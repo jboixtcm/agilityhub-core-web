@@ -156,7 +156,7 @@
       "time": "Hora",
       "noInstructor": "Sin instructor",
       "noLevels": "ninguno",
-      "exempt": "Exenta de la revisión de las 7:30",
+      "exempt": "Exenta de la revisión{time, select, none {} other { de las {time}}}",
       "notes": "Notas",
       "accept": "ACEPTAR",
       "cancel": "ANULAR LA CLASE",

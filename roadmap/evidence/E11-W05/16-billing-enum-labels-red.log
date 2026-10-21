@@ -1,0 +1,61 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/copy-decisions.test.ts (13 tests | 2 failed | 11 skipped) 7ms
+   ❯ E11-W05 (snapshot a7c85d50): every value of BillingIncidentCode and RollbackBlocker has a label (2)
+     × BillingIncidentCode → enums:billingIncident in ca, es and en 5ms
+     × RollbackBlocker → enums:rollbackBlocker in ca, es and en 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 (snapshot a7c85d50): every value of BillingIncidentCode and RollbackBlocker has a label > BillingIncidentCode → enums:billingIncident in ca, es and en
+AssertionError: ca: expected [ 'NO_NEXT_INVOICE_DATE' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "NO_NEXT_INVOICE_DATE",
++ ]
+
+ ❯ src/copy-decisions.test.ts:221:31
+    219|     for (const locale of ["ca", "es", "en"] as const) {
+    220|       const missing = values.filter((value) => text(locale, `enums:${g…
+    221|       expect(missing, locale).toEqual([]);
+       |                               ^
+    222|     }
+    223|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 (snapshot a7c85d50): every value of BillingIncidentCode and RollbackBlocker has a label > RollbackBlocker → enums:rollbackBlocker in ca, es and en
+AssertionError: ca: expected [ 'COLLECTION_DATE_PASSED' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "COLLECTION_DATE_PASSED",
++ ]
+
+ ❯ src/copy-decisions.test.ts:221:31
+    219|     for (const locale of ["ca", "es", "en"] as const) {
+    220|       const missing = values.filter((value) => text(locale, `enums:${g…
+    221|       expect(missing, locale).toEqual([]);
+       |                               ^
+    222|     }
+    223|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 skipped (13)
+   Start at  23:02:56
+   Duration  396ms (transform 73%, import 24%, tests 3%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/copy-decisions.test.ts -t snapshot a7c85d50

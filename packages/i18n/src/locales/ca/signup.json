@@ -54,7 +54,7 @@
     "street": "Carrer i número",
     "postalCode": "CP",
     "town": "Població (proposada pel CP)",
-    "existingDogNote": "Ja ets soci i vols afegir un altre gos? Fes servir el mateix formulari: et reconeixerem pel DNI o l'email (verificació per correu) i només registrarem el gos nou.",
+    "existingDogNote": "Ja ets soci i vols afegir un altre gos? Fes servir el mateix formulari: et reconeixerem pel document d'identitat o l'email (verificació per correu) i només registrarem el gos nou.",
     "reviewEmailTitle": "Revisa el correu",
     "reviewEmail": "T'hem enviat un enllaç de verificació a {email}.",
     "resend": "Torna-m'ho a enviar",

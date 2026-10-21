@@ -1,5 +1,12 @@
 import { itemsWith, listFields, type ApiClient, type components } from "@agilityhub/api-client";
-import { fmtMaskedIban, type Locale, useClubFormats } from "@agilityhub/i18n";
+import {
+  currencyDigits,
+  fmtMaskedIban,
+  majorUnits,
+  minorFromMajor,
+  type Locale,
+  useClubFormats,
+} from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -149,7 +156,7 @@ export function SignupReviewPage({
 }) {
   const branding = useBranding();
   const refreshCounters = useRefreshCounters();
-  const { formatMoney, formatMonth, formatPlainDate, locale } = useClubFormats();
+  const { formatMoneyMinor, formatMonth, formatPlainDate, locale } = useClubFormats();
   const { i18n, t } = useTranslation(["admin-census", "errors"]);
   const memberId = currentMemberId();
   const [signup, setSignup] = useState<SignupView>();
@@ -381,6 +388,8 @@ export function SignupReviewPage({
   // Only an upfront block without a Stripe payment asks for the amount collected (null = no upfront, INC-08).
   const manualUpfront = billing && upfront !== undefined && !stripePaid;
   const amountDue = Math.max(0, (upfront?.totalDue.amountMinor ?? 0) - (upfront?.totalPaid.amountMinor ?? 0));
+  // The typed amount in the club currency's own minor units (EUR 2 digits, JPY 0), never a fixed 100.
+  const paidDigits = currencyDigits(branding.currency);
   const readmission = signup.signup.readmission || signup.warnings.includes("READMISSION");
 
   const validationBody = (): ValidationRequest => {
@@ -390,7 +399,7 @@ export function SignupReviewPage({
       ...(billing && monthly && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
       ...(selectedPlan === undefined ? {} : { planId: selectedPlan.planId, ...(selectedPlan.priceId === undefined ? {} : { priceId: selectedPlan.priceId }) }),
       ...(groupId === undefined ? {} : { familyGroupId: groupId }),
-      ...(manualUpfront ? { upfrontAmountPaid: { amountMinor: Math.round(Number(manualPaid) * 100), currency: branding.currency } } : {}),
+      ...(manualUpfront ? { upfrontAmountPaid: { amountMinor: minorFromMajor(Number(manualPaid), branding.currency), currency: branding.currency } } : {}),
       version: signup.version,
     };
   };
@@ -498,7 +507,7 @@ export function SignupReviewPage({
   const firstMonth = upfront?.firstMonth;
   const upfrontBreakdown = liveLines
     .map((line) => {
-      const amount = formatMoney(line.amount.amountMinor / 100);
+      const amount = formatMoneyMinor(line.amount);
       if (line.concept !== "FIRST_MONTH") return t(`admin-census:signupReview.upfrontLines.${line.concept}`, { amount });
       // The FIRST_MONTH line names its month and portion from `upfront.firstMonth` (R-04-15).
       return firstMonth === undefined
@@ -517,7 +526,7 @@ export function SignupReviewPage({
     return t("admin-census:signupReview.planWithPrice", {
       periodicity: quoted?.periodicity ?? price.periodicity,
       plan: plan.name,
-      price: formatMoney((quoted?.amount ?? price.amount).amountMinor / 100),
+      price: formatMoneyMinor(quoted?.amount ?? price.amount),
     });
   };
   const planOptions = signup.planOptions.flatMap((plan) =>
@@ -862,9 +871,9 @@ export function SignupReviewPage({
             <label>
               {t("admin-census:signupReview.actuallyPaid")}{" "}
               {stripePaid ? (
-                <><Input readOnly value={formatMoney(upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></>
+                <><Input readOnly value={formatMoneyMinor(upfront.totalPaid)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></>
               ) : (
-                <Input aria-describedby={upfrontError === undefined ? undefined : "signup-upfront-error"} aria-invalid={upfrontError !== undefined || undefined} max={(amountDue / 100).toFixed(2)} min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); if (upfrontError !== undefined) setDecisionError(undefined); }} step="0.01" type="number" value={manualPaid} />
+                <Input aria-describedby={upfrontError === undefined ? undefined : "signup-upfront-error"} aria-invalid={upfrontError !== undefined || undefined} max={majorUnits(amountDue, branding.currency).toFixed(paidDigits)} min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); if (upfrontError !== undefined) setDecisionError(undefined); }} step={String(10 ** -paidDigits)} type="number" value={manualPaid} />
               )}
             </label>
             {upfrontError === undefined ? null : <p className="ah-form-field__error" id="signup-upfront-error" role="alert">{upfrontError}</p>}

@@ -394,7 +394,7 @@ describe("T-01-22 apps/id", () => {
   });
 });
 
-describe("E11-W02 round 2 (INC-41): apps/id's login after a 429, and the magic link's token", () => {
+describe("T-01-18 (E11-W02 round 2, INC-41): apps/id's login after a 429, and the magic link's token", () => {
   it("a 429 on the password login counts down its Retry-After and holds the buttons until it ends", async () => {
     window.history.replaceState(null, "", "/login");
     const { fetcher: base } = testFetcher();

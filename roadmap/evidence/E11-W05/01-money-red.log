@@ -1,0 +1,79 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/format.test.ts (106 tests | 5 failed | 101 skipped) 4ms
+   ❯ E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits (5)
+     × E11-W05 step 1: fmtMinor(1234, EUR) is «12,34 €» in ca and es, «€12.34» in en 2ms
+     × E11-W05 step 1: a currency without minor units is never divided by 100 (JPY), one with three divides by 1000 (KWD) 0ms
+     × E11-W05 step 1: zero, a negative amount and compact (zero cents dropped, cents kept) 0ms
+     × E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubFormats binds the club's currency 0ms
+     × E11-W05 step 1: minorUnits reads a typed amount in the currency's minor units and majorUnits is its inverse 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: fmtMinor(1234, EUR) is «12,34 €» in ca and es, «€12.34» in en
+TypeError: fmtMinor is not a function
+ ❯ src/format.test.ts:34:12
+     32| describe("E11-W05 step 1 (INC-41 #7): money from the api's minor units…
+     33|   it("E11-W05 step 1: fmtMinor(1234, EUR) is «12,34 €» in ca and es, «…
+     34|     expect(fmtMinor(1234, "EUR", "ca")).toBe("12,34 €");
+       |            ^
+     35|     expect(fmtMinor(1234, "EUR", "es")).toBe("12,34 €");
+     36|     expect(fmtMinor(1234, "EUR", "en")).toBe("€12.34");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: a currency without minor units is never divided by 100 (JPY), one with three divides by 1000 (KWD)
+TypeError: fmtMinor is not a function
+ ❯ src/format.test.ts:41:12
+     39|
+     40|   it("E11-W05 step 1: a currency without minor units is never divided …
+     41|     expect(fmtMinor(1234, "JPY", "ca")).toBe("1234 ¥");
+       |            ^
+     42|     expect(fmtMinor(1234, "JPY", "en")).toBe("¥1,234");
+     43|     expect(fmtMinor(1234, "KWD", "en")).toBe("KWD 1.234");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: zero, a negative amount and compact (zero cents dropped, cents kept)
+TypeError: fmtMinor is not a function
+ ❯ src/format.test.ts:47:12
+     45|
+     46|   it("E11-W05 step 1: zero, a negative amount and compact (zero cents …
+     47|     expect(fmtMinor(0, "EUR", "en")).toBe("€0.00");
+       |            ^
+     48|     expect(fmtMinor(-3050, "EUR", "ca")).toBe("-30,50 €");
+     49|     expect(fmtMinor(648000, "EUR", "ca", { compact: true })).toBe("648…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubFormats binds the club's currency
+TypeError: formatMoneyMinor is not a function
+ ❯ src/format.test.ts:56:12
+     54|
+     55|   it("E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubForm…
+     56|     expect(formatMoneyMinor({ amountMinor: 4500, currency: "EUR" }, "c…
+       |            ^
+     57|     expect(formatMoneyMinor({ amountMinor: 4500, currency: "JPY" }, "c…
+     58|     const euro = createClubFormats("es", "Europe/Madrid", "EUR");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: minorUnits reads a typed amount in the currency's minor units and majorUnits is its inverse
+TypeError: minorUnits is not a function
+ ❯ src/format.test.ts:66:12
+     64|
+     65|   it("E11-W05 step 1: minorUnits reads a typed amount in the currency'…
+     66|     expect(minorUnits("12,34", "EUR")).toBe(1234);
+       |            ^
+     67|     expect(minorUnits("-30,5", "EUR")).toBe(-3050);
+     68|     expect(minorUnits("12,345", "EUR")).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 101 skipped (106)
+   Start at  22:33:59
+   Duration  225ms (transform 73%, import 23%, tests 3%, worker 1%)
+

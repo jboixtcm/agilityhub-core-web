@@ -50,7 +50,7 @@ test("T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the co
   await page.getByRole("button", { name: "VALIDA" }).first().click();
   await expect(page).toHaveURL(/\/preinscripcions\/42000000-0000-4000-8000-000000000001$/u);
   await expect(page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u })).toBeVisible();
-  await expect(page.getByText(/no publiqueu fotos on surti ella/u)).toBeVisible();
+  await expect(page.getByText(/no publiquis fotos on surti ella/u)).toBeVisible();
   await expect(page.getByLabel("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
   await expect(page.getByLabel("Import efectivament cobrat:")).toHaveValue(/130,00/u);
   await page.screenshot({
@@ -85,7 +85,7 @@ test("E3-W08 step 6 (R-04-06, E38): D2 shows a readmission's old and new values,
   });
   await page.getByRole("button", { name: "EDITA LES DADES" }).click();
   const drawer = page.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
-  await expect(drawer.getByLabel("DNI/NIE")).toHaveAttribute("readonly", "");
+  await expect(drawer.getByLabel("Document d'identitat")).toHaveAttribute("readonly", "");
   await expect(drawer.getByText(/per corregir-lo, rebutja la readmissió/u)).toBeVisible();
 });
 

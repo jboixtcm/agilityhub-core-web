@@ -12,6 +12,7 @@ import {
   clubLocalDateOf,
   clubLocalTime,
   type RingBlock,
+  riskReviewTime,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import {
@@ -199,8 +200,20 @@ function withInconsistencyIds(
   session: ClassSession,
   inconsistencies: readonly Inconsistency[],
 ): ClassSession {
+  const { cancellation } = session;
   return {
     ...session,
+    // E11-T13: `byAccountId` and `reviewTime` always sent; `reviewTime` is the club's
+    // `classes.riskReviewTime` when the view is read, `null` unless the review cancelled it.
+    ...(cancellation === undefined || cancellation === null
+      ? {}
+      : {
+          cancellation: {
+            ...cancellation,
+            byAccountId: cancellation.byAccountId ?? null,
+            reviewTime: cancellation.reason === "RISK_REVIEW" ? riskReviewTime() : null,
+          },
+        }),
     atRisk: atRiskNow(session, minDogsParameter()),
     inconsistencyIds: inconsistencies
       .filter((inconsistency) => inconsistency.itemIds.includes(session.id))

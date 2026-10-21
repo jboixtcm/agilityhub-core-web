@@ -572,6 +572,19 @@ describe("E11-W02 INC-55: a refusal removes only the preference it names, and a 
     expect(h.kept.at(-1)).toBeUndefined();
   });
 
+  it("R-11-04 / E11-W05 step 0 (INC-55 #1 reopened, E154): a refusal never discards an unrelated preference when the queue keeps the same field count", async () => {
+    const h = harness();
+    h.saver.edit({ pushClubNews: false, reminderMinutesBefore: 240 });
+    await tick();
+    expect(h.at(0).body).toEqual({ pushClubNews: false, reminderMinutesBefore: 240 });
+    h.saver.edit({ reminderMinutesBefore: 60 });
+    h.saver.edit({ reminderMinutesBefore: 240 });
+    h.at(0).refuse(refusal("INVALID_REMINDER_OPTION"));
+    await tick();
+    await tick();
+    expect(h.puts[1]?.body).toEqual({ pushClubNews: false });
+  });
+
   it("#1 CHANNEL_NOT_ALLOWED drops the push choice only, and details.field names any other preference", async () => {
     const mixed: PreferencesPatch = { emailByCategory: { PERSONAL: false }, pushClubNews: false };
     const cases: [ApiError, PreferencesPatch, PreferencesPatch][] = [

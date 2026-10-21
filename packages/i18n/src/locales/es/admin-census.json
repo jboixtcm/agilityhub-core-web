@@ -36,7 +36,7 @@
     "feeSnapshot": "Cuota del primer mes {first} · Meses siguientes {following}/mes",
     "bookingBreakdown": "{type}: {count}",
     "history": "Historial",
-    "notApplicable": "Las modalidades de pack no pueden solicitar inactividad.",
+    "notApplicable": "Las modalidades de bono no pueden solicitar inactividad.",
     "badgeOpen": "inactiva",
     "badgeUntil": "inactiva hasta {date}",
     "errors": {
@@ -91,7 +91,7 @@
     "newPlan": "Modalidad nueva",
     "price": "Tarifa",
     "effectiveMonth": "Mes de efecto (opcional)",
-    "packDiscountRule": "Al pasar de un pack de {minSessions} sesiones o más a una cuota mensual, la entrada tiene un {discountPercent} % de descuento. El importe debe calcularlo la API."
+    "packDiscountRule": "Al pasar de un bono de {minSessions} sesiones o más a una cuota mensual, la entrada tiene un {discountPercent} % de descuento. El importe debe calcularlo la API."
   },
   "inactivityLeavePage": {
     "title": "Inactividades y bajas",
@@ -338,7 +338,7 @@
       "roles": "Roles de acceso",
       "street": "Calle y número"
     },
-    "imageNotice": "{gender, select, FEMALE {No autoriza el uso de su imagen: no publique fotos en las que aparezca ella.} other {No autoriza el uso de su imagen: no publique fotos en las que aparezca él.}}",
+    "imageNotice": "No autoriza el uso de su imagen: no publiques fotos en las que aparezca {gender, select, FEMALE {ella} OTHER {esta persona} other {él}}.",
     "readmissionPending": "Este abonado tiene una readmisión pendiente: valídala o recházala desde el panel antes de cambiar la ficha.",
     "impersonate": {
       "description": "Se abrirá la app tal como la ve el abonado. Las acciones quedarán auditadas con el administrador que las realice.",
@@ -351,7 +351,7 @@
       "allReceipts": "Todos los recibos ›",
       "upfront": "Pagos al momento",
       "recordPayment": "Registrar un pago",
-      "packs": "Packs",
+      "packs": "Bonos",
       "packLine": "{consumed} consumidas · {remaining} disponibles · caduca el {date}",
       "packExpiredLine": "{consumed} consumidas · caducado el {date}",
       "adjust": "Ajustar",
@@ -367,14 +367,14 @@
       "reason": "Motivo",
       "expiresOn": "Nueva caducidad",
       "amountExceeds": "El importe pagado no puede superar el importe debido.",
-      "planNotPack": "Este concepto necesita una modalidad de pack.",
-      "packNegative": "El ajuste no puede dejar el pack con sesiones negativas.",
+      "planNotPack": "Este concepto necesita una modalidad de bono.",
+      "packNegative": "El ajuste no puede dejar el bono con sesiones negativas.",
       "invalidCard": "Tarjeta no válida"
     },
     "language": "idioma: {locale}",
     "number": "n.º {number}",
     "documentPending": "Documento pendiente",
-    "pack": "Pack {total}: {used}/{remaining} · caduca {date}",
+    "pack": "Bono {total}: {used}/{remaining} · caduca {date}",
     "payment": {
       "adminOnly": "cambio solo admin",
       "holder": "Titular de la cuenta",
@@ -488,7 +488,7 @@
     "dog": "Perro ({current} de {total})",
     "fields": {
       "name": "Nombre",
-      "idDocument": "DNI/NIE",
+      "idDocument": "Documento de identidad",
       "passport": "Pasaporte",
       "otherDocument": "Otro documento",
       "contact": "Contacto",
@@ -573,7 +573,7 @@
       "CHECKOUT_PENDING": "Hay un pago con tarjeta en curso: la modalidad no se puede cambiar hasta que termine.",
       "DOCUMENT_PENDING": "Documento pendiente",
       "FAMILY_HOLDER_NOT_FOUND": "No se ha encontrado el titular del grupo familiar",
-      "NO_IMAGE_CONSENT": "No autoriza el uso de su imagen: no publiquéis fotos donde salga {gender, select, FEMALE {ella} other {él}}.",
+      "NO_IMAGE_CONSENT": "No autoriza el uso de su imagen: no publiques fotos en las que aparezca {gender, select, FEMALE {ella} OTHER {esta persona} other {él}}.",
       "PAID_EXCEEDS_QUOTE": "Lo cobrado supera el nuevo importe: habrá que devolver la diferencia desde Facturación.",
       "READMISSION": "Readmisión",
       "UPFRONT_UNPAID": "Pago inicial pendiente"
@@ -607,7 +607,7 @@
       "title": "Cambios respecto a la ficha de baja",
       "previous": "Antes: {value}",
       "submitted": "Ahora: {value}",
-      "documentLocked": "El DNI/NIE no se puede cambiar durante una readmisión: para corregirlo, rechaza la readmisión.",
+      "documentLocked": "El documento de identidad no se puede cambiar durante una readmisión: para corregirlo, rechaza la readmisión.",
       "dogLocked": "La readmisión está pendiente: la ficha del perro no se puede cambiar hasta que se valide o se rechace."
     }
   },
@@ -667,7 +667,7 @@
       "unread": "Pendiente de leer"
     },
     "author": {
-      "member": "{name} ({gender, select, female {alumna} other {alumno}})",
+      "member": "{name} ({gender, select, FEMALE {alumna} OTHER {alumno/a} other {alumno}})",
       "task": "{name} (tarea)"
     },
     "none": "—",

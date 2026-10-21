@@ -22,6 +22,7 @@ import {
   type OpeningHours,
   openingOf,
   rangeOptions,
+  reviewTimeValue,
   timeLabel,
   timeOf,
   useCalendarErrorMessage,
@@ -251,6 +252,10 @@ export function SelectedClassCard({
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
   const notesOnly = !readOnly && !editable;
+  // R-06-13: the review an exemption skips runs at the club's `classes.riskReviewTime`.
+  const exemptLabel = t("admin-scheduling:calendar.selected.exempt", {
+    time: reviewTimeValue(settings.riskReviewTime),
+  });
   // Starts on slot boundaries that keep the class length inside the day's opening hours; a closed
   // day (R-02-09) offers none, and neither do the hours while they load: the class keeps its time.
   const opening = openingHours === undefined ? undefined : openingOf(openingHours, session.date);
@@ -579,7 +584,7 @@ export function SelectedClassCard({
               onClick={() => void toggleExempt()}
               type="button"
             >
-              {t("admin-scheduling:calendar.selected.exempt")}
+              {exemptLabel}
             </button>
           ) : null}
         </div>
@@ -608,9 +613,7 @@ export function SelectedClassCard({
             label={t("admin-scheduling:calendar.selected.time")}
             value={timeLabel(session.startTime)}
           />
-          {session.riskExempt ? (
-            <Chip tone="info">{t("admin-scheduling:calendar.selected.exempt")}</Chip>
-          ) : null}
+          {session.riskExempt ? <Chip tone="info">{exemptLabel}</Chip> : null}
         </div>
       )}
 

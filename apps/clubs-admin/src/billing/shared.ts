@@ -5,7 +5,13 @@ import {
   type ApiClient,
   type components,
 } from "@agilityhub/api-client";
-import { fmtMoney, isPlainDate, normalizeLocale, type Locale } from "@agilityhub/i18n";
+import {
+  formatMoneyMinor,
+  isPlainDate,
+  minorUnits,
+  normalizeLocale,
+  type Locale,
+} from "@agilityhub/i18n";
 import type { Tone } from "@agilityhub/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -42,35 +48,17 @@ export function shiftPeriod(period: string, months: number): string {
   return `${String(Math.floor(index / 12))}-${String((index % 12) + 1).padStart(2, "0")}`;
 }
 
-/** The fraction digits of a currency (EUR 2): `Money.amountMinor` is in those units. */
-function fractionDigits(currency: string): number {
-  return (
-    new Intl.NumberFormat("en", { currency, style: "currency" }).resolvedOptions()
-      .maximumFractionDigits ?? 2
-  );
-}
-
 /**
- * A `Money` as the api sends it, through `fmtMoney(locale, currency)` (R-12-09, R-12-30): the front
- * never adds, rounds or converts an amount. `compact` drops zero cents, as the mockup's KPIs
+ * A `Money` as the api sends it, through the package's `formatMoneyMinor` (R-12-09, R-12-30): the
+ * front never adds, rounds or converts an amount. `compact` drops zero cents, as the mockup's KPIs
  * («6.480 €», «20 € el 1r mes»).
  */
 export function formatMoney(money: Money, locale: Locale, compact = false): string {
-  const value = money.amountMinor / 10 ** fractionDigits(money.currency);
-  const text = fmtMoney(value, locale, money.currency);
-  return compact ? text.replace(/([,.]0+)(?=\s|$)/u, "") : text;
+  return formatMoneyMinor(money, locale, { compact });
 }
 
-/** An amount the admin typed («-30,5») in the currency's minor units, or `undefined`. */
-export function minorUnits(text: string, currency: string): number | undefined {
-  const normalized = text.trim().replace(/\s/gu, "").replace(",", ".");
-  if (normalized === "" || !/^-?\d+(\.\d+)?$/u.test(normalized)) return undefined;
-  const digits = fractionDigits(currency);
-  const [whole = "0", fraction = ""] = normalized.replace("-", "").split(".");
-  if (fraction.length > digits) return undefined;
-  const value = Number(whole) * 10 ** digits + Number(fraction.padEnd(digits, "0"));
-  return normalized.startsWith("-") ? -value : value;
-}
+/** An amount the admin typed («-30,5») in the currency's minor units (the package's helper). */
+export { minorUnits };
 
 export function useBillingLocale(): Locale {
   const { i18n } = useTranslation();

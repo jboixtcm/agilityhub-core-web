@@ -247,7 +247,7 @@ test.describe("T-03-41 mobile own data", () => {
     await page.goto(`${baseUrl}/dades`);
 
     await expect(page.getByRole("heading", { name: "Les meves dades" })).toBeVisible();
-    await expect(page.getByLabel("DNI")).toHaveAttribute("readonly", "");
+    await expect(page.getByLabel("Document d'identitat")).toHaveAttribute("readonly", "");
     await expect(page.getByLabel("Nom", { exact: true })).toHaveAttribute("readonly", "");
     await expect(page.getByLabel("Cognom 1", { exact: true })).toHaveAttribute("readonly", "");
     await expect(page.getByLabel("Cognom 2", { exact: true })).toHaveAttribute("readonly", "");

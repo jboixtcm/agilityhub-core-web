@@ -1,0 +1,174 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/console/ClubsListPage.test.tsx (5 tests | 1 failed) 683ms
+   ❯ E10-W01 step 2 · D19 list (S17 §2 «D19 Llista», universal list) (5)
+     × shows S17's columns: name, slug, status, country and zone, members, module chips, last admin access, SMS, storage and the checklist 228ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubsListPage.test.tsx > E10-W01 step 2 · D19 list (S17 §2 «D19 Llista», universal list) > shows S17's columns: name, slug, status, country and zone, members, module chips, last admin access, SMS, storage and the checklist
+TestingLibraryElementError: Unable to find an element with the text: En configuració. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"console-club-name"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mClub Mínim[0m
+        [36m</strong>[39m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [0mminim[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+      [36m>[39m
+        [0mEn posada en marxa[0m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [0mES · Europe/Madrid[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [0m12[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"console-chips"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+        [36m>[39m
+          [0mLlista d'espera[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+        [36m>[39m
+          [0mPreguntes freqüents[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+        [36m>[39m
+          [0mNotificacions push[0m
+        [36m</span>[39m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [0mmai[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [0m0[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [0m5 MB[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"console-checklist-summary"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0m4/7[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"console-checklist-summary__missing"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"console-checklist-summary__dot"[39m
+          [36m>[39m
+            [0m · [0m
+          [36m</span>[39m
+          [0mfalten: Dominis verificats, Preguntes freqüents, Política de privacitat[0m
+        [36m</span>[39m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mObre la fitxa de Club Mínim[0m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/console/ClubsListPage.test.tsx:79:18
+     77|     const minim = within(row(club(CONSOLE_CLUB_IDS.minim).name));
+     78|     // E11-W05 step 6 (A39.1, E153): ONBOARDING reads «En configuració…
+     79|     expect(minim.getByText("En configuració")).toBeInTheDocument();
+       |                  ^
+     80|     // R-17-06: «4/7 · falten: …» (no verified domain, no FAQ, no priv…
+     81|     expect(minim.getByText("4/7")).toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  23:03:00
+   Duration  2.31s (transform 37%, tests 31%, environment 17%, import 12%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/console/ClubsListPage.test.tsx

@@ -223,7 +223,8 @@ function authorLabel(t: Translate, row: FollowupItem): string {
   const name = row.authorName ?? "";
   return row.kind === "MEMBER_NOTE"
     ? t("admin-census:followup.author.member", {
-        gender: row.authorGender === "FEMALE" ? "female" : "other",
+        // The api's value (E11-W05 step 4): `OTHER` has its own form; none reads the masculine.
+        gender: row.authorGender ?? "other",
         name,
       })
     : t("admin-census:followup.author.task", { name });

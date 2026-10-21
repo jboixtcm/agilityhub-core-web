@@ -84,6 +84,11 @@ function scalar(value: unknown): string {
     : "";
 }
 
+/** The last instant of the club day `date` (`23:59:59.999` club-local; DST-safe via midnight). */
+function lastInstantOf(date: string, timeZone: string): string {
+  return new Date(Date.parse(clubInstant(addDays(date, 1), "00:00", timeZone)) - 1).toISOString();
+}
+
 function apiFilters(filters: readonly UniversalFilter[]): string[] {
   return filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
 }
@@ -510,7 +515,9 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
   const filterColumns: UniversalListFilterColumn[] = [
     { key: "action", label: t("admin-audit:filters.action"), type: "enum" },
     // E11-W02 round 2 (INC-41): two club days, sent as the club-local bounds of those days (as the
-    // ring-usage register's blocks), never one value `between` cannot take.
+    // ring-usage register's blocks), never one value `between` cannot take. `between` includes both
+    // ends and `at` takes no `lt` (E11-W05 step 5 (e)): the end is the end day's last instant, the
+    // next club-local midnight minus one millisecond.
     {
       key: "at",
       label: t("admin-audit:filters.at"),
@@ -519,7 +526,7 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
         endLabel: t("admin-audit:filters.to"),
         startLabel: t("admin-audit:filters.from"),
         toValue: (start, end) =>
-          `${clubInstant(start, "00:00", branding.timeZone)},${clubInstant(addDays(end, 1), "00:00", branding.timeZone)}`,
+          `${clubInstant(start, "00:00", branding.timeZone)},${lastInstantOf(end, branding.timeZone)}`,
       },
       type: "date",
     },

@@ -1,0 +1,5 @@
+apps/clubs/src/dog-tasks-contrast.test.ts:54:  return blend(hexChannels(first), hexChannels(second), Number(share) / 100);
+apps/clubs/src/SignupPage.test.tsx:1806:      /100,00\s€/u,
+apps/clubs/src/booking/detail.test.tsx:119:    // 100 minutes before: still in time with 90 minutes (the catalog's 4 h would warn here).
+apps/clubs-admin/src/catalogs/PlansPage.tsx:75:    return Math.round((standardAmountMinor * (plan.entryFee.percent ?? 0)) / 100);
+apps/clubs-admin/src/console/product-theme.test.ts:82:          const weight = Number(share) / 100;

@@ -316,7 +316,6 @@
     "addHelp": "Escriu el host sense https://, per exemple app.exemple.cat.",
     "adding": "Afegint",
     "addTitle": "Afegeix domini",
-    "adminHostsNote": "Un domini del backoffice verificat ja té certificat, però el backoffice no s'hi serveix fins que operacions l'afegeix a la llista de hosts del backoffice i recarrega el servidor.",
     "app": "App",
     "apps": {
       "clubs": "App dels abonats",
@@ -433,7 +432,7 @@
   },
   "status": {
     "ACTIVE": "Actiu",
-    "ONBOARDING": "En posada en marxa",
+    "ONBOARDING": "En configuració",
     "SUSPENDED": "Suspès"
   },
   "statusTab": {
@@ -449,7 +448,7 @@
     "description": "L'activació és sempre manual. Cada canvi d'estat queda a l'auditoria.",
     "meaning": {
       "ACTIVE": "El club opera amb normalitat.",
-      "ONBOARDING": "El club ja funciona i els administradors veuen un bàner de posada en marxa.",
+      "ONBOARDING": "El club ja funciona i els administradors veuen un bàner de configuració.",
       "SUSPENDED": "Els accessos al club es rebutgen i els processos no s'executen."
     },
     "reason": "Motiu de la suspensió",
@@ -589,10 +588,11 @@
   "wizard": {
     "adminHelp": "Rebrà una invitació per correu amb un enllaç d'accés com a administrador del club.",
     "catalogsHelp": "Els catàlegs del club nou es poden copiar d'un club plantilla, o començar buits.",
+    "catalogsStartingPoint": "És un punt de partida: el club els pot editar després.",
     "create": "CREA EL CLUB",
     "creating": "Creant el club",
     "definitionTitle": "Fitxer club-as-code",
-    "description": "Vuit passos per crear un club. Es crea en posada en marxa i després es completa la checklist d'onboarding.",
+    "description": "Vuit passos per crear un club. Es crea en configuració i després es completa la checklist d'onboarding.",
     "discardDraft": "Descarta l'esborrany",
     "draftRestored": "S'ha recuperat l'esborrany desat en aquest dispositiu. Les dades personals no s'hi desen.",
     "draftSaved": "Esborrany desat en aquest dispositiu, sense les dades personals.",

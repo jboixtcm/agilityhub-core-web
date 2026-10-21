@@ -1,0 +1,40 @@
+apps/clubs/src/dog-tasks-contrast.test.ts:54:  return blend(hexChannels(first), hexChannels(second), Number(share) / 100);
+apps/clubs/src/SignupPage.tsx:1335:    const price = formatMoney(plan.price.amount.amountMinor / 100);
+apps/clubs/src/SignupPage.tsx:1663:                          price: formatMoney(plan.entryFee.amountMinor / 100),
+apps/clubs/src/SignupPage.tsx:1671:                          entry: formatMoney((plan.entryFee?.amountMinor ?? 0) / 100),
+apps/clubs/src/SignupPage.tsx:1672:                          fee: formatMoney(plan.maintenanceFee.amountMinor / 100),
+apps/clubs/src/SignupPage.tsx:1827:              entry: formatMoney(plan.entryFee.amountMinor / 100),
+apps/clubs/src/SignupPage.tsx:2444:              <strong>{formatMoney(row.amount.amountMinor / 100)}</strong>
+apps/clubs/src/SignupPage.tsx:2452:              <strong>{formatMoney(startOptions[0].amountDue.amountMinor / 100)}</strong>
+apps/clubs/src/SignupPage.tsx:2484:                    <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
+apps/clubs/src/SignupPage.tsx:2493:            <b>{formatMoney(totalDue.amountMinor / 100)}</b>
+apps/clubs/src/SignupPage.test.tsx:1806:      /100,00\s€/u,
+apps/clubs/src/inactivity/InactivityPage.tsx:364:                <strong>{formats.formatMoney(displayedFee.firstMonth.amountMinor / 100)}</strong>
+apps/clubs/src/inactivity/InactivityPage.tsx:370:                    amount: formats.formatMoney(displayedFee.followingMonths.amountMinor / 100),
+apps/clubs/src/booking/detail.test.tsx:119:    // 100 minutes before: still in time with 90 minutes (the catalog's 4 h would warn here).
+apps/clubs/src/booking/ConfirmPage.tsx:136:      : formats.formatMoney(hold.payment.price.amountMinor / 100);
+apps/clubs/src/booking/BookPage.tsx:126:  const price = money(row.price.amountMinor / 100);
+apps/clubs/src/leave/LeavePage.tsx:173:                first: formats.formatMoney(context.fee.firstMonth.amountMinor / 100),
+apps/clubs/src/leave/LeavePage.tsx:174:                following: formats.formatMoney(context.fee.followingMonths.amountMinor / 100),
+apps/clubs/src/billing/InvoicesPage.tsx:98:        <b>{formats.formatMoney(invoice.total.amountMinor / 100)}</b>
+apps/clubs/src/billing/InvoicesPage.tsx:208:                  <td>{formats.formatMoney(line.total.amountMinor / 100)}</td>
+apps/clubs/src/billing/InvoicesPage.tsx:215:                <td>{formats.formatMoney(invoice.total.amountMinor / 100)}</td>
+apps/clubs-admin/src/dashboard/SignupReviewPage.tsx:499:      const amount = formatMoney(line.amount.amountMinor / 100);
+apps/clubs-admin/src/dashboard/SignupReviewPage.tsx:518:      price: formatMoney((quoted?.amount ?? price.amount).amountMinor / 100),
+apps/clubs-admin/src/dashboard/SignupReviewPage.tsx:863:                <><Input readOnly value={formatMoney(upfront.totalPaid.amountMinor / 100)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></>
+apps/clubs-admin/src/dashboard/SignupReviewPage.tsx:865:                <Input aria-describedby={upfrontError === undefined ? undefined : "signup-upfront-error"} aria-invalid={upfrontError !== undefined || undefined} max={(amountDue / 100).toFixed(2)} min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); if (upfrontError !== undefined) setDecisionError(undefined); }} step="0.01" type="number" value={manualPaid} />
+apps/clubs-admin/src/catalogs/ParameterSettings.tsx:230:      ? formats.formatMoney(item.amountMinor / 100)
+apps/clubs-admin/src/catalogs/ParameterSettings.tsx:564:            value={typeof money.amountMinor === "number" ? money.amountMinor / 100 : 0}
+apps/clubs-admin/src/catalogs/PlansPage.tsx:79:    return Math.round((standardAmountMinor * (plan.entryFee.percent ?? 0)) / 100);
+apps/clubs-admin/src/catalogs/PlansPage.tsx:117:  const amount = compactMoney(formatMoney(price.amount.amountMinor / 100));
+apps/clubs-admin/src/catalogs/PlansPage.tsx:126:              entry: compactMoney(formatMoney(planEntryFee / 100)),
+apps/clubs-admin/src/catalogs/PlansPage.tsx:282:    item?.entryFee?.amount === undefined ? "" : String(item.entryFee.amount.amountMinor / 100),
+apps/clubs-admin/src/catalogs/PlansPage.tsx:446:                    amount: compactMoney(formatMoney(entryFeeMinor / 100)),
+apps/clubs-admin/src/catalogs/PlansPage.tsx:625:                  <strong>{compactMoney(formatMoney(price.amount.amountMinor / 100))}</strong>
+apps/clubs-admin/src/catalogs/PlansPage.tsx:749:                  entry: compactMoney(formatMoney(previewEntryFee / 100)),
+apps/clubs-admin/src/catalogs/PlansPage.tsx:825:                  amount: compactMoney(formatMoney(entryFeeMinor / 100)),
+apps/clubs-admin/src/census/MemberBillingBlock.tsx:237:                  : formats.formatMoney(invoice.total.amountMinor / 100)}
+apps/clubs-admin/src/census/MemberBillingBlock.tsx:272:                {formats.formatMoney(payment.amountPaid.amountMinor / 100)} /{" "}
+apps/clubs-admin/src/census/MemberBillingBlock.tsx:273:                {formats.formatMoney(payment.amountDue.amountMinor / 100)}
+apps/clubs-admin/src/census/CensusRecordPage.tsx:743:                  overview.nextInvoice.amount.amountMinor / 100,
+apps/clubs-admin/src/console/product-theme.test.ts:82:          const weight = Number(share) / 100;

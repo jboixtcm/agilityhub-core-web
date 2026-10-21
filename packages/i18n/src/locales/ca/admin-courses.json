@@ -368,7 +368,8 @@
     "activeLine": "Muntat el {built} · fins al {until}",
     "pastLine": "Del {built} al {ended}",
     "replaced": "Substituït",
-    "review": "Revisa-la"
+    "review": "Revisa-la",
+    "ringInactive": "Pista desactivada"
   },
   "files": {
     "fallback": "recorregut",

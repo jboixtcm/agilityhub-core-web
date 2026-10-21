@@ -330,6 +330,76 @@ export function formatMoney(amount: number, locale: Locale, currency: string): s
     .replace(/[\u00a0\u202f]/g, " ");
 }
 
+/** The fraction digits of a currency (EUR 2, JPY 0, KWD 3): the api's `amountMinor` units. */
+export function currencyDigits(currency: string): number {
+  return (
+    new Intl.NumberFormat("en", { currency, style: "currency" }).resolvedOptions()
+      .maximumFractionDigits ?? 2
+  );
+}
+
+/** An api amount in minor units as the currency's major units (1234 EUR → 12.34, JPY → 1234). */
+export function majorUnits(amountMinor: number, currency: string): number {
+  return amountMinor / 10 ** currencyDigits(currency);
+}
+
+/** `majorUnits`' inverse for a number typed in a number field (12.5 EUR → 1250, JPY 1234 → 1234). */
+export function minorFromMajor(amount: number, currency: string): number {
+  return Math.round(amount * 10 ** currencyDigits(currency));
+}
+
+/** An amount the admin typed («-30,5») in the currency's minor units, or `undefined`. */
+export function minorUnits(text: string, currency: string): number | undefined {
+  const normalized = text.trim().replace(/\s/gu, "").replace(",", ".");
+  if (normalized === "" || !/^-?\d+(\.\d+)?$/u.test(normalized)) return undefined;
+  const digits = currencyDigits(currency);
+  const [whole = "0", fraction = ""] = normalized.replace("-", "").split(".");
+  if (fraction.length > digits) return undefined;
+  const value = Number(whole) * 10 ** digits + Number(fraction.padEnd(digits, "0"));
+  return normalized.startsWith("-") ? -value : value;
+}
+
+export interface MinorMoneyOptions {
+  /** Drops zero cents, as the mockups' prices and KPIs («6.480 €», «20 € el 1r mes»). */
+  compact?: boolean;
+}
+
+/**
+ * An api amount in minor units (`Money.amountMinor`) in the reader's locale: the fraction digits
+ * come from the currency, never a fixed 100 (INC-41 #7). The front never adds, rounds or converts.
+ */
+export function fmtMinor(
+  amountMinor: number,
+  currency: string,
+  locale: Locale,
+  { compact = false }: MinorMoneyOptions = {},
+): string {
+  const digits = currencyDigits(currency);
+  const scale = 10 ** digits;
+  // Compact drops the fraction only when it is zero (never a group of a currency without one).
+  const fraction = compact && amountMinor % scale === 0 ? 0 : digits;
+  return new Intl.NumberFormat(intlLocales[locale], {
+    currency,
+    currencyDisplay: "symbol",
+    maximumFractionDigits: fraction,
+    minimumFractionDigits: fraction,
+    style: "currency",
+  })
+    .format(amountMinor / scale)
+    .replace(/[\u00a0\u202f]/g, " ");
+}
+
+export const formatMinor = fmtMinor;
+
+/** The api's `Money` (`{amountMinor, currency}`) through `fmtMinor`. */
+export function formatMoneyMinor(
+  money: { amountMinor: number; currency: string },
+  locale: Locale,
+  options?: MinorMoneyOptions,
+): string {
+  return fmtMinor(money.amountMinor, money.currency, locale, options);
+}
+
 export function formatMonth(value: DateInput, locale: Locale, timeZone: string): string {
   return new Intl.DateTimeFormat(intlLocales[locale], {
     month: "long",
@@ -608,6 +678,13 @@ export interface ClubFormats {
   /** A conjunction list in the reader's language («dilluns i dimarts»). */
   formatList: (values: readonly string[]) => string;
   formatMoney: (amount: number) => string;
+  /** An api amount in minor units in the club's currency (see `fmtMinor`). */
+  formatMinor: (amountMinor: number, options?: MinorMoneyOptions) => string;
+  /** The api's `Money`, in its own currency (see `fmtMinor`). */
+  formatMoneyMinor: (
+    money: { amountMinor: number; currency: string },
+    options?: MinorMoneyOptions,
+  ) => string;
   formatMonth: (value: DateInput) => string;
   /** A billed month `YYYY-MM` as a title, «Setembre 2026» (D6). */
   formatMonthTitle: (period: string) => string;
@@ -634,6 +711,8 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
     formatDuration: (totalMinutes, options) => formatDuration(totalMinutes, locale, options),
     formatList: (values) => formatList(values, locale),
     formatMoney: (amount) => formatMoney(amount, locale, currency),
+    formatMinor: (amountMinor, options) => fmtMinor(amountMinor, currency, locale, options),
+    formatMoneyMinor: (money, options) => formatMoneyMinor(money, locale, options),
     formatMonth: (value) => formatMonth(value, locale, timeZone),
     formatMonthTitle: (period) => formatMonthTitle(period, locale),
     formatMonthsSince: (value, now) => formatMonthsSince(value, locale, timeZone, now),

@@ -35,7 +35,7 @@
     "CANCELLED": "cancelled"
   },
   "cancellationReason": {
-    "RISK_REVIEW": "7:30 review",
+    "RISK_REVIEW": "{time, select, none {review} other {{time} review}}",
     "CLUB_MANUAL": "by the club",
     "DELETED": "deleted",
     "ACTIVITY": "activity"
@@ -297,7 +297,8 @@
     "NO_PLAN": "no modality assigned",
     "CARD_INVALID": "card not valid",
     "CURRENCY_MISMATCH": "currency other than the club's",
-    "PROVIDER_DISABLED": "payment provider turned off"
+    "PROVIDER_DISABLED": "payment provider turned off",
+    "NO_NEXT_INVOICE_DATE": "no next invoice date"
   },
   "paymentChannel": {
     "CASH": "Cash",
@@ -313,7 +314,8 @@
     "REMITTANCE_SUBMITTED": "the remittance has already been sent to the bank",
     "COLLECTION_SUBMITTED": "there are charges already sent",
     "INVOICE_PAID": "there are paid receipts",
-    "MANUAL_INVOICE_AFTER": "a manual receipt was issued after the generation"
+    "MANUAL_INVOICE_AFTER": "a manual receipt was issued after the generation",
+    "COLLECTION_DATE_PASSED": "the collection date has arrived"
   },
   "upfrontConcept": {
     "ENTRY_FEE": "Entry fee",

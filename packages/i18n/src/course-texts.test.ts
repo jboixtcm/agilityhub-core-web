@@ -54,7 +54,7 @@ describe("E9-W02 round 2 #8/#9: the course texts shared by course-ui's callers",
     );
     const tooLarge = ca.errorText(apiError(400, "FILE_TOO_LARGE"));
     expect(stale).toBe(
-      "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+      "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.",
     );
     expect(geometry).toBe("La geometria no és vàlida.");
     expect(tooLarge).toBe("El fitxer és massa gran.");
@@ -70,7 +70,7 @@ describe("E9-W02 round 2 #8/#9: the course texts shared by course-ui's callers",
       "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
     );
     const generic =
-      "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
     expect(ca.errorText({ code: "NETWORK", details: null, status: 0 })).toBe(generic);
     expect(ca.errorText(new TypeError("Failed to fetch"))).toBe(generic);
     expect(ca.errorText(apiError(422, "SOMETHING_NEW"))).toBe(generic);

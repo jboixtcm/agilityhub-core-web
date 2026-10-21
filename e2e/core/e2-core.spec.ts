@@ -159,7 +159,7 @@ function isFilteredMembersResponse(response: { request(): { method(): string }; 
 
 async function measureFilteredMembers(page: Page): Promise<number[]> {
   const durations: number[] = [];
-  const search = page.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" });
+  const search = page.getByRole("searchbox", { name: "Cerca per nom, document, gos…" });
   for (const query of ["l", "la", "lai", "laia", ""]) {
     const responsePromise = page.waitForResponse(isFilteredMembersResponse);
     await search.fill(query);
@@ -256,7 +256,7 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
     `${JSON.stringify(performanceSummary, null, 2)}\n`,
   );
 
-  const search = admin.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" });
+  const search = admin.getByRole("searchbox", { name: "Cerca per nom, document, gos…" });
   const searchedResponse = admin.waitForResponse(isFilteredMembersResponse);
   await search.fill("member@example.test");
   expect((await searchedResponse).status()).toBe(200);

@@ -1,0 +1,97 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/copy-decisions.test.ts (13 tests | 3 failed | 10 skipped) 21ms
+   ❯ E11-W05 step 6 (E153, DECISIONS_COPY A39–A41): the approved literals (3)
+     × A39's corrections: «En configuració», es «ya tiene contenido», no adminHostsNote, en «Guide level», es «no-go» 6ms
+     × A40.5: es «revertir / reversión» for the remittance rollback, ca keeps «retrocedir» (also RUN_NOT_ROLLBACKABLE) 2ms
+     × A41: es says «bono» for the session pack everywhere; ca and en keep «pack» 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 6 (E153, DECISIONS_COPY A39–A41): the approved literals > A39's corrections: «En configuració», es «ya tiene contenido», no adminHostsNote, en «Guide level», es «no-go»
+AssertionError: expected [ 'En posada en marxa', …(2) ] to deeply equal [ 'En configuració', …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "En configuració",
+-   "En configuración",
+-   "Being set up",
++   "En posada en marxa",
++   "En puesta en marcha",
++   "Onboarding",
+  ]
+
+ ❯ src/copy-decisions.test.ts:146:101
+    144| describe("E11-W05 step 6 (E153, DECISIONS_COPY A39–A41): the approved …
+    145|   it("A39's corrections: «En configuració», es «ya tiene contenido», n…
+    146|     expect(["ca", "es", "en"].map((locale) => text(locale as Locale, "…
+       |                                                                                                     ^
+    147|       "En configuració",
+    148|       "En configuración",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 6 (E153, DECISIONS_COPY A39–A41): the approved literals > A40.5: es «revertir / reversión» for the remittance rollback, ca keeps «retrocedir» (also RUN_NOT_ROLLBACKABLE)
+AssertionError: admin-billing:actions.rollback: expected 'Retroceder la remesa' to be 'Revertir la remesa' // Object.is equality
+
+Expected: "Revertir la remesa"
+Received: "Retroceder la remesa"
+
+ ❯ src/copy-decisions.test.ts:185:84
+    183|       "errors:RUN_NOT_ROLLBACKABLE": "Esta remesa no se puede revertir…
+    184|     };
+    185|     for (const [key, expected] of Object.entries(es)) expect(text("es"…
+       |                                                                                    ^
+    186|     const esStrings = readdirSync(resolve(localesDir, "es")).flatMap((…
+    187|       flatten(readNamespace("es", file.replace(/\.json$/u, ""))).map((…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 6 (E153, DECISIONS_COPY A39–A41): the approved literals > A41: es says «bono» for the session pack everywhere; ca and en keep «pack»
+AssertionError: expected [ …(16) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "admin-audit:actions.PACK_ADJUSTED · Sesiones del pack ajustadas",
++   "admin-catalogs:plans.types.pack · pack · {count} sesiones",
++   "admin-catalogs:plans.types.packOption · pack",
++   "admin-catalogs:plans.validityNote · Las tarifas tienen vigencia: cambiar un precio no altera los recibos ya emitidos. Los packs caducan por meses de vigencia y generan la baja prevista automáticamente.",
++   "admin-census:inactivity.notApplicable · Las modalidades de pack no pueden solicitar inactividad.",
++   "admin-census:plan.packDiscountRule · Al pasar de un pack de {minSessions} sesiones o más a una cuota mensual, la entrada tiene un {discountPercent} % de descuento. El importe debe calcularlo la API.",
++   "admin-census:member.billing.packs · Packs",
++   "admin-census:member.billing.planNotPack · Este concepto necesita una modalidad de pack.",
++   "admin-census:member.billing.packNegative · El ajuste no puede dejar el pack con sesiones negativas.",
++   "admin-census:member.pack · Pack {total}: {used}/{remaining} · caduca {date}",
++   "census:myDogs.packMore · +{count} pack",
++   "console:modules.PACKS.help · Modalidades de packs de sesiones con su saldo.",
++   "console:modules.PACKS.label · Packs",
++   "enums:upfrontConcept.PACK · Pack",
++   "enums:invoiceLineOrigin.PACK · Pack",
++   "enums:leaveSource.PACK_EXPIRED · caducidad del pack",
++ ]
+
+ ❯ src/copy-decisions.test.ts:200:20
+    198|         .map(([key, value]) => `${namespace}:${key} · ${value}`);
+    199|     });
+    200|     expect(esPack).toEqual([]);
+       |                    ^
+    201|     expect(text("es", "enums:upfrontConcept.PACK")).toBe("Bono");
+    202|     expect(text("es", "enums:invoiceLineOrigin.PACK")).toBe("Bono");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 10 skipped (13)
+   Start at  23:02:55
+   Duration  406ms (transform 71%, import 21%, tests 7%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/copy-decisions.test.ts -t step 6

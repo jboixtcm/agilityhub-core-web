@@ -206,7 +206,7 @@ describe("T-06-26 D3 weekly templates", () => {
 
     expect(
       await screen.findByText(
-        "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+        "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.",
       ),
     ).toBeVisible();
     await waitFor(() => {
@@ -246,7 +246,7 @@ describe("T-06-26 D3 weekly templates", () => {
     const card = screen.getByRole("region", { name: "Classe seleccionada" });
     fireEvent.click(within(card).getByRole("button", { name: "E" }));
 
-    expect(await within(card).findByText("Seleccioneu un nivell.")).toBeVisible();
+    expect(await within(card).findByText("Tria un nivell.")).toBeVisible();
     expect(within(card).getByRole("button", { name: "E" })).toHaveAttribute("aria-pressed", "true");
     expect(within(card).getByLabelText("Descripció")).toHaveAttribute("placeholder", "C+D+E");
     expect(
@@ -444,11 +444,11 @@ describe("T-06-26 D3 weekly templates", () => {
       expect(within(card).queryByRole("group", { name: "Nivells" })).not.toBeInTheDocument();
     });
     fireEvent.click(within(card).getByRole("button", { name: "CREA LA CLASSE" }));
-    expect(await within(card).findByText("Introduïu una descripció.")).toBeVisible();
+    expect(await within(card).findByText("Escriu una descripció.")).toBeVisible();
     expect(
       screen.queryByRole("table", { name: "Cobertura per nivell (places de la setmana)" }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByRole("alert")).toHaveTextContent("Introduïu una descripció.");
+    expect(screen.queryByRole("alert")).toHaveTextContent("Escriu una descripció.");
   });
 });
 
@@ -595,7 +595,7 @@ describe("T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review", (
     fireEvent.change(within(card).getByLabelText("Límit"), { target: { value: "6" } });
     fireEvent.click(within(card).getByRole("button", { name: "E" }));
 
-    expect(await within(card).findByText("Seleccioneu un nivell.")).toBeVisible();
+    expect(await within(card).findByText("Tria un nivell.")).toBeVisible();
     expect(within(card).getByRole("button", { name: "E" })).toHaveAttribute("aria-pressed", "true");
     expect(within(card).getByLabelText("Descripció")).toHaveValue("Obed. prova");
     expect(within(card).getByLabelText("Límit")).toHaveValue(6);
@@ -636,7 +636,7 @@ function holdFirstClassPatch(answer?: () => Response) {
 }
 
 const UNEXPECTED_ERROR =
-  "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
 
 /** An empty band 21:00–22:00 on «Setmana A» (the mock refuses to remove a band with classes). */
 async function addEmptyBand() {
@@ -819,7 +819,7 @@ describe("T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4)", () => 
     );
 
     queue.release();
-    expect(await within(card).findByText("Seleccioneu un nivell.")).toBeVisible();
+    expect(await within(card).findByText("Tria un nivell.")).toBeVisible();
     // The ring change was built on the refused one: dropped, and its chip is put back.
     await waitFor(() => {
       expect(within(card).getByRole("radio", { name: "Carretera" })).toHaveAttribute(
@@ -831,14 +831,14 @@ describe("T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4)", () => 
       "aria-checked",
       "false",
     );
-    expect(within(card).getByText("Seleccioneu un nivell.")).toBeVisible();
+    expect(within(card).getByText("Tria un nivell.")).toBeVisible();
     await settle();
     expect(queue.events).toEqual(["PATCH sent", "PATCH answered"]);
   });
 });
 
 describe("T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2)", () => {
-  const LEVEL_REQUIRED = "Seleccioneu un nivell.";
+  const LEVEL_REQUIRED = "Tria un nivell.";
   const NOT_FOUND = "No s'ha trobat l'element sol·licitat.";
 
   function openClass(name: string) {
@@ -997,7 +997,7 @@ describe("T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
     const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
     expect(
       screen.getByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     failOpeningHours = false;
@@ -1199,7 +1199,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): D3's week generation follows
     const dialog = await confirm();
     expect(
       await within(dialog).findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     // Not the generation's answer: the modal stays, and its button sends the same submission.

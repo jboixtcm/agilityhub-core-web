@@ -5,7 +5,7 @@ import {
   type components,
   useSubmissionKeys,
 } from "@agilityhub/api-client";
-import { useClubFormats } from "@agilityhub/i18n";
+import { currencyDigits, minorFromMajor, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -143,7 +143,10 @@ export function MemberBillingBlock({
   const reasonError = adjustmentFieldError("reason");
   const expiryError = adjustmentFieldError("expiresOn");
 
-  const cents = (value: string) => Math.round(Number(value.replace(",", ".")) * 100);
+  const cents = (value: string) =>
+    minorFromMajor(Number(value.replace(",", ".")), branding.currency);
+  // One minor unit of the club's currency («0.01» for EUR, «1» for JPY).
+  const amountStep = String(10 ** -currencyDigits(branding.currency));
   const savePayment = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPending(true);
@@ -232,9 +235,7 @@ export function MemberBillingBlock({
                 <small>{invoice.concept}</small>
               </span>
               <span>
-                {invoice.total === undefined
-                  ? ""
-                  : formats.formatMoney(invoice.total.amountMinor / 100)}
+                {invoice.total === undefined ? "" : formats.formatMoneyMinor(invoice.total)}
               </span>
               {invoice.status === undefined ? null : (
                 <Badge tone={invoiceTones[invoice.status]}>
@@ -269,8 +270,8 @@ export function MemberBillingBlock({
             <li key={payment.id}>
               <span>{t(`enums:upfrontConcept.${payment.concept}`)}</span>
               <span>
-                {formats.formatMoney(payment.amountPaid.amountMinor / 100)} /{" "}
-                {formats.formatMoney(payment.amountDue.amountMinor / 100)}
+                {formats.formatMoneyMinor(payment.amountPaid)} /{" "}
+                {formats.formatMoneyMinor(payment.amountDue)}
               </span>
               <Badge>{t(`enums:upfrontStatus.${payment.status}`)}</Badge>
             </li>
@@ -382,7 +383,7 @@ export function MemberBillingBlock({
                 setAmountDue(event.currentTarget.value);
               }}
               required
-              step="0.01"
+              step={amountStep}
               type="number"
               value={amountDue}
             />
@@ -401,7 +402,7 @@ export function MemberBillingBlock({
                 setAmountPaid(event.currentTarget.value);
               }}
               required
-              step="0.01"
+              step={amountStep}
               type="number"
               value={amountPaid}
             />

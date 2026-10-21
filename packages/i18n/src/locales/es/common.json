@@ -57,6 +57,11 @@
   "unavailable": {
     "title": "No disponible"
   },
+  "screen": {
+    "updated": "La aplicación se ha actualizado. Vuelve a cargarla.",
+    "reload": "Volver a cargar",
+    "failed": "No se ha podido mostrar esta pantalla."
+  },
   "inProgress": "La operación todavía está en curso. Vuelve a intentarlo dentro de un momento.",
   "gallery": {
     "active": "Activa",

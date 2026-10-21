@@ -170,8 +170,8 @@ export function LeavePage({
           {context.fee == null ? null : (
             <p>
               {t("leave:offer.fee", {
-                first: formats.formatMoney(context.fee.firstMonth.amountMinor / 100),
-                following: formats.formatMoney(context.fee.followingMonths.amountMinor / 100),
+                first: formats.formatMoneyMinor(context.fee.firstMonth),
+                following: formats.formatMoneyMinor(context.fee.followingMonths),
               })}
             </p>
           )}

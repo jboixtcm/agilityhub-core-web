@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui
+
+ ❯ src/lazy-boundary.test.tsx (4 tests | 1 failed) 56ms
+   ❯ E11-W05 step 5 (E11-W02 round 3 minor, E154): a failure belongs to the address it was drawn for (2)
+     × a new resetKey (the next pathname) draws the content again; the same key keeps the failure 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lazy-boundary.test.tsx > E11-W05 step 5 (E11-W02 round 3 minor, E154): a failure belongs to the address it was drawn for > a new resetKey (the next pathname) draws the content again; the same key keeps the failure
+AssertionError: expected <div role="alert">…(1)</div> to be null
+
+- Expected:
+null
+
++ Received:
+<div
+  role="alert"
+>
+  screen
+  <button
+    type="button"
+  >
+    retry
+  </button>
+</div>
+
+ ❯ src/lazy-boundary.test.tsx:75:41
+     73|       rerender(frame(<Drawn fail={undefined} />, reload, "/recorreguts…
+     74|     });
+     75|     expect(screen.queryByRole("alert")).toBeNull();
+       |                                         ^
+     76|     expect(screen.getByText("Drawn")).toBeVisible();
+     77|     vi.restoreAllMocks();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  22:37:56
+   Duration  461ms (environment 66%, tests 15%, setup 13%, transform 5%, import 1%, worker 1%)
+

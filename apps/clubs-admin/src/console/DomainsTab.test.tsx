@@ -93,8 +93,8 @@ describe("E10-W03 step 1 · D19 «Dominis» (S17 §2, R-17-02/03, T-17-12)", () 
     expect(admin.queryByRole("button", { name: /Verifica/u })).toBeNull();
     expect(admin.queryByRole("button", { name: /Elimina/u })).toBeNull();
     expect(screen.queryByRole("heading", { name: /Registres DNS de/u })).toBeNull();
-    // The backoffice note of R-17-03 (Caddy's CLUB_ADMIN_HOSTS step, INC-64).
-    expect(screen.getByText(/no s'hi serveix fins que operacions/u)).toBeInTheDocument();
+    // E11-W05 step 6 (A39.53, E153): INC-64 removed the manual host step, so its note is gone.
+    expect(screen.queryByText(/operacions/u)).toBeNull();
   });
 
   it("R-17-02 [Afegeix domini] sends {host, app} with one key per payload and shows the new domain's DNS records", async () => {

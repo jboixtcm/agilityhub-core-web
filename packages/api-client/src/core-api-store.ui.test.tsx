@@ -142,7 +142,7 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
     fireEvent.click(await screen.findByRole("button", { name: "Continua" }));
     // A lost answer is a network failure: the generic catalog text, beside the upload.
     expect((await screen.findByRole("alert")).textContent).toBe(
-      "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Continua" }));
@@ -231,7 +231,7 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
     fireEvent.click(screen.getByRole("button", { name: "Desa" }));
 
     expect((await screen.findByRole("alert")).textContent).toBe(
-      "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+      "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.",
     );
     expect(geometryPuts(api).map((body) => body.version)).toEqual([3]);
     expect(api.geometry.doors.map((door) => [door.id, door.isActive])).toEqual([

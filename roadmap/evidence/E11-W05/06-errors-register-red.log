@@ -1,0 +1,267 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/copy-decisions.test.ts (8 tests | 2 failed | 6 skipped) 6ms
+   ❯ E11-W05 step 4 (A40.4, E142/E153): the errors namespace speaks tu/tú, as every other namespace (2)
+     × ca: no errors string addresses the reader as «vosaltres» or «usted» 4ms
+     × es: no errors string addresses the reader as «vosaltres» or «usted» 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 4 (A40.4, E142/E153): the errors namespace speaks tu/tú, as every other namespace > ca: no errors string addresses the reader as «vosaltres» or «usted»
+AssertionError: expected [ [ 'ACCOUNT_BLOCKED', …(1) ], …(25) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "ACCOUNT_BLOCKED",
++     "El vostre compte està bloquejat.",
++   ],
++   [
++     "ACTIVITY_INCOMPLETE",
++     "Completeu l'activitat abans de continuar.",
++   ],
++   [
++     "CANNOT_CHANGE_OWN_ADMIN_ROLE",
++     "No podeu canviar el vostre rol d'administrador.",
++   ],
++   [
++     "CONSENT_VERSION_OUTDATED",
++     "Accepteu la versió actual del consentiment.",
++   ],
++   [
++     "DESCRIPTION_REQUIRED",
++     "Introduïu una descripció.",
++   ],
++   [
++     "DOG_NOT_ACCESSIBLE",
++     "No podeu accedir a aquest gos.",
++   ],
++   [
++     "FORBIDDEN",
++     "No teniu permís per fer aquesta acció.",
++   ],
++   [
++     "INTERNAL_ERROR",
++     "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
++   ],
++   [
++     "LEVEL_REQUIRED",
++     "Seleccioneu un nivell.",
++   ],
++   [
++     "LEVEL_UNCHANGED",
++     "Seleccioneu un nivell diferent.",
++   ],
++   [
++     "MODULE_DEPENDENCY",
++     "Activeu primer el mòdul necessari.",
++   ],
++   [
++     "NEXT_INVOICE_DATE_REQUIRED",
++     "Introduïu la data de la factura següent.",
++   ],
++   [
++     "NO_MEMBERSHIP",
++     "No teniu cap abonament per a aquest club.",
++   ],
++   [
++     "PASSWORD_COMPROMISED",
++     "Trieu una contrasenya que no hagi aparegut en una filtració de dades.",
++   ],
++   [
++     "PRODUCTION_REQUIRES_CONFIRMATION",
++     "Confirmeu l'operació abans d'executar-la a producció.",
++   ],
++   [
++     "RATE_LIMITED",
++     "Hi ha massa sol·licituds. Torneu-ho a provar més tard.",
++   ],
++   [
++     "REFRESH_EXPIRED",
++     "La sessió ha caducat. Torneu a iniciar la sessió.",
++   ],
++   [
++     "REFRESH_REUSED",
++     "La sessió ja no és vàlida. Torneu a iniciar la sessió.",
++   ],
++   [
++     "SAME_MEMBER",
++     "Seleccioneu un abonat diferent.",
++   ],
++   [
++     "SETUP_SOURCE_REQUIRED",
++     "Seleccioneu l'origen del muntatge.",
++   ],
++   [
++     "SIMULATION_STALE",
++     "La simulació no està actualitzada. Torneu-la a executar.",
++   ],
++   [
++     "SMS_BODY_REQUIRED",
++     "Introduïu el contingut del missatge de text.",
++   ],
++   [
++     "STALE_VERSION",
++     "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
++   ],
++   [
++     "TASK_NOT_DONE",
++     "Completeu primer aquesta tasca.",
++   ],
++   [
++     "UNAUTHENTICATED",
++     "Inicieu la sessió per continuar.",
++   ],
++   [
++     "VALIDATION_ERROR",
++     "Reviseu els camps destacats.",
++   ],
++ ]
+
+ ❯ src/copy-decisions.test.ts:127:20
+    125|       markers[locale].test(text),
+    126|     );
+    127|     expect(formal).toEqual([]);
+       |                    ^
+    128|   });
+    129| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 4 (A40.4, E142/E153): the errors namespace speaks tu/tú, as every other namespace > es: no errors string addresses the reader as «vosaltres» or «usted»
+AssertionError: expected [ [ 'ACCOUNT_BLOCKED', …(1) ], …(25) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   [
++     "ACCOUNT_BLOCKED",
++     "Su cuenta está bloqueada.",
++   ],
++   [
++     "ACTIVITY_INCOMPLETE",
++     "Complete la actividad antes de continuar.",
++   ],
++   [
++     "CANNOT_CHANGE_OWN_ADMIN_ROLE",
++     "No puede cambiar su propio rol de administrador.",
++   ],
++   [
++     "CONSENT_VERSION_OUTDATED",
++     "Acepte la versión actual del consentimiento.",
++   ],
++   [
++     "DESCRIPTION_REQUIRED",
++     "Introduzca una descripción.",
++   ],
++   [
++     "DOG_NOT_ACCESSIBLE",
++     "No puede acceder a este perro.",
++   ],
++   [
++     "FORBIDDEN",
++     "No tiene permiso para realizar esta acción.",
++   ],
++   [
++     "INTERNAL_ERROR",
++     "Se ha producido un error inesperado. Vuelva a intentarlo; si persiste, indique el código de referencia al club.",
++   ],
++   [
++     "LEVEL_REQUIRED",
++     "Seleccione un nivel.",
++   ],
++   [
++     "LEVEL_UNCHANGED",
++     "Seleccione un nivel diferente.",
++   ],
++   [
++     "MODULE_DEPENDENCY",
++     "Active primero el módulo necesario.",
++   ],
++   [
++     "NEXT_INVOICE_DATE_REQUIRED",
++     "Introduzca la fecha de la siguiente factura.",
++   ],
++   [
++     "NO_MEMBERSHIP",
++     "No tiene ningún abono para este club.",
++   ],
++   [
++     "PASSWORD_COMPROMISED",
++     "Elija una contraseña que no haya aparecido en una filtración de datos.",
++   ],
++   [
++     "PRODUCTION_REQUIRES_CONFIRMATION",
++     "Confirme la operación antes de ejecutarla en producción.",
++   ],
++   [
++     "RATE_LIMITED",
++     "Hay demasiadas solicitudes. Vuelva a intentarlo más tarde.",
++   ],
++   [
++     "REFRESH_EXPIRED",
++     "La sesión ha caducado. Vuelva a iniciar sesión.",
++   ],
++   [
++     "REFRESH_REUSED",
++     "La sesión ya no es válida. Vuelva a iniciar sesión.",
++   ],
++   [
++     "SAME_MEMBER",
++     "Seleccione un abonado diferente.",
++   ],
++   [
++     "SETUP_SOURCE_REQUIRED",
++     "Seleccione el origen del montaje.",
++   ],
++   [
++     "SIMULATION_STALE",
++     "La simulación no está actualizada. Vuelva a ejecutarla.",
++   ],
++   [
++     "SMS_BODY_REQUIRED",
++     "Introduzca el contenido del mensaje de texto.",
++   ],
++   [
++     "STALE_VERSION",
++     "Este elemento se ha modificado desde otro lugar. Actualícelo y vuelva a intentarlo.",
++   ],
++   [
++     "TASK_NOT_DONE",
++     "Complete primero esta tarea.",
++   ],
++   [
++     "UNAUTHENTICATED",
++     "Inicie sesión para continuar.",
++   ],
++   [
++     "VALIDATION_ERROR",
++     "Revise los campos destacados.",
++   ],
++ ]
+
+ ❯ src/copy-decisions.test.ts:127:20
+    125|       markers[locale].test(text),
+    126|     );
+    127|     expect(formal).toEqual([]);
+       |                    ^
+    128|   });
+    129| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 skipped (8)
+   Start at  22:55:50
+   Duration  223ms (transform 75%, import 21%, tests 4%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/copy-decisions.test.ts -t A40.4

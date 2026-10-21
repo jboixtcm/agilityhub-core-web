@@ -346,7 +346,7 @@
       "roles": "Rols d'accés",
       "street": "Carrer i número"
     },
-    "imageNotice": "{gender, select, FEMALE {No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella.} other {No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ell.}}",
+    "imageNotice": "No autoritza l'ús de la seva imatge: no publiquis fotos on surti {gender, select, FEMALE {ella} OTHER {aquesta persona} other {ell}}.",
     "readmissionPending": "Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.",
     "impersonate": {
       "description": "S'obrirà l'app tal com la veu l'abonat. Les accions quedaran auditades amb l'administrador que les faci.",
@@ -498,7 +498,7 @@
     "dog": "Gos ({current} de {total})",
     "fields": {
       "name": "Nom",
-      "idDocument": "DNI/NIE",
+      "idDocument": "Document d'identitat",
       "passport": "Passaport",
       "otherDocument": "Altre document",
       "contact": "Contacte",
@@ -587,7 +587,7 @@
       "CHECKOUT_PENDING": "Hi ha un pagament amb targeta en curs: la modalitat no es pot canviar fins que acabi.",
       "DOCUMENT_PENDING": "Document pendent",
       "FAMILY_HOLDER_NOT_FOUND": "No s'ha trobat el titular del grup familiar",
-      "NO_IMAGE_CONSENT": "No autoritza l'ús de la seva imatge: no publiqueu fotos on surti {gender, select, FEMALE {ella} other {ell}}.",
+      "NO_IMAGE_CONSENT": "No autoritza l'ús de la seva imatge: no publiquis fotos on surti {gender, select, FEMALE {ella} OTHER {aquesta persona} other {ell}}.",
       "PAID_EXCEEDS_QUOTE": "El que s'ha cobrat supera el nou import: caldrà retornar la diferència des de Facturació.",
       "READMISSION": "Readmissió",
       "UPFRONT_UNPAID": "Pagament inicial pendent"
@@ -621,7 +621,7 @@
       "title": "Canvis respecte de la fitxa de baixa",
       "previous": "Abans: {value}",
       "submitted": "Ara: {value}",
-      "documentLocked": "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
+      "documentLocked": "El document d'identitat no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
       "dogLocked": "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi."
     }
   },
@@ -681,7 +681,7 @@
       "unread": "Pendent de llegir"
     },
     "author": {
-      "member": "{name} ({gender, select, female {alumna} other {alumne}})",
+      "member": "{name} ({gender, select, FEMALE {alumna} OTHER {alumne/a} other {alumne}})",
       "task": "{name} (tasca)"
     },
     "none": "—",

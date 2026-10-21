@@ -75,7 +75,8 @@ describe("E10-W01 step 2 · D19 list (S17 §2 «D19 Llista», universal list)", 
       ),
     ).toBeInTheDocument();
     const minim = within(row(club(CONSOLE_CLUB_IDS.minim).name));
-    expect(minim.getByText("En posada en marxa")).toBeInTheDocument();
+    // E11-W05 step 6 (A39.1, E153): ONBOARDING reads «En configuració».
+    expect(minim.getByText("En configuració")).toBeInTheDocument();
     // R-17-06: «4/7 · falten: …» (no verified domain, no FAQ, no privacy URL).
     expect(minim.getByText("4/7")).toBeInTheDocument();
     expect(

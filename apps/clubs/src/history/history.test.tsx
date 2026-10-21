@@ -248,7 +248,7 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
   it("a dog that is not the member's (404 DOG_NOT_ACCESSIBLE) says so and goes back to «Tots»", async () => {
     window.history.replaceState(null, "", "/historic?dogId=dog-thai");
     await renderPage(<HistoryPage client={apiClient()} />);
-    expect(await screen.findByText("No podeu accedir a aquest gos.")).toBeVisible();
+    expect(await screen.findByText("No pots accedir a aquest gos.")).toBeVisible();
     await waitFor(() => {
       expect(historyRows()).toHaveLength(7);
     });

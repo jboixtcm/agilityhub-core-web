@@ -796,7 +796,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): «Enviar comunicat» fo
     await press();
     expect(
       await within(modal).findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     await press();

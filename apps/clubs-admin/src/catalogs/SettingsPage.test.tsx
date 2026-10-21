@@ -152,7 +152,7 @@ describe("T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S0
     if (section === null) throw new TypeError("Missing the Nivells card");
     fireEvent.click(screen.getByRole("switch", { name: "Progressió: D" }));
     expect(await within(section).findByRole("alert")).toHaveTextContent(
-      "No teniu permís per fer aquesta acció.",
+      "No tens permís per fer aquesta acció.",
     );
     expect(screen.getByRole("switch", { name: "Progressió: D" })).toHaveAttribute(
       "aria-checked",
@@ -294,7 +294,7 @@ describe("T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review
     // D is refused: its error is in its own row, and E, still on its way, stays locked.
     await patches.release("level-d");
     expect(await within(levelRow("D")).findByRole("alert")).toHaveTextContent(
-      "No teniu permís per fer aquesta acció.",
+      "No tens permís per fer aquesta acció.",
     );
     expect(screen.getByRole("switch", { name: "Progressió: D" })).toBeEnabled();
     expect(screen.getByRole("switch", { name: "Progressió: D" })).toHaveAttribute(
@@ -320,7 +320,7 @@ describe("T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review
     expect(within(levelRow("E")).queryByRole("alert")).toBeNull();
     // The error describes its switch.
     expect(screen.getByRole("switch", { name: "Progressió: D" })).toHaveAccessibleDescription(
-      `${HELP} No teniu permís per fer aquesta acció.`,
+      `${HELP} No tens permís per fer aquesta acció.`,
     );
     await patches.release("level-f");
     await waitFor(() => {

@@ -7,6 +7,7 @@ import {
   dayRelativeParts,
   dogArticle,
   fmtDayRelative,
+  fmtMinor,
   fmtMonthsSince,
   formatActivityDate,
   formatDate,
@@ -14,15 +15,74 @@ import {
   formatDateRange,
   formatDuration,
   formatList,
+  formatMinor,
   formatMoney,
+  formatMoneyMinor,
   formatMonthTitle,
   formatPlainDate,
   formatTime,
   formatWeekRange,
   isPlainDate,
+  majorUnits,
+  minorFromMajor,
+  minorUnits,
   parsePlainDate,
   personArticle,
 } from "./format";
+
+describe("E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits", () => {
+  it("E11-W05 step 1: fmtMinor(1234, EUR) is «12,34 €» in ca and es, «€12.34» in en", () => {
+    expect(fmtMinor(1234, "EUR", "ca")).toBe("12,34 €");
+    expect(fmtMinor(1234, "EUR", "es")).toBe("12,34 €");
+    expect(fmtMinor(1234, "EUR", "en")).toBe("€12.34");
+    expect(formatMinor).toBe(fmtMinor);
+  });
+
+  it("E11-W05 step 1: a currency without minor units is never divided by 100 (JPY), one with three divides by 1000 (KWD)", () => {
+    // ca groups four digits (CLDR), as the mockups' «6.480 €»: what matters is no division by 100.
+    expect(fmtMinor(1234, "JPY", "ca")).toBe("1.234 ¥");
+    expect(fmtMinor(1234, "JPY", "en")).toBe("¥1,234");
+    expect(fmtMinor(1234, "KWD", "en")).toBe("KWD 1.234");
+  });
+
+  it("E11-W05 step 1: zero, a negative amount and compact (zero cents dropped, cents kept)", () => {
+    expect(fmtMinor(0, "EUR", "en")).toBe("€0.00");
+    expect(fmtMinor(-3050, "EUR", "ca")).toBe("-30,50 €");
+    expect(fmtMinor(648000, "EUR", "ca", { compact: true })).toBe("6.480 €");
+    expect(fmtMinor(2000, "EUR", "en", { compact: true })).toBe("€20");
+    expect(fmtMinor(2050, "EUR", "ca", { compact: true })).toBe("20,50 €");
+    expect(fmtMinor(1234, "JPY", "ca", { compact: true })).toBe("1.234 ¥");
+    // A currency without a fraction keeps its thousands: compact never strips «.000».
+    expect(fmtMinor(1000, "JPY", "ca", { compact: true })).toBe("1.000 ¥");
+    expect(fmtMinor(100000, "EUR", "ca", { compact: true })).toBe("1.000 €");
+  });
+
+  it("E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubFormats binds the club's currency", () => {
+    expect(formatMoneyMinor({ amountMinor: 4500, currency: "EUR" }, "ca")).toBe("45,00 €");
+    expect(formatMoneyMinor({ amountMinor: 4500, currency: "JPY" }, "ca")).toBe("4.500 ¥");
+    const euro = createClubFormats("es", "Europe/Madrid", "EUR");
+    expect(euro.formatMinor(1234)).toBe("12,34 €");
+    expect(euro.formatMinor(2000, { compact: true })).toBe("20 €");
+    expect(euro.formatMoneyMinor({ amountMinor: 999, currency: "EUR" })).toBe("9,99 €");
+    expect(createClubFormats("ca", "Asia/Tokyo", "JPY").formatMinor(1234)).toBe("1.234 ¥");
+  });
+
+  it("E11-W05 step 1: minorUnits reads a typed amount in the currency's minor units and majorUnits is its inverse", () => {
+    expect(minorUnits("12,34", "EUR")).toBe(1234);
+    expect(minorUnits("-30,5", "EUR")).toBe(-3050);
+    expect(minorUnits("12,345", "EUR")).toBeUndefined();
+    expect(minorUnits("1234", "JPY")).toBe(1234);
+    expect(minorUnits("12,5", "JPY")).toBeUndefined();
+    expect(minorUnits("hola", "EUR")).toBeUndefined();
+    expect(majorUnits(1234, "EUR")).toBe(12.34);
+    expect(majorUnits(1234, "JPY")).toBe(1234);
+    expect(majorUnits(1234, "KWD")).toBe(1.234);
+    expect(minorFromMajor(12.34, "EUR")).toBe(1234);
+    expect(minorFromMajor(0.1 + 0.2, "EUR")).toBe(30);
+    expect(minorFromMajor(1234, "JPY")).toBe(1234);
+    expect(minorFromMajor(majorUnits(1234, "KWD"), "KWD")).toBe(1234);
+  });
+});
 
 describe("E8-W01 S12 §2 D6's month title (formatMonthTitle)", () => {
   it("E8-W01: «Setembre 2026» · «Septiembre 2026» · «September 2026», never shifted by a zone", () => {

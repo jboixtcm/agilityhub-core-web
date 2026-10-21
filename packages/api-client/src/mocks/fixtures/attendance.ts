@@ -42,9 +42,10 @@ export const OWN_INSTRUCTOR_ID = "instructor-estel";
 /**
  * Club-wide variants of the world (one per scenario): the window already closed (read after T1,
  * R-10-03's «dc 5 a les 9:00»), `bookings.instructorLastMinuteNotice = false`, `waitlist.mode =
- * FIFO`, and another instructor saving the 8:30 sheet just before the caller (R-10-04's 409).
+ * FIFO`, another instructor saving the 8:30 sheet just before the caller (R-10-04's 409), and
+ * sheets with nobody booked (`empty`: 21's empty state).
  */
-export type AttendanceVariant = "closed" | "fifo" | "noticeDisabled" | "stale";
+export type AttendanceVariant = "closed" | "empty" | "fifo" | "noticeDisabled" | "stale";
 
 export interface StoredClass {
   capacity: number;
@@ -463,6 +464,10 @@ export function attendanceSheetView(
   stored: StoredClass,
   context: AttendanceContext,
 ): AttendanceSheet {
+  // The `empty` variant: the sheet of a class nobody booked (21's empty state, E11-W05 step 7).
+  if (context.variant === "empty" && (stored.rows.length > 0 || stored.waitlist.length > 0)) {
+    return attendanceSheetView({ ...stored, rows: [], waitlist: [] }, context);
+  }
   const waitlistOn = context.modules.includes("WAITLIST");
   const tasksOn = context.modules.includes("TASKS");
   const entries = stored.waitlist.filter((item) => item.state === "ACTIVE");

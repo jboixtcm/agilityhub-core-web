@@ -8,9 +8,13 @@ export function ScreenLoading() {
   return <Skeleton height="12rem" label={t("shell:loading")} />;
 }
 
-/** A screen that could not be drawn: the UI kit's error state, and a reload as its retry. */
+/**
+ * A screen that could not be drawn: the UI kit's error state, and a reload as its retry. A missing
+ * chunk means the app was updated (E11-W05 step 5 (d), A39.210); a screen's own failure says so
+ * plainly, in the app's register (A39.211).
+ */
 function ScreenFailure({ chunk, retry }: { chunk: boolean; retry: () => void }) {
-  const { t } = useTranslation(["common", "errors"]);
+  const { t } = useTranslation("common");
   return (
     <ErrorState
       action={
@@ -20,10 +24,10 @@ function ScreenFailure({ chunk, retry }: { chunk: boolean; retry: () => void }) 
           }}
           variant="secondary"
         >
-          {t("common:boot.retry")}
+          {chunk ? t("common:screen.reload") : t("common:boot.retry")}
         </Button>
       }
-      description={chunk ? t("common:boot.offline") : t("errors:INTERNAL_ERROR")}
+      description={chunk ? t("common:screen.updated") : t("common:screen.failed")}
       title={t("common:unavailable.title")}
     />
   );

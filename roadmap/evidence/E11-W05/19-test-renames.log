@@ -1,0 +1,45 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+
+ Test Files  3 passed (3)
+      Tests  71 passed (71)
+   Start at  22:47:43
+   Duration  20.70s (tests 87%, transform 6%, environment 4%, import 2%, setup 1%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+
+ Test Files  6 passed (6)
+      Tests  116 passed (116)
+   Start at  22:48:05
+   Duration  6.46s (tests 64%, transform 18%, environment 10%, import 6%, setup 3%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui
+
+
+ Test Files  3 passed (3)
+      Tests  41 passed (41)
+   Start at  22:48:16
+   Duration  967ms (environment 43%, tests 31%, transform 14%, setup 10%, import 2%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/id
+
+
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+   Start at  22:48:17
+   Duration  3.15s (tests 79%, environment 9%, transform 8%, setup 2%, import 2%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+
+
+ Test Files  1 passed (1)
+      Tests  52 passed (52)
+   Start at  22:48:21
+   Duration  5.00s (tests 80%, transform 13%, import 7%)
+

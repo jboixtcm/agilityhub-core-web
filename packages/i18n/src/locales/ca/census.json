@@ -69,7 +69,7 @@
       "freeTraining": "Entrenament lliure",
       "fullName": "Abonat",
       "gender": "Gènere",
-      "idDocument": "DNI",
+      "idDocument": "Document d'identitat",
       "imageRights": "Drets d'imatge",
       "joinedAt": "Alta des de",
       "inactivityUntil": "Inactiva fins",
@@ -102,7 +102,7 @@
       "priceId": "Tarifa",
       "status": "Estat"
     },
-    "search": "Cerca per nom, DNI, gos…",
+    "search": "Cerca per nom, document, gos…",
     "status": {
       "inactive": "inactiva",
       "inactiveUntil": "inactiva fins {date}",
@@ -226,7 +226,7 @@
     "emailHelp": "Les comunicacions s'envien a tots els emails",
     "emails": "Emails",
     "firstName": "Nom",
-    "idDocument": "DNI",
+    "idDocument": "Document d'identitat",
     "invalidEmail": "El correu electrònic no és vàlid.",
     "invalidPostalCode": "El codi postal no és vàlid.",
     "lastName1": "Cognom 1",

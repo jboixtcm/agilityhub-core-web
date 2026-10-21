@@ -151,11 +151,11 @@
     "title": "Modalidades y tarifas",
     "types": {
       "monthly": "cuota mensual",
-      "pack": "pack · {count} sesiones",
-      "packOption": "pack",
+      "pack": "bono · {count} sesiones",
+      "packOption": "bono",
       "singleClass": "clase individual"
     },
-    "validityNote": "Las tarifas tienen vigencia: cambiar un precio no altera los recibos ya emitidos. Los packs caducan por meses de vigencia y generan la baja prevista automáticamente."
+    "validityNote": "Las tarifas tienen vigencia: cambiar un precio no altera los recibos ya emitidos. Los bonos caducan por meses de vigencia y generan la baja prevista automáticamente."
   },
   "rings": {
     "caption": "Pistas del club",
@@ -181,6 +181,14 @@
     "new": "Nueva pista",
     "removeQuestion": "¿Eliminar la pista {name}?",
     "removeTitle": "Eliminar la pista",
+    "ringBookings": {
+      "back": "Volver atrás",
+      "deactivate": "Anular las reservas y desactivar la pista",
+      "item": "{member} + {dog}{when, select, none {} other { · {when}}}",
+      "text": "Si continúas, estas reservas quedarán anuladas por el club y se avisará:",
+      "title": "Esta pista tiene reservas de entrenamiento",
+      "unreservable": "Anular las reservas y guardar"
+    },
     "title": "Pistas"
   },
   "team": {

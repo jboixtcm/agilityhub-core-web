@@ -123,7 +123,12 @@ import {
   storeSignupDogDocuments,
   withReadmissionValues,
 } from "./fixtures/signup-review";
-import { TRAINING_MOCK_NOW, trainingState } from "./fixtures/training";
+import {
+  cancelRingTrainings,
+  liveRingTrainings,
+  TRAINING_MOCK_NOW,
+  trainingState,
+} from "./fixtures/training";
 import {
   followupHandlers,
   resetFollowupMockState,
@@ -605,12 +610,17 @@ function normalized(value: string): string {
     .toLocaleLowerCase();
 }
 
+/** An ISO instant, with or without milliseconds (`2026-10-02T21:59:59.999Z`). */
+const INSTANT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/u;
+
 function compareValue(left: string, right: string): number {
   const leftNumber = Number(left);
   const rightNumber = Number(right);
   if (Number.isFinite(leftNumber) && Number.isFinite(rightNumber)) {
     return leftNumber - rightNumber;
   }
+  // Instants compare as instants, as the api does: «…59Z» is after «…58.999Z» (E11-W05 step 5 (e)).
+  if (INSTANT.test(left) && INSTANT.test(right)) return Date.parse(left) - Date.parse(right);
   return left.localeCompare(right);
 }
 
@@ -3014,7 +3024,14 @@ export const handlers = [
     }
     const sorted = sortMembers(filtered, url.searchParams.getAll("sort"));
     const { page, size } = pagination(url);
-    const items = sorted.slice(page * size, (page + 1) * size);
+    const channel = currentMockScenario().unlabelledPaymentChannel;
+    const items = sorted
+      .slice(page * size, (page + 1) * size)
+      .map((item) =>
+        channel === undefined || item.paymentMethod?.type !== "MANUAL"
+          ? item
+          : { ...item, paymentMethod: { ...item.paymentMethod, channel } },
+      );
     return HttpResponse.json({
       appliedFilters: appliedFilters(filters, memberFilterLabels, (filter) =>
         labelForValue(censusMembers, filter.field, filter.value, memberValues),
@@ -3891,13 +3908,27 @@ export const handlers = [
     if (body.version !== ring.version) {
       return apiError("STALE_VERSION", "Stale ring version", 409);
     }
-    if (
-      (body.active === false && (ring.usage?.futureClassSessions ?? 0) > 0) ||
-      (body.allowsFreeTraining === false && (ring.usage?.futureTrainingBookings ?? 0) > 0)
-    ) {
+    // R-05-07: future live classes block the deactivation.
+    if (body.active === false && ring.active && (ring.usage?.futureClassSessions ?? 0) > 0) {
       return apiError("RING_IN_USE", "Ring in use", 409);
     }
+    // R-05-07/R-05-08 (S09 R-09-13): deactivating it or turning «Reservable per entrenaments» off
+    // with live training bookings asks first; `cancelBookings: true` cancels them in the write.
+    const closesTraining =
+      (body.active === false && ring.active) ||
+      (body.allowsFreeTraining === false && ring.allowsFreeTraining);
+    const live = closesTraining ? liveRingTrainings(ring.id, Date.now()) : [];
+    if (live.length > 0) {
+      if (body.cancelBookings !== true) {
+        return apiErrorWithDetails("RING_HAS_BOOKINGS", "The ring has training bookings", 422, {
+          bookings: live,
+        });
+      }
+      cancelRingTrainings(ring.id, Date.now());
+    }
     const { trainingCapacity: requestedCapacity, ...bodyWithoutCapacity } = body;
+    // A request flag, not a field of the ring.
+    delete bodyWithoutCapacity.cancelBookings;
     const { trainingCapacity: currentCapacity, ...ringWithoutCapacity } = ring;
     const updated: Ring = {
       ...ringWithoutCapacity,
@@ -3919,9 +3950,11 @@ export const handlers = [
     if (ring === undefined) {
       return apiError("NOT_FOUND", "Ring not found", 404);
     }
+    // A ring with classes or live training bookings can only be deactivated (D16 «inUse»).
     if (
       (ring.usage?.futureClassSessions ?? 0) > 0 ||
-      (ring.usage?.futureTrainingBookings ?? 0) > 0
+      (ring.usage?.futureTrainingBookings ?? 0) > 0 ||
+      liveRingTrainings(ring.id, Date.now()).length > 0
     ) {
       return apiError("RING_IN_USE", "Ring in use", 409);
     }

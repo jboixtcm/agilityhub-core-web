@@ -33,6 +33,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react
 import { useTranslation } from "react-i18next";
 
 import { useListExport } from "../audit/useListExport";
+import { MANUAL_CHANNELS, type ManualChannel } from "../billing/shared";
 import { loadDogDocumentTypes } from "../dashboard/readmission";
 import {
   type AnnouncementAudience,
@@ -97,6 +98,11 @@ function filterValue(value: unknown): string {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
     : "";
+}
+
+/** A `PaymentMethodView.channel` with its own label (`ManualChannel`); the api's field is free. */
+function isLabelledChannel(channel: string | null | undefined): channel is ManualChannel {
+  return MANUAL_CHANNELS.some((value) => value === channel);
 }
 
 /** E8-W04 round 2: a `displayStatus` filter reads its label («baixa prevista»), never the code. */
@@ -655,14 +661,15 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "paymentMethod",
                 label: t("census:members.columns.paymentMethod"),
-                // The masked account, else the channel's or the type's label, never its code.
+                // The masked account, else the channel's or the type's label, never its code. The
+                // api's `channel` is a free string: one with no label reads the type's (E11-W05).
                 render: (item: MemberRow) =>
                   fmtMaskedIban(item.paymentMethod?.maskedAccount) ??
-                  (item.paymentMethod?.channel == null
-                    ? item.paymentMethod === undefined
-                      ? t("census:values.empty")
-                      : t(`enums:paymentMethodType.${item.paymentMethod.type}`)
-                    : t(`enums:paymentChannel.${item.paymentMethod.channel}`)),
+                  (item.paymentMethod === undefined
+                    ? t("census:values.empty")
+                    : isLabelledChannel(item.paymentMethod.channel)
+                      ? t(`enums:paymentChannel.${item.paymentMethod.channel}`)
+                      : t(`enums:paymentMethodType.${item.paymentMethod.type}`)),
               },
               {
                 key: "nextInvoiceDate",

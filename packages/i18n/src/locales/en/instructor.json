@@ -88,7 +88,7 @@
     "loadError": "The card could not be loaded.",
     "retry": "Try again",
     "headerLevel": "Level {code} · {since}",
-    "memberStatus": "{gender, select, female {Member} other {Member}}",
+    "memberStatus": "{gender, select, FEMALE {Member} OTHER {Member} other {Member}}",
     "attendanceTitle": "Attendance · last 30 days",
     "attendanceSub": "{noShow, plural, one {# no-show} other {# no-shows}} · {notified, plural, one {# notified} other {# notified}}",
     "classesTitle": "Classes · last 30 days",

@@ -191,6 +191,27 @@ describe("T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13)", () => {
     ]);
   });
 
+  it("E11-W05 step 4 (A40.3): a note whose author's gender is OTHER reads «(alumne/a)», never the masculine", async () => {
+    server.use(
+      http.get("*/api/v1/followup", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new TypeError("Expected the followup page");
+        const page = (await original.json()) as { items: Record<string, unknown>[] };
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) =>
+            item.authorGender === "MALE" ? { ...item, authorGender: "OTHER" } : item,
+          ),
+        });
+      }),
+    );
+    await renderFollowUp();
+    const authors = (await tableRows()).map((row) => row.split(" | ")[4]);
+    expect(authors).toContain("Pau (alumne/a)");
+    expect(authors).toContain("Laura (alumna)");
+    expect(authors).not.toContain("Pau (alumne)");
+  });
+
   it("the three chips map to filter=kind:eq:TASK, kind:eq:MEMBER_NOTE and no kind filter", async () => {
     const requests = recordRequests();
     await renderFollowUp();

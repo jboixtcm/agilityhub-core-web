@@ -57,6 +57,11 @@
   "unavailable": {
     "title": "Unavailable"
   },
+  "screen": {
+    "updated": "The app was updated. Reload it.",
+    "reload": "Reload",
+    "failed": "This screen could not be shown."
+  },
   "inProgress": "The operation is still in progress. Try again in a moment.",
   "gallery": {
     "active": "Active",

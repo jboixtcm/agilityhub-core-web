@@ -1,5 +1,5 @@
 import type { ApiClient, components } from "@agilityhub/api-client";
-import { useClubFormats } from "@agilityhub/i18n";
+import { currencyDigits, majorUnits, minorFromMajor, useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -226,9 +226,10 @@ export function valueSummary(
   }
   if (type === "money") {
     const item = objectValue(value);
-    return typeof item.amountMinor === "number"
-      ? formats.formatMoney(item.amountMinor / 100)
-      : t("admin-settings:value.notConfigured");
+    if (typeof item.amountMinor !== "number") return t("admin-settings:value.notConfigured");
+    return typeof item.currency === "string"
+      ? formats.formatMoneyMinor({ amountMinor: item.amountMinor, currency: item.currency })
+      : formats.formatMinor(item.amountMinor);
   }
   if (["bool", "boolean"].includes(type) && typeof value === "boolean") {
     return value ? t("admin-settings:value.yes") : t("admin-settings:value.no");
@@ -546,6 +547,7 @@ export function ParameterControl({
 
   if (type === "money") {
     const money = objectValue(draft);
+    const currency = typeof money.currency === "string" ? money.currency : branding.currency;
     return (
       <FormField id="parameter-value" label={label}>
         <div className="settings-editor__money">
@@ -554,16 +556,18 @@ export function ParameterControl({
             min={constraintNumber(parameter, "min") ?? 0}
             onChange={(event) => {
               onDraftChange({
-                amountMinor: Math.round(event.currentTarget.valueAsNumber * 100),
-                currency: typeof money.currency === "string" ? money.currency : branding.currency,
+                amountMinor: minorFromMajor(event.currentTarget.valueAsNumber, currency),
+                currency,
               });
             }}
             required
-            step="0.01"
+            step={String(10 ** -currencyDigits(currency))}
             type="number"
-            value={typeof money.amountMinor === "number" ? money.amountMinor / 100 : 0}
+            value={
+              typeof money.amountMinor === "number" ? majorUnits(money.amountMinor, currency) : 0
+            }
           />
-          <span>{typeof money.currency === "string" ? money.currency : branding.currency}</span>
+          <span>{currency}</span>
         </div>
       </FormField>
     );

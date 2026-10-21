@@ -169,7 +169,7 @@ describe("T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A", () =>
       </I18nextProvider>,
     );
     const alert = await screen.findByRole("alert");
-    expect(alert).toHaveTextContent("No teniu permís per fer aquesta acció.");
+    expect(alert).toHaveTextContent("No tens permís per fer aquesta acció.");
     server.resetHandlers();
     fireEvent.click(within(alert).getByRole("button", { name: "Torna-ho a provar" }));
     expect(await screen.findByText("4 avisos")).toBeVisible();

@@ -1105,7 +1105,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     }
   };
 
-  const gender = me.membership.gender === "FEMALE" ? "female" : "other";
+  const gender = icuGender(me.membership.gender);
   return (
     <main className="auth-page">
       <section className="auth-panel activation-panel">
@@ -1186,11 +1186,17 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   );
 }
 
-function roleCopy(
-  role: Role,
-  gender: "female" | "other",
-  t: ReturnType<typeof useTranslation>["t"],
-) {
+/**
+ * The api's gender as the ICU `select` of the gendered strings reads it (E11-W05 step 4): `FEMALE`,
+ * `OTHER` (the slash forms) and `MALE`; `other` (the masculine) when the membership has none.
+ */
+type IcuGender = "FEMALE" | "MALE" | "OTHER" | "other";
+
+function icuGender(gender: "FEMALE" | "MALE" | "OTHER" | null | undefined): IcuGender {
+  return gender ?? "other";
+}
+
+function roleCopy(role: Role, gender: IcuGender, t: ReturnType<typeof useTranslation>["t"]) {
   if (role === "MEMBER") {
     return {
       description: t("auth:profileChoice.memberDescription"),
@@ -1254,7 +1260,7 @@ function ProfileChoicePage({
     return null;
   }
   const roles = profileRoles(me);
-  const gender = me.membership.gender === "FEMALE" ? "female" : "other";
+  const gender = icuGender(me.membership.gender);
 
   const selectProfile = async (role: Role) => {
     setPending(role);
@@ -1419,7 +1425,7 @@ function PasswordModal({
 /** «Canviar de perfil · {perfil}», with the ICU gender of the membership as on 03b (R-01-07). */
 function activeProfileLabel(
   role: Role | undefined,
-  gender: "female" | "other",
+  gender: IcuGender,
   t: ReturnType<typeof useTranslation>["t"],
 ): string {
   if (role === "INSTRUCTOR") {
@@ -1491,11 +1497,7 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             <Icon aria-hidden="true" name="user" />
             <span>{t("auth:profile.changeProfile")}</span>
             <small>
-              {activeProfileLabel(
-                me.membership.activeProfile,
-                me.membership.gender === "FEMALE" ? "female" : "other",
-                t,
-              )}
+              {activeProfileLabel(me.membership.activeProfile, icuGender(me.membership.gender), t)}
             </small>
             <Icon aria-hidden="true" name="chev" />
           </a>

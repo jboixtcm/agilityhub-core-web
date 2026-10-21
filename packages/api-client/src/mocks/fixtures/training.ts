@@ -936,6 +936,66 @@ export function trainingsOnRing(
   );
 }
 
+type RingBooking = components["schemas"]["RingBooking"];
+
+/**
+ * The live training bookings of a ring (R-05-07/R-05-08, S09 R-09-13): `ACTIVE` and not started,
+ * of this world and of the calendar world's store, as `RING_HAS_BOOKINGS{bookings[]}` lists them.
+ */
+export function liveRingTrainings(ringId: string, now: number): RingBooking[] {
+  const own = visibleBookings(now)
+    .filter(
+      (booking) =>
+        booking.state === "ACTIVE" &&
+        booking.ringId === ringId &&
+        Date.parse(startsAtOf(booking)) > now,
+    )
+    .map((booking) => ({
+      bookingId: booking.id,
+      dogName: booking.dogName,
+      from: startsAtOf(booking),
+      memberName: booking.memberName,
+      ringId: booking.ringId,
+      to: clubInstant(booking.date, booking.end),
+    }));
+  const calendar = planningState.trainingBookings
+    .filter((booking) => booking.ringId === ringId && Date.parse(booking.from) > now)
+    .map((booking) => ({
+      bookingId: booking.id,
+      dogName: booking.dogName,
+      from: booking.from,
+      memberName: booking.memberName,
+      ringId: booking.ringId,
+      to: booking.to,
+    }));
+  return [...own, ...calendar].sort((left, right) => left.from.localeCompare(right.from));
+}
+
+/**
+ * `cancelBookings: true` on a ring turned off for training (R-05-08): each live booking is
+ * `CANCELLED_BY_CLUB` with `RING_NOT_RESERVABLE`, in the same write.
+ */
+export function cancelRingTrainings(ringId: string, now: number): void {
+  const at = new Date(now).toISOString().replace(/\.\d{3}Z$/u, "Z");
+  for (const booking of trainingState.bookings) {
+    if (
+      booking.state === "ACTIVE" &&
+      booking.ringId === ringId &&
+      Date.parse(booking.createdAt) <= now &&
+      Date.parse(startsAtOf(booking)) > now
+    ) {
+      booking.state = "CANCELLED_BY_CLUB";
+      booking.cancelReason = "RING_NOT_RESERVABLE";
+      booking.cancelledAt = at;
+      booking.cancelledBy = "ADMIN";
+    }
+  }
+  // The calendar world's store keeps live bookings only.
+  planningState.trainingBookings = planningState.trainingBookings.filter(
+    (booking) => booking.ringId !== ringId || Date.parse(booking.from) <= now,
+  );
+}
+
 type TrainingBookingListItem = components["schemas"]["TrainingBookingListItem"];
 
 /**

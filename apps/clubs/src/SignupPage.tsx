@@ -1318,7 +1318,7 @@ function DogStep({
 }) {
   const branding = useBranding();
   const profile = countryProfile(branding.countryProfile);
-  const { formatMoney } = useClubFormats();
+  const { formatMinor, formatMoneyMinor } = useClubFormats();
   const { t } = useTranslation(["signup", "errors"]);
   const formRef = useRef<HTMLFormElement>(null);
   const focusFirstError = useFocusFirstError(formRef);
@@ -1338,7 +1338,7 @@ function DogStep({
   // the plan's `priceLabel`.
   const planPrice = (plan: SignupPlan): string => {
     if (plan.price === undefined) return plan.priceLabel ?? "";
-    const price = formatMoney(plan.price.amount.amountMinor / 100);
+    const price = formatMoneyMinor(plan.price.amount);
     return plan.type === "PACK"
       ? t("signup:dog.packPrice", { months: plan.pack?.validityMonths ?? 1, price })
       : plan.type === "SINGLE_CLASS"
@@ -1666,7 +1666,7 @@ function DogStep({
                     plan.maintenanceFee !== undefined ? null : (
                       <small>
                         {t("signup:dog.entryFee", {
-                          price: formatMoney(plan.entryFee.amountMinor / 100),
+                          price: formatMoneyMinor(plan.entryFee),
                         })}
                       </small>
                     )}
@@ -1674,8 +1674,8 @@ function DogStep({
                     {plan.maintenanceFee === undefined ? null : (
                       <small>
                         {t("signup:dog.maintenance", {
-                          entry: formatMoney((plan.entryFee?.amountMinor ?? 0) / 100),
-                          fee: formatMoney(plan.maintenanceFee.amountMinor / 100),
+                          entry: formatMinor(plan.entryFee?.amountMinor ?? 0),
+                          fee: formatMoneyMinor(plan.maintenanceFee),
                           withEntry: (plan.entryFee?.amountMinor ?? 0) > 0 ? "yes" : "no",
                         })}
                       </small>
@@ -1733,7 +1733,7 @@ function FamilyStep({
   onContinue: (path: string) => void;
   totalSteps: number;
 }) {
-  const { formatMoney } = useClubFormats();
+  const { formatMoneyMinor } = useClubFormats();
   const { t } = useTranslation("signup");
   const rootRef = useRef<HTMLDivElement>(null);
   const focusFirstError = useFocusFirstError(rootRef);
@@ -1830,7 +1830,7 @@ function FamilyStep({
         {plan?.entryFee === undefined ? null : (
           <p>
             {t("signup:family.cardDescription", {
-              entry: formatMoney(plan.entryFee.amountMinor / 100),
+              entry: formatMoneyMinor(plan.entryFee),
             })}
           </p>
         )}
@@ -1971,7 +1971,7 @@ function PaymentStep({
 }) {
   const branding = useBranding();
   const profile = countryProfile(branding.countryProfile);
-  const { formatMoney, formatPlainDate } = useClubFormats();
+  const { formatMoneyMinor, formatPlainDate } = useClubFormats();
   const { i18n, t } = useTranslation(["signup", "errors"]);
   const formRef = useRef<HTMLFormElement>(null);
   const focusFirstError = useFocusFirstError(formRef);
@@ -2454,7 +2454,7 @@ function PaymentStep({
           {upfrontRows.map((row) => (
             <p className="signup-upfront__line" key={row.key}>
               <span>{row.label}</span>
-              <strong>{formatMoney(row.amount.amountMinor / 100)}</strong>
+              <strong>{formatMoneyMinor(row.amount)}</strong>
             </p>
           ))}
           {startOptions.length === 1 && startOptions[0] !== undefined ? (
@@ -2462,7 +2462,7 @@ function PaymentStep({
             // it reads as one more line of the card, without «tria quan vols començar:».
             <p className="signup-upfront__line">
               <span>{optionLabel(startOptions[0])}</span>
-              <strong>{formatMoney(startOptions[0].amountDue.amountMinor / 100)}</strong>
+              <strong>{formatMoneyMinor(startOptions[0].amountDue)}</strong>
             </p>
           ) : startOptions.length === 0 ? null : (
             <fieldset className="signup-upfront__options">
@@ -2494,7 +2494,7 @@ function PaymentStep({
                       {checked ? <Icon name="check" /> : null}
                     </span>
                     <span>{optionLabel(option)}</span>
-                    <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
+                    <strong>{formatMoneyMinor(option.amountDue)}</strong>
                   </label>
                 );
               })}
@@ -2503,7 +2503,7 @@ function PaymentStep({
           {/* T-04-32: display-only; the club computes and charges the total, it is never sent. */}
           <p className="signup-upfront__total">
             <span>{t("signup:step4.total")}</span>
-            <b>{formatMoney(totalDue.amountMinor / 100)}</b>
+            <b>{formatMoneyMinor(totalDue)}</b>
           </p>
           <p>{stripe ? t("signup:payment.stripeSubmit") : manualInstructions}</p>
         </Card>

@@ -340,7 +340,7 @@ describe("T-14-26 R-14-12 E4-W07 one export at a time", () => {
     if (selection === undefined) throw new TypeError("Expected the selection button");
     await renderButton(selection);
     fireEvent.click(screen.getByRole("checkbox", { name: "Selecciona Laura Serra Vidal" }));
-    fireEvent.change(screen.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" }), {
+    fireEvent.change(screen.getByRole("searchbox", { name: "Cerca per nom, document, gos…" }), {
       target: { value: "Duna" },
     });
     await waitFor(() => {

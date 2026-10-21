@@ -180,7 +180,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): the training cance
     await press();
     expect(
       await within(dialog).findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     await press();

@@ -671,7 +671,9 @@ export function NewClubWizard({
     ),
     catalogs: (
       <>
-        <p className="console-muted">{t("console:wizard.catalogsHelp")}</p>
+        <p className="console-muted">
+          {t("console:wizard.catalogsHelp")} {t("console:wizard.catalogsStartingPoint")}
+        </p>
         <FormField
           id="console-wizard-template"
           label={t("console:catalogs.template")}

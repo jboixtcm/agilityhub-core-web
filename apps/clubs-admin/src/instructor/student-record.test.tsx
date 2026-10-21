@@ -1,6 +1,7 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
   ATTENDANCE_MOCK_NOW,
+  handlers,
   mockScenario,
   type MockScenario,
   resetAttendanceMockState,
@@ -11,7 +12,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -305,7 +306,7 @@ describe("E6-W02 round 2 (review of 30-09): D13", () => {
     const clip = within(note).getByRole("button", { name: "foto_balancí.jpg" });
     fireEvent.click(clip);
     const refused = await within(note).findByRole("alert");
-    expect(refused).toHaveTextContent("No teniu permís per fer aquesta acció.");
+    expect(refused).toHaveTextContent("No tens permís per fer aquesta acció.");
     expect(clip.closest(".ah-attachment-chip")?.nextElementSibling).toBe(refused);
     answer = "network";
     fireEvent.click(clip);
@@ -313,6 +314,28 @@ describe("E6-W02 round 2 (review of 30-09): D13", () => {
       expect(within(note).getByRole("alert")).toHaveTextContent("No s'ha pogut obrir el fitxer.");
     });
   });
+
+  it.each([
+    ["ca", "Abonat/ada"],
+    ["es", "Abonado/a"],
+  ] as const)(
+    "E11-W05 step 4 (A40.3): in %s D13's member chip of a member whose gender is OTHER reads the slash form",
+    async (locale, chip) => {
+      server.use(
+        http.get("*/api/v1/dogs/:id/instructor-card", async ({ request }) => {
+          const original = await getResponse(handlers, request);
+          if (original === undefined) throw new TypeError("Expected the instructor card");
+          const card = (await original.json()) as { member: Record<string, unknown> };
+          return HttpResponse.json({ ...card, member: { ...card.member, gender: "OTHER" } });
+        }),
+      );
+      await renderRecord({ locale });
+      const header = present(document.querySelector<HTMLElement>(".student-record__header"));
+      expect([...header.querySelectorAll(".ah-chip")].map((chip) => chip.textContent)).toContain(
+        chip,
+      );
+    },
+  );
 
   it("#6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key", async () => {
     await renderRecord({ locale: "es" });

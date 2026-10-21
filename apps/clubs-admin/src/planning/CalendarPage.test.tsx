@@ -242,7 +242,7 @@ function cardEditors() {
 }
 
 const STALE_MESSAGE =
-  "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.";
+  "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.";
 const INVALID_STATE_MESSAGE = "Aquest element no està en un estat vàlid per a aquesta operació.";
 const CLOSED_DAY = "El club està tancat aquest dia";
 const VISIBLE_NOW = "Els alumnes la veuran de seguida";
@@ -478,7 +478,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     // …and the conflict message is still on the page.
     expect(
       screen.getByText(
-        "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+        "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.",
       ),
     ).toBeVisible();
     expect(bodies).toEqual([{ capacity: 6, version: 1 }]);
@@ -1408,7 +1408,7 @@ describe("T-06-28 E4-W10 D4 follow-ups of the E4-W09 review", () => {
     const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
     expect(
       screen.getByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     // No default hours are assumed: nothing that picks a time can open.
@@ -1808,7 +1808,7 @@ const INTERNAL_ERROR_BODY = {
   traceId: "t-503",
 };
 const INTERNAL_ERROR_TEXT =
-  "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
 
 describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule", () => {
   it("T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key", async () => {
@@ -1915,5 +1915,95 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes 
     expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
     expect(keys[1]).toBe(keys[0]);
     expect(keys[2]).not.toBe(keys[0]);
+  });
+});
+
+describe("R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy", () => {
+  /** `classes.riskReviewTime` of the mock club, changed through the api. */
+  async function reviewAt(time: string) {
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const current = await api.GET("/parameters/{key}", {
+      params: { path: { key: "classes.riskReviewTime" } },
+    });
+    await api.PUT("/parameters/{key}", {
+      body: { value: time, version: current.data?.version ?? 0 },
+      params: { path: { key: "classes.riskReviewTime" } },
+    });
+  }
+
+  /** The Wednesday 9:30 «Cadells» the review cancelled (the D4 mockup's struck cell). */
+  function reviewedClass() {
+    const session = planningState.sessions.find(
+      (item) => item.date === "2026-08-12" && item.startTime === "09:30",
+    );
+    if (session?.cancellation?.reason !== "RISK_REVIEW") {
+      throw new TypeError("Missing the class the review cancelled");
+    }
+    return session;
+  }
+
+  it("R-06-13 D4: under a review at 08:00 the struck cell reads «revisió de les 8:00» (the cancellation's reviewTime) and the exempt chip «Exempta de la revisió de les 8:00» (classes.riskReviewTime)", async () => {
+    await reviewAt("08:00");
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    expect(
+      within(week).getByRole("button", { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u }),
+    ).toBeVisible();
+    expect(within(week).queryByText(/7:30/u)).not.toBeInTheDocument();
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(
+      await within(selectedCard()).findByRole("button", {
+        name: "Exempta de la revisió de les 8:00",
+      }),
+    ).toBeVisible();
+  });
+
+  it("R-06-13 D4: a cancellation that carries reviewTime 07:30 reads «7:30» (the time it ran) under a parameter now at 08:00", async () => {
+    await reviewAt("08:00");
+    const reviewed = reviewedClass();
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const answered = await api.GET("/weeks/{id}/calendar", {
+      params: { path: { id: reviewed.weekId }, query: { filter: "ACTIVE" } },
+    });
+    if (answered.data === undefined) throw new TypeError("Missing calendar");
+    const calendar = structuredClone(answered.data);
+    for (const session of calendar.classes) {
+      if (session.id === reviewed.id && session.cancellation) {
+        session.cancellation.reviewTime = "07:30";
+      }
+    }
+    server.use(
+      http.get("*/api/v1/weeks/:id/calendar", ({ params }) =>
+        params.id === reviewed.weekId ? HttpResponse.json(calendar) : undefined,
+      ),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    expect(
+      within(week).getByRole("button", { name: /^dc 12 9:30 · Cadells · .*revisió de les 7:30/u }),
+    ).toBeVisible();
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(
+      await within(selectedCard()).findByRole("button", {
+        name: "Exempta de la revisió de les 8:00",
+      }),
+    ).toBeVisible();
+  });
+
+  it("R-06-15 INSTRUCTOR (no /parameters): the exempt chip takes the time GET /risk-review answers", async () => {
+    await reviewAt("08:00");
+    planningState.sessions = planningState.sessions.map((session) =>
+      session.id === WEDNESDAY_1850 ? { ...session, riskExempt: true } : session,
+    );
+    mockScenario("instructor");
+    await renderCalendar({ readOnly: true });
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(
+      await within(selectedCard()).findByText("Exempta de la revisió de les 8:00"),
+    ).toBeVisible();
   });
 });

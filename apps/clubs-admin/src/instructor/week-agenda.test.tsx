@@ -490,7 +490,7 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
     fireEvent.click(screen.getByRole("button", { name: "PDF" }));
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     expect(screen.getByRole("table")).toBeVisible();

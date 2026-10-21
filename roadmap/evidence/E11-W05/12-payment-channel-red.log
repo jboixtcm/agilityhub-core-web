@@ -1,0 +1,199 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/census/CensusListPage.test.tsx (11 tests | 1 failed | 9 skipped) 10657ms
+   ❯ E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates, never codes (3)
+     × E11-W05 step 5 (f): D5: a channel with no label (the api's `channel` is a free string) reads its type's label, never the key 10457ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusListPage.test.tsx > E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates, never codes > E11-W05 step 5 (f): D5: a channel with no label (the api's `channel` is a free string) reads its type's label, never the key
+TestingLibraryElementError: Unable to find an element with the text: Efectiu. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m>[39m
+    [36m<input[39m
+      [33maria-label[39m=[32m"Selecciona Anna Ballart Consul"[39m
+      [33mclass[39m=[32m"ah-checkbox"[39m
+      [33mtype[39m=[32m"checkbox"[39m
+    [36m/>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [0mAnna Ballart Consul[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"census-dogs-cell"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mNass[0m
+          [0m [0m
+          [36m<span[39m
+            [33mclass[39m=[32m"census-level-chip"[39m
+          [36m>[39m
+            [0mB[0m
+          [36m</span>[39m
+        [36m</span>[39m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [0mAbonat[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0malta[0m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [0mpaymentChannel.CHEQUE[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mSelecciona Anna Ballart Consul[0m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m>[39m
+    [36m<input[39m
+      [33maria-label[39m=[32m"Selecciona Anna Ballart Consul"[39m
+      [33mclass[39m=[32m"ah-checkbox"[39m
+      [33mtype[39m=[32m"checkbox"[39m
+    [36m/>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [0mAnna Ballart Consul[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"census-dogs-cell"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mNass[0m
+          [0m [0m
+          [36m<span[39m
+            [33mclass[39m=[32m"census-level-chip"[39m
+          [36m>[39m
+            [0mB[0m
+          [36m</span>[39m
+        [36m</span>[39m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [0mAbonat[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0malta[0m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [0mpaymentChannel.CHEQUE[0m
+    [36m</a>[39m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-anna"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0mSelecciona Anna Ballart Consul[0m
+      [36m</span>[39m
+    [36m</a>[39m
+  [36m</td>[39m
+[36m</tr>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/CensusListPage.test.tsx:324:31
+    322|     const anna = (await screen.findByText("Anna Ballart Consul")).clos…
+    323|     if (anna === null) throw new Error("Expected Anna's row");
+    324|     expect(await within(anna).findByText("Efectiu")).toBeVisible();
+       |                               ^
+    325|     expect(screen.queryByText(/paymentChannel|CHEQUE/u)).toBeNull();
+    326|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 9 skipped (11)
+   Start at  22:40:39
+   Duration  11.84s (tests 91%, transform 5%, environment 2%, import 2%)
+

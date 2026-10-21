@@ -97,7 +97,7 @@ describe("T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca)", () => {
     ).toBe("manteniment 16:00–18:00");
     expect(
       t("admin-scheduling:calendar.cell.cancelled", {
-        reason: t("enums:cancellationReason.RISK_REVIEW"),
+        reason: t("enums:cancellationReason.RISK_REVIEW", { time: "7:30" }),
       }),
     ).toBe("anul·lada · revisió de les 7:30");
     expect(t("admin-scheduling:calendar.warnings.title")).toBe(
@@ -116,5 +116,38 @@ describe("T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca)", () => {
       ["ACTIVE", "DRAFT", "FINISHED", "CANCELLED"].map((state) => t(`enums:classState.${state}`)),
     ).toEqual(["activa", "esborrany", "finalitzada", "anul·lada"]);
     expect(t("errors:ADMIN_TEXT_REQUIRED")).toBe("Cal escriure el text de l'avís per als alumnes.");
+  });
+
+  it("R-06-13 E11-W05 step 2: the review's time is a placeholder in ca, es and en (no «7:30» in the copy)", async () => {
+    const texts: Record<string, string[]> = {};
+    for (const language of ["ca", "es", "en"] as const) {
+      const i18n = await createI18n({
+        branding,
+        browserLanguages: [language],
+        initialNamespaces: ["admin-scheduling", "enums"],
+        storage: undefined,
+      });
+      texts[language] = [
+        i18n.t("enums:cancellationReason.RISK_REVIEW", { time: "8:00" }),
+        i18n.t("admin-scheduling:calendar.selected.exempt", { time: "8:00" }),
+        i18n.t("enums:cancellationReason.RISK_REVIEW", { time: "none" }),
+        i18n.t("admin-scheduling:calendar.selected.exempt", { time: "none" }),
+      ];
+    }
+    expect(texts).toEqual({
+      ca: [
+        "revisió de les 8:00",
+        "Exempta de la revisió de les 8:00",
+        "revisió",
+        "Exempta de la revisió",
+      ],
+      en: ["8:00 review", "Exempt from the 8:00 review", "review", "Exempt from the review"],
+      es: [
+        "revisión de las 8:00",
+        "Exenta de la revisión de las 8:00",
+        "revisión",
+        "Exenta de la revisión",
+      ],
+    });
   });
 });

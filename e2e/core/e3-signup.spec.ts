@@ -832,8 +832,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await expect(admin.getByText(/Sí — titular: Laia Fictici001 \+ gos Ona 1/u)).toBeVisible();
   await admin.getByRole("button", { name: "EDITA LES DADES" }).click();
   const edit = admin.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
-  // E38: only a readmission locks the DNI/NIE; this ordinary signup keeps it editable on the real core.
-  await expect(edit.getByLabel("DNI/NIE")).not.toHaveAttribute("readonly");
+  // E38: only a readmission locks the ID document; this ordinary signup keeps it editable on the real core.
+  await expect(edit.getByLabel("Document d'identitat")).not.toHaveAttribute("readonly");
   await edit.getByLabel("IBAN").fill("ES9121000418450200051332");
   // M14: the second email and the second phone (R-04-03), kept by the next edit below.
   await edit.locator("#signup-edit-email2").fill("nora.feina.e3@example.test");
@@ -1714,7 +1714,10 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       "retorn.e3@example.test",
     );
     await expect(readmissionDrawer.locator("#signup-edit-phone1Number")).toHaveValue("699000905");
-    await expect(readmissionDrawer.getByLabel("DNI/NIE")).toHaveAttribute("readonly", "");
+    await expect(readmissionDrawer.getByLabel("Document d'identitat")).toHaveAttribute(
+      "readonly",
+      "",
+    );
     // E4-W13 step 3 (R-04-06 b): the reused dog's chip is read-only while the readmission waits.
     const reusedChip = readmissionDrawer.locator("#signup-edit-dog-0-chip");
     await expect(reusedChip).toHaveAttribute("readonly", "");

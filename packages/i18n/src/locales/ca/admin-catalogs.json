@@ -181,6 +181,14 @@
     "new": "Nova pista",
     "removeQuestion": "Eliminar la pista {name}?",
     "removeTitle": "Elimina la pista",
+    "ringBookings": {
+      "back": "Torna enrere",
+      "deactivate": "Anul·la les reserves i desactiva la pista",
+      "item": "{member} + {dog}{when, select, none {} other { · {when}}}",
+      "text": "Si continues, aquestes reserves quedaran anul·lades pel club i se'n farà l'avís:",
+      "title": "Aquesta pista té reserves d'entrenament",
+      "unreservable": "Anul·la les reserves i desa"
+    },
     "title": "Pistes"
   },
   "team": {

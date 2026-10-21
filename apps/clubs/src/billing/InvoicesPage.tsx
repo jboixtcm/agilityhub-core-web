@@ -95,7 +95,7 @@ function ReceiptRow({ invoice }: { invoice: Invoice }) {
         <small>{invoice.lines[0]?.description}</small>
       </span>
       <span className="receipt-row__meta">
-        <b>{formats.formatMoney(invoice.total.amountMinor / 100)}</b>
+        <b>{formats.formatMoneyMinor(invoice.total)}</b>
         <Badge tone={tones[invoice.status]}>
           {isFullyRefunded(invoice)
             ? t("enums:invoiceStatus.REFUNDED")
@@ -205,14 +205,14 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
               {invoice.lines.map((line, index) => (
                 <tr key={`${line.origin}-${String(index)}`}>
                   <td>{line.description}</td>
-                  <td>{formats.formatMoney(line.total.amountMinor / 100)}</td>
+                  <td>{formats.formatMoneyMinor(line.total)}</td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
               <tr>
                 <th>{t("billing:detail.total")}</th>
-                <td>{formats.formatMoney(invoice.total.amountMinor / 100)}</td>
+                <td>{formats.formatMoneyMinor(invoice.total)}</td>
               </tr>
             </tfoot>
           </table>

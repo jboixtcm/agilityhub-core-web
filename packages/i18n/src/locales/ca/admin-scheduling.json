@@ -156,7 +156,7 @@
       "time": "Hora",
       "noInstructor": "Sense instructor",
       "noLevels": "cap",
-      "exempt": "Exempta de la revisió de les 7:30",
+      "exempt": "Exempta de la revisió{time, select, none {} other { de les {time}}}",
       "notes": "Notes",
       "accept": "ACCEPTA",
       "cancel": "ANUL·LA LA CLASSE",

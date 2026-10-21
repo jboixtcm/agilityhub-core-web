@@ -1,0 +1,6118 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (95 tests | 8 failed | 83 skipped) 551ms
+   ❯ T-04-33 D2 signup validation (22)
+     × E4-W12 step 2 / E11-W05 step 4: in ca the identity row of a DNI is labelled by its type 135ms
+     × E4-W12 step 2 / E11-W05 step 4: in ca the identity row of a NIE is labelled by its type 34ms
+     × E4-W12 step 2 / E11-W05 step 4: in es the identity row of a DNI is labelled by its type 17ms
+     × E4-W12 step 2 / E11-W05 step 4: in en the identity row of a NIE is labelled by its type 18ms
+     × E4-W12 step 2 / E11-W05 step 4: in en the identity row of a DNI is labelled by its type 15ms
+   ❯ E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) (9)
+     × the ID document is read-only while the readmission waits, and says how to correct it (E11-W05 step 4: «Document d'identitat») 68ms
+     × a signup that is not a readmission has no readmission block and an editable ID document 52ms
+     × round 2: `readmission: null` (how the core writes an ordinary signup) keeps the ID document editable and the card on `member` 55ms
+ ❯ src/census/CensusListPage.test.tsx (10 tests | 1 failed | 9 skipped) 1173ms
+   ❯ T-03-38 D5 universal member list (6)
+     × E11-W05 step 4 (A40.2): D5 names the identity column «Document d'identitat» and searches by «document», never «DNI» 1170ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > E11-W05 step 4 (A40.2): D5 names the identity column «Document d'identitat» and searches by «document», never «DNI»
+TestingLibraryElementError: Unable to find an accessible element with the role "searchbox" and name "Cerca per nom, document, gos…"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"census-page__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Abonats184 d'alta":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Enviar comunicat":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Afegeix el filtre":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Neteja":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Desa la vista":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Canvia el nom":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina la vista":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Excel":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "PDF":
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ordena Abonat de manera ascendent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Ordena Abonat de manera ascendent"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pàgina anterior":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pàgina anterior"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Pàgina següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Pàgina següent"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Llistat d'abonats":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Llistat d'abonats"[39m
+    [33mclass[39m=[32m"ah-universal-list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  searchbox:
+
+  Name "Cerca per nom, DNI, gos…":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Cerca per nom, DNI, gos…"[39m
+    [33mplaceholder[39m=[32m"Cerca per nom, DNI, gos…"[39m
+    [33mtype[39m=[32m"search"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Estat dels abonats":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Estat dels abonats"[39m
+    [33mclass[39m=[32m"ah-universal-list__status"[39m
+  [36m/>[39m
+
+  Name "Columna":
+  [36m<select />[39m
+
+  Name "Operador":
+  [36m<select />[39m
+
+  Name "Valor":
+  [36m<select />[39m
+
+  Name "Vistes":
+  [36m<select />[39m
+
+  Name "files per pàgina":
+  [36m<select[39m
+    [33maria-label[39m=[32m"files per pàgina"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Alta":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ACTIVE"[39m
+  [36m/>[39m
+
+  Name "Baixa":
+  [36m<option[39m
+    [33mvalue[39m=[32m"LEFT"[39m
+  [36m/>[39m
+
+  Name "Tots":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Número":
+  [36m<option[39m
+    [33mvalue[39m=[32m"memberNumber"[39m
+  [36m/>[39m
+
+  Name "Cognoms":
+  [36m<option[39m
+    [33mvalue[39m=[32m"lastName"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<option[39m
+    [33mvalue[39m=[32m"fullName"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<option[39m
+    [33mvalue[39m=[32m"status"[39m
+  [36m/>[39m
+
+  Name "Estat visible":
+  [36m<option[39m
+    [33mvalue[39m=[32m"displayStatus"[39m
+  [36m/>[39m
+
+  Name "Modalitat":
+  [36m<option[39m
+    [33mvalue[39m=[32m"planId"[39m
+  [36m/>[39m
+
+  Name "Tarifa":
+  [36m<option[39m
+    [33mvalue[39m=[32m"priceId"[39m
+  [36m/>[39m
+
+  Name "Mètode de pagament":
+  [36m<option[39m
+    [33mvalue[39m=[32m"paymentMethodType"[39m
+  [36m/>[39m
+
+  Name "Proper rebut":
+  [36m<option[39m
+    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+  [36m/>[39m
+
+  Name "Alta des de":
+  [36m<option[39m
+    [33mvalue[39m=[32m"joinedAt"[39m
+  [36m/>[39m
+
+  Name "Data de baixa":
+  [36m<option[39m
+    [33mvalue[39m=[32m"leaveDate"[39m
+  [36m/>[39m
+
+  Name "Origen de la baixa":
+  [36m<option[39m
+    [33mvalue[39m=[32m"leaveSource"[39m
+  [36m/>[39m
+
+  Name "Inactiva fins":
+  [36m<option[39m
+    [33mvalue[39m=[32m"inactivityUntil"[39m
+  [36m/>[39m
+
+  Name "Sol·licitud pendent":
+  [36m<option[39m
+    [33mvalue[39m=[32m"hasPendingRequest"[39m
+  [36m/>[39m
+
+  Name "Reserves bloquejades":
+  [36m<option[39m
+    [33mvalue[39m=[32m"bookingBlocked"[39m
+  [36m/>[39m
+
+  Name "Grup familiar":
+  [36m<option[39m
+    [33mvalue[39m=[32m"familyGroupId"[39m
+  [36m/>[39m
+
+  Name "Drets d'imatge":
+  [36m<option[39m
+    [33mvalue[39m=[32m"imageRightsGranted"[39m
+  [36m/>[39m
+
+  Name "Rols":
+  [36m<option[39m
+    [33mvalue[39m=[32m"roles"[39m
+  [36m/>[39m
+
+  Name "Població":
+  [36m<option[39m
+    [33mvalue[39m=[32m"city"[39m
+  [36m/>[39m
+
+  Name "CP":
+  [36m<option[39m
+    [33mvalue[39m=[32m"postalCode"[39m
+  [36m/>[39m
+
+  Name "Nivell del gos":
+  [36m<option[39m
+    [33mvalue[39m=[32m"dogLevelId"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<option[39m
+    [33mvalue[39m=[32m"dogName"[39m
+  [36m/>[39m
+
+  Name "Documents pendents":
+  [36m<option[39m
+    [33mvalue[39m=[32m"hasPendingDocuments"[39m
+  [36m/>[39m
+
+  Name "Entrenament lliure":
+  [36m<option[39m
+    [33mvalue[39m=[32m"freeTrainingAllowed"[39m
+  [36m/>[39m
+
+  Name "Gènere":
+  [36m<option[39m
+    [33mvalue[39m=[32m"gender"[39m
+  [36m/>[39m
+
+  Name "Data de naixement":
+  [36m<option[39m
+    [33mvalue[39m=[32m"birthDate"[39m
+  [36m/>[39m
+
+  Name "és igual a":
+  [36m<option[39m
+    [33mvalue[39m=[32m"eq"[39m
+  [36m/>[39m
+
+  Name "no és igual a":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ne"[39m
+  [36m/>[39m
+
+  Name "és anterior o inferior a":
+  [36m<option[39m
+    [33mvalue[39m=[32m"lt"[39m
+  [36m/>[39m
+
+  Name "és igual o anterior o inferior a":
+  [36m<option[39m
+    [33mvalue[39m=[32m"lte"[39m
+  [36m/>[39m
+
+  Name "és posterior o superior a":
+  [36m<option[39m
+    [33mvalue[39m=[32m"gt"[39m
+  [36m/>[39m
+
+  Name "és igual o posterior o superior a":
+  [36m<option[39m
+    [33mvalue[39m=[32m"gte"[39m
+  [36m/>[39m
+
+  Name "100 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"100"[39m
+  [36m/>[39m
+
+  Name "101 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"101"[39m
+  [36m/>[39m
+
+  Name "102 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"102"[39m
+  [36m/>[39m
+
+  Name "103 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"103"[39m
+  [36m/>[39m
+
+  Name "104 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"104"[39m
+  [36m/>[39m
+
+  Name "105 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"105"[39m
+  [36m/>[39m
+
+  Name "106 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"106"[39m
+  [36m/>[39m
+
+  Name "107 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"107"[39m
+  [36m/>[39m
+
+  Name "108 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"108"[39m
+  [36m/>[39m
+
+  Name "109 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"109"[39m
+  [36m/>[39m
+
+  Name "110 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"110"[39m
+  [36m/>[39m
+
+  Name "111 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"111"[39m
+  [36m/>[39m
+
+  Name "112 (2)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"112"[39m
+  [36m/>[39m
+
+  Name "113 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"113"[39m
+  [36m/>[39m
+
+  Name "114 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"114"[39m
+  [36m/>[39m
+
+  Name "115 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"115"[39m
+  [36m/>[39m
+
+  Name "116 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"116"[39m
+  [36m/>[39m
+
+  Name "117 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"117"[39m
+  [36m/>[39m
+
+  Name "118 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"118"[39m
+  [36m/>[39m
+
+  Name "119 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"119"[39m
+  [36m/>[39m
+
+  Name "120 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"120"[39m
+  [36m/>[39m
+
+  Name "121 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"121"[39m
+  [36m/>[39m
+
+  Name "122 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"122"[39m
+  [36m/>[39m
+
+  Name "123 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"123"[39m
+  [36m/>[39m
+
+  Name "124 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"124"[39m
+  [36m/>[39m
+
+  Name "125 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"125"[39m
+  [36m/>[39m
+
+  Name "126 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"126"[39m
+  [36m/>[39m
+
+  Name "127 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"127"[39m
+  [36m/>[39m
+
+  Name "128 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"128"[39m
+  [36m/>[39m
+
+  Name "129 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"129"[39m
+  [36m/>[39m
+
+  Name "130 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"130"[39m
+  [36m/>[39m
+
+  Name "131 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"131"[39m
+  [36m/>[39m
+
+  Name "132 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"132"[39m
+  [36m/>[39m
+
+  Name "133 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"133"[39m
+  [36m/>[39m
+
+  Name "134 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"134"[39m
+  [36m/>[39m
+
+  Name "135 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"135"[39m
+  [36m/>[39m
+
+  Name "136 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"136"[39m
+  [36m/>[39m
+
+  Name "137 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"137"[39m
+  [36m/>[39m
+
+  Name "138 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"138"[39m
+  [36m/>[39m
+
+  Name "139 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"139"[39m
+  [36m/>[39m
+
+  Name "140 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"140"[39m
+  [36m/>[39m
+
+  Name "141 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"141"[39m
+  [36m/>[39m
+
+  Name "142 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"142"[39m
+  [36m/>[39m
+
+  Name "143 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"143"[39m
+  [36m/>[39m
+
+  Name "144 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"144"[39m
+  [36m/>[39m
+
+  Name "145 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"145"[39m
+  [36m/>[39m
+
+  Name "146 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"146"[39m
+  [36m/>[39m
+
+  Name "147 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"147"[39m
+  [36m/>[39m
+
+  Name "148 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"148"[39m
+  [36m/>[39m
+
+  Name "149 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"149"[39m
+  [36m/>[39m
+
+  Name "150 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"150"[39m
+  [36m/>[39m
+
+  Name "151 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"151"[39m
+  [36m/>[39m
+
+  Name "152 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"152"[39m
+  [36m/>[39m
+
+  Name "153 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"153"[39m
+  [36m/>[39m
+
+  Name "154 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"154"[39m
+  [36m/>[39m
+
+  Name "155 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"155"[39m
+  [36m/>[39m
+
+  Name "156 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"156"[39m
+  [36m/>[39m
+
+  Name "157 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"157"[39m
+  [36m/>[39m
+
+  Name "158 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"158"[39m
+  [36m/>[39m
+
+  Name "159 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"159"[39m
+  [36m/>[39m
+
+  Name "160 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"160"[39m
+  [36m/>[39m
+
+  Name "161 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"161"[39m
+  [36m/>[39m
+
+  Name "162 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"162"[39m
+  [36m/>[39m
+
+  Name "163 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"163"[39m
+  [36m/>[39m
+
+  Name "164 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"164"[39m
+  [36m/>[39m
+
+  Name "165 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"165"[39m
+  [36m/>[39m
+
+  Name "166 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"166"[39m
+  [36m/>[39m
+
+  Name "167 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"167"[39m
+  [36m/>[39m
+
+  Name "168 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"168"[39m
+  [36m/>[39m
+
+  Name "169 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"169"[39m
+  [36m/>[39m
+
+  Name "170 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"170"[39m
+  [36m/>[39m
+
+  Name "171 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"171"[39m
+  [36m/>[39m
+
+  Name "172 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"172"[39m
+  [36m/>[39m
+
+  Name "173 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"173"[39m
+  [36m/>[39m
+
+  Name "174 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"174"[39m
+  [36m/>[39m
+
+  Name "175 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"175"[39m
+  [36m/>[39m
+
+  Name "176 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"176"[39m
+  [36m/>[39m
+
+  Name "177 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"177"[39m
+  [36m/>[39m
+
+  Name "178 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"178"[39m
+  [36m/>[39m
+
+  Name "179 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"179"[39m
+  [36m/>[39m
+
+  Name "180 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"180"[39m
+  [36m/>[39m
+
+  Name "181 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"181"[39m
+  [36m/>[39m
+
+  Name "182 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"182"[39m
+  [36m/>[39m
+
+  Name "183 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"183"[39m
+  [36m/>[39m
+
+  Name "184 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"184"[39m
+  [36m/>[39m
+
+  Name "185 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"185"[39m
+  [36m/>[39m
+
+  Name "186 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"186"[39m
+  [36m/>[39m
+
+  Name "187 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"187"[39m
+  [36m/>[39m
+
+  Name "188 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"188"[39m
+  [36m/>[39m
+
+  Name "189 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"189"[39m
+  [36m/>[39m
+
+  Name "190 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"190"[39m
+  [36m/>[39m
+
+  Name "191 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"191"[39m
+  [36m/>[39m
+
+  Name "192 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"192"[39m
+  [36m/>[39m
+
+  Name "193 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"193"[39m
+  [36m/>[39m
+
+  Name "194 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"194"[39m
+  [36m/>[39m
+
+  Name "195 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"195"[39m
+  [36m/>[39m
+
+  Name "196 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"196"[39m
+  [36m/>[39m
+
+  Name "197 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"197"[39m
+  [36m/>[39m
+
+  Name "198 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"198"[39m
+  [36m/>[39m
+
+  Name "199 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"199"[39m
+  [36m/>[39m
+
+  Name "200 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"200"[39m
+  [36m/>[39m
+
+  Name "201 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"201"[39m
+  [36m/>[39m
+
+  Name "202 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"202"[39m
+  [36m/>[39m
+
+  Name "203 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"203"[39m
+  [36m/>[39m
+
+  Name "204 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"204"[39m
+  [36m/>[39m
+
+  Name "205 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"205"[39m
+  [36m/>[39m
+
+  Name "206 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"206"[39m
+  [36m/>[39m
+
+  Name "207 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"207"[39m
+  [36m/>[39m
+
+  Name "208 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"208"[39m
+  [36m/>[39m
+
+  Name "209 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"209"[39m
+  [36m/>[39m
+
+  Name "210 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"210"[39m
+  [36m/>[39m
+
+  Name "211 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"211"[39m
+  [36m/>[39m
+
+  Name "212 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"212"[39m
+  [36m/>[39m
+
+  Name "213 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"213"[39m
+  [36m/>[39m
+
+  Name "214 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"214"[39m
+  [36m/>[39m
+
+  Name "215 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"215"[39m
+  [36m/>[39m
+
+  Name "216 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"216"[39m
+  [36m/>[39m
+
+  Name "217 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"217"[39m
+  [36m/>[39m
+
+  Name "218 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"218"[39m
+  [36m/>[39m
+
+  Name "219 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"219"[39m
+  [36m/>[39m
+
+  Name "220 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"220"[39m
+  [36m/>[39m
+
+  Name "221 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"221"[39m
+  [36m/>[39m
+
+  Name "222 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"222"[39m
+  [36m/>[39m
+
+  Name "223 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"223"[39m
+  [36m/>[39m
+
+  Name "224 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"224"[39m
+  [36m/>[39m
+
+  Name "225 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"225"[39m
+  [36m/>[39m
+
+  Name "226 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"226"[39m
+  [36m/>[39m
+
+  Name "227 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"227"[39m
+  [36m/>[39m
+
+  Name "228 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"228"[39m
+  [36m/>[39m
+
+  Name "229 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"229"[39m
+  [36m/>[39m
+
+  Name "230 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"230"[39m
+  [36m/>[39m
+
+  Name "231 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"231"[39m
+  [36m/>[39m
+
+  Name "232 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"232"[39m
+  [36m/>[39m
+
+  Name "233 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"233"[39m
+  [36m/>[39m
+
+  Name "234 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"234"[39m
+  [36m/>[39m
+
+  Name "235 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"235"[39m
+  [36m/>[39m
+
+  Name "236 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"236"[39m
+  [36m/>[39m
+
+  Name "237 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"237"[39m
+  [36m/>[39m
+
+  Name "238 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"238"[39m
+  [36m/>[39m
+
+  Name "239 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"239"[39m
+  [36m/>[39m
+
+  Name "240 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"240"[39m
+  [36m/>[39m
+
+  Name "241 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"241"[39m
+  [36m/>[39m
+
+  Name "242 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"242"[39m
+  [36m/>[39m
+
+  Name "243 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"243"[39m
+  [36m/>[39m
+
+  Name "244 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"244"[39m
+  [36m/>[39m
+
+  Name "245 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"245"[39m
+  [36m/>[39m
+
+  Name "246 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"246"[39m
+  [36m/>[39m
+
+  Name "247 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"247"[39m
+  [36m/>[39m
+
+  Name "248 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"248"[39m
+  [36m/>[39m
+
+  Name "249 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"249"[39m
+  [36m/>[39m
+
+  Name "250 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"250"[39m
+  [36m/>[39m
+
+  Name "251 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"251"[39m
+  [36m/>[39m
+
+  Name "252 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"252"[39m
+  [36m/>[39m
+
+  Name "253 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"253"[39m
+  [36m/>[39m
+
+  Name "254 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"254"[39m
+  [36m/>[39m
+
+  Name "255 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"255"[39m
+  [36m/>[39m
+
+  Name "256 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"256"[39m
+  [36m/>[39m
+
+  Name "257 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"257"[39m
+  [36m/>[39m
+
+  Name "258 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"258"[39m
+  [36m/>[39m
+
+  Name "259 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"259"[39m
+  [36m/>[39m
+
+  Name "260 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"260"[39m
+  [36m/>[39m
+
+  Name "261 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"261"[39m
+  [36m/>[39m
+
+  Name "262 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"262"[39m
+  [36m/>[39m
+
+  Name "263 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"263"[39m
+  [36m/>[39m
+
+  Name "264 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"264"[39m
+  [36m/>[39m
+
+  Name "265 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"265"[39m
+  [36m/>[39m
+
+  Name "266 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"266"[39m
+  [36m/>[39m
+
+  Name "267 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"267"[39m
+  [36m/>[39m
+
+  Name "268 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"268"[39m
+  [36m/>[39m
+
+  Name "269 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"269"[39m
+  [36m/>[39m
+
+  Name "87 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"87"[39m
+  [36m/>[39m
+
+  Name "88 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"88"[39m
+  [36m/>[39m
+
+  Name "89 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"89"[39m
+  [36m/>[39m
+
+  Name "90 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"90"[39m
+  [36m/>[39m
+
+  Name "91 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"91"[39m
+  [36m/>[39m
+
+  Name "92 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"92"[39m
+  [36m/>[39m
+
+  Name "93 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"93"[39m
+  [36m/>[39m
+
+  Name "94 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"94"[39m
+  [36m/>[39m
+
+  Name "95 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"95"[39m
+  [36m/>[39m
+
+  Name "96 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"96"[39m
+  [36m/>[39m
+
+  Name "97 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"97"[39m
+  [36m/>[39m
+
+  Name "98 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"98"[39m
+  [36m/>[39m
+
+  Name "99 (1)":
+  [36m<option[39m
+    [33mvalue[39m=[32m"99"[39m
+  [36m/>[39m
+
+  Name "Cap vista desada":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Baixes previstes":
+  [36m<option[39m
+    [33mvalue[39m=[32m"view-members-leave"[39m
+  [36m/>[39m
+
+  Name "20 files per pàgina":
+  [36m<option[39m
+    [33mvalue[39m=[32m"20"[39m
+  [36m/>[39m
+
+  Name "50 files per pàgina":
+  [36m<option[39m
+    [33mvalue[39m=[32m"50"[39m
+  [36m/>[39m
+
+  Name "200 files per pàgina":
+  [36m<option[39m
+    [33mvalue[39m=[32m"200"[39m
+  [36m/>[39m
+
+  Name "1000 files per pàgina":
+  [36m<option[39m
+    [33mvalue[39m=[32m"1000"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"ah-universal-list__menu"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"ah-universal-list__menu"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<details[39m
+    [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__export"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-universal-list__columns"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdraggable[39m=[32m"true"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "Abonat":
+  [36m<input[39m
+    [33mchecked[39m=[32m""[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Gossos (nivell)":
+  [36m<input[39m
+    [33mchecked[39m=[32m""[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Modalitat":
+  [36m<input[39m
+    [33mchecked[39m=[32m""[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<input[39m
+    [33mchecked[39m=[32m""[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Número":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Contacte":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Pagament":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Proper rebut":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Grup familiar":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Alta des de":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Data de baixa":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Origen de la baixa":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Inactiva fins":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Reserves bloquejades":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Drets d'imatge":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Rols":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Població":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "CP":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Documents pendents":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Entrenament lliure":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Data de naixement":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Gènere":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "DNI":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Vista compartida":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Vista per defecte":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona totes les files":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona totes les files"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Laura Serra Vidal"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Marc Prats García"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Anna Ballart Consul"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Eva Perez Prunell"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Sergio Gimenez Casado"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Montse Tresserra Casas"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 1":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Laura Serra Vidal 1"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 2":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Marc Prats García 2"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 3":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Anna Ballart Consul 3"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 4":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Eva Perez Prunell 4"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 5":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Sergio Gimenez Casado 5"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 6":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Montse Tresserra Casas 6"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 7":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Aina Roca Soler 7"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 8":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Biel Puig Miró 8"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 9":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Clara Font Pons 9"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 10":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Dídac Vila Costa 10"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 11":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Laura Serra Vidal 11"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 12":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Marc Prats García 12"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 13":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Anna Ballart Consul 13"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 14":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Eva Perez Prunell 14"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 15":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Sergio Gimenez Casado 15"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 16":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Montse Tresserra Casas 16"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 17":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Aina Roca Soler 17"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 18":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Biel Puig Miró 18"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 19":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Clara Font Pons 19"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Joan Antoni Serra":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Joan Antoni Serra"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 20":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Dídac Vila Costa 20"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 21":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Laura Serra Vidal 21"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 22":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Marc Prats García 22"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 23":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Anna Ballart Consul 23"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 24":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Eva Perez Prunell 24"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 25":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Sergio Gimenez Casado 25"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 26":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Montse Tresserra Casas 26"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 27":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Aina Roca Soler 27"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 28":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Biel Puig Miró 28"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 29":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Clara Font Pons 29"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 30":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Dídac Vila Costa 30"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 31":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Laura Serra Vidal 31"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 32":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Marc Prats García 32"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 33":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Anna Ballart Consul 33"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 34":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Eva Perez Prunell 34"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 35":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Sergio Gimenez Casado 35"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 36":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Montse Tresserra Casas 36"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 37":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Aina Roca Soler 37"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 38":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Biel Puig Miró 38"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 39":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Clara Font Pons 39"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 40":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Dídac Vila Costa 40"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 41":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Laura Serra Vidal 41"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 42":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Marc Prats García 42"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 43":
+  [36m<input[39m
+    [33maria-label[39m=[32m"Selecciona Anna Ballart Consul 43"[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Nom de la vista":
+  [36m<input[39m
+    [33mmaxlength[39m=[32m"40"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Llistat d'abonats":
+  [36m<table />[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Llistat d'abonats":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Selecciona totes les files Abonat Gossos (nivell) Modalitat Estat":
+  [36m<tr />[39m
+
+  Name "Selecciona Laura Serra Vidal Laura Serra Vidal Duna CRock D Abonat alta Selecciona Laura Serra Vidal":
+  [36m<tr />[39m
+
+  Name "Selecciona Marc Prats García Marc Prats García Chun-li A Abonat alta Selecciona Marc Prats García":
+  [36m<tr />[39m
+
+  Name "Selecciona Anna Ballart Consul Anna Ballart Consul Nass B Abonat alta Selecciona Anna Ballart Consul":
+  [36m<tr />[39m
+
+  Name "Selecciona Eva Perez Prunell Eva Perez Prunell Fish B Abonat inactiva fins 30/09 Selecciona Eva Perez Prunell":
+  [36m<tr />[39m
+
+  Name "Selecciona Sergio Gimenez Casado Sergio Gimenez Casado Thai E Abonat alta Selecciona Sergio Gimenez Casado":
+  [36m<tr />[39m
+
+  Name "Selecciona Montse Tresserra Casas Montse Tresserra Casas Trevi D Abonat alta Selecciona Montse Tresserra Casas":
+  [36m<tr />[39m
+
+  Name "Selecciona Laura Serra Vidal 1 Laura Serra Vidal 1 Duna 1 A Abonat alta Selecciona Laura Serra Vidal 1":
+  [36m<tr />[39m
+
+  Name "Selecciona Marc Prats García 2 Marc Prats García 2 Rock 2 B Abonat alta Selecciona Marc Prats García 2":
+  [36m<tr />[39m
+
+  Name "Selecciona Anna Ballart Consul 3 Anna Ballart Consul 3 Nass 3 C Abonat alta Selecciona Anna Ballart Consul 3":
+  [36m<tr />[39m
+
+  Name "Selecciona Eva Perez Prunell 4 Eva Perez Prunell 4 Thai 4 D Abonat alta Selecciona Eva Perez Prunell 4":
+  [36m<tr />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 5 Sergio Gimenez Casado 5 Trevi 5 E Abonat alta Selecciona Sergio Gimenez Casado 5":
+  [36m<tr />[39m
+
+  Name "Selecciona Montse Tresserra Casas 6 Montse Tresserra Casas 6 Bruc 6 F Abonat alta Selecciona Montse Tresserra Casas 6":
+  [36m<tr />[39m
+
+  Name "Selecciona Aina Roca Soler 7 Aina Roca Soler 7 Kira 7 G Abonat alta Selecciona Aina Roca Soler 7":
+  [36m<tr />[39m
+
+  Name "Selecciona Biel Puig Miró 8 Biel Puig Miró 8 Neru 8 A Abonat alta Selecciona Biel Puig Miró 8":
+  [36m<tr />[39m
+
+  Name "Selecciona Clara Font Pons 9 Clara Font Pons 9 Lua 9 B Abonat alta Selecciona Clara Font Pons 9":
+  [36m<tr />[39m
+
+  Name "Selecciona Dídac Vila Costa 10 Dídac Vila Costa 10 Taca 10 C Abonat alta Selecciona Dídac Vila Costa 10":
+  [36m<tr />[39m
+
+  Name "Selecciona Laura Serra Vidal 11 Laura Serra Vidal 11 Gala 11 D Abonat alta Selecciona Laura Serra Vidal 11":
+  [36m<tr />[39m
+
+  Name "Selecciona Marc Prats García 12 Marc Prats García 12 Ot 12 E Abonat alta Selecciona Marc Prats García 12":
+  [36m<tr />[39m
+
+  Name "Selecciona Anna Ballart Consul 13 Anna Ballart Consul 13 Duna 13 F Abonat alta Selecciona Anna Ballart Consul 13":
+  [36m<tr />[39m
+
+  Name "Selecciona Eva Perez Prunell 14 Eva Perez Prunell 14 Rock 14 G Abonat alta Selecciona Eva Perez Prunell 14":
+  [36m<tr />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 15 Sergio Gimenez Casado 15 Nass 15 A Abonat alta Selecciona Sergio Gimenez Casado 15":
+  [36m<tr />[39m
+
+  Name "Selecciona Montse Tresserra Casas 16 Montse Tresserra Casas 16 Thai 16 B Abonat alta Selecciona Montse Tresserra Casas 16":
+  [36m<tr />[39m
+
+  Name "Selecciona Aina Roca Soler 17 Aina Roca Soler 17 Trevi 17 C Abonat alta Selecciona Aina Roca Soler 17":
+  [36m<tr />[39m
+
+  Name "Selecciona Biel Puig Miró 18 Biel Puig Miró 18 Bruc 18 D Abonat alta Selecciona Biel Puig Miró 18":
+  [36m<tr />[39m
+
+  Name "Selecciona Clara Font Pons 19 Clara Font Pons 19 Kira 19 E Abonat alta Selecciona Clara Font Pons 19":
+  [36m<tr />[39m
+
+  Name "Selecciona Joan Antoni Serra Joan Antoni Serra — Abonat baixa 12/12 Selecciona Joan Antoni Serra":
+  [36m<tr />[39m
+
+  Name "Selecciona Dídac Vila Costa 20 Dídac Vila Costa 20 Neru 20 F Abonat alta Selecciona Dídac Vila Costa 20":
+  [36m<tr />[39m
+
+  Name "Selecciona Laura Serra Vidal 21 Laura Serra Vidal 21 Lua 21 G Abonat alta Selecciona Laura Serra Vidal 21":
+  [36m<tr />[39m
+
+  Name "Selecciona Marc Prats García 22 Marc Prats García 22 Taca 22 A Abonat alta Selecciona Marc Prats García 22":
+  [36m<tr />[39m
+
+  Name "Selecciona Anna Ballart Consul 23 Anna Ballart Consul 23 Gala 23 B Abonat alta Selecciona Anna Ballart Consul 23":
+  [36m<tr />[39m
+
+  Name "Selecciona Eva Perez Prunell 24 Eva Perez Prunell 24 Ot 24 C Abonat alta Selecciona Eva Perez Prunell 24":
+  [36m<tr />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 25 Sergio Gimenez Casado 25 Duna 25 D Abonat alta Selecciona Sergio Gimenez Casado 25":
+  [36m<tr />[39m
+
+  Name "Selecciona Montse Tresserra Casas 26 Montse Tresserra Casas 26 Rock 26 E Abonat alta Selecciona Montse Tresserra Casas 26":
+  [36m<tr />[39m
+
+  Name "Selecciona Aina Roca Soler 27 Aina Roca Soler 27 Nass 27 F Abonat alta Selecciona Aina Roca Soler 27":
+  [36m<tr />[39m
+
+  Name "Selecciona Biel Puig Miró 28 Biel Puig Miró 28 Thai 28 G Abonat alta Selecciona Biel Puig Miró 28":
+  [36m<tr />[39m
+
+  Name "Selecciona Clara Font Pons 29 Clara Font Pons 29 Trevi 29 A Abonat alta Selecciona Clara Font Pons 29":
+  [36m<tr />[39m
+
+  Name "Selecciona Dídac Vila Costa 30 Dídac Vila Costa 30 Bruc 30 B Abonat alta Selecciona Dídac Vila Costa 30":
+  [36m<tr />[39m
+
+  Name "Selecciona Laura Serra Vidal 31 Laura Serra Vidal 31 Kira 31 C Abonat alta Selecciona Laura Serra Vidal 31":
+  [36m<tr />[39m
+
+  Name "Selecciona Marc Prats García 32 Marc Prats García 32 Neru 32 D Abonat alta Selecciona Marc Prats García 32":
+  [36m<tr />[39m
+
+  Name "Selecciona Anna Ballart Consul 33 Anna Ballart Consul 33 Lua 33 E Abonat alta Selecciona Anna Ballart Consul 33":
+  [36m<tr />[39m
+
+  Name "Selecciona Eva Perez Prunell 34 Eva Perez Prunell 34 Taca 34 F Abonat alta Selecciona Eva Perez Prunell 34":
+  [36m<tr />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 35 Sergio Gimenez Casado 35 Gala 35 G Abonat alta Selecciona Sergio Gimenez Casado 35":
+  [36m<tr />[39m
+
+  Name "Selecciona Montse Tresserra Casas 36 Montse Tresserra Casas 36 Ot 36 A Abonat alta Selecciona Montse Tresserra Casas 36":
+  [36m<tr />[39m
+
+  Name "Selecciona Aina Roca Soler 37 Aina Roca Soler 37 Duna 37 B Abonat alta Selecciona Aina Roca Soler 37":
+  [36m<tr />[39m
+
+  Name "Selecciona Biel Puig Miró 38 Biel Puig Miró 38 Rock 38 C Abonat alta Selecciona Biel Puig Miró 38":
+  [36m<tr />[39m
+
+  Name "Selecciona Clara Font Pons 39 Clara Font Pons 39 Nass 39 D Abonat alta Selecciona Clara Font Pons 39":
+  [36m<tr />[39m
+
+  Name "Selecciona Dídac Vila Costa 40 Dídac Vila Costa 40 Thai 40 E Abonat alta Selecciona Dídac Vila Costa 40":
+  [36m<tr />[39m
+
+  Name "Selecciona Laura Serra Vidal 41 Laura Serra Vidal 41 Trevi 41 F Abonat alta Selecciona Laura Serra Vidal 41":
+  [36m<tr />[39m
+
+  Name "Selecciona Marc Prats García 42 Marc Prats García 42 Bruc 42 G Abonat alta Selecciona Marc Prats García 42":
+  [36m<tr />[39m
+
+  Name "Selecciona Anna Ballart Consul 43 Anna Ballart Consul 43 Kira 43 A Abonat alta Selecciona Anna Ballart Consul 43":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Selecciona totes les files":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gossos (nivell)":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Modalitat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "Selecciona Laura Serra Vidal":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal":
+  [36m<td />[39m
+
+  Name "Duna CRock D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Laura Serra Vidal":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García":
+  [36m<td />[39m
+
+  Name "Chun-li A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Marc Prats García":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul":
+  [36m<td />[39m
+
+  Name "Nass B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Anna Ballart Consul":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell":
+  [36m<td />[39m
+
+  Name "Fish B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "inactiva fins 30/09":
+  [36m<td />[39m
+
+  Name "Selecciona Eva Perez Prunell":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado":
+  [36m<td />[39m
+
+  Name "Thai E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Sergio Gimenez Casado":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas":
+  [36m<td />[39m
+
+  Name "Trevi D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Montse Tresserra Casas":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 1":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 1":
+  [36m<td />[39m
+
+  Name "Duna 1 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Laura Serra Vidal 1":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 2":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 2":
+  [36m<td />[39m
+
+  Name "Rock 2 B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Marc Prats García 2":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 3":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 3":
+  [36m<td />[39m
+
+  Name "Nass 3 C":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Anna Ballart Consul 3":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 4":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 4":
+  [36m<td />[39m
+
+  Name "Thai 4 D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Eva Perez Prunell 4":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 5":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 5":
+  [36m<td />[39m
+
+  Name "Trevi 5 E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 5":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 6":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 6":
+  [36m<td />[39m
+
+  Name "Bruc 6 F":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Montse Tresserra Casas 6":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 7":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 7":
+  [36m<td />[39m
+
+  Name "Kira 7 G":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Aina Roca Soler 7":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 8":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 8":
+  [36m<td />[39m
+
+  Name "Neru 8 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Biel Puig Miró 8":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 9":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 9":
+  [36m<td />[39m
+
+  Name "Lua 9 B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Clara Font Pons 9":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 10":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 10":
+  [36m<td />[39m
+
+  Name "Taca 10 C":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Dídac Vila Costa 10":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 11":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 11":
+  [36m<td />[39m
+
+  Name "Gala 11 D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Laura Serra Vidal 11":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 12":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 12":
+  [36m<td />[39m
+
+  Name "Ot 12 E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Marc Prats García 12":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 13":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 13":
+  [36m<td />[39m
+
+  Name "Duna 13 F":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Anna Ballart Consul 13":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 14":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 14":
+  [36m<td />[39m
+
+  Name "Rock 14 G":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Eva Perez Prunell 14":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 15":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 15":
+  [36m<td />[39m
+
+  Name "Nass 15 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 15":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 16":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 16":
+  [36m<td />[39m
+
+  Name "Thai 16 B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Montse Tresserra Casas 16":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 17":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 17":
+  [36m<td />[39m
+
+  Name "Trevi 17 C":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Aina Roca Soler 17":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 18":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 18":
+  [36m<td />[39m
+
+  Name "Bruc 18 D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Biel Puig Miró 18":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 19":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 19":
+  [36m<td />[39m
+
+  Name "Kira 19 E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Clara Font Pons 19":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Joan Antoni Serra":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Joan Antoni Serra":
+  [36m<td />[39m
+
+  Name "—":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "baixa 12/12":
+  [36m<td />[39m
+
+  Name "Selecciona Joan Antoni Serra":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 20":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 20":
+  [36m<td />[39m
+
+  Name "Neru 20 F":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Dídac Vila Costa 20":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 21":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 21":
+  [36m<td />[39m
+
+  Name "Lua 21 G":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Laura Serra Vidal 21":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 22":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 22":
+  [36m<td />[39m
+
+  Name "Taca 22 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Marc Prats García 22":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 23":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 23":
+  [36m<td />[39m
+
+  Name "Gala 23 B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Anna Ballart Consul 23":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 24":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 24":
+  [36m<td />[39m
+
+  Name "Ot 24 C":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Eva Perez Prunell 24":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 25":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 25":
+  [36m<td />[39m
+
+  Name "Duna 25 D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 25":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 26":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 26":
+  [36m<td />[39m
+
+  Name "Rock 26 E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Montse Tresserra Casas 26":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 27":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 27":
+  [36m<td />[39m
+
+  Name "Nass 27 F":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Aina Roca Soler 27":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 28":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 28":
+  [36m<td />[39m
+
+  Name "Thai 28 G":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Biel Puig Miró 28":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 29":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 29":
+  [36m<td />[39m
+
+  Name "Trevi 29 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Clara Font Pons 29":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 30":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 30":
+  [36m<td />[39m
+
+  Name "Bruc 30 B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Dídac Vila Costa 30":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 31":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 31":
+  [36m<td />[39m
+
+  Name "Kira 31 C":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Laura Serra Vidal 31":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 32":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 32":
+  [36m<td />[39m
+
+  Name "Neru 32 D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Marc Prats García 32":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 33":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 33":
+  [36m<td />[39m
+
+  Name "Lua 33 E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Anna Ballart Consul 33":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 34":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 34":
+  [36m<td />[39m
+
+  Name "Taca 34 F":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Eva Perez Prunell 34":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 35":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 35":
+  [36m<td />[39m
+
+  Name "Gala 35 G":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Sergio Gimenez Casado 35":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 36":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 36":
+  [36m<td />[39m
+
+  Name "Ot 36 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Montse Tresserra Casas 36":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 37":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 37":
+  [36m<td />[39m
+
+  Name "Duna 37 B":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Aina Roca Soler 37":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 38":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 38":
+  [36m<td />[39m
+
+  Name "Rock 38 C":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Biel Puig Miró 38":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 39":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 39":
+  [36m<td />[39m
+
+  Name "Nass 39 D":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Clara Font Pons 39":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 40":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 40":
+  [36m<td />[39m
+
+  Name "Thai 40 E":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Dídac Vila Costa 40":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 41":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 41":
+  [36m<td />[39m
+
+  Name "Trevi 41 F":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Laura Serra Vidal 41":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 42":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 42":
+  [36m<td />[39m
+
+  Name "Bruc 42 G":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Marc Prats García 42":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 43":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__selection"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 43":
+  [36m<td />[39m
+
+  Name "Kira 43 A":
+  [36m<td />[39m
+
+  Name "Abonat":
+  [36m<td />[39m
+
+  Name "alta":
+  [36m<td />[39m
+
+  Name "Selecciona Anna Ballart Consul 43":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Laura Serra Vidal":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura"[39m
+  [36m/>[39m
+
+  Name "Duna CRock D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-marc"[39m
+  [36m/>[39m
+
+  Name "Chun-li A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-marc"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-marc"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-marc"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-marc"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-anna"[39m
+  [36m/>[39m
+
+  Name "Nass B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-anna"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-anna"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-anna"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-anna"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-eva"[39m
+  [36m/>[39m
+
+  Name "Fish B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-eva"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-eva"[39m
+  [36m/>[39m
+
+  Name "inactiva fins 30/09":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-eva"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-eva"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-sergio"[39m
+  [36m/>[39m
+
+  Name "Thai E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-sergio"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-sergio"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-sergio"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-sergio"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-montse"[39m
+  [36m/>[39m
+
+  Name "Trevi D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-montse"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-montse"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-montse"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-montse"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 1":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-1"[39m
+  [36m/>[39m
+
+  Name "Duna 1 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-1"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-1"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-1"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 1":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-1"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 2":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-2"[39m
+  [36m/>[39m
+
+  Name "Rock 2 B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-2"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-2"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-2"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 2":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-2"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 3":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-3"[39m
+  [36m/>[39m
+
+  Name "Nass 3 C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-3"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-3"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-3"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 3":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-3"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 4":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-4"[39m
+  [36m/>[39m
+
+  Name "Thai 4 D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-4"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-4"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-4"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 4":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-4"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 5":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-5"[39m
+  [36m/>[39m
+
+  Name "Trevi 5 E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-5"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-5"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-5"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 5":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-5"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 6":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-6"[39m
+  [36m/>[39m
+
+  Name "Bruc 6 F":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-6"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-6"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-6"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 6":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-6"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 7":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-7"[39m
+  [36m/>[39m
+
+  Name "Kira 7 G":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-7"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-7"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-7"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 7":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-7"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 8":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-8"[39m
+  [36m/>[39m
+
+  Name "Neru 8 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-8"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-8"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-8"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 8":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-8"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 9":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-9"[39m
+  [36m/>[39m
+
+  Name "Lua 9 B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-9"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-9"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-9"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 9":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-9"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 10":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-10"[39m
+  [36m/>[39m
+
+  Name "Taca 10 C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-10"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-10"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-10"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 10":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-10"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 11":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-11"[39m
+  [36m/>[39m
+
+  Name "Gala 11 D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-11"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-11"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-11"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 11":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-11"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 12":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-12"[39m
+  [36m/>[39m
+
+  Name "Ot 12 E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-12"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-12"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-12"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 12":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-12"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 13":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-13"[39m
+  [36m/>[39m
+
+  Name "Duna 13 F":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-13"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-13"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-13"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 13":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-13"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 14":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-14"[39m
+  [36m/>[39m
+
+  Name "Rock 14 G":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-14"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-14"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-14"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 14":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-14"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 15":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-15"[39m
+  [36m/>[39m
+
+  Name "Nass 15 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-15"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-15"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-15"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 15":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-15"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 16":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-16"[39m
+  [36m/>[39m
+
+  Name "Thai 16 B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-16"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-16"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-16"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 16":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-16"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 17":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-17"[39m
+  [36m/>[39m
+
+  Name "Trevi 17 C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-17"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-17"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-17"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 17":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-17"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 18":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-18"[39m
+  [36m/>[39m
+
+  Name "Bruc 18 D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-18"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-18"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-18"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 18":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-18"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 19":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-19"[39m
+  [36m/>[39m
+
+  Name "Kira 19 E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-19"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-19"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-19"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 19":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-19"[39m
+  [36m/>[39m
+
+  Name "Joan Antoni Serra":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-joan"[39m
+  [36m/>[39m
+
+  Name "—":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-joan"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-joan"[39m
+  [36m/>[39m
+
+  Name "baixa 12/12":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-joan"[39m
+  [36m/>[39m
+
+  Name "Selecciona Joan Antoni Serra":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-joan"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 20":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-20"[39m
+  [36m/>[39m
+
+  Name "Neru 20 F":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-20"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-20"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-20"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 20":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-20"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 21":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-21"[39m
+  [36m/>[39m
+
+  Name "Lua 21 G":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-21"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-21"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-21"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 21":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-21"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 22":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-22"[39m
+  [36m/>[39m
+
+  Name "Taca 22 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-22"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-22"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-22"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 22":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-22"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 23":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-23"[39m
+  [36m/>[39m
+
+  Name "Gala 23 B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-23"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-23"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-23"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 23":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-23"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 24":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-24"[39m
+  [36m/>[39m
+
+  Name "Ot 24 C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-24"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-24"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-24"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 24":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-24"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 25":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-25"[39m
+  [36m/>[39m
+
+  Name "Duna 25 D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-25"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-25"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-25"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 25":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-25"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 26":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-26"[39m
+  [36m/>[39m
+
+  Name "Rock 26 E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-26"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-26"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-26"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 26":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-26"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 27":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-27"[39m
+  [36m/>[39m
+
+  Name "Nass 27 F":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-27"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-27"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-27"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 27":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-27"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 28":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-28"[39m
+  [36m/>[39m
+
+  Name "Thai 28 G":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-28"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-28"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-28"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 28":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-28"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 29":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-29"[39m
+  [36m/>[39m
+
+  Name "Trevi 29 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-29"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-29"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-29"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 29":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-29"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 30":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-30"[39m
+  [36m/>[39m
+
+  Name "Bruc 30 B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-30"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-30"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-30"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 30":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-30"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 31":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-31"[39m
+  [36m/>[39m
+
+  Name "Kira 31 C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-31"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-31"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-31"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 31":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-31"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 32":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-32"[39m
+  [36m/>[39m
+
+  Name "Neru 32 D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-32"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-32"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-32"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 32":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-32"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 33":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-33"[39m
+  [36m/>[39m
+
+  Name "Lua 33 E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-33"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-33"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-33"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 33":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-33"[39m
+  [36m/>[39m
+
+  Name "Eva Perez Prunell 34":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-34"[39m
+  [36m/>[39m
+
+  Name "Taca 34 F":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-34"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-34"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-34"[39m
+  [36m/>[39m
+
+  Name "Selecciona Eva Perez Prunell 34":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-34"[39m
+  [36m/>[39m
+
+  Name "Sergio Gimenez Casado 35":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-35"[39m
+  [36m/>[39m
+
+  Name "Gala 35 G":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-35"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-35"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-35"[39m
+  [36m/>[39m
+
+  Name "Selecciona Sergio Gimenez Casado 35":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-35"[39m
+  [36m/>[39m
+
+  Name "Montse Tresserra Casas 36":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-36"[39m
+  [36m/>[39m
+
+  Name "Ot 36 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-36"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-36"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-36"[39m
+  [36m/>[39m
+
+  Name "Selecciona Montse Tresserra Casas 36":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-36"[39m
+  [36m/>[39m
+
+  Name "Aina Roca Soler 37":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-37"[39m
+  [36m/>[39m
+
+  Name "Duna 37 B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-37"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-37"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-37"[39m
+  [36m/>[39m
+
+  Name "Selecciona Aina Roca Soler 37":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-37"[39m
+  [36m/>[39m
+
+  Name "Biel Puig Miró 38":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-38"[39m
+  [36m/>[39m
+
+  Name "Rock 38 C":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-38"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-38"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-38"[39m
+  [36m/>[39m
+
+  Name "Selecciona Biel Puig Miró 38":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-38"[39m
+  [36m/>[39m
+
+  Name "Clara Font Pons 39":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-39"[39m
+  [36m/>[39m
+
+  Name "Nass 39 D":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-39"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-39"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-39"[39m
+  [36m/>[39m
+
+  Name "Selecciona Clara Font Pons 39":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-39"[39m
+  [36m/>[39m
+
+  Name "Dídac Vila Costa 40":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-40"[39m
+  [36m/>[39m
+
+  Name "Thai 40 E":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-40"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-40"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-40"[39m
+  [36m/>[39m
+
+  Name "Selecciona Dídac Vila Costa 40":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-40"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal 41":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-41"[39m
+  [36m/>[39m
+
+  Name "Trevi 41 F":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-41"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-41"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-41"[39m
+  [36m/>[39m
+
+  Name "Selecciona Laura Serra Vidal 41":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-41"[39m
+  [36m/>[39m
+
+  Name "Marc Prats García 42":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-42"[39m
+  [36m/>[39m
+
+  Name "Bruc 42 G":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-42"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-42"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-42"[39m
+  [36m/>[39m
+
+  Name "Selecciona Marc Prats García 42":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-42"[39m
+  [36m/>[39m
+
+  Name "Anna Ballart Consul 43":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-43"[39m
+  [36m/>[39m
+
+  Name "Kira 43 A":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-43"[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-43"[39m
+  [36m/>[39m
+
+  Name "alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-43"[39m
+  [36m/>[39m
+
+  Name "Selecciona Anna Ballart Consul 43":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-generated-43"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  contentinfo:
+
+  Name "":
+  [36m<footer[39m
+    [33mclass[39m=[32m"ah-universal-list__footer"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAbonats[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m184 d'alta[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-send"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mEnviar comunicat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'abonats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per nom, DNI, gos…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mplaceholder[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels abonats"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mAlta[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEFT"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberNumber"[39m
+                  [36m>[39m
+                    [0mNúmero[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"lastName"[39m
+                  [36m>[39m
+                    [0mCognoms[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fullName"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"displayStatus"[39m
+                  [36m>[39m
+                    [0mEstat visible[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"planId"[39m
+                  [36m>[39m
+                    [0mModalitat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"priceId"[39m
+                  [36m>[39m
+                    [0mTarifa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode de pagament[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+                  [36m>[39m
+                    [0mProper rebut[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"joinedAt"[39m
+                  [36m>[39m
+                    [0mAlta des de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveDate"[39m
+                  [36m>[39m
+                    [0mData de baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveSource"[39m
+                  [36m>[39m
+                    [0mOrigen de la baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"inactivityUntil"[39m
+                  [36m>[39m
+                    [0mInactiva fins[0m
+      ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusListPage.test.tsx:178:19
+    176|     await renderPage("members");
+    177|     expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+    178|     expect(screen.getByRole("searchbox", { name: "Cerca per nom, docum…
+       |                   ^
+    179|
+    180|     fireEvent.click(screen.getByText("Columnes"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2 / E11-W05 step 4: in ca the identity row of a DNI is labelled by its type
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2 / E11-W05 step 4: in ca the identity row of a NIE is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Document d'identitat$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:224:18
+    222|     const term = value.closest("dd")?.previousElementSibling;
+    223|     expect(term?.tagName).toBe("DT");
+    224|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    225|   });
+    226|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2 / E11-W05 step 4: in es the identity row of a DNI is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Documento de identidad$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:224:18
+    222|     const term = value.closest("dd")?.previousElementSibling;
+    223|     expect(term?.tagName).toBe("DT");
+    224|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    225|   });
+    226|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2 / E11-W05 step 4: in en the identity row of a NIE is labelled by its type
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > T-04-33 D2 signup validation > E4-W12 step 2 / E11-W05 step 4: in en the identity row of a DNI is labelled by its type
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^ID document$/u[39m
+Received:
+[31m  DNI/NIE[39m
+ ❯ src/dashboard/SignupReviewPage.test.tsx:224:18
+    222|     const term = value.closest("dd")?.previousElementSibling;
+    223|     expect(term?.tagName).toBe("DT");
+    224|     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+       |                  ^
+    225|   });
+    226|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > the ID document is read-only while the readmission waits, and says how to correct it (E11-W05 step 4: «Document d'identitat»)
+TestingLibraryElementError: Unable to find a label with the text of: Document d'identitat
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_i_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_i_"[39m
+    [36m>[39m
+      [0mEdita les dades de la preinscripció[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"signup-edit-form"[39m
+    [36m>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mPersona[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-firstName"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-firstName"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName1"[39m
+          [36m>[39m
+            [0mPrimer cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName1"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Roca"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName2"[39m
+          [36m>[39m
+            [0mSegon cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName2"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-birthDate"[39m
+          [36m>[39m
+            [0mData de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-birthDate"[39m
+            [33mtype[39m=[32m"date"[39m
+            [33mvalue[39m=[32m"1988-04-12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [0mGènere[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemení[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMasculí[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"OTHER"[39m
+            [36m>[39m
+              [0mAltres / No binari[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-idDocument"[39m
+          [36m>[39m
+            [0mDNI/NIE[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-describedby[39m=[32m"signup-edit-idDocument-help"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-idDocument"[39m
+            [33mreadonly[39m=[32m""[39m
+            [33mvalue[39m=[32m"47123456K"[39m
+          [36m/>[39m
+          [36m<small[39m
+            [33mclass[39m=[32m"ah-form-field__help"[39m
+            [33mid[39m=[32m"signup-edit-idDocument-help"[39m
+          [36m>[39m
+            [0mEl DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.[0m
+          [36m</small>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email1"[39m
+          [36m>[39m
+            [0mCorreu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email1"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m"marta.roca@example.test"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email2"[39m
+          [36m>[39m
+            [0mSegon correu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email2"[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-edit-form__row"[39m
+...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1284:37
+    1282|     await renderReview({ fetchOverride: over });
+    1283|     const drawer = openDrawer();
+    1284|     const document = within(drawer).getByLabelText("Document d'identit…
+       |                                     ^
+    1285|     expect(document).toHaveAttribute("readonly");
+    1286|     expect(document).toHaveValue("47123456K");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > a signup that is not a readmission has no readmission block and an editable ID document
+TestingLibraryElementError: Unable to find a label with the text of: Document d'identitat
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_k_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_k_"[39m
+    [36m>[39m
+      [0mEdita les dades de la preinscripció[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"signup-edit-form"[39m
+    [36m>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mPersona[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-firstName"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-firstName"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName1"[39m
+          [36m>[39m
+            [0mPrimer cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName1"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Roca"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName2"[39m
+          [36m>[39m
+            [0mSegon cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName2"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-birthDate"[39m
+          [36m>[39m
+            [0mData de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-birthDate"[39m
+            [33mtype[39m=[32m"date"[39m
+            [33mvalue[39m=[32m"1988-04-12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [0mGènere[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemení[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMasculí[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"OTHER"[39m
+            [36m>[39m
+              [0mAltres / No binari[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-idDocument"[39m
+          [36m>[39m
+            [0mDNI/NIE[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-idDocument"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"47123456K"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email1"[39m
+          [36m>[39m
+            [0mCorreu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email1"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m"marta.roca@example.test"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email2"[39m
+          [36m>[39m
+            [0mSegon correu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email2"[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-edit-form__row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"signup-edit-phone1Prefix"[39m
+            [36m>[39m
+              [0mPrefix[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"signup-edit-phone1Prefix"[39m
+              [33mtype[39m=[32m"text"[39m
+              [33mvalue[39m=[32m"+34"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"signup-edit-phone1Number"[39m
+            [36m>[39m
+              [0mTelèfon[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"signup-edit-phone1Number"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"tel"[39m
+              [33mvalue[39m=[32m"655123123"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<fieldset>[39m
+          [36m<legend>[39m
+            [0mSegon telèfon[0m
+          [36m</legend>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"signup-edit-form__row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Prefix"[39m
+              [36m>[39m
+                [0mPrefix[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Prefix"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"+34"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Number"[39m
+              [36m>[39m
+                [0mTelèfon[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Number"[39m
+                [33mtype[39m=[32m"tel"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Label"[39m
+              [36m>[39m
+                [0mDescripció[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Label"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-street"[39m
+          [36m>[39m
+            [0mAdreça[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-street"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Carrer de la Riera, 12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-postalCode"[39m
+          [36m>[39m
+            [0mCodi postal[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-postalCode"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"08349"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-city"[39m
+          [36m>[39m
+            [0mPoblació[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-city"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Cabrera de Mar"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-paymentType"[39m
+          [36m>[39m
+            [0mMètode de pagament[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-paymentType"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"SEPA_DD"[39m
+            [36m>[39m
+              [0mDomiciliació[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MANUAL"[39m
+            [36m>[39m
+              [0mEfectiu[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-iban"[39m
+          [36m>[39m
+            [0mIBAN[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-iban"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-accountHolder"[39m
+          [36m>[39m
+            [0mTitular del compte[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-accountHolder"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta Roca Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-holderTaxId"[39m
+          [36m>[39m
+            [0mNIF del titular[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-holderTaxId"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-requested-plan"[39m
+          [36m>[39m
+            [0mModalitat sol·licitada[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-requested-plan"[39m
+            [33mreadonly[39m=[32m""[39m
+            [33mvalue[39m=[32m"Abonat"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mGos (1 de 1)[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-name"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-name"[39m
+            [33mvalue[39m=[32m"Kiwi"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-breed"[39m
+          [36m>[39m
+            [0mRaça[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-breed"[39m
+            [33mvalue[39m=[32m"Whippet"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-birthMonth"[39m
+          [36m>[39m
+            [0mMes de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-birthMonth"[39m
+            [33mvalue[39m=[32m"2024-04"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-chip"[39m
+          [36m>[39m
+            [0mXip[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-chip"[39m
+            [33mvalue[39m=[32m"941000024681357"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-sex"[39m
+          [36m>[39m
+            [0mSexe[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-sex"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemella[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMascle[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-notes"[39m
+          [36m>[39m
+            [0mNotes als instructors[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-notes"[39m
+            [33mmaxlength[39m=[32m"1000"[39m
+          [36m>[39m
+            [0mIniciar-nos a l'agility i socialitzar[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"signup-edit-documents"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+          [36m>[39m
+            [0mDocuments[0m
+          [36m</span>[39m
+          [36m<ul />[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDESA ELS CANVIS[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1324:33
+    1322|     await renderReview();
+    1323|     expect(screen.queryByRole("region", { name: "Canvis respecte de la…
+    1324|     expect(within(openDrawer()).getByLabelText("Document d'identitat")…
+       |                                 ^
+    1325|       "readonly",
+    1326|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) > round 2: `readmission: null` (how the core writes an ordinary signup) keeps the ID document editable and the card on `member`
+TestingLibraryElementError: Unable to find a label with the text of: Document d'identitat
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_m_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_m_"[39m
+    [36m>[39m
+      [0mEdita les dades de la preinscripció[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"signup-edit-form"[39m
+    [36m>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mPersona[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-firstName"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-firstName"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName1"[39m
+          [36m>[39m
+            [0mPrimer cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName1"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Roca"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-lastName2"[39m
+          [36m>[39m
+            [0mSegon cognom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-lastName2"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-birthDate"[39m
+          [36m>[39m
+            [0mData de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-birthDate"[39m
+            [33mtype[39m=[32m"date"[39m
+            [33mvalue[39m=[32m"1988-04-12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [0mGènere[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-gender"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemení[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMasculí[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"OTHER"[39m
+            [36m>[39m
+              [0mAltres / No binari[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-idDocument"[39m
+          [36m>[39m
+            [0mDNI/NIE[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-idDocument"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"47123456K"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email1"[39m
+          [36m>[39m
+            [0mCorreu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email1"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m"marta.roca@example.test"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-email2"[39m
+          [36m>[39m
+            [0mSegon correu electrònic[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-email2"[39m
+            [33mtype[39m=[32m"email"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"signup-edit-form__row"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"signup-edit-phone1Prefix"[39m
+            [36m>[39m
+              [0mPrefix[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"signup-edit-phone1Prefix"[39m
+              [33mtype[39m=[32m"text"[39m
+              [33mvalue[39m=[32m"+34"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"signup-edit-phone1Number"[39m
+            [36m>[39m
+              [0mTelèfon[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"signup-edit-phone1Number"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"tel"[39m
+              [33mvalue[39m=[32m"655123123"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<fieldset>[39m
+          [36m<legend>[39m
+            [0mSegon telèfon[0m
+          [36m</legend>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"signup-edit-form__row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Prefix"[39m
+              [36m>[39m
+                [0mPrefix[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Prefix"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"+34"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Number"[39m
+              [36m>[39m
+                [0mTelèfon[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Number"[39m
+                [33mtype[39m=[32m"tel"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"signup-edit-phone2Label"[39m
+              [36m>[39m
+                [0mDescripció[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"signup-edit-phone2Label"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-street"[39m
+          [36m>[39m
+            [0mAdreça[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-street"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Carrer de la Riera, 12"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-postalCode"[39m
+          [36m>[39m
+            [0mCodi postal[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-postalCode"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"08349"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-city"[39m
+          [36m>[39m
+            [0mPoblació[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-city"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Cabrera de Mar"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-paymentType"[39m
+          [36m>[39m
+            [0mMètode de pagament[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-paymentType"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"SEPA_DD"[39m
+            [36m>[39m
+              [0mDomiciliació[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MANUAL"[39m
+            [36m>[39m
+              [0mEfectiu[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-iban"[39m
+          [36m>[39m
+            [0mIBAN[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-iban"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-accountHolder"[39m
+          [36m>[39m
+            [0mTitular del compte[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-accountHolder"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Marta Roca Pujol"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-holderTaxId"[39m
+          [36m>[39m
+            [0mNIF del titular[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-holderTaxId"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-requested-plan"[39m
+          [36m>[39m
+            [0mModalitat sol·licitada[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-requested-plan"[39m
+            [33mreadonly[39m=[32m""[39m
+            [33mvalue[39m=[32m"Abonat"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<fieldset>[39m
+        [36m<legend>[39m
+          [0mGos (1 de 1)[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-name"[39m
+          [36m>[39m
+            [0mNom[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-name"[39m
+            [33mvalue[39m=[32m"Kiwi"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-breed"[39m
+          [36m>[39m
+            [0mRaça[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-breed"[39m
+            [33mvalue[39m=[32m"Whippet"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-birthMonth"[39m
+          [36m>[39m
+            [0mMes de naixement[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-birthMonth"[39m
+            [33mvalue[39m=[32m"2024-04"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-chip"[39m
+          [36m>[39m
+            [0mXip[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-chip"[39m
+            [33mvalue[39m=[32m"941000024681357"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-sex"[39m
+          [36m>[39m
+            [0mSexe[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-sex"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"FEMALE"[39m
+            [36m>[39m
+              [0mFemella[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"MALE"[39m
+            [36m>[39m
+              [0mMascle[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"signup-edit-dog-0-notes"[39m
+          [36m>[39m
+            [0mNotes als instructors[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"signup-edit-dog-0-notes"[39m
+            [33mmaxlength[39m=[32m"1000"[39m
+          [36m>[39m
+            [0mIniciar-nos a l'agility i socialitzar[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"signup-edit-documents"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+          [36m>[39m
+            [0mDocuments[0m
+          [36m</span>[39m
+          [36m<ul />[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDESA ELS CANVIS[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/SignupReviewPage.test.tsx:1336:33
+    1334|     expect(screen.queryByRole("region", { name: "Canvis respecte de la…
+    1335|     expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34…
+    1336|     expect(within(openDrawer()).getByLabelText("Document d'identitat")…
+       |                                 ^
+    1337|       "readonly",
+    1338|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  9 failed | 4 passed | 92 skipped (105)
+   Start at  22:35:37
+   Duration  2.82s (transform 36%, tests 36%, environment 14%, import 11%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/CensusListPage.test.tsx src/dashboard/SignupReviewPage.test.tsx -t E11-W05|E4-W12 step 2|ID document

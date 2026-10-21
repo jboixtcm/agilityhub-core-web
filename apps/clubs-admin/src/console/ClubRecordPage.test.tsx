@@ -164,7 +164,7 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(screen.getByLabelText("Web").closest(".ah-form-field")).toHaveTextContent(
       "Aquest camp és obligatori.",
     );
-    expect(screen.getByText("Reviseu els camps destacats.")).toBeInTheDocument();
+    expect(screen.getByText("Revisa els camps destacats.")).toBeInTheDocument();
   });
 
   it("Localització: every change shows its consequences first; TIMEZONE_CHANGE_BLOCKED lands on the zone field", async () => {
@@ -268,7 +268,7 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(theme?.body).not.toHaveProperty("markFileKey");
   });
 
-  it("E11-W02 round 2 (review #7): Tema previews «Automàtic» in the reader's dark scheme, dark logo included", async () => {
+  it("R-02-08 (E11-W02 round 2, review #7): Tema previews «Automàtic» in the reader's dark scheme, dark logo included", async () => {
     // jsdom has no `matchMedia`: a reader who asks for the dark scheme.
     Object.defineProperty(window, "matchMedia", {
       configurable: true,
@@ -572,7 +572,7 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     await waitFor(() => {
       expect(text).toHaveAccessibleDescription("Aquest camp és obligatori.");
     });
-    expect(screen.getByText("Reviseu els camps destacats.")).toBeInTheDocument();
+    expect(screen.getByText("Revisa els camps destacats.")).toBeInTheDocument();
     // The answer was about the text it sent: once the user changes it, the message goes.
     fireEvent.change(text, { target: { value: "Autoritzo les fotos del meu gos i les meves." } });
     expect(text).not.toHaveAccessibleDescription("Aquest camp és obligatori.");

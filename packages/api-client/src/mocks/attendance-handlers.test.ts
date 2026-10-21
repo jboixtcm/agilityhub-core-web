@@ -420,6 +420,15 @@ describe("E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-0
     ).toBe(6);
   });
 
+  it("E11-W05 step 7 (attendanceEmpty): the sheet of a class nobody booked has no rows and no waiting list, in the contract's shape", async () => {
+    use("attendanceEmpty");
+    const empty = (await sheet("c3")).data;
+    expectValid("AttendanceSheet", empty);
+    expect(empty?.rows).toEqual([]);
+    expect(empty?.classSession).toMatchObject({ booked: 0, waiting: 0 });
+    expect(empty?.waitlist?.entries ?? []).toEqual([]);
+  });
+
   it("R-10-03: closed window (attendanceClosed), notice disabled, not open yet, a cancelled class and the ADMIN's override", async () => {
     use("attendanceClosed");
     expect((await sheet()).data?.sheet).toMatchObject({

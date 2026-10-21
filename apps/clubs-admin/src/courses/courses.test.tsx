@@ -728,7 +728,7 @@ describe("R-16-10 / R-16-07 a course's page: build sheet, register as set up, me
 
     // An ADMIN is never refused by the switch: the refusal is another one (e.g. impersonation).
     await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "admin");
-    expect(await refuse()).toBe("No teniu permís per fer aquesta acció.");
+    expect(await refuse()).toBe("No tens permís per fer aquesta acció.");
     expect(screen.getAllByRole("button", { name: "Registra-ho com a muntat" })).toHaveLength(2);
 
     cleanup();
@@ -1085,6 +1085,29 @@ describe("D16 «Geometria» (S16 §2, R-16-04/06/08)", () => {
     const history = await screen.findByRole("region", { name: "Muntatges" });
     expect(await within(history).findByText("Substituït")).toBeVisible();
     expect(within(history).queryByText("Desmuntat")).toBeNull();
+  });
+
+  it("R-16-08 E11-W05 step 5 (E154): «Substituït» links to the setup that replaced it (replacedBySetupId), which takes the focus", async () => {
+    await renderRoute("/pistes/ring-muntanya/geometria");
+    const history = await screen.findByRole("region", { name: "Muntatges" });
+    const link = await within(history).findByRole("link", { name: "Substituït" });
+    const replacing = document.getElementById(`setup-${SETUP_IDS.muntanyaActive}`);
+    expect(replacing).not.toBeNull();
+    expect(link).toHaveAttribute("href", `#setup-${SETUP_IDS.muntanyaActive}`);
+    fireEvent.click(link);
+    expect(replacing).toHaveFocus();
+    expect(replacing).toHaveTextContent("Muntat");
+  });
+
+  it("R-16-08 E11-W05 step 5 (E154): a setup dismantled because its ring was deactivated (RING_INACTIVE) reads «Pista desactivada», not «Desmuntat»", async () => {
+    const dismantled = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaDismantled);
+    if (dismantled === undefined) throw new Error("SETUP_NOT_FOUND");
+    Object.assign(dismantled, { dismantledReason: "RING_INACTIVE", replacedBySetupId: null });
+    await renderRoute("/pistes/ring-muntanya/geometria");
+    const history = await screen.findByRole("region", { name: "Muntatges" });
+    expect(await within(history).findByText("Pista desactivada")).toBeVisible();
+    expect(within(history).queryByText("Desmuntat")).toBeNull();
+    expect(within(history).queryByRole("link", { name: "Substituït" })).toBeNull();
   });
 
   it("A8b the marker sheet: one PDF page per active stored marker, made here", async () => {

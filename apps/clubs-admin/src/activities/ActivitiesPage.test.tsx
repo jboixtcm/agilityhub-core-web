@@ -630,7 +630,7 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
       await screen.findByText("Falten dades per publicar l'activitat: revisa els camps marcats."),
     ).toBeVisible();
     expect(within(card).getAllByText("Cal per publicar")).toHaveLength(2);
-    expect(within(card).queryByText("Completeu l'activitat abans de continuar.")).toBeNull();
+    expect(within(card).queryByText("Completa l'activitat abans de continuar.")).toBeNull();
     expect(patchBodies.at(-1)).toMatchObject({ endTime: null, startTime: null });
   });
 
@@ -894,7 +894,7 @@ const INTERNAL_ERROR_BODY = {
   traceId: "t-503",
 };
 const INTERNAL_ERROR_TEXT =
-  "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
 
 describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule", () => {
   it("T-07-29 T-07-10 E7-W07 step 4 (CONVENCIONS_API §7, E85): [PUBLICA] keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ACTIVITY_IN_PAST retires it, so the same publication sent again takes a new key", async () => {
@@ -1430,7 +1430,7 @@ describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => 
     const card = await maintenance("Torneig d'Estiu 2026");
     const retry = await within(card).findByRole("button", { name: "Torna-ho a provar" });
     expect(within(card).getByRole("alert")).toHaveTextContent(
-      "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
     );
     // No 07:00–22:00 is assumed: only «—» and the activity's own time.
     expect(optionValues(within(card).getByLabelText("Hora d'inici"))).toEqual(["", "18:30"]);
@@ -1566,9 +1566,9 @@ describe("T-07-29 E4-W11 D7 follow-ups of the E4-W10 review", () => {
     fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
 
     await waitFor(() => {
-      expect(fieldErrorText("activity-places")).toBe("Reviseu els camps destacats.");
+      expect(fieldErrorText("activity-places")).toBe("Revisa els camps destacats.");
     });
-    expect(screen.getAllByText("Reviseu els camps destacats.")).toHaveLength(1);
+    expect(screen.getAllByText("Revisa els camps destacats.")).toHaveLength(1);
   });
 
   it("an INSTRUCTOR and a finished activity never read GET /club/opening-hours (the D4/D3 rule)", async () => {

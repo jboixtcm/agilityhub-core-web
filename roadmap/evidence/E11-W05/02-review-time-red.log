@@ -1,0 +1,1900 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/planning/calendar-literals.test.ts (3 tests | 1 failed | 2 skipped) 37ms
+   ❯ T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) (3)
+     × R-06-13 E11-W05 step 2: the review's time is a placeholder in ca, es and en (no «7:30» in the copy) 37ms
+ ❯ src/planning/CalendarPage.test.tsx (50 tests | 3 failed | 47 skipped) 20488ms
+   ❯ R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy (3)
+     × R-06-13 D4: under a review at 08:00 the struck cell reads «revisió de les 8:00» (the cancellation's reviewTime) and the exempt chip «Exempta de la revisió de les 8:00» (classes.riskReviewTime) 284ms
+     × R-06-13 D4: a cancellation that carries reviewTime 07:30 reads «7:30» (the time it ran) under a parameter now at 08:00 10114ms
+     × R-06-15 INSTRUCTOR (no /parameters): the exempt chip takes the time GET /risk-review answers 10087ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy > R-06-13 D4: under a review at 08:00 the struck cell reads «revisió de les 8:00» (the cancellation's reviewTime) and the exempt chip «Exempta de la revisió de les 8:00» (classes.riskReviewTime)
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/^dc 12 9:30 · Cadells · .*revisió de les 8:00/u`
+
+Here are the accessible roles:
+
+  caption:
+
+  Name "Calendari de classes · del 10 al 16 d’agost":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "dl 10 dt 11 dc 12 dj 13 dv 14 ds 15":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "dl 10":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dt 11":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dc 12":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dj 13":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dv 14":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "ds 15":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "dl 10":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dt 11":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dj 13":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dv 14":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ds 15":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "8:30 A+B4/5Central · Laura C i sup.3/5Muntanya · Marc A+B5/5 +1Central · Laura C i sup.4/5Muntanya · Marc Cadells3/5Cadells · Marc A3/5Muntanya · Laura B+C4/5Central · Marc":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "9:30 Cadells0/5anul·lada · revisió de les 7:30 B+C2/5Central · Laura Cadells3/5Cadells · Marc":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "16:00 Carretera bloquejadamanteniment 16:00–18:00":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "17:40 Teràpia1/1Petita · Laura D+E4/5Carretera · Marc D+E2/5Carretera · Marc Particular1/1Petita · Laura":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "18:50 B+C5/5 +2Central · Marc Cadells2/5Cadells · Anna A+B3/5Central · Laura B+C4/5 +2Central · Marc Teràpia1/1Petita · Anna Cadells2/5Cadells · Marc Particular1/1Petita · Marc A+B4/5Central · Laura":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowheader:
+
+  Name "8:30":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "9:30":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "16:00":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "17:40":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "18:50":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "A+B4/5Central · Laura C i sup.3/5Muntanya · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A+B5/5 +1Central · Laura C i sup.4/5Muntanya · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Cadells3/5Cadells · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A3/5Muntanya · Laura B+C4/5Central · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Cadells0/5anul·lada · revisió de les 7:30":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "B+C2/5Central · Laura Cadells3/5Cadells · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Carretera bloquejadamanteniment 16:00–18:00":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Teràpia1/1Petita · Laura":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "D+E4/5Carretera · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "D+E2/5Carretera · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Particular1/1Petita · Laura":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "B+C5/5 +2Central · Marc Cadells2/5Cadells · Anna":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A+B3/5Central · Laura":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "B+C4/5 +2Central · Marc Teràpia1/1Petita · Anna":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Cadells2/5Cadells · Marc Particular1/1Petita · Marc":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "A+B4/5Central · Laura":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "dl 10 8:30 · A+B · 4/5 · Central · Laura · finalitzada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dl 10 8:30 · A+B · 4/5 · Central · Laura · finalitzada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-10-0830-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dl 10 8:30 · C i sup. · 3/5 · Muntanya · Marc · finalitzada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dl 10 8:30 · C i sup. · 3/5 · Muntanya · Marc · finalitzada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-10-0830-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12 8:30 · A+B · 5/5 +1 · Central · Laura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dc 12 8:30 · A+B · 5/5 +1 · Central · Laura"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-12-0830-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12 8:30 · C i sup. · 4/5 · Muntanya · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dc 12 8:30 · C i sup. · 4/5 · Muntanya · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-12-0830-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dv 14 8:30 · Cadells · 3/5 · Cadells · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dv 14 8:30 · Cadells · 3/5 · Cadells · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-14-0830-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ds 15 8:30 · A · 3/5 · Muntanya · Laura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"ds 15 8:30 · A · 3/5 · Muntanya · Laura"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-15-0830-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ds 15 8:30 · B+C · 4/5 · Central · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"ds 15 8:30 · B+C · 4/5 · Central · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-15-0830-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12 9:30 · Cadells · 0/5 · anul·lada · revisió de les 7:30 · anul·lada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dc 12 9:30 · Cadells · 0/5 · anul·lada · revisió de les 7:30 · anul·lada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--muted ah-schedule-cell--struck"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-12-0930-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ds 15 9:30 · B+C · 2/5 · Central · Laura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"ds 15 9:30 · B+C · 2/5 · Central · Laura"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-15-0930-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ds 15 9:30 · Cadells · 3/5 · Cadells · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"ds 15 9:30 · Cadells · 3/5 · Cadells · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-15-0930-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Carretera bloquejada · manteniment 16:00–18:00":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Carretera bloquejada · manteniment 16:00–18:00"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--neutral"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dl 10 17:40 · Teràpia · 1/1 · Petita · Laura · finalitzada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dl 10 17:40 · Teràpia · 1/1 · Petita · Laura · finalitzada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-10-1740-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dt 11 17:40 · D+E · 4/5 · Carretera · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dt 11 17:40 · D+E · 4/5 · Carretera · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-11-1740-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #C9CDD3;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dj 13 17:40 · D+E · 2/5 · Carretera · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dj 13 17:40 · D+E · 2/5 · Carretera · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-13-1740-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #C9CDD3;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dv 14 17:40 · Particular · 1/1 · Petita · Laura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dv 14 17:40 · Particular · 1/1 · Petita · Laura"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-14-1740-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dl 10 18:50 · B+C · 5/5 +2 · Central · Marc · finalitzada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dl 10 18:50 · B+C · 5/5 +2 · Central · Marc · finalitzada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-10-1850-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dl 10 18:50 · Cadells · 2/5 · Cadells · Anna · finalitzada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dl 10 18:50 · Cadells · 2/5 · Cadells · Anna · finalitzada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-10-1850-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dt 11 18:50 · A+B · 3/5 · Central · Laura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dt 11 18:50 · A+B · 3/5 · Central · Laura"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-11-1850-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12 18:50 · B+C · 4/5 +2 · Central · Marc":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dc 12 18:50 · B+C · 4/5 +2 · Central · Marc"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-12-1850-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12 18:50 · Teràpia · 1/1 · Petita · Anna":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dc 12 18:50 · Teràpia · 1/1 · Petita · Anna"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-12-1850-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dj 13 18:50 · Cadells · 2/5 · Cadells · Marc · Instructor assignat a dues classes alhora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dj 13 18:50 · Cadells · 2/5 · Cadells · Marc · Instructor assignat a dues classes alhora"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--warning"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-13-1850-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dj 13 18:50 · Particular · 1/1 · Petita · Marc · Instructor assignat a dues classes alhora":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dj 13 18:50 · Particular · 1/1 · Petita · Marc · Instructor assignat a dues classes alhora"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--warning"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-13-1850-1"[39m
+    [33mstyle[39m=[32m"--schedule-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dv 14 18:50 · A+B · 4/5 · Central · Laura":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dv 14 18:50 · A+B · 4/5 · Central · Laura"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-14-1850-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<table[39m
+  [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+  [33mstyle[39m=[32m"--schedule-columns: 6;"[39m
+[36m>[39m
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m>[39m
+    [0mCalendari de classes · del 10 al 16 d’agost[0m
+  [36m</caption>[39m
+  [36m<thead>[39m
+    [36m<tr>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+      [36m/>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+          [36m>[39m
+            [0mdl 10[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+          [36m>[39m
+            [0mdt 11[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+          [36m>[39m
+            [0mdc 12[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+          [36m>[39m
+            [0mdj 13[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+          [36m>[39m
+            [0mdv 14[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+        [33mscope[39m=[32m"col"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+          [36m>[39m
+            [0mds 15[0m
+          [36m</span>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</th>[39m
+    [36m</tr>[39m
+  [36m</thead>[39m
+  [36m<tbody>[39m
+    [36m<tr[39m
+      [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+    [36m>[39m
+      [36m<th[39m
+        [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+        [33mscope[39m=[32m"row"[39m
+      [36m>[39m
+        [0m8:30[0m
+      [36m</th>[39m
+      [36m<td[39m
+        [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-schedule-grid__stack"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid__item"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"dl 10 8:30 · A+B · 4/5 · Central · Laura · finalitzada"[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-schedule-cell"[39m
+              [33mdata-class-id[39m=[32m"cls-2026-08-10-0830-0"[39m
+              [33mstyle[39m=[32m"--schedule-color: #8FCE8F;"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+       ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/planning/CalendarPage.test.tsx:1951:20
+    1949|
+    1950|     expect(
+    1951|       within(week).getByRole("button", { name: /^dc 12 9:30 · Cadells …
+       |                    ^
+    1952|     ).toBeVisible();
+    1953|     expect(within(week).queryByText(/7:30/u)).not.toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy > R-06-13 D4: a cancellation that carries reviewTime 07:30 reads «7:30» (the time it ran) under a parameter now at 08:00
+TestingLibraryElementError: Unable to find role="button" and name "Exempta de la revisió de les 8:00"
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"calendar-selected-title"[39m
+  [33mclass[39m=[32m"ah-card calendar-selected-card"[39m
+  [33mid[39m=[32m"calendar-selected-card"[39m
+  [33mrole[39m=[32m"region"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"planning-card-title"[39m
+      [33mid[39m=[32m"calendar-selected-title"[39m
+    [36m>[39m
+      [0mClasse seleccionada — dc 12 · 18:50 · B+C · Central · Marc[0m
+    [36m</h2>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success calendar-state"[39m
+    [36m>[39m
+      [0mactiva[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"calendar-selected-card__counts"[39m
+    [36m>[39m
+      [0m4/5 +2[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-chips"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mPista[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-muntanya"[39m
+        [36m>[39m
+          [0mMuntanya[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-central"[39m
+        [36m>[39m
+          [0mCentral[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-carretera"[39m
+        [36m>[39m
+          [0mCarretera[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-cadells"[39m
+        [36m>[39m
+          [0mCadells[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-petita"[39m
+        [36m>[39m
+          [0mPetita[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m""[39m
+        [36m>[39m
+          [0mSense pista[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mRecorregut previst[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m""[39m
+        [36m>[39m
+          [0mCap[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"placement-central-lliga"[39m
+        [36m>[39m
+          [0mAgility C–D · Lliga social · recorregut 1[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--multi"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33maria-expanded[39m=[32m"false"[39m
+        [33mclass[39m=[32m"calendar-chip__toggle"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"calendar-chip__label"[39m
+        [36m>[39m
+          [0mNivells[0m
+        [36m</span>[39m
+        [0m [0m
+        [0mB, C[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mInstructor[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-laura"[39m
+        [36m>[39m
+          [0mLaura[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-marc"[39m
+        [36m>[39m
+          [0mMarc[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-anna"[39m
+        [36m>[39m
+          [0mAnna[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-sergio"[39m
+        [36m>[39m
+          [0mSergio[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mLímit[0m
+      [36m</span>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input calendar-chip__number"[39m
+        [33mmin[39m=[32m"1"[39m
+        [33mplaceholder[39m=[32m"5"[39m
+        [33mtype[39m=[32m"number"[39m
+        [33mvalue[39m=[32m""[39m
+      [36m/>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mHora[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:00"[39m
+        [36m>[39m
+          [0m7:00[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:10"[39m
+        [36m>[39m
+          [0m7:10[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:20"[39m
+        [36m>[39m
+          [0m7:20[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:30"[39m
+        [36m>[39m
+          [0m7:30[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:40"[39m
+        [36m>[39m
+          [0m7:40[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:50"[39m
+        [36m>[39m
+          [0m7:50[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:00"[39m
+        [36m>[39m
+          [0m8:00[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:10"[39m
+        [36m>[39m
+          [0m8:10[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:20"[39m
+        [36m>[39m
+          [0m8:20[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:30"[39m
+        [36m>[39m
+          [0m8:30[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:40"[39m
+        [36m>[39m
+          [0m8:40[0m
+        [36m</option>[39m...
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"calendar-selected-title"[39m
+  [33mclass[39m=[32m"ah-card calendar-selected-card"[39m
+  [33mid[39m=[32m"calendar-selected-card"[39m
+  [33mrole[39m=[32m"region"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"planning-card-title"[39m
+      [33mid[39m=[32m"calendar-selected-title"[39m
+    [36m>[39m
+      [0mClasse seleccionada — dc 12 · 18:50 · B+C · Central · Marc[0m
+    [36m</h2>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success calendar-state"[39m
+    [36m>[39m
+      [0mactiva[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"calendar-selected-card__counts"[39m
+    [36m>[39m
+      [0m4/5 +2[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-chips"[39m
+  [36m>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mPista[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-muntanya"[39m
+        [36m>[39m
+          [0mMuntanya[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-central"[39m
+        [36m>[39m
+          [0mCentral[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-carretera"[39m
+        [36m>[39m
+          [0mCarretera[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-cadells"[39m
+        [36m>[39m
+          [0mCadells[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"ring-petita"[39m
+        [36m>[39m
+          [0mPetita[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m""[39m
+        [36m>[39m
+          [0mSense pista[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mRecorregut previst[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m""[39m
+        [36m>[39m
+          [0mCap[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"placement-central-lliga"[39m
+        [36m>[39m
+          [0mAgility C–D · Lliga social · recorregut 1[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--multi"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33maria-expanded[39m=[32m"false"[39m
+        [33mclass[39m=[32m"calendar-chip__toggle"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"calendar-chip__label"[39m
+        [36m>[39m
+          [0mNivells[0m
+        [36m</span>[39m
+        [0m [0m
+        [0mB, C[0m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mInstructor[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-laura"[39m
+        [36m>[39m
+          [0mLaura[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-marc"[39m
+        [36m>[39m
+          [0mMarc[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-anna"[39m
+        [36m>[39m
+          [0mAnna[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"instructor-sergio"[39m
+        [36m>[39m
+          [0mSergio[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mLímit[0m
+      [36m</span>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input calendar-chip__number"[39m
+        [33mmin[39m=[32m"1"[39m
+        [33mplaceholder[39m=[32m"5"[39m
+        [33mtype[39m=[32m"number"[39m
+        [33mvalue[39m=[32m""[39m
+      [36m/>[39m
+    [36m</label>[39m
+    [36m<label[39m
+      [33mclass[39m=[32m"calendar-chip calendar-chip--select"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mHora[0m
+      [36m</span>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:00"[39m
+        [36m>[39m
+          [0m7:00[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:10"[39m
+        [36m>[39m
+          [0m7:10[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:20"[39m
+        [36m>[39m
+          [0m7:20[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:30"[39m
+        [36m>[39m
+          [0m7:30[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:40"[39m
+        [36m>[39m
+          [0m7:40[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"07:50"[39m
+        [36m>[39m
+          [0m7:50[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:00"[39m
+        [36m>[39m
+          [0m8:00[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:10"[39m
+        [36m>[39m
+          [0m8:10[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:20"[39m
+        [36m>[39m
+          [0m8:20[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:30"[39m
+        [36m>[39m
+          [0m8:30[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"08:40"[39m
+        [36m>[39m
+          [0m8:40[0m
+        [36m</option>[39m...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/CalendarPage.test.tsx:1989:36
+    1987|     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 1…
+    1988|     expect(
+    1989|       await within(selectedCard()).findByRole("button", {
+       |                                    ^
+    1990|         name: "Exempta de la revisió de les 8:00",
+    1991|       }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy > R-06-15 INSTRUCTOR (no /parameters): the exempt chip takes the time GET /risk-review answers
+TestingLibraryElementError: Unable to find an element with the text: Exempta de la revisió de les 8:00. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"calendar-selected-title"[39m
+  [33mclass[39m=[32m"ah-card calendar-selected-card"[39m
+  [33mid[39m=[32m"calendar-selected-card"[39m
+  [33mrole[39m=[32m"region"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"planning-card-title"[39m
+      [33mid[39m=[32m"calendar-selected-title"[39m
+    [36m>[39m
+      [0mClasse seleccionada — dc 12 · 18:50 · B+C · Central · Marc[0m
+    [36m</h2>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success calendar-state"[39m
+    [36m>[39m
+      [0mactiva[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"calendar-selected-card__counts"[39m
+    [36m>[39m
+      [0m4/5 +2[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-chips"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mPista[0m
+      [36m</span>[39m
+      [0m [0m
+      [0mCentral[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mNivells[0m
+      [36m</span>[39m
+      [0m [0m
+      [0mB, C[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mInstructor[0m
+      [36m</span>[39m
+      [0m [0m
+      [0mMarc[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mLímit[0m
+      [36m</span>[39m
+      [0m [0m
+      [0m5[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mHora[0m
+      [36m</span>[39m
+      [0m [0m
+      [0m18:50[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--info"[39m
+    [36m>[39m
+      [0mExempta de la revisió de les 7:30[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<section[39m
+    [33maria-label[39m=[32m"Inscrits (4/5)"[39m
+    [33mclass[39m=[32m"ah-registrants"[39m
+  [36m>[39m
+    [36m<h3[39m
+      [33mclass[39m=[32m"ah-registrants__title"[39m
+    [36m>[39m
+      [0mInscrits (4/5)[0m
+    [36m</h3>[39m
+    [36m<ul[39m
+      [33mclass[39m=[32m"ah-registrants__list"[39m
+    [36m>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mLaura + Duna[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mJana + Mixa[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mIrene + Kai[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mB[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mNil + Coco[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mJoel + Rumba[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mB[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0manul·lada tard[0m
+        [36m</span>[39m
+      [36m</li>[39m
+    [36m</ul>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-registrants__waiting"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEn espera: Júlia + Kira · Roser + Lluna[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</section>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mTanca[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"calendar-selected-title"[39m
+  [33mclass[39m=[32m"ah-card calendar-selected-card"[39m
+  [33mid[39m=[32m"calendar-selected-card"[39m
+  [33mrole[39m=[32m"region"[39m
+  [33mtabindex[39m=[32m"-1"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mclass[39m=[32m"planning-card-title"[39m
+      [33mid[39m=[32m"calendar-selected-title"[39m
+    [36m>[39m
+      [0mClasse seleccionada — dc 12 · 18:50 · B+C · Central · Marc[0m
+    [36m</h2>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success calendar-state"[39m
+    [36m>[39m
+      [0mactiva[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"calendar-selected-card__counts"[39m
+    [36m>[39m
+      [0m4/5 +2[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-chips"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mPista[0m
+      [36m</span>[39m
+      [0m [0m
+      [0mCentral[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mNivells[0m
+      [36m</span>[39m
+      [0m [0m
+      [0mB, C[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mInstructor[0m
+      [36m</span>[39m
+      [0m [0m
+      [0mMarc[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mLímit[0m
+      [36m</span>[39m
+      [0m [0m
+      [0m5[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--neutral calendar-chip calendar-chip--static"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"calendar-chip__label"[39m
+      [36m>[39m
+        [0mHora[0m
+      [36m</span>[39m
+      [0m [0m
+      [0m18:50[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-chip ah-tone--info"[39m
+    [36m>[39m
+      [0mExempta de la revisió de les 7:30[0m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<section[39m
+    [33maria-label[39m=[32m"Inscrits (4/5)"[39m
+    [33mclass[39m=[32m"ah-registrants"[39m
+  [36m>[39m
+    [36m<h3[39m
+      [33mclass[39m=[32m"ah-registrants__title"[39m
+    [36m>[39m
+      [0mInscrits (4/5)[0m
+    [36m</h3>[39m
+    [36m<ul[39m
+      [33mclass[39m=[32m"ah-registrants__list"[39m
+    [36m>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mLaura + Duna[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mJana + Mixa[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mIrene + Kai[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mB[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mNil + Coco[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mconfirmada[0m
+        [36m</span>[39m
+      [36m</li>[39m
+      [36m<li[39m
+        [33mclass[39m=[32m"ah-registrants__row"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-registrants__who"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mJoel + Rumba[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral ah-registrants__level"[39m
+          [36m>[39m
+            [0mB[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0manul·lada tard[0m
+        [36m</span>[39m
+      [36m</li>[39m
+    [36m</ul>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-registrants__waiting"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEn espera: Júlia + Kira · Roser + Lluna[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</section>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"calendar-selected-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mTanca[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/CalendarPage.test.tsx:2006:36
+    2004|     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 1…
+    2005|     expect(
+    2006|       await within(selectedCard()).findByText("Exempta de la revisió d…
+       |                                    ^
+    2007|     ).toBeVisible();
+    2008|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > R-06-13 E11-W05 step 2: the review's time is a placeholder in ca, es and en (no «7:30» in the copy)
+AssertionError: expected { ca: [ …(4) ], es: [ …(4) ], …(1) } to deeply equal { ca: [ …(4) ], …(2) }
+
+- Expected
++ Received
+
+  {
+    "ca": [
+-     "revisió de les 8:00",
+-     "Exempta de la revisió de les 8:00",
+-     "revisió",
+-     "Exempta de la revisió",
++     "revisió de les 7:30",
++     "Exempta de la revisió de les 7:30",
++     "revisió de les 7:30",
++     "Exempta de la revisió de les 7:30",
+    ],
+    "en": [
+-     "8:00 review",
+-     "Exempt from the 8:00 review",
+-     "review",
+-     "Exempt from the review",
++     "7:30 review",
++     "Exempt from the 7:30 review",
++     "7:30 review",
++     "Exempt from the 7:30 review",
+    ],
+    "es": [
+-     "revisión de las 8:00",
+-     "Exenta de la revisión de las 8:00",
+-     "revisión",
+-     "Exenta de la revisión",
++     "revisión de las 7:30",
++     "Exenta de la revisión de las 7:30",
++     "revisión de las 7:30",
++     "Exenta de la revisión de las 7:30",
+    ],
+  }
+
+ ❯ src/planning/calendar-literals.test.ts:137:19
+    135|       ];
+    136|     }
+    137|     expect(texts).toEqual({
+       |                   ^
+    138|       ca: [
+    139|         "revisió de les 8:00",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 49 skipped (53)
+   Start at  22:39:21
+   Duration  21.84s (tests 91%, transform 4%, environment 3%, import 1%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/CalendarPage.test.tsx src/planning/calendar-literals.test.ts -t E11-W05

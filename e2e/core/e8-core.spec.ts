@@ -1021,7 +1021,7 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   const statusText = until === null ? "inactiva" : `inactiva fins ${dayMonth(until)}`;
   await visit(page, `${adminUrl}/abonats`);
   await page
-    .getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" })
+    .getByRole("searchbox", { name: "Cerca per nom, document, gos…" })
     .fill(frozenMember.fullName);
   await expect(
     page.locator("tbody tr").filter({ hasText: frozenMember.fullName }).first(),
@@ -1129,7 +1129,7 @@ test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15
 
   await visit(page, `${adminUrl}/abonats`);
   await page
-    .getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" })
+    .getByRole("searchbox", { name: "Cerca per nom, document, gos…" })
     .fill(laura.fullName ?? "");
   const defaultRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
   await expect(defaultRow).toContainText(`baixa ${dayMonth(leaveDate)}`);

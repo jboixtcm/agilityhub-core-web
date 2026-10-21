@@ -119,6 +119,10 @@ describe("T-17-12 · «Nou club» wizard (S17 §2 «D19 Assistent»)", () => {
     expect(screen.getByTestId("theme-preview-clubs")).toHaveTextContent("Club Agility Serralada");
     next();
     await step("Catàlegs base", 6);
+    // E11-W05 step 6 (A41.1): the copied set is a starting point the club edits afterwards.
+    expect(
+      screen.getByText(/És un punt de partida: el club els pot editar després\.$/u),
+    ).toBeInTheDocument();
     const template = screen.getByLabelText("Club plantilla");
     await waitFor(() => {
       expect(within(template).getAllByRole("option")).toHaveLength(2);

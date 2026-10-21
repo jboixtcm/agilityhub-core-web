@@ -156,7 +156,7 @@
       "time": "Time",
       "noInstructor": "No instructor",
       "noLevels": "none",
-      "exempt": "Exempt from the 7:30 review",
+      "exempt": "Exempt from the {time, select, none {review} other {{time} review}}",
       "notes": "Notes",
       "accept": "ACCEPT",
       "cancel": "CANCEL THE CLASS",

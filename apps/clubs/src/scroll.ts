@@ -65,15 +65,22 @@ function scrollToHash(hash: string): () => void {
  * at its hash's target; Back and Forward return to where the reader left that address, once the
  * screen is tall enough again; the document's load only looks for its hash's target. `visit`
  * changes once per screen shown (`App`'s location).
+ *
+ * E11-W05 step 5 (c): a load (a reload of a scrolled screen) keeps the browser's own restoration. The
+ * app takes it over («manual») only once it navigates, and gives it back when the page goes, so
+ * the next load of that entry is the browser's again.
  */
 export function useDocumentScroll(visit: number, kind: NavigationKind): void {
   useEffect(() => {
     if (!("scrollRestoration" in window.history)) return undefined;
-    // The browser's own restore runs before the screen redraws, against a shorter document.
-    const previous = window.history.scrollRestoration;
-    window.history.scrollRestoration = "manual";
+    const browser = window.history.scrollRestoration;
+    const giveBack = () => {
+      window.history.scrollRestoration = browser;
+    };
+    window.addEventListener("pagehide", giveBack);
     return () => {
-      window.history.scrollRestoration = previous;
+      window.removeEventListener("pagehide", giveBack);
+      giveBack();
     };
   }, []);
 
@@ -89,6 +96,11 @@ export function useDocumentScroll(visit: number, kind: NavigationKind): void {
 
   useLayoutEffect(() => {
     const hash = window.location.hash;
+    // After an in-app navigation the browser's own restore would run before the screen redraws,
+    // against a shorter document.
+    if (kind !== "load" && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
     if (kind === "pop") {
       // Read before the new screen's first scroll event can overwrite it with a clamped value.
       const top = positions.get(liveAddress()) ?? 0;

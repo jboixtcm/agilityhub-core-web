@@ -1,6 +1,7 @@
+import { handlers } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { getResponse, http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
 import { BookPage } from "./BookPage";
@@ -233,6 +234,36 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     });
     expect(text(rows()[0] ?? document.body)).toBe("dc 5 · 18:50 · B+C | 2 places · 12,00 €");
     expect(document.querySelector(".pack-card")).toBeNull();
+  });
+
+  it("E11-W05 step 1 (INC-41 #7): 04's SINGLE_CLASS price goes through the minor-units helper — «12,00 €» unchanged for EUR, a JPY price never divided by 100", async () => {
+    const singleClass = {
+      branding: { ...canic, modules: [...canic.modules, "SINGLE_CLASS" as const] },
+      scenario: "bookingSingleClass" as const,
+    };
+    await renderBook(singleClass);
+    expect(text(rows()[0] ?? document.body)).toBe("dc 5 · 18:50 · B+C | 2 places · 12,00 €");
+    cleanup();
+
+    server.use(
+      http.get("*/api/v1/me/bookable-classes", async ({ request }) => {
+        const real = await getResponse(handlers, request);
+        if (real === undefined) return undefined;
+        const body = (await real.json()) as {
+          classes: { price?: { amountMinor: number } | null }[];
+        };
+        return HttpResponse.json({
+          ...body,
+          classes: body.classes.map((item) =>
+            item.price === null || item.price === undefined
+              ? item
+              : { ...item, price: { amountMinor: 1200, currency: "JPY" } },
+          ),
+        });
+      }),
+    );
+    await renderBook(singleClass);
+    expect(text(rows()[0] ?? document.body)).toBe("dc 5 · 18:50 · B+C | 2 places · 1.200 ¥");
   });
 
   it("WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera»", async () => {

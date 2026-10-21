@@ -368,7 +368,8 @@
     "activeLine": "Set up on {built} · until {until}",
     "pastLine": "From {built} to {ended}",
     "replaced": "Replaced",
-    "review": "Review it"
+    "review": "Review it",
+    "ringInactive": "Ring deactivated"
   },
   "files": {
     "fallback": "course",

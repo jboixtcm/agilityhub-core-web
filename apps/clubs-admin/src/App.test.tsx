@@ -895,7 +895,7 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
   });
 
   it.each(["/tauler", "/no-existeix", "/abonats"])(
-    "E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens %s lands on D12, its week, never on an empty page; the address says /agenda",
+    "R-01-07 (E11-W02 round 2, INC-41): an INSTRUCTOR without ADMIN who opens %s lands on D12, its week, never on an empty page; the address says /agenda",
     async (path) => {
       mockScenario("instructor");
       const client = authClient();

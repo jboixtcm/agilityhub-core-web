@@ -813,14 +813,34 @@ function SetupsCard({
             // INC-62: the api says why a setup was dismantled; «Substituït» only when another
             // setup replaced it (R-16-07), never a «Desmunta» that fell in the same second.
             const replaced = setup.status === "DISMANTLED" && setup.dismantledReason === "REPLACED";
+            // E154: the setup that replaced it, when the list holds it (`replacedBySetupId`).
+            const replacing =
+              replaced && setups.some((item) => item.id === setup.replacedBySetupId)
+                ? setup.replacedBySetupId
+                : undefined;
             return (
-              <li key={setup.id}>
+              <li id={`setup-${setup.id}`} key={setup.id} tabIndex={-1}>
                 <div>
                   <strong>{labels.setupKind(setup.kind)}</strong>
                   <Badge tone={setup.status === "ACTIVE" ? "success" : "neutral"}>
-                    {replaced
-                      ? t("admin-courses:setups.replaced")
-                      : labels.setupStatus(setup.status)}
+                    {replacing !== undefined && replacing !== null ? (
+                      <a
+                        href={`#setup-${replacing}`}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          document.getElementById(`setup-${replacing}`)?.focus();
+                        }}
+                      >
+                        {t("admin-courses:setups.replaced")}
+                      </a>
+                    ) : replaced ? (
+                      t("admin-courses:setups.replaced")
+                    ) : setup.status === "DISMANTLED" &&
+                      setup.dismantledReason === "RING_INACTIVE" ? (
+                      t("admin-courses:setups.ringInactive")
+                    ) : (
+                      labels.setupStatus(setup.status)
+                    )}
                   </Badge>
                 </div>
                 <span className="courses-muted">

@@ -35,7 +35,7 @@
     "CANCELLED": "anul·lada"
   },
   "cancellationReason": {
-    "RISK_REVIEW": "revisió de les 7:30",
+    "RISK_REVIEW": "revisió{time, select, none {} other { de les {time}}}",
     "CLUB_MANUAL": "pel club",
     "DELETED": "eliminada",
     "ACTIVITY": "activitat"
@@ -297,7 +297,8 @@
     "NO_PLAN": "sense modalitat assignada",
     "CARD_INVALID": "targeta no vàlida",
     "CURRENCY_MISMATCH": "moneda diferent de la del club",
-    "PROVIDER_DISABLED": "proveïdor de pagament desactivat"
+    "PROVIDER_DISABLED": "proveïdor de pagament desactivat",
+    "NO_NEXT_INVOICE_DATE": "sense data del proper rebut"
   },
   "paymentChannel": {
     "CASH": "Efectiu",
@@ -313,7 +314,8 @@
     "REMITTANCE_SUBMITTED": "la remesa ja s'ha enviat al banc",
     "COLLECTION_SUBMITTED": "hi ha cobraments enviats",
     "INVOICE_PAID": "hi ha rebuts cobrats",
-    "MANUAL_INVOICE_AFTER": "s'ha emès un rebut manual després de la generació"
+    "MANUAL_INVOICE_AFTER": "s'ha emès un rebut manual després de la generació",
+    "COLLECTION_DATE_PASSED": "la data de cobrament ja ha arribat"
   },
   "upfrontConcept": {
     "ENTRY_FEE": "Entrada",

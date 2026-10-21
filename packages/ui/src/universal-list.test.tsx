@@ -581,7 +581,7 @@ describe("E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a l
   });
 });
 
-describe("E11-W02 round 2 (INC-41): `between` is offered only where it can be filled", () => {
+describe("R-14-11 (E11-W02 round 2, INC-41): `between` is offered only where it can be filled", () => {
   it("a date column without a range offers no «entre» (it would ask for one value)", async () => {
     const state: UniversalListState = {
       columns: ["id"],

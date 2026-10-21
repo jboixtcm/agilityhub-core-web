@@ -1326,7 +1326,7 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
     ["dl 3 at 21:00 (screen 23's drawer)", "2026-08-03T21:00:00+02:00"],
     ["dg 2 at 20:30 (the member world)", BOOKING_MOCK_NOW],
   ])(
-    "E11-W02 round 2 (INC-55 #3, R-08-02, R-08-03, R-08-19): at %s one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds",
+    "T-08-03 / R-08-02, R-08-03, R-08-19 (E11-W02 round 2, INC-55 #3): at %s one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds",
     async (_clock, now) => {
       vi.setSystemTime(new Date(now));
       resetPlanningState();

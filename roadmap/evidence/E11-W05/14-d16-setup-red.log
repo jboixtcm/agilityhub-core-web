@@ -1,0 +1,363 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/courses/courses.test.tsx (37 tests | 2 failed | 35 skipped) 20221ms
+   ❯ D16 «Geometria» (S16 §2, R-16-04/06/08) (14)
+     × R-16-08 E11-W05 step 5 (E154): «Substituït» links to the setup that replaced it (replacedBySetupId), which takes the focus 10159ms
+     × R-16-08 E11-W05 step 5 (E154): a setup dismantled because its ring was deactivated (RING_INACTIVE) reads «Pista desactivada», not «Desmuntat» 10059ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > D16 «Geometria» (S16 §2, R-16-04/06/08) > R-16-08 E11-W05 step 5 (E154): «Substituït» links to the setup that replaced it (replacedBySetupId), which takes the focus
+TestingLibraryElementError: Unable to find role="link" and name "Substituït"
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"setups-title"[39m
+  [33mclass[39m=[32m"ah-card courses-card"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mid[39m=[32m"setups-title"[39m
+  [36m>[39m
+    [0mMuntatges[0m
+  [36m</h2>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"courses-setups"[39m
+  [36m>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mJumping[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mMuntat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mMuntat el 20 d’octubre · fins al 27 d’octubre[0m
+      [36m</span>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"courses-warning"[39m
+      [36m>[39m
+        [0mGeometria canviada: revisa la col·locació[0m
+        [0m [0m
+        [36m<a[39m
+          [33mhref[39m=[32m"/recorreguts/course-jumping-dijous/col-locacio?colocacio=placement-muntanya-dijous"[39m
+        [36m>[39m
+          [0mRevisa-la[0m
+        [36m</a>[39m
+      [36m</p>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mBuida[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mSubstituït[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 16 d’octubre al 20 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mAgility[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mCaducat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 6 d’octubre al 13 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"setups-title"[39m
+  [33mclass[39m=[32m"ah-card courses-card"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mid[39m=[32m"setups-title"[39m
+  [36m>[39m
+    [0mMuntatges[0m
+  [36m</h2>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"courses-setups"[39m
+  [36m>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mJumping[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mMuntat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mMuntat el 20 d’octubre · fins al 27 d’octubre[0m
+      [36m</span>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"courses-warning"[39m
+      [36m>[39m
+        [0mGeometria canviada: revisa la col·locació[0m
+        [0m [0m
+        [36m<a[39m
+          [33mhref[39m=[32m"/recorreguts/course-jumping-dijous/col-locacio?colocacio=placement-muntanya-dijous"[39m
+        [36m>[39m
+          [0mRevisa-la[0m
+        [36m</a>[39m
+      [36m</p>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mBuida[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mSubstituït[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 16 d’octubre al 20 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mAgility[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mCaducat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 6 d’octubre al 13 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:1093:40
+    1091|     await renderRoute("/pistes/ring-muntanya/geometria");
+    1092|     const history = await screen.findByRole("region", { name: "Muntatg…
+    1093|     const link = await within(history).findByRole("link", { name: "Sub…
+       |                                        ^
+    1094|     const replacing = document.getElementById(`setup-${SETUP_IDS.munta…
+    1095|     expect(replacing).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/courses/courses.test.tsx > D16 «Geometria» (S16 §2, R-16-04/06/08) > R-16-08 E11-W05 step 5 (E154): a setup dismantled because its ring was deactivated (RING_INACTIVE) reads «Pista desactivada», not «Desmuntat»
+TestingLibraryElementError: Unable to find an element with the text: Pista desactivada. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"setups-title"[39m
+  [33mclass[39m=[32m"ah-card courses-card"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mid[39m=[32m"setups-title"[39m
+  [36m>[39m
+    [0mMuntatges[0m
+  [36m</h2>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"courses-setups"[39m
+  [36m>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mJumping[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mMuntat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mMuntat el 20 d’octubre · fins al 27 d’octubre[0m
+      [36m</span>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"courses-warning"[39m
+      [36m>[39m
+        [0mGeometria canviada: revisa la col·locació[0m
+        [0m [0m
+        [36m<a[39m
+          [33mhref[39m=[32m"/recorreguts/course-jumping-dijous/col-locacio?colocacio=placement-muntanya-dijous"[39m
+        [36m>[39m
+          [0mRevisa-la[0m
+        [36m</a>[39m
+      [36m</p>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mBuida[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mDesmuntat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 16 d’octubre al 20 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mAgility[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mCaducat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 6 d’octubre al 13 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"setups-title"[39m
+  [33mclass[39m=[32m"ah-card courses-card"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mid[39m=[32m"setups-title"[39m
+  [36m>[39m
+    [0mMuntatges[0m
+  [36m</h2>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"courses-setups"[39m
+  [36m>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mJumping[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0mMuntat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mMuntat el 20 d’octubre · fins al 27 d’octubre[0m
+      [36m</span>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"courses-warning"[39m
+      [36m>[39m
+        [0mGeometria canviada: revisa la col·locació[0m
+        [0m [0m
+        [36m<a[39m
+          [33mhref[39m=[32m"/recorreguts/course-jumping-dijous/col-locacio?colocacio=placement-muntanya-dijous"[39m
+        [36m>[39m
+          [0mRevisa-la[0m
+        [36m</a>[39m
+      [36m</p>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mBuida[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mDesmuntat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 16 d’octubre al 20 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li>[39m
+      [36m<div>[39m
+        [36m<strong>[39m
+          [0mAgility[0m
+        [36m</strong>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mCaducat[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"courses-muted"[39m
+      [36m>[39m
+        [0mDel 6 d’octubre al 13 d’octubre[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:1108:34
+    1106|     await renderRoute("/pistes/ring-muntanya/geometria");
+    1107|     const history = await screen.findByRole("region", { name: "Muntatg…
+    1108|     expect(await within(history).findByText("Pista desactivada")).toBe…
+       |                                  ^
+    1109|     expect(within(history).queryByText("Desmuntat")).toBeNull();
+    1110|     expect(within(history).queryByRole("link", { name: "Substituït" })…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 35 skipped (37)
+   Start at  22:49:03
+   Duration  21.79s (tests 93%, transform 4%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx -t E11-W05

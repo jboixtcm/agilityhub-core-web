@@ -13,6 +13,12 @@ export interface LazyBoundaryProps {
   failure: (failure: { chunk: boolean; retry: () => void }) => ReactNode;
   /** The document's reload (`reloadDocument`; a test passes its own). */
   reload: () => void;
+  /**
+   * What the content was drawn for (the pathname): a failure belongs to it, and a new value draws
+   * the content again (E11-W05, E154). A healthy content is not remounted: React.lazy keeps its
+   * module, so no loading state shows either.
+   */
+  resetKey?: unknown;
 }
 
 interface FailureBoundaryState {
@@ -31,6 +37,12 @@ class FailureBoundary extends Component<Omit<LazyBoundaryProps, "loading">, Fail
     if (isChunkLoadError(error)) reloadOnce(this.props.reload);
   }
 
+  override componentDidUpdate(previous: Omit<LazyBoundaryProps, "loading">): void {
+    if (this.state.error !== undefined && !Object.is(previous.resetKey, this.props.resetKey)) {
+      this.setState({ error: undefined });
+    }
+  }
+
   override render(): ReactNode {
     if (this.state.error === undefined) return this.props.children;
     return this.props.failure({
@@ -43,12 +55,12 @@ class FailureBoundary extends Component<Omit<LazyBoundaryProps, "loading">, Fail
 /**
  * A lazy screen's frame (E11-W02 rounds 2–3): its loading state while its chunk loads, and the
  * app's error state instead of a blank app when the chunk or the screen fails; a chunk a deploy
- * removed reloads the document once (`reloadOnce`). Key it by what it shows, so that a failure
- * stays with that screen.
+ * removed reloads the document once (`reloadOnce`). Key it by what it shows, or pass `resetKey`
+ * when its content follows several addresses, so that a failure stays with that screen.
  */
-export function LazyBoundary({ children, failure, loading, reload }: LazyBoundaryProps) {
+export function LazyBoundary({ children, failure, loading, reload, resetKey }: LazyBoundaryProps) {
   return (
-    <FailureBoundary failure={failure} reload={reload}>
+    <FailureBoundary failure={failure} reload={reload} resetKey={resetKey}>
       <Suspense fallback={loading}>{children}</Suspense>
     </FailureBoundary>
   );

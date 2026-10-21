@@ -496,13 +496,12 @@ export function createPreferencesSaver(
                   io.kept?.(held);
                 }
               }
+              // Always applied (E11-W05 step 0): the same field count can hold different fields.
               const waiting = mergePatches(unrefused, withoutRefusedValues(state.queued, refused));
-              if (changedPreferences(waiting) !== changedPreferences(state.queued)) {
-                set({
-                  queued: waiting,
-                  ...(isEmptyPatch(waiting) && timer === undefined ? { waiting: false } : {}),
-                });
-              }
+              set({
+                queued: waiting,
+                ...(isEmptyPatch(waiting) && timer === undefined ? { waiting: false } : {}),
+              });
               if (overlapped) unsure = true;
               settled();
               return;

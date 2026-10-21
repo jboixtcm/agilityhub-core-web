@@ -1,0 +1,28 @@
+$ cat packages/api-client/openapi/openapi.next.sha
+a7c85d50
+$ shasum -a 256 packages/api-client/openapi/openapi.json packages/api-client/openapi/openapi.next.json   # before
+2af2bdd785bdec07b7170116343e6ce63359744a953e6959691ea394a79e4a61  packages/api-client/openapi/openapi.json
+bdb7731314e064e3695b4cb88e55242faed49904f7fc7463995e1cddfba98bdb  packages/api-client/openapi/openapi.next.json
+$ mv packages/api-client/openapi/openapi.next.json packages/api-client/openapi/openapi.json && shasum -a 256 packages/api-client/openapi/openapi.json
+bdb7731314e064e3695b4cb88e55242faed49904f7fc7463995e1cddfba98bdb  packages/api-client/openapi/openapi.json
+exit 0
+(openapi.next.sha stays: the staging script owns it, as E11-W06 states)
+
+$ pnpm api:generate   # full output in 00b-api-generate.log
+exit 0
+
+# Non-description differences openapi.json (before) -> a7c85d50 (python structural diff):
+LIST /components/schemas/BillingIncidentCode/enum          + NO_NEXT_INVOICE_DATE
+CHG  /components/schemas/ClassCancellation/properties/byAccountId/type   string -> [string, null] (null for RISK_REVIEW)
+ADD  /components/schemas/ClassCancellation/properties/reviewTime        [string, null], ^\d{2}:\d{2}$ (E11-T13)
+LIST /components/schemas/ClassCancellation/required        byAccountId no longer required
+ADD  /components/schemas/ManualInvoiceRequest/properties/period
+ADD  /components/schemas/MemberPlanChangeRequest/properties/nextInvoiceDate
+ADD  /components/schemas/NextInvoiceDate
+ADD  /components/schemas/NextInvoiceDateRequest
+ADD  /components/schemas/PeriodRemittance/properties/requestedCollectionDate
+ADD  /components/schemas/PeriodRemittance/properties/submissionDue
+LIST /components/schemas/PeriodRemittance/required
+LIST /components/schemas/RollbackBlocker/enum              + COLLECTION_DATE_PASSED
+ADD  /paths//api/v1/members/{id}/next-invoice-date
+(+ 43 description-only changes)

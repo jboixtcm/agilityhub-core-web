@@ -1,6 +1,11 @@
 import type { components } from "../../generated/schema";
 
-import { clubInstant, RISK_REVIEW_DAY, riskReviewClassIds } from "./calendar";
+import {
+  clubInstant,
+  RISK_REVIEW_DAY,
+  RISK_REVIEW_DEFAULT_TIME,
+  riskReviewClassIds,
+} from "./calendar";
 import { addDays, clubLocalDate } from "./planning";
 import { findParameter } from "./settings";
 
@@ -201,7 +206,7 @@ const RISK_PARAMETERS = {
   "classes.minDogs": 2,
   "classes.riskAutoCancelSameDay": true,
   "classes.riskLookaheadDays": 2,
-  "classes.riskReviewTime": "07:30",
+  "classes.riskReviewTime": RISK_REVIEW_DEFAULT_TIME,
 };
 
 const classItem = (id: string, action: string, detail: Record<string, unknown>): JobEffectItem => ({

@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+
+ ❯ src/preferences-saver.test.ts (25 tests | 1 failed | 24 skipped) 11ms
+   ❯ E11-W02 INC-55: a refusal removes only the preference it names, and a confirmed choice leaves the outbox (5)
+     × R-11-04 / E11-W05 step 0 (INC-55 #1 reopened, E154): a refusal never discards an unrelated preference when the queue keeps the same field count 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/preferences-saver.test.ts > E11-W02 INC-55: a refusal removes only the preference it names, and a confirmed choice leaves the outbox > R-11-04 / E11-W05 step 0 (INC-55 #1 reopened, E154): a refusal never discards an unrelated preference when the queue keeps the same field count
+AssertionError: expected { reminderMinutesBefore: 240 } to deeply equal { pushClubNews: false }
+
+- Expected
++ Received
+
+  {
+-   "pushClubNews": false,
++   "reminderMinutesBefore": 240,
+  }
+
+ ❯ src/preferences-saver.test.ts:585:29
+    583|     await tick();
+    584|     await tick();
+    585|     expect(h.puts[1]?.body).toEqual({ pushClubNews: false });
+       |                             ^
+    586|   });
+    587|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 24 skipped (25)
+   Start at  22:30:45
+   Duration  216ms (transform 63%, import 20%, tests 13%, worker 4%)
+

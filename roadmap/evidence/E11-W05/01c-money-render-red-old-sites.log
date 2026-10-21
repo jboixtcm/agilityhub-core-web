@@ -1,0 +1,62 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+ ❯ src/booking/book.test.tsx (13 tests | 1 failed | 12 skipped) 170ms
+   ❯ T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) (13)
+     × E11-W05 step 1 (INC-41 #7): 04's SINGLE_CLASS price goes through the minor-units helper — «12,00 €» unchanged for EUR, a JPY price never divided by 100 168ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > E11-W05 step 1 (INC-41 #7): 04's SINGLE_CLASS price goes through the minor-units helper — «12,00 €» unchanged for EUR, a JPY price never divided by 100
+AssertionError: expected 'dc 5 · 18:50 · B+C | 2 places · 12,00…' to be 'dc 5 · 18:50 · B+C | 2 places · 1.200…' // Object.is equality
+
+Expected: "dc 5 · 18:50 · B+C | 2 places · 1.200 ¥"
+Received: "dc 5 · 18:50 · B+C | 2 places · 12,00 €"
+
+ ❯ src/booking/book.test.tsx:266:46
+    264|     );
+    265|     await renderBook(singleClass);
+    266|     expect(text(rows()[0] ?? document.body)).toBe("dc 5 · 18:50 · B+C …
+       |                                              ^
+    267|   });
+    268|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 skipped (13)
+   Start at  22:41:38
+   Duration  1.35s (transform 48%, environment 19%, import 16%, tests 13%, setup 4%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/catalogs/PlansPage.test.tsx (4 tests | 1 failed | 2 skipped) 154ms
+   ❯ E11-W05 step 1 (INC-41 #7): D8's prices through the minor-units helper — no visible change for EUR (2)
+     × E11-W05 step 1: a club whose currency has no cents (JPY) reads its price undivided («6.000 ¥/mes», never «60,00 ¥») 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/PlansPage.test.tsx > E11-W05 step 1 (INC-41 #7): D8's prices through the minor-units helper — no visible change for EUR > E11-W05 step 1: a club whose currency has no cents (JPY) reads its price undivided («6.000 ¥/mes», never «60,00 ¥»)
+AssertionError: expected 'Abonatquota mensual60 ¥/mesfins a due…' to contain '6.000 ¥/mes'
+
+Expected: "6.000 ¥/mes"
+Received: "Abonatquota mensual60 ¥/mesfins a dues classes per setmanasí"
+
+ ❯ src/catalogs/PlansPage.test.tsx:106:33
+    104|     }));
+    105|     await renderPlans({ ...branding, currency: "JPY" });
+    106|     expect(await row("Abonat")).toContain("6.000 ¥/mes");
+       |                                 ^
+    107|   });
+    108| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 2 skipped (4)
+   Start at  22:41:39
+   Duration  1.21s (transform 44%, environment 21%, import 16%, tests 14%, setup 4%)
+

@@ -355,7 +355,7 @@ describe("T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and acto
   });
 });
 
-describe("E11-W02 round 2 (INC-41): the audit's «Data» filter can be filled", () => {
+describe("T-14-26 / R-14-11 (E11-W02 round 2, INC-41): the audit's «Data» filter can be filled", () => {
   it("«Data» between two club days: two date inputs, sent as the club-local bounds of those days", async () => {
     const filters: string[] = [];
     const listener = ({ request }: { request: Request }) => {
@@ -374,10 +374,52 @@ describe("E11-W02 round 2 (INC-41): the audit's «Data» filter can be filled", 
     fireEvent.change(screen.getByLabelText("Des de"), { target: { value: "2026-08-03" } });
     fireEvent.change(screen.getByLabelText("Fins a"), { target: { value: "2026-08-04" } });
     fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
-    // Europe/Madrid in August is +02:00: the 3rd starts at 22:00Z on the 2nd; the 5th ends the range.
+    // Europe/Madrid in August is +02:00: the 3rd starts at 22:00Z on the 2nd; the 4th's last
+    // instant ends the range (E11-W05 step 5 (e): `between` is inclusive at both ends).
     await waitFor(() => {
-      expect(filters).toContain("at:between:2026-08-02T22:00:00Z,2026-08-04T22:00:00Z");
+      expect(filters).toContain("at:between:2026-08-02T22:00:00Z,2026-08-04T21:59:59.999Z");
     });
     server.events.removeListener("request:start", listener);
+  });
+});
+
+describe("T-14-26 / R-14-11 E11-W05 step 5 (e): the «Data» range ends at the end day's last instant (CONVENCIONS_API §4: `between` includes both ends)", () => {
+  it("1–2 Oct in Europe/Madrid ends in 2026-10-02T21:59:59.999Z, so an entry at 00:00:00.000 of the 3rd is not listed", async () => {
+    const filters: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const url = new URL(request.url);
+      if (url.pathname.endsWith("/audit-entries"))
+        filters.push(...url.searchParams.getAll("filter"));
+    };
+    server.events.on("request:start", listener);
+    window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
+    await renderAudit();
+    expect(await screen.findByRole("heading", { name: "Auditoria de l'abonat" })).toBeVisible();
+    fireEvent.change(screen.getByRole("combobox", { name: "Columna" }), {
+      target: { value: "at" },
+    });
+    fireEvent.change(screen.getByLabelText("Des de"), { target: { value: "2026-10-01" } });
+    fireEvent.change(screen.getByLabelText("Fins a"), { target: { value: "2026-10-02" } });
+    fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
+    await waitFor(() => {
+      expect(filters).toContain("at:between:2026-09-30T22:00:00Z,2026-10-02T21:59:59.999Z");
+    });
+    server.events.removeListener("request:start", listener);
+  });
+
+  it("the mock compares the bounds as instants: an entry at a bound written with milliseconds is listed", async () => {
+    const list = async (range: string) => {
+      const url = new URL(`${window.location.origin}/api/v1/audit-entries`);
+      url.searchParams.append("filter", `at:between:${range}`);
+      const body = (await (await fetch(url)).json()) as { items: { at: string }[] };
+      return body.items.map((item) => item.at);
+    };
+    // The fixture's entry at 2026-08-03T10:15:00Z, as the last instant of a range.
+    expect(await list("2026-08-02T22:00:00Z,2026-08-03T10:15:00.000Z")).toContain(
+      "2026-08-03T10:15:00Z",
+    );
+    expect(await list("2026-08-02T22:00:00Z,2026-08-03T10:14:59.999Z")).not.toContain(
+      "2026-08-03T10:15:00Z",
+    );
   });
 });

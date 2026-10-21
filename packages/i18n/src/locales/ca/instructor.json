@@ -88,7 +88,7 @@
     "loadError": "No s'ha pogut carregar la fitxa.",
     "retry": "Torna-ho a provar",
     "headerLevel": "Nivell {code} · {since}",
-    "memberStatus": "{gender, select, female {Abonada} other {Abonat}}",
+    "memberStatus": "{gender, select, FEMALE {Abonada} OTHER {Abonat/ada} other {Abonat}}",
     "attendanceTitle": "Assistència · darrers 30 dies",
     "attendanceSub": "{noShow, plural, one {# no presentat} other {# no presentats}} · {notified, plural, one {# avisat} other {# avisats}}",
     "classesTitle": "Classes · darrers 30 dies",

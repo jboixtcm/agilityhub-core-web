@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (16 tests | 1 failed | 15 skipped) 44ms
+   ❯ E11-W05 snapshot a7c85d50 (E11-T13): ClassCancellation carries reviewTime and a nullable byAccountId, both always sent (1)
+     × R-06-13: the review's cancellation is read with byAccountId null and the club's classes.riskReviewTime at read time; a club's cancellation with reviewTime null 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E11-W05 snapshot a7c85d50 (E11-T13): ClassCancellation carries reviewTime and a nullable byAccountId, both always sent > R-06-13: the review's cancellation is read with byAccountId null and the club's classes.riskReviewTime at read time; a club's cancellation with reviewTime null
+AssertionError: expected { adminText: null, …(5) } to match object { byAccountId: null, …(1) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "byAccountId": null,
+-   "reviewTime": "07:30",
++   "byAccountId": "system",
+  }
+
+ ❯ src/mocks/calendar-handlers.test.ts:69:46
+     67|         return data.classes.find((item) => item.cancellation?.reason =…
+     68|       });
+     69|     expect((await reviewed())?.cancellation).toMatchObject({ byAccount…
+       |                                              ^
+     70|
+     71|     const parameter = await client.GET("/parameters/{key}", {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  22:39:16
+   Duration  1.17s (transform 64%, import 32%, tests 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/calendar-handlers.test.ts -t E11-W05

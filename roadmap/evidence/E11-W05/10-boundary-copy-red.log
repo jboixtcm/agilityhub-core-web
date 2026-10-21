@@ -1,0 +1,79 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+stderr | src/screen-load-error.test.tsx > E11-W02 round 2 (review #4) and E11-W05 step 5 (d): a screen whose chunk cannot load never blanks the app > 04 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once
+Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock
+    at createHelpfulError (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/@vitest+mocker@5.0.0_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3__vite@8.2.2_@types+node@_skleqvykj2lcs72bea5et2hcqq/node_modules/@vitest/mocker/dist/chunk-registry.js:203:16)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/@vitest+mocker@5.0.0_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3__vite@8.2.2_@types+node@_skleqvykj2lcs72bea5et2hcqq/node_modules/@vitest/mocker/dist/chunk-registry.js:184:11
+    at VitestMocker.callFunctionMock (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:332:19)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:415:12 {
+  [stack]: [Getter/Setter],
+  [message]: '[vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock',
+  cause: TypeError: Failed to fetch dynamically imported module: /assets/screens-old.js
+      at /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs/src/screen-load-error.test.tsx:17:5
+      at ManualMockedModule.factory (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.OVGXnVRj.js:7342:78)
+      at ManualMockedModule.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/@vitest+mocker@5.0.0_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3__vite@8.2.2_@types+node@_skleqvykj2lcs72bea5et2hcqq/node_modules/@vitest/mocker/dist/chunk-registry.js:175:19)
+      at VitestMocker.callFunctionMock (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:332:30)
+      at file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:415:23
+      at Traces.$ (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/traces.js:143:27)
+      at VitestMocker.requestWithMockedModule (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:380:21)
+      at VitestModuleRunner.cachedRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:595:38)
+      at request (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/module-runner.js:1231:76)
+      at async Promise.all (index 0) {
+    [stack]: [Getter/Setter],
+    [message]: 'Failed to fetch dynamically imported module: /assets/screens-old.js'
+  }
+}
+
+The above error occurred in one of your React components.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, FailureBoundary.
+
+
+ ❯ src/screen-load-error.test.tsx (2 tests | 2 failed) 110ms
+   ❯ E11-W02 round 2 (review #4) and E11-W05 step 5 (d): a screen whose chunk cannot load never blanks the app (2)
+     × 04 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once 100ms
+     × a screen that throws while drawing: a plain message in the app's register, «Torna-ho a provar», and no reload of its own 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screen-load-error.test.tsx > E11-W02 round 2 (review #4) and E11-W05 step 5 (d): a screen whose chunk cannot load never blanks the app > 04 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'aplicació s'ha actualitzat. Torna a carregar-la.[39m
+Received:
+[31m  No disponibleNo hi ha connexió amb el servidor.Torna-ho a provar[39m
+ ❯ src/screen-load-error.test.tsx:77:19
+     75|     expect(alert).toHaveTextContent("No disponible");
+     76|     // A chunk a deploy removed: the app was updated, not a lost conne…
+     77|     expect(alert).toHaveTextContent("L'aplicació s'ha actualitzat. Tor…
+       |                   ^
+     78|     expect(alert).not.toHaveTextContent("No hi ha connexió amb el serv…
+     79|     // The shell is still there: the tabs lead elsewhere.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/screen-load-error.test.tsx > E11-W02 round 2 (review #4) and E11-W05 step 5 (d): a screen whose chunk cannot load never blanks the app > a screen that throws while drawing: a plain message in the app's register, «Torna-ho a provar», and no reload of its own
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  No s'ha pogut mostrar aquesta pantalla.[39m
+Received:
+[31m  No disponibleS'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.Torna-ho a provar[39m
+ ❯ src/screen-load-error.test.tsx:109:19
+    107|     const alert = await screen.findByRole("alert");
+    108|     // A39.211: not `errors:INTERNAL_ERROR` (a reference code, «vosalt…
+    109|     expect(alert).toHaveTextContent("No s'ha pogut mostrar aquesta pan…
+       |                   ^
+    110|     expect(alert).not.toHaveTextContent("codi de referència");
+    111|     expect(reloadDocument).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  22:38:24
+   Duration  1.26s (transform 49%, environment 20%, import 17%, tests 9%, setup 4%)
+

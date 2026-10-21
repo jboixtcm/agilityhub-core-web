@@ -50,7 +50,9 @@ import {
   isIsoDate,
   loadCalendarSettings,
   loadOpeningHours,
+  loadRiskReviewTime,
   parseFilter,
+  reviewTimeValue,
   type RingBlock,
   timeLabel,
   useCalendarErrorMessage,
@@ -351,7 +353,9 @@ export function CalendarPage({
   const settings = useResource(
     useCallback(
       async (): Promise<CalendarSettings> =>
-        readOnly ? defaultCalendarSettings : loadCalendarSettings(client),
+        readOnly
+          ? { ...defaultCalendarSettings, riskReviewTime: await loadRiskReviewTime(client) }
+          : loadCalendarSettings(client),
       [client, readOnly],
     ),
   );
@@ -652,12 +656,16 @@ export function CalendarPage({
         ? undefined
         : ringsById.get(session.ringId);
     const cancelled = session.state === "CANCELLED";
+    // R-06-13: the review's time is the cancellation's own `reviewTime` (E11-T13); a cancellation
+    // read without one (older data) takes the club's `classes.riskReviewTime`.
     const subtitle = cancelled
       ? t("admin-scheduling:calendar.cell.cancelled", {
           reason:
             session.cancellation === null || session.cancellation === undefined
               ? ""
-              : t(`enums:cancellationReason.${session.cancellation.reason}`),
+              : t(`enums:cancellationReason.${session.cancellation.reason}`, {
+                  time: reviewTimeValue(session.cancellation.reviewTime ?? config.riskReviewTime),
+                }),
         })
       : `${ring?.name ?? t("admin-scheduling:calendar.cell.noRing")} · ${instructorsOf(session.instructorIds)}`;
     const meta = session.state === "DRAFT" ? undefined : countsOf(session);

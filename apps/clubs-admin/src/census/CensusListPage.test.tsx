@@ -171,6 +171,18 @@ describe("T-03-38 D5 universal member list", () => {
     );
   });
 
+  it("E11-W05 step 4 (A40.2): D5 names the identity column «Document d'identitat» and searches by «document», never «DNI»", async () => {
+    window.history.pushState(null, "", "/abonats");
+    await renderPage("members");
+    expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+    expect(screen.getByRole("searchbox", { name: "Cerca per nom, document, gos…" })).toBeVisible();
+
+    fireEvent.click(screen.getByText("Columnes"));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Document d'identitat" }));
+    expect(await screen.findByRole("columnheader", { name: "Document d'identitat" })).toBeVisible();
+    expect(screen.queryByText(/\bDNI\b/u)).not.toBeInTheDocument();
+  });
+
   it("T-13-22 offers the leave columns and keeps the system leave view non-deletable", async () => {
     const memberRequests: (string | null)[] = [];
     server.events.on("request:start", ({ request }) => {
@@ -254,13 +266,13 @@ describe("E11-W02 round 2 (review #12): D5's active count", () => {
   });
 });
 
-describe("E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates, never codes", () => {
+describe("T-03-42 / R-03-32, R-03-29 (E11-W02 round 2, INC-41): D5 and D15 show labels and the club's dates, never codes", () => {
   function showColumn(name: string) {
     const box = screen.getByRole("checkbox", { name });
     if (!(box as HTMLInputElement).checked) fireEvent.click(box);
   }
 
-  it("D5: the payment method and the pending documents by their labels", async () => {
+  it("T-03-42 / R-03-32 D5: the payment method and the pending documents by their labels", async () => {
     window.history.pushState(null, "", "/abonats?size=100");
     await renderPage("members");
     expect(await screen.findByText("Anna Ballart Consul")).toBeVisible();
@@ -279,7 +291,41 @@ describe("E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates,
     }
   });
 
-  it("D15: «Al nivell des de» and «Data d'alta» are instants, shown as the club's calendar day", async () => {
+  it("R-03-32 E11-W05 step 5 (f): D5: a channel with no label (the api's `channel` is a free string) reads its type's label, never the key", async () => {
+    server.use(
+      http.get("*/api/v1/members", async ({ request }) => {
+        const real = await getResponse(handlers, request);
+        const page = (await real?.json()) as { items: Record<string, unknown>[] };
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) =>
+            item.fullName === "Anna Ballart Consul" && item.paymentMethod !== undefined
+              ? {
+                  ...item,
+                  paymentMethod: {
+                    ...(item.paymentMethod as Record<string, unknown>),
+                    channel: "CHEQUE",
+                    maskedAccount: null,
+                    type: "MANUAL",
+                  },
+                }
+              : item,
+          ),
+        });
+      }),
+    );
+    window.history.pushState(null, "", "/abonats?size=100");
+    await renderPage("members");
+    expect(await screen.findByText("Anna Ballart Consul")).toBeVisible();
+    fireEvent.click(screen.getByText("Columnes"));
+    showColumn("Pagament");
+    const anna = (await screen.findByText("Anna Ballart Consul")).closest("tr");
+    if (anna === null) throw new Error("Expected Anna's row");
+    expect(await within(anna).findByText("Efectiu")).toBeVisible();
+    expect(screen.queryByText(/paymentChannel|CHEQUE/u)).toBeNull();
+  });
+
+  it("T-03-04 / R-03-29 D15: «Al nivell des de» and «Data d'alta» are instants, shown as the club's calendar day", async () => {
     server.use(
       http.get("*/api/v1/dogs", async ({ request }) => {
         const real = await getResponse(handlers, request);

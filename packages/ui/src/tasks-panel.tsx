@@ -9,7 +9,16 @@ import {
   useState,
 } from "react";
 
-import { Badge, Button, Drawer, IconButton, Modal, Skeleton, Textarea } from "./components";
+import {
+  Badge,
+  Button,
+  Drawer,
+  EmptyState,
+  IconButton,
+  Modal,
+  Skeleton,
+  Textarea,
+} from "./components";
 import { Icon } from "./icons/Icon";
 
 // ── Attachments ──────────────────────────────────────────────────────────────────────────────
@@ -464,7 +473,8 @@ export function TasksPanel<Task extends TaskPanelItem>({
       {loading ? (
         <Skeleton height="8rem" label={labels.loading} />
       ) : tasks.length === 0 && !adding ? (
-        <p className="ah-tasks__empty">{labels.empty}</p>
+        // E11-W05 step 5 (b): the UI kit's empty state, as every other list.
+        <EmptyState icon="check" title={labels.empty} />
       ) : (
         <ul className="ah-tasks__list">
           {tasks.map((task) => {

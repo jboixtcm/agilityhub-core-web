@@ -87,7 +87,7 @@ async function renderAt(path: string) {
   );
 }
 
-describe("E11-W02 round 2 (review #5): the same screen with another query reads it again", () => {
+describe("T-10-31 / R-10-14 (E11-W02 round 2, review #5): the same screen with another query reads it again", () => {
   it("25 opened from «tipus=TRAINING» and then from its plain address shows every type", async () => {
     const reads: string[] = [];
     const listener = ({ request }: { request: Request }) => {
@@ -127,6 +127,31 @@ describe("E11-W02 round 2 (review #6): the document's scroll on push, Back and a
     });
   });
 
+  it("E11-W05 step 5 (c): a reload keeps the browser's own restoration — «manual» only once the app navigates, given back when the page goes", async () => {
+    // jsdom has no `scrollRestoration`: the test gives the history one, with the browser's default.
+    Object.defineProperty(window.history, "scrollRestoration", {
+      configurable: true,
+      value: "auto",
+      writable: true,
+    });
+    onTestFinished(() => {
+      Reflect.deleteProperty(window.history, "scrollRestoration");
+    });
+    await renderAt("/historic");
+    await screen.findByRole("heading", { level: 1, name: "Històric" }, { timeout: 5_000 });
+    // The document's load (a reload of a scrolled screen): the browser restores where it was.
+    expect(window.history.scrollRestoration).toBe("auto");
+
+    const tabs = screen.getByRole("navigation", { name: "Navegació principal" });
+    fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" }));
+    await screen.findByRole("heading", { level: 1, name: "Reservar" }, { timeout: 5_000 });
+    expect(window.history.scrollRestoration).toBe("manual");
+
+    // Leaving or reloading the document from here: the next load is the browser's again.
+    window.dispatchEvent(new Event("pagehide"));
+    expect(window.history.scrollRestoration).toBe("auto");
+  });
+
   it("«/perfil#avisos» opens 12 at its notices card", async () => {
     const scrolled: Element[] = [];
     // jsdom has no `scrollIntoView`: the test gives the elements one that records the call.
@@ -150,7 +175,7 @@ describe("E11-W02 round 2 (review #6): the document's scroll on push, Back and a
   });
 });
 
-describe("E11-W02 round 2 (INC-41): one language selector on 12", () => {
+describe("R-01-14 (E11-W02 round 2, INC-41): one language selector on 12", () => {
   it("«/perfil» draws as mockup 12, without the shell's header: its «Idioma» card is the only selector", async () => {
     await renderAt("/perfil");
     await screen.findByRole("heading", { level: 1, name: "El meu perfil" }, { timeout: 5_000 });

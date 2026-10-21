@@ -116,6 +116,24 @@ const SCREENS: [string, string, string, "instructor" | "member", string, string 
     "Ara mateix no hi ha cap classe per reservar amb aquest gos.",
   ],
   ["07", "/reserves/booking-duna-mon3", MEMBER, "member", "Carregant la reserva", null],
+  // E11-W05 step 5 (b): the three detail screens 07 links to.
+  ["espera", "/espera/waitlist-duna-thu6", MEMBER, "member", "Carregant la reserva", null],
+  [
+    "entrenament",
+    "/entrenaments/training-rock-mon3",
+    MEMBER,
+    "member",
+    "Carregant la reserva",
+    null,
+  ],
+  [
+    "activitat",
+    "/activitats/activity-taller-contactes",
+    MEMBER,
+    "member",
+    "Carregant l'activitat",
+    null,
+  ],
   [
     "08",
     "/entrenaments",
@@ -165,6 +183,23 @@ const SCREENS: [string, string, string, "instructor" | "member", string, string 
     "Carregant la llista",
     "Encara no hi ha cap inscrit.",
   ],
+  // E11-W05 step 5 (b): 22's «5 darreres classes» and 26's tasks panel.
+  [
+    "22",
+    "/instructor/alumnes/dog-duna",
+    INSTRUCTOR,
+    "instructor",
+    "Carregant la fitxa",
+    "Encara no hi ha classes",
+  ],
+  [
+    "26",
+    "/instructor/alumnes/dog-duna/tasques",
+    INSTRUCTOR,
+    "instructor",
+    "Carregant les tasques",
+    "Encara no hi ha cap tasca",
+  ],
   [
     "23",
     "/instructor/avui",
@@ -191,7 +226,7 @@ const LISTS = SCREENS.filter(
 // E11-W02 step 4 (round 2, points 1 and 2): each screen's reads have their states from the UI kit —
 // its own loading status while they are out, an alert when they fail, and for a list the UI kit's
 // `EmptyState` when the answer has nothing in it.
-describe("E11-W02 step 4: the members' app says when its data is loading, failed or empty", () => {
+describe("E11-W02 step 4 and E11-W05 step 5 (b): the members' app says when its data is loading, failed or empty", () => {
   it.each(SCREENS)(
     "%s (%s) shows its own loading status while its reads are out",
     async (_screen, path, email, scenario, loading) => {

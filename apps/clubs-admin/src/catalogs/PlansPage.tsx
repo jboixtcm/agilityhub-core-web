@@ -1,5 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import { useClubFormats } from "@agilityhub/i18n";
+import { currencyDigits, majorUnits, minorFromMajor, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -48,10 +48,6 @@ function nextMonthStart(): string {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 1))
     .toISOString()
     .slice(0, 10);
-}
-
-function compactMoney(value: string): string {
-  return value.replace(/([,.]00)(?= )/u, "");
 }
 
 function priceConcept(type: Plan["type"], billingMode: Plan["billingMode"]): Price["concept"] {
@@ -108,13 +104,13 @@ function PriceStatus({ status }: { status: Price["status"] }) {
 }
 
 function PlanPrice({ entryFeeMinor, plan }: { entryFeeMinor: number; plan: Plan }) {
-  const { formatMoney } = useClubFormats();
+  const { formatMinor, formatMoneyMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const price = currentPrice(plan);
   if (price === undefined) {
     return <>{plan.texts?.priceLabel ?? t("admin-catalogs:plans.noPrice")}</>;
   }
-  const amount = compactMoney(formatMoney(price.amount.amountMinor / 100));
+  const amount = formatMoneyMinor(price.amount, { compact: true });
   if (plan.type === "MONTHLY") {
     const planEntryFee = entryFeeAmountMinor(plan, entryFeeMinor);
     return (
@@ -123,7 +119,7 @@ function PlanPrice({ entryFeeMinor, plan }: { entryFeeMinor: number; plan: Plan 
           ? t("admin-catalogs:plans.monthlyPrice", { amount })
           : t("admin-catalogs:plans.monthlyPriceWithEntry", {
               amount,
-              entry: compactMoney(formatMoney(planEntryFee / 100)),
+              entry: formatMinor(planEntryFee, { compact: true }),
             })}
       </strong>
     );
@@ -161,7 +157,7 @@ function PriceForm({
     try {
       const body: PriceCreate = {
         amount: {
-          amountMinor: Math.round(Number(amount.replace(",", ".")) * 100),
+          amountMinor: minorFromMajor(Number(amount.replace(",", ".")), branding.currency),
           currency: branding.currency,
         },
         concept: priceConcept(plan.type, plan.billingMode),
@@ -195,7 +191,7 @@ function PriceForm({
               setAmount(event.currentTarget.value);
             }}
             required
-            step="0.01"
+            step={String(10 ** -currencyDigits(branding.currency))}
             type="number"
             value={amount}
           />
@@ -261,7 +257,7 @@ function PlanForm({
   item?: Plan | undefined;
 }) {
   const branding = useBranding();
-  const { formatMoney } = useClubFormats();
+  const { formatMinor, formatMoneyMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
   const [locale, setLocale] = useState(branding.defaultLocale);
@@ -279,7 +275,9 @@ function PlanForm({
   const [dogsIncluded, setDogsIncluded] = useState(item?.dogsIncluded ?? 1);
   const [entryMode, setEntryMode] = useState<EntryFee["mode"]>(item?.entryFee?.mode ?? "STANDARD");
   const [entryAmount, setEntryAmount] = useState(
-    item?.entryFee?.amount === undefined ? "" : String(item.entryFee.amount.amountMinor / 100),
+    item?.entryFee?.amount === undefined
+      ? ""
+      : String(majorUnits(item.entryFee.amount.amountMinor, item.entryFee.amount.currency)),
   );
   const [entryPercent, setEntryPercent] = useState(
     item?.entryFee?.percent === undefined ? "" : String(item.entryFee.percent),
@@ -303,7 +301,7 @@ function PlanForm({
     if (entryMode === "AMOUNT") {
       return {
         amount: {
-          amountMinor: Math.round(Number(entryAmount.replace(",", ".")) * 100),
+          amountMinor: minorFromMajor(Number(entryAmount.replace(",", ".")), branding.currency),
           currency: branding.currency,
         },
         mode: entryMode,
@@ -443,7 +441,7 @@ function PlanForm({
               >
                 <option value="STANDARD">
                   {t("admin-catalogs:plans.entryMode.standard", {
-                    amount: compactMoney(formatMoney(entryFeeMinor / 100)),
+                    amount: formatMinor(entryFeeMinor, { compact: true }),
                   })}
                 </option>
                 <option value="AMOUNT">{t("admin-catalogs:plans.entryMode.amount")}</option>
@@ -463,7 +461,7 @@ function PlanForm({
                     setEntryAmount(event.currentTarget.value);
                   }}
                   required
-                  step="0.01"
+                  step={String(10 ** -currencyDigits(branding.currency))}
                   type="number"
                   value={entryAmount}
                 />
@@ -622,7 +620,7 @@ function PlanForm({
               {(item.prices ?? []).map((price) => (
                 <li key={price.id}>
                   <PriceStatus status={price.status} />
-                  <strong>{compactMoney(formatMoney(price.amount.amountMinor / 100))}</strong>
+                  <strong>{formatMoneyMinor(price.amount, { compact: true })}</strong>
                   <span>
                     {price.validFrom}
                     {price.validTo === undefined
@@ -656,7 +654,7 @@ function PlanCopyCards({
   plan: Plan;
 }) {
   const branding = useBranding();
-  const { formatMoney } = useClubFormats();
+  const { formatMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
   const [textLocale, setTextLocale] = useState(branding.defaultLocale);
@@ -746,7 +744,7 @@ function PlanCopyCards({
               ? sentenceCase(plan.conditions ?? "")
               : t("admin-catalogs:plans.previewConditionsWithEntry", {
                   conditions: sentenceCase(plan.conditions ?? ""),
-                  entry: compactMoney(formatMoney(previewEntryFee / 100)),
+                  entry: formatMinor(previewEntryFee, { compact: true }),
                 })}
           </p>
           <p>{offerLabel[textLocale] ?? ""}</p>
@@ -759,7 +757,7 @@ function PlanCopyCards({
 
 export function PlansPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
-  const { formatMoney } = useClubFormats();
+  const { formatMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const load = useCallback(async () => {
     const result = await client.GET("/plans", { params: { query: { includeInactive: true } } });
@@ -822,7 +820,7 @@ export function PlansPage({ client }: { client: ApiClient }) {
             {billingEnabled ? (
               <a className="catalog-page__parameter-link" href="/parametres">
                 {t("admin-catalogs:plans.entryFeeSummary", {
-                  amount: compactMoney(formatMoney(entryFeeMinor / 100)),
+                  amount: formatMinor(entryFeeMinor, { compact: true }),
                 })}
               </a>
             ) : null}

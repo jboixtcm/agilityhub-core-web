@@ -75,7 +75,7 @@ interface DogForm {
 type PersonTextKey = Exclude<keyof PersonForm, "gender" | "paymentType">;
 type DogTextKey = Exclude<keyof DogForm, "notesToInstructors" | "sex">;
 
-/** The identity document's label names its type (R-04-01): DNI and NIE share «DNI/NIE». */
+/** The identity document's label names its type (R-04-01): DNI and NIE share «Document d'identitat». */
 export function idDocumentLabel(
   type: string | null | undefined,
   t: (key: string) => string,

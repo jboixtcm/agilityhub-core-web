@@ -35,16 +35,16 @@ function client() {
   return createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
 }
 
-async function renderPlans() {
+async function renderPlans(club: Branding = branding) {
   const i18n = await createI18n({
-    branding,
+    branding: club,
     browserLanguages: ["ca"],
     initialNamespaces: ["admin-catalogs", "errors"],
     storage: undefined,
   });
   render(
     <I18nextProvider i18n={i18n}>
-      <BrandingProvider branding={branding}>
+      <BrandingProvider branding={club}>
         <PlansPage client={client()} />
       </BrandingProvider>
     </I18nextProvider>,
@@ -66,6 +66,46 @@ async function openPriceForm(name: string) {
   const dialog = screen.getByRole("dialog", { name: `Edita ${name}` });
   return { dialog, tax: within(dialog).getByLabelText("Impost (%)") };
 }
+
+describe("E11-W05 step 1 (INC-41 #7): D8's prices through the minor-units helper — no visible change for EUR", () => {
+  const row = async (name: string) => {
+    const table = await screen.findByRole("table", { name: "Modalitats i tarifes" });
+    const cell = await within(table).findByText(name);
+    const tr = cell.closest("tr");
+    if (tr === null) throw new TypeError(`No row for ${name}`);
+    return tr.textContent.replace(/\s+/gu, " ");
+  };
+
+  it("E11-W05 step 1: «Abonat» reads «60 €/mes + entrada 100 €» as before, and a price with cents keeps them («60,50 €/mes»)", async () => {
+    await renderPlans();
+    expect(await row("Abonat")).toContain("60 €/mes + entrada 100 €");
+    cleanup();
+
+    server.resetHandlers();
+    await servePlans("Abonat", (plan) => ({
+      ...plan,
+      currentPrices: (plan.currentPrices ?? []).map((price) => ({
+        ...price,
+        amount: { amountMinor: 6050, currency: "EUR" },
+      })),
+    }));
+    await renderPlans();
+    expect(await row("Abonat")).toContain("60,50 €/mes + entrada 100 €");
+  });
+
+  it("E11-W05 step 1: a club whose currency has no cents (JPY) reads its price undivided («6.000 ¥/mes», never «60,00 ¥»)", async () => {
+    await servePlans("Abonat", (plan) => ({
+      ...plan,
+      currentPrices: (plan.currentPrices ?? []).map((price) => ({
+        ...price,
+        amount: { amountMinor: 6000, currency: "JPY" },
+      })),
+      entryFee: { mode: "NONE" },
+    }));
+    await renderPlans({ ...branding, currency: "JPY" });
+    expect(await row("Abonat")).toContain("6.000 ¥/mes");
+  });
+});
 
 describe("E4-W16 step 8 (INC-28, S05 §12, §13-5): D8 «Nou preu» proposes the plan's tax, never a country constant", () => {
   it("proposes the current price's taxPercent — 0 at a club without VAT — and sends the value shown", async () => {

@@ -1,8 +1,10 @@
 import type { components } from "../../generated/schema";
 
 import { addDays, mondayOf } from "./planning";
+import { findParameter } from "./settings";
 
 export type ClassSession = components["schemas"]["ClassSession"];
+export type ClassCancellation = components["schemas"]["ClassCancellation"];
 export type RingBlock = components["schemas"]["RingBlock"];
 export type CancellationPreview = components["schemas"]["CancellationPreview"];
 export type CancellationBooking = components["schemas"]["CancellationBooking"];
@@ -252,8 +254,31 @@ function sessionsOf(
   });
 }
 
-/** The club-local time of the daily risk review (S15 R-15-12, `classes.riskReviewTime`). */
-const RISK_REVIEW_TIME = "07:30";
+/** `classes.riskReviewTime`'s default (S15 §9): the mock club's value until a test changes it. */
+export const RISK_REVIEW_DEFAULT_TIME = "07:30";
+
+/** The club-local time of the daily risk review (S15 R-15-12): the club's `classes.riskReviewTime`. */
+export function riskReviewTime(): string {
+  const value = findParameter("classes.riskReviewTime")?.value;
+  return typeof value === "string" ? value : RISK_REVIEW_DEFAULT_TIME;
+}
+
+/**
+ * A class the risk review cancelled, as the api sends it (E11-T13): run by the system, so
+ * `byAccountId` is `null`; `reviewTime` is the club's `classes.riskReviewTime` (the read handlers
+ * refresh it on every read, as the api fills it when the view is read).
+ */
+export function riskReviewCancellation(at: string, affectedBookings: number): ClassCancellation {
+  return {
+    adminText: null,
+    affectedBookings,
+    affectedWaitlist: 0,
+    at,
+    byAccountId: null,
+    reason: "RISK_REVIEW",
+    reviewTime: riskReviewTime(),
+  };
+}
 
 const ABOVE_C = [C, D, E, F, G] as const;
 
@@ -268,22 +293,11 @@ const ABOVE_C = [C, D, E, F, G] as const;
  */
 function activeSpecs(monday: string, now: number): SessionSpec[] {
   const finished = { state: "FINISHED" as const };
-  const review = clubInstant(addDays(monday, 2), RISK_REVIEW_TIME);
+  const review = clubInstant(addDays(monday, 2), riskReviewTime());
   const cadells: Partial<SessionSpec> =
     now < Date.parse(review)
       ? { atRisk: true }
-      : {
-          cancellation: {
-            adminText: null,
-            affectedBookings: 0,
-            affectedWaitlist: 0,
-            at: review,
-            byAccountId: null,
-            reason: "RISK_REVIEW",
-            reviewTime: "07:30",
-          },
-          state: "CANCELLED",
-        };
+      : { cancellation: riskReviewCancellation(review, 0), state: "CANCELLED" };
   return [
     spec(0, "08:30", CEN, [A, B], LAURA, "A+B", 5, { ...finished, booked: 4 }),
     spec(0, "08:30", MUN, ABOVE_C, MARC, "C i sup.", 5, { ...finished, booked: 3 }),
@@ -404,17 +418,13 @@ export function riskReviewSessions(date: string): ClassSession[] {
   const ids = riskReviewClassIds(date);
   const tomorrow = addDays(date, 1);
   const week = (day: string) => `week-${mondayOf(day)}`;
-  const cancelled = (affectedBookings: number, seconds: number) => ({
-    adminText: null,
-    affectedBookings,
-    affectedWaitlist: 0,
-    at: new Date(Date.parse(clubInstant(date, "07:30")) + seconds * 1_000)
-      .toISOString()
-      .replace(".000Z", "Z"),
-    byAccountId: null,
-    reason: "RISK_REVIEW" as const,
-    reviewTime: "07:30",
-  });
+  const cancelled = (affectedBookings: number, seconds: number) =>
+    riskReviewCancellation(
+      new Date(Date.parse(clubInstant(date, riskReviewTime())) + seconds * 1_000)
+        .toISOString()
+        .replace(".000Z", "Z"),
+      affectedBookings,
+    );
   return [
     classSession({
       capacity: 5,

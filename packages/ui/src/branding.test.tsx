@@ -154,7 +154,7 @@ describe("T-02-05 BrandingProvider", () => {
   });
 });
 
-describe("E11-W02 round 2 (review #7): theme `auto` is live", () => {
+describe("R-02-08 (E11-W02 round 2, review #7): theme `auto` is live", () => {
   const autoCanic = (): Branding => ({
     ...canicBranding(),
     theme: { ...canicBranding().theme, mode: "auto" },

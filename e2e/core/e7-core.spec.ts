@@ -2090,7 +2090,7 @@ test("T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Env
   await openRoute(page, "/abonats", "/tauler");
   expect((await listRead).status(), "GET /members").toBe(200);
   const searched = page.waitForResponse(isMembersList("member"));
-  await page.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" }).fill("member");
+  await page.getByRole("searchbox", { name: "Cerca per nom, document, gos…" }).fill("member");
   const searchAnswer = await searched;
   expect(searchAnswer.status(), "GET /members?q=member").toBe(200);
   const listed = (await searchAnswer.json()) as MemberPage;
@@ -2250,7 +2250,7 @@ test("T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Env
   await openRoute(page, "/abonats", "/tauler");
   expect((await again).status()).toBe(200);
   const searchedAgain = page.waitForResponse(isMembersList("member"));
-  await page.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" }).fill("member");
+  await page.getByRole("searchbox", { name: "Cerca per nom, document, gos…" }).fill("member");
   const shown = (await (await searchedAgain).json()) as MemberPage;
   // What D5 renders for its query (one page holds them all here).
   const d5Rows = page.locator(".census-page table tbody tr");

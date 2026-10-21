@@ -35,7 +35,7 @@
     "CANCELLED": "anulada"
   },
   "cancellationReason": {
-    "RISK_REVIEW": "revisión de las 7:30",
+    "RISK_REVIEW": "revisión{time, select, none {} other { de las {time}}}",
     "CLUB_MANUAL": "por el club",
     "DELETED": "eliminada",
     "ACTIVITY": "actividad"
@@ -297,7 +297,8 @@
     "NO_PLAN": "sin modalidad asignada",
     "CARD_INVALID": "tarjeta no válida",
     "CURRENCY_MISMATCH": "moneda distinta de la del club",
-    "PROVIDER_DISABLED": "proveedor de pago desactivado"
+    "PROVIDER_DISABLED": "proveedor de pago desactivado",
+    "NO_NEXT_INVOICE_DATE": "sin fecha del próximo recibo"
   },
   "paymentChannel": {
     "CASH": "Efectivo",
@@ -307,18 +308,19 @@
   "remittanceStatus": {
     "GENERATED": "generada",
     "SUBMITTED": "enviada al banco",
-    "ROLLED_BACK": "retrocedida"
+    "ROLLED_BACK": "revertida"
   },
   "rollbackBlocker": {
     "REMITTANCE_SUBMITTED": "la remesa ya se ha enviado al banco",
     "COLLECTION_SUBMITTED": "hay cobros enviados",
     "INVOICE_PAID": "hay recibos cobrados",
-    "MANUAL_INVOICE_AFTER": "se ha emitido un recibo manual después de la generación"
+    "MANUAL_INVOICE_AFTER": "se ha emitido un recibo manual después de la generación",
+    "COLLECTION_DATE_PASSED": "la fecha de cobro ya ha llegado"
   },
   "upfrontConcept": {
     "ENTRY_FEE": "Entrada",
     "FIRST_MONTH": "Primer mes",
-    "PACK": "Pack",
+    "PACK": "Bono",
     "SINGLE_CLASS": "Clase individual",
     "ACTIVITY": "Actividad",
     "OTHER": "Otros"
@@ -328,7 +330,7 @@
     "MAINTENANCE_FEE": "Cuota de mantenimiento",
     "INACTIVITY_FEE": "Cuota de inactividad",
     "SINGLE_CLASS": "Clase individual",
-    "PACK": "Pack",
+    "PACK": "Bono",
     "ADJUSTMENT": "Ajuste",
     "MIGRATED": "Migrado"
   },
@@ -345,14 +347,14 @@
     "REFUNDED": "reembolsado"
   },
   "collectionFailure": {
-    "ROLLBACK": "retroceso de la remesa",
+    "ROLLBACK": "reversión de la remesa",
     "BANK_RETURN": "devolución bancaria",
     "NO_PAYMENT_METHOD": "sin tarjeta válida",
     "card_declined": "tarjeta rechazada",
     "expired_card": "tarjeta caducada",
     "insufficient_funds": "fondos insuficientes"
   },
-  "leaveSource": {"MEMBER": "solicitud del abonado", "ADMIN": "decisión del club", "PACK_EXPIRED": "caducidad del pack", "MIGRATED": "migración"},
+  "leaveSource": {"MEMBER": "solicitud del abonado", "ADMIN": "decisión del club", "PACK_EXPIRED": "caducidad del bono", "MIGRATED": "migración"},
   "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema"},
   "memberDisplayStatus": {"INACTIVE_PERIOD": "inactiva", "INACTIVE_PERIOD_DATED": "inactiva hasta {date}", "LEAVE_SCHEDULED": "baja prevista {date}"},
   "finishReason": {"SCHEDULED": "finalización prevista", "ADMIN": "decisión del club", "LEAVE": "baja"},

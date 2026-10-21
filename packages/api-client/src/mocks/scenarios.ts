@@ -109,6 +109,11 @@ export interface MockScenarioDefinition {
   signupRequireDogDocument?: boolean;
   /** The club's date `GET /signup` quotes for (R-04-15); default `SIGNUP_MOCK_TODAY` (17-08-2026). */
   signupToday?: string;
+  /**
+   * D5 (E11-W05 step 5 (f)): the manual payments come through a channel with no label
+   * (`PaymentMethodView.channel` is a free string), so the list reads the type's label.
+   */
+  unlabelledPaymentChannel?: string;
   /** R-04-09 (S05 B34): the member adding a dog has no plan, so 17 offers the plans to choose. */
   signupMemberWithoutPlan?: boolean;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
@@ -204,6 +209,13 @@ const scenarios = {
     branding: canic,
     me: meAdmin as Me,
     sessions: accountSessions,
+  },
+  /** D5 with a payment channel that has no label (E11-W05 step 5 (f)). */
+  adminUnlabelledChannel: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    unlabelledPaymentChannel: "CHEQUE",
   },
   adminAllLocales: {
     branding: { ...canic, locales: ["ca", "es", "en"] },
@@ -534,6 +546,13 @@ const scenarios = {
   /** S10 R-10-03: the sheets read after T1 (circles inert, `ATTENDANCE_WINDOW_CLOSED`). */
   attendanceClosed: {
     attendance: "closed",
+    branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+  },
+  /** E11-W05 step 7: 21 of a class nobody booked (the sheet's `EmptyState`). */
+  attendanceEmpty: {
+    attendance: "empty",
     branding: canic,
     me: meInstructor as Me,
     sessions: accountSessions,

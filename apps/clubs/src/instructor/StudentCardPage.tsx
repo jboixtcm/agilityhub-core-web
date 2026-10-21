@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   Chip,
+  EmptyState,
   Icon,
   IconButton,
   Skeleton,
@@ -223,10 +224,11 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
         </dl>
       </Card>
       <h2 className="instructor-screen__section">{t("instructor:card.lastClasses")}</h2>
-      <Card className="instructor-card__classes">
-        {card.data.lastClasses.length === 0 ? (
-          <p>{t("instructor:card.noClasses")}</p>
-        ) : (
+      {card.data.lastClasses.length === 0 ? (
+        // E11-W05 step 5 (b): the UI kit's empty state, as every other list.
+        <EmptyState icon="cal" title={t("instructor:card.noClasses")} />
+      ) : (
+        <Card className="instructor-card__classes">
           <ul>
             {card.data.lastClasses.map((item) => (
               <li key={item.bookingId}>
@@ -257,8 +259,8 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
               </li>
             ))}
           </ul>
-        )}
-      </Card>
+        </Card>
+      )}
       {note === undefined ? null : (
         <>
           <h2 className="instructor-screen__section">{t("instructor:card.memberNotes")}</h2>

@@ -181,6 +181,14 @@
     "new": "New ring",
     "removeQuestion": "Delete ring {name}?",
     "removeTitle": "Delete ring",
+    "ringBookings": {
+      "back": "Go back",
+      "deactivate": "Cancel the bookings and deactivate the ring",
+      "item": "{member} + {dog}{when, select, none {} other { · {when}}}",
+      "text": "If you continue, these bookings will be cancelled by the club and notified:",
+      "title": "This ring has training bookings",
+      "unreservable": "Cancel the bookings and save"
+    },
     "title": "Rings"
   },
   "team": {

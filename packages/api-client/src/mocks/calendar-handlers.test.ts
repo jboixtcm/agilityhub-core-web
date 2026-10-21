@@ -58,6 +58,45 @@ async function calendar(weekId: string, filter: "ACTIVE" | "CANCELLED" | "DRAFT"
   return result.data;
 }
 
+describe("E11-W05 snapshot a7c85d50 (E11-T13): ClassCancellation carries reviewTime and a nullable byAccountId, both always sent", () => {
+  it("R-06-13: the review's cancellation is read with byAccountId null and the club's classes.riskReviewTime at read time; a club's cancellation with reviewTime null", async () => {
+    const validate = schema("WeekCalendar");
+    const reviewed = () =>
+      calendar("week-2026-08-10", "CANCELLED").then((data) => {
+        expect(validate(data), JSON.stringify(validate.errors, null, 2)).toBe(true);
+        return data.classes.find((item) => item.cancellation?.reason === "RISK_REVIEW");
+      });
+    expect((await reviewed())?.cancellation).toMatchObject({
+      byAccountId: null,
+      reviewTime: "07:30",
+    });
+
+    const parameter = await client.GET("/parameters/{key}", {
+      params: { path: { key: "classes.riskReviewTime" } },
+    });
+    await client.PUT("/parameters/{key}", {
+      body: { value: "08:00", version: parameter.data?.version ?? 0 },
+      params: { path: { key: "classes.riskReviewTime" } },
+    });
+    expect((await reviewed())?.cancellation).toMatchObject({
+      byAccountId: null,
+      reviewTime: "08:00",
+    });
+
+    const active = await calendar("week-2026-08-10", "ACTIVE");
+    const target = active.classes.find((item) => item.state === "ACTIVE");
+    if (target === undefined) throw new TypeError("Missing an active class");
+    const cancelled = await client.POST("/class-sessions/{id}/cancellation", {
+      body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
+      params: { header: { "Idempotency-Key": "key-e11-w05" }, path: { id: target.id } },
+    });
+    const session = schema("ClassSession");
+    expect(session(cancelled.data), JSON.stringify(session.errors, null, 2)).toBe(true);
+    expect(cancelled.data?.cancellation).toMatchObject({ reason: "CLUB_MANUAL", reviewTime: null });
+    expect(cancelled.data?.cancellation?.byAccountId).toEqual(expect.any(String));
+  });
+});
+
 describe("E4-W02 calendar MSW handlers follow the S06 contract (forms B and D)", () => {
   it("serves the D4 week (form B) with the Thursday warning and the Carretera block", async () => {
     const data = await calendar("week-2026-08-10", "ACTIVE");

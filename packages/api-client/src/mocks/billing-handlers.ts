@@ -488,10 +488,7 @@ function billingPeriod(period: string): BillingPeriod {
       ? periodCounts(target, period)
       : { all: 0, failed: 0, paid: 0, pending: 0, remitted: 0 },
     period,
-    remittance:
-      remittance === undefined
-        ? null
-        : periodRemittance(remittance, today()),
+    remittance: remittance === undefined ? null : periodRemittance(remittance, today()),
     run:
       run === undefined
         ? null

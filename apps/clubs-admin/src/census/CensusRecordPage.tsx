@@ -10,7 +10,9 @@ import {
 import {
   type ClubFormats,
   fmtMaskedIban,
+  formatMoneyMinor,
   isPlainDate,
+  normalizeLocale,
   useClubFormats,
 } from "@agilityhub/i18n";
 import {
@@ -132,14 +134,6 @@ function formatDate(value: string, formats: ClubFormats, withYear = true): strin
   return isPlainDate(value)
     ? formats.formatPlainDate(value, presentation)
     : formats.formatDate(value, presentation);
-}
-
-function formatMoney(value: number, locale: string, currency: string): string {
-  return new Intl.NumberFormat(locale, {
-    currency,
-    maximumFractionDigits: 2,
-    style: "currency",
-  }).format(value);
 }
 
 function dogDetailView(value: ApiDogDetail): DogDetail {
@@ -757,11 +751,7 @@ function MemberSummary({
             {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
               <DataRow label={t("admin-census:member.fields.nextInvoice")}>
                 <strong>{formatDate(overview.nextInvoice.date, formats)}</strong> ·{" "}
-                {formatMoney(
-                  overview.nextInvoice.amount.amountMinor / 100,
-                  locale,
-                  overview.nextInvoice.amount.currency,
-                )}
+                {formatMoneyMinor(overview.nextInvoice.amount, normalizeLocale(locale))}
               </DataRow>
             ) : null}
             <DataRow label={t("admin-census:member.fields.consents")}>

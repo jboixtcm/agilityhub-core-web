@@ -290,7 +290,7 @@ describe("T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01)", () => {
     // Round 2 #4: the catalog message of the answer's code (INTERNAL_ERROR).
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     refuse = false;
@@ -577,7 +577,7 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     fireEvent.click(screen.getByRole("button", { name: "Desa" }));
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     fail = false;
@@ -998,7 +998,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     expect(await screen.findByRole("link", { name: "Clara + Gos 50 · C" })).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
     );
     expect(within(screen.getByRole("list")).getAllByRole("link")).toHaveLength(50);
     refuse = false;
@@ -1079,7 +1079,7 @@ describe("E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, 
       http.get("*/api/v1/dogs", refusal("FORBIDDEN", 403)),
     );
     await dayPage();
-    expect(await screen.findByText("No teniu permís per fer aquesta acció.")).toBeVisible();
+    expect(await screen.findByText("No tens permís per fer aquesta acció.")).toBeVisible();
     expect(screen.queryByText("No s'ha pogut carregar el dia.")).toBeNull();
     cleanup();
     await sheetPage("c-unknown");
@@ -1089,7 +1089,7 @@ describe("E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, 
     expect(await screen.findByText("No s'ha trobat l'element sol·licitat.")).toBeVisible();
     cleanup();
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
-    expect(await screen.findByText("No teniu permís per fer aquesta acció.")).toBeVisible();
+    expect(await screen.findByText("No tens permís per fer aquesta acció.")).toBeVisible();
     expect(screen.getByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
   });
 

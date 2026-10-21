@@ -57,6 +57,11 @@
   "unavailable": {
     "title": "No disponible"
   },
+  "screen": {
+    "updated": "L'aplicació s'ha actualitzat. Torna a carregar-la.",
+    "reload": "Torna a carregar",
+    "failed": "No s'ha pogut mostrar aquesta pantalla."
+  },
   "inProgress": "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
   "gallery": {
     "active": "Activa",

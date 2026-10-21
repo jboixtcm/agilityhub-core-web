@@ -1,7 +1,11 @@
-import type { ApiClient, components } from "@agilityhub/api-client";
+import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import { useClubFormats } from "@agilityhub/i18n";
 import { Button, FormField, Icon, Input, Modal, Switch, useBranding } from "@agilityhub/ui";
-import { type SyntheticEvent, useCallback, useState } from "react";
+import { type SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { dayLabel, timeLabel } from "../planning/calendar-shared";
+import { clubToday } from "../planning/shared";
 
 import {
   CatalogFeedback,
@@ -18,6 +22,150 @@ import {
 type Ring = components["schemas"]["Ring"];
 type RingCreate = components["schemas"]["RingCreate"];
 type RingPatch = components["schemas"]["RingPatch"];
+
+/**
+ * A `422 RING_HAS_BOOKINGS {bookings[]}` (R-05-07/R-05-08): the live training bookings of the
+ * change it answered, which [confirm] sends again with `cancelBookings: true`.
+ */
+interface RingBookingsConflict {
+  /** Deactivating the ring, or only turning «Reservable per entrenaments» off. */
+  action: "deactivate" | "unreservable";
+  body: RingPatch;
+  bookings: readonly unknown[];
+  ringId: string;
+}
+
+function ringBookingsOf(cause: unknown): readonly unknown[] | undefined {
+  if (!isApiError(cause) || cause.code !== "RING_HAS_BOOKINGS") return undefined;
+  const bookings = (cause.details as { bookings?: unknown } | undefined)?.bookings;
+  return Array.isArray(bookings) ? (bookings as unknown[]) : [];
+}
+
+/** «{memberName} + {dogName} · {day} {time}» of each `RingBooking`, in the club's zone. */
+function RingBookingLines({ bookings }: { bookings: readonly unknown[] }) {
+  const { t } = useTranslation("admin-catalogs");
+  const branding = useBranding();
+  const { formatPlainDate, formatTime } = useClubFormats();
+  const lines = bookings.map((booking, index) => {
+    const record =
+      typeof booking === "object" && booking !== null ? (booking as Record<string, unknown>) : {};
+    const from = typeof record.from === "string" ? new Date(record.from) : undefined;
+    const when =
+      from === undefined || Number.isNaN(from.getTime())
+        ? "none"
+        : `${dayLabel(clubToday(branding.timeZone, from), formatPlainDate)} ${timeLabel(formatTime(from))}`;
+    const id = typeof record.bookingId === "string" ? record.bookingId : record.id;
+    return {
+      key: typeof id === "string" ? id : String(index),
+      text: t("admin-catalogs:rings.ringBookings.item", {
+        dog: typeof record.dogName === "string" ? record.dogName : "",
+        member: typeof record.memberName === "string" ? record.memberName : "",
+        when,
+      }),
+    };
+  });
+  return lines.length === 0 ? null : (
+    <ul className="calendar-list">
+      {lines.map((line) => (
+        <li key={line.key}>{line.text}</li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * D16's confirmation of `RING_HAS_BOOKINGS` (as D4's, R-06-09/R-06-11): the bookings the club
+ * would cancel, [Torna enrere] and the action that resends the same change with
+ * `cancelBookings: true`. Its own failure is shown inside it.
+ */
+function RingBookingsDialog({
+  conflict,
+  error,
+  onBack,
+  onConfirm,
+  pending,
+}: {
+  conflict: RingBookingsConflict | undefined;
+  error: string | undefined;
+  onBack: () => void;
+  onConfirm: () => void;
+  pending: boolean;
+}) {
+  const { t } = useTranslation("admin-catalogs");
+  return (
+    <Modal
+      closeLabel={t("admin-catalogs:common.close")}
+      onClose={onBack}
+      open={conflict !== undefined}
+      title={t("admin-catalogs:rings.ringBookings.title")}
+    >
+      <p>{t("admin-catalogs:rings.ringBookings.text")}</p>
+      <RingBookingLines bookings={conflict?.bookings ?? []} />
+      {error === undefined ? null : <p role="alert">{error}</p>}
+      <div className="catalog-form__actions">
+        <Button disabled={pending} onClick={onBack} variant="ghost">
+          {t("admin-catalogs:rings.ringBookings.back")}
+        </Button>
+        <Button
+          loading={pending}
+          loadingLabel={t("admin-catalogs:common.saving")}
+          onClick={onConfirm}
+          variant="danger"
+        >
+          {conflict?.action === "deactivate"
+            ? t("admin-catalogs:rings.ringBookings.deactivate")
+            : t("admin-catalogs:rings.ringBookings.unreservable")}
+        </Button>
+      </div>
+    </Modal>
+  );
+}
+
+/** The confirmation's state: the conflict, its resend in flight and the resend's failure. */
+function useRingBookings(
+  client: ApiClient,
+  onSaved: () => void,
+  messageForError: (error: unknown) => string,
+) {
+  const [conflict, setConflict] = useState<RingBookingsConflict>();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string>();
+  const drop = useCallback(() => {
+    setConflict(undefined);
+    setError(undefined);
+  }, []);
+  const confirm = async () => {
+    if (conflict === undefined || pending) return;
+    setPending(true);
+    setError(undefined);
+    try {
+      await client.PATCH("/rings/{id}", {
+        body: { ...conflict.body, cancelBookings: true },
+        params: { path: { id: conflict.ringId } },
+      });
+      setConflict(undefined);
+      onSaved();
+    } catch (cause) {
+      setError(messageForError(cause));
+    } finally {
+      setPending(false);
+    }
+  };
+  return { conflict, confirm, drop, error, open: setConflict, pending };
+}
+
+/** The values a `RING_HAS_BOOKINGS` answer is about: a later edit makes it someone else's. */
+function patchKey(body: RingPatch): string {
+  return JSON.stringify([
+    body.active,
+    body.allowsFreeTraining,
+    body.color,
+    body.name,
+    body.shortName,
+    body.trainingCapacity,
+    body.version,
+  ]);
+}
 
 function RingForm({
   client,
@@ -43,14 +191,40 @@ function RingForm({
   const [active, setActive] = useState(item?.active ?? true);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  const ringBookings = useRingBookings(
+    client,
+    () => {
+      onSaved();
+      onClose();
+    },
+    messageForError,
+  );
+  const capacity = trainingCapacity === "" ? undefined : Number(trainingCapacity);
+  const patch: RingPatch | undefined =
+    item === undefined
+      ? undefined
+      : {
+          active,
+          allowsFreeTraining,
+          color,
+          name,
+          shortName: shortName.toLocaleUpperCase(),
+          ...(capacity === undefined ? {} : { trainingCapacity: capacity }),
+          version: item.version,
+        };
+  /** What the fields show now: an answer that arrives late is checked against it (R-06-11). */
+  const shown = useRef(patch === undefined ? "" : patchKey(patch));
+  useEffect(() => {
+    shown.current = patch === undefined ? "" : patchKey(patch);
+  });
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPending(true);
     setError(undefined);
+    ringBookings.drop();
     try {
-      const capacity = trainingCapacity === "" ? undefined : Number(trainingCapacity);
-      if (item === undefined) {
+      if (item === undefined || patch === undefined) {
         const body: RingCreate = {
           active,
           allowsFreeTraining,
@@ -61,16 +235,23 @@ function RingForm({
         };
         await client.POST("/rings", { body });
       } else {
-        const body: RingPatch = {
-          active,
-          allowsFreeTraining,
-          color,
-          name,
-          shortName: shortName.toLocaleUpperCase(),
-          ...(capacity === undefined ? {} : { trainingCapacity: capacity }),
-          version: item.version,
-        };
-        await client.PATCH("/rings/{id}", { body, params: { path: { id: item.id } } });
+        const sent = patch;
+        try {
+          await client.PATCH("/rings/{id}", { body: sent, params: { path: { id: item.id } } });
+        } catch (cause) {
+          const bookings = ringBookingsOf(cause);
+          if (bookings === undefined) throw cause;
+          // Only while the fields still show the change it answered: else it is dropped.
+          if (shown.current === patchKey(sent)) {
+            ringBookings.open({
+              action: item.active && sent.active === false ? "deactivate" : "unreservable",
+              body: sent,
+              bookings,
+              ringId: item.id,
+            });
+          }
+          return;
+        }
       }
       onSaved();
       onClose();
@@ -182,6 +363,14 @@ function RingForm({
           {t("admin-catalogs:common.save")}
         </Button>
       </div>
+      {/* Its buttons are `type="button"`: nothing in it submits the form below. */}
+      <RingBookingsDialog
+        conflict={ringBookings.conflict}
+        error={ringBookings.error}
+        onBack={ringBookings.drop}
+        onConfirm={() => void ringBookings.confirm()}
+        pending={ringBookings.pending}
+      />
     </form>
   );
 }
@@ -201,8 +390,10 @@ export function RingsPage({ client }: { client: ApiClient }) {
   const [editing, setEditing] = useState<{ item?: Ring }>();
   const [removing, setRemoving] = useState<Ring>();
   const [removeBlocked, setRemoveBlocked] = useState(false);
+  const [removePending, setRemovePending] = useState(false);
   const [feedback, setFeedback] = useState<string>();
   const showFreeTraining = branding.modules.includes("FREE_TRAINING");
+  const ringBookings = useRingBookings(client, data.reload, messageForError);
 
   const reorder = async (sourceId: string, targetId: string) => {
     const ordered = moveBefore(data.items, sourceId, targetId);
@@ -216,9 +407,10 @@ export function RingsPage({ client }: { client: ApiClient }) {
   };
 
   const remove = async () => {
-    if (removing === undefined) {
+    if (removing === undefined || removePending) {
       return;
     }
+    setRemovePending(true);
     try {
       await client.DELETE("/rings/{id}", { params: { path: { id: removing.id } } });
       setRemoving(undefined);
@@ -231,23 +423,35 @@ export function RingsPage({ client }: { client: ApiClient }) {
         setFeedback(messageForError(error));
         setRemoving(undefined);
       }
+    } finally {
+      setRemovePending(false);
     }
   };
 
   const deactivate = async () => {
-    if (removing === undefined) {
+    if (removing === undefined || removePending) {
       return;
     }
+    const ring = removing;
+    const body: RingPatch = { active: false, version: ring.version };
+    setRemovePending(true);
     try {
-      await client.PATCH("/rings/{id}", {
-        body: { active: false, version: removing.version },
-        params: { path: { id: removing.id } },
-      });
+      await client.PATCH("/rings/{id}", { body, params: { path: { id: ring.id } } });
       setRemoving(undefined);
       setRemoveBlocked(false);
       data.reload();
     } catch (error) {
-      setFeedback(messageForError(error));
+      const bookings = ringBookingsOf(error);
+      if (bookings === undefined) {
+        setFeedback(messageForError(error));
+      } else {
+        // R-05-07: the live trainings first; the confirmation belongs to this ring.
+        setRemoving(undefined);
+        setRemoveBlocked(false);
+        ringBookings.open({ action: "deactivate", body, bookings, ringId: ring.id });
+      }
+    } finally {
+      setRemovePending(false);
     }
   };
 
@@ -364,13 +568,24 @@ export function RingsPage({ client }: { client: ApiClient }) {
           >
             {t("admin-catalogs:common.cancel")}
           </Button>
-          <Button onClick={() => void (removeBlocked ? deactivate() : remove())} variant="danger">
+          <Button
+            disabled={removePending}
+            onClick={() => void (removeBlocked ? deactivate() : remove())}
+            variant="danger"
+          >
             {removeBlocked
               ? t("admin-catalogs:common.deactivate")
               : t("admin-catalogs:common.remove")}
           </Button>
         </div>
       </Modal>
+      <RingBookingsDialog
+        conflict={ringBookings.conflict}
+        error={ringBookings.error}
+        onBack={ringBookings.drop}
+        onConfirm={() => void ringBookings.confirm()}
+        pending={ringBookings.pending}
+      />
     </section>
   );
 }

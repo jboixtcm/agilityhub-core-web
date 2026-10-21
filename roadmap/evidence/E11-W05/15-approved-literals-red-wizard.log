@@ -1,0 +1,255 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/console/NewClubWizard.test.tsx (5 tests | 1 failed | 4 skipped) 254ms
+   ❯ T-17-12 · «Nou club» wizard (S17 §2 «D19 Assistent») (5)
+     × eight steps create the club (POST /platform/clubs, one key) and land on its record with the onboarding checklist 252ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/NewClubWizard.test.tsx > T-17-12 · «Nou club» wizard (S17 §2 «D19 Assistent») > eight steps create the club (POST /platform/clubs, one key) and land on its record with the onboarding checklist
+TestingLibraryElementError: Unable to find an element with the text: /És un punt de partida: el club els pot editar després\.$/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"console-page console-wizard"[39m
+      [33mnovalidate[39m=[32m""[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mNou club[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-muted"[39m
+          [36m>[39m
+            [0mVuit passos per crear un club. Es crea en configuració i després es completa la checklist d'onboarding.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"console-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mDesa com a esborrany[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mDescarta l'esborrany[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<ol[39m
+        [33maria-label[39m=[32m"Passos de l'assistent"[39m
+        [33mclass[39m=[32m"console-steps"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+            [0mIdentitat[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+            [0mLocalització[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</span>[39m
+            [0mMòduls[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</span>[39m
+            [0mPagaments[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</span>[39m
+            [0mTema[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li[39m
+          [33maria-current[39m=[32m"step"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</span>[39m
+            [0mCatàlegs base[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m7[0m
+            [36m</span>[39m
+            [0mPrimer administrador[0m
+          [36m</button>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<button[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m8[0m
+            [36m</span>[39m
+            [0mRevisió[0m
+          [36m</button>[39m
+        [36m</li>[39m
+      [36m</ol>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card console-card console-wizard__step"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mtabindex[39m=[32m"-1"[39m
+        [36m>[39m
+          [0mPas 6 de 8 · Catàlegs base[0m
+        [36m</h2>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"console-fieldset"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-muted"[39m
+          [36m>[39m
+            [0mEls catàlegs del club nou es poden copiar d'un club plantilla, o començar buits.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"console-wizard-template"[39m
+            [36m>[39m
+              [0mClub plantilla[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"console-wizard-template"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mCap: catàlegs buits[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"50000000-0000-4000-8000-000000000004"[39m
+              [36m>[39m
+                [0mPlantilla AgilityHub · ca, es, en · EUR[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"console-actions console-wizard__nav"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mEnrere[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSEGÜENT[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/console/NewClubWizard.test.tsx:124:14
+    122|     // E11-W05 step 6 (A41.1): the copied set is a starting point the …
+    123|     expect(
+    124|       screen.getByText(/És un punt de partida: el club els pot editar …
+       |              ^
+    125|     ).toBeInTheDocument();
+    126|     const template = screen.getByLabelText("Club plantilla");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  23:05:08
+   Duration  1.82s (transform 45%, environment 21%, import 15%, tests 15%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/console/NewClubWizard.test.tsx -t eight steps

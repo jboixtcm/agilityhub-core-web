@@ -184,7 +184,7 @@
     "anObstacle": "Un obstáculo",
     "outsideRing": "{obstacle} queda fuera de la pista.",
     "borderClearance": "{obstacle} queda demasiado cerca de la valla.",
-    "courseNoGo": "{obstacle} toca una zona prohibida del recorrido.",
+    "courseNoGo": "{obstacle} toca una zona no-go del recorrido.",
     "ringNoGo": "{obstacle} toca la zona «{zone}».",
     "doorBlocked": "{obstacle} tapa la puerta «{door}».",
     "doorClearance": "{obstacle} queda demasiado cerca de la puerta «{door}».",
@@ -368,7 +368,8 @@
     "activeLine": "Montado el {built} · hasta el {until}",
     "pastLine": "Del {built} al {ended}",
     "replaced": "Sustituido",
-    "review": "Revisarla"
+    "review": "Revisarla",
+    "ringInactive": "Pista desactivada"
   },
   "files": {
     "fallback": "recorrido",

@@ -109,7 +109,7 @@ describe("T-03-39 D10 member record", () => {
     expect(screen.getByText("Mode de facturació")).toBeVisible();
     expect(screen.getByText("alumne", { exact: true })).toBeVisible();
     expect(
-      screen.getByText("No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella."),
+      screen.getByText("No autoritza l'ús de la seva imatge: no publiquis fotos on surti ella."),
     ).toBeVisible();
     expect(screen.getByText("Pack 10: 6/4 · caduca 12-11")).toBeVisible();
     expect(screen.getByText("Pot entrenar sol")).toBeVisible();
@@ -160,7 +160,7 @@ describe("T-03-39 D10 member record", () => {
 
     expect(
       await within(drawer).findByText(
-        "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+        "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.",
       ),
     ).toBeVisible();
   });
@@ -274,6 +274,26 @@ describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the 
     );
     expect(opens.opened).toEqual([]);
     opens.restore();
+  });
+});
+
+describe("E11-W05 step 4 (A40.3): D10's image notice for a member whose gender is OTHER", () => {
+  it("reads «aquesta persona» in the app's register, never the masculine «ell»", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    if (data === undefined) throw new TypeError("The mock overview did not answer");
+    const overview = { ...data, member: { ...data.member, gender: "OTHER" as const } };
+    server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    expect(
+      screen.getByText(
+        "No autoritza l'ús de la seva imatge: no publiquis fotos on surti aquesta persona.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByText(/surti ell\./u)).not.toBeInTheDocument();
   });
 });
 
@@ -981,7 +1001,7 @@ describe("E11-W06 W7 (CONVENCIONS_I18N §1, R-06-14): D10 shows an instant on th
   });
 });
 
-describe("E11-W02 round 2 (INC-41): no «+34» typed in D10", () => {
+describe("R-02-06 (E11-W02 round 2, INC-41): no «+34» typed in D10", () => {
   it("a new phone of the member takes the club's country prefix (its countryProfile), not Spain's", async () => {
     server.use(
       // D10 reads the member through its overview: Laura without phones.
@@ -1006,7 +1026,7 @@ describe("E11-W02 round 2 (INC-41): no «+34» typed in D10", () => {
   });
 });
 
-describe("E11-W02 round 2 (INC-41): the dog transfer offers every active member", () => {
+describe("R-03-14 (E11-W02 round 2, INC-41): the dog transfer offers every active member", () => {
   it("«Abonat de destí» lists all the club's active members but the owner, not the first 12", async () => {
     const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
     const active = await client.GET("/members", {

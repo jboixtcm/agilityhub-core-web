@@ -1,0 +1,426 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/console/DomainsTab.test.tsx (11 tests | 1 failed) 949ms
+   ❯ E10-W03 step 1 · D19 «Dominis» (S17 §2, R-17-02/03, T-17-12) (10)
+     × T-17-12 a VERIFIED primary domain has no DNS instructions and no [Elimina] (E123) 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/DomainsTab.test.tsx > E10-W03 step 1 · D19 «Dominis» (S17 §2, R-17-02/03, T-17-12) > T-17-12 a VERIFIED primary domain has no DNS instructions and no [Elimina] (E123)
+TestingLibraryElementError: Unable to find an element with the text: /no s'hi serveix fins que operacions/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Agility Cànic[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mcanic[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mActiu[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0m7/7[0m
+              [36m</strong>[39m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Seccions de la fitxa del club"[39m
+        [33mclass[39m=[32m"console-tabs"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/identitat"[39m
+        [36m>[39m
+          [0mIdentitat[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/localitzacio"[39m
+        [36m>[39m
+          [0mLocalització[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/dominis"[39m
+        [36m>[39m
+          [0mDominis[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/tema"[39m
+        [36m>[39m
+          [0mTema[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/moduls"[39m
+        [36m>[39m
+          [0mMòduls[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/pagaments"[39m
+        [36m>[39m
+          [0mPagaments[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/legal"[39m
+        [36m>[39m
+          [0mLegal[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/parametres"[39m
+        [36m>[39m
+          [0mParàmetres[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/catalegs"[39m
+        [36m>[39m
+          [0mCatàlegs base[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/equip"[39m
+        [36m>[39m
+          [0mEquip[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/processos"[39m
+        [36m>[39m
+          [0mProcessos[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/auditoria"[39m
+        [36m>[39m
+          [0mAuditoria[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/us"[39m
+        [36m>[39m
+          [0mÚs[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/estat"[39m
+        [36m>[39m
+          [0mEstat[0m
+        [36m</a>[39m
+      [36m</nav>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Dominis"[39m
+        [33mclass[39m=[32m"console-tab-panel"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"console-tab-panel__writes"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"console-form"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mDominis[0m
+              [36m</h2>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"console-muted"[39m
+              [36m>[39m
+                [0mEls hosts del club per app. Un domini nou queda pendent fins que se'n verifica el registre DNS.[0m
+              [36m</p>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-data-table__scroll"[39m
+              [36m>[39m
+                [36m<table[39m
+                  [33mclass[39m=[32m"ah-data-table"[39m
+                [36m>[39m
+                  [36m<caption[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mDominis del club[0m
+                  [36m</caption>[39m
+                  [36m<thead>[39m
+                    [36m<tr>[39m
+                      [36m<th[39m
+                        [33mscope[39m=[32m"col"[39m
+                      [36m>[39m
+                        [0mHost[0m
+                      [36m</th>[39m
+                      [36m<th[39m
+                        [33mscope[39m=[32m"col"[39m
+                      [36m>[39m
+                        [0mApp[0m
+                      [36m</th>[39m
+                      [36m<th[39m
+                        [33mscope[39m=[32m"col"[39m
+                      [36m>[39m
+                        [0mEstat[0m
+                      [36m</th>[39m
+                      [36m<th[39m
+                        [33mscope[39m=[32m"col"[39m
+                      [36m>[39m
+                        [0mVerificat[0m
+                      [36m</th>[39m
+                      [36m<th[39m
+                        [33mscope[39m=[32m"col"[39m
+                      [36m>[39m
+                        [0mAccions[0m
+                      [36m</th>[39m
+                    [36m</tr>[39m
+                  [36m</thead>[39m
+                  [36m<tbody>[39m
+                    [36m<tr>[39m
+                      [36m<td>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"console-domain__host"[39m
+                        [36m>[39m
+                          [36m<strong>[39m
+                            [0mapp.example.test[0m
+                          [36m</strong>[39m
+                          [36m<span[39m
+                            [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                          [36m>[39m
+                            [0mprincipal[0m
+                          [36m</span>[39m
+                        [36m</span>[39m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [0mApp dels abonats[0m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                        [36m>[39m
+                          [0mverificat[0m
+                        [36m</span>[39m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [0m01/09/2026 10:20[0m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"console-row-actions"[39m
+                        [36m/>[39m
+                      [36m</td>[39m
+                    [36m</tr>[39m
+                    [36m<tr>[39m
+                      [36m<td>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"console-domain__host"[39m
+                        [36m>[39m
+                          [36m<strong>[39m
+                            [0madmin.example.test[0m
+                          [36m</strong>[39m
+                          [36m<span[39m
+                            [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                          [36m>[39m
+                            [0mprincipal[0m
+                          [36m</span>[39m
+                        [36m</span>[39m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [0mBackoffice[0m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                        [36m>[39m
+                          [0mverificat[0m
+                        [36m</span>[39m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [0m01/09/2026 10:25[0m
+                      [36m</td>[39m
+                      [36m<td>[39m
+                        [36m<span[39m
+                          [33mclass[39m=[32m"console-row-actions"[39m
+                        [36m/>[39m
+                      [36m</td>[39m
+                    [36m</tr>[39m
+                  [36m</tbody>[39m
+                [36m</table>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mAfegeix domini[0m
+              [36m</h2>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"console-muted"[39m
+              [36m>[39m
+                [0mEscriu el host sense https://, per exemple app.exemple.cat.[0m
+              [36m</p>[39m
+              [36m<form[39m
+                [33mclass[39m=[32m"console-form"[39m
+              [36m>[39m
+                [36m<fieldset[39m
+                  [33mclass[39m=[32m"console-fieldset"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"console-grid"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"console-domain-host"[39m
+                      [36m>[39m
+                        [0mHost[0m
+                      [36m</label>[39m
+                      [36m<input[39m
+                        [33mautocomplete[39m=[32m"off"[39m
+                        [33mclass[39m=[32m"ah-input"[39m
+                        [33mid[39m=[32m"console-domain-host"[39m
+                        [33mplaceholder[39m=[32m"app.exemple.cat"[39m
+                        [33mrequired[39m=[32m""[39m
+                        [33mtype[39m=[32m"text"[39m
+                        [33mvalue[39m=[32m""[39m
+                      [36m/>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"console-domain-app"[39m
+                      [36m>[39m
+                        [0mApp[0m
+                      [36m</label>[39m
+                      [36m<select[39m
+                        [33mclass[39m=[32m"ah-input ah-select"[39m
+                        [33mid[39m=[32m"console-domain-app"[39m
+                      [36m>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"clubs"[39m
+                        [36m>[39m
+                          [0mApp dels abonats[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"clubs-admin"[39m
+                        [36m>[39m
+                          [0mBackoffice[0m
+                        [36m</option>[39m
+                      [36m</select>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</fieldset>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"console-actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mdisabled[39m=[32m""[39m
+                    [33mtype[39m=[32m"submit"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mAfegeix domini[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</form>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mClau d'API pública[0m
+              [36m</h2>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"console-muted"[39m
+              [36m>[39m
+                [0mLa clau amb què el web del club llegeix el calendari i les activitats públiques. Només es mostra un cop: una clau nova substitueix l'anterior, que continua funcionant 24 hores.[0m
+              [36m</p>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"console-actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mGenera una clau nova[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/console/DomainsTab.test.tsx:97:19
+     95|     expect(screen.queryByRole("heading", { name: /Registres DNS de/u }…
+     96|     // The backoffice note of R-17-03 (Caddy's CLUB_ADMIN_HOSTS step, …
+     97|     expect(screen.getByText(/no s'hi serveix fins que operacions/u)).t…
+       |                   ^
+     98|   });
+     99|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 60 passed (61)
+   Start at  23:05:27
+   Duration  3.69s (tests 32%, environment 26%, transform 26%, import 10%, setup 6%)
+
+  Transform  transforming modules took 4.29s · 26% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/console/

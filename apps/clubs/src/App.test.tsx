@@ -793,7 +793,8 @@ describe("T-01-19 activation screen", () => {
     const variants = [
       ["activationFemale", "Benvinguda, Estel!"],
       ["activationMale", "Benvingut, Marc!"],
-      ["activationNonBinary", "Benvingut, Àlex!"],
+      // E11-W05 step 4 (A40.3): `OTHER` is greeted as 03b and 03 greet, never with the masculine.
+      ["activationNonBinary", "Hola, Àlex!"],
     ] as const;
 
     for (const [scenario, heading] of variants) {
@@ -1601,6 +1602,33 @@ describe("E4-W16 step 12 member-app fixes", () => {
     expect(row).not.toHaveTextContent("alumna");
   });
 
+  it("E11-W05 step 4 (A40.3, T-01-20): a membership whose gender is OTHER reads the slash forms on 03b and on 12's «Canviar de perfil»", async () => {
+    mockScenario("multiProfile");
+    const seed = authClient();
+    await seed.login("estel.rius@example.test", "secret-password");
+    const me = seed.getMe();
+    if (me?.membership === undefined) throw new TypeError("Expected the membership");
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({ ...me, membership: { ...me.membership, gender: "OTHER" } }),
+      ),
+    );
+    const client = authClient();
+    await client.login("estel.rius@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil-acces");
+    await renderApplication(client);
+    expect(screen.getByRole("button", { name: /Com a alumne\/a/u })).toBeVisible();
+    expect(screen.getByRole("button", { name: /Com a instructor\/a/u })).toBeVisible();
+    expect(screen.getByRole("button", { name: /Com a administrador\/a/u })).toBeVisible();
+
+    cleanup();
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    expect(screen.getByRole("link", { name: /Canviar de perfil/u })).toHaveTextContent(
+      /alumne\/a/u,
+    );
+  });
+
   it("(c) the onboarding offers only the club's languages and starts on the club's default when the account's is not offered", async () => {
     mockScenario("onboarding");
     server.use(
@@ -1821,7 +1849,7 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     await waitFor(() => {
       expect(document.querySelector(".onboarding-form__error")).toHaveTextContent(
-        "Accepteu la versió actual del consentiment.",
+        "Accepta la versió actual del consentiment.",
       );
     });
     const refreshedConsent = screen.getByRole("checkbox", {
@@ -2645,7 +2673,9 @@ describe("T-03-41 mobile own data", () => {
     expect(await screen.findByRole("heading", { name: "Les meves dades" })).toBeVisible();
     // The heading shows with the page's own loading state; the form comes with `GET /me` (A38: the
     // page is no longer hidden again meanwhile, so the form is awaited, not assumed).
-    expect(await screen.findByLabelText("DNI")).toHaveAttribute("readonly");
+    // E11-W05 step 4 (A40.2): the field names any identity document, not «DNI».
+    expect(await screen.findByLabelText("Document d'identitat")).toHaveAttribute("readonly");
+    expect(screen.queryByLabelText("DNI")).toBeNull();
     expect(screen.getByLabelText("Nom")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Cognom 1")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Cognom 2")).toHaveAttribute("readonly");

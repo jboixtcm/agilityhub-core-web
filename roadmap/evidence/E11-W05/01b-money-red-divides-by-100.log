@@ -1,0 +1,65 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/format.test.ts (106 tests | 3 failed | 101 skipped) 15ms
+   ❯ E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits (5)
+     × E11-W05 step 1: a currency without minor units is never divided by 100 (JPY), one with three divides by 1000 (KWD) 3ms
+     × E11-W05 step 1: zero, a negative amount and compact (zero cents dropped, cents kept) 1ms
+     × E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubFormats binds the club's currency 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: a currency without minor units is never divided by 100 (JPY), one with three divides by 1000 (KWD)
+AssertionError: expected '12,34 ¥' to be '1234 ¥' // Object.is equality
+
+Expected: "1234 ¥"
+Received: "12,34 ¥"
+
+ ❯ src/format.test.ts:41:41
+     39|
+     40|   it("E11-W05 step 1: a currency without minor units is never divided …
+     41|     expect(fmtMinor(1234, "JPY", "ca")).toBe("1234 ¥");
+       |                                         ^
+     42|     expect(fmtMinor(1234, "JPY", "en")).toBe("¥1,234");
+     43|     expect(fmtMinor(1234, "KWD", "en")).toBe("KWD 1.234");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: zero, a negative amount and compact (zero cents dropped, cents kept)
+AssertionError: expected '6.480 €' to be '6480 €' // Object.is equality
+
+Expected: "6480 €"
+Received: "6.480 €"
+
+ ❯ src/format.test.ts:49:62
+     47|     expect(fmtMinor(0, "EUR", "en")).toBe("€0.00");
+     48|     expect(fmtMinor(-3050, "EUR", "ca")).toBe("-30,50 €");
+     49|     expect(fmtMinor(648000, "EUR", "ca", { compact: true })).toBe("648…
+       |                                                              ^
+     50|     expect(fmtMinor(2000, "EUR", "en", { compact: true })).toBe("€20");
+     51|     expect(fmtMinor(2050, "EUR", "ca", { compact: true })).toBe("20,50…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/format.test.ts > E11-W05 step 1 (INC-41 #7): money from the api's minor units, in the currency's own fraction digits > E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubFormats binds the club's currency
+AssertionError: expected '45,00 ¥' to be '4500 ¥' // Object.is equality
+
+Expected: "4500 ¥"
+Received: "45,00 ¥"
+
+ ❯ src/format.test.ts:57:76
+     55|   it("E11-W05 step 1: formatMoneyMinor reads the api's Money; ClubForm…
+     56|     expect(formatMoneyMinor({ amountMinor: 4500, currency: "EUR" }, "c…
+     57|     expect(formatMoneyMinor({ amountMinor: 4500, currency: "JPY" }, "c…
+       |                                                                            ^
+     58|     const euro = createClubFormats("es", "Europe/Madrid", "EUR");
+     59|     expect(euro.formatMinor(1234)).toBe("12,34 €");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed | 101 skipped (106)
+   Start at  22:34:26
+   Duration  241ms (transform 70%, import 19%, tests 9%, worker 1%)
+

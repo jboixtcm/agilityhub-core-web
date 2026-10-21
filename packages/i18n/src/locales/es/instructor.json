@@ -88,7 +88,7 @@
     "loadError": "No se ha podido cargar la ficha.",
     "retry": "Volver a intentarlo",
     "headerLevel": "Nivel {code} · {since}",
-    "memberStatus": "{gender, select, female {Abonada} other {Abonado}}",
+    "memberStatus": "{gender, select, FEMALE {Abonada} OTHER {Abonado/a} other {Abonado}}",
     "attendanceTitle": "Asistencia · últimos 30 días",
     "attendanceSub": "{noShow, plural, one {# no presentado} other {# no presentados}} · {notified, plural, one {# avisado} other {# avisados}}",
     "classesTitle": "Clases · últimos 30 días",

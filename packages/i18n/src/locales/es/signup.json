@@ -54,7 +54,7 @@
     "street": "Calle y número",
     "postalCode": "CP",
     "town": "Población (propuesta por el CP)",
-    "existingDogNote": "¿Ya eres socio y quieres añadir otro perro? Usa el mismo formulario: te reconoceremos por el DNI o el email (verificación por correo) y solo registraremos el perro nuevo.",
+    "existingDogNote": "¿Ya eres socio y quieres añadir otro perro? Usa el mismo formulario: te reconoceremos por el documento de identidad o el email (verificación por correo) y solo registraremos el perro nuevo.",
     "reviewEmailTitle": "Revisa el correo",
     "reviewEmail": "Te hemos enviado un enlace de verificación a {email}.",
     "resend": "Volver a enviar",

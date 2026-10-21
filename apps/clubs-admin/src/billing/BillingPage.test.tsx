@@ -1139,7 +1139,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     answer = "other";
     fireEvent.click(simulate);
     await waitFor(() => {
-      expect(screen.getAllByRole("alert").at(-1)).toHaveTextContent("Reviseu els camps destacats.");
+      expect(screen.getAllByRole("alert").at(-1)).toHaveTextContent("Revisa els camps destacats.");
     });
     expect(screen.queryByText("Només es pot simular fins a tres mesos endavant.")).toBeNull();
   });
@@ -1347,28 +1347,40 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
         }),
       ),
     );
+    // E11-W05 step 5 (h): the five-second poll runs on fake timers (no wall-clock periods, the
+    // flake of E11-W02 log 24a); the clock still moves with real time for the reads' own delays.
+    vi.useFakeTimers({
+      now: Date.now(),
+      shouldAdvanceTime: true,
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
     await renderPage({ scenario: "billingStripe" });
     expect(await screen.findByText("Cobrant les targetes…")).toBeVisible();
     const reads = () =>
       sent.filter((entry) => entry.url.pathname.startsWith("/api/v1/billing/runs/")).length;
+    // The CHARGING render's effects arm the poll (its start time) before the clock jumps.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(vi.getTimerCount()).toBeGreaterThan(0);
     // Two minutes go by while the cards are still being charged.
     vi.setSystemTime(Date.now() + 121_000);
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 5_300));
+      await vi.advanceTimersByTimeAsync(5_300);
     });
     expect(
       await screen.findByText("Els cobraments amb targeta encara s'estan processant."),
     ).toBeVisible();
     const stopped = reads();
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 5_300));
+      await vi.advanceTimersByTimeAsync(5_300);
     });
     expect(reads()).toBe(stopped);
     fireEvent.click(screen.getByRole("button", { name: "Actualitza" }));
     await waitFor(() => {
       expect(reads()).toBeGreaterThan(stopped);
     });
-  }, 30_000);
+  });
 
   it("E8-W01 round 2 #3: a CHARGING period starts bounded monitoring when the first run read fails, shows retry and settles on a later poll", async () => {
     mockScenario("billingStripe");
@@ -1751,12 +1763,12 @@ describe("E8-W01 second review (01-10): the manual receipt's member and errors, 
       return field;
     };
     await waitFor(() => {
-      expect(fieldOf("Concepte (línia 1)")).toHaveTextContent("Reviseu els camps destacats.");
+      expect(fieldOf("Concepte (línia 1)")).toHaveTextContent("Revisa els camps destacats.");
     });
-    expect(fieldOf("Import (línia 1)")).not.toHaveTextContent("Reviseu els camps destacats.");
+    expect(fieldOf("Import (línia 1)")).not.toHaveTextContent("Revisa els camps destacats.");
     expect(
       within(dialog).getByRole("checkbox", { name: "Cobra'l amb la propera remesa" }),
-    ).toHaveAccessibleDescription("Reviseu els camps destacats.");
+    ).toHaveAccessibleDescription("Revisa els camps destacats.");
     // The two field messages only: no general alert repeating them.
     expect(within(dialog).getAllByRole("alert")).toHaveLength(2);
   });

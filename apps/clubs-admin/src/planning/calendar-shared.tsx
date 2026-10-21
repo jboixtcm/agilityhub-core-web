@@ -231,6 +231,8 @@ export function holidayDates(value: unknown): string[] {
 export interface CalendarSettings {
   levelsEnabled: boolean;
   maxInstructors: number;
+  /** `classes.riskReviewTime` (club-local `HH:mm`, R-15-12); `null` while unknown. */
+  riskReviewTime: string | null;
   slotMinutes: number;
   trainingSlotMinutes: number;
 }
@@ -238,9 +240,30 @@ export interface CalendarSettings {
 export const defaultCalendarSettings: CalendarSettings = {
   levelsEnabled: true,
   maxInstructors: 1,
+  riskReviewTime: null,
   slotMinutes: 10,
   trainingSlotMinutes: 30,
 };
+
+/**
+ * The `{time}` of «revisió de les {time}» (R-06-13): written as the mockup writes it («7:30», not
+ * «07:30»; «12:00» stays), or `none` while the time is unknown (the copy then names the review only).
+ */
+export function reviewTimeValue(time: string | null | undefined): string {
+  return time === null || time === undefined || time === "" ? "none" : timeLabel(time);
+}
+
+/**
+ * The review's time for a read-only calendar (INSTRUCTOR, who cannot read `/parameters`): the
+ * `reviewTime` of `GET /risk-review` (S15 §6 form A, ADMIN and INSTRUCTOR); `null` if it fails.
+ */
+export async function loadRiskReviewTime(client: ApiClient): Promise<string | null> {
+  try {
+    return (await client.GET("/risk-review")).data?.reviewTime ?? null;
+  } catch {
+    return null;
+  }
+}
 
 async function parameterValue(client: ApiClient, key: string): Promise<unknown> {
   try {
@@ -251,17 +274,20 @@ async function parameterValue(client: ApiClient, key: string): Promise<unknown> 
 }
 
 export async function loadCalendarSettings(client: ApiClient): Promise<CalendarSettings> {
-  const [levelsEnabled, maxInstructors, slotMinutes, trainingSlotMinutes] = await Promise.all([
-    parameterValue(client, "levels.enabled"),
-    parameterValue(client, "classes.maxInstructorsPerClass"),
-    parameterValue(client, "classes.slotMinutes"),
-    parameterValue(client, "training.slotMinutes"),
-  ]);
+  const [levelsEnabled, maxInstructors, riskReviewTime, slotMinutes, trainingSlotMinutes] =
+    await Promise.all([
+      parameterValue(client, "levels.enabled"),
+      parameterValue(client, "classes.maxInstructorsPerClass"),
+      parameterValue(client, "classes.riskReviewTime"),
+      parameterValue(client, "classes.slotMinutes"),
+      parameterValue(client, "training.slotMinutes"),
+    ]);
   const number = (value: unknown, fallback: number) =>
     typeof value === "number" && value > 0 ? value : fallback;
   return {
     levelsEnabled: levelsEnabled !== false,
     maxInstructors: number(maxInstructors, defaultCalendarSettings.maxInstructors),
+    riskReviewTime: typeof riskReviewTime === "string" ? riskReviewTime : null,
     slotMinutes: number(slotMinutes, defaultCalendarSettings.slotMinutes),
     trainingSlotMinutes: number(trainingSlotMinutes, defaultCalendarSettings.trainingSlotMinutes),
   };

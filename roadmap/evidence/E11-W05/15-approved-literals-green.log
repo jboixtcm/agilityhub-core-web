@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+
+ Test Files  3 passed (3)
+      Tests  21 passed (21)
+   Start at  23:05:24
+   Duration  367ms (transform 58%, tests 23%, import 18%, worker 1%)
+

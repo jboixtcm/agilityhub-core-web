@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+ ❯ src/router-shell.test.tsx (5 tests | 1 failed) 2345ms
+   ❯ E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash (3)
+     × E11-W05 step 5 (c): a reload keeps the browser's own restoration — «manual» only once the app navigates, given back when the page goes 315ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > E11-W05 step 5 (c): a reload keeps the browser's own restoration — «manual» only once the app navigates, given back when the page goes
+AssertionError: expected 'manual' to be 'auto' // Object.is equality
+
+Expected: "auto"
+Received: "manual"
+
+ ❯ src/router-shell.test.tsx:143:46
+    141|     await screen.findByRole("heading", { level: 1, name: "Històric" },…
+    142|     // The document's load (an F5 of a scrolled screen): the browser r…
+    143|     expect(window.history.scrollRestoration).toBe("auto");
+       |                                              ^
+    144|
+    145|     const tabs = screen.getByRole("navigation", { name: "Navegació pri…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  22:38:03
+   Duration  3.54s (tests 68%, transform 17%, environment 7%, import 6%, setup 2%)
+

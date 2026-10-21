@@ -124,7 +124,7 @@ async function navigateSpa(page: Page, path: string): Promise<void> {
  */
 async function memberRecord(admin: Page): Promise<{ name: string; path: string }> {
   await navigateSpa(admin, "/abonats");
-  const search = admin.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" });
+  const search = admin.getByRole("searchbox", { name: "Cerca per nom, document, gos…" });
   const listed = admin.waitForResponse(
     (response) =>
       response.request().method() === "GET" &&

@@ -164,7 +164,8 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
           )}
           <Chip>
             {t("instructor:card.memberStatus", {
-              gender: member.gender === "FEMALE" ? "female" : "other",
+              // The api's value (E11-W05 step 4): `OTHER` has its own form; none reads the masculine.
+              gender: member.gender ?? "other",
             })}
           </Chip>
           {dogLine === undefined ? null : <Chip className="student-record__dog">{dogLine}</Chip>}

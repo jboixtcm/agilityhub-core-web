@@ -63,7 +63,7 @@ function Hourglass() {
 function rowBadge(
   row: BookableClass,
   t: Translate,
-  money: (amount: number) => string,
+  money: (amount: { amountMinor: number; currency: string }) => string,
 ): { content: ReactNode; label?: string; tone: Tone } | undefined {
   let badge: { content: ReactNode; label?: string; tone: Tone } | undefined;
   const waiting = row.waiting ?? 0;
@@ -123,7 +123,7 @@ function rowBadge(
   }
   if (badge === undefined) return undefined;
   if (row.price === null || row.price === undefined) return badge;
-  const price = money(row.price.amountMinor / 100);
+  const price = money(row.price);
   return {
     content: (
       <>
@@ -325,7 +325,7 @@ export function BookPage({ client }: { client: ApiClient }) {
         ) : (
           data.classes.map((row) => {
             const start = localParts(row.startsAtLocal);
-            const badge = rowBadge(row, t, formats.formatMoney);
+            const badge = rowBadge(row, t, formats.formatMoneyMinor);
             const canTap = actionable(row, blocked);
             const content = (
               <>

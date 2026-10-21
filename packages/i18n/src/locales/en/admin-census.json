@@ -338,7 +338,7 @@
       "roles": "Access roles",
       "street": "Street and number"
     },
-    "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} other {Does not authorise use of his image: do not publish photos showing him.}}",
+    "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} OTHER {Does not authorise use of their image: do not publish photos showing them.} other {Does not authorise use of his image: do not publish photos showing him.}}",
     "readmissionPending": "This member has a pending readmission: validate or reject it from the dashboard before changing the record.",
     "impersonate": {
       "description": "The app will open as the member sees it. Actions will be audited with the administrator who performs them.",
@@ -488,7 +488,7 @@
     "dog": "Dog ({current} of {total})",
     "fields": {
       "name": "Name",
-      "idDocument": "DNI/NIE",
+      "idDocument": "ID document",
       "passport": "Passport",
       "otherDocument": "Other document",
       "contact": "Contact",

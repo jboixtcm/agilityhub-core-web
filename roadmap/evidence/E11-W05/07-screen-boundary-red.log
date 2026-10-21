@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+stderr | src/screen-failure.test.tsx > E11-W05 step 5 (a): a back-office screen that fails to draw never blanks the app > /equip throws while drawing: an ErrorState inside the shell says so (no reload), and the next address draws its screen
+An error occurred in the <TeamPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+ ❯ src/screen-failure.test.tsx (2 tests | 1 failed | 1 skipped) 5041ms
+   ❯ E11-W05 step 5 (a): a back-office screen that fails to draw never blanks the app (1)
+     × /equip throws while drawing: an ErrorState inside the shell says so (no reload), and the next address draws its screen 5038ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screen-failure.test.tsx > E11-W05 step 5 (a): a back-office screen that fails to draw never blanks the app > /equip throws while drawing: an ErrorState inside the shell says so (no reload), and the next address draws its screen
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/screen-failure.test.tsx:89:32
+     87|     await renderAt("/equip");
+     88|
+     89|     const alert = await screen.findByRole("alert", {}, { timeout: 5_00…
+       |                                ^
+     90|     expect(alert).toHaveTextContent("No disponible");
+     91|     expect(alert).toHaveTextContent("No s'ha pogut mostrar aquesta pan…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: Cannot read properties of undefined (reading 'members')
+ ❯ TeamPage src/screen-failure.test.tsx:17:11
+     15|   ...(await importOriginal<typeof import("./catalogs/TeamPage")>()),
+     16|   TeamPage: () => {
+     17|     throw new TypeError("Cannot read properties of undefined (reading …
+       |           ^
+     18|   },
+     19| }));
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopConcurrentByScheduler ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17635:9
+ ❯ renderRootConcurrent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17617:15
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16503:11
+
+This error originated in "src/screen-failure.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "/equip throws while drawing: an ErrorState inside the shell says so (no reload), and the next address draws its screen". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+     Errors  1 error
+   Start at  22:37:48
+   Duration  6.71s (tests 76%, transform 15%, import 4%, environment 4%, setup 1%)
+

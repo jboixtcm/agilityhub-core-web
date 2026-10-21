@@ -79,20 +79,22 @@ async function renderAt(path: string, email: string, appBranding: Branding) {
   );
 }
 
-describe("E11-W02 round 3 (review m1): the back office's lazy chunks never blank the app", () => {
-  it("D19 with its chunk gone: the shell stays, an ErrorState says so, and the document reloads once", async () => {
+describe("E11-W02 round 3 (review m1) and E11-W05 step 5 (a, d): the back office's lazy chunks never blank the app", () => {
+  it("D19 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once", async () => {
     mockScenario("platform");
     await renderAt("/consola/clubs", "pol.ferrer@example.test", currentMockScenario().branding);
 
     const alert = await screen.findByRole("alert", {}, { timeout: 5_000 });
     expect(alert).toHaveTextContent("No disponible");
-    expect(alert).toHaveTextContent("No hi ha connexió amb el servidor.");
+    // A chunk a deploy removed: the app was updated, not a lost connection (A39.210).
+    expect(alert).toHaveTextContent("L'aplicació s'ha actualitzat. Torna a carregar-la.");
+    expect(alert).not.toHaveTextContent("No hi ha connexió amb el servidor.");
     // The shell is still there: its entries lead elsewhere.
     expect(screen.getByRole("link", { name: "Consola" })).toBeVisible();
     // A newer deploy: one reload fetches the new chunks.
     expect(reloadDocument).toHaveBeenCalledTimes(1);
 
-    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    fireEvent.click(screen.getByRole("button", { name: "Torna a carregar" }));
     expect(reloadDocument).toHaveBeenCalledTimes(2);
   });
 

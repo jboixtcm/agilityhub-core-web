@@ -133,7 +133,7 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
   const price =
     hold.payment === null || hold.payment === undefined
       ? undefined
-      : formats.formatMoney(hold.payment.price.amountMinor / 100);
+      : formats.formatMoneyMinor(hold.payment.price);
 
   const leave = async () => {
     kept.current = true;

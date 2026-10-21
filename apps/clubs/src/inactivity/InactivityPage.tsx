@@ -361,13 +361,13 @@ export function InactivityPage({
             <Card className="lifecycle-fee">
               <div>
                 <span>{t("inactivity:form.firstMonth")}</span>
-                <strong>{formats.formatMoney(displayedFee.firstMonth.amountMinor / 100)}</strong>
+                <strong>{formats.formatMoneyMinor(displayedFee.firstMonth)}</strong>
               </div>
               <div>
                 <span>{t("inactivity:form.followingMonths")}</span>
                 <strong>
                   {t("inactivity:form.perMonth", {
-                    amount: formats.formatMoney(displayedFee.followingMonths.amountMinor / 100),
+                    amount: formats.formatMoneyMinor(displayedFee.followingMonths),
                   })}
                 </strong>
               </div>

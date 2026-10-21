@@ -1,0 +1,15 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+
+ Test Files  7 passed (7)
+      Tests  174 passed (174)
+   Start at  23:05:50
+   Duration  14.16s (tests 69%, transform 16%, environment 8%, import 5%, setup 2%)
+

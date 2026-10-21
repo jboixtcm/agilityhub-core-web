@@ -1,0 +1,68 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/copy-decisions.test.ts (8 tests | 3 failed | 5 skipped) 38ms
+   ❯ E11-W05 step 4 (A40.3, E142/E153): the api's gender reaches every gendered string, OTHER reads the slash form (3)
+     × ca: FEMALE, OTHER, MALE and a missing gender 21ms
+     × es: FEMALE, OTHER, MALE and a missing gender 9ms
+     × en has no gendered word but the image notice, whose OTHER reads «them» as NO_IMAGE_CONSENT does 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 4 (A40.3, E142/E153): the api's gender reaches every gendered string, OTHER reads the slash form > ca: FEMALE, OTHER, MALE and a missing gender
+AssertionError: auth:activation.welcome FEMALE: expected 'Benvingut, Àlex!' to be 'Benvinguda, Àlex!' // Object.is equality
+
+Expected: "Benvinguda, Àlex!"
+Received: "Benvingut, Àlex!"
+
+ ❯ src/copy-decisions.test.ts:97:72
+     95|     const t = await translator(locale, ["auth", "admin-census", "instr…
+     96|     for (const [key, values, female, other, male] of rows[locale]) {
+     97|       expect(t(key, { ...values, gender: "FEMALE" }), `${key} FEMALE`)…
+       |                                                                        ^
+     98|       expect(t(key, { ...values, gender: "OTHER" }), `${key} OTHER`).t…
+     99|       expect(t(key, { ...values, gender: "MALE" }), `${key} MALE`).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 4 (A40.3, E142/E153): the api's gender reaches every gendered string, OTHER reads the slash form > es: FEMALE, OTHER, MALE and a missing gender
+AssertionError: auth:activation.welcome FEMALE: expected 'Bienvenido, Àlex!' to be '¡Bienvenida, Àlex!' // Object.is equality
+
+Expected: "¡Bienvenida, Àlex!"
+Received: "Bienvenido, Àlex!"
+
+ ❯ src/copy-decisions.test.ts:97:72
+     95|     const t = await translator(locale, ["auth", "admin-census", "instr…
+     96|     for (const [key, values, female, other, male] of rows[locale]) {
+     97|       expect(t(key, { ...values, gender: "FEMALE" }), `${key} FEMALE`)…
+       |                                                                        ^
+     98|       expect(t(key, { ...values, gender: "OTHER" }), `${key} OTHER`).t…
+     99|       expect(t(key, { ...values, gender: "MALE" }), `${key} MALE`).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/copy-decisions.test.ts > E11-W05 step 4 (A40.3, E142/E153): the api's gender reaches every gendered string, OTHER reads the slash form > en has no gendered word but the image notice, whose OTHER reads «them» as NO_IMAGE_CONSENT does
+AssertionError: expected 'Does not authorise use of his image: …' to be 'Does not authorise use of their image…' // Object.is equality
+
+Expected: "Does not authorise use of their image: do not publish photos showing them."
+Received: "Does not authorise use of his image: do not publish photos showing him."
+
+ ❯ src/copy-decisions.test.ts:106:71
+    104|   it("en has no gendered word but the image notice, whose OTHER reads …
+    105|     const t = await translator("en", ["admin-census", "instructor"]);
+    106|     expect(t("admin-census:member.imageNotice", { gender: "OTHER" })).…
+       |                                                                       ^
+    107|       "Does not authorise use of their image: do not publish photos sh…
+    108|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 5 skipped (8)
+   Start at  22:55:54
+   Duration  274ms (transform 62%, tests 19%, import 18%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/copy-decisions.test.ts -t A40.3

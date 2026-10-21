@@ -525,9 +525,10 @@ function routeContent(
   search = "",
 ) {
   if (route.path === "/consola/*") {
-    // D19 (S17 §2): the platform console, without a club context; its own chunk.
+    // D19 (S17 §2): the platform console, without a club context; its own chunk. A failure
+    // belongs to the address it was drawn for: the console's next address draws again (E154).
     return (
-      <ChunkBoundary key="console">
+      <ChunkBoundary key="console" resetKey={pathname}>
         <ConsolePage client={client} onNavigate={onNavigate} pathname={pathname} search={search} />
       </ChunkBoundary>
     );
@@ -612,7 +613,7 @@ function routeContent(
   if (route.path.startsWith("/recorreguts") || route.path === "/pistes/:id/geometria") {
     // D18 and D16 «Geometria» (S16): their own chunk, with course-core and course-ui.
     return (
-      <ChunkBoundary key="courses">
+      <ChunkBoundary key="courses" resetKey={pathname}>
         <CoursesRoute client={client} onNavigate={onNavigate} pathname={pathname} search={search} />
       </ChunkBoundary>
     );
@@ -1067,7 +1068,12 @@ export function App({ authClient }: { authClient: AuthClient }) {
           onNavigate={navigate}
           pathname={pathname}
         >
-          {gatedRoute(route, routeContent(route, client, navigate, pathname, url.search))}
+          {/* E11-W05 step 5 (a): a screen that fails to draw shows the UI kit's error state
+              inside the shell, never a blank app, as in the members' app; the next address
+              draws its screen (`resetKey`, no remount of a healthy screen). */}
+          <ChunkBoundary resetKey={pathname}>
+            {gatedRoute(route, routeContent(route, client, navigate, pathname, url.search))}
+          </ChunkBoundary>
         </AdminShell>
       </ExportJobsProvider>
     </OnboardingExperience>

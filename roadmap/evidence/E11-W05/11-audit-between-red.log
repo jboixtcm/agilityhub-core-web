@@ -1,0 +1,362 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/audit/AuditPage.test.tsx (12 tests | 3 failed) 22179ms
+   ❯ E11-W02 round 2 (INC-41): the audit's «Data» filter can be filled (1)
+     × «Data» between two club days: two date inputs, sent as the club-local bounds of those days 10075ms
+   ❯ E11-W05 step 5 (e): the «Data» range ends at the end day's last instant (CONVENCIONS_API §4: `between` includes both ends) (2)
+     × 1–2 Oct in Europe/Madrid ends in 2026-10-02T21:59:59.999Z, so an entry at 00:00:00.000 of the 3rd is not listed 10084ms
+     × the mock compares the bounds as instants: an entry at a bound written with milliseconds is listed 87ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > E11-W02 round 2 (INC-41): the audit's «Data» filter can be filled > «Data» between two club days: two date inputs, sent as the club-local bounds of those days
+AssertionError: expected [ Array(1) ] to include 'at:between:2026-08-02T22:00:00Z,2026-…'
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"audit-page"[39m
+      [36m>[39m
+        [36m<header>[39m
+          [36m<h1>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/abonats/member-laura"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mAuditoria de l'abonat[0m
+            [36m</a>[39m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Entrades d'auditoria de l'abonat"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca per acció, actor o entitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca per acció, actor o entitat"[39m
+                [33mplaceholder[39m=[32m"Cerca per acció, actor o entitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Acció"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les accions[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"MEMBER_UPDATED"[39m
+              [36m>[39m
+                [0mDades de l'abonat modificades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"MEMBER_PAYMENT_METHOD_CHANGED"[39m
+              [36m>[39m
+                [0mMètode de pagament modificat[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"MEMBER_PLAN_CHANGED"[39m
+              [36m>[39m
+                [0mModalitat modificada[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"DOG_LEVEL_CHANGED"[39m
+              [36m>[39m
+                [0mNivell del gos modificat[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"PARAMETER_CHANGED"[39m
+              [36m>[39m
+                [0mConfiguració modificada[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"DATA_EXPORTED"[39m
+              [36m>[39m
+                [0mDades exportades[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre (1): Data = «2026-08-02T22:00:00Z,2026-08-04T22:00:00Z»[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [0mData = «2026-08-02T22:00:00Z,2026-08-04T22:00:00Z»[0m
+                  [36m</span>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Treu el filtre de Data"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<label>[39m
+                  [...
+ ❯ src/audit/AuditPage.test.tsx:380:23
+    378|     // instant ends the range (E11-W05 step 5 (e): `between` is inclus…
+    379|     await waitFor(() => {
+    380|       expect(filters).toContain("at:between:2026-08-02T22:00:00Z,2026-…
+       |                       ^
+    381|     });
+    382|     server.events.removeListener("request:start", listener);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > E11-W05 step 5 (e): the «Data» range ends at the end day's last instant (CONVENCIONS_API §4: `between` includes both ends) > 1–2 Oct in Europe/Madrid ends in 2026-10-02T21:59:59.999Z, so an entry at 00:00:00.000 of the 3rd is not listed
+AssertionError: expected [ Array(1) ] to include 'at:between:2026-09-30T22:00:00Z,2026-…'
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"audit-page"[39m
+      [36m>[39m
+        [36m<header>[39m
+          [36m<h1>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/abonats/member-laura"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mAuditoria de l'abonat[0m
+            [36m</a>[39m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Entrades d'auditoria de l'abonat"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca per acció, actor o entitat[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca per acció, actor o entitat"[39m
+                [33mplaceholder[39m=[32m"Cerca per acció, actor o entitat"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Acció"[39m
+              [33mclass[39m=[32m"ah-universal-list__status"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les accions[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"MEMBER_UPDATED"[39m
+              [36m>[39m
+                [0mDades de l'abonat modificades[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"MEMBER_PAYMENT_METHOD_CHANGED"[39m
+              [36m>[39m
+                [0mMètode de pagament modificat[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"MEMBER_PLAN_CHANGED"[39m
+              [36m>[39m
+                [0mModalitat modificada[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"DOG_LEVEL_CHANGED"[39m
+              [36m>[39m
+                [0mNivell del gos modificat[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"PARAMETER_CHANGED"[39m
+              [36m>[39m
+                [0mConfiguració modificada[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"DATA_EXPORTED"[39m
+              [36m>[39m
+                [0mDades exportades[0m
+              [36m</option>[39m
+            [36m</select>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre (1): Data = «2026-09-30T22:00:00Z,2026-10-02T22:00:00Z»[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [0mData = «2026-09-30T22:00:00Z,2026-10-02T22:00:00Z»[0m
+                  [36m</span>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Treu el filtre de Data"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<label>[39m
+                  [...
+ ❯ src/audit/AuditPage.test.tsx:405:23
+    403|     fireEvent.click(screen.getByRole("button", { name: "Afegeix el fil…
+    404|     await waitFor(() => {
+    405|       expect(filters).toContain("at:between:2026-09-30T22:00:00Z,2026-…
+       |                       ^
+    406|     });
+    407|     server.events.removeListener("request:start", listener);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > E11-W05 step 5 (e): the «Data» range ends at the end day's last instant (CONVENCIONS_API §4: `between` includes both ends) > the mock compares the bounds as instants: an entry at a bound written with milliseconds is listed
+AssertionError: expected [] to include '2026-08-03T10:15:00Z'
+ ❯ src/audit/AuditPage.test.tsx:418:73
+    416|     };
+    417|     // The fixture's entry at 2026-08-03T10:15:00Z, as the last instan…
+    418|     expect(await list("2026-08-02T22:00:00Z,2026-08-03T10:15:00.000Z")…
+       |                                                                         ^
+    419|       "2026-08-03T10:15:00Z",
+    420|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 9 passed (12)
+   Start at  22:39:20
+   Duration  23.66s (tests 94%, transform 3%, environment 1%, import 1%)
+

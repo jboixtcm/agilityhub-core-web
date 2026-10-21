@@ -36,7 +36,7 @@ describe("E11-W02 (INC-41): the app that cannot read /branding says so instead o
   );
 });
 
-describe("E11-W02 round 2 (INC-41): the boot failure says what failed", () => {
+describe("R-02-01 / R-02-02 (E11-W02 round 2, INC-41): the boot failure says what failed", () => {
   it.each([
     [
       "an address no club has (404 UNKNOWN_HOST)",

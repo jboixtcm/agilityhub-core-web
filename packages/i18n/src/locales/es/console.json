@@ -73,7 +73,7 @@
     "GENERIC": "Genérico"
   },
   "errors": {
-    "catalogNotEmpty": "{part}: el club ya tiene. Solo se copian las partes vacías.",
+    "catalogNotEmpty": "{part}: el club ya tiene contenido. Solo se copian las partes vacías.",
     "domainState": "No se puede hacer con un dominio en estado «{status}».",
     "primaryDomain": "Es el dominio principal de su app: antes haz principal otro dominio verificado.",
     "fileTooLarge": "El archivo es demasiado grande: como máximo {maxSizeMb} MB.",
@@ -223,8 +223,8 @@
       "label": "Enlace a Learn"
     },
     "PACKS": {
-      "help": "Modalidades de packs de sesiones con su saldo.",
-      "label": "Packs"
+      "help": "Modalidades de bonos de sesiones con su saldo.",
+      "label": "Bonos"
     },
     "PUSH": {
       "help": "Notificaciones web en el dispositivo del abonado.",
@@ -316,7 +316,6 @@
     "addHelp": "Escribe el host sin https://, por ejemplo app.ejemplo.es.",
     "adding": "Añadiendo",
     "addTitle": "Añadir dominio",
-    "adminHostsNote": "Un dominio del backoffice verificado ya tiene certificado, pero el backoffice no se sirve en él hasta que operaciones lo añade a la lista de hosts del backoffice y recarga el servidor.",
     "app": "App",
     "apps": {
       "clubs": "App de los socios",
@@ -433,7 +432,7 @@
   },
   "status": {
     "ACTIVE": "Activo",
-    "ONBOARDING": "En puesta en marcha",
+    "ONBOARDING": "En configuración",
     "SUSPENDED": "Suspendido"
   },
   "statusTab": {
@@ -449,7 +448,7 @@
     "description": "La activación es siempre manual. Cada cambio de estado queda en la auditoría.",
     "meaning": {
       "ACTIVE": "El club opera con normalidad.",
-      "ONBOARDING": "El club ya funciona y los administradores ven un banner de puesta en marcha.",
+      "ONBOARDING": "El club ya funciona y los administradores ven un banner de configuración.",
       "SUSPENDED": "Los accesos al club se rechazan y los procesos no se ejecutan."
     },
     "reason": "Motivo de la suspensión",
@@ -589,10 +588,11 @@
   "wizard": {
     "adminHelp": "Recibirá una invitación por correo con un enlace de acceso como administrador del club.",
     "catalogsHelp": "Los catálogos del club nuevo se pueden copiar de un club plantilla, o empezar vacíos.",
+    "catalogsStartingPoint": "Es un punto de partida: el club puede editarlos después.",
     "create": "CREAR EL CLUB",
     "creating": "Creando el club",
     "definitionTitle": "Archivo club-as-code",
-    "description": "Ocho pasos para crear un club. Se crea en puesta en marcha y después se completa la checklist de onboarding.",
+    "description": "Ocho pasos para crear un club. Se crea en configuración y después se completa la checklist de onboarding.",
     "discardDraft": "Descartar el borrador",
     "draftRestored": "Se ha recuperado el borrador guardado en este dispositivo. Los datos personales no se guardan.",
     "draftSaved": "Borrador guardado en este dispositivo, sin los datos personales.",

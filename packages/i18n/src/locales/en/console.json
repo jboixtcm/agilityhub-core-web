@@ -316,7 +316,6 @@
     "addHelp": "Type the host without https://, for example app.example.org.",
     "adding": "Adding",
     "addTitle": "Add domain",
-    "adminHostsNote": "A verified back-office domain gets its certificate at once, but the back office is served on it only once operations add it to the back-office host list and reload the server.",
     "app": "App",
     "apps": {
       "clubs": "Members' app",
@@ -433,7 +432,7 @@
   },
   "status": {
     "ACTIVE": "Active",
-    "ONBOARDING": "Onboarding",
+    "ONBOARDING": "Being set up",
     "SUSPENDED": "Suspended"
   },
   "statusTab": {
@@ -449,7 +448,7 @@
     "description": "Activation is always manual. Every status change is audited.",
     "meaning": {
       "ACTIVE": "The club operates normally.",
-      "ONBOARDING": "The club already works and its administrators see an onboarding banner.",
+      "ONBOARDING": "The club already works and its administrators see a set-up banner.",
       "SUSPENDED": "Access to the club is refused and processes do not run."
     },
     "reason": "Reason for the suspension",
@@ -589,10 +588,11 @@
   "wizard": {
     "adminHelp": "They will get an email invitation with an access link as the club's administrator.",
     "catalogsHelp": "The new club's catalogs can be copied from a template club, or start empty.",
+    "catalogsStartingPoint": "They are a starting point: the club can edit them afterwards.",
     "create": "CREATE THE CLUB",
     "creating": "Creating the club",
     "definitionTitle": "Club-as-code file",
-    "description": "Eight steps to create a club. It is created in onboarding, then the onboarding checklist is completed.",
+    "description": "Eight steps to create a club. It is created in the set-up state, then the onboarding checklist is completed.",
     "discardDraft": "Discard the draft",
     "draftRestored": "The draft saved on this device was restored. Personal data is not saved in it.",
     "draftSaved": "Draft saved on this device, without the personal data.",

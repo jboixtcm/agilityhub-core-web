@@ -343,9 +343,6 @@ export function DomainsTab({ client, club, onReload }: ConsoleTabProps) {
             />
           ))}
         <FormMessage message={added} tone="success" />
-        {domains.some((domain) => domain.app === "clubs-admin" && domain.status === "VERIFIED") ? (
-          <p className="console-muted">{t("console:domains.adminHostsNote")}</p>
-        ) : null}
       </SectionCard>
       {withInstructions.map((domain) => {
         const records: ExpectedRecords | undefined =

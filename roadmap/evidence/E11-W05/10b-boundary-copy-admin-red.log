@@ -1,0 +1,60 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+stderr | src/lazy-chunks.test.tsx > E11-W02 round 3 (review m1) and E11-W05 step 5 (a, d): the back office's lazy chunks never blank the app > D19 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once
+Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock
+    at createHelpfulError (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/@vitest+mocker@5.0.0_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3__vite@8.2.2_@types+node@_skleqvykj2lcs72bea5et2hcqq/node_modules/@vitest/mocker/dist/chunk-registry.js:203:16)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/@vitest+mocker@5.0.0_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3__vite@8.2.2_@types+node@_skleqvykj2lcs72bea5et2hcqq/node_modules/@vitest/mocker/dist/chunk-registry.js:184:11
+    at VitestMocker.callFunctionMock (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:332:19)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:415:12 {
+  [stack]: [Getter/Setter],
+  [message]: '[vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock',
+  cause: TypeError: Failed to fetch dynamically imported module: /assets/ConsolePage-old.js
+      at /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin/src/lazy-chunks.test.tsx:17:5
+      at ManualMockedModule.factory (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.OVGXnVRj.js:7342:78)
+      at ManualMockedModule.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/@vitest+mocker@5.0.0_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3__vite@8.2.2_@types+node@_skleqvykj2lcs72bea5et2hcqq/node_modules/@vitest/mocker/dist/chunk-registry.js:175:19)
+      at VitestMocker.callFunctionMock (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:332:30)
+      at file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:415:23
+      at Traces.$ (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/traces.js:143:27)
+      at VitestMocker.requestWithMockedModule (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:380:21)
+      at VitestModuleRunner.cachedRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.1_nbEjJY.js:595:38)
+      at request (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/module-runner.js:1231:76) {
+    [stack]: [Getter/Setter],
+    [message]: 'Failed to fetch dynamically imported module: /assets/ConsolePage-old.js'
+  }
+}
+
+The above error occurred in one of your React components.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, FailureBoundary.
+
+
+ ❯ src/lazy-chunks.test.tsx (2 tests | 1 failed) 440ms
+   ❯ E11-W02 round 3 (review m1) and E11-W05 step 5 (a, d): the back office's lazy chunks never blank the app (2)
+     × D19 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once 95ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lazy-chunks.test.tsx > E11-W02 round 3 (review m1) and E11-W05 step 5 (a, d): the back office's lazy chunks never blank the app > D19 with its chunk gone: the shell stays, an ErrorState says the app was updated, and the document reloads once
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'aplicació s'ha actualitzat. Torna a carregar-la.[39m
+Received:
+[31m  No disponibleNo hi ha connexió amb el servidor.Torna-ho a provar[39m
+ ❯ src/lazy-chunks.test.tsx:90:19
+     88|     expect(alert).toHaveTextContent("No disponible");
+     89|     // A chunk a deploy removed: the app was updated, not a lost conne…
+     90|     expect(alert).toHaveTextContent("L'aplicació s'ha actualitzat. Tor…
+       |                   ^
+     91|     expect(alert).not.toHaveTextContent("No hi ha connexió amb el serv…
+     92|     // The shell is still there: its entries lead elsewhere.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  22:38:26
+   Duration  2.01s (transform 49%, tests 23%, import 13%, environment 13%, setup 3%)
+

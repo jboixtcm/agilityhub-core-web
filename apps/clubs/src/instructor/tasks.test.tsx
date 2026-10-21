@@ -268,7 +268,7 @@ describe("T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12
     fireEvent.click(within(card(1)).getByRole("button", { name: "Desa" }));
     expect(
       await screen.findByText(
-        "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
+        "Aquest element s'ha modificat des d'un altre lloc. Actualitza'l i torna-ho a provar.",
       ),
     ).toBeVisible();
     expect(
@@ -562,7 +562,7 @@ describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
     const clip = within(card(0)).getByRole("button", { name: "vídeo_balancí.mp4" });
     fireEvent.click(clip);
     const refused = await within(card(0)).findByRole("alert");
-    expect(refused).toHaveTextContent("No teniu permís per fer aquesta acció.");
+    expect(refused).toHaveTextContent("No tens permís per fer aquesta acció.");
     expect(clip.closest(".ah-attachment-chip")?.nextElementSibling).toBe(refused);
     answer = "network";
     fireEvent.click(clip);

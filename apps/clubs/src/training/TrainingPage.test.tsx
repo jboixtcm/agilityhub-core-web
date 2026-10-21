@@ -770,7 +770,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the sha
     fireEvent.click(confirmButton());
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
       ),
     ).toBeVisible();
     // Not the booking's answer: the choice stays, and the retry is the same submission.

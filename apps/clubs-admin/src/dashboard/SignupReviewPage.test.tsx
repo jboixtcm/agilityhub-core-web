@@ -172,7 +172,7 @@ describe("T-04-33 D2 signup validation", () => {
     expect(screen.getByText("Iniciar-nos a l'agility i socialitzar")).toBeVisible();
     expect(screen.queryByText(/\badjunts?\b/u)).not.toBeInTheDocument();
     expect(screen.getByText(dataRow(/^Kiwi · Femella · Whippet · /u))).toBeVisible();
-    expect(screen.getByText(/no publiqueu fotos on surti ella/u)).toBeVisible();
+    expect(screen.getByText(/no publiquis fotos on surti ella/u)).toBeVisible();
     expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
     expect(screen.getByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
     expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Abonat · 60,00 €/mes");
@@ -202,16 +202,16 @@ describe("T-04-33 D2 signup validation", () => {
   });
 
   it.each([
-    ["ca", "DNI", "47123456K", "DNI/NIE"],
-    ["ca", "NIE", "X1234567L", "DNI/NIE"],
+    // E11-W05 step 4 (A40.2): a DNI or an NIE reads «Document d'identitat», never «DNI/NIE».
+    ["ca", "DNI", "47123456K", "Document d'identitat"],
+    ["ca", "NIE", "X1234567L", "Document d'identitat"],
     ["ca", "PASSPORT", "PA1234567", "Passaport"],
     ["es", "PASSPORT", "PA1234567", "Pasaporte"],
     ["en", "PASSPORT", "PA1234567", "Passport"],
-    ["es", "DNI", "47123456K", "DNI/NIE"],
-    // E4-W15 step 3 (E4-W12 review #1): English names the type too, as screen 16 does.
-    ["en", "NIE", "X1234567L", "DNI/NIE"],
-    ["en", "DNI", "47123456K", "DNI/NIE"],
-  ] as const)("E4-W12 step 2: in %s the identity row of a %s is labelled by its type", async (language, type, number, label) => {
+    ["es", "DNI", "47123456K", "Documento de identidad"],
+    ["en", "NIE", "X1234567L", "ID document"],
+    ["en", "DNI", "47123456K", "ID document"],
+  ] as const)("E4-W12 step 2 / E11-W05 step 4: in %s the identity row of a %s is labelled by its type", async (language, type, number, label) => {
     await renderReview({
       branding: { ...canic, locales: ["ca", "es", "en"] },
       fetchOverride: recordingFetch((body) => { body.member.idDocument = { number, type }; }).fetch,
@@ -224,13 +224,25 @@ describe("T-04-33 D2 signup validation", () => {
     expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
   });
 
+  it.each([
+    ["ca", "No autoritza l'ús de la seva imatge: no publiquis fotos on surti aquesta persona."],
+    ["es", "No autoriza el uso de su imagen: no publiques fotos en las que aparezca esta persona."],
+  ] as const)("E11-W05 step 4 (A40.3): in %s the NO_IMAGE_CONSENT warning of a person whose gender is OTHER is neutral", async (language, warning) => {
+    await renderReview({
+      branding: { ...canic, locales: ["ca", "es", "en"] },
+      fetchOverride: recordingFetch((body) => { body.member.gender = "OTHER"; }).fetch,
+      language,
+    });
+    expect(await screen.findByText(warning)).toBeVisible();
+  });
+
   it("E4-W12 step 2: the edit drawer labels a passport «Passaport» too", async () => {
     await renderReview({
       fetchOverride: recordingFetch((body) => { body.member.idDocument = { number: "PA1234567", type: "PASSPORT" }; }).fetch,
     });
     const drawer = openDrawer();
     expect(within(drawer).getByLabelText("Passaport")).toHaveValue("PA1234567");
-    expect(within(drawer).queryByLabelText("DNI/NIE")).toBeNull();
+    expect(within(drawer).queryByLabelText("Document d'identitat")).toBeNull();
   });
 
   it("shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet", async () => {
@@ -1327,17 +1339,17 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
   });
 
-  it("the DNI/NIE is read-only while the readmission waits, and says how to correct it", async () => {
+  it("the ID document is read-only while the readmission waits, and says how to correct it (E11-W05 step 4: «Document d'identitat»)", async () => {
     mockScenario("adminSignupReviewReadmission");
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
-    const document = within(drawer).getByLabelText("DNI/NIE");
+    const document = within(drawer).getByLabelText("Document d'identitat");
     expect(document).toHaveAttribute("readonly");
     expect(document).toHaveValue("47123456K");
     const help = window.document.getElementById(document.getAttribute("aria-describedby") ?? "");
     expect(help).toHaveTextContent(
-      "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
+      "El document d'identitat no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
     );
     fireEvent.change(document, { target: { value: "47123457P" } });
     fireEvent.change(within(drawer).getByLabelText("Nom", { selector: "#signup-edit-firstName" }), {
@@ -1358,29 +1370,35 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     );
     await renderReview();
     const drawer = openDrawer();
-    fireEvent.change(within(drawer).getByLabelText("DNI/NIE"), { target: { value: "47123457P" } });
+    fireEvent.change(within(drawer).getByLabelText("Document d'identitat"), {
+      target: { value: "47123457P" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
     expect(
       await within(drawer).findByText(
-        "El DNI/NIE no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
+        "El document d'identitat no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
       ),
     ).toBeVisible();
   });
 
-  it("a signup that is not a readmission has no readmission block and an editable DNI/NIE", async () => {
+  it("a signup that is not a readmission has no readmission block and an editable ID document", async () => {
     await renderReview();
     expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
-    expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveAttribute("readonly");
+    expect(within(openDrawer()).getByLabelText("Document d'identitat")).not.toHaveAttribute(
+      "readonly",
+    );
   });
 
-  it("round 2: `readmission: null` (how the core writes an ordinary signup) keeps the DNI/NIE editable and the card on `member`", async () => {
+  it("round 2: `readmission: null` (how the core writes an ordinary signup) keeps the ID document editable and the card on `member`", async () => {
     const { fetch: over } = recordingFetch((body) => {
       (body as Record<string, unknown>).readmission = null;
     });
     await renderReview({ fetchOverride: over });
     expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
     expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34 655123123/u))).toBeVisible();
-    expect(within(openDrawer()).getByLabelText("DNI/NIE")).not.toHaveAttribute("readonly");
+    expect(within(openDrawer()).getByLabelText("Document d'identitat")).not.toHaveAttribute(
+      "readonly",
+    );
   });
 });
 
