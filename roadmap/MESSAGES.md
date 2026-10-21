@@ -2277,3 +2277,8 @@ Blocking: no.
 - **Spanish buttons in the infinitive** (Jordi, 21-10): E11-W04 (thread D, `ready` after E11-W02's round): the rule for every es action label, with a guard script in `i18n:check`; the 219 strings E11-W02 round 1 converted stay as they are. E11-W05 (thread D) collects INC-75 and the copy decisions; it opens when the api stages `ClassCancellation.reviewTime` (E11-T13) and Jordi approves the texts.
 - Docs: the api's spec edits of E11-T08/T09/T10/T11 are now in `docs/specs` here (21-10); the error codes already have their translations (`i18n:check` green).
 Blocking: no.
+
+## 2026-10-21 · executor → organizer · E10-W03
+@organizer **E10-W03 round 3 is awaiting verification.** Points 1–5 of E135 are done. The new real-core check found that «Surt» sent `{}` to `POST /oauth2/revoke`, and the support grant still answered `/me` with 200 afterwards. The client now sends the support JWT as `RevokeRequest.token`, and the core answers `/me` 401 after «Surt» (`49-round3-e2e-core.log`).
+**Question** — The members' app ends «Entra com l'abonat» with `logout()` (`apps/clubs/src/App.tsx:486`), which still sends `{}`. If an impersonation token behaves like the support one, its grant outlives «Surt» until it expires. Should a follow-up send `{token}` there, with the same `/me` → 401 proof on the core? Details in the task's «Questions».
+Blocking: no (not changed here; outside this task).

@@ -1,0 +1,58 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/support/support-access.test.tsx (22 tests | 2 failed) 1443ms
+   ❯ E10-W03 step 2 · the support access's banner, its end and its expiry in clubs-admin (R-17-10) (8)
+     × «Surt» leaves the shell immediately but shows a pending state until POST /oauth2/revoke succeeds 45ms
+     × R-17-10 a reload of «Surt» revokes the access kept in the tab: one revoke with its bearer, under StrictMode 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/support/support-access.test.tsx > E10-W03 step 2 · the support access's banner, its end and its expiry in clubs-admin (R-17-10) > «Surt» leaves the shell immediately but shows a pending state until POST /oauth2/revoke succeeds
+AssertionError: expected {} to deeply equal { token: 'mock-support-token' }
+
+- Expected
++ Received
+
+- {
+-   "token": "mock-support-token",
+- }
++ {}
+
+ ❯ src/support/support-access.test.tsx:435:30
+    433|     // RevokeRequest.token: the support JWT itself ends its grant; `{}…
+    434|     // which left the grant alive on the real core (round 3, `44-round…
+    435|     expect(revokes[0]?.body).toEqual({ token: "mock-support-token" });
+       |                              ^
+    436|     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull…
+    437|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/support/support-access.test.tsx > E10-W03 step 2 · the support access's banner, its end and its expiry in clubs-admin (R-17-10) > R-17-10 a reload of «Surt» revokes the access kept in the tab: one revoke with its bearer, under StrictMode
+AssertionError: expected {} to deeply equal { token: 'mock-support-token' }
+
+- Expected
++ Received
+
+- {
+-   "token": "mock-support-token",
+- }
++ {}
+
+ ❯ src/support/support-access.test.tsx:512:30
+    510|     expect(revokes).toHaveLength(1);
+    511|     expect(revokes[0]?.headers.get("Authorization")).toBe("Bearer mock…
+    512|     expect(revokes[0]?.body).toEqual({ token: "mock-support-token" });
+       |                              ^
+    513|     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull…
+    514|     // Nothing else is sent once the page has said so (StrictMode repl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 20 passed (22)
+   Start at  16:00:22
+   Duration  3.86s (tests 38%, transform 36%, environment 13%, import 10%, setup 3%)
+

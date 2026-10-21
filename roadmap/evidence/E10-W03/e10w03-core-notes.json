@@ -7,13 +7,29 @@
       "recordValue"
     ]
   },
+  "brandingBefore": {
+    "code": "UNKNOWN_HOST",
+    "status": 404
+  },
   "verification": {
     "status": 200,
     "body": {
       "status": "VERIFIED",
-      "checkedAt": "2026-10-18T10:57:42.461922846Z",
+      "checkedAt": "2026-10-21T14:21:27.915510674Z",
       "method": "CNAME"
     }
+  },
+  "primary": {
+    "afterChoice": [
+      "e10w03-87669.example.test"
+    ],
+    "afterRestore": [
+      "minim.example.test"
+    ]
+  },
+  "brandingAfter": {
+    "slug": "minim",
+    "status": 200
   },
   "allowed": {
     "body": "",
@@ -24,12 +40,12 @@
       "code": "HOST_NOT_VERIFIED",
       "message": "El domini no està verificat.",
       "details": {
-        "host": "e10w03-missing-62636.example.test",
+        "host": "e10w03-missing-88298.example.test",
         "cnameTarget": "clubs.agilitydoghub.com",
-        "recordName": "_agilityhub-verify.e10w03-missing-62636.example.test",
-        "recordValue": "agh-verify-gPHT1BhERSttBWLMns65_JEFUMFSG1e6"
+        "recordName": "_agilityhub-verify.e10w03-missing-88298.example.test",
+        "recordValue": "agh-verify-t2ZTXDIO6p4fVLgD0NJBhOBc2xEW7CGx"
       },
-      "traceId": "23c40426-c0d3-4b03-bd2c-808c4d39fc45"
+      "traceId": "9e63a063-b2a6-4e8d-8964-2dae3186bd7d"
     },
     "status": 422
   },
@@ -43,5 +59,9 @@
       "expiresAt"
     ]
   },
-  "revoke": 200
+  "revoke": {
+    "meAfterExit": 401,
+    "meBeforeExit": 200,
+    "revoke": 200
+  }
 }

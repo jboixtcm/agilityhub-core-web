@@ -214,6 +214,7 @@ select {
   list-style: none;
 }
 
+.audit-support__error,
 .audit-support__items li {
   display: flex;
   flex-wrap: wrap;

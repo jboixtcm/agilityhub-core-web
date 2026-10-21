@@ -167,7 +167,9 @@
     "endFailed": "The access could not be ended. Try again.",
     "ending": "Ending",
     "item": "{name}, AgilityHub team · from {from} until {until}",
+    "loadFailed": "The live support accesses could not be read.",
     "reason": "Reason: {reason}",
+    "retry": "Try again",
     "title": "Live support accesses",
     "unknownActor": "AgilityHub team"
   },

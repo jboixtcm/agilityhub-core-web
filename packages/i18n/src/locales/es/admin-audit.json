@@ -167,7 +167,9 @@
     "endFailed": "No se ha podido terminar el acceso. Vuelve a intentarlo.",
     "ending": "Terminando",
     "item": "{name}, del equipo AgilityHub · desde el {from} hasta el {until}",
+    "loadFailed": "No se han podido leer los accesos de soporte en curso.",
     "reason": "Motivo: {reason}",
+    "retry": "Volver a intentarlo",
     "title": "Accesos de soporte en curso",
     "unknownActor": "Equipo AgilityHub"
   },

@@ -1,7 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { request as httpRequest } from "node:http";
 import { join, resolve } from "node:path";
 
-import { type Page, type Response } from "@playwright/test";
+import { type Locator, type Page, type Response } from "@playwright/test";
 
 import { expect, test } from "./oauth-token-log";
 
@@ -269,6 +270,50 @@ async function publishFakeCname(page: Page, host: string, target: string): Promi
   expect(response.status, response.body).toBeLessThan(300);
 }
 
+/**
+ * T-17-03: `GET /branding` straight to the core with a club host in `Host`, as the club's ingress
+ * forwards it (`node:http`, because a browser or `fetch` never lets a caller set `Host`).
+ */
+function brandingFor(host: string): Promise<{ body: string; status: number }> {
+  return new Promise((resolveBranding, reject) => {
+    const outgoing = httpRequest(
+      new URL("/api/v1/branding", coreUrl),
+      { headers: { Accept: "application/json", Host: host }, method: "GET" },
+      (incoming) => {
+        let body = "";
+        incoming.setEncoding("utf8");
+        incoming.on("data", (chunk: string) => {
+          body += chunk;
+        });
+        incoming.on("end", () => {
+          resolveBranding({ body, status: incoming.statusCode ?? 0 });
+        });
+      },
+    );
+    outgoing.on("error", reject);
+    outgoing.end();
+  });
+}
+
+function errorCodeOf(body: string): unknown {
+  return (JSON.parse(body) as { code?: unknown }).code;
+}
+
+function clubSlugOf(body: string): unknown {
+  return (JSON.parse(body) as { club?: { slug?: unknown } }).club?.slug;
+}
+
+/** `GET /me` from the club's back-office tab with an explicit bearer (never the cookie). */
+async function meStatusWith(page: Page, token: string): Promise<number> {
+  return page.evaluate(async (bearer) => {
+    const response = await fetch("/api/v1/me", {
+      credentials: "omit",
+      headers: { Authorization: `Bearer ${bearer}` },
+    });
+    return response.status;
+  }, token);
+}
+
 /** Opens a seeded club's record tab from D19's list (its id is the api's). */
 async function openSeededRecord(page: Page, slug: string, tab: string): Promise<void> {
   await navigateSpa(page, "/consola/clubs");
@@ -282,7 +327,7 @@ async function openSeededRecord(page: Page, slug: string, tab: string): Promise<
   await page.getByRole("link", { exact: true, name: tab }).click();
 }
 
-test("E10-W03 · «Dominis» (positive and negative fake DNS), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)", async ({
+test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice, /branding before and after), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
@@ -313,6 +358,11 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS), allowed host and 
   };
   notes.added = { status: domain.status, verification: Object.keys(domain.verification).sort() };
   expect(domain.status).toBe("PENDING");
+  // T-17-03: until it is verified, the host opens no club.
+  const brandingBefore = await brandingFor(host);
+  notes.brandingBefore = { code: errorCodeOf(brandingBefore.body), status: brandingBefore.status };
+  expect(brandingBefore.status, brandingBefore.body).toBe(404);
+  expect(errorCodeOf(brandingBefore.body)).toBe("UNKNOWN_HOST");
   const records = page.locator(".console-card").filter({
     has: page.getByRole("heading", { name: `Registres DNS de ${host}` }),
   });
@@ -335,10 +385,48 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS), allowed host and 
   await expect(
     page.getByText(new RegExp(`S'ha verificat ${host.replace(/\./gu, "\\.")}`, "u")),
   ).toBeVisible();
-  await expect(row.getByText("verificat")).toBeVisible();
-  // The verification response is DomainVerification; the reloaded PlatformDomain row proves the
-  // first verified domain for this app became primary.
-  await expect(row.getByText("principal")).toBeVisible();
+  await expect(row.getByText("verificat", { exact: true })).toBeVisible();
+  // The primary choice (R-17-03, round 3 #1). The «club mínim» already has a primary verified
+  // domain for the members' app (`minim.example.test`, its seed), so the new one is verified but
+  // not primary: [Fes-lo principal] moves the badge to it (`PUT …/primary` → 200), and back.
+  const seededHost = "minim.example.test";
+  const seededRow = page.getByRole("row").filter({ hasText: seededHost });
+  const badge = (target: Locator) => target.getByText("principal", { exact: true });
+  const makePrimary = (target: Locator, name: string) =>
+    target.getByRole("button", { exact: true, name: `Fes-lo principal: ${name}` });
+  const choosePrimary = async (target: Locator, name: string): Promise<string[]> => {
+    const chosen = page.waitForResponse(isPlatform("PUT", /\/domains\/[^/]+\/primary$/u));
+    await makePrimary(target, name).click();
+    const response = await chosen;
+    expect(response.status()).toBe(200);
+    const domains = (await response.json()) as { app: string; host: string; primary: boolean }[];
+    return domains
+      .filter((candidate) => candidate.app === "clubs" && candidate.primary)
+      .map((candidate) => candidate.host);
+  };
+  await expect(badge(seededRow)).toBeVisible();
+  await expect(badge(row)).toHaveCount(0);
+  await expect(makePrimary(seededRow, seededHost)).toHaveCount(0);
+  const primaryAfterChoice = await choosePrimary(row, host);
+  expect(primaryAfterChoice).toEqual([host]);
+  await expect(badge(row)).toBeVisible();
+  await expect(makePrimary(row, host)).toHaveCount(0);
+  await expect(badge(seededRow)).toHaveCount(0);
+  await expect(makePrimary(seededRow, seededHost)).toBeVisible();
+  await w03Screenshot(page, "core-D19-dominis-principal-1280.png");
+  const primaryAfterRestore = await choosePrimary(seededRow, seededHost);
+  expect(primaryAfterRestore).toEqual([seededHost]);
+  await expect(badge(seededRow)).toBeVisible();
+  await expect(badge(row)).toHaveCount(0);
+  notes.primary = { afterChoice: primaryAfterChoice, afterRestore: primaryAfterRestore };
+  // T-17-03: once verified, the host opens its club.
+  const brandingAfter = await brandingFor(host);
+  notes.brandingAfter = {
+    slug: brandingAfter.status === 200 ? clubSlugOf(brandingAfter.body) : null,
+    status: brandingAfter.status,
+  };
+  expect(brandingAfter.status, brandingAfter.body).toBe(200);
+  expect(clubSlugOf(brandingAfter.body)).toBe("minim");
   // The Caddy ask endpoint deliberately lives outside /api/v1 and accepts only loopback/RFC1918
   // peers. Playwright's container calls the core directly on the private compose network.
   const allowedResponse = await page.request.get(
@@ -468,18 +556,32 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS), allowed host and 
   await page.getByRole("button", { name: "Entra com a administrador del club" }).click();
   const leaving = await second;
   await leaving.waitForURL("**/tauler", { timeout: 60_000 });
+  // The tab's support bearer (its session storage), used below and never written anywhere.
+  const supportToken = await leaving.evaluate(() => {
+    const stored = JSON.parse(sessionStorage.getItem("agilityhub.impersonation") ?? "{}") as {
+      token?: string;
+    };
+    return stored.token ?? "";
+  });
+  expect(supportToken).not.toBe("");
+  const meBeforeExit = await meStatusWith(leaving, supportToken);
+  expect(meBeforeExit).toBe(200);
   const revoked = leaving.waitForResponse((response) => response.url().endsWith("/oauth2/revoke"));
   await leaving
     .getByRole("region", { name: "Accés de suport" })
     .getByRole("button", { name: "Surt" })
     .click();
   const revokeResponse = await revoked;
-  notes.revoke = revokeResponse.status();
   expect(revokeResponse.ok()).toBe(true);
+  expect(revokeResponse.request().headers().authorization).toBe(`Bearer ${supportToken}`);
   await expect(leaving).toHaveURL(/\/suport\?sortit=1$/u);
   await expect(
     leaving.getByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
   ).toBeVisible();
+  // R-17-10 (round 3 #3): the grant is dead, not only forgotten by the tab.
+  const meAfterExit = await meStatusWith(leaving, supportToken);
+  notes.revoke = { meAfterExit, meBeforeExit, revoke: revokeResponse.status() };
+  expect(meAfterExit).toBe(401);
 
   writeFileSync(
     join(w03Directory, "e10w03-core-notes.json"),

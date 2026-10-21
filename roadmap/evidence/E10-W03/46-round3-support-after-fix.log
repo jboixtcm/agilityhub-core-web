@@ -1,0 +1,42 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/support/support-access.test.tsx (22 tests | 1 failed) 2418ms
+   ❯ E10-W03 step 2 · the club's ADMIN ends a live support access from «Auditoria» (R-17-10, E123) (7)
+     × R-17-10 reads every audit page, so all 51 live support grants can be ended 141ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/support/support-access.test.tsx > E10-W03 step 2 · the club's ADMIN ends a live support access from «Auditoria» (R-17-10, E123) > R-17-10 reads every audit page, so all 51 live support grants can be ended
+AssertionError: expected [ 'SUPPORT_ACCESS_STARTED:0', …(3) ] to deeply equal [ 'SUPPORT_ACCESS_STARTED:0', …(2) ]
+
+- Expected
++ Received
+
+  [
+    "SUPPORT_ACCESS_STARTED:0",
+    "SUPPORT_ACCESS_STARTED:1",
+    "SUPPORT_ACCESS_ENDED:0",
++   "SUPPORT_ACCESS_ENDED:0",
+  ]
+
+ ❯ src/support/support-access.test.tsx:741:72
+    739|     });
+    740|     // Every STARTED page first; the ENDED read then covers only the l…
+    741|     expect(reads.map((read) => `${read.action}:${String(read.page)}`))…
+       |                                                                        ^
+    742|       "SUPPORT_ACCESS_STARTED:0",
+    743|       "SUPPORT_ACCESS_STARTED:1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 passed (22)
+   Start at  16:00:35
+   Duration  8.65s (transform 50%, tests 29%, environment 10%, import 9%, setup 2%)
+
+  Transform  transforming modules took 4.22s · 50% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

@@ -430,6 +430,9 @@ describe("E10-W03 step 2 · the support access's banner, its end and its expiry 
     expect(pageLoads.assign).not.toHaveBeenCalled();
     expect(pageLoads.replace).not.toHaveBeenCalled();
     expect(revokes[0]?.headers.get("Authorization")).toBe("Bearer mock-support-token");
+    // RevokeRequest.token: the support JWT itself ends its grant; `{}` revokes only a bearer `sid`,
+    // which left the grant alive on the real core (round 3, `44-round3-e2e-core.log`).
+    expect(revokes[0]?.body).toEqual({ token: "mock-support-token" });
     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
   });
 
@@ -475,6 +478,114 @@ describe("E10-W03 step 2 · the support access's banner, its end and its expiry 
     ).toBeInTheDocument();
     expect(authorizations).toEqual(["Bearer mock-support-token", "Bearer mock-support-token"]);
     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+
+  /** A tab reloaded on `/suport?sortit=1`: the access is only in its session storage (round 3 #2). */
+  async function reloadOnExit(client = authClient()) {
+    sessionStorage.setItem(
+      IMPERSONATION_STORAGE_KEY,
+      JSON.stringify({
+        expiresAt: Date.now() + 3_600_000,
+        state: "active",
+        token: "mock-support-token",
+      }),
+    );
+    window.history.pushState(null, "", "/suport?sortit=1");
+    await renderApplication(
+      client,
+      <StrictMode>
+        <App authClient={client} />
+      </StrictMode>,
+    );
+  }
+
+  it("R-17-10 a reload of «Surt» revokes the access kept in the tab: one revoke with its bearer, under StrictMode", async () => {
+    const revokes = captureRequests(
+      (method, url) => method === "POST" && url.pathname.endsWith("/oauth2/revoke"),
+    );
+    await reloadOnExit();
+    expect(
+      await screen.findByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeInTheDocument();
+    expect(revokes).toHaveLength(1);
+    expect(revokes[0]?.headers.get("Authorization")).toBe("Bearer mock-support-token");
+    expect(revokes[0]?.body).toEqual({ token: "mock-support-token" });
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+    // Nothing else is sent once the page has said so (StrictMode replays the effects).
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(revokes).toHaveLength(1);
+  });
+
+  it("R-17-10 a reload of «Surt» whose revoke fails shows the failure and retries with the kept bearer", async () => {
+    let attempt = 0;
+    const authorizations: (null | string)[] = [];
+    server.use(
+      http.post("*/oauth2/revoke", ({ request }) => {
+        attempt += 1;
+        authorizations.push(request.headers.get("Authorization"));
+        return attempt === 1
+          ? HttpResponse.json(
+              {
+                code: "INTERNAL_ERROR",
+                details: {},
+                message: "Temporary failure",
+                traceId: "trace-support-revoke",
+              },
+              { status: 500 },
+            )
+          : new HttpResponse(null, { status: 200 });
+      }),
+    );
+    await reloadOnExit();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut acabar l'accés de suport.",
+    );
+    expect(
+      screen.queryByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeNull();
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toContain("mock-support-token");
+    fireEvent.click(screen.getByRole("button", { name: "Torna a provar de sortir" }));
+    expect(
+      await screen.findByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeInTheDocument();
+    expect(authorizations).toEqual(["Bearer mock-support-token", "Bearer mock-support-token"]);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+
+  it("R-17-10 a reload of «Surt» whose /me gets no answer says it failed, never that it has ended", async () => {
+    const revokes = captureRequests(
+      (method, url) => method === "POST" && url.pathname.endsWith("/oauth2/revoke"),
+    );
+    server.use(http.get(`${API_BASE}/me`, () => HttpResponse.error()));
+    await reloadOnExit();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut acabar l'accés de suport.",
+    );
+    expect(
+      screen.queryByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeNull();
+    expect(revokes).toEqual([]);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toContain("mock-support-token");
+  });
+
+  it("R-17-10 a reload of «Surt» whose /me answers 401 (the access had already ended) sends no revoke", async () => {
+    const revokes = captureRequests(
+      (method, url) => method === "POST" && url.pathname.endsWith("/oauth2/revoke"),
+    );
+    server.use(
+      http.get(`${API_BASE}/me`, () =>
+        HttpResponse.json(
+          { code: "UNAUTHENTICATED", details: {}, message: "No session", traceId: "t" },
+          { status: 401 },
+        ),
+      ),
+    );
+    await reloadOnExit();
+    expect(
+      await screen.findByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeInTheDocument();
+    expect(revokes).toEqual([]);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).not.toContain("mock-support-token");
   });
 
   it("an access that expired or that the club ended (401) shows that it has ended, never another session", async () => {
@@ -569,41 +680,42 @@ describe("E10-W03 step 2 · the club's ADMIN ends a live support access from «A
     ).toEqual(["live"]);
   });
 
-  it("R-17-10 reads every audit page, so all 51 live support grants can be ended", async () => {
-    const expiresAt = new Date(Date.now() + 3_600_000).toISOString();
-    const starts = Array.from({ length: 51 }, (_, index) => ({
+  /** A STARTED entry of the club audit, `index` seconds before `now` (fictional grant ids). */
+  function supportStart(index: number, expiresAt: string, now = Date.now()) {
+    return {
       action: "SUPPORT_ACCESS_STARTED" as const,
       actorName: `Suport ${String(index + 1)}`,
       actorRole: "PLATFORM" as const,
-      at: new Date(Date.now() - index * 1_000).toISOString(),
+      at: new Date(now - index * 1_000).toISOString(),
       details: { expiresAt },
       entityId: `70000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
       entityType: "ImpersonationGrant",
       id: `a1000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
       origin: "PLATFORM_SUPPORT" as const,
       reason: `Assistència ${String(index + 1)}`,
-    }));
-    const supportReads: string[] = [];
+    };
+  }
+
+  /**
+   * `GET /audit-entries` for the two support actions, paged like the api; `startedRows(page)` gives
+   * the STARTED list as it is when that page is read. Records each read and its filters.
+   */
+  function supportAudit(startedRows: (page: number) => ReturnType<typeof supportStart>[]) {
+    const reads: { action: string; filters: string[]; page: number }[] = [];
     server.use(
       http.get(`${API_BASE}/audit-entries`, ({ request }) => {
         const url = new URL(request.url);
-        const action = url.searchParams
-          .getAll("filter")
+        const filters = url.searchParams.getAll("filter");
+        const action = filters
           .find((filter) => filter.startsWith("action:eq:"))
           ?.slice("action:eq:".length);
         if (action !== "SUPPORT_ACCESS_STARTED" && action !== "SUPPORT_ACCESS_ENDED") {
-          return HttpResponse.json({
-            items: [],
-            page: 0,
-            size: 20,
-            totalItems: 0,
-            totalPages: 0,
-          });
+          return HttpResponse.json({ items: [], page: 0, size: 20, totalItems: 0, totalPages: 0 });
         }
         const page = Number(url.searchParams.get("page") ?? "0");
         const size = Number(url.searchParams.get("size") ?? "50");
-        const rows = action === "SUPPORT_ACCESS_STARTED" ? starts : [];
-        supportReads.push(`${action}:${String(page)}`);
+        const rows = action === "SUPPORT_ACCESS_STARTED" ? startedRows(page) : [];
+        reads.push({ action, filters, page });
         return HttpResponse.json({
           items: rows.slice(page * size, (page + 1) * size),
           page,
@@ -613,16 +725,103 @@ describe("E10-W03 step 2 · the club's ADMIN ends a live support access from «A
         });
       }),
     );
+    return reads;
+  }
+
+  it("R-17-10 reads every audit page, so all 51 live support grants can be ended", async () => {
+    const expiresAt = new Date(Date.now() + 3_600_000).toISOString();
+    const starts = Array.from({ length: 51 }, (_, index) => supportStart(index, expiresAt));
+    const reads = supportAudit(() => starts);
 
     const card = await openAudit("adminSupportAccess");
     await waitFor(() => {
       expect(card.getAllByRole("listitem")).toHaveLength(51);
     });
-    expect(supportReads).toEqual([
+    // Every STARTED page first; the ENDED read then covers only the live grants' lifetime (round 3 #5).
+    expect(reads.map((read) => `${read.action}:${String(read.page)}`)).toEqual([
       "SUPPORT_ACCESS_STARTED:0",
-      "SUPPORT_ACCESS_ENDED:0",
       "SUPPORT_ACCESS_STARTED:1",
+      "SUPPORT_ACCESS_ENDED:0",
+    ]);
+    expect(reads[2]?.filters).toEqual([
+      "action:eq:SUPPORT_ACCESS_ENDED",
+      `at:between:${starts[50]?.at ?? ""},${expiresAt}`,
     ]);
     expect(card.getByText(/Suport 51/u)).toBeInTheDocument();
+  });
+
+  it("R-17-10 a grant that two offset pages both return (one started between the reads) is listed once", async () => {
+    const now = Date.now();
+    const expiresAt = new Date(now + 3_600_000).toISOString();
+    const starts = Array.from({ length: 51 }, (_, index) =>
+      supportStart(index + 1, expiresAt, now),
+    );
+    // Page 1 is read after a new access started: the offset shifts and grant 50 comes back.
+    const newer = { ...supportStart(0, expiresAt, now + 1_000), actorName: "Suport nou" };
+    supportAudit((page) => (page === 0 ? starts : [newer, ...starts]));
+    const errors = vi.spyOn(console, "error");
+
+    const card = await openAudit("adminSupportAccess");
+    await waitFor(() => {
+      expect(card.getAllByRole("listitem")).toHaveLength(51);
+    });
+    expect(card.getAllByText(/^Suport 51,/u)).toHaveLength(1);
+    expect(card.getAllByRole("button", { name: "Acaba l'accés" })).toHaveLength(51);
+    expect(errors.mock.calls.some((call) => String(call[0]).includes("same key"))).toBe(false);
+  });
+
+  it("R-17-10 without a live grant the ENDED history is not read and the card stays hidden", async () => {
+    const expired = new Date(Date.now() - 60_000).toISOString();
+    const reads = supportAudit(() => [supportStart(3_600, expired)]);
+    mockScenario("adminSupportAccess");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/auditoria");
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(reads.map((read) => read.action)).toEqual(["SUPPORT_ACCESS_STARTED"]);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(reads).toHaveLength(1);
+    expect(screen.queryByRole("region", { name: "Accessos de suport en curs" })).toBeNull();
+  });
+
+  it("R-17-10 a failed read of the live accesses says so with a retry, and never keeps a stale list", async () => {
+    let failStarted = true;
+    server.use(
+      http.get(`${API_BASE}/audit-entries`, ({ request }) => {
+        const filters = new URL(request.url).searchParams.getAll("filter");
+        if (failStarted && filters.includes("action:eq:SUPPORT_ACCESS_STARTED")) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Audit down", traceId: "t-audit" },
+            { status: 500 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    const card = await openAudit("adminSupportAccess");
+    expect(await card.findByRole("alert")).toHaveTextContent(
+      "No s'han pogut llegir els accessos de suport en curs.",
+    );
+    expect(card.queryByRole("listitem")).toBeNull();
+    failStarted = false;
+    fireEvent.click(card.getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await card.findByRole("listitem")).toHaveTextContent(
+      "Pol Ferrer, de l'equip AgilityHub",
+    );
+    expect(card.queryByRole("alert")).toBeNull();
+
+    // [Acaba l'accés] succeeds, then its reread fails: the ended grant is never offered again.
+    failStarted = true;
+    fireEvent.click(card.getByRole("button", { name: "Acaba l'accés" }));
+    expect(
+      await card.findByText("S'ha acabat l'accés de suport de Pol Ferrer."),
+    ).toBeInTheDocument();
+    expect(await card.findByRole("alert")).toHaveTextContent(
+      "No s'han pogut llegir els accessos de suport en curs.",
+    );
+    expect(card.queryByRole("listitem")).toBeNull();
+    expect(card.queryByRole("button", { name: "Acaba l'accés" })).toBeNull();
   });
 });

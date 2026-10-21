@@ -775,12 +775,20 @@ export class AuthClient extends EventTarget {
    * Ends a one-time impersonated/support session only after the provider accepted its revoke.
    * Unlike the ordinary logout, a network error or 5xx keeps the bearer and the tab-local
    * handoff record so an explicit retry can revoke the same grant (S17 R-17-10).
+   * A page loaded with the access only in this tab's storage (a reload of «Surt», a restored tab)
+   * restores it first, before the SessionProvider does: a `401` on `/me` means it had already
+   * ended, and no answer fails here, so the page never says it ended without revoking it.
    */
   async revokeImpersonation(): Promise<void> {
+    if (this.accessToken === null && readStoredImpersonation()?.state === "active") {
+      await this.restoreSession();
+    }
     if (this.accessToken === null || (this.impersonation === null && !this.holdsHandoffSession())) {
       return;
     }
-    const response = await this.revoke();
+    // `RevokeRequest.token` = the impersonation or support JWT, which ends its grant. `{}` revokes
+    // only the bearer's session (`sid`), and the core then kept a support grant alive.
+    const response = await this.revoke(this.accessToken);
     // A 401 means that this one-time grant has already expired or been ended by the club.
     if (!response.ok && response.status !== 401) {
       throw await ApiError.fromResponse(response);
@@ -803,12 +811,13 @@ export class AuthClient extends EventTarget {
     this.navigate(this.signInPath);
   }
 
-  private async revoke(): Promise<Response> {
+  /** `token`: the JWT to revoke in the body (`RevokeRequest.token`); without it, the bearer's `sid`. */
+  private async revoke(token?: string): Promise<Response> {
     const headers = new Headers({ "Content-Type": "application/json" });
     headers.set("Authorization", `Bearer ${this.accessToken ?? ""}`);
     try {
       return await this.fetcher(this.endpointFor("/oauth2/revoke"), {
-        body: JSON.stringify({}),
+        body: JSON.stringify(token === undefined ? {} : { token }),
         credentials: "include",
         headers,
         method: "POST",

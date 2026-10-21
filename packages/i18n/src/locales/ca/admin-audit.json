@@ -167,7 +167,9 @@
     "endFailed": "No s'ha pogut acabar l'accés. Torna-ho a provar.",
     "ending": "Acabant",
     "item": "{name}, de l'equip AgilityHub · des del {from} fins al {until}",
+    "loadFailed": "No s'han pogut llegir els accessos de suport en curs.",
     "reason": "Motiu: {reason}",
+    "retry": "Torna-ho a provar",
     "title": "Accessos de suport en curs",
     "unknownActor": "Equip AgilityHub"
   },
