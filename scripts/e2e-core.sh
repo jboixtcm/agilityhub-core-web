@@ -134,6 +134,11 @@ echo "demo seed: $evidence_directory/demo-canic.yaml ($(wc -l <"$evidence_direct
 docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/demo-fifo.yaml \
   >"$evidence_directory/demo-fifo.yaml" || echo "could not read /app/seeds/demo-fifo.yaml" >&2
 echo "fifo demo seed: $evidence_directory/demo-fifo.yaml ($(wc -l <"$evidence_directory/demo-fifo.yaml" | tr -d ' ') lines)"
+# E10-W02: the template club the stack applies (S17 R-17-08, the wizard's «Catàlegs base»), kept
+# with the evidence so a run shows which catalogues the clone could copy.
+docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/club-template-default.yaml \
+  >"$evidence_directory/club-template-default.yaml" || echo "could not read /app/seeds/club-template-default.yaml" >&2
+echo "template club: $evidence_directory/club-template-default.yaml ($(wc -l <"$evidence_directory/club-template-default.yaml" | tr -d ' ') lines)"
 export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
 # Runtime-only vault keys for the fictional bank/card fixtures. They are forwarded to Core but
 # never echoed or written to evidence.
@@ -194,31 +199,21 @@ check_e8_seed_totals() {
   echo "E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted"
 }
 
-# E10-W01: the demo seed has no platform account, so the E10 stage (and only it, on its own fresh
-# stack) gives the seeded club admin the global role S17's console needs (`Account.platformRoles`,
-# S01 §3). The account's field names go to the evidence, so a run proves the field it set.
-grant_platform_admin() {
-  docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
-    mongodb://localhost:27017/agilityhub_e1_web --eval '
-      const result = db.accounts.updateOne(
-        {email: "admin@example.test"},
-        {$set: {platformRoles: ["AGILITYHUB_ADMIN"]}}
-      );
-      const account = db.accounts.findOne({email: "admin@example.test"});
-      print(EJSON.stringify({
-        fields: account === null ? [] : Object.keys(account).sort(),
-        matched: result.matchedCount,
-        modified: result.modifiedCount,
-        platformRoles: account?.platformRoles ?? null
-      }));
-      if (result.matchedCount !== 1) { quit(1); }
-    ' | tee "$evidence_directory/e10-platform-role.json"
-}
+# E10-W02 (organizer note E125): no database grant for the E10 stage any more. The demo seed carries
+# the platform account (`platform@example.test`, api E10-T03), and `e10-core.spec.ts` gives the
+# seeded club admin `AGILITYHUB_ADMIN` through the api (`PUT /platform/accounts/{id}/platform-roles`).
 
 run_core_suite() {
   # `run_stage` calls it as `run_core_suite <stage> || …`, which turns `set -e` off in here: a core
   # that does not start stops the stage (its seed log is kept all the same).
   local up_status=0
+  # E10-W02: the console's stage alone seeds the template club (the wizard's «Catàlegs base»);
+  # every other stage keeps the seed it had.
+  if [[ "$CORE_TEST_FILES" == *e10-core* ]]; then
+    export SEED_TEMPLATE_CLUB=1
+  else
+    export SEED_TEMPLATE_CLUB=""
+  fi
   # E8-W04 round 2: a seed that never finishes (attempt 1: two hours at 440 % CPU) fails the stage
   # after 25 minutes instead of holding the host; its log is kept below as for any failure.
   docker compose -f "$compose_file" up -d --wait --wait-timeout 1500 mongo seed core || up_status=$?
@@ -228,9 +223,6 @@ run_core_suite() {
   fi
   if [[ "$CORE_TEST_FILES" == *e8-core* ]]; then
     check_e8_seed_totals "$1" || return $?
-  fi
-  if [[ "$CORE_TEST_FILES" == *e10-core* ]]; then
-    grant_platform_admin || return $?
   fi
   # E4-W16 round 2: `--no-deps`, because the stack is already up and seeded. Without it `run` walks
   # `depends_on` (core → activate-demo-club → seed) and starts the exited seed again next to the
@@ -544,8 +536,9 @@ if [[ "$staged" == true ]]; then
   export SEED_WEEK_START="$E4_WEEK_START"
   run_stage e9
   cleanup
-  # E10-W01: S17's club console (list, one record tab, the «Nou club» wizard) on its own fresh
-  # seed, with the platform role granted by `grant_platform_admin`.
+  # E10-W01/W02: S17's club console on its own fresh seed: the product host's entry, the list, the
+  # record tabs, the «Nou club» wizard, the domains, the support access and the «second club» script
+  # (the platform role granted through the api by the seed's platform account).
   export CORE_TEST_FILES="e10-core.spec.ts"
   export SEED_WEEK_START="$E4_WEEK_START"
   run_stage e10

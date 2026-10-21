@@ -371,6 +371,27 @@ describe("T-01-22 apps/id", () => {
       "https://clubsadmin.agilitydoghub.com/consola/clubs",
     );
   });
+
+  it("E10-W02 step 1: the console card follows VITE_CONSOLE_URL, the deployment's product host (T-17-12)", async () => {
+    vi.stubEnv("VITE_CONSOLE_URL", "http://127.0.0.1:4178/consola/clubs");
+    try {
+      const platformAccount: Me = {
+        account: { ...me.account, platformRoles: ["AGILITYHUB_ADMIN"] },
+        features: [],
+      };
+      const { fetcher } = testFetcher(platformAccount);
+      const client = createClient(fetcher);
+      await client.login("pol.ferrer@example.test", "secret-password");
+      window.history.replaceState(null, "", "/products");
+      await renderApp(client);
+      expect(await screen.findByRole("link", { name: /OBRE LA CONSOLA/u })).toHaveAttribute(
+        "href",
+        "http://127.0.0.1:4178/consola/clubs",
+      );
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
 });
 
 describe("E11-W02 round 2 (INC-41): apps/id's login after a 429, and the magic link's token", () => {

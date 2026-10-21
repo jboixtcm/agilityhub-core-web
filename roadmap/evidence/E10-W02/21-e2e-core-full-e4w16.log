@@ -1,0 +1,62 @@
+heavy.sh: 18:45 waiting for the host lock, held by: 18:44 agilityhub-core-web-c: pnpm e2e:core E11-W02
+heavy.sh: the lock is still held after 45 min by: 19:05 agilityhub-core-web-c: pnpm e2e:core E11-W02
+heavy.sh: running WITHOUT the lock - if this run fails on timeouts, say so in the report
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E10-W02/full e4w16-core.spec.ts
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-17T15:53:06.178739049Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:8cdabb7cf20946057faa5f4dafd38a86d359c19f57b1d12048ad6cba2551e24a]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/club-template-default.yaml (47 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e10-w02-full_default Creating 
+ Volume agilityhub-e10-w02-full_attachment-files Creating 
+ Volume agilityhub-e10-w02-full_attachment-files Creating 
+ Volume agilityhub-e10-w02-full_mailbox Creating 
+ Volume agilityhub-e10-w02-full_mailbox Creating 
+ Network agilityhub-e10-w02-full_default Creating 
+ Volume agilityhub-e10-w02-full_mongo-data Creating 
+ Volume agilityhub-e10-w02-full_mongo-data Creating 
+ Volume agilityhub-e10-w02-full_export-files Creating 
+ Volume agilityhub-e10-w02-full_export-files Creating 
+ Volume agilityhub-e10-w02-full_attachment-files Created 
+ Volume agilityhub-e10-w02-full_attachment-files Created 
+ Volume agilityhub-e10-w02-full_mailbox Created 
+ Volume agilityhub-e10-w02-full_mailbox Created 
+ Volume agilityhub-e10-w02-full_mongo-data Created 
+ Volume agilityhub-e10-w02-full_mongo-data Created 
+ Volume agilityhub-e10-w02-full_export-files Created 
+ Volume agilityhub-e10-w02-full_export-files Created 
+ Network agilityhub-e10-w02-full_default Created 
+ Network agilityhub-e10-w02-full_default Created 
+ Container agilityhub-e10-w02-full-mongo-1 Creating 
+ Container agilityhub-e10-w02-full-mongo-1 Created 
+ Container agilityhub-e10-w02-full-seed-1 Creating 
+ Container agilityhub-e10-w02-full-seed-1 Created 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full-core-1 Creating 
+ Container agilityhub-e10-w02-full-core-1 Created 
+ Container agilityhub-e10-w02-full-mongo-1 Starting 
+ Container agilityhub-e10-w02-full-mongo-1 Started 
+ Container agilityhub-e10-w02-full-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full-seed-1 Starting 
+ Container agilityhub-e10-w02-full-seed-1 Started 
+ Container agilityhub-e10-w02-full-seed-1 Waiting 
+ Container agilityhub-e10-w02-full-seed-1 Exited 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full-core-1 Starting 
+Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint agilityhub-e10-w02-full-core-1 (b5083f9aeb93fe4b2ff86ce245d6a300ebd941ec59d9f575845d04cd5b6934b2): Bind for 127.0.0.1:18080 failed: port is already allocated
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/seed-files.log (200 lines)
+ ELIFECYCLE  Command failed with exit code 1.

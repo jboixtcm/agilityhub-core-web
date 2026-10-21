@@ -1,0 +1,294 @@
+{
+  "branding clubsadmin.example.test": {
+    "body": {
+      "club": {
+        "slug": null,
+        "name": "AgilityHub",
+        "city": null,
+        "legalName": null,
+        "taxId": null,
+        "legalAddress": null
+      },
+      "theme": {
+        "logoUrl": null,
+        "logoDarkUrl": null,
+        "markUrl": null,
+        "colors": {
+          "primary": "#2563EB",
+          "onPrimary": "#FFFFFF",
+          "background": "#F8FAFC",
+          "surface": "#FFFFFF",
+          "surfaceAlt": "#F1F5F9",
+          "text": "#0F172A",
+          "textMuted": "#475569",
+          "border": "#CBD5E1",
+          "success": "#15803D",
+          "warning": "#A16207",
+          "danger": "#B91C1C",
+          "info": "#0369A1"
+        },
+        "fontFamily": "system-ui",
+        "radius": "8px",
+        "ringPalette": [],
+        "mode": "light"
+      },
+      "locales": [
+        "ca",
+        "es",
+        "en"
+      ],
+      "defaultLocale": "ca",
+      "timeZone": "Europe/Madrid",
+      "currency": "EUR",
+      "countryProfile": {
+        "code": "GENERIC",
+        "idDocumentTypes": [
+          "PASSPORT",
+          "OTHER"
+        ],
+        "phonePrefix": ""
+      },
+      "modules": [],
+      "signup": {
+        "enabled": false
+      },
+      "status": "ACTIVE",
+      "legal": {
+        "privacyPolicyUrl": "https://id.agilitydoghub.com/privacy"
+      },
+      "pushPublicKey": null
+    },
+    "status": 200
+  },
+  "branding id.example.test": {
+    "body": {
+      "club": {
+        "slug": null,
+        "name": "AgilityHub",
+        "city": null,
+        "legalName": null,
+        "taxId": null,
+        "legalAddress": null
+      },
+      "theme": {
+        "logoUrl": null,
+        "logoDarkUrl": null,
+        "markUrl": null,
+        "colors": {
+          "primary": "#2563EB",
+          "onPrimary": "#FFFFFF",
+          "background": "#F8FAFC",
+          "surface": "#FFFFFF",
+          "surfaceAlt": "#F1F5F9",
+          "text": "#0F172A",
+          "textMuted": "#475569",
+          "border": "#CBD5E1",
+          "success": "#15803D",
+          "warning": "#A16207",
+          "danger": "#B91C1C",
+          "info": "#0369A1"
+        },
+        "fontFamily": "system-ui",
+        "radius": "8px",
+        "ringPalette": [],
+        "mode": "light"
+      },
+      "locales": [
+        "ca",
+        "es",
+        "en"
+      ],
+      "defaultLocale": "ca",
+      "timeZone": "Europe/Madrid",
+      "currency": "EUR",
+      "countryProfile": {
+        "code": "GENERIC",
+        "idDocumentTypes": [
+          "PASSPORT",
+          "OTHER"
+        ],
+        "phonePrefix": ""
+      },
+      "modules": [],
+      "signup": {
+        "enabled": false
+      },
+      "status": "ACTIVE",
+      "legal": {
+        "privacyPolicyUrl": "https://id.agilitydoghub.com/privacy"
+      },
+      "pushPublicKey": null
+    },
+    "status": 200
+  },
+  "branding unknown.example.test": {
+    "body": {
+      "code": "UNKNOWN_HOST",
+      "message": "No hi ha cap club associat a aquest domini.",
+      "details": {},
+      "traceId": "ee48cff3-9541-47d7-87d2-204ac6a6432f"
+    },
+    "status": 404
+  },
+  "token clubs-admin platform@example.test @ clubsadmin.example.test": {
+    "body": {
+      "code": "UNKNOWN_HOST",
+      "message": "No hi ha cap club associat a aquest domini.",
+      "details": {},
+      "traceId": "568324d3-b697-4cc7-a231-462ced00dbbb"
+    },
+    "claims": null,
+    "cookies": [],
+    "status": 404,
+    "usage": {}
+  },
+  "token id-web platform@example.test @ clubsadmin.example.test": {
+    "body": {
+      "code": "UNKNOWN_HOST",
+      "message": "No hi ha cap club associat a aquest domini.",
+      "details": {},
+      "traceId": "2b76c619-20ae-4059-ac58-bef50133b3c1"
+    },
+    "claims": null,
+    "cookies": [],
+    "status": 404,
+    "usage": {}
+  },
+  "token id-web platform@example.test @ id.example.test": {
+    "body": {
+      "keys": [
+        "access_token",
+        "expires_in",
+        "scope",
+        "token_type"
+      ]
+    },
+    "claims": {
+      "sub": "(set)",
+      "iss": "https://id.example.test",
+      "locale": "ca",
+      "sid": "(set)",
+      "aud": "id-web",
+      "platformRoles": [
+        "AGILITYHUB_ADMIN"
+      ],
+      "azp": "id-web",
+      "scope": "",
+      "auth_time": 1792594863,
+      "name": "Pat Plataforma Example",
+      "exp": 1792595763,
+      "iat": 1792594863,
+      "jti": "(set)",
+      "email": "platform@example.test"
+    },
+    "cookies": [
+      "ah_refresh(Path=/oauth2/token; Max-Age=2592000; Expires=Fri, 20 Nov 2026 15:01:03 GMT; HttpOnly; SameSite=Strict)"
+    ],
+    "status": 200,
+    "usage": {
+      "me @ id.example.test": {
+        "account": {
+          "platformRoles": [
+            "AGILITYHUB_ADMIN"
+          ]
+        },
+        "keys": [
+          "account",
+          "features"
+        ],
+        "membership": null,
+        "profiles": null,
+        "status": 200
+      },
+      "platform/clubs @ id.example.test": {
+        "code": null,
+        "items": 3,
+        "status": 200
+      },
+      "me @ clubsadmin.example.test": {
+        "account": {
+          "platformRoles": [
+            "AGILITYHUB_ADMIN"
+          ]
+        },
+        "keys": [
+          "account",
+          "features"
+        ],
+        "membership": null,
+        "profiles": null,
+        "status": 200
+      },
+      "platform/clubs @ clubsadmin.example.test": {
+        "code": null,
+        "items": 3,
+        "status": 200
+      },
+      "me @ admin.example.test": {
+        "account": null,
+        "keys": [
+          "code",
+          "details",
+          "message",
+          "traceId"
+        ],
+        "membership": null,
+        "profiles": null,
+        "status": 403
+      },
+      "platform/clubs @ admin.example.test": {
+        "code": null,
+        "items": 3,
+        "status": 200
+      }
+    }
+  },
+  "token clubs-admin platform@example.test @ id.example.test": {
+    "body": {
+      "code": "UNKNOWN_HOST",
+      "message": "No hi ha cap club associat a aquest domini.",
+      "details": {},
+      "traceId": "a1d675b6-c3fa-4a29-b2a1-27a3aff3a94d"
+    },
+    "claims": null,
+    "cookies": [],
+    "status": 404,
+    "usage": {}
+  },
+  "token clubs-admin platform@example.test @ admin.example.test": {
+    "body": {
+      "code": "NO_MEMBERSHIP",
+      "message": "El compte no té accés a aquest club.",
+      "details": {},
+      "traceId": "0027c9fb-79a2-4394-9ce3-b811f16ddbd7"
+    },
+    "claims": null,
+    "cookies": [],
+    "status": 403,
+    "usage": {}
+  },
+  "token clubs-admin admin@example.test @ clubsadmin.example.test": {
+    "body": {
+      "code": "UNKNOWN_HOST",
+      "message": "No hi ha cap club associat a aquest domini.",
+      "details": {},
+      "traceId": "b4214e3a-d211-45e3-aa91-8a6e0344a2a5"
+    },
+    "claims": null,
+    "cookies": [],
+    "status": 404,
+    "usage": {}
+  },
+  "token clubs-admin member@example.test @ clubsadmin.example.test": {
+    "body": {
+      "code": "UNKNOWN_HOST",
+      "message": "No hi ha cap club associat a aquest domini.",
+      "details": {},
+      "traceId": "73476916-6dc4-48e2-af53-230a74e485aa"
+    },
+    "claims": null,
+    "cookies": [],
+    "status": 404,
+    "usage": {}
+  }
+}

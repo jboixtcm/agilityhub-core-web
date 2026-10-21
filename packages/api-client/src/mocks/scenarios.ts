@@ -4,6 +4,7 @@ import type { AttendanceVariant } from "./fixtures/attendance";
 import type { BillingVariant } from "./fixtures/billing";
 import brandingCanic from "./fixtures/branding-canic.json";
 import brandingMinim from "./fixtures/branding-minim.json";
+import brandingProduct from "./fixtures/branding-product.json";
 import type { FollowupVariant, HistoryVariant, InboxVariant } from "./fixtures/followup";
 import meAdmin from "./fixtures/me-admin.json";
 import meImpersonated from "./fixtures/me-impersonated.json";
@@ -156,12 +157,11 @@ export function supportMe(expiresAt: string): Me {
   };
 }
 
-const productBranding: Branding = {
-  ...minimal,
-  club: { ...minimal.club, name: "AgilityHub", slug: "agilityhub" },
-  locales: ["ca", "es", "en"],
-  modules: [],
-};
+/**
+ * E10-W02: `GET /branding` on the product host as the core answers it (E10-T04, recorded by the
+ * real-core stage): `club.slug` and the club's identity `null`, the product's theme, no module.
+ */
+const productBranding = brandingProduct as Branding;
 
 const scenarios = {
   /** D19 on the product host, light (the product's own theme). */

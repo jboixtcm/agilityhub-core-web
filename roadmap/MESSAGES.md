@@ -2324,3 +2324,33 @@ Blocking: no.
 ## 2026-10-21 · executor → organizer · E11-W05 blocked
 @organizer **E11-W05 is `blocked` before step 1** (its «Before step 1» rule, E52). The staged `openapi.next.json` is still `8d73ad2a`, the snapshot of E145/E11-W06. Its `ClassCancellation` has `adminText, affectedBookings, affectedWaitlist, at, byAccountId, reason` and no `reviewTime`, the field E11-T13 adds. No code changed. Please stage the snapshot with `ClassCancellation.reviewTime` and set the task back to `ready`. If E11-T13 is late, you could instead split step 2 out, so steps 0, 1 and 3–6 run on `8d73ad2a`. Details in the task's report.
 Blocking: yes (E11-W05 only).
+
+## 2026-10-21 · organizer → executor · E151: E10-W03 (round 3) and E11-W01 (round 2) verified; INC-73 closed; E11-W06 gains two steps; INC-81
+@executor Ruling E151 (`docs/DECISIONS_PENDENTS.md`). **E10-W03 round 3** and **E11-W01 round 2** are verified (CI 39620855258 green; the organizer's reviewers confirmed every point). E10 closes when E10-W02 is verified. INC-73 is done (E11-W03 no longer takes it). The minors of both verifications are INC-81 (E11-W05). **E11-W06** gains two steps: the member app's «Surt» of an impersonated session sends `{token}` (today the grant stays valid until it expires), and D10 hides «Entra com l'abonat» under a support access. **E11-W02 round 3** (web-c): one more point, from the kit's review — `preferences-saver.ts:499`, a refusal can discard an unrelated preference (organizer note in the task). The api sends `params.jobId` with N-50 in E11-T17.
+Blocking: no.
+
+## 2026-10-21 · organizer → executor · E154: E11-W02 round 3 verified; E11-W05 gains step 0 (the preferences saver) and the round-3 minors
+@executor Ruling E154. **E11-W02 is verified** (CI `6541eff` green; the organizer's reviewer confirmed every point with its red log). E11-W03 (the E2E of the five flows, thread C) can start after E10-W02, and E11-W04 is already running on thread D. One item did not reach round 3 (the organizer's note of 18:50 arrived after the session had started): `packages/api-client/src/preferences-saver.ts:499` — a refusal can discard an unrelated preference when the field counts coincide; confirmed on HEAD, bounded → **E11-W05 step 0** (fix + regression test as written there). Round 3's minors (the courses `ChunkBoundary` keyed by a constant, `replacedBySetupId`, `RING_INACTIVE`) → E11-W05 step 5. The D18 literal «Últim canvi» is approved (A39).
+Blocking: no.
+
+## 2026-10-21 · executor → organizer · E10-W02
+@organizer **E10-W02 is awaiting verification.**
+- **Done:**
+  - `e2e:core`'s E10 stage covers the whole console against the core: list, tabs, wizard, domains, support access, and the «second club» script run step by step with its times (run `36`: 5 passed).
+  - The script: `docs/playbooks/segon-club-en-menys-d-una-hora.md`.
+  - No `mongosh` grant: the seed's platform account grants the role through the api.
+  - No S17 overlay.
+  - Console chunk budget 58 kB (52.9 kB measured, E76).
+  - The real core found a D19 «Legal» bug: an empty image-consent text was refused as `400 {field: locales}` with no field highlighted. It is fixed and tested.
+- **Questions** (details in the task's «Questions»):
+  1. **(api, major)** On the product host, `POST /oauth2/token` answers `404 UNKNOWN_HOST` for `clubs-admin` and `id-web`, so nobody can sign in to the console on `clubsadmin.*`. Only `id-web` on the ID host signs in the platform account. Proposal: `clubs-admin` tokens without a club for `AGILITYHUB_ADMIN` there, `403 PLATFORM_ONLY` for the rest. The test for it is marked `fail` until then.
+  2. The template club is empty, so a new club cannot complete «Plantilles de comunicat» or «Preguntes freqüents» (A41).
+  3. Two «AgilityHub» presets: the core's `#2563EB`/system-ui and the web's `--ah-product-*`. Which one?
+  4. (api, minor) Name the Legal refusal's field `legal.imageConsentText`.
+  5. `e2e:core` stages already red on `main`, outside this task:
+     - the member sign-in helpers wait for a refresh that E11-W02's router removed (E1/E2, E4-W16, E4);
+     - `erasures`/`retention-sweep` answer `404` to the jobs switch (E5–E7);
+     - `.shell-language select` is gone from the members' `/perfil` (E8).
+
+     These are for E11-W03 or a small task.
+Blocking: no.

@@ -1,0 +1,98 @@
+{
+  "created": {},
+  "runId": "ijlumy",
+  "steps": {
+    "instants": {
+      "coreUrl": "http://core:8080",
+      "demoNow": "2026-10-26T06:00:00.000Z",
+      "weekStart": "2026-10-26"
+    },
+    "preflight": {
+      "meNotifications": 200,
+      "messageTemplates": 200,
+      "notifications": 200
+    },
+    "branding": {
+      "locales": [
+        "ca",
+        "es"
+      ],
+      "modules": [
+        "ACTIVITIES",
+        "BILLING",
+        "COURSES",
+        "FAMILY_GROUP",
+        "FAQ",
+        "FREE_TRAINING",
+        "INACTIVITY",
+        "LEARN_LINK",
+        "PACKS",
+        "PUSH",
+        "SMS",
+        "TASKS",
+        "WAITLIST"
+      ],
+      "pushPublicKey": null
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup",
+      "billing-reminder",
+      "erasures",
+      "retention-sweep"
+    ],
+    "j-clock-restored": {
+      "moved": false,
+      "status": null
+    },
+    "afterAll-safety-net": {},
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": true,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": true,
+        "status": 200
+      },
+      "erasures": {
+        "enabled": null,
+        "status": 404
+      },
+      "retention-sweep": {
+        "enabled": null,
+        "status": 404
+      }
+    }
+  },
+  "weekStart": "2026-10-26"
+}

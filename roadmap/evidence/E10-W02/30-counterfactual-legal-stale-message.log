@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (24 tests | 1 failed | 22 skipped) 192ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (24)
+     × E10-W02 T-17-12 Legal: the core's VALIDATION_ERROR {field: locales} lands on the default language's image-consent text 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E10-W02 T-17-12 Legal: the core's VALIDATION_ERROR {field: locales} lands on the default language's image-consent text
+Error: [2mexpect([22m[31melement[39m[2m).not.toHaveAccessibleDescription()[22m
+
+Expected element not to have accessible description:
+[32m  Aquest camp és obligatori.[39m
+Received:
+[31m  Aquest camp és obligatori.[39m
+ ❯ src/console/ClubRecordPage.test.tsx:578:22
+    576|     // The answer was about the text it sent: once the user changes it…
+    577|     fireEvent.change(text, { target: { value: "Autoritzo les fotos del…
+    578|     expect(text).not.toHaveAccessibleDescription("Aquest camp és oblig…
+       |                      ^
+    579|   });
+    580|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 22 skipped (24)
+   Start at  21:34:57
+   Duration  1.68s (transform 51%, environment 18%, import 15%, tests 12%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/console/ClubRecordPage.test.tsx -t E10-W02

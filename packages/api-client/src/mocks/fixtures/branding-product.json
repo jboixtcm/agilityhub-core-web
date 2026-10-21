@@ -1,0 +1,51 @@
+{
+  "club": {
+    "slug": null,
+    "name": "AgilityHub",
+    "city": null,
+    "legalName": null,
+    "taxId": null,
+    "legalAddress": null
+  },
+  "theme": {
+    "logoUrl": null,
+    "logoDarkUrl": null,
+    "markUrl": null,
+    "colors": {
+      "primary": "#2563EB",
+      "onPrimary": "#FFFFFF",
+      "background": "#F8FAFC",
+      "surface": "#FFFFFF",
+      "surfaceAlt": "#F1F5F9",
+      "text": "#0F172A",
+      "textMuted": "#475569",
+      "border": "#CBD5E1",
+      "success": "#15803D",
+      "warning": "#A16207",
+      "danger": "#B91C1C",
+      "info": "#0369A1"
+    },
+    "fontFamily": "system-ui",
+    "radius": "8px",
+    "ringPalette": [],
+    "mode": "light"
+  },
+  "locales": ["ca", "es", "en"],
+  "defaultLocale": "ca",
+  "timeZone": "Europe/Madrid",
+  "currency": "EUR",
+  "countryProfile": {
+    "code": "GENERIC",
+    "idDocumentTypes": ["PASSPORT", "OTHER"],
+    "phonePrefix": ""
+  },
+  "modules": [],
+  "signup": {
+    "enabled": false
+  },
+  "status": "ACTIVE",
+  "legal": {
+    "privacyPolicyUrl": "https://id.agilitydoghub.com/privacy"
+  },
+  "pushPublicKey": null
+}

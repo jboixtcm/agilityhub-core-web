@@ -1,3 +1,4 @@
+import { apiFieldErrors } from "@agilityhub/api-client";
 import { Button, FormField, Input, Modal, Textarea } from "@agilityhub/ui";
 import { type SyntheticEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -47,8 +48,32 @@ export function LegalTab({ client, club, onReload, onReplace }: ConsoleTabProps)
   const [newVersion, setNewVersion] = useState("");
   const fields = fieldErrorMap(t, write.error, { prefix: "legal." });
   const { draft } = form;
+  const defaultText = (draft.imageConsentText[club.defaultLocale] ?? "").trim();
+  // Asked for once a save found it empty; typing it clears the message.
+  const [defaultTextAsked, setDefaultTextAsked] = useState(false);
+  // The default language's text the last save sent.
+  const [sentDefaultText, setSentDefaultText] = useState<string>();
+  // E10-W02: the core refuses a `legal` without the image-consent text in the club's default
+  // language as `VALIDATION_ERROR {field: "locales"}` (a LocalizedText needs its `defaultLocale`,
+  // CONVENCIONS_I18N), a field this form does not have: it is shown on that text until it changes.
+  const defaultMissing =
+    (defaultTextAsked && defaultText === "") ||
+    (sentDefaultText === defaultText &&
+      apiFieldErrors(write.error).some((entry) => entry.field === "locales"));
+  const imageTextError =
+    locale === club.defaultLocale && defaultMissing
+      ? t("console:fieldErrors.REQUIRED")
+      : fields[`imageConsentText.${locale}`];
 
   const save = async (legalTextsVersion: string) => {
+    if (defaultText === "") {
+      // CONVENCIONS_I18N: a LocalizedText needs the club's default language; the form says so on
+      // that text before sending anything.
+      setDefaultTextAsked(true);
+      setLocale(club.defaultLocale);
+      return;
+    }
+    setSentDefaultText(defaultText);
     const legal = {
       imageConsentText: Object.fromEntries(
         club.locales.flatMap((candidate) => {
@@ -98,9 +123,7 @@ export function LegalTab({ client, club, onReload, onReplace }: ConsoleTabProps)
           <FormField
             id="console-legal-image"
             label={t("console:legal.imageConsentText", { locale: t(`console:locales.${locale}`) })}
-            {...(fields[`imageConsentText.${locale}`] === undefined
-              ? {}
-              : { error: fields[`imageConsentText.${locale}`] ?? "" })}
+            {...(imageTextError === undefined ? {} : { error: imageTextError })}
           >
             <Textarea
               id="console-legal-image"

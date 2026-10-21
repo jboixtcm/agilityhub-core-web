@@ -193,6 +193,33 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
     expect(data).toMatchObject({ displayCity: "Vilassar", version: current.version + 1 });
   });
 
+  it("E10-W02 T-17-12: a `legal` without the image-consent text in the club's default language is the core's 400 VALIDATION_ERROR {field: locales}", async () => {
+    const current = await club(minim);
+    const legal = {
+      legalTextsVersion: "2026-10-21",
+      privacyPolicyUrl: "https://minim.example.test/privacitat",
+    };
+    expect(
+      await failure(
+        client.PATCH("/platform/clubs/{id}", {
+          body: {
+            legal: { ...legal, imageConsentText: { es: "Autorizo las fotos." } },
+            version: current.version,
+          },
+          params: { path: { id: minim } },
+        }),
+      ),
+    ).toEqual({ code: "VALIDATION_ERROR", details: { field: "locales" }, status: 400 });
+    const { data } = await client.PATCH("/platform/clubs/{id}", {
+      body: {
+        legal: { ...legal, imageConsentText: { ca: "Autoritzo les fotos." } },
+        version: current.version,
+      },
+      params: { path: { id: minim } },
+    });
+    expect(data?.legal).toMatchObject({ imageConsentText: { ca: "Autoritzo les fotos." } });
+  });
+
   it("modules: dependencies are 422 MODULE_DEPENDENCY {module, requires}; a preset enables its list", async () => {
     const current = await club(minim);
     expect(

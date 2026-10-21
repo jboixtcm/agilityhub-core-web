@@ -1,0 +1,63 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/fixtures.contract.test.ts (86 tests | 2 failed) 992ms
+   ❯ T-01-25 OpenAPI mock fixture contract (16)
+     × maps every JSON fixture to an authoritative component schema 5ms
+     × validates branding-product.json 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > maps every JSON fixture to an authoritative component schema
+AssertionError: expected [ 'audit-entries.json', …(14) ] to deeply equal [ 'audit-entries.json', …(13) ]
+
+- Expected
++ Received
+
+@@ -1,9 +1,10 @@
+  [
+    "audit-entries.json",
+    "branding-canic.json",
+    "branding-minim.json",
++   "branding-product.json",
+    "club-pages.json",
+    "dashboard.json",
+    "export-jobs.json",
+    "me-admin.json",
+    "me-impersonated.json",
+
+ ❯ src/mocks/fixtures.contract.test.ts:171:26
+    169|
+    170|   it("maps every JSON fixture to an authoritative component schema", (…
+    171|     expect(fixtureFiles).toEqual(Object.keys(schemasByFixture).sort());
+       |                          ^
+    172|   });
+    173|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/fixtures.contract.test.ts > T-01-25 OpenAPI mock fixture contract > validates branding-product.json
+TypeError: No component schema is mapped for branding-product.json
+ ❯ src/mocks/fixtures.contract.test.ts:177:13
+    175|     const fixtureSchema = schemasByFixture[fixtureFile];
+    176|     if (fixtureSchema === undefined) {
+    177|       throw new TypeError(`No component schema is mapped for ${fixture…
+       |             ^
+    178|     }
+    179|     const ajv = new Ajv2020({ allErrors: true, strict: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 24 passed (25)
+      Tests  2 failed | 617 passed (619)
+   Start at  17:48:38
+   Duration  5.83s (tests 43%, transform 29%, import 27%)
+
+  Transform  transforming modules took 10.58s · 29% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks

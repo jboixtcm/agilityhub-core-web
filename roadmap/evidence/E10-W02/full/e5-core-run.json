@@ -1,0 +1,116 @@
+{
+  "created": {},
+  "demoNow": "2026-10-26T06:00:00.000Z",
+  "runId": "ijhoyb",
+  "steps": {
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup",
+      "billing-reminder",
+      "erasures",
+      "retention-sweep"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": false,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": false,
+        "status": 200
+      },
+      "erasures": {
+        "enabled": null,
+        "status": 404
+      },
+      "retention-sweep": {
+        "enabled": null,
+        "status": 404
+      }
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": true,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": true,
+        "status": 200
+      },
+      "erasures": {
+        "enabled": null,
+        "status": 404
+      },
+      "retention-sweep": {
+        "enabled": null,
+        "status": 404
+      }
+    },
+    "clock-anonymous-2026-10-21T20:03:14.090Z": {
+      "body": {
+        "now": "2026-10-21T20:03:14.090022459Z"
+      },
+      "status": 200
+    },
+    "clock-restored": {
+      "body": {
+        "now": "2026-10-21T20:03:14.090022459Z"
+      },
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-26"
+}

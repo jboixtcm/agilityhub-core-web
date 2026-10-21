@@ -741,6 +741,14 @@ export const consoleHandlers = [
     if (body.version !== club.version) return stale();
     // `legal: null` is refused (PlatformClubPatch: omit it to keep the current texts).
     if ("legal" in raw && raw.legal === null) return fieldError("legal");
+    // E10-W02: the core refuses a `legal` whose image-consent text lacks the club's default
+    // language (a LocalizedText needs its `defaultLocale`) with `details.field = "locales"`.
+    if (
+      body.legal !== undefined &&
+      (body.legal.imageConsentText[body.defaultLocale ?? club.defaultLocale] ?? "").trim() === ""
+    ) {
+      return apiError("VALIDATION_ERROR", "Validation failed", 400, { field: "locales" });
+    }
     if (body.name?.trim() === "") return fieldError("name", "REQUIRED");
     if (
       typeof body.contactEmail === "string" &&

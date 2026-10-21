@@ -1,0 +1,58 @@
+{
+  "runId": "ijap35",
+  "weekStart": "2026-10-19",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "body": {
+      "saturdayTemplateId": "506cca1d-66a5-42d4-aba3-84afca687f05",
+      "weekdayTemplateId": "b000b439-317f-4252-bfbb-4861d8a8f81f"
+    },
+    "status": 200,
+    "weekId": "147aa2db-824e-4ceb-b2fc-2f3c80232f48",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-11-09"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ],
+  "validation": {
+    "draftCount": 38,
+    "week": "2026-10-26"
+  },
+  "classCancellation": {
+    "status": 200,
+    "reason": "DELETED",
+    "adminText": "Integració E4 ijap35: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "e3ee2954-fa50-4e29-a39f-ac055ab4cfaa",
+    "at": "2026-10-21T19:57:49.036Z",
+    "affectedBookings": 4,
+    "affectedWaitlist": 2
+  },
+  "ringBlockConflict": {
+    "status": 409,
+    "code": "RING_BLOCK_CONFLICT",
+    "message": "L'horari coincideix amb un bloqueig de pista.",
+    "details": {
+      "conflicts": [
+        {
+          "ringId": "cb29180a-0bd2-4408-982f-41d3c300c99c",
+          "type": "CLASS",
+          "id": "0d77f626-ad94-4a60-8034-1563cf1fc82f",
+          "from": "2026-11-04T19:00:00Z",
+          "to": "2026-11-04T20:00:00Z",
+          "label": "Obed. urbana",
+          "bookedCount": 0
+        }
+      ]
+    },
+    "traceId": "ff15b67f-92fd-4683-aef7-af41b30c14dc"
+  },
+  "ringBlock": {
+    "id": "ec4e7f17-48f2-4ba2-8a93-a93becd4f01e",
+    "status": 201
+  }
+}

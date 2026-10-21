@@ -1,0 +1,223 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E10-W02 e10-core.spec.ts
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-17T15:53:06.178739049Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:8cdabb7cf20946057faa5f4dafd38a86d359c19f57b1d12048ad6cba2551e24a]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e10-w02_default Creating 
+ Volume agilityhub-e10-w02_mongo-data Creating 
+ Volume agilityhub-e10-w02_mongo-data Creating 
+ Volume agilityhub-e10-w02_attachment-files Creating 
+ Volume agilityhub-e10-w02_attachment-files Creating 
+ Volume agilityhub-e10-w02_mailbox Creating 
+ Volume agilityhub-e10-w02_mailbox Creating 
+ Network agilityhub-e10-w02_default Creating 
+ Volume agilityhub-e10-w02_export-files Creating 
+ Volume agilityhub-e10-w02_export-files Creating 
+ Volume agilityhub-e10-w02_export-files Created 
+ Volume agilityhub-e10-w02_export-files Created 
+ Volume agilityhub-e10-w02_mailbox Created 
+ Volume agilityhub-e10-w02_mailbox Created 
+ Volume agilityhub-e10-w02_attachment-files Created 
+ Volume agilityhub-e10-w02_attachment-files Created 
+ Volume agilityhub-e10-w02_mongo-data Created 
+ Volume agilityhub-e10-w02_mongo-data Created 
+ Network agilityhub-e10-w02_default Created 
+ Network agilityhub-e10-w02_default Created 
+ Container agilityhub-e10-w02-mongo-1 Creating 
+ Container agilityhub-e10-w02-mongo-1 Created 
+ Container agilityhub-e10-w02-seed-1 Creating 
+ Container agilityhub-e10-w02-seed-1 Created 
+ Container agilityhub-e10-w02-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-core-1 Creating 
+ Container agilityhub-e10-w02-core-1 Created 
+ Container agilityhub-e10-w02-mongo-1 Starting 
+ Container agilityhub-e10-w02-mongo-1 Started 
+ Container agilityhub-e10-w02-mongo-1 Waiting 
+ Container agilityhub-e10-w02-mongo-1 Healthy 
+ Container agilityhub-e10-w02-seed-1 Starting 
+ Container agilityhub-e10-w02-seed-1 Started 
+ Container agilityhub-e10-w02-seed-1 Waiting 
+ Container agilityhub-e10-w02-seed-1 Exited 
+ Container agilityhub-e10-w02-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-mongo-1 Waiting 
+ Container agilityhub-e10-w02-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-mongo-1 Healthy 
+ Container agilityhub-e10-w02-core-1 Starting 
+ Container agilityhub-e10-w02-core-1 Started 
+ Container agilityhub-e10-w02-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-core-1 Waiting 
+ Container agilityhub-e10-w02-mongo-1 Waiting 
+ Container agilityhub-e10-w02-seed-1 Waiting 
+ Container agilityhub-e10-w02-seed-1 Exited 
+ Container agilityhub-e10-w02-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-mongo-1 Healthy 
+ Container agilityhub-e10-w02-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/seed-files.log (200 lines)
+ Container agilityhub-e10-w02-playwright-run-7347406eda3f Creating 
+ Container agilityhub-e10-w02-playwright-run-7347406eda3f Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 423, downloaded 0, added 0
+Progress: resolved 858, reused 844, downloaded 0, added 0
+Progress: resolved 858, reused 857, downloaded 0, added 206
+Progress: resolved 858, reused 858, downloaded 0, added 488
+Progress: resolved 858, reused 858, downloaded 0, added 683
+Progress: resolved 858, reused 858, downloaded 0, added 836
+Progress: resolved 858, reused 858, downloaded 0, added 847
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 9.1s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:582) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:677) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:772) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e10-core.spec.ts:305:5 › E10-W02 · the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 §2, R-01-17, T-17-12)
+  1) e2e/core/e10-core.spec.ts:305:5 › E10-W02 · the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 §2, R-01-17, T-17-12) 
+
+    Test timeout of 180000ms exceeded.
+
+    Error: page.waitForURL: Test ended.
+    =========================== logs ===========================
+    waiting for navigation to "http://127.0.0.1:4178/entrar" until "load"
+    ============================================================
+
+      415 |   // The card leads to the console on the product host, which has no session of its own there.
+      416 |   await open.click();
+    > 417 |   await idPage.waitForURL(`${productUrl}/entrar`);
+          |                ^
+      418 |   await expect(idPage.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
+      419 |
+      420 |   writeFileSync(
+        at /work/e2e/core/e10-core.spec.ts:417:16
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-21T15:31:15.116Z grant_type=refresh_token status=400 cookie=none context=w0c1 page=127.0.0.1:4178/consola/clubs started=2026-10-21T15:31:15.111Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E10-...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e10-core-E10-W02-·-the-con-f38bc-ost-S17-§2-R-01-17-T-17-12-/error-context.md
+
+    Error Context: test-results/core-e1/e10-core-E10-W02-·-the-con-f38bc-ost-S17-§2-R-01-17-T-17-12-/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e10-core-E10-W02-·-the-con-f38bc-ost-S17-§2-R-01-17-T-17-12-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e10-core-E10-W02-·-the-con-f38bc-ost-S17-§2-R-01-17-T-17-12-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/5] e2e/core/e10-core.spec.ts:428:5 › E10-W02 · the platform account signs in to the console on the product host and lands on D19 (S17 §2 «Entrada») — expected to fail until the api signs a platform account in on a product host
+[3/5] e2e/core/e10-core.spec.ts:465:5 › E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou club» wizard (T-17-12)
+[4/5] e2e/core/e10-core.spec.ts:611:5 › E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice, /branding before and after), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)
+[5/5] e2e/core/e10-core.spec.ts:989:5 › E10-W02 · a second club in under an hour: the manual script, step by step against the core, with its times (T-17-12)
+  2) e2e/core/e10-core.spec.ts:989:5 › E10-W02 · a second club in under an hour: the manual script, step by step against the core, with its times (T-17-12) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 400
+
+      1174 |     const saved = page.waitForResponse(isPlatform("PATCH", /\/api\/v1\/platform\/clubs\/[^/]+$/u));
+      1175 |     await page.getByRole("button", { exact: true, name: "DESA" }).click();
+    > 1176 |     expect((await saved).status()).toBe(200);
+           |                                    ^
+      1177 |     await expect(page.getByText("Canvis desats.")).toBeVisible();
+      1178 |     await screenshot(page, "core-W02-08-legal-1280.png");
+      1179 |   });
+        at /work/e2e/core/e10-core.spec.ts:1176:36
+        at timed (/work/e2e/core/e10-core.spec.ts:999:14)
+        at /work/e2e/core/e10-core.spec.ts:1171:3
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-21T15:34:24.852Z grant_type=refresh_token status=400 cookie=none context=w1c4 page=127.0.0.1:4174/entrar started=2026-10-21T15:34:24.850Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E10-W02 · a...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e10-core-E10-W02-·-a-secon-431c4-ore-with-its-times-T-17-12-/error-context.md
+
+    Error Context: test-results/core-e1/e10-core-E10-W02-·-a-secon-431c4-ore-with-its-times-T-17-12-/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e10-core-E10-W02-·-a-secon-431c4-ore-with-its-times-T-17-12-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e10-core-E10-W02-·-a-secon-431c4-ore-with-its-times-T-17-12-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2 failed
+    e2e/core/e10-core.spec.ts:305:5 › E10-W02 · the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 §2, R-01-17, T-17-12) 
+    e2e/core/e10-core.spec.ts:989:5 › E10-W02 · a second club in under an hour: the manual script, step by step against the core, with its times (T-17-12) 
+  3 passed (3.3m)
+
+ ELIFECYCLE  Command failed with exit code 1.

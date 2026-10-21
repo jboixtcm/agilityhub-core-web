@@ -525,6 +525,59 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     });
   });
 
+  it("E10-W02 T-17-12 Legal: a new club's first save needs the image-consent text in its default language before anything is sent (CONVENCIONS_I18N)", async () => {
+    const patches = captureRequests((method) => method === "PATCH");
+    await openTab(MINIM, "legal");
+    fireEvent.change(screen.getByLabelText("URL de la política de privacitat"), {
+      target: { value: "https://minim.example.test/privacitat" },
+    });
+    // From another language's tab, the save brings the default one back with its message.
+    fireEvent.click(screen.getByRole("tab", { name: "ES" }));
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    const text = await screen.findByLabelText("Text de consentiment d'imatge (Català)");
+    expect(text).toHaveAccessibleDescription("Aquest camp és obligatori.");
+    expect(patches).toHaveLength(0);
+    fireEvent.change(text, { target: { value: "Autoritzo les fotos del meu gos." } });
+    expect(text).not.toHaveAccessibleDescription("Aquest camp és obligatori.");
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    expect(await screen.findByText("Canvis desats.")).toBeInTheDocument();
+    expect(patches[0]?.body).toMatchObject({
+      legal: {
+        imageConsentText: { ca: "Autoritzo les fotos del meu gos." },
+        privacyPolicyUrl: "https://minim.example.test/privacitat",
+      },
+    });
+  });
+
+  it("E10-W02 T-17-12 Legal: the core's VALIDATION_ERROR {field: locales} lands on the default language's image-consent text", async () => {
+    server.use(
+      http.patch(`${API_BASE}/platform/clubs/:id`, () =>
+        HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: { field: "locales" },
+            message: "Les dades de la petició no són vàlides.",
+            traceId: "e10-w02-legal",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await openTab(CANIC, "legal");
+    fireEvent.change(screen.getByLabelText("URL de la política de privacitat"), {
+      target: { value: "https://canic.example.test/privacitat-nova" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    const text = await screen.findByLabelText("Text de consentiment d'imatge (Català)");
+    await waitFor(() => {
+      expect(text).toHaveAccessibleDescription("Aquest camp és obligatori.");
+    });
+    expect(screen.getByText("Reviseu els camps destacats.")).toBeInTheDocument();
+    // The answer was about the text it sent: once the user changes it, the message goes.
+    fireEvent.change(text, { target: { value: "Autoritzo les fotos del meu gos i les meves." } });
+    expect(text).not.toHaveAccessibleDescription("Aquest camp és obligatori.");
+  });
+
   it("E10-W03 #8 (E10-W01 review #3): an unknown tab segment shows Identitat and the address says /identitat", async () => {
     const replaced = vi.spyOn(window.history, "replaceState");
     await openTab(MINIM, "parametres-antics");

@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 11 skipped (13)
+   Start at  21:33:41
+   Duration  764ms (environment 36%, transform 33%, tests 16%, setup 7%, import 7%)
+

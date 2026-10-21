@@ -17,7 +17,9 @@ x-core-environment: &core-environment
   OIDC_CLUBS_APP_LOGOUT_URI: https://app.example.test/
   OIDC_CLUBS_ADMIN_REDIRECT_URI: https://admin.example.test/oidc/callback
   OIDC_CLUBS_ADMIN_LOGOUT_URI: https://admin.example.test/
-  CORS_PLATFORM_HOSTS: id.example.test
+  # E10-W02: the console's product host (S17 §2 «Entrada», `clubsadmin.*` without a club alias) is
+  # a platform host, so its `GET /branding` answers the product's branding (E10-T04).
+  CORS_PLATFORM_HOSTS: id.example.test,clubsadmin.example.test
   SHARED_SCHEDULING_ENABLED: "true"
   BILLING_BANK_KEY: ${BILLING_BANK_KEY:?BILLING_BANK_KEY is required}
   BILLING_SECRETS_KEY: ${BILLING_SECRETS_KEY:?BILLING_SECRETS_KEY is required}
@@ -52,6 +54,8 @@ services:
     environment:
       <<: *core-environment
       SEED_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
+      # E10-W02: `1` for the console's stage only (`e2e-core.sh`), which applies the template club.
+      SEED_TEMPLATE_CLUB: ${SEED_TEMPLATE_CLUB:-}
     entrypoint: [/bin/sh, -ec]
     working_dir: /app
     command:
@@ -59,6 +63,9 @@ services:
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-canic.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-fifo.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
+        if [ "$${SEED_TEMPLATE_CLUB}" = "1" ]; then
+          java -jar /app/app.jar --core.command=club:apply /app/seeds/club-template-default.yaml
+        fi
         java -jar /app/app.jar --core.command=seed:demo --club=canic --seed=42 --week-start=${SEED_WEEK_START:-${E4_WEEK_START:?E4_WEEK_START is required}}
         java -jar /app/app.jar --core.command=seed:demo --club=fifo --seed=42 --week-start=${SEED_WEEK_START:-${E4_WEEK_START:?E4_WEEK_START is required}}
     volumes:

@@ -1,0 +1,35 @@
+{
+  "platform boot url": "http://127.0.0.1:4178/entrar",
+  "platform boot text": "Accés al backoffice\nCorreu electrònic\nEnvia'm l'enllaç\nTinc contrasenya",
+  "platform after login url": "http://127.0.0.1:4178/entrar",
+  "platform after login text": "Accés al backoffice\nCorreu electrònic\nEnvia'm l'enllaç\nContrasenya\nENTRA\n\nNo s'ha pogut completar l'accés. Torna-ho a provar.",
+  "platform calls": [
+    "GET /api/v1/branding → 200",
+    "POST /oauth2/token → 400",
+    "GET /api/v1/branding → 200",
+    "POST /oauth2/token → 400",
+    "POST /oauth2/token → 404"
+  ],
+  "club-admin boot url": "http://127.0.0.1:4178/entrar",
+  "club-admin boot text": "Accés al backoffice\nCorreu electrònic\nEnvia'm l'enllaç\nTinc contrasenya",
+  "club-admin after login url": "http://127.0.0.1:4178/entrar",
+  "club-admin after login text": "Accés al backoffice\nCorreu electrònic\nEnvia'm l'enllaç\nContrasenya\nENTRA\n\nNo s'ha pogut completar l'accés. Torna-ho a provar.",
+  "club-admin calls": [
+    "GET /api/v1/branding → 200",
+    "POST /oauth2/token → 400",
+    "GET /api/v1/branding → 200",
+    "POST /oauth2/token → 400",
+    "POST /oauth2/token → 404"
+  ],
+  "id after login url": "http://127.0.0.1:4175/account",
+  "id products text": "AH\nAgilityHub ID\nUN COMPTE, TOTS ELS PRODUCTES\nProductes\nCompte\nTanca la sessió\nIdioma\nCatalà\nCastellà\nAnglès\nEls teus productes\n\nEntra als productes AgilityHub vinculats al teu compte.\n\nAgilityHub Learn\n\nAprèn, practica i avança amb continguts d'agility.\n\nOBRE LEARN\nAgilityHub Clubs\n\nAccedeix als clubs on tens una pertinença activa.\n\nOBRE CLUBS\nConsola de clubs\n\nCrea i governa els clubs de la plataforma. Només per a l'equip AgilityHub.\n\nOBRE LA CONSOLA\nAccés segur amb AgilityHub ID",
+  "id console links": [
+    "/products",
+    "/products",
+    "/account",
+    "/logout",
+    "https://learn.agilitydoghub.com",
+    "https://clubs.agilitydoghub.com",
+    "https://clubsadmin.agilitydoghub.com/consola/clubs"
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "notes": {
+    "templates": [
+      "Cap: catàlegs buits",
+      "AgilityHub template · ca, es, en · EUR"
+    ],
+    "created": {
+      "checklist": {
+        "dns": false,
+        "sepa": false,
+        "branding": false,
+        "templates": false,
+        "faq": false,
+        "legal": false,
+        "firstAdmin": false
+      },
+      "keys": [
+        "club",
+        "checklist"
+      ]
+    },
+    "catalogClone": {
+      "body": {
+        "copied": {
+          "LEVELS": 0,
+          "RINGS": 0,
+          "PLANS": 0,
+          "FAQ": 0,
+          "MESSAGE_TEMPLATES": 0
+        },
+        "warnings": []
+      },
+      "request": {
+        "fromClubId": "aa42fe9c-e1dc-4078-bc2b-b7264185b947",
+        "parts": [
+          "LEVELS",
+          "RINGS",
+          "PLANS",
+          "FAQ",
+          "MESSAGE_TEMPLATES"
+        ]
+      },
+      "status": 200
+    },
+    "invitation": {
+      "link": "id.example.test/magic-link?t",
+      "subject": "Invitació per administrar Club Agility Riu Blau"
+    },
+    "firstAdminSignIn": {
+      "code": null,
+      "status": 200
+    },
+    "failedPlatformCalls": [],
+    "checklistBeforeActivation": {
+      "dns": true,
+      "sepa": true,
+      "branding": true,
+      "templates": false,
+      "faq": false,
+      "legal": true,
+      "firstAdmin": true
+    },
+    "totalMinutes": 0.14
+  },
+  "steps": [
+    {
+      "seconds": 1.6,
+      "startedAt": "2026-10-21T19:42:46.500Z",
+      "step": "1 · Entra a la consola"
+    },
+    {
+      "seconds": 0.9,
+      "startedAt": "2026-10-21T19:42:48.128Z",
+      "step": "2 · Assistent «Nou club»"
+    },
+    {
+      "seconds": 0.5,
+      "startedAt": "2026-10-21T19:42:49.055Z",
+      "step": "3 · Dominis: afegeix i verifica"
+    },
+    {
+      "seconds": 0.4,
+      "startedAt": "2026-10-21T19:42:49.537Z",
+      "step": "4 · Tema: logo"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-21T19:42:49.966Z",
+      "step": "5 · Pagaments: SEPA"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-21T19:42:50.198Z",
+      "step": "6 · Legal: privacitat i consentiment d'imatge"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-21T19:42:50.383Z",
+      "step": "7 · Catàlegs base: clona de la plantilla"
+    },
+    {
+      "seconds": 2.1,
+      "startedAt": "2026-10-21T19:42:50.599Z",
+      "step": "8 · Primer administrador: invitació i primer accés"
+    },
+    {
+      "seconds": 1.1,
+      "startedAt": "2026-10-21T19:42:52.651Z",
+      "step": "9 · Revisió de la fitxa"
+    },
+    {
+      "seconds": 0.9,
+      "startedAt": "2026-10-21T19:42:53.790Z",
+      "step": "10 · Checklist i activació"
+    },
+    {
+      "seconds": 0.3,
+      "startedAt": "2026-10-21T19:42:54.653Z",
+      "step": "11 · L'app dels abonats al domini del club"
+    }
+  ],
+  "totalSeconds": 8
+}

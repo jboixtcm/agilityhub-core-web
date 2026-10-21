@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+
+ ❯ src/App.test.tsx (13 tests | 1 failed | 11 skipped) 123ms
+   ❯ T-01-22 apps/id (11)
+     × E10-W02 step 1: the console card follows VITE_CONSOLE_URL, the deployment's product host (T-17-12) 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-22 apps/id > E10-W02 step 1: the console card follows VITE_CONSOLE_URL, the deployment's product host (T-17-12)
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"href"[32m[39m[2m, [22m[32m[32m"http://127.0.0.1:4178/consola/clubs"[32m[39m[2m) // element.getAttribute("href") === "http://127.0.0.1:4178/consola/clubs"[22m
+
+Expected the element to have attribute:
+[32m  href="http://127.0.0.1:4178/consola/clubs"[39m
+Received:
+[31m  href="https://clubsadmin.agilitydoghub.com/consola/clubs"[39m
+ ❯ src/App.test.tsx:387:77
+    385|       window.history.replaceState(null, "", "/products");
+    386|       await renderApp(client);
+    387|       expect(await screen.findByRole("link", { name: /OBRE LA CONSOLA/…
+       |                                                                             ^
+    388|         "href",
+    389|         "http://127.0.0.1:4178/consola/clubs",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 11 skipped (13)
+   Start at  21:33:38
+   Duration  1.08s (environment 43%, transform 27%, tests 12%, setup 11%, import 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E10-W0

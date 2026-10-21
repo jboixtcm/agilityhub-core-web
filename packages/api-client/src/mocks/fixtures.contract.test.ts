@@ -108,6 +108,10 @@ const schemasByFixture: Readonly<Record<string, AnySchema>> = {
   "branding-minim.json": {
     $ref: `${openapiSchemaId}#/components/schemas/BrandingResponse`,
   },
+  // E10-W02: the product host's `GET /branding`, as the core answers it (S17 §2 «Entrada»).
+  "branding-product.json": {
+    $ref: `${openapiSchemaId}#/components/schemas/BrandingResponse`,
+  },
   "club-pages.json": {
     items: { $ref: `${openapiSchemaId}#/components/schemas/ClubPage` },
     type: "array",

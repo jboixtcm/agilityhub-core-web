@@ -1,0 +1,150 @@
+{
+  "created": {},
+  "runId": "ijjmai",
+  "steps": {
+    "instants": {
+      "finished": "2026-10-26T08:46:00.000Z",
+      "monday": "2026-10-26T03:00:00.000Z",
+      "nextMorning": "2026-10-27T07:00:00.000Z",
+      "windowClosed": "2026-10-27T23:00:00.000Z"
+    },
+    "preflight": {
+      "followup": 200,
+      "instructorDay": 200
+    },
+    "jobs-listed": {
+      "names": [
+        "week-opening",
+        "risk-review",
+        "no-show-notices",
+        "reminders",
+        "expirations",
+        "class-finishing",
+        "cleanup",
+        "billing-reminder",
+        "erasures",
+        "retention-sweep"
+      ],
+      "reminders": {
+        "counters": [],
+        "enabled": true,
+        "jobName": "REMINDERS",
+        "lastRun": null,
+        "module": null,
+        "nextScheduledForLocal": null,
+        "schedule": {
+          "kind": "CONTINUOUS",
+          "localTime": null,
+          "dayOfWeek": null,
+          "dayOfMonth": null
+        }
+      }
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup",
+      "billing-reminder",
+      "erasures",
+      "retention-sweep"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": false,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": false,
+        "status": 200
+      },
+      "erasures": {
+        "enabled": null,
+        "status": 404
+      },
+      "retention-sweep": {
+        "enabled": null,
+        "status": 404
+      }
+    },
+    "clock-2026-10-21T20:04:43.362Z": {
+      "body": {
+        "now": "2026-10-21T20:04:43.362039834Z"
+      },
+      "status": 200
+    },
+    "j-clock-restored": {
+      "status": 200
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": true,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": true,
+        "status": 200
+      },
+      "erasures": {
+        "enabled": null,
+        "status": 404
+      },
+      "retention-sweep": {
+        "enabled": null,
+        "status": 404
+      }
+    }
+  },
+  "weekStart": "2026-10-26"
+}

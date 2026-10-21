@@ -1,0 +1,206 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E10-W02/full e5-core.spec.ts
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-17T15:53:06.178739049Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:8cdabb7cf20946057faa5f4dafd38a86d359c19f57b1d12048ad6cba2551e24a]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/club-template-default.yaml (47 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Volume agilityhub-e10-w02-full_mongo-data Creating 
+ Volume agilityhub-e10-w02-full_mongo-data Creating 
+ Volume agilityhub-e10-w02-full_mailbox Creating 
+ Volume agilityhub-e10-w02-full_mailbox Creating 
+ Network agilityhub-e10-w02-full_default Creating 
+ Network agilityhub-e10-w02-full_default Creating 
+ Volume agilityhub-e10-w02-full_export-files Creating 
+ Volume agilityhub-e10-w02-full_export-files Creating 
+ Volume agilityhub-e10-w02-full_attachment-files Creating 
+ Volume agilityhub-e10-w02-full_attachment-files Creating 
+ Volume agilityhub-e10-w02-full_mongo-data Created 
+ Volume agilityhub-e10-w02-full_mongo-data Created 
+ Volume agilityhub-e10-w02-full_export-files Created 
+ Volume agilityhub-e10-w02-full_export-files Created 
+ Volume agilityhub-e10-w02-full_mailbox Created 
+ Volume agilityhub-e10-w02-full_mailbox Created 
+ Volume agilityhub-e10-w02-full_attachment-files Created 
+ Volume agilityhub-e10-w02-full_attachment-files Created 
+ Network agilityhub-e10-w02-full_default Created 
+ Network agilityhub-e10-w02-full_default Created 
+ Container agilityhub-e10-w02-full-mongo-1 Creating 
+ Container agilityhub-e10-w02-full-mongo-1 Created 
+ Container agilityhub-e10-w02-full-seed-1 Creating 
+ Container agilityhub-e10-w02-full-seed-1 Created 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full-core-1 Creating 
+ Container agilityhub-e10-w02-full-core-1 Created 
+ Container agilityhub-e10-w02-full-mongo-1 Starting 
+ Container agilityhub-e10-w02-full-mongo-1 Started 
+ Container agilityhub-e10-w02-full-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full-seed-1 Starting 
+ Container agilityhub-e10-w02-full-seed-1 Started 
+ Container agilityhub-e10-w02-full-seed-1 Waiting 
+ Container agilityhub-e10-w02-full-seed-1 Exited 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full-core-1 Starting 
+ Container agilityhub-e10-w02-full-core-1 Started 
+ Container agilityhub-e10-w02-full-seed-1 Waiting 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full-core-1 Waiting 
+ Container agilityhub-e10-w02-full-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full-seed-1 Exited 
+ Container agilityhub-e10-w02-full-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full/seed-files.log (191 lines)
+ Container agilityhub-e10-w02-full-playwright-run-1b03f2eedc7a Creating 
+ Container agilityhub-e10-w02-full-playwright-run-1b03f2eedc7a Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 207
+Progress: resolved 858, reused 858, downloaded 0, added 681
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.9s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 11 tests using 1 worker
+
+[1/11] e2e/core/e5-core.spec.ts:895:5 › E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read
+  1) e2e/core/e5-core.spec.ts:895:5 › E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "enabled": false,
+    -   "status": 200,
+    +   "enabled": null,
+    +   "status": 404,
+      }
+
+      909 |   note("jobs-switch-off-answers", switchedOff);
+      910 |   for (const answer of Object.values(switchedOff)) {
+    > 911 |     expect(answer).toEqual({ enabled: false, status: 200 });
+          |                    ^
+      912 |   }
+      913 |   await closeSessions();
+      914 |   // The scenario is consistent at `demoNow`: the core's test clock goes there before any other login.
+        at /work/e2e/core/e5-core.spec.ts:911:20
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "enabled": true,
+    -   "status": 200,
+    +   "enabled": null,
+    +   "status": 404,
+      }
+
+      888 |   expect(restored.status).toBe(200);
+      889 |   for (const answer of Object.values(switchedOn)) {
+    > 890 |     expect(answer).toEqual({ enabled: true, status: 200 });
+          |                    ^
+      891 |   }
+      892 |   if (mondayLeftover !== undefined) expect(mondayLeftover.state).toMatch(/^CANCELLED/u);
+      893 | });
+        at /work/e2e/core/e5-core.spec.ts:890:20
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-21T20:03:12.452Z grant_type=refresh_token status=400 cookie=none context=w0c1 page=127.0.0.1:4174/entrar started=2026-10-21T20:03:12.442Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E5-W04 step...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-E5-W04-step-2-·-th-9f674-e-parameters-the-flows-read/error-context.md
+
+    Error Context: test-results/core-e1/e5-core-E5-W04-step-2-·-th-9f674-e-parameters-the-flows-read/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-E5-W04-step-2-·-th-9f674-e-parameters-the-flows-read/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-E5-W04-step-2-·-th-9f674-e-parameters-the-flows-read/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/11] e2e/core/e5-core.spec.ts:963:7 › week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation
+[3/11] e2e/core/e5-core.spec.ts:1075:7 › week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29
+[4/11] e2e/core/e5-core.spec.ts:1196:7 › week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim
+[5/11] e2e/core/e5-core.spec.ts:1326:7 › week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed
+[6/11] e2e/core/e5-core.spec.ts:1421:7 › week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings
+[7/11] e2e/core/e5-core.spec.ts:1713:7 › week 0 at demoNow › E5-W04 step 5 · the core's statuses for JOB_UNKNOWN, SLOT_NOT_ON_GRID, DOG_ALREADY_BOOKED and OVERRIDE_NOT_ALLOWED
+[8/11] e2e/core/e5-core.spec.ts:1787:7 › week 0 at demoNow › T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run
+[9/11] e2e/core/e5-core.spec.ts:1918:5 › R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter
+[10/11] e2e/core/e5-core.spec.ts:1993:5 › R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week
+[11/11] e2e/core/e5-core.spec.ts:2100:5 › E5-W05 round 2 · E75 · GET /training-bookings?q= and GET /ring-blocks?q= answer the matching rows on the core and narrow both tabs of «Entrenaments»; GET /bookings/filter-values labels every value
+  1 failed
+    e2e/core/e5-core.spec.ts:895:5 › E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read 
+  10 did not run
+
+ ELIFECYCLE  Command failed with exit code 1.

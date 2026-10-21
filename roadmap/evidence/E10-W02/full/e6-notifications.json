@@ -1,0 +1,164 @@
+{
+  "byCode": [
+    {
+      "_id": "N-04",
+      "count": 78
+    },
+    {
+      "_id": "N-05",
+      "count": 6
+    },
+    {
+      "_id": "N-06",
+      "count": 13
+    },
+    {
+      "_id": "N-08a",
+      "count": 11
+    },
+    {
+      "_id": "N-09",
+      "count": 1
+    },
+    {
+      "_id": "N-11a",
+      "count": 2
+    },
+    {
+      "_id": "N-11b",
+      "count": 1
+    },
+    {
+      "_id": "N-15",
+      "count": 1
+    },
+    {
+      "_id": "N-18a",
+      "count": 2
+    },
+    {
+      "_id": "N-18b",
+      "count": 1
+    },
+    {
+      "_id": "N-19",
+      "count": 1
+    },
+    {
+      "_id": "N-20",
+      "count": 2
+    },
+    {
+      "_id": "N-21",
+      "count": 3
+    },
+    {
+      "_id": "N-22",
+      "count": 3
+    },
+    {
+      "_id": "N-28",
+      "count": 2
+    },
+    {
+      "_id": "N-29",
+      "count": 1
+    },
+    {
+      "_id": "N-32a",
+      "count": 552
+    },
+    {
+      "_id": "N-32b",
+      "count": 47
+    },
+    {
+      "_id": "N-38",
+      "count": 1
+    },
+    {
+      "_id": "N-54",
+      "count": 2
+    }
+  ],
+  "notices": [
+    {
+      "action": null,
+      "code": "N-19",
+      "createdAt": {
+        "$date": "2026-10-21T20:04:32.763Z"
+      },
+      "deliveries": [
+        {
+          "channel": "APP",
+          "status": "DELIVERED"
+        },
+        {
+          "channel": "EMAIL",
+          "status": "SENT"
+        }
+      ],
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "variables": {
+        "club_name": "Club Agility Cànic",
+        "audience": "MEMBER",
+        "member_name": "Rita Fictici013",
+        "member_first_name": "Rita",
+        "member_last_names": "Fictici013",
+        "gender": "other",
+        "dog_name": "Mel",
+        "dog_name_article": "la Mel",
+        "class_date": "dimecres, 30 de setembre de 2026",
+        "class_description": "A+B",
+        "entityId": "586c2c64-3dcd-4e24-b0cd-562c33a69387"
+      }
+    },
+    {
+      "action": "CLAIM_SEAT",
+      "code": "N-15",
+      "createdAt": {
+        "$date": "2026-10-21T20:04:40.129Z"
+      },
+      "deliveries": [
+        {
+          "channel": "APP",
+          "status": "DELIVERED"
+        },
+        {
+          "channel": "SMS",
+          "status": "SKIPPED_MODULE_OFF"
+        },
+        {
+          "channel": "PUSH",
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "variables": {
+        "class_date": "dimarts 27",
+        "class_time": "18:00",
+        "class_description": "General",
+        "ring_name": "Pista única",
+        "club_name": "Club Fictici Cua",
+        "audience": "MEMBER",
+        "member_name": "Fèlix Cua003",
+        "member_first_name": "Fèlix",
+        "member_last_names": "Cua003",
+        "gender": "other",
+        "dog_name": "Brisa 3",
+        "dog_name_article": "la Brisa 3",
+        "mode": "FIFO",
+        "confirm_by": "21:30",
+        "entityId": "b2e41dad-da63-47e7-ab9a-d9890f386a40"
+      }
+    }
+  ]
+}
