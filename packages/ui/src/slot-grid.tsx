@@ -17,7 +17,7 @@ export interface SlotCellModel {
    * R-09-04) is drawn taken. Defaults to `true`.
    */
   bookable?: boolean;
-  /** «18:50»: the class's own start when the api sends it (instructor projection), else the row's. */
+  /** «18:50»: the class's own start (`SlotCell.classStartsAtLocal`, INC-44), else the row's. */
   classTime?: string | null;
   /** Instructor projection: who trains («Pau + Blat»), the block's reason or the class. */
   detail?: string | null;

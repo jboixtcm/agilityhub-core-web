@@ -14,6 +14,7 @@ import {
   courseState,
   mockScenario,
   PLACEMENT_IDS,
+  resetCatalogState,
   resetCourseMockState,
   resetPlanningState,
   resetSettingsState,
@@ -205,8 +206,11 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
         "source",
         "stats",
         "thumbnailUrl",
+        // E11-W02 round 3 (INC-62): D18's date column.
+        "updatedAt",
       ].sort(),
     );
+    expect(jumping?.updatedAt).toBe("2026-10-12T17:00:00Z");
     // R-16-03 activeOnRings: the active Muntanya setup shows it through its placement.
     expect(jumping?.activeOnRings).toEqual([{ id: "ring-muntanya", name: "Muntanya" }]);
     // `level`: the club levels' codes joined by an en dash, else the AgilityHub level.
@@ -1076,6 +1080,29 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
     expect(moved).toMatchObject({ body: { code: "PLACEMENT_RING_MISMATCH" }, status: 422 });
   });
 
+  it("E11-W02 round 3 (INC-62, S16 §3): deactivating a ring dismantles its ACTIVE setup with RING_INACTIVE", async () => {
+    resetCatalogState();
+    const ring = await call<Schemas["Ring"]>("admin", "GET", "/rings/ring-central");
+    const patched = await call<Schemas["Ring"]>("admin", "PATCH", "/rings/ring-central", {
+      active: false,
+      version: ring.body.version,
+    });
+    expect(patched.status).toBe(200);
+    const history = await call<Schemas["RingSetupPage"]>(
+      "admin",
+      "GET",
+      "/rings/ring-central/setups",
+    );
+    valid("RingSetupPage", history.body);
+    expect(history.body.items.find((item) => item.id === SETUP_IDS.centralPhoto)).toMatchObject({
+      dismantledByAccountId: "10000000-0000-4000-8000-000000000001",
+      dismantledReason: "RING_INACTIVE",
+      replacedBySetupId: null,
+      status: "DISMANTLED",
+    });
+    resetCatalogState();
+  });
+
   it("R-16-08 / T-16-18 dismantle → DISMANTLED (no ACTIVE setup left on the ring); renewal of an ACTIVE setup → a new expiresAt counted from today; renewal or dismantle of another status → 409 INVALID_STATE", async () => {
     const dismantled = await call<Schemas["RingSetup"]>(
       "instructor",
@@ -1086,6 +1113,9 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
     valid("RingSetup", dismantled.body);
     expect(dismantled.body).toMatchObject({
       dismantledByAccountId: "10000000-0000-4000-8000-000000000003",
+      // E11-W02 round 3 (INC-62): «Desmunta» is MANUAL, replaced by nothing.
+      dismantledReason: "MANUAL",
+      replacedBySetupId: null,
       status: "DISMANTLED",
     });
     expect(dismantled.body.dismantledAt).not.toBeNull();
@@ -1161,6 +1191,16 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
       [SETUP_IDS.muntanyaActive, "DISMANTLED"],
       [SETUP_IDS.muntanyaDismantled, "DISMANTLED"],
       [SETUP_IDS.muntanyaExpired, "EXPIRED"],
+    ]);
+    // E11-W02 round 3 (INC-62): the replaced setup says why and by which one; the new one is
+    // dismantled by nothing yet.
+    expect(
+      history.body.items.map((item) => [item.dismantledReason, item.replacedBySetupId]),
+    ).toEqual([
+      [null, null],
+      ["REPLACED", created.body.setup.id],
+      ["REPLACED", SETUP_IDS.muntanyaActive],
+      [null, null],
     ]);
 
     const mismatch = await call<Schemas["ApiError"]>("admin", "POST", "/ring-setups", {

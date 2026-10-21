@@ -234,6 +234,27 @@ describe("T-16-15 D18 «Biblioteca de recorreguts» (S16 §2)", () => {
     ]);
   });
 
+  it("T-16-15 E11-W02 round 3 (INC-62): a row shows its last change (`updatedAt`) as the club's day, and the column sorts the api's way", async () => {
+    const agility = courseState.courses.find((item) => item.id === COURSE_IDS.agility);
+    if (agility === undefined) throw new Error("COURSE_NOT_FOUND");
+    // 00:30 on 13 October in the club (Europe/Madrid), still the 12th in UTC.
+    agility.updatedAt = "2026-10-12T22:30:00Z";
+    await renderRoute("/recorreguts");
+    const row = (await screen.findByText("Agility C–D")).closest("tr");
+    if (row === null) throw new Error("ROW_NOT_FOUND");
+    expect(within(row).getByText("13/10/2026")).toBeVisible();
+    expect(screen.getByRole("columnheader", { name: /Últim canvi/u })).toBeVisible();
+    expect(requests("GET", "/courses").at(-1)?.url.searchParams.get("fields")).toContain(
+      "updatedAt",
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Últim canvi/u }));
+    await waitFor(() => {
+      expect(requests("GET", "/courses").at(-1)?.url.searchParams.getAll("sort")).toEqual([
+        "updatedAt,asc",
+      ]);
+    });
+  });
+
   it("T-16-15 the tag and club-level filters (x-filterable `tag`, `levelId`) go to the api and read by name", async () => {
     await renderRoute("/recorreguts?filter=tag:eq:dijous");
     expect(await screen.findByText("Jumping del dijous")).toBeVisible();
@@ -567,9 +588,9 @@ describe("R-16-10 / R-16-07 a course's page: build sheet, register as set up, me
       "La geometria de la pista ha canviat: revisa la col·locació abans de treure'n el full de muntatge.",
     );
     fireEvent.click(stored);
-    expect(requests("GET", `/placements/${PLACEMENT_IDS.muntanyaJumping}/build-sheet`)).toHaveLength(
-      0,
-    );
+    expect(
+      requests("GET", `/placements/${PLACEMENT_IDS.muntanyaJumping}/build-sheet`),
+    ).toHaveLength(0);
   });
 
   it("R-16-06 / T-16-19 E9-W05 #1 the editor disables a stale placement's stored sheet until it is saved", async () => {
@@ -742,9 +763,9 @@ describe("R-16-10 / R-16-07 a course's page: build sheet, register as set up, me
     );
     await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "instructor");
     await screen.findByText("Dijous tarda");
-    expect(
-      await screen.findAllByRole("button", { name: "Registra-ho com a muntat" }),
-    ).toHaveLength(2);
+    expect(await screen.findAllByRole("button", { name: "Registra-ho com a muntat" })).toHaveLength(
+      2,
+    );
   });
 
   it("optimistic locking: after 409 STALE_VERSION the course is read again and only the user's own edits are put back", async () => {
@@ -1034,16 +1055,36 @@ describe("D16 «Geometria» (S16 §2, R-16-04/06/08)", () => {
     expect(none).toBeDisabled();
   });
 
-  it("R-16-08 «Substituït» compares instants, not strings: the same moment written with milliseconds still reads as a replacement", async () => {
+  it("R-16-08 E11-W02 round 3 (INC-62): «Substituït» is the api's dismantledReason, never inferred from the times — a «Desmunta» in the same second as the next build reads «Desmuntat»", async () => {
     const dismantled = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaDismantled);
     const active = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive);
     if (dismantled === undefined || active === undefined) throw new Error("SETUP_NOT_FOUND");
-    // The same instant as the replacing setup's `builtAt`, written with milliseconds (E9-W04: the
-    // mock world's dates are relative to its day).
-    dismantled.dismantledAt = new Date(active.builtAt).toISOString();
+    // Dismantled by hand at the very instant the next setup was built.
+    Object.assign(dismantled, {
+      dismantledAt: active.builtAt,
+      dismantledReason: "MANUAL",
+      replacedBySetupId: null,
+    });
+    await renderRoute("/pistes/ring-muntanya/geometria");
+    const history = await screen.findByRole("region", { name: "Muntatges" });
+    expect(await within(history).findByText("Desmuntat")).toBeVisible();
+    expect(within(history).queryByText("Substituït")).toBeNull();
+  });
+
+  it("R-16-08 E11-W02 round 3 (INC-62): a setup the api says another one replaced reads «Substituït» whatever its times", async () => {
+    const dismantled = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaDismantled);
+    const active = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive);
+    if (dismantled === undefined || active === undefined) throw new Error("SETUP_NOT_FOUND");
+    expect(dismantled).toMatchObject({
+      dismantledReason: "REPLACED",
+      replacedBySetupId: SETUP_IDS.muntanyaActive,
+    });
+    // Its dismantling written a minute before the replacing build.
+    dismantled.dismantledAt = new Date(Date.parse(active.builtAt) - 60_000).toISOString();
     await renderRoute("/pistes/ring-muntanya/geometria");
     const history = await screen.findByRole("region", { name: "Muntatges" });
     expect(await within(history).findByText("Substituït")).toBeVisible();
+    expect(within(history).queryByText("Desmuntat")).toBeNull();
   });
 
   it("A8b the marker sheet: one PDF page per active stored marker, made here", async () => {

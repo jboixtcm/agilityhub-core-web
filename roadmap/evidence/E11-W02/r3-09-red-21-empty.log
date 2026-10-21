@@ -1,0 +1,540 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+ ❯ src/states.test.tsx (49 tests | 1 failed | 46 skipped) 5698ms
+   ❯ E11-W02 step 4: the members' app says when its data is loading, failed or empty (49)
+     × 21 (/instructor/classes/c1) shows the UI kit's empty state when its lists answer nothing 5009ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 21 (/instructor/classes/c1) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Encara no hi ha cap inscrit."
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"instructor-screen instructor-sheet"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mdl 3 · 8:30 · A+B · Central[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"instructor-sheet__meta"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0m3/5[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning instructor-sheet__waiting"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-hour"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0m1 en espera[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"instructor-sheet__instructor"[39m
+            [36m>[39m
+              [0mEstel[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-sheet__card"[39m
+          [36m>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"instructor-sheet__rows"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"instructor-sheet__actions"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mUn toc a la rodona per canviar l'estat[0m
+              [36m</span>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDesa[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<ul[39m
+            [33maria-label[39m=[32m"Llegenda"[39m
+            [33mclass[39m=[32m"instructor-sheet__legend"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--pending"[39m
+              [36m/>[39m
+              [0mpendent[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--present"[39m
+              [36m/>[39m
+              [0mpresent[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--notified"[39m
+              [36m/>[39m
+              [0mha avisat[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--no-show"[39m
+              [36m/>[39m
+              [0mno presentat[0m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mLlista d'espera (1)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-sheet__waitlist"[39m
+          [36m>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon instructor-sheet__clock"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<strong>[39m
+                  [0mPau + Blat[0m
+                [36m</strong>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"instructor-sheet__joined"[39m
+                [36m>[39m
+                  [0mdes del 02/08 21:04[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+            [36m<p>[39m
+              [0mSi s'allibera una plaça, s'avisa alhora tothom qui espera.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"instructor-screen instructor-sheet"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mdl 3 · 8:30 · A+B · Central[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"instructor-sheet__meta"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0m3/5[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning instructor-sheet__waiting"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-hour"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0m1 en espera[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"instructor-sheet__instructor"[39m
+            [36m>[39m
+              [0mEstel[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-sheet__card"[39m
+          [36m>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"instructor-sheet__rows"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"instructor-sheet__actions"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mUn toc a la rodona per canviar l'estat[0m
+              [36m</span>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDesa[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<ul[39m
+            [33maria-label[39m=[32m"Llegenda"[39m
+            [33mclass[39m=[32m"instructor-sheet__legend"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--pending"[39m
+              [36m/>[39m
+              [0mpendent[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--present"[39m
+              [36m/>[39m
+              [0mpresent[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--notified"[39m
+              [36m/>[39m
+              [0mha avisat[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"instructor-sheet__legend-dot instructor-sheet__legend-dot--no-show"[39m
+              [36m/>[39m
+              [0mno presentat[0m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mLlista d'espera (1)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-sheet__waitlist"[39m
+          [36m>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon instructor-sheet__clock"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<strong>[39m
+                  [0mPau + Blat[0m
+                [36m</strong>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"instructor-sheet__joined"[39m
+                [36m>[39m
+                  [0mdes del 02/08 21:04[0m
+                [36m</span>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+            [36m<p>[39m
+              [0mSi s'allibera una plaça, s'avisa alhora tothom qui espera.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:220:34
+    218|       mockScenario(scenario);
+    219|       await renderAt(path, email, "empty");
+    220|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    221|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    222|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed | 46 skipped (49)
+   Start at  17:10:56
+   Duration  7.11s (tests 81%, transform 10%, environment 4%, import 4%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/states.test.tsx -t ^.*21 

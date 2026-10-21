@@ -128,6 +128,12 @@ function nextId(prefix: string): string {
   return `${prefix}-${String(courseState.sequence)}`;
 }
 
+/** A setup's id is a UUID, as the api's (`replacedBySetupId` names it, INC-62). */
+function nextSetupId(): string {
+  courseState.sequence += 1;
+  return `57000000-0000-4000-9000-${String(courseState.sequence).padStart(12, "0")}`;
+}
+
 function fieldError(field: string, code: string): Response {
   return apiError("VALIDATION_ERROR", "Validation failed", 400, {
     fieldErrors: [{ code, field }],
@@ -287,6 +293,7 @@ function listItem(course: Course, locale: string): CourseListItem {
     source: course.source,
     stats: course.stats,
     thumbnailUrl: course.thumbnailUrl ?? null,
+    updatedAt: course.updatedAt,
   };
 }
 
@@ -303,6 +310,7 @@ const COURSE_LIST_SPEC: ListSpec<Course> = {
     "stats",
     "ownerType",
     "activeOnRings",
+    "updatedAt",
   ],
   filterable: [
     "owner",
@@ -625,15 +633,17 @@ function registerSetup(source: Schemas["RingSetupRequest"]): Schemas["RingSetupC
     createdAt: at,
     dismantledAt: null,
     dismantledByAccountId: null,
+    dismantledReason: null,
     expectedUntil: source.expectedUntil ?? null,
     expiresAt: setupExpiry(source.expectedUntil),
-    id: nextId("setup"),
+    id: nextSetupId(),
     imageFileKey: source.imageFileKey ?? null,
     imageUrl: source.imageFileKey == null ? null : courseFileUrl(source.imageFileKey),
     kind: source.kind,
     levelIds: [...source.levelIds],
     notes: source.notes ?? null,
     placementId: source.placementId ?? null,
+    replacedBySetupId: null,
     ringId: source.ringId,
     status: "ACTIVE",
     view: "STAFF",
@@ -646,6 +656,9 @@ function registerSetup(source: Schemas["RingSetupRequest"]): Schemas["RingSetupC
             ...item,
             dismantledAt: at,
             dismantledByAccountId: meId(),
+            // INC-62: why, and by which setup.
+            dismantledReason: "REPLACED" as const,
+            replacedBySetupId: setup.id,
             status: "DISMANTLED" as const,
           }
         : item,
@@ -1422,6 +1435,8 @@ export const courseHandlers = [
         ...setup,
         dismantledAt: nowIso(),
         dismantledByAccountId: meId(),
+        dismantledReason: "MANUAL",
+        replacedBySetupId: null,
         status: "DISMANTLED",
       };
       courseState.setups = courseState.setups.map((item) => (item.id === setup.id ? next : item));

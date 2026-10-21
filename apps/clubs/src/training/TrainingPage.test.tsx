@@ -131,13 +131,14 @@ describe("T-09-38 screen 08 grid, «Qualsevol» and the confirmation", () => {
     const taken = within(morning).getByRole("button", { name: "7:00, ocupada" });
     expect(taken).toHaveClass("ah-slot--taken");
     expect(taken).toBeDisabled();
-    // Expected deviation (S09 §13-3): the fixed 30-min grid labels the class with the row's time.
+    // E11-W02 round 3 (INC-44, S09 §13-3): a cell the 18:50 classes take reads the classes' own
+    // start (`classStartsAtLocal`) on the 18:30 and 19:00 rows of the fixed 30-min grid.
     const afternoon = group("Tarda");
-    const lesson = within(afternoon).getByRole("button", { name: "18:30, 18:30 classe" });
+    const lesson = within(afternoon).getByRole("button", { name: "18:30, 18:50 classe" });
     expect(lesson).toHaveClass("ah-slot--class");
-    expect(lesson).toHaveTextContent("18:30 classe");
+    expect(lesson).toHaveTextContent("18:50 classe");
     expect(lesson).toBeDisabled();
-    expect(within(afternoon).getByRole("button", { name: "19:00, 19:00 classe" })).toBeDisabled();
+    expect(within(afternoon).getByRole("button", { name: "19:00, 18:50 classe" })).toBeDisabled();
     // The two sections are split at 14:00 club-local (S09 §13-12).
     expect(within(morning).getAllByRole("button").at(-1)).toHaveAccessibleName("13:30, lliure");
     expect(within(afternoon).getAllByRole("button")[0]).toHaveAccessibleName("14:00, lliure");
@@ -148,6 +149,10 @@ describe("T-09-38 screen 08 grid, «Qualsevol» and the confirmation", () => {
       "ah-slot--own",
     );
     expect(within(group("Matí")).getByRole("button", { name: "9:00, bloqueig" })).toBeDisabled();
+    // A ring's own class cell reads its class's start too (INC-44).
+    expect(within(group("Tarda")).getByRole("button", { name: "19:00, 18:50 classe" })).toHaveClass(
+      "ah-slot--class",
+    );
     fireEvent.click(within(rings).getByRole("button", { name: "Central" }));
     expect(within(group("Matí")).getByRole("button", { name: "8:30, entrenament" })).toHaveClass(
       "ah-slot--taken",

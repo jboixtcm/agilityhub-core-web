@@ -194,7 +194,7 @@ describe("the instructor's viewer, «Registra què hi ha muntat» and the build 
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     fireEvent.click(submit);
     await waitFor(() => {
-      expect(window.location.pathname).toMatch(/^\/recorreguts\/setup-/u);
+      expect(window.location.pathname).toMatch(/^\/recorreguts\/[0-9a-f-]{36}$/u);
     });
     expect(await screen.findByText("Registrat com a muntat.")).toBeVisible();
     expect(await screen.findByRole("img", { name: "Foto o plànol del muntatge" })).toBeVisible();
@@ -366,7 +366,7 @@ describe("the instructor's viewer, «Registra què hi ha muntat» and the build 
     expect(
       await screen.findByText("Sessió acabada: el muntatge ha quedat registrat."),
     ).toBeVisible();
-    expect(window.location.pathname).toMatch(/^\/recorreguts\/setup-/u);
+    expect(window.location.pathname).toMatch(/^\/recorreguts\/[0-9a-f-]{36}$/u);
     expect(
       record.list.filter((line) => line === `POST /build-sessions/${sessionId}/finish`),
     ).toHaveLength(1);

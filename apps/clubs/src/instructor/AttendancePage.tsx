@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Chip,
+  EmptyState,
   Icon,
   IconButton,
   Skeleton,
@@ -330,50 +331,57 @@ export function AttendancePage({ classId, client }: { classId: string; client: A
               {toast.message}
             </Toast>
           )}
-          <Card className="instructor-sheet__card">
-            <ul className="instructor-sheet__rows">
-              {data.rows.map((row) => (
-                <SheetRow
-                  disabled={sheet.saving || cancelled}
-                  key={row.bookingId}
-                  noShowNoticeTime={data.sheet.noShowNoticeTime}
-                  onChoose={(state) => {
-                    sheet.choose(row.bookingId, state);
-                  }}
-                  onPhoto={setPhoto}
-                  permissions={data.sheet}
-                  row={row}
-                  tasks={tasks}
-                  value={sheet.draft[row.bookingId] ?? row.state}
-                />
+          {data.rows.length === 0 ? (
+            // E11-W02 round 3 (review m2): a class nobody is booked on — 23's own words.
+            <EmptyState icon="paw" title={t("instructor:overview.registrants.empty")} />
+          ) : (
+            <Card className="instructor-sheet__card">
+              <ul className="instructor-sheet__rows">
+                {data.rows.map((row) => (
+                  <SheetRow
+                    disabled={sheet.saving || cancelled}
+                    key={row.bookingId}
+                    noShowNoticeTime={data.sheet.noShowNoticeTime}
+                    onChoose={(state) => {
+                      sheet.choose(row.bookingId, state);
+                    }}
+                    onPhoto={setPhoto}
+                    permissions={data.sheet}
+                    row={row}
+                    tasks={tasks}
+                    value={sheet.draft[row.bookingId] ?? row.state}
+                  />
+                ))}
+              </ul>
+              {cancelled ? null : (
+                <div className="instructor-sheet__actions">
+                  <span>{t("instructor:attendance.hint")}</span>
+                  <Button
+                    disabled={sheet.changes.length === 0}
+                    loading={sheet.saving}
+                    loadingLabel={t("instructor:attendance.saving")}
+                    onClick={() => void sheet.save()}
+                    variant="secondary"
+                  >
+                    {t("instructor:attendance.save")}
+                  </Button>
+                </div>
+              )}
+            </Card>
+          )}
+          {data.rows.length === 0 ? null : (
+            <ul aria-label={t("instructor:attendance.legend")} className="instructor-sheet__legend">
+              {STATES.map((state) => (
+                <li key={state}>
+                  <span
+                    aria-hidden="true"
+                    className={`instructor-sheet__legend-dot instructor-sheet__legend-dot--${state.toLowerCase().replace("_", "-")}`}
+                  />
+                  {t(`enums:attendanceState.${state}`)}
+                </li>
               ))}
             </ul>
-            {cancelled ? null : (
-              <div className="instructor-sheet__actions">
-                <span>{t("instructor:attendance.hint")}</span>
-                <Button
-                  disabled={sheet.changes.length === 0}
-                  loading={sheet.saving}
-                  loadingLabel={t("instructor:attendance.saving")}
-                  onClick={() => void sheet.save()}
-                  variant="secondary"
-                >
-                  {t("instructor:attendance.save")}
-                </Button>
-              </div>
-            )}
-          </Card>
-          <ul aria-label={t("instructor:attendance.legend")} className="instructor-sheet__legend">
-            {STATES.map((state) => (
-              <li key={state}>
-                <span
-                  aria-hidden="true"
-                  className={`instructor-sheet__legend-dot instructor-sheet__legend-dot--${state.toLowerCase().replace("_", "-")}`}
-                />
-                {t(`enums:attendanceState.${state}`)}
-              </li>
-            ))}
-          </ul>
+          )}
           {waitlist === undefined || waitlist.entries.length === 0 ? null : (
             <>
               <h2 className="instructor-screen__section">

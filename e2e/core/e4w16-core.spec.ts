@@ -6,7 +6,7 @@ import { type Browser, type BrowserContext, type Page } from "@playwright/test";
 
 import type { components } from "../../packages/api-client/src/generated/schema";
 
-import { expect, test } from "./oauth-token-log";
+import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 // E4-W16 real-core stage (steps 11, 10, 1, 5 and 7), on its own fresh core and seed. Steps 1 and
 // 10 need api E5-T27 (the impersonation `launchUrl` with a handoff code; the RESET mark), which the
@@ -101,20 +101,12 @@ async function loginMember(page: Page, email = memberEmail): Promise<void> {
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
   await page.getByLabel("Contrasenya").fill(corePassword);
-  // /inici restores the session with the cookie: leaving the page before that refresh answers
-  // aborts it after the core rotated the cookie, and the next page replays the old one
-  // (`400 REFRESH_REUSED`). Wait for it, as e2's helper does.
-  const routeRefresh = page.waitForResponse(
-    (response) =>
-      response.url().endsWith("/oauth2/token") &&
-      response.request().method() === "POST" &&
-      new URLSearchParams(response.request().postData() ?? "").get("grant_type") ===
-        "refresh_token" &&
-      new URL(response.request().frame().url()).pathname === "/inici",
-  );
-  await submitPasswordLogin(page);
-  await page.waitForURL("**/inici");
-  expect((await routeRefresh).status()).toBe(200);
+  // A38 (E11-W02): /inici opens in place with the login's session, so no refresh can be aborted
+  // by leaving it (the `400 REFRESH_REUSED` this helper used to wait out).
+  await expectNoRefreshDuring(page, async () => {
+    await submitPasswordLogin(page);
+    await page.waitForURL("**/inici");
+  });
   await expect(page.locator(".clubs-shell")).toBeVisible();
 }
 
@@ -534,10 +526,15 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
       });
   });
   await clubs.waitForURL((url) => url.pathname === "/inici", { timeout: 30_000 });
-  await expect
-    .poll(() => clubsMe.find((answer) => answer.page === "/inici")?.status ?? 0)
-    .toBe(200);
-  const restored = clubsMe.find((answer) => answer.page === "/inici");
+  // A38 (E11-W02): after the handoff the app opens /inici in place, so its `/me` may be read while
+  // the tab still shows /entrar (the launchUrl's page): the first 200 of either page is the
+  // session's (the 503 above is the one this test makes the first `/me` answer).
+  const sessionMe = () =>
+    clubsMe.find(
+      (answer) => answer.status === 200 && (answer.page === "/inici" || answer.page === "/entrar"),
+    );
+  await expect.poll(() => sessionMe()?.status ?? 0).toBe(200);
+  const restored = sessionMe();
   // E5-W05 step 24 (ruling E73, api E5-T29 step 14): `/me` names the member the admin opened
   // (`impersonation.memberName`, the record's name as D10 shows it), and the banner shows it. The
   // seed names the account of member@example.test apart from its member record, so a banner that

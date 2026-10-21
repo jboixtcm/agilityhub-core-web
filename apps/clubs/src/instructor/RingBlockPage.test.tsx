@@ -108,6 +108,16 @@ describe("screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11)", (
     ).toBe(true);
   });
 
+  it("E11-W02 round 3 (INC-44, S09 §13-3): a cell the 18:50 class takes reads «18:50 classe» on its 18:30 and 19:00 rows, with the class it is", async () => {
+    await openRingBlock("ring-central");
+    await pick("2026-08-03", "afternoon");
+    const lesson = cell("19:00, 18:50 classe");
+    expect(lesson).toHaveClass("ah-slot--class");
+    expect(lesson).toBeDisabled();
+    expect(lesson).toHaveTextContent("B+C");
+    expect(cell("18:30, 18:50 classe")).toBeDisabled();
+  });
+
   it("409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again", async () => {
     const requests = recordRequests();
     await openRingBlock("ring-central");

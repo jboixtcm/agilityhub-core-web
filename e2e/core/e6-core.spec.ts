@@ -6,7 +6,7 @@ import type { Browser, BrowserContext, Locator, Page, Request, Response } from "
 
 import type { components } from "../../packages/api-client/src/generated/schema";
 
-import { expect, test } from "./oauth-token-log";
+import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 // E6-W04 · S10 WP-10-G end to end against the published core with the E6 demo seed (api E6-T04,
 // `scenario.attendance` of the image's `seeds/demo-canic.yaml`, dumped by the wrapper next to this
@@ -417,7 +417,10 @@ async function settle(page: Page, pathname: string): Promise<void> {
     .toBe(true);
 }
 
-/** The back office's `/entrar` (D-screens): ADMIN lands on D1, an INSTRUCTOR on an empty shell. */
+/**
+ * The back office's `/entrar` (D-screens): ADMIN lands on D1; an INSTRUCTOR without ADMIN on D12
+ * (E11-W02 round 2, INC-41 item 13: never an empty shell).
+ */
 async function loginAdmin(page: Page, email: string): Promise<void> {
   await page.goto(`${adminUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
@@ -427,9 +430,9 @@ async function loginAdmin(page: Page, email: string): Promise<void> {
   }
   await page.getByLabel("Contrasenya").fill(corePassword);
   await submitPasswordLogin(page);
-  await page.waitForURL("**/tauler");
+  await page.waitForURL((url) => url.pathname === "/tauler" || url.pathname === "/agenda");
   await expect(page.locator(".admin-shell")).toBeVisible();
-  await settle(page, "/tauler");
+  await settle(page, new URL(page.url()).pathname);
 }
 
 // E6-W01 round 2 #7 (ruling E71): an instructor lands on 20 (`/instructor/dia`).
@@ -442,12 +445,11 @@ async function loginClubs(
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel(text[locale].email).fill(email);
   await page.getByLabel(text[locale].password, { exact: true }).fill(corePassword);
-  // The app refreshes once it lands; a navigation that aborted that call would leave the browser
-  // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E5 do.
-  const routeRefresh = page.waitForResponse(isRefresh);
-  await submitPasswordLogin(page);
-  await page.waitForURL((url) => url.pathname === landing || url.pathname === "/perfil-acces");
-  expect((await routeRefresh).status()).toBe(200);
+  // A38 (E11-W02): the landing (or 03b) opens in place with the login's session, no refresh.
+  await expectNoRefreshDuring(page, async () => {
+    await submitPasswordLogin(page);
+    await page.waitForURL((url) => url.pathname === landing || url.pathname === "/perfil-acces");
+  });
   if (new URL(page.url()).pathname === "/perfil-acces") {
     // 03b: an account with more than one profile and none remembered chooses one first.
     note(`profile-choice-${email}`, { landing });
@@ -659,12 +661,21 @@ async function switchJobs(
 ): Promise<Record<string, { enabled: boolean | null; status: number }>> {
   const answers: Record<string, { enabled: boolean | null; status: number }> = {};
   for (const name of names) {
-    const answer = await call<Partial<Schemas["JobSwitchResponse"]>>(
+    const answer = await call<Partial<Schemas["ApiError"] & Schemas["JobSwitchResponse"]>>(
       admin,
       `/jobs/${name}/switch`,
       "PUT",
       { enabled },
     );
+    // E11-T01 (S14): `erasures` and `retention-sweep` are a legal duty without a switch, the
+    // contract's `404 JOB_UNKNOWN {reason: NO_SWITCH}`: they stay as they are.
+    if (
+      answer.status === 404 &&
+      answer.body.code === "JOB_UNKNOWN" &&
+      answer.body.details?.reason === "NO_SWITCH"
+    ) {
+      continue;
+    }
     answers[name] = { enabled: answer.body.enabled ?? null, status: answer.status };
   }
   return answers;
@@ -1227,7 +1238,12 @@ test("E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/cl
     "waitlist.notifyThresholdMinutes": 30,
   });
   const jobs = await call<JobSummaries>(admin, "/jobs");
-  expect(jobs.body.items.filter((job) => job.enabled).map((job) => job.name)).toEqual([]);
+  // The jobs without a switch (`erasures`, `retention-sweep`, E11-T01) stay on.
+  expect(
+    jobs.body.items
+      .filter((job) => job.enabled && Object.keys(switchedOff).includes(job.name))
+      .map((job) => job.name),
+  ).toEqual([]);
   scene = await findScene(admin);
   note("scene", scene);
 });

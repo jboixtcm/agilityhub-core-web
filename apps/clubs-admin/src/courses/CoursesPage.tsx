@@ -66,6 +66,7 @@ const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   name: ["name", "thumbnailUrl", "ownerType"],
   source: ["source"],
   stats: ["stats"],
+  updatedAt: ["updatedAt"],
 };
 
 const DEFAULT_COLUMNS = [
@@ -76,6 +77,7 @@ const DEFAULT_COLUMNS = [
   "source",
   "activeOnRings",
   "stats",
+  "updatedAt",
 ];
 
 /** D18's chips (S16 §2): the club's, the AgilityHub library (`PUBLIC`), mine (`ACCOUNT`). */
@@ -430,7 +432,7 @@ export function CoursesPage({
 }) {
   const { t } = useTranslation(["admin-courses", "census", "enums", "errors"]);
   const labels = useCourseLabels();
-  const { locale } = useClubFormats();
+  const { formatDate, locale } = useClubFormats();
   // The path length is course-core's, to 0.1 m (stats.pathLengthM).
   const pathLength = useMemo(
     () => new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }),
@@ -637,6 +639,13 @@ export function CoursesPage({
                 length: pathLength.format(row.stats.pathLengthM),
               })
             : t("admin-courses:list.statsCount", { count: row.stats.obstacleCount }),
+    },
+    {
+      // S16 §2 «dates» (INC-62): the course's last change, as the club's day.
+      key: "updatedAt",
+      label: t("admin-courses:list.columns.updatedAt"),
+      render: (row) => (row.updatedAt === undefined ? none : formatDate(row.updatedAt, "short")),
+      sortKey: "updatedAt",
     },
   ];
 

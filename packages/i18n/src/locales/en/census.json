@@ -54,7 +54,6 @@
   "members": {
     "activeCount": "{count} active",
     "bulk": {
-      "changeLevel": "Change level",
       "exportSelection": "Export selection",
       "sendAnnouncement": "Send announcement"
     },

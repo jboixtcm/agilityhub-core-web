@@ -1,0 +1,16 @@
+{
+  "body": {
+    "code": "VALIDATION_ERROR",
+    "message": "Les dades de la petició no són vàlides.",
+    "details": {
+      "fieldErrors": [
+        {
+          "field": "paymentMethod",
+          "code": "READ_ONLY"
+        }
+      ]
+    },
+    "traceId": "2e079b1c-dc1f-42f0-b41f-3afafe93a18c"
+  },
+  "status": 400
+}

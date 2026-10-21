@@ -141,7 +141,7 @@ for (const mode of MODES) {
         ).toBeVisible();
         await shot(page, "08-entrenaments", width, mode);
 
-        await navigate(page, "/recorreguts/setup-muntanya-dijous");
+        await navigate(page, "/recorreguts/57000000-0000-4000-8000-000000000002");
         await expect(page.getByText("Jumping · nivell C–D")).toBeVisible();
         await shot(page, "visor-alumne", width, mode);
 
@@ -198,7 +198,7 @@ for (const mode of MODES) {
         });
         await shot(page, "registra-muntat", width, mode);
 
-        await navigate(page, "/recorreguts/setup-muntanya-dijous");
+        await navigate(page, "/recorreguts/57000000-0000-4000-8000-000000000002");
         await page.getByRole("button", { name: "Sessió de muntatge" }).click();
         await expect(page).toHaveURL(/\/instructor\/muntatge\//u);
         await expect(page.getByText(/^Codi per unir-s'hi:/u)).toBeVisible();

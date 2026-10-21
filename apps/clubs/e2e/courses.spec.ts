@@ -79,7 +79,7 @@ test.describe("E9-W04 S16 in the members' app (WP-16-F′) against MSW, 375 px",
     await expect(line).toBeVisible();
     await shot(page, "08-entrenaments-recorreguts-375.png");
     await line.click();
-    await expect(page).toHaveURL(/\/recorreguts\/setup-muntanya-dijous$/u);
+    await expect(page).toHaveURL(/\/recorreguts\/57000000-0000-4000-8000-000000000002$/u);
     await expect(page.getByText("Jumping · nivell C–D")).toBeVisible();
     const plan = page.getByRole("img", { name: "Plànol de Jumping del dijous" });
     await expect(plan).toBeVisible();
@@ -158,7 +158,7 @@ test.describe("E9-W04 S16 in the members' app (WP-16-F′) against MSW, 375 px",
     await shot(page, "registra-muntat-375.png");
     await page.getByRole("button", { name: "REGISTRA" }).click();
     await expect(page.getByText("Registrat com a muntat.")).toBeVisible();
-    await expect(page).toHaveURL(/\/recorreguts\/setup-/u);
+    await expect(page).toHaveURL(/\/recorreguts\/[0-9a-f-]{36}$/u);
     await shot(page, "registra-muntat-desat-375.png");
   });
 
@@ -166,7 +166,7 @@ test.describe("E9-W04 S16 in the members' app (WP-16-F′) against MSW, 375 px",
     page,
   }) => {
     await login(page, "instructor", "/instructor/dia");
-    await navigate(page, "/recorreguts/setup-muntanya-dijous");
+    await navigate(page, "/recorreguts/57000000-0000-4000-8000-000000000002");
     await page.getByRole("button", { name: "Sessió de muntatge" }).click();
     await expect(page).toHaveURL(/\/instructor\/muntatge\//u);
     const list = page.getByRole("list", { name: "Obstacles" });

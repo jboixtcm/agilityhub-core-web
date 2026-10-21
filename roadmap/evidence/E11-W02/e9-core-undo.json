@@ -1,0 +1,15 @@
+{
+  "liveSessionsLeftForP9": [
+    "1018a0ab-3770-4a9c-b6b2-30b971633f86"
+  ],
+  "note": "No abandon operation: each LIVE session stays open until P9 closes it",
+  "problems": [],
+  "steps": [
+    "PUT /members/e92b6f24-6a97-306e-b756-daf8f56925b2/roles MEMBER",
+    "DELETE /rings/d302e6b9-0515-4636-892e-bac481bfa711/geometry",
+    "PUT /placements/be1ef7f6-78b3-4259-bfc5-7cadbda72b09 ARCHIVED",
+    "POST /bookings/7f0ab7c6-3fd3-41f5-96e0-88016f311820/cancellation",
+    "PATCH /class-sessions/8d718c23-8f5b-4472-a3d2-780755316788 {placementId: null}"
+  ],
+  "testStatus": "passed"
+}

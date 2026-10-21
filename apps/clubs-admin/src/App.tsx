@@ -28,7 +28,6 @@ import {
 import {
   lazy,
   type ReactNode,
-  Suspense,
   type SyntheticEvent,
   useCallback,
   useContext,
@@ -52,6 +51,7 @@ import { TeamPage } from "./catalogs/TeamPage";
 import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { InactivityLeavePage } from "./census/InactivityLeavePage";
+import { ChunkBoundary } from "./ChunkBoundary";
 import { ConsoleForbidden } from "./console/ConsoleForbidden";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
@@ -552,11 +552,11 @@ function routeContent(
   search = "",
 ) {
   if (route.path === "/consola/*") {
-    // D19 (S17 §2): the platform console, without a club context.
+    // D19 (S17 §2): the platform console, without a club context; its own chunk.
     return (
-      <Suspense fallback={null}>
+      <ChunkBoundary key="console">
         <ConsolePage client={client} onNavigate={onNavigate} pathname={pathname} search={search} />
-      </Suspense>
+      </ChunkBoundary>
     );
   }
   if (route.path.startsWith("/activitats")) {
@@ -639,9 +639,9 @@ function routeContent(
   if (route.path.startsWith("/recorreguts") || route.path === "/pistes/:id/geometria") {
     // D18 and D16 «Geometria» (S16): their own chunk, with course-core and course-ui.
     return (
-      <Suspense fallback={null}>
+      <ChunkBoundary key="courses">
         <CoursesRoute client={client} onNavigate={onNavigate} pathname={pathname} search={search} />
-      </Suspense>
+      </ChunkBoundary>
     );
   }
   if (route.path === "/equip") {

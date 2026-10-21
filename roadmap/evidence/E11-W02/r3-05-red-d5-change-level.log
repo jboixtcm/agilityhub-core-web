@@ -1,0 +1,54 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/census/CensusListPage.test.tsx (9 tests | 1 failed | 8 skipped) 425ms
+   ❯ T-03-38 D5 universal member list (5)
+     × E11-W02 round 3 (AGENTS rule 3): the bulk bar offers only what works — no «Canviar nivell» while the contract has no bulk level endpoint 423ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > E11-W02 round 3 (AGENTS rule 3): the bulk bar offers only what works — no «Canviar nivell» while the contract has no bulk level endpoint
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--ghost"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    <svg
+      aria-hidden="true"
+      class="ah-icon"
+    >
+      <use
+        href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-up"
+      />
+    </svg>
+    Canviar nivell
+  </span>
+</button>
+
+ ❯ src/census/CensusListPage.test.tsx:87:70
+     85|     expect(within(bar).getByRole("button", { name: "Enviar comunicat" …
+     86|     expect(within(bar).getByRole("button", { name: "Exportar selecció"…
+     87|     expect(screen.queryByRole("button", { name: "Canviar nivell" })).t…
+       |                                                                      ^
+     88|   });
+     89|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  17:07:28
+   Duration  1.76s (transform 37%, tests 25%, environment 20%, import 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/CensusListPage.test.tsx -t round 3

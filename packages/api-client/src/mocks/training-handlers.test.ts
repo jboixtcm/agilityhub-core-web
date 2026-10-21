@@ -206,6 +206,14 @@ describe("E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATAL
     expect(row(body, "2026-08-03", "18:30")).toBe("MUN:CLASS CEN:CLASS CAR:CLASS");
     expect(row(body, "2026-08-03", "19:00")).toBe("MUN:CLASS CEN:CLASS CAR:CLASS");
     expect(row(body, "2026-08-03", "19:30")).toBe("MUN:FREE CEN:CLASS CAR:FREE");
+    // E11-W02 round 3 (INC-44): a class cell carries its class's club-local start, for a member
+    // too; the other cells do not.
+    expect(monday.find((slot) => slot.startsAtLocal === "19:00")?.rings["ring-central"]).toEqual({
+      classStartsAtLocal: "18:50",
+      reason: "CLASS",
+      state: "BLOCKED",
+    });
+    expect(monday[0]?.rings["ring-muntanya"]).not.toHaveProperty("classStartsAtLocal");
     // The 7:00 has begun: not bookable though Muntanya's own training is the only one there.
     expect(monday.find((slot) => slot.startsAtLocal === "08:30")).toMatchObject({
       anyFree: true,

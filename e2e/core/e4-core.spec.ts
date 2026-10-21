@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 
 import type { Browser, BrowserContext, Locator, Page, Response, Route } from "@playwright/test";
 
-import { expect, test } from "./oauth-token-log";
+import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 // E4-W05 · T-06-28 and T-07-32 end to end against the published core with the E4 demo seed
 // (api E4-T05, `seeds/demo-canic.yaml` of the image). The seed is anchored on `E4_WEEK_START`, the
@@ -236,12 +236,11 @@ async function loginClubs(
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel(labels.email).fill(email);
   await page.getByLabel(labels.password, { exact: true }).fill(corePassword);
-  // The app refreshes once it lands; a navigation that aborted that call would leave the browser
-  // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1/E2 do.
-  const routeRefresh = page.waitForResponse(isRefresh);
-  await submitPasswordLogin(page);
-  await page.waitForURL(`**${landing}`);
-  expect((await routeRefresh).status()).toBe(200);
+  // A38 (E11-W02): the landing opens in place with the login's session, no refresh.
+  await expectNoRefreshDuring(page, async () => {
+    await submitPasswordLogin(page);
+    await page.waitForURL(`**${landing}`);
+  });
   await expect(page.locator(".clubs-shell")).toBeVisible();
 }
 

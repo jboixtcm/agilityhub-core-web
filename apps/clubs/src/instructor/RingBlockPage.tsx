@@ -188,6 +188,8 @@ export function RingBlockPage({
   const ringKey = ring?.id ?? "";
   const cellOf = (slot: RingBlockSlot): SlotCellModel => ({
     bookable: slot.bookable,
+    // INC-44: «18:50 classe», the class's own start.
+    classTime: slot.cell?.classStartsAtLocal ?? null,
     columnId: ringKey,
     conflict: conflicts.some((conflict) =>
       overlapsConflict(slot, date, branding.timeZone, conflict),

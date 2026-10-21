@@ -2286,3 +2286,27 @@ Blocking: no (not changed here; outside this task).
 ## 2026-10-21 · organizer → executor · E145: the pre-launch audit — E11-W06 installed (thread C, before E11-W03); INC-79 and INC-80
 @executor Ruling E145 (`docs/DECISIONS_PENDENTS.md`), INC-79/INC-80 (`docs/INCIDENCIES_OBERTES.md`). The organizer's independent audit of main `10644b87` against the staged contract found three majors: the e-mail deep links (`/espera/:id`, `/reserves/:id`, `/preinscripcions/:id`) do not survive the sign-in; a remembered ADMIN profile without the MEMBER role lands on `/inici` with two 403s; three tabs refreshing together revoke the token family. **E11-W06** (thread C, `ready`, after E10-W02, order 35 so it runs before E11-W03's E2E) fixes them with the minors W4–W13; it adopts the staged snapshot (`8d73ad2a`) first. W14–W17 are INC-80 (W15 → E11-W05; the rest after the launch). The invented strings of the fixes go under «Questions / catalog proposals» as usual (ruling E148 collects Jordi's answers in `DECISIONS_COPY_A39-A41.md`).
 Blocking: no.
+
+## 2026-10-21 · organizer → executor · E153: Jordi's copy decisions are in — E11-W05 is `ready` with its «Approved copy» section
+@executor Ruling E153. Jordi answered every pending copy item (the register `DECISIONS_COPY_A39-A41.md` on the source; the summary is in E11-W05's «Approved copy» section): the 211 proposed literals approved en bloc with 11 corrections; `RING_HAS_BOOKINGS` = D4's text; «DNI» → «Document d'identitat»; `OTHER` with slash forms; the `errors` namespace to tu/tú (26 ca + 26 es); es «revertir» for the rollback; es «Bono» for the pack. E11-W05 is `ready` (after E11-W02's round 3 and E11-W04, and once the api stages `ClassCancellation.reviewTime` from E11-T13); the template club's catalogs come from the api's E11-T18 (the wizard already clones part by part).
+Blocking: no.
+
+## 2026-10-21 · executor → organizer · E11-W02 round 3
+@organizer **E11-W02 round 3 is awaiting verification** (thread D, local, Docker available). Points 1–5 of E142 are done, each with a red run:
+- D18 «Últim canvi» (`updatedAt`), D16 «Substituït» from `dismantledReason`, «18:50 classe» on 08 and 24 from `classStartsAtLocal`;
+- D5's «Canviar nivell» is hidden;
+- `ChunkBoundary` covers the console, the S16 route and D18's 3D tab;
+- 21 has its `EmptyState`.
+
+The complete Playwright suite and `e2e:core` are green: all 11 stages, 78 tests.
+`e2e:core` needed fixes in the specs, consequences of this task's earlier rounds and of E11-T01:
+- a login now opens the landing in place, with no refresh (A38);
+- an instructor lands on D12;
+- 12 has no shell header;
+- `erasures` and `retention-sweep` answer `404 JOB_UNKNOWN {reason: NO_SWITCH}`.
+
+Two notes:
+1. D12's card draws no class cell (its times are selects), so «18:50 classe» shows on 08 and 24 only.
+2. The mock setup ids are UUIDs now, because `replacedBySetupId` is `format: uuid`.
+
+Blocking: no.

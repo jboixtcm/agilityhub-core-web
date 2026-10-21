@@ -2,6 +2,7 @@
  * E11-W02 round 2 (review #4): since A38 a tab outlives a deploy, and the service worker drops the
  * old build's files, so the tab's next `import()` of a screen's chunk can find it gone. Such a
  * failure is a stale document, not a broken screen: one reload fetches the new build's chunks.
+ * Shared by both apps since round 3 (the back office's lazy console and courses chunks).
  */
 const CHUNK_LOAD_ERRORS = [
   /Failed to fetch dynamically imported module/u,

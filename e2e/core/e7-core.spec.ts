@@ -5,7 +5,7 @@ import type { Browser, BrowserContext, Locator, Page, Request, Response } from "
 
 import type { components } from "../../packages/api-client/src/generated/schema";
 
-import { expect, test } from "./oauth-token-log";
+import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 // E7-W03 · S11 WP-11-F (web half) end to end against the published core with the E7 demo seed
 // (api E7-T04, `messaging:` of the image's `seeds/demo-canic.yaml`, dumped by the wrapper next to
@@ -349,14 +349,6 @@ function isCall(method: string, path: RegExp) {
     response.request().method() === method && path.test(apiPath(response));
 }
 
-function isRefresh(response: Response): boolean {
-  return (
-    response.url().endsWith("/oauth2/token") &&
-    response.request().method() === "POST" &&
-    new URLSearchParams(response.request().postData() ?? "").get("grant_type") === "refresh_token"
-  );
-}
-
 async function submitPasswordLogin(page: Page): Promise<void> {
   const meStatuses: number[] = [];
   page.on("response", (response) => {
@@ -446,12 +438,11 @@ async function loginClubs(page: Page, email: string, locale: Locale): Promise<vo
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel(ui[locale].email).fill(email);
   await page.getByLabel(ui[locale].password, { exact: true }).fill(corePassword);
-  // The app refreshes once it lands; a navigation that aborted that call would leave the browser
-  // with the rotated-away cookie (`REFRESH_REUSED`), so the login waits for it as E1–E6 do.
-  const routeRefresh = page.waitForResponse(isRefresh);
-  await submitPasswordLogin(page);
-  await page.waitForURL((url) => url.pathname === "/inici" || url.pathname === "/perfil-acces");
-  expect((await routeRefresh).status()).toBe(200);
+  // A38 (E11-W02): the landing (or 03b) opens in place with the login's session, no refresh.
+  await expectNoRefreshDuring(page, async () => {
+    await submitPasswordLogin(page);
+    await page.waitForURL((url) => url.pathname === "/inici" || url.pathname === "/perfil-acces");
+  });
   if (new URL(page.url()).pathname === "/perfil-acces") {
     // 03b: an account with more than one profile and none remembered chooses one first.
     note(`profile-choice-${email}`, { locale });
@@ -655,12 +646,21 @@ async function switchJobs(
 ): Promise<Record<string, { enabled: boolean | null; status: number }>> {
   const answers: Record<string, { enabled: boolean | null; status: number }> = {};
   for (const name of names) {
-    const answer = await call<Partial<Schemas["JobSwitchResponse"]>>(
+    const answer = await call<Partial<Schemas["ApiError"] & Schemas["JobSwitchResponse"]>>(
       admin,
       `/jobs/${name}/switch`,
       "PUT",
       { enabled },
     );
+    // E11-T01 (S14): `erasures` and `retention-sweep` are a legal duty without a switch, the
+    // contract's `404 JOB_UNKNOWN {reason: NO_SWITCH}`: they stay as they are.
+    if (
+      answer.status === 404 &&
+      answer.body.code === "JOB_UNKNOWN" &&
+      answer.body.details?.reason === "NO_SWITCH"
+    ) {
+      continue;
+    }
     answers[name] = { enabled: answer.body.enabled ?? null, status: answer.status };
   }
   return answers;

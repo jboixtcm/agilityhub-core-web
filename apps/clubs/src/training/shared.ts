@@ -500,9 +500,12 @@ export function anyCell(slot: TrainingSlot, rings: readonly TrainingRing[]): Slo
   if (slot.anyFree) return { bookable: slot.bookable, columnId: ANY_COLUMN, id, state: "FREE" };
   const cells = rings.map((ring) => slot.rings[ring.id]);
   const allClass = cells.length > 0 && cells.every((cell) => cell?.reason === "CLASS");
+  // «18:50 classe» (INC-44) when every ring's class starts then; else the row's time.
+  const starts = new Set(cells.map((cell) => cell?.classStartsAtLocal ?? null));
+  const [classTime = null] = starts.size === 1 ? starts : [];
   // Struck without a reason: the rings may be taken for different ones.
   return allClass
-    ? { columnId: ANY_COLUMN, id, reason: "CLASS", state: "BLOCKED" }
+    ? { classTime, columnId: ANY_COLUMN, id, reason: "CLASS", state: "BLOCKED" }
     : { columnId: ANY_COLUMN, id, reason: null, state: "BOOKED" };
 }
 
@@ -511,6 +514,8 @@ export function ringCell(slot: TrainingSlot, ringId: string): SlotCellModel {
   const cell = slot.rings[ringId];
   return {
     bookable: cell?.state === "FREE" && slot.bookable,
+    // INC-44: the class's own start («18:50 classe»), for every viewer.
+    classTime: cell?.classStartsAtLocal ?? null,
     columnId: ringId,
     id: `${ringId}_${slot.startsAt}`,
     reason: cell?.reason ?? null,

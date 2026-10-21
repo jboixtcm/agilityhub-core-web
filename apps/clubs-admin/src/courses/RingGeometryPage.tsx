@@ -810,15 +810,9 @@ function SetupsCard({
             // R-16-06 (ruling E117): the client joins the setup's placement with the placements.
             const stalePlacement =
               setup.status === "ACTIVE" && placement?.stale === true ? placement : undefined;
-            // The api keeps no reason for DISMANTLED: a setup dismantled the instant the next one
-            // was built was replaced by it (R-16-07, one transaction).
-            const dismantledAt =
-              setup.dismantledAt == null ? Number.NaN : Date.parse(setup.dismantledAt);
-            const replaced =
-              setup.status === "DISMANTLED" &&
-              setups.some(
-                (other) => other.id !== setup.id && Date.parse(other.builtAt) === dismantledAt,
-              );
+            // INC-62: the api says why a setup was dismantled; «Substituït» only when another
+            // setup replaced it (R-16-07), never a «Desmunta» that fell in the same second.
+            const replaced = setup.status === "DISMANTLED" && setup.dismantledReason === "REPLACED";
             return (
               <li key={setup.id}>
                 <div>

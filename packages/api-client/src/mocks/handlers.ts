@@ -66,6 +66,7 @@ import { CONSOLE_CLUB_IDS, consoleState } from "./fixtures/console";
 import {
   COURSE_IDS,
   courseState,
+  dismantleForInactiveRing,
   PLACEMENT_IDS,
   resetCourseState,
   SETUP_IDS,
@@ -3845,6 +3846,9 @@ export const handlers = [
         requestedCapacity ?? currentCapacity ?? ring.effectiveTrainingCapacity,
       version: ring.version + 1,
     };
+    if (ring.active && !updated.active) {
+      dismantleForInactiveRing(ring.id, currentMockScenario().me.account.id);
+    }
     return HttpResponse.json(replaceCatalogItem(catalogState.rings, updated));
   }),
   http.delete("*/api/v1/rings/:id", ({ params }) => {

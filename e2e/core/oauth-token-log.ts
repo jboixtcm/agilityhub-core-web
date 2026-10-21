@@ -125,6 +125,28 @@ function pageOf(request: Request): string {
   }
 }
 
+/**
+ * E11-W02 round 3 (A38): since the members' app has a router, a password login opens its landing
+ * in place with the session it just made — no reload, so no `refresh_token` grant (a later full
+ * load, `page.goto`, restores the session from the cookie). Runs `act` (the login, up to its
+ * landing) and fails if the page posted a refresh meanwhile.
+ */
+export async function expectNoRefreshDuring(page: Page, act: () => Promise<void>): Promise<void> {
+  const refreshes: string[] = [];
+  const onRequest = (request: Request) => {
+    if (isTokenRequest(request) && grantType(request) === "refresh_token") {
+      refreshes.push(pageOf(request));
+    }
+  };
+  page.on("request", onRequest);
+  try {
+    await act();
+  } finally {
+    page.off("request", onRequest);
+  }
+  expect(refreshes, "A38: the login opens the landing in place, without a refresh").toEqual([]);
+}
+
 class OAuthTokenRecorder {
   readonly calls: OAuthTokenCall[] = [];
   currentTest = "(outside a test)";

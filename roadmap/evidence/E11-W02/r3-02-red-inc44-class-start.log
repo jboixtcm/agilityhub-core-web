@@ -1,0 +1,938 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+ ❯ src/instructor/RingBlockPage.test.tsx (12 tests | 1 failed | 11 skipped) 525ms
+   ❯ screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) (10)
+     × E11-W02 round 3 (INC-44, S09 §13-3): a cell the 18:50 class takes reads «18:50 classe» on its 18:30 and 19:00 rows, with the class it is 522ms
+ ❯ src/training/TrainingPage.test.tsx (28 tests | 1 failed | 27 skipped) 536ms
+   ❯ T-09-38 screen 08 grid, «Qualsevol» and the confirmation (4)
+     × draws the api's cells: free outlined and pressable, struck, «classe» dimmed 533ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > E11-W02 round 3 (INC-44, S09 §13-3): a cell the 18:50 class takes reads «18:50 classe» on its 18:30 and 19:00 rows, with the class it is
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "19:00, 18:50 classe"
+
+Here are the accessible roles:
+
+  button:
+
+  Name "14:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "14:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "15:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "15:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "16:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "16:30, entrenament":
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:30, entrenament"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--taken"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"taken"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"Marc + Chun-li"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "17:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "17:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "18:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "18:30, 18:30 classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:30, 18:30 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"B+C"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "19:00, 19:00 classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:00, 19:00 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"B+C"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "19:30, 19:30 classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:30, 19:30 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"B+C"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "20:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "20:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "21:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "21:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-label[39m=[32m"Hores de la franja"[39m
+  [33mclass[39m=[32m"ah-slot-grid ah-slot-grid--flow"[39m
+  [33mrole[39m=[32m"group"[39m
+[36m>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m14:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m14:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m15:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m15:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m16:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:30, entrenament"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--taken"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"taken"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"Marc + Chun-li"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m16:30[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__detail"[39m
+    [36m>[39m
+      [0mMarc + Chun-li[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m17:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m17:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m18:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:30, 18:30 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"B+C"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m18:30 classe[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__detail"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:00, 19:00 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"B+C"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m19:00 classe[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__detail"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:30, 19:30 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtitle[39m=[32m"B+C"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m19:30 classe[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__detail"[39m
+    [36m>[39m
+      [0mB+C[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m20:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m20:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m21:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"ring-central"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m21:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ cell src/instructor/RingBlockPage.test.tsx:39:46
+     37|
+     38| function cell(name: string): HTMLElement {
+     39|   return within(group("Hores de la franja")).getByRole("button", { nam…
+       |                                              ^
+     40| }
+     41|
+ ❯ src/instructor/RingBlockPage.test.tsx:114:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > draws the api's cells: free outlined and pressable, struck, «classe» dimmed
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "18:30, 18:50 classe"
+
+Here are the accessible roles:
+
+  button:
+
+  Name "14:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "14:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "15:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "15:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "16:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "16:30, ocupada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:30, ocupada"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--taken"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"taken"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "17:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "17:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "18:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "18:30, 18:30 classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:30, 18:30 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "19:00, 19:00 classe":
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:00, 19:00 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "19:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "20:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "20:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "21:00, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------button:
+
+  Name "21:30, lliure":
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-label[39m=[32m"Tarda"[39m
+  [33mclass[39m=[32m"ah-slot-grid ah-slot-grid--flow"[39m
+  [33mrole[39m=[32m"group"[39m
+[36m>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m14:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"14:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m14:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m15:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"15:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m15:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m16:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"16:30, ocupada"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--taken"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"taken"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m16:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m17:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"17:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m17:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m18:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"18:30, 18:30 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m18:30 classe[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:00, 19:00 classe"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--class"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"class"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m19:00 classe[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"19:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m19:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m20:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"20:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m20:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:00, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m21:00[0m
+    [36m</span>[39m
+  [36m</button>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"21:30, lliure"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-slot ah-slot--free"[39m
+    [33mdata-ring[39m=[32m"__any__"[39m
+    [33mdata-slot-state[39m=[32m"free"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-slot__time"[39m
+    [36m>[39m
+      [0m21:30[0m
+    [36m</span>[39m
+  [36m</button>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/training/TrainingPage.test.tsx:137:38
+    135|     // start (`classStartsAtLocal`) on the 18:30 and 19:00 rows of the…
+    136|     const afternoon = group("Tarda");
+    137|     const lesson = within(afternoon).getByRole("button", { name: "18:3…
+       |                                      ^
+    138|     expect(lesson).toHaveClass("ah-slot--class");
+    139|     expect(lesson).toHaveTextContent("18:50 classe");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 38 skipped (40)
+   Start at  17:03:34
+   Duration  1.95s (transform 39%, tests 29%, environment 16%, import 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingPage.test.tsx src/instructor/RingBlockPage.test.tsx -t INC-44|draws the api's cells

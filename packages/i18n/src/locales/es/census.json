@@ -54,7 +54,6 @@
   "members": {
     "activeCount": "{count} de alta",
     "bulk": {
-      "changeLevel": "Cambiar nivel",
       "exportSelection": "Exportar selección",
       "sendAnnouncement": "Enviar comunicado"
     },

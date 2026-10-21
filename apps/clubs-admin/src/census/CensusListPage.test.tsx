@@ -74,6 +74,17 @@ describe("T-03-38 D5 universal member list", () => {
     expect(new URLSearchParams(window.location.search).get("size")).toBe("50");
   });
 
+  it("E11-W02 round 3 (AGENTS rule 3): the bulk bar offers only what works — no «Canviar nivell» while the contract has no bulk level endpoint", async () => {
+    window.history.pushState(null, "", "/abonats");
+    await renderPage("members");
+    fireEvent.click(await screen.findByRole("checkbox", { name: "Selecciona Laura Serra Vidal" }));
+    const bar = screen.getByText("1 seleccionat — accions massives:").parentElement;
+    if (bar === null) throw new TypeError("Expected the bulk actions bar");
+    expect(within(bar).getByRole("button", { name: "Enviar comunicat" })).toBeVisible();
+    expect(within(bar).getByRole("button", { name: "Exportar selecció" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Canviar nivell" })).toBeNull();
+  });
+
   it("E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members", async () => {
     // The real core's plan ids are UUIDs: `plan-member` exists only in the MSW fixture.
     const coreMembers = [

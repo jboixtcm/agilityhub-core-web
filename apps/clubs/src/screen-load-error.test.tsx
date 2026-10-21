@@ -3,13 +3,12 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
 import { createClubsI18n } from "@agilityhub/i18n/clubs";
-import { type Branding, BrandingProvider } from "@agilityhub/ui";
+import { type Branding, BrandingProvider, reloadDocument } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { App } from "./App";
-import { reloadDocument } from "./chunk-reload";
 
 // The screens' chunk is gone (a deploy replaced it): its import fails as a browser's does.
 vi.mock("./screens", () =>
@@ -17,8 +16,8 @@ vi.mock("./screens", () =>
     new TypeError("Failed to fetch dynamically imported module: /assets/screens-old.js"),
   ),
 );
-vi.mock("./chunk-reload", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("./chunk-reload")>()),
+vi.mock("@agilityhub/ui", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@agilityhub/ui")>()),
   reloadDocument: vi.fn(),
 }));
 

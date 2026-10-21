@@ -1,0 +1,1236 @@
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web-c
+> bash scripts/e2e-docker.sh E11-W02
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: E11-W02
+Capture folder of the permanent mock specs: <the task of each spec>
+Playwright arguments: --workers=4
+Checkout copied into the container: 440M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 107, added 107
+Progress: resolved 858, reused 0, downloaded 340, added 339
+Progress: resolved 858, reused 0, downloaded 533, added 530
+Progress: resolved 858, reused 0, downloaded 561, added 561
+Progress: resolved 858, reused 0, downloaded 625, added 625
+Progress: resolved 858, reused 0, downloaded 742, added 742
+Progress: resolved 858, reused 0, downloaded 815, added 815
+Progress: resolved 858, reused 0, downloaded 854, added 854
+Progress: resolved 858, reused 0, downloaded 855, added 855
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 10.3s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 336cf6833df329e9
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 7246a14bcb0c4785
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing f9ba4ae3823dc18d
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 62490415ae4cd114
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=4
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+@agilityhub/course-ui:e2e: ····
+@agilityhub/course-ui:e2e:   4 passed (7.1s)
+clubs-admin:build: cache miss, executing cbb1774c796fbb85
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 472 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                             2.90 kB │ gzip:   0.97 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-BR2xPRm0.css                       5.67 kB │ gzip:   1.22 kB
+clubs-admin:build: dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+clubs-admin:build: dist/assets/list-helpers-Cs0DdFxJ.css                      38.50 kB │ gzip:   6.41 kB
+clubs-admin:build: dist/assets/index-Dp25xndI.css                            114.19 kB │ gzip:  17.98 kB
+clubs-admin:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs-admin:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs-admin:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs-admin:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-BeJlwKIP.js                      1.44 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs-admin:build: dist/assets/training-CLd1ihpP.js                            1.62 kB │ gzip:   0.85 kB
+clubs-admin:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs-admin:build: dist/assets/home-CNw600-7.js                                1.65 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-DTHNRC_R.js                          1.96 kB │ gzip:   0.95 kB
+clubs-admin:build: dist/assets/inactivity-Cd3ruGr3.js                          2.07 kB │ gzip:   1.03 kB
+clubs-admin:build: dist/assets/inactivity-2pMMdTz_.js                          2.08 kB │ gzip:   1.03 kB
+clubs-admin:build: dist/assets/admin-dashboard-CaRQFr39.js                     2.09 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/admin-dashboard-BQL-FPZU.js                     2.15 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/admin-dashboard-Dp6ttMdC.js                     2.20 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/id-EtAaSn9n.js                                  3.10 kB │ gzip:   1.37 kB
+clubs-admin:build: dist/assets/id-nHarCitd.js                                  3.27 kB │ gzip:   1.51 kB
+clubs-admin:build: dist/assets/id-YbpbOAwS.js                                  3.34 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/courses-DCeyglGp.js                             3.82 kB │ gzip:   1.71 kB
+clubs-admin:build: dist/assets/courses-D0ohAZtv.js                             4.10 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/courses-BSgiFxwz.js                             4.11 kB │ gzip:   1.89 kB
+clubs-admin:build: dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/admin-messaging-jCnhc3Pj.js                     4.80 kB │ gzip:   2.04 kB
+clubs-admin:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs-admin:build: dist/assets/booking-DTKV9qOl.js                             5.18 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/admin-catalogs-p29fM8xq.js                      5.41 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/admin-catalogs-dZtpqy8S.js                      5.67 kB │ gzip:   2.23 kB
+clubs-admin:build: dist/assets/auth-Cdqg_K8k.js                                5.67 kB │ gzip:   2.35 kB
+clubs-admin:build: dist/assets/admin-catalogs-D4wG5vIy.js                      5.87 kB │ gzip:   2.26 kB
+clubs-admin:build: dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+clubs-admin:build: dist/assets/signup-Dk93t5hf.js                              5.98 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/auth-DJhJi_PF.js                                6.27 kB │ gzip:   2.59 kB
+clubs-admin:build: dist/assets/auth-Dj7hdYLL.js                                6.34 kB │ gzip:   2.60 kB
+clubs-admin:build: dist/assets/admin-activities-Cq_gSQfl.js                    6.61 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-audit-CXfB8Bhp.js                         6.69 kB │ gzip:   2.76 kB
+clubs-admin:build: dist/assets/census-DUSBlok6.js                              6.80 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-activities-BniXEHx4.js                    6.86 kB │ gzip:   2.84 kB
+clubs-admin:build: dist/assets/admin-activities-CgUWXhLO.js                    7.06 kB │ gzip:   2.90 kB
+clubs-admin:build: dist/assets/census-B-NMesaW.js                              7.15 kB │ gzip:   2.94 kB
+clubs-admin:build: dist/assets/admin-audit-T6uqCqLx.js                         7.34 kB │ gzip:   3.06 kB
+clubs-admin:build: dist/assets/census-HJh3eNnF.js                              7.35 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-audit-C-gg9Pjy.js                         7.48 kB │ gzip:   3.08 kB
+clubs-admin:build: dist/assets/admin-scheduling-CuhYcQCI.js                    8.44 kB │ gzip:   3.12 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/admin-scheduling-aQ58wazE.js                    8.87 kB │ gzip:   3.38 kB
+clubs-admin:build: dist/assets/admin-scheduling-HaS_SkUx.js                    8.89 kB │ gzip:   3.39 kB
+clubs-admin:build: dist/assets/instructor-DxGH6HDp.js                          9.21 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/instructor-B9ckjWiH.js                          9.62 kB │ gzip:   3.52 kB
+clubs-admin:build: dist/assets/instructor-CsKxTl8f.js                          9.74 kB │ gzip:   3.54 kB
+clubs-admin:build: dist/assets/admin-billing-CSu7p_6R.js                       9.83 kB │ gzip:   3.47 kB
+clubs-admin:build: dist/assets/admin-billing-CC32bEji.js                      10.03 kB │ gzip:   3.78 kB
+clubs-admin:build: dist/assets/admin-billing-C0CifaQl.js                      10.24 kB │ gzip:   3.82 kB
+clubs-admin:build: dist/assets/enums-Bxq9DLOA.js                              10.29 kB │ gzip:   4.28 kB
+clubs-admin:build: dist/assets/enums-1H1J8p9N.js                              10.64 kB │ gzip:   4.48 kB
+clubs-admin:build: dist/assets/enums-CKDiW-uu.js                              10.70 kB │ gzip:   4.48 kB
+clubs-admin:build: dist/assets/admin-courses-BQToCyML.js                      12.83 kB │ gzip:   4.88 kB
+clubs-admin:build: dist/assets/admin-courses-CLePRG4x.js                      13.68 kB │ gzip:   5.22 kB
+clubs-admin:build: dist/assets/admin-courses-DJgGdw_2.js                      14.01 kB │ gzip:   5.26 kB
+clubs-admin:build: dist/assets/admin-census-KdC6HJqg.js                       19.34 kB │ gzip:   7.12 kB
+clubs-admin:build: dist/assets/console-CN3WboCd.js                            20.36 kB │ gzip:   7.98 kB
+clubs-admin:build: dist/assets/admin-census-D6-AoVB8.js                       20.57 kB │ gzip:   7.73 kB
+clubs-admin:build: dist/assets/admin-census-B4MmwTam.js                       21.06 kB │ gzip:   7.80 kB
+clubs-admin:build: dist/assets/console-DR_0ce9p.js                            21.59 kB │ gzip:   8.69 kB
+clubs-admin:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs-admin:build: dist/assets/console-scRFSWSi.js                            22.26 kB │ gzip:   8.78 kB
+clubs-admin:build: dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+clubs-admin:build: dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+clubs-admin:build: dist/assets/admin-settings-C2S0yznb.js                     27.24 kB │ gzip:   9.15 kB
+clubs-admin:build: dist/assets/admin-settings-KoQZaOjh.js                     29.41 kB │ gzip:   9.91 kB
+clubs-admin:build: dist/assets/admin-settings-CnQDRxro.js                     29.99 kB │ gzip:   9.96 kB
+clubs-admin:build: dist/assets/ConsolePage-B4VN7mFU.js                       116.72 kB │ gzip:  27.84 kB
+clubs-admin:build: dist/assets/list-helpers-D4e9ykZ-.js                      222.65 kB │ gzip:  69.17 kB
+clubs-admin:build: dist/assets/CoursesRoute-BACiPbB1.js                      229.57 kB │ gzip:  63.49 kB
+clubs-admin:build: dist/assets/CourseViewer3D-ChTAR7Nd.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-Dz_roSkw.js                           1,074.48 kB │ gzip: 367.13 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs-admin:build: [32m✓ built in 377ms[39m
+clubs:build: cache miss, executing 72d3ffee92e2cf41
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: transforming...
+clubs:build: ✓ 421 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/index.html                                             2.94 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-i5g5RRJN.css                          12.70 kB │ gzip:   2.55 kB
+clubs:build: dist/assets/screens-B1WyLGC1.css                           21.13 kB │ gzip:   3.50 kB
+clubs:build: dist/assets/shared-DcmVIp1B.css                            40.01 kB │ gzip:   6.69 kB
+clubs:build: dist/assets/index-fXSfocZd.css                             64.61 kB │ gzip:  11.63 kB
+clubs:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-BFUNwGaa.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs:build: dist/assets/training-CLd1ihpP.js                            1.62 kB │ gzip:   0.85 kB
+clubs:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs:build: dist/assets/home-CNw600-7.js                                1.65 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-DTHNRC_R.js                          1.96 kB │ gzip:   0.95 kB
+clubs:build: dist/assets/inactivity-Cd3ruGr3.js                          2.07 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/inactivity-2pMMdTz_.js                          2.08 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-zStx-vQz.js                            2.91 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/courses-DCeyglGp.js                             3.82 kB │ gzip:   1.71 kB
+clubs:build: dist/assets/courses-D0ohAZtv.js                             4.10 kB │ gzip:   1.87 kB
+clubs:build: dist/assets/courses-BSgiFxwz.js                             4.11 kB │ gzip:   1.89 kB
+clubs:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs:build: dist/assets/booking-DTKV9qOl.js                             5.18 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/auth-Cdqg_K8k.js                                5.67 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+clubs:build: dist/assets/signup-Dk93t5hf.js                              5.98 kB │ gzip:   2.82 kB
+clubs:build: dist/assets/auth-DJhJi_PF.js                                6.27 kB │ gzip:   2.59 kB
+clubs:build: dist/assets/auth-Dj7hdYLL.js                                6.34 kB │ gzip:   2.60 kB
+clubs:build: dist/assets/census-DUSBlok6.js                              6.80 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/census-B-NMesaW.js                              7.15 kB │ gzip:   2.94 kB
+clubs:build: dist/assets/census-HJh3eNnF.js                              7.35 kB │ gzip:   2.99 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/instructor-DxGH6HDp.js                          9.21 kB │ gzip:   3.30 kB
+clubs:build: dist/assets/instructor-B9ckjWiH.js                          9.62 kB │ gzip:   3.52 kB
+clubs:build: dist/assets/instructor-CsKxTl8f.js                          9.74 kB │ gzip:   3.54 kB
+clubs:build: dist/assets/enums-Bxq9DLOA.js                              10.29 kB │ gzip:   4.28 kB
+clubs:build: dist/assets/enums-1H1J8p9N.js                              10.64 kB │ gzip:   4.48 kB
+clubs:build: dist/assets/enums-CKDiW-uu.js                              10.70 kB │ gzip:   4.48 kB
+clubs:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs:build: dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+clubs:build: dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+clubs:build: dist/assets/CoursesRoute-BDTxGoTW.js                      131.14 kB │ gzip:  36.26 kB
+clubs:build: dist/assets/screens-ByBal9sr.js                           219.34 kB │ gzip:  56.18 kB
+clubs:build: dist/assets/shared-CIAUp2Wd.js                            230.98 kB │ gzip:  71.44 kB
+clubs:build: dist/assets/index-o1jykHjm.js                             252.71 kB │ gzip:  76.72 kB
+clubs:build: dist/assets/CourseViewer3D-CgpWusW4.js                    582.82 kB │ gzip: 151.70 kB
+clubs:build: 
+clubs:build: [33m[plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs:build: [32m✓ built in 231ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+clubs:build: 
+clubs:build: [32m✓ built in 30ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  62 entries (1218.13 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: check-clubs-bundle: 57 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+id:build: cache miss, executing 2dbd090cbb3f88ed
+id:build: 
+id:build: > id@0.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+id:build: transforming...
+id:build: ✓ 258 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-D_qMauPa.css                           54.87 kB │ gzip:   9.91 kB
+id:build: dist/assets/common-BmBJ5B82.js                            2.39 kB │ gzip:   1.12 kB
+id:build: dist/assets/common-CDigVNb9.js                            2.48 kB │ gzip:   1.22 kB
+id:build: dist/assets/common-j9bnHlpA.js                            2.54 kB │ gzip:   1.24 kB
+id:build: dist/assets/id-EtAaSn9n.js                                3.10 kB │ gzip:   1.37 kB
+id:build: dist/assets/id-nHarCitd.js                                3.27 kB │ gzip:   1.51 kB
+id:build: dist/assets/id-YbpbOAwS.js                                3.34 kB │ gzip:   1.52 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+id:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+id:build: dist/assets/index-CUESeonB.js                           329.50 kB │ gzip: 101.54 kB
+id:build: 
+id:build: [32m✓ built in 131ms[39m
+clubs-admin:e2e: cache bypass, force executing 7d23bab66b653ea3
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test --workers\=4
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:1003) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 113 tests using 4 workers
+clubs-admin:e2e: TTTTTTTTTTTTTTTTFFFFTTTT············°°°°°°°°°°°°···················F·········F··
+clubs-admin:e2e: ·································
+clubs-admin:e2e: 
+clubs-admin:e2e:   1) e2e/activities.spec.ts:48:3 › E4-W04 D7 activities › T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Activitats', exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       48 |   test("T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup", async ({ page }) => {
+clubs-admin:e2e:       49 |     await signIn(page, "admin");
+clubs-admin:e2e:     > 50 |     await page.getByRole("link", { exact: true, name: "Activitats" }).click();
+clubs-admin:e2e:          |                                                                       ^
+clubs-admin:e2e:       51 |     await page.waitForURL("**/activitats**");
+clubs-admin:e2e:       52 |     const table = page.getByRole("table");
+clubs-admin:e2e:       53 |     const tournament = table.getByRole("row").filter({ hasText: "Torneig d'Estiu 2026" });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:50:71
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-E4-W04-D7-activ-e4f79-d-Estiu-2026»-as-the-mockup/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-E4-W04-D7-activ-e4f79-d-Estiu-2026»-as-the-mockup/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-E4-W04-D7-activ-e4f79-d-Estiu-2026»-as-the-mockup/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   2) e2e/activities.spec.ts:78:3 › E4-W04 D7 activities › T-07-29 publishing a dated draft opens the ring-conflict dialog and applies the options 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       29 |   );
+clubs-admin:e2e:       30 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 31 |   await page.getByLabel("Correu electrònic").fill(`${scenario}@example.test`);
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       32 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       33 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       34 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at signIn (/work/apps/clubs-admin/e2e/activities.spec.ts:31:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:81:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-E4-W04-D7-activ-8efcc-log-and-applies-the-options/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-E4-W04-D7-activ-8efcc-log-and-applies-the-options/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-E4-W04-D7-activ-8efcc-log-and-applies-the-options/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   3) e2e/activities.spec.ts:111:3 › E4-W04 D7 activities › T-07-29 cancelling the Torneig lists the 22 registrants and requires the notice text 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.waitForURL: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     =========================== logs ===========================
+clubs-admin:e2e:     waiting for navigation until "load"
+clubs-admin:e2e:       navigated to "http://127.0.0.1:4174/tauler"
+clubs-admin:e2e:       "networkidle" event fired
+clubs-admin:e2e:     ============================================================
+clubs-admin:e2e: 
+clubs-admin:e2e:       34 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:       35 |   // The account's landing (E11-W02 round 2, INC-41): D1 for an ADMIN, D12 for an INSTRUCTOR.
+clubs-admin:e2e:     > 36 |   await page.waitForURL(/\/(tauler|agenda)$/u);
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       37 | }
+clubs-admin:e2e:       38 |
+clubs-admin:e2e:       39 | function maintenance(page: Page, title: string) {
+clubs-admin:e2e:         at signIn (/work/apps/clubs-admin/e2e/activities.spec.ts:36:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:114:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-E4-W04-D7-activ-39744-nd-requires-the-notice-text/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-E4-W04-D7-activ-39744-nd-requires-the-notice-text/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-E4-W04-D7-activ-39744-nd-requires-the-notice-text/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   4) e2e/activities.spec.ts:131:3 › E4-W04 D7 activities › registrants of a full activity with the FIFO waitlist positions 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/activitats/activity-taller-contactes", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       131 |   test("registrants of a full activity with the FIFO waitlist positions", async ({ page }) => {
+clubs-admin:e2e:       132 |     await signIn(page, "admin");
+clubs-admin:e2e:     > 133 |     await page.goto(`${baseUrl}/activitats/activity-taller-contactes`);
+clubs-admin:e2e:           |                ^
+clubs-admin:e2e:       134 |     await maintenance(page, "Taller de contactes")
+clubs-admin:e2e:       135 |       .getByRole("link", { name: "Inscrits (10) ›" })
+clubs-admin:e2e:       136 |       .click();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:133:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-E4-W04-D7-activ-95763-the-FIFO-waitlist-positions/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-E4-W04-D7-activ-95763-the-FIFO-waitlist-positions/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-E4-W04-D7-activ-95763-the-FIFO-waitlist-positions/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   5) e2e/activities.spec.ts:149:3 › E4-W04 D7 activities › INSTRUCTOR reads D7 without actions ─────
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeDisabled() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('region', { name: 'Manteniment de l\'activitat — Torneig d\'Estiu 2026' }).getByLabel('Títol', { exact: true })
+clubs-admin:e2e:     Expected: disabled
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeDisabled" getByRole('region', { name: 'Manteniment de l\'activitat — Torneig d\'Estiu 2026' }).getByLabel('Títol', { exact: true }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('region', { name: 'Manteniment de l\'activitat — Torneig d\'Estiu 2026' }).getByLabel('Títol', { exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       151 |     await page.goto(`${baseUrl}/activitats/activity-torneig-estiu-2026`);
+clubs-admin:e2e:       152 |     const card = maintenance(page, "Torneig d'Estiu 2026");
+clubs-admin:e2e:     > 153 |     await expect(card.getByLabel("Títol", { exact: true })).toBeDisabled();
+clubs-admin:e2e:           |                                                             ^
+clubs-admin:e2e:       154 |     await expect(page.getByRole("button", { name: "Nova activitat" })).toHaveCount(0);
+clubs-admin:e2e:       155 |     await expect(card.getByRole("button", { name: "DESA" })).toHaveCount(0);
+clubs-admin:e2e:       156 |   });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:153:61
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-E4-W04-D7-activ-74a66-OR-reads-D7-without-actions/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-E4-W04-D7-activ-74a66-OR-reads-D7-without-actions/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-E4-W04-D7-activ-74a66-OR-reads-D7-without-actions/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   6) e2e/activities.spec.ts:166:3 › T-07-29 E4-W08 D7 follow-ups › S07 §6 registrants: the member filter (memberId) names the member in its chip 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/activitats/activity-taller-contactes/inscrits", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       168 |   }) => {
+clubs-admin:e2e:       169 |     await signIn(page, "admin");
+clubs-admin:e2e:     > 170 |     await page.goto(`${baseUrl}/activitats/activity-taller-contactes/inscrits`);
+clubs-admin:e2e:           |                ^
+clubs-admin:e2e:       171 |     const table = page.getByRole("table");
+clubs-admin:e2e:       172 |     await expect(table.getByText("en llista d'espera (1)")).toBeVisible();
+clubs-admin:e2e:       173 |     const filterSummary = page.locator("summary", { hasText: /^Filtre/u });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:170:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-T-07-29-E4-W08--6df1b-ames-the-member-in-its-chip/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-T-07-29-E4-W08--6df1b-ames-the-member-in-its-chip/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-T-07-29-E4-W08--6df1b-ames-the-member-in-its-chip/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   7) e2e/agenda-ring-card.spec.ts:46:3 › E5-W02 D12 card «Reservar o bloquejar pista (sense alumne)» › T-09-40 (D12) an instructor reserves Petita on Thursday 13 from the card 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.waitForURL: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     =========================== logs ===========================
+clubs-admin:e2e:     waiting for navigation until "load"
+clubs-admin:e2e:       navigated to "http://127.0.0.1:4174/agenda"
+clubs-admin:e2e:       "networkidle" event fired
+clubs-admin:e2e:       "domcontentloaded" event fired
+clubs-admin:e2e:     ============================================================
+clubs-admin:e2e: 
+clubs-admin:e2e:       40 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:       41 |   // The account's landing (E11-W02 round 2, INC-41): D1 for an ADMIN, D12 for an INSTRUCTOR.
+clubs-admin:e2e:     > 42 |   await page.waitForURL(/\/(tauler|agenda)$/u);
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       43 | }
+clubs-admin:e2e:       44 |
+clubs-admin:e2e:       45 | test.describe("E5-W02 D12 card «Reservar o bloquejar pista (sense alumne)»", () => {
+clubs-admin:e2e:         at signIn (/work/apps/clubs-admin/e2e/agenda-ring-card.spec.ts:42:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/agenda-ring-card.spec.ts:49:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/agenda-ring-card-E5-W02-D1-a8a6c-n-Thursday-13-from-the-card/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/agenda-ring-card-E5-W02-D1-a8a6c-n-Thursday-13-from-the-card/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/agenda-ring-card-E5-W02-D1-a8a6c-n-Thursday-13-from-the-card/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   8) e2e/audit.spec.ts:38:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.waitForURL: Test ended.
+clubs-admin:e2e:     =========================== logs ===========================
+clubs-admin:e2e:     waiting for navigation to "**/tauler" until "load"
+clubs-admin:e2e:       navigated to "http://127.0.0.1:4174/tauler"
+clubs-admin:e2e:     ============================================================
+clubs-admin:e2e: 
+clubs-admin:e2e:       29 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       30 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:     > 31 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       32 | }
+clubs-admin:e2e:       33 |
+clubs-admin:e2e:       34 | test.beforeAll(() => {
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/audit.spec.ts:31:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:43:3
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   9) e2e/audit.spec.ts:109:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       25 |   }, allLocalesBranding);
+clubs-admin:e2e:       26 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 27 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       28 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       29 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       30 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/audit.spec.ts:27:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:114:3
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   10) e2e/billing.spec.ts:81:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 D6 as the mockup draws it: incidents first, cash members, KPIs, chips and the month's receipts 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.waitForURL: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     =========================== logs ===========================
+clubs-admin:e2e:     waiting for navigation to "**/tauler" until "load"
+clubs-admin:e2e:       navigated to "http://127.0.0.1:4174/tauler"
+clubs-admin:e2e:       "networkidle" event fired
+clubs-admin:e2e:       "domcontentloaded" event fired
+clubs-admin:e2e:     ============================================================
+clubs-admin:e2e: 
+clubs-admin:e2e:       48 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       49 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:     > 50 |   await page.waitForURL("**/tauler");
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       51 | }
+clubs-admin:e2e:       52 |
+clubs-admin:e2e:       53 | /** D6 on a month; the page is ready once the list draws the month's receipts. */
+clubs-admin:e2e:         at signIn (/work/apps/clubs-admin/e2e/billing.spec.ts:50:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:84:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-00cc5-ps-and-the-month-s-receipts/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-00cc5-ps-and-the-month-s-receipts/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-00cc5-ps-and-the-month-s-receipts/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   11) e2e/billing.spec.ts:170:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › E8-W04 6b: incident and cash-member links open their real D10 mock records 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       44 |   );
+clubs-admin:e2e:       45 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 46 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       47 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       48 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       49 |   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+clubs-admin:e2e:         at signIn (/work/apps/clubs-admin/e2e/billing.spec.ts:46:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:173:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-d9548-their-real-D10-mock-records/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-d9548-their-real-D10-mock-records/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-d9548-their-real-D10-mock-records/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   12) e2e/billing.spec.ts:192:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the strong confirmation: the next month is simulated, then «Es generaran 168 rebuts…» generates it 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/facturacio?mes=2026-09", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       53 | /** D6 on a month; the page is ready once the list draws the month's receipts. */
+clubs-admin:e2e:       54 | async function openMonth(page: Page, period: string, title: string) {
+clubs-admin:e2e:     > 55 |   await page.goto(`${baseUrl}/facturacio?mes=${period}`);
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       56 |   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+clubs-admin:e2e:       57 | }
+clubs-admin:e2e:       58 |
+clubs-admin:e2e:         at openMonth (/work/apps/clubs-admin/e2e/billing.spec.ts:55:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:196:11
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-2239a-n-168-rebuts…»-generates-it/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-2239a-n-168-rebuts…»-generates-it/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-2239a-n-168-rebuts…»-generates-it/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   13) e2e/billing.spec.ts:243:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the rollback stays disabled until «RETROCEDIR» is typed, then the month's 168 receipts are cancelled 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/facturacio?mes=2026-09", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       53 | /** D6 on a month; the page is ready once the list draws the month's receipts. */
+clubs-admin:e2e:       54 | async function openMonth(page: Page, period: string, title: string) {
+clubs-admin:e2e:     > 55 |   await page.goto(`${baseUrl}/facturacio?mes=${period}`);
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       56 |   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+clubs-admin:e2e:       57 | }
+clubs-admin:e2e:       58 |
+clubs-admin:e2e:         at openMonth (/work/apps/clubs-admin/e2e/billing.spec.ts:55:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:247:11
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-62780--168-receipts-are-cancelled/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-62780--168-receipts-are-cancelled/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-62780--168-receipts-are-cancelled/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   14) e2e/billing.spec.ts:278:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the receipt drawer of a pending cash receipt (2026-0915) offers «Marca cobrat», «Anul·la el rebut» and the PDF 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Setembre 2026', level: 1 })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Setembre 2026', level: 1 }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Setembre 2026', level: 1 })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       54 | async function openMonth(page: Page, period: string, title: string) {
+clubs-admin:e2e:       55 |   await page.goto(`${baseUrl}/facturacio?mes=${period}`);
+clubs-admin:e2e:     > 56 |   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+clubs-admin:e2e:          |                                                                      ^
+clubs-admin:e2e:       57 | }
+clubs-admin:e2e:       58 |
+clubs-admin:e2e:       59 | function invoiceRow(page: Page, number: string): Locator {
+clubs-admin:e2e:         at openMonth (/work/apps/clubs-admin/e2e/billing.spec.ts:56:70)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:282:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-a6c16-ul·la-el-rebut»-and-the-PDF/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-a6c16-ul·la-el-rebut»-and-the-PDF/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-a6c16-ul·la-el-rebut»-and-the-PDF/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   15) e2e/billing.spec.ts:298:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-32 billingManualOnly: a cash-only club reads «2 · GENERA ELS REBUTS» on its simulated September 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/facturacio?mes=2026-09", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       53 | /** D6 on a month; the page is ready once the list draws the month's receipts. */
+clubs-admin:e2e:       54 | async function openMonth(page: Page, period: string, title: string) {
+clubs-admin:e2e:     > 55 |   await page.goto(`${baseUrl}/facturacio?mes=${period}`);
+clubs-admin:e2e:          |              ^
+clubs-admin:e2e:       56 |   await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+clubs-admin:e2e:       57 | }
+clubs-admin:e2e:       58 |
+clubs-admin:e2e:         at openMonth (/work/apps/clubs-admin/e2e/billing.spec.ts:55:14)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:302:11
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-0af2f--on-its-simulated-September/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-0af2f--on-its-simulated-September/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-0af2f--on-its-simulated-September/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   16) e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.fill: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByLabel('Correu electrònic')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       42 |   );
+clubs-admin:e2e:       43 |   await page.goto(`${baseUrl}/entrar`);
+clubs-admin:e2e:     > 44 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+clubs-admin:e2e:          |                                              ^
+clubs-admin:e2e:       45 |   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+clubs-admin:e2e:       46 |   await page.getByLabel("Contrasenya").fill("secret-password");
+clubs-admin:e2e:       47 |   await page.getByRole("button", { name: "ENTRA" }).click();
+clubs-admin:e2e:         at prepareAdmin (/work/apps/clubs-admin/e2e/catalogs.spec.ts:44:46)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:61:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-85f11-controls-without-the-module/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   17) e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/equip", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       100 |     const page = await context.newPage();
+clubs-admin:e2e:       101 |     await prepareAdmin(page, "admin", brandingCanic);
+clubs-admin:e2e:     > 102 |     await page.goto(`${baseUrl}/equip`);
+clubs-admin:e2e:           |                ^
+clubs-admin:e2e:       103 |
+clubs-admin:e2e:       104 |     await expect(page.getByRole("heading", { name: "Instructors i administradors" })).toBeVisible();
+clubs-admin:e2e:       105 |     await expect(page.getByRole("heading", { exact: true, name: "Instructors" })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:102:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-b03ee-ember-and-last-admin-guards/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   18) e2e/catalogs.spec.ts:145:3 › E2-W04 club catalogs › T-05-24 edits plan copy, billing modes and pricing while respecting module gates 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/modalitats", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       149 |     const page = await context.newPage();
+clubs-admin:e2e:       150 |     await prepareAdmin(page, "admin", brandingCanic);
+clubs-admin:e2e:     > 151 |     await page.goto(`${baseUrl}/modalitats`);
+clubs-admin:e2e:           |                ^
+clubs-admin:e2e:       152 |
+clubs-admin:e2e:       153 |     await expect(page.getByRole("heading", { name: "Modalitats i tarifes" })).toBeVisible();
+clubs-admin:e2e:       154 |     await expect(page.getByText(/entrada per gos \(matrícula\): 100/u)).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:151:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-05b8e-ile-respecting-module-gates/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-05b8e-ile-respecting-module-gates/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-05b8e-ile-respecting-module-gates/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   19) e2e/catalogs.spec.ts:198:3 › E2-W04 club catalogs › T-05-25 manages local levels and FAQ CRUD/reorder with FAQ module gating 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Nivells' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Nivells' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Nivells' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       204 |     await page.goto(`${baseUrl}/parametres`);
+clubs-admin:e2e:       205 |
+clubs-admin:e2e:     > 206 |     await expect(page.getByRole("heading", { name: "Nivells" })).toBeVisible();
+clubs-admin:e2e:           |                                                                  ^
+clubs-admin:e2e:       207 |     await expect(
+clubs-admin:e2e:       208 |       page.getByRole("heading", { name: "Preguntes freqüents — pàgina «Info» de l'app" }),
+clubs-admin:e2e:       209 |     ).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:206:66
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-2962b-rder-with-FAQ-module-gating/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-2962b-rder-with-FAQ-module-gating/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-2962b-rder-with-FAQ-module-gating/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   20) e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator:  getByRole('heading', { name: /Abonats/u })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Received: undefined
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: /Abonats/u }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: /Abonats/u })
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       35 |     await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:       36 |
+clubs-admin:e2e:     > 37 |     await expect(page.getByRole("heading", { name: /Abonats/u })).toBeVisible();
+clubs-admin:e2e:          |                                                                   ^
+clubs-admin:e2e:       38 |     await expect(page.getByText("184 d'alta")).toBeVisible();
+clubs-admin:e2e:       39 |     // E4-W12 step 5 (S03 §2 D5): only the status chip «Alta» applies by default.
+clubs-admin:e2e:       40 |     await expect(page.getByRole("combobox", { name: "Estat dels abonats" })).toHaveValue("ACTIVE");
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:37:67
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-08a3d-te-and-approved-1280-layout/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-08a3d-te-and-approved-1280-layout/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-08a3d-te-and-approved-1280-layout/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   21) e2e/census-lists.spec.ts:51:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/abonats", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       51 |   test("T-03-32 reorders columns and creates a saved view", async ({ page }) => {
+clubs-admin:e2e:       52 |     await prepareAdmin(page);
+clubs-admin:e2e:     > 53 |     await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:          |                ^
+clubs-admin:e2e:       54 |     await expect(page.getByRole("link", { exact: true, name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:       55 |
+clubs-admin:e2e:       56 |     await page.locator("summary").filter({ hasText: "Columnes" }).click();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:53:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   22) e2e/census-lists.spec.ts:70:3 › E2-W01 census universal lists › T-03-33 changes rows per page without losing the page selection 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('link', { name: 'Laura Serra Vidal', exact: true })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('link', { name: 'Laura Serra Vidal', exact: true }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Laura Serra Vidal', exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       71 |     await prepareAdmin(page);
+clubs-admin:e2e:       72 |     await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:     > 73 |     await expect(page.getByRole("link", { exact: true, name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:          |                                                                                      ^
+clubs-admin:e2e:       74 |
+clubs-admin:e2e:       75 |     await page.getByRole("checkbox", { exact: true, name: "Selecciona Laura Serra Vidal" }).check();
+clubs-admin:e2e:       76 |     await page
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:73:86
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-1fd26-t-losing-the-page-selection/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-1fd26-t-losing-the-page-selection/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-1fd26-t-losing-the-page-selection/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   23) e2e/census-lists.spec.ts:87:3 › E2-W01 census universal lists › T-03-34 D15 opens a dog record and matches the approved 1280 layout 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/gossos", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       87 |   test("T-03-34 D15 opens a dog record and matches the approved 1280 layout", async ({ page }) => {
+clubs-admin:e2e:       88 |     await prepareAdmin(page);
+clubs-admin:e2e:     > 89 |     await page.goto(`${baseUrl}/gossos`);
+clubs-admin:e2e:          |                ^
+clubs-admin:e2e:       90 |
+clubs-admin:e2e:       91 |     await expect(page.getByRole("heading", { name: /Gossos/u })).toBeVisible();
+clubs-admin:e2e:       92 |     await expect(page.getByText("242 actius")).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:89:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-e3ce3-es-the-approved-1280-layout/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-e3ce3-es-the-approved-1280-layout/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-e3ce3-es-the-approved-1280-layout/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   24) e2e/census-records.spec.ts:36:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Tearing down "context" exceeded the test timeout of 30000ms.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.goto: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - navigating to "http://127.0.0.1:4174/abonats/member-laura", waiting until "load"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       38 |   }) => {
+clubs-admin:e2e:       39 |     await prepareAdmin(page);
+clubs-admin:e2e:     > 40 |     await page.goto(`${baseUrl}/abonats/member-laura`);
+clubs-admin:e2e:          |                ^
+clubs-admin:e2e:       41 |
+clubs-admin:e2e:       42 |     await expect(page.getByRole("heading", { name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:       43 |     await expect(page.getByRole("link", { name: "WhatsApp" })).toHaveAttribute(
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-records.spec.ts:40:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-records-E2-W02-cens-d2d9b-nd-exposes-every-D10-action/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-records-E2-W02-cens-d2d9b-nd-exposes-every-D10-action/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-records-E2-W02-cens-d2d9b-nd-exposes-every-D10-action/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   25) e2e/e11-w02-round3.spec.ts:79:5 › E11-W02 round 3: D18's date, D16's «Substituït», D5's bulk bar › D5 at 1280 px: the bulk bar offers no «Canviar nivell» (AGENTS rule 3) 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.check: Error: strict mode violation: getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal' }) resolved to 6 elements:
+clubs-admin:e2e:         1) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal', exact: true })
+clubs-admin:e2e:         2) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 1"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 1', exact: true })
+clubs-admin:e2e:         3) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 11"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 11' })
+clubs-admin:e2e:         4) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 21"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 21' })
+clubs-admin:e2e:         5) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 31"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 31' })
+clubs-admin:e2e:         6) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 41"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 41' })
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       83 |       await signIn(page);
+clubs-admin:e2e:       84 |       await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:     > 85 |       await page.getByRole("checkbox", { name: "Selecciona Laura Serra Vidal" }).check();
+clubs-admin:e2e:          |                                                                                  ^
+clubs-admin:e2e:       86 |       await expect(page.getByText("1 seleccionat — accions massives:")).toBeVisible();
+clubs-admin:e2e:       87 |       await expect(page.getByRole("button", { name: "Exportar selecció" })).toBeVisible();
+clubs-admin:e2e:       88 |       await expect(page.getByRole("button", { name: "Canviar nivell" })).toHaveCount(0);
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/e11-w02-round3.spec.ts:85:82
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/e11-w02-round3-E11-W02-rou-b0dae-viar-nivell»-AGENTS-rule-3-/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/e11-w02-round3-E11-W02-rou-b0dae-viar-nivell»-AGENTS-rule-3-/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/e11-w02-round3-E11-W02-rou-b0dae-viar-nivell»-AGENTS-rule-3-/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   26) e2e/e11-w02-round3.spec.ts:79:5 › E11-W02 round 3: D18's date, D16's «Substituït», D5's bulk bar › D5 at 375 px: the bulk bar offers no «Canviar nivell» (AGENTS rule 3) 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.check: Error: strict mode violation: getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal' }) resolved to 6 elements:
+clubs-admin:e2e:         1) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal', exact: true })
+clubs-admin:e2e:         2) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 1"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 1', exact: true })
+clubs-admin:e2e:         3) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 11"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 11' })
+clubs-admin:e2e:         4) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 21"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 21' })
+clubs-admin:e2e:         5) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 31"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 31' })
+clubs-admin:e2e:         6) <input type="checkbox" class="ah-checkbox" aria-label="Selecciona Laura Serra Vidal 41"/> aka getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal 41' })
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('checkbox', { name: 'Selecciona Laura Serra Vidal' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       83 |       await signIn(page);
+clubs-admin:e2e:       84 |       await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:     > 85 |       await page.getByRole("checkbox", { name: "Selecciona Laura Serra Vidal" }).check();
+clubs-admin:e2e:          |                                                                                  ^
+clubs-admin:e2e:       86 |       await expect(page.getByText("1 seleccionat — accions massives:")).toBeVisible();
+clubs-admin:e2e:       87 |       await expect(page.getByRole("button", { name: "Exportar selecció" })).toBeVisible();
+clubs-admin:e2e:       88 |       await expect(page.getByRole("button", { name: "Canviar nivell" })).toHaveCount(0);
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/e11-w02-round3.spec.ts:85:82
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/e11-w02-round3-E11-W02-rou-30352-viar-nivell»-AGENTS-rule-3-/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/e11-w02-round3-E11-W02-rou-30352-viar-nivell»-AGENTS-rule-3-/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/e11-w02-round3-E11-W02-rou-30352-viar-nivell»-AGENTS-rule-3-/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   26 failed
+clubs-admin:e2e:     e2e/activities.spec.ts:48:3 › E4-W04 D7 activities › T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup 
+clubs-admin:e2e:     e2e/activities.spec.ts:78:3 › E4-W04 D7 activities › T-07-29 publishing a dated draft opens the ring-conflict dialog and applies the options 
+clubs-admin:e2e:     e2e/activities.spec.ts:111:3 › E4-W04 D7 activities › T-07-29 cancelling the Torneig lists the 22 registrants and requires the notice text 
+clubs-admin:e2e:     e2e/activities.spec.ts:131:3 › E4-W04 D7 activities › registrants of a full activity with the FIFO waitlist positions 
+clubs-admin:e2e:     e2e/activities.spec.ts:149:3 › E4-W04 D7 activities › INSTRUCTOR reads D7 without actions ──────
+clubs-admin:e2e:     e2e/activities.spec.ts:166:3 › T-07-29 E4-W08 D7 follow-ups › S07 §6 registrants: the member filter (memberId) names the member in its chip 
+clubs-admin:e2e:     e2e/agenda-ring-card.spec.ts:46:3 › E5-W02 D12 card «Reservar o bloquejar pista (sense alumne)» › T-09-40 (D12) an instructor reserves Petita on Thursday 13 from the card 
+clubs-admin:e2e:     e2e/audit.spec.ts:38:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e:     e2e/audit.spec.ts:109:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e:     e2e/billing.spec.ts:81:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 D6 as the mockup draws it: incidents first, cash members, KPIs, chips and the month's receipts 
+clubs-admin:e2e:     e2e/billing.spec.ts:170:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › E8-W04 6b: incident and cash-member links open their real D10 mock records 
+clubs-admin:e2e:     e2e/billing.spec.ts:192:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the strong confirmation: the next month is simulated, then «Es generaran 168 rebuts…» generates it 
+clubs-admin:e2e:     e2e/billing.spec.ts:243:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the rollback stays disabled until «RETROCEDIR» is typed, then the month's 168 receipts are cancelled 
+clubs-admin:e2e:     e2e/billing.spec.ts:278:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the receipt drawer of a pending cash receipt (2026-0915) offers «Marca cobrat», «Anul·la el rebut» and the PDF 
+clubs-admin:e2e:     e2e/billing.spec.ts:298:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-32 billingManualOnly: a cash-only club reads «2 · GENERA ELS REBUTS» on its simulated September 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:56:3 › E2-W04 club catalogs › T-05-22 manages ordered rings and hides free-training controls without the module 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:96:3 › E2-W04 club catalogs › T-05-23 manages instructors and administrators with active-member and last-admin guards 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:145:3 › E2-W04 club catalogs › T-05-24 edits plan copy, billing modes and pricing while respecting module gates 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:198:3 › E2-W04 club catalogs › T-05-25 manages local levels and FAQ CRUD/reorder with FAQ module gating 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:33:3 › E2-W01 census universal lists › T-03-31 D5 shows the member filter state and approved 1280 layout 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:51:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:70:3 › E2-W01 census universal lists › T-03-33 changes rows per page without losing the page selection 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:87:3 › E2-W01 census universal lists › T-03-34 D15 opens a dog record and matches the approved 1280 layout 
+clubs-admin:e2e:     e2e/census-records.spec.ts:36:3 › E2-W02 census records › T-03-36 keeps the member detail request tenant-scoped and exposes every D10 action 
+clubs-admin:e2e:     e2e/e11-w02-round3.spec.ts:79:5 › E11-W02 round 3: D18's date, D16's «Substituït», D5's bulk bar › D5 at 1280 px: the bulk bar offers no «Canviar nivell» (AGENTS rule 3) 
+clubs-admin:e2e:     e2e/e11-w02-round3.spec.ts:79:5 › E11-W02 round 3: D18's date, D16's «Substituït», D5's bulk bar › D5 at 375 px: the bulk bar offers no «Canviar nivell» (AGENTS rule 3) 
+clubs-admin:e2e:   12 skipped
+clubs-admin:e2e:   75 passed (7.0m)
+clubs-admin:e2e:  ELIFECYCLE  Command failed with exit code 1.
+clubs:e2e: cache bypass, force executing b038050b62f5e496
+id:e2e: cache bypass, force executing 1beb151e545b94b2
+clubs-admin#e2e:  ERROR  command (/work/apps/clubs-admin) /usr/bin/pnpm run e2e --workers=4 exited (1)
+
+ Tasks:    7 successful, 10 total
+Cached:    0 cached, 10 total
+  Time:    7m29.772s 
+Failed:    clubs-admin#e2e
+
+ ERROR  run failed: command  exited (1)
+evidence: E11-W02/r3-D18-biblioteca-375.png
+evidence: E11-W02/r3-D16-geometria-375.png
+evidence: E11-W02/r3-D16-geometria-1280.png
+evidence: E11-W02/r3-D18-biblioteca-1280.png
+ ELIFECYCLE  Command failed with exit code 1.

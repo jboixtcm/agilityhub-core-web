@@ -41,7 +41,8 @@
       "stats": "Obstacles",
       "obstacleCount": "Nombre d'obstacles",
       "tag": "Etiqueta",
-      "levelId": "Nivell del club"
+      "levelId": "Nivell del club",
+      "updatedAt": "Últim canvi"
     },
     "statsCount": "{count, plural, one {# obstacle} other {# obstacles}}",
     "statsWithLength": "{count, plural, one {# obstacle} other {# obstacles}} · {length} m",

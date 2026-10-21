@@ -1175,10 +1175,8 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                   {listExport.error.message}
                 </span>
               ) : null}
-              <Button variant="ghost">
-                <Icon aria-hidden="true" name="up" />
-                {t("census:members.bulk.changeLevel")}
-              </Button>
+              {/* Mockup D5's «Canviar nivell» waits for a bulk level endpoint in the contract
+                  (AGENTS rule 3: no dead action; E11-W02 round 3). */}
             </>
           )}
           caption={t("census:members.caption")}

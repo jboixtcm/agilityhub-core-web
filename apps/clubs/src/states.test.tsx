@@ -156,6 +156,15 @@ const SCREENS: [string, string, string, "instructor" | "member", string, string 
     "El club encara no ha publicat preguntes",
   ],
   ["20", "/instructor/dia", INSTRUCTOR, "instructor", "Carregant el dia", "Cap classe aquest dia"],
+  // E11-W02 round 3 (review m2): a class with no registrants.
+  [
+    "21",
+    "/instructor/classes/c1",
+    INSTRUCTOR,
+    "instructor",
+    "Carregant la llista",
+    "Encara no hi ha cap inscrit.",
+  ],
   [
     "23",
     "/instructor/avui",

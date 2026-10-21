@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 
 import { type Browser, type BrowserContext, type Page } from "@playwright/test";
 
-import { expect, test } from "./oauth-token-log";
+import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
@@ -98,17 +98,10 @@ async function loginMember(page: Page, email = "member@example.test"): Promise<v
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
   await page.getByLabel("Contrasenya").fill(corePassword);
-  const routeRefresh = page.waitForResponse((response) => {
-    if (!response.url().endsWith("/oauth2/token") || response.request().method() !== "POST") {
-      return false;
-    }
-    return (
-      new URLSearchParams(response.request().postData() ?? "").get("grant_type") === "refresh_token"
-    );
+  await expectNoRefreshDuring(page, async () => {
+    await submitPasswordLogin(page);
+    await page.waitForURL("**/inici");
   });
-  await submitPasswordLogin(page);
-  await page.waitForURL("**/inici");
-  expect((await routeRefresh).status()).toBe(200);
   await expect(page.locator(".clubs-shell")).toBeVisible();
 }
 

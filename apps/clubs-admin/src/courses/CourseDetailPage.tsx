@@ -17,16 +17,10 @@ import {
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
-import {
-  lazy,
-  type SyntheticEvent,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { lazy, type SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { ChunkBoundary } from "../ChunkBoundary";
 
 import {
   RegisterSetupModal,
@@ -774,18 +768,15 @@ export function CourseDetailPage({
                 { content: viewer2d, label: t("admin-courses:detail.tab2d"), value: "2d" },
                 {
                   content: (
-                    <Suspense
-                      fallback={
-                        <Skeleton height="24rem" label={t("admin-courses:common.loading")} />
-                      }
-                    >
+                    // E11-W02 round 3: three.js's own chunk; a failed import stays in the tab.
+                    <ChunkBoundary height="24rem" loadingLabel={t("admin-courses:common.loading")}>
                       <CourseViewer3D
                         ariaLabel={t("admin-courses:detail.plan3d", { name: course.name })}
                         course={model}
                         placement={placement}
                         ring={frame}
                       />
-                    </Suspense>
+                    </ChunkBoundary>
                   ),
                   label: t("admin-courses:detail.tab3d"),
                   value: "3d",

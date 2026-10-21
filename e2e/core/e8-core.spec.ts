@@ -314,7 +314,8 @@ async function login(
   if (await reveal.isVisible()) await reveal.click();
   await page.getByLabel(/Contrasenya|Contraseña|Password/u, { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
-  await page.waitForURL((url) => url.pathname === "/tauler" || url.pathname === "/inici");
+  // An INSTRUCTOR without ADMIN lands on D12 (E11-W02 round 2, INC-41 item 13).
+  await page.waitForURL((url) => ["/agenda", "/inici", "/tauler"].includes(url.pathname));
   await expect.poll(bearer).toBeDefined();
   return { bearer, context, page };
 }
@@ -1076,8 +1077,10 @@ test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15
 
   let leaveReasonLabel = "";
   const member = await impersonate(browser, admin, laura.id, clubsUrl, "es");
+  // The tab reads es from its start (`contextFor`'s stored locale). E11-W02 round 2 (INC-41 #16)
+  // took the shell header's selector off 12, and an impersonation has no «Idioma» card there
+  // (INC-73: the language is the person's own), so nothing is chosen here.
   await member.page.goto(`${clubsUrl}/perfil`);
-  await member.page.locator(".shell-language select").selectOption("es");
   await expect(member.page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
   await navigateSpa(member.page, "/baixa");
   await expect(member.page.getByRole("heading", { name: "Solicitar la baja" })).toBeVisible();
@@ -1333,12 +1336,11 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   const feeMemberId = lifecycle.feeMemberId;
   if (feeMemberId === undefined) throw new Error("The inactivity leg did not choose a fee member");
   const expectedFee = lifecycle.feeSnapshot;
-  if (expectedFee === undefined) throw new Error("The inactivity leg did not freeze the expected fee");
+  if (expectedFee === undefined)
+    throw new Error("The inactivity leg did not freeze the expected fee");
   expect(expectedFee.fromMonth).toBe(period);
   expect(expectedFee.toMonth).toBe(period);
-  const feePreview = simulation.invoicesPreview.find(
-    (preview) => preview.memberId === feeMemberId,
-  );
+  const feePreview = simulation.invoicesPreview.find((preview) => preview.memberId === feeMemberId);
   expect(feePreview, `the arranged fee member is billed in ${period}`).toBeDefined();
   const previewFeeLine = feePreview?.lines.find((line) => line.origin === "INACTIVITY_FEE");
   expect(previewFeeLine?.total).toEqual({

@@ -54,7 +54,6 @@
   "members": {
     "activeCount": "{count} d'alta",
     "bulk": {
-      "changeLevel": "Canviar nivell",
       "exportSelection": "Exportar selecció",
       "sendAnnouncement": "Enviar comunicat"
     },

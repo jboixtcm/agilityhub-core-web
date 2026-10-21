@@ -533,6 +533,8 @@ function cellOf(
   const lesson = occupancy.classes.find((item) => item.ringId === ring.id && overlaps(slot, item));
   if (lesson !== undefined) {
     return staff({
+      // INC-44: the class's own club-local start, for every viewer («18:50 classe»).
+      classStartsAtLocal: lesson.start.slice(0, 5),
       reason: "CLASS",
       state: "BLOCKED",
       ...(options.staff

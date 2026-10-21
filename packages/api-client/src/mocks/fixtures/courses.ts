@@ -50,11 +50,12 @@ export const PLACEMENT_IDS = {
   muntanyaJumping: "placement-muntanya-dijous",
 } as const;
 
+/** UUIDs, as the api's (`replacedBySetupId` is `format: uuid`, INC-62). */
 export const SETUP_IDS = {
-  centralPhoto: "setup-central-foto",
-  muntanyaActive: "setup-muntanya-dijous",
-  muntanyaDismantled: "setup-muntanya-buida",
-  muntanyaExpired: "setup-muntanya-agility",
+  centralPhoto: "57000000-0000-4000-8000-000000000001",
+  muntanyaActive: "57000000-0000-4000-8000-000000000002",
+  muntanyaDismantled: "57000000-0000-4000-8000-000000000003",
+  muntanyaExpired: "57000000-0000-4000-8000-000000000004",
 } as const;
 
 const ADMIN_ACCOUNT = "10000000-0000-4000-8000-000000000001";
@@ -703,6 +704,7 @@ function setup(
     createdAt: fields.builtAt,
     dismantledAt: null,
     dismantledByAccountId: null,
+    dismantledReason: null,
     expectedUntil: null,
     id,
     imageFileKey: null,
@@ -710,6 +712,7 @@ function setup(
     levelIds: [],
     notes: null,
     placementId: null,
+    replacedBySetupId: null,
     ringId,
     view: "STAFF",
     ...fields,
@@ -743,8 +746,11 @@ export function initialSetups(today: string = clubLocalDate()): RingSetup[] {
       builtAt: at(-5, "10:00"),
       dismantledAt: activeBuiltAt,
       dismantledByAccountId: INSTRUCTOR_ACCOUNT,
+      // INC-62: replaced by the ACTIVE one (R-16-07).
+      dismantledReason: "REPLACED",
       expiresAt: expiry(5),
       kind: "EMPTY",
+      replacedBySetupId: SETUP_IDS.muntanyaActive,
       status: "DISMANTLED",
     }),
     setup(SETUP_IDS.muntanyaExpired, "ring-muntanya", {
@@ -891,6 +897,25 @@ export function courseNameIn(course: Course, locale: string): string {
 export function activeSetupOf(ringId: string): RingSetup | undefined {
   if (!callerClubOwnsTheWorld()) return undefined;
   return courseState.setups.find((item) => item.ringId === ringId && item.status === "ACTIVE");
+}
+
+/** S16 §3 (INC-62): a deactivated ring's ACTIVE setup is dismantled with `RING_INACTIVE`. */
+export function dismantleForInactiveRing(ringId: string, byAccountId: string): void {
+  const active = activeSetupOf(ringId);
+  if (active === undefined) return;
+  const at = new Date().toISOString().replace(/\.\d{3}Z$/u, "Z");
+  courseState.setups = courseState.setups.map((item) =>
+    item.id === active.id
+      ? {
+          ...item,
+          dismantledAt: at,
+          dismantledByAccountId: byAccountId,
+          dismantledReason: "RING_INACTIVE",
+          replacedBySetupId: null,
+          status: "DISMANTLED",
+        }
+      : item,
+  );
 }
 
 /** The course a setup shows: its own `courseId`, else its placement's (undefined once deleted). */
