@@ -48,7 +48,7 @@ import { safeDecode } from "./activities/shared";
 import { navigateInApp } from "./booking/shared";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
 import { logoutWithPush } from "./notifications/push";
-import { DataExportCard } from "./profile/DataExportCard";
+import { DataExportCard, dataExportJobFromUrl } from "./profile/DataExportCard";
 import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
@@ -1313,6 +1313,11 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
   const localeOptions = productLocales.filter((locale) => branding.locales.includes(locale));
   // S11 §13-11: «Aprèn amb AgilityHub» after «Els meus gossos», only with LEARN_LINK.
   const learnLink = isModuleUiItemEnabled(branding.modules, "menuEntries", "learn");
+  // INC-73 (S01 §6, E11-T09): the password and the language are the person's own account, which
+  // an impersonation token cannot change (`403` to `PUT /me/password` and `PATCH /me`).
+  const impersonated = me.impersonation !== undefined;
+  // N-50's card (`OPEN_EXPORT`) opens `/perfil?jobId={id}` (S14 R-14-13).
+  const exportJobId = dataExportJobFromUrl(window.location.search);
 
   return (
     <div className="profile-page">
@@ -1338,16 +1343,18 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
-        <button
-          onClick={() => {
-            setPasswordOpen(true);
-          }}
-          type="button"
-        >
-          <Icon aria-hidden="true" name="lock" />
-          <span>{t("auth:profile.password")}</span>
-          <Icon aria-hidden="true" name="chev" />
-        </button>
+        {impersonated ? null : (
+          <button
+            onClick={() => {
+              setPasswordOpen(true);
+            }}
+            type="button"
+          >
+            <Icon aria-hidden="true" name="lock" />
+            <span>{t("auth:profile.password")}</span>
+            <Icon aria-hidden="true" name="chev" />
+          </button>
+        )}
         {profiles.length > 1 ? (
           <a href="/perfil-acces">
             <Icon aria-hidden="true" name="user" />
@@ -1364,45 +1371,52 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
         ) : null}
       </Card>
       <NoticesCard client={client} />
-      <Card className="profile-language-card">
-        <label className="profile-language">
-          <Icon aria-hidden="true" name="globe" />
-          <span>{t("auth:profile.language")}</span>
-          <Select
-            aria-label={t("auth:profile.language")}
-            disabled={working}
-            onChange={(event) => {
-              const locale = event.currentTarget.value;
-              setWorking(true);
-              void authClient.updateLocale(locale).then(
-                async () => {
-                  localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-                  await i18n.changeLanguage(locale);
-                  setWorking(false);
-                },
-                () => {
-                  setWorking(false);
-                },
-              );
-            }}
-            value={me.account.locale}
-          >
-            {localeOptions.map((locale) => (
-              <option key={locale} value={locale}>
-                {locale === "ca"
-                  ? t("shell:language.ca")
-                  : locale === "es"
-                    ? t("shell:language.es")
-                    : t("shell:language.en")}
-              </option>
-            ))}
-          </Select>
-        </label>
-        {/* R-11-15: only the notifications created from now on come in the new language. */}
-        <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
-      </Card>
+      {impersonated ? null : (
+        <Card className="profile-language-card">
+          <label className="profile-language">
+            <Icon aria-hidden="true" name="globe" />
+            <span>{t("auth:profile.language")}</span>
+            <Select
+              aria-label={t("auth:profile.language")}
+              disabled={working}
+              onChange={(event) => {
+                const locale = event.currentTarget.value;
+                setWorking(true);
+                void authClient.updateLocale(locale).then(
+                  async () => {
+                    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+                    await i18n.changeLanguage(locale);
+                    setWorking(false);
+                  },
+                  () => {
+                    setWorking(false);
+                  },
+                );
+              }}
+              value={me.account.locale}
+            >
+              {localeOptions.map((locale) => (
+                <option key={locale} value={locale}>
+                  {locale === "ca"
+                    ? t("shell:language.ca")
+                    : locale === "es"
+                      ? t("shell:language.es")
+                      : t("shell:language.en")}
+                </option>
+              ))}
+            </Select>
+          </label>
+          {/* R-11-15: only the notifications created from now on come in the new language. */}
+          <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
+        </Card>
+      )}
       {me.impersonation === undefined && me.membership.roles.includes("MEMBER") ? (
-        <DataExportCard accountId={me.account.id} client={client} key={me.account.id} />
+        <DataExportCard
+          accountId={me.account.id}
+          client={client}
+          key={`${me.account.id}:${exportJobId ?? ""}`}
+          {...(exportJobId === undefined ? {} : { initialJobId: exportJobId })}
+        />
       ) : null}
       <ProfileLifecycleSection
         client={client}

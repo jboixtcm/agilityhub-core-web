@@ -62,9 +62,14 @@ test("T-14-17 screen 12 keeps the queued export and downloads its ZIP", async ({
   expect((await download).status()).toBe(200);
 });
 
-test("T-14-17 hides the data export during impersonation", async ({ page }) => {
+test("T-14-17 and INC-73 hide the data export, the language and the password during impersonation", async ({
+  page,
+}) => {
   await login(page, "impersonated");
   await page.goto(`${baseUrl}/perfil`);
   await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "El meu perfil" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Descarrega les meves dades" })).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: "Idioma" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Canvia la contrasenya" })).toHaveCount(0);
 });

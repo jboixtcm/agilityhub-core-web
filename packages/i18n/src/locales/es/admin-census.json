@@ -403,6 +403,7 @@
       },
       "erasure": {
         "title": "Supresión de datos",
+        "leaveFirst": "Para suprimir los datos, primero hay que tramitar la baja del abonado.",
         "action": "Suprimir los datos (RGPD)",
         "description": "La supresión seudonimiza los datos personales y conserva los movimientos que deben retenerse legalmente.",
         "loading": "Comprobando si hay una supresión programada…",
@@ -411,6 +412,8 @@
         "confirm": "PROGRAMAR LA SUPRESIÓN",
         "requested": "La supresión se ha programado.",
         "scheduled": "Supresión programada para el {date}",
+        "blocked": "La supresión prevista para el {date} está bloqueada: se vuelve a intentar cada día.",
+        "erasing": "La supresión está en curso.",
         "cancel": "Cancelar la supresión",
         "cancelDescription": "La solicitud se cancelará y los datos no se suprimirán en la fecha programada.",
         "cancelling": "Cancelando la supresión…",

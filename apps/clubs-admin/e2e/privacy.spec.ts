@@ -32,7 +32,45 @@ async function login(page: Page): Promise<void> {
   await page.waitForURL("**/tauler");
 }
 
-test("T-14-18/T-14-30 D10 renders consents and schedules then cancels erasure", async ({
+test("T-14-17 D10's «Descarrega les dades (RGPD)» queues the package and downloads its ZIP from the exports drawer", async ({
+  page,
+}) => {
+  await page.setViewportSize({ height: 900, width: 1280 });
+  await login(page);
+  await page.goto(`${baseUrl}/abonats/member-laura`);
+  const queued = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      new URL(response.url()).pathname === "/api/v1/members/member-laura/data-export",
+  );
+  await page.getByRole("button", { name: "Descarrega les dades (RGPD)" }).click();
+  const answer = await queued;
+  expect(answer.status()).toBe(202);
+  expect(answer.request().postDataJSON()).toEqual({ deliverToMember: false });
+  const exportsDrawer = page.getByRole("dialog", { name: "Exportacions" });
+  await expect(exportsDrawer).toContainText("Preparant l'exportació…");
+  const readyDownload = exportsDrawer.getByRole("button", {
+    name: "Descarrega dades-personals_20261018-1100.zip",
+  });
+  await expect(readyDownload).toBeVisible();
+  const zip = page.waitForResponse(
+    (response) =>
+      response.request().method() === "GET" &&
+      /\/api\/v1\/exports\/[0-9a-f-]+\/download$/u.test(new URL(response.url()).pathname),
+  );
+  const download = page.waitForEvent("download");
+  await readyDownload.click();
+  const file = await zip;
+  expect(file.status()).toBe(200);
+  expect(file.headers()["content-type"]).toContain("application/zip");
+  expect((await download).suggestedFilename()).toBe("dades-personals_20261018-1100.zip");
+  await page.screenshot({
+    fullPage: true,
+    path: resolve(evidenceDirectory, "D10-paquet-rgpd-mock-1280.png"),
+  });
+});
+
+test("T-14-18/R-14-18 D10 renders consents and schedules then cancels erasure", async ({
   page,
 }) => {
   await page.setViewportSize({ height: 900, width: 1280 });

@@ -1,0 +1,3058 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+stderr | src/support/support-access.test.tsx > E11-W01 round 2 #1 · D10 offers no personal-data export to a support access (R-17-10) > a support session reads the member's record without «Descarrega les dades (RGPD)»; the club's own ADMIN has it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/support/support-access.test.tsx > E11-W01 round 2 #1 · D10 offers no personal-data export to a support access (R-17-10) > a support session reads the member's record without «Descarrega les dades (RGPD)»; the club's own ADMIN has it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/support/support-access.test.tsx > E11-W01 round 2 #1 · D10 offers no personal-data export to a support access (R-17-10) > a support session reads the member's record without «Descarrega les dades (RGPD)»; the club's own ADMIN has it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/support/support-access.test.tsx (16 tests | 1 failed) 1051ms
+   ❯ E11-W01 round 2 #1 · D10 offers no personal-data export to a support access (R-17-10) (1)
+     × a support session reads the member's record without «Descarrega les dades (RGPD)»; the club's own ADMIN has it 103ms
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/census/CensusRecordPage.test.tsx (34 tests | 8 failed) 13497ms
+   ❯ E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final (9)
+     × E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 136ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 88ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 83ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 91ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 74ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 74ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 76ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 10063ms
+ ❯ src/census/MemberPrivacyCard.test.tsx (13 tests | 7 failed) 60497ms
+   ❯ T-14-18 · D10 requests and cancels a member erasure (R-14-14) (9)
+     × R-14-14 «la UI ho diu»: an ACTIVE or INACTIVE member's card says the leave comes first, in ca, es and en 10008ms
+     × 409 ERASURE_ALREADY_REQUESTED (another admin asked first) reads the live request again and shows it scheduled 10036ms
+     × 409 INVALID_STATE on the cancellation (the request started meanwhile) stays in the dialog and the card shows it running 10027ms
+     × a BLOCKED request has its own line, its block reasons and the cancellation; an ERASING one only its line 10005ms
+     × a failed first read shows the error with [Torna-ho a provar] and no request button until it reads 10006ms
+     × 409 MEMBER_ERASED on the request or the cancellation calls the page's onErased and sends nothing more 40ms
+   ❯ T-14-17 and R-14-18 · D10 data access and consent history (4)
+     × 409 MEMBER_ERASED on the data package calls the page's onErased (the page says it) 10006ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_b7_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_b7_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_b7_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_b7_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_b7_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_b7_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_b7_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_b7_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_c6_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_c6_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_c6_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_c6_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_c6_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_c6_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_c6_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_c6_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_d5_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_d5_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_d5_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_d5_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_d5_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_d5_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_d5_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_d5_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_e4_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_e4_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_e4_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_e4_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_e4_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_e4_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_e4_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_e4_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__feedback census-record__feedback--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+          [36m>[39m
+            [0mReserves bloquejades[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_f3_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_f3_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_f3_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_f3_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_f3_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_f3_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_f3_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_f3_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+    ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_g2_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_g2_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_g2_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_g2_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_g2_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_g2_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_g2_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_g2_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: suprimit. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_h1_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_h1_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_h1_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_h1_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_h1_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_h1_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_h1_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_h1_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:592:23
+    590|         expectNoChangeOffered();
+    591|         // E11-W01 round 2 #6: the «suprimit» badge follows the same `…
+    592|         expect(screen.getByText("suprimit")).toBeVisible();
+       |                       ^
+    593|         expect(opened).not.toHaveBeenCalled();
+    594|         expect(calls).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: Aquest abonat ha estat suprimit i ja no es pot modificar., which matches selector '.census-record__feedback'. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-privacy__export"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mDescarrega les dades (RGPD)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<small[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+            [36m</small>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_i0_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_i0_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_i0_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_i0_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_i0_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_i0_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_i0_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_i0_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33...
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"census-record"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"census-record__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__identity"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mLaura Serra Vidal[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mnúm. 87[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta des de 2023[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mtitular del grup familiar[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__header-actions"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"census-record__action-link"[39m
+              [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+              [33mrel[39m=[32m"noreferrer"[39m
+              [33mtarget[39m=[32m"_blank"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-wa"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mWhatsApp[0m
+            [36m</a>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"member-privacy__export"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDescarrega les dades (RGPD)[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<small[39m
+                [33mrole[39m=[32m"alert"[39m
+              [36m>[39m
+                [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+              [36m</small>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mReenvia accés[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mEntra com l'abonat[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mEdita[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+            [33mclass[39m=[32m"ah-tabs__list"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_i0_-panel-summary"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_i0_-tab-summary"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mFitxa[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_i0_-panel-tasks"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_i0_-tab-tasks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33m...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/census/CensusRecordPage.test.tsx:569:17
+    567|         const dialog = action.send();
+    568|         if (dialog === undefined) {
+    569|           await waitFor(() => {
+       |                 ^
+    570|             expect(
+    571|               screen.getByText(erased, { selector: ".census-record__fe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-18 · D10 requests and cancels a member erasure (R-14-14) > R-14-14 «la UI ho diu»: an ACTIVE or INACTIVE member's card says the leave comes first, in ca, es and en
+TestingLibraryElementError: Unable to find an element with the text: Per suprimir les dades, primer cal tramitar la baixa de l'abonat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberPrivacyCard.test.tsx:176:27
+    174|     ] as const) {
+    175|       await renderPrivacy(status, language);
+    176|       expect(await screen.findByText(text)).toBeVisible();
+       |                           ^
+    177|       cleanup();
+    178|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-18 · D10 requests and cancels a member erasure (R-14-14) > 409 ERASURE_ALREADY_REQUESTED (another admin asked first) reads the live request again and shows it scheduled
+TestingLibraryElementError: Unable to find an element with the text: /Supressió programada per al/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSuprimeix les dades (RGPD)[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_a_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-modal"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_a_"[39m
+            [36m>[39m
+              [0mSuprimeix les dades (RGPD)[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mLa supressió pseudonimitza les dades personals i conserva els moviments que s'han de retenir legalment.[0m
+            [36m</p>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"member-privacy__checks"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [0mL'abonat ha d'estar de baixa.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mNo hi pot haver cap rebut obert.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mNo hi pot haver cap pagament inicial obert.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mNo hi pot haver cap reserva futura activa.[0m
+              [36m</li>[39m
+            [36m</ul>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"erasure-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"erasure-reason"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"member-privacy__error"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mL'esborrament de dades ja s'ha sol·licitat.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__dialog-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mCancel·la[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mPROGRAMA LA SUPRESSIÓ[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSuprimeix les dades (RGPD)[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_a_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-modal"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_a_"[39m
+            [36m>[39m
+              [0mSuprimeix les dades (RGPD)[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mLa supressió pseudonimitza les dades personals i conserva els moviments que s'han de retenir legalment.[0m
+            [36m</p>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"member-privacy__checks"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [0mL'abonat ha d'estar de baixa.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mNo hi pot haver cap rebut obert.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mNo hi pot haver cap pagament inicial obert.[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0mNo hi pot haver cap reserva futura activa.[0m
+              [36m</li>[39m
+            [36m</ul>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"erasure-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"erasure-reason"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"member-privacy__error"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mL'esborrament de dades ja s'ha sol·licitat.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__dialog-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mCancel·la[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mPROGRAMA LA SUPRESSIÓ[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberPrivacyCard.test.tsx:209:25
+    207|     fireEvent.click(within(dialog).getByRole("button", { name: "PROGRA…
+    208|
+    209|     expect(await screen.findByText(/Supressió programada per al/u)).to…
+       |                         ^
+    210|     expect(screen.getByText("L'esborrament de dades ja s'ha sol·licita…
+    211|     expect(screen.queryByRole("dialog")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-18 · D10 requests and cancels a member erasure (R-14-14) > 409 INVALID_STATE on the cancellation (the request started meanwhile) stays in the dialog and the card shows it running
+TestingLibraryElementError: Unable to find an element with the text: La supressió està en curs.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-privacy__scheduled"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mSupressió programada per al 31/10/2026[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAnul·la la supressió[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_d_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-modal"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_d_"[39m
+            [36m>[39m
+              [0mAnul·la la supressió[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mLa sol·licitud es cancel·larà i les dades no se suprimiran en la data programada.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"member-privacy__error"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mAquest element no està en un estat vàlid per a aquesta operació.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__dialog-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mCancel·la[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mANUL·LA LA SUPRESSIÓ[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-privacy__scheduled"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mSupressió programada per al 31/10/2026[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAnul·la la supressió[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"_r_d_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-modal"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_d_"[39m
+            [36m>[39m
+              [0mAnul·la la supressió[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0mLa sol·licitud es cancel·larà i les dades no se suprimiran en la data programada.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"member-privacy__error"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mAquest element no està en un estat vàlid per a aquesta operació.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__dialog-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mCancel·la[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mANUL·LA LA SUPRESSIÓ[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberPrivacyCard.test.tsx:237:25
+    235|       "Aquest element no està en un estat vàlid per a aquesta operació…
+    236|     );
+    237|     expect(await screen.findByText("La supressió està en curs.")).toBe…
+       |                         ^
+    238|     // Neither the card nor the dialog offers the cancellation of a ru…
+    239|     expect(within(dialog).queryByRole("button", { name: "ANUL·LA LA SU…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-18 · D10 requests and cancels a member erasure (R-14-14) > a BLOCKED request has its own line, its block reasons and the cancellation; an ERASING one only its line
+TestingLibraryElementError: Unable to find an element with the text: /^La supressió prevista per al .+ està bloquejada: es torna a provar cada dia\.$/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-privacy__scheduled"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mSupressió programada per al 31/10/2026[0m
+          [36m</p>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [0mHi ha rebuts pendents, en cobrament o impagats.[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [0mHi ha pagaments inicials oberts.[0m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAnul·la la supressió[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-privacy__scheduled"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mSupressió programada per al 31/10/2026[0m
+          [36m</p>[39m
+          [36m<ul>[39m
+            [36m<li>[39m
+              [0mHi ha rebuts pendents, en cobrament o impagats.[0m
+            [36m</li>[39m
+            [36m<li>[39m
+              [0mHi ha pagaments inicials oberts.[0m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAnul·la la supressió[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberPrivacyCard.test.tsx:253:20
+    251|     await renderPrivacy();
+    252|     expect(
+    253|       await screen.findByText(
+       |                    ^
+    254|         /^La supressió prevista per al .+ està bloquejada: es torna a …
+    255|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-18 · D10 requests and cancels a member erasure (R-14-14) > a failed first read shows the error with [Torna-ho a provar] and no request button until it reads
+TestingLibraryElementError: Unable to find role="button" and name "Torna-ho a provar"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"member-privacy__error"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [0mS'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSuprimeix les dades (RGPD)[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-privacy"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mPrivacitat i dades[0m
+      [36m</h2>[39m
+      [36m<h3>[39m
+        [0mHistorial de consentiments[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"member-privacy__consents"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mPolítica de privacitat[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0macceptat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2023-01 · 14/02/2023 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<strong>[39m
+            [0mDrets d'imatge[0m
+          [36m</strong>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mrevocat[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mversió 2026-09 · 01/09/2026 · CA[0m
+          [36m</small>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__erasure"[39m
+      [36m>[39m
+        [36m<h3>[39m
+          [0mSupressió de dades[0m
+        [36m</h3>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"member-privacy__error"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [0mS'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSuprimeix les dades (RGPD)[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberPrivacyCard.test.tsx:293:32
+    291|     );
+    292|     await renderPrivacy();
+    293|     const retry = await screen.findByRole("button", { name: "Torna-ho …
+       |                                ^
+    294|     expect(retry.closest("[role='alert']")).not.toBeNull();
+    295|     expect(screen.queryByRole("button", { name: "Suprimeix les dades (…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-18 · D10 requests and cancels a member erasure (R-14-14) > 409 MEMBER_ERASED on the request or the cancellation calls the page's onErased and sends nothing more
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/census/MemberPrivacyCard.test.tsx:315:22
+    313|       "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    314|     );
+    315|     expect(onErased).toHaveBeenCalledTimes(1);
+       |                      ^
+    316|
+    317|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  src/census/MemberPrivacyCard.test.tsx > T-14-17 and R-14-18 · D10 data access and consent history > 409 MEMBER_ERASED on the data package calls the page's onErased (the page says it)
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"member-privacy__export"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDescarrega les dades (RGPD)[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<small[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+        [36m</small>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/census/MemberPrivacyCard.test.tsx:390:24
+    388|     fireEvent.click(screen.getByRole("button", { name: "Descarrega les…
+    389|     await waitFor(() => {
+    390|       expect(onErased).toHaveBeenCalledTimes(1);
+       |                        ^
+    391|     });
+    392|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+ FAIL  src/support/support-access.test.tsx > E11-W01 round 2 #1 · D10 offers no personal-data export to a support access (R-17-10) > a support session reads the member's record without «Descarrega les dades (RGPD)»; the club's own ADMIN has it
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--ghost"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Descarrega les dades (RGPD)
+  </span>
+</button>
+
+ ❯ src/support/support-access.test.tsx:644:83
+    642|     // The record's other actions stay (audited as PLATFORM); only the…
+    643|     expect(screen.getByRole("button", { name: "Reenvia accés" })).toBe…
+    644|     expect(screen.queryByRole("button", { name: "Descarrega les dades …
+       |                                                                                   ^
+    645|
+    646|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/16]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  16 failed | 47 passed (63)
+   Start at  15:43:31
+   Duration  62.04s (tests 94%, transform 3%, environment 2%, import 1%)
+

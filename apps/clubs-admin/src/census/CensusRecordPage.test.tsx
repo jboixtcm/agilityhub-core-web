@@ -356,6 +356,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
     "Baixa (amb data)",
     "Registra un pagament",
     "Ajusta",
+    "Descarrega les dades (RGPD)",
   ];
   function expectNoChangeOffered() {
     for (const name of changeButtons) {
@@ -528,6 +529,18 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
       submit: "Entra com l'abonat",
       unchanged: () => undefined,
     },
+    {
+      method: "post",
+      name: "«Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3)",
+      path: "/members/:id/data-export",
+      saved: "El paquet s'està preparant. El trobaràs a Exportacions.",
+      // No dialog: the page says it, as for «Desbloqueja les reserves».
+      send: () => {
+        headerAction("Descarrega les dades (RGPD)");
+        return undefined;
+      },
+      unchanged: () => undefined,
+    },
   ];
 
   // One test per action, named in full (`it.each`'s `$name` would cut the longer names).
@@ -575,6 +588,8 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
           expect(dialog).not.toBeInTheDocument();
         }
         expectNoChangeOffered();
+        // E11-W01 round 2 #6: the «suprimit» badge follows the same `erased` as the actions.
+        expect(screen.getByText("suprimit")).toBeVisible();
         expect(opened).not.toHaveBeenCalled();
         expect(calls).toBe(1);
       } finally {

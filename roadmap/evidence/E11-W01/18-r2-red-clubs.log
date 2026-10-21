@@ -1,0 +1,1032 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ ❯ src/NotificationsPage.test.tsx (22 tests | 1 failed) 11687ms
+   ❯ T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) (22)
+     × E11-W01 round 2 #2 (S14 R-14-13): N-50 «Les teves dades estan a punt» (OPEN_EXPORT) opens 12 on its package, with nothing stored by this tab 352ms
+ ❯ src/App.test.tsx (66 tests | 2 failed) 15198ms
+   ❯ T-01-21 profile access rows and impersonation (8)
+     × INC-73 (S01 §6, E11-T09): an impersonation offers no language or password change, which the api refuses to its token 58ms
+     × E11-W01 round 2 #2 (S14 R-14-13): a fresh load of /perfil?jobId= (N-50's link) follows that package without this tab's storage 10012ms
+ ❯ src/profile/DataExportCard.test.tsx (9 tests | 4 failed) 20332ms
+   ❯ T-14-17 · screen 12 requests, follows and downloads the member data package (R-14-13) (9)
+     × READY reads N-50's «Les teves dades estan a punt» and the api's expiresAt, never a hard-coded «7 dies» 10006ms
+     × FAILED shows the translated error of job.error.code (never the api's English message) and offers a new package 8ms
+     × R-12-13's bound: a package still queued after two minutes stops being read until [Actualitza] 28ms
+     × N-50's job (OPEN_EXPORT → /perfil?jobId=) seeds the card on a fresh load, ahead of a stored job 10005ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-21 profile access rows and impersonation > INC-73 (S01 §6, E11-T09): an impersonation offers no language or password change, which the api refuses to its token
+AssertionError: expected <select …(2)>…(2)</select> to be null
+
+- Expected:
+null
+
++ Received:
+<select
+  aria-label="Idioma"
+  class="ah-input ah-select"
+>
+  <option
+    value="ca"
+  >
+    Català
+  </option>
+  <option
+    value="es"
+  >
+    Castellà
+  </option>
+</select>
+
+ ❯ src/App.test.tsx:609:64
+    607|     expect(await screen.findByText("Estàs veient l'app com Laura Serra…
+    608|     expect(screen.getByRole("heading", { level: 1, name: "El meu perfi…
+    609|     expect(screen.queryByRole("combobox", { name: "Idioma" })).toBeNul…
+       |                                                                ^
+    610|     expect(screen.queryByRole("button", { name: "Canvia la contrasenya…
+    611|     // The rest of the profile stays: the member's data and the exit o…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/App.test.tsx > T-01-21 profile access rows and impersonation > E11-W01 round 2 #2 (S14 R-14-13): a fresh load of /perfil?jobId= (N-50's link) follows that package without this tab's storage
+TestingLibraryElementError: Unable to find role="button" and name "Descarrega el paquet"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"profile-page"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mEl meu perfil[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card profile-account"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/dades"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-label[39m=[32m"Biel Roca"[39m
+                [33mclass[39m=[32m"ah-avatar ah-avatar--person"[39m
+                [33mrole[39m=[32m"img"[39m
+              [36m>[39m
+                [0mBR[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0mBiel Roca[0m
+              [36m</strong>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+            [36m<small>[39m
+              [0mToca el teu nom per veure i editar totes les teves dades[0m
+            [36m</small>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card profile-list"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/gossos"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-paw"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mEls meus gossos[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"https://learn.agilitydoghub.com"[39m
+              [33mrel[39m=[32m"noopener noreferrer"[39m
+              [33mtarget[39m=[32m"_blank"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-link"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mAprèn amb AgilityHub[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+            [36m<button[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mCanvia la contrasenya[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card profile-notices"[39m
+            [33mid[39m=[32m"avisos"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"profile-notices__header"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mAvisos[0m
+              [36m</h2>[39m
+              [36m<small>[39m
+                [0mApp[0m
+              [36m</small>[39m
+              [36m<small>[39m
+                [0mCorreu[0m
+              [36m</small>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"profile-notices__row"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mOperativa (reserves i canvis que has fet tu)[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+                [33mrole[39m=[32m"img"[39m
+              [36m>[39m
+                [36m<title>[39m
+                  [0mAvisos a l'app activats[0m
+                [36m</title>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis que has fet tu)"[39m
+                [33mclass[39m=[32m"ah-switch profile-notices__switch"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+             ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"profile-page"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mEl meu perfil[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card profile-account"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/dades"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-label[39m=[32m"Biel Roca"[39m
+                [33mclass[39m=[32m"ah-avatar ah-avatar--person"[39m
+                [33mrole[39m=[32m"img"[39m
+              [36m>[39m
+                [0mBR[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0mBiel Roca[0m
+              [36m</strong>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+            [36m<small>[39m
+              [0mToca el teu nom per veure i editar totes les teves dades[0m
+            [36m</small>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card profile-list"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/gossos"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-paw"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mEls meus gossos[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"https://learn.agilitydoghub.com"[39m
+              [33mrel[39m=[32m"noopener noreferrer"[39m
+              [33mtarget[39m=[32m"_blank"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-link"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mAprèn amb AgilityHub[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+            [36m<button[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mCanvia la contrasenya[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card profile-notices"[39m
+            [33mid[39m=[32m"avisos"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"profile-notices__header"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mAvisos[0m
+              [36m</h2>[39m
+              [36m<small>[39m
+                [0mApp[0m
+              [36m</small>[39m
+              [36m<small>[39m
+                [0mCorreu[0m
+              [36m</small>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"profile-notices__row"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mOperativa (reserves i canvis que has fet tu)[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+                [33mrole[39m=[32m"img"[39m
+              [36m>[39m
+                [36m<title>[39m
+                  [0mAvisos a l'app activats[0m
+                [36m</title>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<button[39m
+                [33maria-checked[39m=[32m"false"[39m
+                [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis que has fet tu)"[39m
+                [33mclass[39m=[32m"ah-switch profile-notices__switch"[39m
+                [33mrole[39m=[32m"switch"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+             ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:639:25
+    637|     window.history.pushState(null, "", `/perfil?jobId=${jobId}`);
+    638|     await renderApplication(memberClient);
+    639|     expect(await screen.findByRole("button", { name: "Descarrega el pa…
+       |                         ^
+    640|     expect(screen.getByText("Les teves dades estan a punt.")).toBeVisi…
+    641|     // The expiry the api sends (7 days, R-14-13), in the club's zone:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E11-W01 round 2 #2 (S14 R-14-13): N-50 «Les teves dades estan a punt» (OPEN_EXPORT) opens 12 on its package, with nothing stored by this tab
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "Les teves dades estan a punt"
+
+Here are the accessible roles:
+
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"clubs-shell__content"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-app-bar notifications-page__bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Notificacions":
+  [36m<h1 />[39m
+
+  Name "Les teves dades estan a punt":
+  [36m<h2[39m
+    [33mclass[39m=[32m"notification-card__title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "Notificacions":
+  [36m<ul[39m
+    [33maria-label[39m=[32m"Notificacions"[39m
+    [33mclass[39m=[32m"notifications-list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"notification-card__body"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"Navegació principal"[39m
+    [33mclass[39m=[32m"ah-tab-bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Inici":
+  [36m<a[39m
+    [33maria-current[39m=[32m"page"[39m
+    [33mclass[39m=[32m"ah-tab-bar__item"[39m
+    [33mhref[39m=[32m"/inici"[39m
+  [36m/>[39m
+
+  Name "Reservar":
+  [36m<a[39m
+    [33mclass[39m=[32m"ah-tab-bar__item"[39m
+    [33mhref[39m=[32m"/reservar"[39m
+  [36m/>[39m
+
+  Name "Entrenaments":
+  [36m<a[39m
+    [33mclass[39m=[32m"ah-tab-bar__item"[39m
+    [33mhref[39m=[32m"/entrenaments"[39m
+  [36m/>[39m
+
+  Name "Avui":
+  [36m<a[39m
+    [33mclass[39m=[32m"ah-tab-bar__item"[39m
+    [33mhref[39m=[32m"/avui"[39m
+  [36m/>[39m
+
+  Name "Perfil":
+  [36m<a[39m
+    [33mclass[39m=[32m"ah-tab-bar__item"[39m
+    [33mhref[39m=[32m"/perfil"[39m
+  [36m/>[39m
+
+  Name "Info":
+  [36m<a[39m
+    [33mclass[39m=[32m"ah-tab-bar__item"[39m
+    [33mhref[39m=[32m"/info"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"notifications-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar notifications-page__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mNotificacions[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<ul[39m
+            [33maria-label[39m=[32m"Notificacions"[39m
+            [33mclass[39m=[32m"notifications-list"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card notification-card notification-card--ok notification-card--unread"[39m
+                [33mdata-code[39m=[32m"N-50"[39m
+                [33mdata-notification-id[39m=[32m"notification-n50"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"notification-card__head"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon notification-card__icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-export"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<h2[39m
+                    [33mclass[39m=[32m"notification-card__title"[39m
+                  [36m>[39m
+                    [0mLes teves dades estan a punt[0m
+                  [36m</h2>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"notification-card__unread"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-sr-only"[39m
+                    [36m>[39m
+                      [0mNova[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"notification-card__body"[39m
+                [36m>[39m
+                  [0mJa pots descarregar el paquet amb les teves dades.[0m
+                [36m</p>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"notification-card__foot"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"notification-card__meta"[39m
+                  [36m>[39m
+                    [0mfa 1 h[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/NotificationsPage.test.tsx:349:25
+    347|     sessionStorage.clear();
+    348|     await openFeed();
+    349|     const card = screen.getByRole("link", { name: "Les teves dades est…
+       |                         ^
+    350|     expect(card).toHaveAttribute("href", `/perfil?jobId=${jobId}`);
+    351|     fireEvent.click(card);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/profile/DataExportCard.test.tsx > T-14-17 · screen 12 requests, follows and downloads the member data package (R-14-13) > READY reads N-50's «Les teves dades estan a punt» and the api's expiresAt, never a hard-coded «7 dies»
+TestingLibraryElementError: Unable to find an element with the text: Les teves dades estan a punt.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card profile-data-export"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__heading"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-export"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<div>[39m
+          [36m<h2>[39m
+            [0mLes meves dades[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mPrepara un paquet amb les dades del teu compte. Estarà disponible durant 7 dies.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDescarrega les meves dades[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card profile-data-export"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__heading"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-export"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<div>[39m
+          [36m<h2>[39m
+            [0mLes meves dades[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mPrepara un paquet amb les dades del teu compte. Estarà disponible durant 7 dies.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDescarrega les meves dades[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/profile/DataExportCard.test.tsx:165:25
+    163|     );
+    164|     await renderCard("ca", jobId);
+    165|     expect(await screen.findByText("Les teves dades estan a punt.")).t…
+       |                         ^
+    166|     expect(screen.getByText("Disponible fins al 25/10/2026.")).toBeVis…
+    167|     expect(screen.queryByText(/7 dies/u)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/profile/DataExportCard.test.tsx > T-14-17 · screen 12 requests, follows and downloads the member data package (R-14-13) > FAILED shows the translated error of job.error.code (never the api's English message) and offers a new package
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'exportació és massa gran.[39m
+Received:
+[31m  Export exceeds the maximum size[39m
+ ❯ src/profile/DataExportCard.test.tsx:181:46
+    179|     );
+    180|     await renderCard();
+    181|     expect(await screen.findByRole("alert")).toHaveTextContent("L'expo…
+       |                                              ^
+    182|     expect(screen.queryByText(/Export exceeds/u)).toBeNull();
+    183|     expect(screen.getByRole("button", { name: "Descarrega les meves da…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/profile/DataExportCard.test.tsx > T-14-17 · screen 12 requests, follows and downloads the member data package (R-14-13) > R-12-13's bound: a package still queued after two minutes stops being read until [Actualitza]
+TestingLibraryElementError: Unable to find an accessible element with the role "status"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Les meves dades":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Descarrega les meves dades":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card profile-data-export"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__heading"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-export"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<div>[39m
+          [36m<h2>[39m
+            [0mLes meves dades[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mPrepara un paquet amb les dades del teu compte. Estarà disponible durant 7 dies.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDescarrega les meves dades[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/profile/DataExportCard.test.tsx:241:19
+    239|     });
+    240|     await renderCard("ca", jobId);
+    241|     expect(screen.getByRole("status")).toHaveTextContent("Preparant el…
+       |                   ^
+    242|     await vi.advanceTimersByTimeAsync(DATA_EXPORT_POLL_LIMIT_MS + 5_00…
+    243|     const refresh = await screen.findByRole("button", { name: "Actuali…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/profile/DataExportCard.test.tsx > T-14-17 · screen 12 requests, follows and downloads the member data package (R-14-13) > N-50's job (OPEN_EXPORT → /perfil?jobId=) seeds the card on a fresh load, ahead of a stored job
+TestingLibraryElementError: Unable to find an element with the text: Les teves dades estan a punt.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card profile-data-export"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__heading"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-export"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<div>[39m
+          [36m<h2>[39m
+            [0mLes meves dades[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mPrepara un paquet amb les dades del teu compte. Estarà disponible durant 7 dies.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__ready"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [0mEl paquet està a punt.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDescarrega el paquet[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card profile-data-export"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__heading"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-export"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<div>[39m
+          [36m<h2>[39m
+            [0mLes meves dades[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mPrepara un paquet amb les dades del teu compte. Estarà disponible durant 7 dies.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"profile-data-export__ready"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [0mEl paquet està a punt.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDescarrega el paquet[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/profile/DataExportCard.test.tsx:267:25
+    265|     });
+    266|     await renderCard("ca", jobId);
+    267|     expect(await screen.findByText("Les teves dades estan a punt.")).t…
+       |                         ^
+    268|     expect(reads).toEqual([`/api/v1/exports/${jobId}`]);
+    269|     expect(sessionStorage.getItem(storageKey)).toBe(jobId);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  7 failed | 90 passed (97)
+   Start at  15:44:38
+   Duration  21.79s (tests 92%, transform 4%, environment 2%, import 2%, setup 1%)
+

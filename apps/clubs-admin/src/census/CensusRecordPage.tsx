@@ -973,6 +973,7 @@ function MemberSummary({
           erased={erased}
           key={member.id}
           memberId={member.id}
+          onErased={onErased}
           status={member.status}
         />
       </div>
@@ -1213,10 +1214,22 @@ function MemberSummary({
   );
 }
 
-export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient; id?: string }) {
+export function MemberRecordPage({
+  client,
+  id = pathId(),
+  supportAccess = false,
+}: {
+  client: ApiClient;
+  id?: string;
+  /**
+   * A support access of the AgilityHub team (S17 R-17-10): every personal-data export is closed
+   * to it (`403 SUPPORT_RESTRICTED`), so the record does not offer «Descarrega les dades (RGPD)».
+   */
+  supportAccess?: boolean;
+}) {
   const branding = useBranding();
   const refreshCounters = useRefreshCounters();
-  const { i18n, t } = useTranslation("admin-census");
+  const { i18n, t } = useTranslation(["admin-census", "errors"]);
   const [overview, setOverview] = useState<MemberOverview>();
   // Why the record could not be read: a `409 MEMBER_ERASED` is final, anything else retried.
   const [failure, setFailure] = useState<{ error: unknown }>();
@@ -1317,9 +1330,8 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               })}
             </Badge>
           ) : null}
-          {member.displayStatus.kind === "ERASED" ? (
-            <Badge tone="neutral">{t("admin-census:member.privacy.erased")}</Badge>
-          ) : null}
+          {/* S14 §2: read erased, or found erased by a change (the same `erased` as the actions). */}
+          {erased ? <Badge tone="neutral">{t("admin-census:member.privacy.erased")}</Badge> : null}
           {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
             <Badge>
               {holder
@@ -1353,7 +1365,17 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
           )}
           {erased ? null : (
             <>
-              <MemberDataExportButton client={client} memberId={member.id} />
+              {supportAccess ? null : (
+                <MemberDataExportButton
+                  client={client}
+                  memberId={member.id}
+                  onErased={() => {
+                    // The button leaves with the other actions: the page says why.
+                    onErased();
+                    setFeedback({ message: t("errors:MEMBER_ERASED"), tone: "danger" });
+                  }}
+                />
+              )}
               <Button
                 onClick={() => {
                   setMemberDialog("resend");

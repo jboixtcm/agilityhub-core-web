@@ -411,6 +411,7 @@
       },
       "erasure": {
         "title": "Supressió de dades",
+        "leaveFirst": "Per suprimir les dades, primer cal tramitar la baixa de l'abonat.",
         "action": "Suprimeix les dades (RGPD)",
         "description": "La supressió pseudonimitza les dades personals i conserva els moviments que s'han de retenir legalment.",
         "loading": "Comprovant si hi ha una supressió programada…",
@@ -419,6 +420,8 @@
         "confirm": "PROGRAMA LA SUPRESSIÓ",
         "requested": "La supressió s'ha programat.",
         "scheduled": "Supressió programada per al {date}",
+        "blocked": "La supressió prevista per al {date} està bloquejada: es torna a provar cada dia.",
+        "erasing": "La supressió està en curs.",
         "cancel": "Anul·la la supressió",
         "cancelDescription": "La sol·licitud es cancel·larà i les dades no se suprimiran en la data programada.",
         "cancelling": "Anul·lant la supressió…",

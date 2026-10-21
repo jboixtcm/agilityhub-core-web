@@ -365,6 +365,8 @@ const exportDetailPolls = new Map<string, number>();
 // Rows of each queued list export, reported once the worker marks it READY.
 const queuedExportRows = new Map<string, number>();
 const requestedMemberDataExports = new Set<string>();
+// The account that asked for each member-data package: only that caller reads it (S14 §6).
+const exportJobOwners = new Map<string, string>();
 const memberErasureRequests = new Map<string, ErasureRequest>();
 
 let memberDogsState: MeDogs = structuredClone(meDogsFixture);
@@ -458,6 +460,7 @@ function resetAuditMockState(): void {
   exportDetailPolls.clear();
   queuedExportRows.clear();
   requestedMemberDataExports.clear();
+  exportJobOwners.clear();
   memberErasureRequests.clear();
 }
 
@@ -1020,9 +1023,16 @@ function memberDataExport(subjectMemberId: string, self: boolean) {
     status: "QUEUED",
   };
   requestedMemberDataExports.add(subjectMemberId);
+  exportJobOwners.set(jobId, currentMockScenario().me.account.id);
   exportDetailPolls.set(jobId, 0);
   exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== jobId)];
   return HttpResponse.json({ jobId, statusUrl: `/api/v1/exports/${jobId}` }, { status: 202 });
+}
+
+/** S14 §6, T-14-17: the jobs are caller-owned, so another account's job is `404` («Pau → 404»). */
+function exportOwnedByAnother(jobId: string): boolean {
+  const owner = exportJobOwners.get(jobId);
+  return owner !== undefined && owner !== currentMockScenario().me.account.id;
 }
 
 function privacyMemberRefusal(memberId: string) {
@@ -1876,6 +1886,14 @@ export const handlers = [
   http.patch("*/api/v1/me", async ({ request }) => {
     const body = (await request.json()) as UpdateMeRequest;
     const scenario = currentMockScenario();
+    // S01 §6 (E11-T09, INC-73): the language and the name are the person's own account.
+    if (scenario.me.impersonation !== undefined) {
+      return apiError(
+        "IMPERSONATION_DENIED",
+        "Impersonation tokens cannot change the account",
+        403,
+      );
+    }
     if (body.locale !== undefined && !scenario.branding.locales.includes(body.locale)) {
       return apiError("LOCALE_NOT_SUPPORTED", "Locale not supported", 400);
     }
@@ -2725,6 +2743,10 @@ export const handlers = [
     return memberDataExport(memberId, true);
   }),
   http.post("*/api/v1/members/:id/data-export", async ({ params, request }) => {
+    // S17 R-17-10: every personal-data export is closed to a support access.
+    if (isSupportToken(request)) {
+      return apiError("SUPPORT_RESTRICTED", "Not with a support access", 403);
+    }
     const memberId = String(params.id);
     const refused = privacyMemberRefusal(memberId);
     if (refused !== undefined) return refused;
@@ -2856,13 +2878,14 @@ export const handlers = [
           : job,
       );
     }
-    return HttpResponse.json(
-      kind === null ? exportJobsState : exportJobsState.filter((job) => job.kind === kind),
-    );
+    const owned = exportJobsState.filter((job) => !exportOwnedByAnother(job.id));
+    return HttpResponse.json(kind === null ? owned : owned.filter((job) => job.kind === kind));
   }),
   http.get("*/api/v1/exports/:id/download", ({ params, request }) => {
     const job = exportJobsState.find((item) => item.id === String(params.id));
-    if (job?.status !== "READY") return apiError("NOT_FOUND", "Export not found", 404);
+    if (job?.status !== "READY" || exportOwnedByAnother(job.id)) {
+      return apiError("NOT_FOUND", "Export not found", 404);
+    }
     if (!/^Bearer \S+$/u.test(request.headers.get("Authorization") ?? "")) {
       return apiError("UNAUTHENTICATED", "Authentication required", 401);
     }
@@ -2892,7 +2915,9 @@ export const handlers = [
   http.get("*/api/v1/exports/:id", ({ params }) => {
     const id = String(params.id);
     let job = exportJobsState.find((item) => item.id === id);
-    if (job === undefined) return apiError("NOT_FOUND", "Export not found", 404);
+    if (job === undefined || exportOwnedByAnother(id)) {
+      return apiError("NOT_FOUND", "Export not found", 404);
+    }
     if (job.kind === "MEMBER_DATA" && (job.status === "QUEUED" || job.status === "RUNNING")) {
       const polls = (exportDetailPolls.get(id) ?? 0) + 1;
       exportDetailPolls.set(id, polls);

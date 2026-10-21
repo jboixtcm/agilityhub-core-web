@@ -403,6 +403,7 @@
       },
       "erasure": {
         "title": "Data erasure",
+        "leaveFirst": "To erase the data, the member's leave must be processed first.",
         "action": "Erase data (GDPR)",
         "description": "Erasure pseudonymises personal data and keeps transactions that must be retained by law.",
         "loading": "Checking for a scheduled erasure…",
@@ -411,6 +412,8 @@
         "confirm": "SCHEDULE ERASURE",
         "requested": "Erasure was scheduled.",
         "scheduled": "Erasure scheduled for {date}",
+        "blocked": "The erasure planned for {date} is blocked: it is retried every day.",
+        "erasing": "The erasure is in progress.",
         "cancel": "Cancel erasure",
         "cancelDescription": "The request will be cancelled and the data will not be erased on the scheduled date.",
         "cancelling": "Cancelling erasure…",

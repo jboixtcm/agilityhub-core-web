@@ -305,6 +305,96 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     });
   });
 
+  /**
+   * N-50 «Les teves dades estan a punt» (PERSONAL, APP + EMAIL) with the action the core sends: on
+   * the real core (`n50-feed-card-core.json`, E11-W01 round 2) `OPEN_EXPORT` carries no params.
+   */
+  function serveN50(jobId: string, params: Record<string, string>) {
+    const n50 = {
+      action: { enabled: true, params, type: "OPEN_EXPORT" },
+      body: "Ja pots descarregar el paquet amb les teves dades.",
+      category: "PERSONAL",
+      channels: ["APP", "EMAIL"],
+      code: "N-50",
+      color: "OK",
+      createdAt: "2026-08-02T15:00:00Z",
+      icon: "export",
+      id: "notification-n50",
+      readAt: null,
+      title: "Les teves dades estan a punt",
+    };
+    server.use(
+      http.get("*/api/v1/me/notifications", () =>
+        HttpResponse.json({ items: [n50], page: 0, size: 20, totalItems: 1, unreadCount: 1 }),
+      ),
+      http.post("*/api/v1/me/notifications/notification-n50/read", () =>
+        HttpResponse.json({ unreadCount: 0 }),
+      ),
+      http.get("*/api/v1/exports/:id", ({ params }) =>
+        params.id === jobId
+          ? HttpResponse.json({
+              createdAt: "2026-08-02T14:58:00Z",
+              downloadUrl: `/api/v1/exports/${jobId}/download?expires=1&signature=s`,
+              expiresAt: "2026-08-09T15:00:00Z",
+              fileName: "member-data.zip",
+              format: "ZIP",
+              id: jobId,
+              kind: "MEMBER_DATA",
+              progressPct: 100,
+              status: "READY",
+            })
+          : undefined,
+      ),
+    );
+  }
+
+  const memberDataJobKey = "agilityhub.memberDataExportJob:10000000-0000-4000-8000-000000000002";
+
+  it("E11-W01 round 2 #2 (S14 R-14-13): N-50's card (OPEN_EXPORT without params, as the core sends it) opens 12, which finds this device's package after the tab was closed", async () => {
+    const jobId = "71000000-0000-4000-8000-000000000001";
+    serveN50(jobId, {});
+    // The member asked for the package on this device; the tab that asked was closed since.
+    localStorage.setItem(memberDataJobKey, jobId);
+    sessionStorage.clear();
+    try {
+      await openFeed();
+      const card = screen.getByRole("link", { name: "Les teves dades estan a punt" });
+      expect(card).toHaveAttribute("href", "/perfil");
+      fireEvent.click(card);
+      await waitFor(() => {
+        expect(window.location.pathname).toBe("/perfil");
+      });
+      expect(await screen.findByRole("button", { name: "Descarrega el paquet" })).toBeVisible();
+      expect(screen.getByText("Les teves dades estan a punt.")).toBeVisible();
+      expect(screen.queryByRole("button", { name: "Descarrega les meves dades" })).toBeNull();
+      expect(count("GET", `/exports/${jobId}`)).toBeGreaterThan(0);
+    } finally {
+      localStorage.removeItem(memberDataJobKey);
+    }
+  });
+
+  it("E11-W01 round 2 #2 (S14 §8 «obre GET /exports/{id}»): an N-50 that names its job (params.jobId) opens 12 on that package with nothing stored on the device", async () => {
+    const jobId = "71000000-0000-4000-8000-000000000001";
+    serveN50(jobId, { jobId });
+    localStorage.removeItem(memberDataJobKey);
+    sessionStorage.clear();
+    try {
+      await openFeed();
+      const card = screen.getByRole("link", { name: "Les teves dades estan a punt" });
+      expect(card).toHaveAttribute("href", `/perfil?jobId=${jobId}`);
+      fireEvent.click(card);
+      await waitFor(() => {
+        expect(`${window.location.pathname}${window.location.search}`).toBe(
+          `/perfil?jobId=${jobId}`,
+        );
+      });
+      expect(await screen.findByRole("button", { name: "Descarrega el paquet" })).toBeVisible();
+      expect(screen.queryByRole("button", { name: "Descarrega les meves dades" })).toBeNull();
+    } finally {
+      localStorage.removeItem(memberDataJobKey);
+    }
+  });
+
   it("entering calls read-all once, and 03's bell goes quiet", async () => {
     await openFeed();
     await waitFor(() => {

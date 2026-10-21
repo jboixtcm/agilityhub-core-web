@@ -673,10 +673,25 @@ select {
   font-size: 0.875rem;
 }
 
-.profile-data-export__ready {
+.profile-data-export__ready,
+.profile-data-export__stalled {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+}
+
+.profile-data-export__stalled {
+  display: flex;
+  gap: var(--ah-space-3);
+}
+
+.profile-data-export__state {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.profile-data-export__state small {
+  color: var(--ah-color-text-muted);
 }
 
 .profile-data-export > [role="alert"] {

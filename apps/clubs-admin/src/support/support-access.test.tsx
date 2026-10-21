@@ -825,3 +825,33 @@ describe("E10-W03 step 2 · the club's ADMIN ends a live support access from «A
     expect(card.queryByRole("button", { name: "Acaba l'accés" })).toBeNull();
   });
 });
+
+describe("E11-W01 round 2 #1 · D10 offers no personal-data export to a support access (R-17-10)", () => {
+  it("a support session reads the member's record without «Descarrega les dades (RGPD)»; the club's own ADMIN has it", async () => {
+    mockScenario("adminSupportAccess");
+    const support = authClient();
+    await support.acceptImpersonation(
+      "mock-support-token",
+      new Date(Date.now() + 3_600_000).toISOString(),
+    );
+    window.history.pushState(null, "", "/abonats/member-laura");
+    await renderApplication(support);
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Laura Serra Vidal" }),
+    ).toBeVisible();
+    expect(screen.getByRole("region", { name: "Accés de suport" })).toBeVisible();
+    // The record's other actions stay (audited as PLATFORM); only the closed export goes.
+    expect(screen.getByRole("button", { name: "Reenvia accés" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Descarrega les dades (RGPD)" })).toBeNull();
+
+    cleanup();
+    sessionStorage.clear();
+    const admin = authClient();
+    await admin.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/abonats/member-laura");
+    await renderApplication(admin);
+    expect(
+      await screen.findByRole("button", { name: "Descarrega les dades (RGPD)" }),
+    ).toBeVisible();
+  });
+});

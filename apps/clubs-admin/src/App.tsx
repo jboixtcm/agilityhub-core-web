@@ -482,6 +482,16 @@ function PlanningTemplatesRoute({
   );
 }
 
+/** D10 (S03 §2): a support access (S17 R-17-10) gets the record without the personal-data export. */
+function MemberRecordRoute({
+  client,
+}: {
+  client: ReturnType<typeof createAuthenticatedApiClient>;
+}) {
+  const session = useSession();
+  return <MemberRecordPage client={client} supportAccess={session.me?.support !== undefined} />;
+}
+
 function CalendarRoute({
   client,
   onNavigate,
@@ -612,7 +622,7 @@ function routeContent(
     return <DogsPage client={client} />;
   }
   if (route.path === "/abonats/:id") {
-    return <MemberRecordPage client={client} />;
+    return <MemberRecordRoute client={client} />;
   }
   if (route.path === "/abonats/:id/auditoria") {
     return <MemberAuditPage client={client} />;

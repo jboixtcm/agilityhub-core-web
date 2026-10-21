@@ -2,6 +2,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 
 import { createApiClient, isApiError } from "../index";
 
+import { MOCK_SUPPORT_TOKEN } from "./console-handlers";
 import { mockScenario, resetAuditMockState, resetCensusRecordState } from "./handlers";
 import { server } from "./server";
 
@@ -100,7 +101,7 @@ describe("S14 privacy mock contract", () => {
     expect(cancelled.response.status).toBe(204);
   });
 
-  it("T-14-30 returns the complete append-only consent history without inventing nulls", async () => {
+  it("R-14-18 returns the complete append-only consent history without inventing nulls", async () => {
     const response = await client.GET("/members/{id}/consents", {
       params: { path: { id: "member-laura" } },
     });
@@ -123,5 +124,49 @@ describe("S14 privacy mock contract", () => {
         version: "2026-09",
       },
     ]);
+  });
+
+  it("T-14-17 another account reads none of the member's package: GET /exports/{id} and its file are 404, and the list leaves it out", async () => {
+    mockScenario("member");
+    const queued = await client.POST("/me/data-export");
+    const jobId = queued.data?.jobId ?? "";
+    expect((await client.GET("/exports/{id}", { params: { path: { id: jobId } } })).data?.id).toBe(
+      jobId,
+    );
+
+    // «Pau → 404»: a second member of the club (the multi-profile account) asks for Laura's job.
+    mockScenario("multiProfile");
+    const other = await failure(client.GET("/exports/{id}", { params: { path: { id: jobId } } }));
+    expect(other).toMatchObject({ code: "NOT_FOUND", details: {}, status: 404 });
+    const otherFile = await failure(
+      client.GET("/exports/{id}/download", {
+        params: { path: { id: jobId }, query: { expires: 0, signature: "x" } },
+      }),
+    );
+    expect(otherFile).toMatchObject({ code: "NOT_FOUND", status: 404 });
+    const list = await client.GET("/exports", { params: { query: { kind: "MEMBER_DATA" } } });
+    expect(list.data?.map((job) => job.id)).not.toContain(jobId);
+  });
+
+  it("R-17-10 closes the admin data package to a support access with 403 SUPPORT_RESTRICTED", async () => {
+    const support = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      getAccessToken: () => MOCK_SUPPORT_TOKEN,
+    });
+    const refused = await failure(
+      support.POST("/members/{id}/data-export", {
+        body: { deliverToMember: false },
+        params: { path: { id: "member-laura" } },
+      }),
+    );
+    expect(refused).toMatchObject({ code: "SUPPORT_RESTRICTED", status: 403 });
+  });
+
+  it("INC-73 (S01 §6, E11-T09): PATCH /me refuses an impersonation token with 403 IMPERSONATION_DENIED", async () => {
+    mockScenario("impersonated");
+    const refused = await failure(client.PATCH("/me", { body: { locale: "es" } }));
+    expect(refused).toMatchObject({ code: "IMPERSONATION_DENIED", details: {}, status: 403 });
+    mockScenario("member");
+    expect((await client.PATCH("/me", { body: { locale: "es" } })).data?.account.locale).toBe("es");
   });
 });

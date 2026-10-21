@@ -590,6 +590,70 @@ describe("T-01-21 profile access rows and impersonation", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("INC-73 (S01 §6, E11-T09): an impersonation offers no language or password change, which the api refuses to its token", async () => {
+    const memberClient = authClient();
+    await memberClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(memberClient);
+    expect(await screen.findByRole("combobox", { name: "Idioma" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Canvia la contrasenya" })).toBeVisible();
+
+    cleanup();
+    mockScenario("impersonated");
+    const impersonatedClient = authClient();
+    await impersonatedClient.acceptImpersonation("mock-impersonation-token");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(impersonatedClient);
+    expect(await screen.findByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    expect(screen.getByRole("heading", { level: 1, name: "El meu perfil" })).toBeVisible();
+    expect(screen.queryByRole("combobox", { name: "Idioma" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Canvia la contrasenya" })).toBeNull();
+    // The rest of the profile stays: the member's data and the exit of the impersonation.
+    expect(screen.getByRole("link", { name: /Laura Serra Vidal/u })).toBeVisible();
+  });
+
+  it("E11-W01 round 2 #2 (S14 R-14-13): a fresh load of /perfil?jobId= (an N-50 that names its job) follows that package with nothing stored on the device", async () => {
+    const jobId = "71000000-0000-4000-8000-000000000001";
+    const storedKey = "agilityhub.memberDataExportJob:10000000-0000-4000-8000-000000000002";
+    localStorage.removeItem(storedKey);
+    server.use(
+      http.get("*/api/v1/exports/:id", ({ params }) =>
+        params.id === jobId
+          ? HttpResponse.json({
+              createdAt: "2026-10-18T09:00:00Z",
+              downloadUrl: `/api/v1/exports/${jobId}/download?expires=1&signature=s`,
+              expiresAt: "2026-10-25T09:00:00Z",
+              fileName: "member-data.zip",
+              format: "ZIP",
+              id: jobId,
+              kind: "MEMBER_DATA",
+              progressPct: 100,
+              status: "READY",
+            })
+          : undefined,
+      ),
+    );
+    sessionStorage.clear();
+    const memberClient = authClient();
+    await memberClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", `/perfil?jobId=${jobId}`);
+    await renderApplication(memberClient);
+    expect(await screen.findByRole("button", { name: "Descarrega el paquet" })).toBeVisible();
+    expect(screen.getByText("Les teves dades estan a punt.")).toBeVisible();
+    // The expiry the api sends (7 days, R-14-13), in the club's zone: never a hard-coded «7 dies».
+    expect(screen.getByText("Disponible fins al 25/10/2026.")).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Descarrega les meves dades" })).toBeNull();
+    expect(localStorage.getItem(storedKey)).toBe(jobId);
+
+    // Anything but a job UUID in the address is ignored: the card offers a new package.
+    cleanup();
+    localStorage.removeItem(storedKey);
+    window.history.pushState(null, "", "/perfil?jobId=..%2Fadmin");
+    await renderApplication(memberClient);
+    expect(await screen.findByRole("button", { name: "Descarrega les meves dades" })).toBeVisible();
+    localStorage.removeItem(storedKey);
+  });
+
   it("renders the mockup rows in order without account sessions or backoffice handoff", async () => {
     mockScenario("multiProfile");
     const client = authClient();

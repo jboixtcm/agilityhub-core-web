@@ -16,8 +16,9 @@ function path(template: string, value: string): string {
 /**
  * Where a card without a button opens (S11 R-11-11): the route the code fixes, or nothing. The
  * buttons (`CHANGE_CLASS`, `CLAIM_SEAT`) are not links, and the back-office actions
- * (`OPEN_SIGNUP`, `OPEN_MEMBER`, `OPEN_JOBS`, `OPEN_EXPORT`, `OPEN_CHALLENGE`) have no route in the
- * member app. A route whose module is off opens nothing (no dead link, AGENTS rule 3).
+ * (`OPEN_SIGNUP`, `OPEN_MEMBER`, `OPEN_JOBS`, `OPEN_CHALLENGE`) have no route in the member app.
+ * `OPEN_EXPORT` is N-50's (S14 R-14-13): the member's own data package, on 12's card. A route
+ * whose module is off opens nothing (no dead link, AGENTS rule 3).
  */
 export function feedActionHref(action: FeedAction, reader: FeedReader): string | undefined {
   const { params } = action;
@@ -46,6 +47,10 @@ export function feedActionHref(action: FeedAction, reader: FeedReader): string |
       return gated("/activitats/:id", params.activityId);
     case "OPEN_SETUP":
       return gated("/recorreguts/muntat/:ringId", params.ringId);
+    case "OPEN_EXPORT":
+      return params.jobId === undefined || params.jobId === ""
+        ? "/perfil"
+        : `/perfil?jobId=${encodeURIComponent(params.jobId)}`;
     default:
       return undefined;
   }
