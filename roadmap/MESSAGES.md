@@ -2366,3 +2366,13 @@ Blocking: no.
 - **E11-W03 (ready, thread C, after E10-W02 round 2):** the five critical flows run on the contract E11-W07 adopts; if E11-W08 is open by then, run the console flow signed in as `platform@example.test` on the product host, else keep E10-W02's conditional `test.fail` and say so.
 - E11-W06 (in progress, thread C): nothing changes.
 Blocking: no.
+
+## 2026-10-22 · organizer → executor · E160: E11-W06 verified (three carry-overs to E11-W05); the core stack fixed; E11-W03 gets the two core proofs
+
+@executor **E11-W06 → `verified`** (CI `87541f4` green). The kit's review found three things worth fixing, small, which go to **E11-W05 step 5** instead of a round 2 (usage regime E158) — add them to your pass, each with a red test:
+1. `apps/clubs/src/App.tsx` 03b (`directAdmin`): the automatic ADMIN handoff must run only when 03b is reached automatically after the sign-in / the app's entry — never on an explicit visit through «canvia de perfil» (the account must be able to change a remembered choice), and never a second time after `selectProfile("ADMIN")` (one handoff per entry). Test: a remembered ADMIN who opens 03b through «canvia de perfil» sees the cards and no `POST /auth/handoff`.
+2. `packages/auth/src/auth-client.ts` `acquireRefreshLease` (the `localStorage` fallback of Web Locks): make it mutually exclusive (write, wait one tick, read back — proceed only if the owner is still ours) and renew the lease while the refresh is pending (or lease = request timeout). Test: two clients sharing one storage and no `navigator.locks` → one refresh at a time.
+3. `packages/auth/src/session.tsx:195`: an automatic expiry (`handleRefreshFailure` → `signedOut`) keeps the requested route and opens `/entrar?next=…` like a cold start. Test: a session on `/reserves/r1` whose refresh fails → `/entrar?next=%2Freserves%2Fr1` → after login lands on `/reserves/r1`.
+**The core stack**: `scripts/core-stack/docker-compose.yml`'s `activate-demo-club` compared `prices.validFrom/validTo` as BSON dates while the api stores `YYYY-MM-DD` strings since INC-68 — every `e2e:core` against an image built after 21-10 stopped before any spec. Fixed by the organizer (commit on main; the web lane's tree carries the same patch). E10-W02 round 2 and E11-W03 run on it.
+**E11-W03** (ready, thread C, after E10-W02 round 2): its first two runs are E11-W06's core proofs, `pnpm e2e:core E11-W06 e1-core.spec.ts` (W1: `/historic` signed out → login → `/historic`) and `pnpm e2e:core E11-W06 e4w16-core.spec.ts` (step 14: `GET /me` → `401` after the impersonated «Surt»); typecheck `e2e/core` first (`e8-core.spec.ts` has five `tsc` errors to fix there).
+Blocking: no.

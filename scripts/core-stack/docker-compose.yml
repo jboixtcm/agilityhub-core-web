@@ -93,10 +93,15 @@ services:
             email: {$$in: ["member@example.test", "member.2@example.test"]}
           }).toArray();
           const plan = db.plans.findOne({code: "ABONAT", active: true});
+          // INC-68 (api E11-T08): validity days are stored as YYYY-MM-DD strings; older images stored BSON dates.
+          const today = new Date().toISOString().slice(0, 10);
+          const current = (field, op, value) => ({$$or: [{[field]: {[op]: value}}, {[field]: {[op]: new Date()}}]});
           const price = db.prices.find({
             planId: plan?._id,
-            validFrom: {$$lte: new Date()},
-            $$or: [{validTo: {$$exists: false}}, {validTo: {$$gte: new Date()}}]
+            $$and: [
+              current("validFrom", "$$lte", today),
+              {$$or: [{validTo: {$$exists: false}}, {validTo: null}, current("validTo", "$$gte", today)]}
+            ]
           }).sort({validFrom: -1}).limit(1).next();
           if (accounts.length !== 2 || !plan || !price) { quit(1); }
           const members = db.members.updateMany(
