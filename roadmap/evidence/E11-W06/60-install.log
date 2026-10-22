@@ -1,0 +1,7 @@
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: Done
+Done in 854ms using pnpm v9.15.9

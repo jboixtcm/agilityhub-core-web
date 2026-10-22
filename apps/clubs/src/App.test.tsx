@@ -614,7 +614,8 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
         refuse
           ? HttpResponse.json(
               { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
-              { status: 503 },
+              // CATALEG_ERRORS rule 0: any 5xx of the framework answers this 500.
+              { status: 500 },
             )
           : undefined,
       ),

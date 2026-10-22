@@ -63,7 +63,8 @@ describe("E11-W06 W8 (the states matrix of E11-W02): screen 30's failed read", (
         return failing
           ? HttpResponse.json(
               { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
-              { status: 503 },
+              // CATALEG_ERRORS rule 0: any 5xx of the framework answers this 500.
+              { status: 500 },
             )
           : undefined;
       }),

@@ -15,10 +15,18 @@ type Warning = components["schemas"]["SignupWarning"];
  * claim and a Stripe payment); `manual` has nothing paid yet; `addDog` is an ACTIVE member whose
  * new dog waits (R-04-25); `familyPending` is a family claim the applicant could not match
  * (`NOT_FOUND_PENDING`, R-04-13); `readmission` is a LEFT member who applies again (R-04-06, E38);
- * `readmissionNoCard` is the same readmission whose reused dog's record has no card document.
+ * `readmissionNoCard` is the same readmission whose reused dog's record has no card document;
+ * `noPlanProposal` is a requested plan that is no longer assignable (R-04-19, INC-39), so the view
+ * proposes no plan and no price (the snapshot's `SignupProposals` declares both optional, not
+ * nullable, while its description says «null»: the mock leaves them out; D2 reads both alike).
  */
 export type SignupReviewVariant =
-  "addDog" | "familyPending" | "manual" | "readmission" | "readmissionNoCard";
+  | "addDog"
+  | "familyPending"
+  | "manual"
+  | "noPlanProposal"
+  | "readmission"
+  | "readmissionNoCard";
 
 export const signupReviewBaseline = memberSignupReviewFixture as MemberSignupView;
 
@@ -56,6 +64,10 @@ export function signupReviewVariant(
     view.upfront.lines = dueLines(view.upfront.lines);
     view.upfront = { ...view.upfront, ...totals(view.upfront.lines) };
     view.warnings = [...view.warnings, "UPFRONT_UNPAID"];
+  }
+  if (variant === "noPlanProposal") {
+    delete view.proposals.planId;
+    delete view.proposals.priceId;
   }
   if (variant === "familyPending") {
     // What the applicant typed on 17; the api found no ACTIVE member with it.

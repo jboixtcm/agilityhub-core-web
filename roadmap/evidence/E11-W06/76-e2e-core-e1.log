@@ -1,0 +1,60 @@
+heavy.sh: 02:15 waiting for the host lock, held by: 02:15 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 02:40 got the host lock after 24 min 17 s
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E11-W06 e1-core.spec.ts
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-21T17:17:50.976560194Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:1382321a32060d52a193a034b5e1077cd36a09568e9ca4b392e8e7695162079f]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W06/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W06/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W06/club-template-default.yaml (47 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e11-w06_default Creating 
+ Volume agilityhub-e11-w06_mongo-data Creating 
+ Volume agilityhub-e11-w06_mongo-data Creating 
+ Volume agilityhub-e11-w06_export-files Creating 
+ Volume agilityhub-e11-w06_export-files Creating 
+ Network agilityhub-e11-w06_default Creating 
+ Volume agilityhub-e11-w06_mailbox Creating 
+ Volume agilityhub-e11-w06_mailbox Creating 
+ Volume agilityhub-e11-w06_attachment-files Creating 
+ Volume agilityhub-e11-w06_attachment-files Creating 
+ Volume agilityhub-e11-w06_export-files Created 
+ Volume agilityhub-e11-w06_export-files Created 
+ Volume agilityhub-e11-w06_attachment-files Created 
+ Volume agilityhub-e11-w06_attachment-files Created 
+ Volume agilityhub-e11-w06_mongo-data Created 
+ Volume agilityhub-e11-w06_mongo-data Created 
+ Volume agilityhub-e11-w06_mailbox Created 
+ Volume agilityhub-e11-w06_mailbox Created 
+ Network agilityhub-e11-w06_default Created 
+ Network agilityhub-e11-w06_default Created 
+ Container agilityhub-e11-w06-mongo-1 Creating 
+ Container agilityhub-e11-w06-mongo-1 Created 
+ Container agilityhub-e11-w06-seed-1 Creating 
+ Container agilityhub-e11-w06-seed-1 Created 
+ Container agilityhub-e11-w06-activate-demo-club-1 Creating 
+ Container agilityhub-e11-w06-activate-demo-club-1 Created 
+ Container agilityhub-e11-w06-core-1 Creating 
+ Container agilityhub-e11-w06-core-1 Created 
+ Container agilityhub-e11-w06-mongo-1 Starting 
+ Container agilityhub-e11-w06-mongo-1 Started 
+ Container agilityhub-e11-w06-mongo-1 Waiting 
+ Container agilityhub-e11-w06-mongo-1 Healthy 
+ Container agilityhub-e11-w06-seed-1 Starting 
+ Container agilityhub-e11-w06-seed-1 Started 
+ Container agilityhub-e11-w06-seed-1 Waiting 
+ Container agilityhub-e11-w06-seed-1 Exited 
+ Container agilityhub-e11-w06-activate-demo-club-1 Starting 
+ Container agilityhub-e11-w06-activate-demo-club-1 Started 
+ Container agilityhub-e11-w06-mongo-1 Waiting 
+ Container agilityhub-e11-w06-activate-demo-club-1 Waiting 
+ Container agilityhub-e11-w06-activate-demo-club-1 Error service "activate-demo-club" didn't complete successfully: exit 1
+ Container agilityhub-e11-w06-mongo-1 Error dependency mongo failed to start
+service "activate-demo-club" didn't complete successfully: exit 1
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W06/seed-files.log (191 lines)
+ ELIFECYCLE  Command failed with exit code 1.

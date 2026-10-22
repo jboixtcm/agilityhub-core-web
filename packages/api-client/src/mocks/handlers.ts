@@ -990,6 +990,37 @@ function pagination(url: URL) {
   return { page, size };
 }
 
+/** `clubPagesUnavailable` (E11-W06 W8): the browser's mark that the api answers again. */
+const MOCK_CLUB_PAGES_BACK_KEY = "agilityhub.mockClubPagesBack";
+
+/**
+ * `signedOutUntilLogin` (E11-W06 W1): the browser's mark of a sign-in, which survives the full
+ * loads the apps make after it (the refresh cookie's stand-in; never a token).
+ */
+const MOCK_SIGNED_IN_KEY = "agilityhub.mockSignedIn";
+
+function mockBrowserStorage(): Storage | undefined {
+  try {
+    return typeof localStorage === "undefined" ? undefined : localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * E11-W06 W5 (CONVENCIONS_I18N §1): the account's saved language in the mock world — what
+ * `PATCH /me {locale}` stored, or what a browser test sets as the account's language — so `GET
+ * /me` answers it after a full load, as the api does (the apps apply `Account.locale` at sign-in).
+ */
+const MOCK_ACCOUNT_LOCALE_KEY = "agilityhub.mockAccountLocale";
+
+function withMockAccountLocale<T extends { account: { locale: string } }>(me: T): T {
+  const locale = mockBrowserStorage()?.getItem(MOCK_ACCOUNT_LOCALE_KEY);
+  return locale === null || locale === undefined || locale === ""
+    ? me
+    : { ...me, account: { ...me.account, locale } };
+}
+
 function apiError(code: string, message: string, status: number, headers?: HeadersInit) {
   return HttpResponse.json<ApiErrorResponse>(
     { code, details: {}, message, traceId: "mock-trace-id" },
@@ -1692,7 +1723,7 @@ export const handlers = [
       // An impersonation scenario (e.g. `impersonatedFamily`) keeps its own `/me`.
       mockScenario("impersonated");
     }
-    return HttpResponse.json(currentMockScenario().me);
+    return HttpResponse.json(withMockAccountLocale(currentMockScenario().me));
   }),
   http.get("*/api/v1/dashboard", () => {
     const scenario = currentMockScenario();
@@ -1899,10 +1930,15 @@ export const handlers = [
     if (body.locale !== undefined && !scenario.branding.locales.includes(body.locale)) {
       return apiError("LOCALE_NOT_SUPPORTED", "Locale not supported", 400);
     }
+    // The account keeps its language (CONVENCIONS_I18N §1): the next `GET /me` answers it.
+    if (body.locale !== undefined) {
+      mockBrowserStorage()?.setItem(MOCK_ACCOUNT_LOCALE_KEY, body.locale);
+    }
+    const me = withMockAccountLocale(scenario.me);
     return HttpResponse.json({
-      ...scenario.me,
+      ...me,
       account: {
-        ...scenario.me.account,
+        ...me.account,
         ...(body.locale === undefined ? {} : { locale: body.locale }),
         ...(body.name === undefined ? {} : { name: body.name }),
       },
@@ -2613,7 +2649,13 @@ export const handlers = [
   http.post("*/oauth2/session", () =>
     HttpResponse.json({ redirectUrl: "/products?authorization=complete" }),
   ),
-  http.post("*/oauth2/revoke", () => new HttpResponse(null, { status: 200 })),
+  http.post("*/oauth2/revoke", () => {
+    // `signedOutUntilLogin`: the revoked session's cookie is gone, so the next restore is refused.
+    if (currentMockScenario().signedOutUntilLogin === true) {
+      mockBrowserStorage()?.removeItem(MOCK_SIGNED_IN_KEY);
+    }
+    return new HttpResponse(null, { status: 200 });
+  }),
   http.get("*/oauth2/authorize", ({ request }) =>
     HttpResponse.redirect(new URL("/products?authorization=complete", request.url), 302),
   ),
@@ -2655,6 +2697,14 @@ export const handlers = [
       if (form.get("password") === "wrong-password") {
         return apiError("INVALID_CREDENTIALS", "Invalid credentials", 401);
       }
+    }
+    if (scenario.signedOutUntilLogin === true) {
+      // No refresh cookie until this browser signs in with its password: the restore is `400
+      // REFRESH_EXPIRED`, as the api answers a refresh without its cookie.
+      if (grant === "refresh_token" && mockBrowserStorage()?.getItem(MOCK_SIGNED_IN_KEY) !== "1") {
+        return apiError("REFRESH_EXPIRED", "No session", 400);
+      }
+      mockBrowserStorage()?.setItem(MOCK_SIGNED_IN_KEY, "1");
     }
     return HttpResponse.json(mockTokens());
   }),
@@ -4286,6 +4336,12 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
   http.get("*/api/v1/club-pages", ({ request }) => {
+    if (
+      currentMockScenario().clubPagesUnavailable === true &&
+      mockBrowserStorage()?.getItem(MOCK_CLUB_PAGES_BACK_KEY) !== "1"
+    ) {
+      return apiError("INTERNAL_ERROR", "Unavailable", 500);
+    }
     const active = new URL(request.url).searchParams.get("active");
     const pages =
       active === null

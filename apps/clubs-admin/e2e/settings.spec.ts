@@ -58,6 +58,8 @@ async function prepareAdmin(
   await page.addInitScript(
     ({ initialBranding, initialLocale, mockScenario }) => {
       localStorage.setItem("agilityhub.locale", initialLocale);
+      // The account's own language too: the app applies it at the sign-in (E11-W06 W5).
+      localStorage.setItem("agilityhub.mockAccountLocale", initialLocale);
       localStorage.setItem("agilityhub.mockScenario", mockScenario);
       localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(initialBranding));
     },

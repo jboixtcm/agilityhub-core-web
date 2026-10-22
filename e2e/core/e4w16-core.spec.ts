@@ -487,9 +487,15 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   const clubs = await popup;
   if (clubs === undefined) throw new Error("D10 did not open the launchUrl");
   const clubsGrants: string[] = [];
+  // E11-W06 step 14: the impersonation JWT the tab sends, to prove «Surt» revokes its grant.
+  let impersonationBearer: string | undefined;
   clubs.on("request", (request) => {
     if (new URL(request.url()).pathname === "/oauth2/token" && request.method() === "POST") {
       clubsGrants.push(new URLSearchParams(request.postData() ?? "").get("grant_type") ?? "");
+    }
+    const authorization = request.headers().authorization;
+    if (authorization !== undefined && new URL(request.url()).pathname.startsWith("/api/v1/")) {
+      impersonationBearer = authorization;
     }
   });
   // What the club app's `/me` answered (status, the impersonation mark, the account's and the
@@ -582,6 +588,38 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   expect(second).toEqual({ code: "HANDOFF_INVALID", status: 400 });
   // The impersonated tab never refreshed (no refresh_token grant, before or after the reload).
   expect(clubsGrants.filter((grant) => grant === "refresh_token")).toEqual([]);
+
+  // E11-W06 step 14 (S01 R-01-10, ruling E151): the banner's «Surt» revokes the grant itself
+  // (`RevokeRequest.token` = the impersonation JWT), so that bearer is refused at once, not when
+  // `auth.impersonationMinutes` runs out.
+  const bearer = impersonationBearer ?? "";
+  expect(bearer).toMatch(/^Bearer /u);
+  const beforeExit = await clubs.evaluate(async (authorization) => {
+    const response = await fetch("/api/v1/me", { headers: { Authorization: authorization } });
+    return response.status;
+  }, bearer);
+  expect(beforeExit).toBe(200);
+  const revoked = clubs.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      new URL(response.url()).pathname === "/oauth2/revoke",
+  );
+  await clubs.getByRole("status").getByRole("button", { name: "Surt" }).click();
+  const revokeAnswer = await revoked;
+  const revokeBody = JSON.parse(revokeAnswer.request().postData() ?? "{}") as { token?: string };
+  expect(`Bearer ${revokeBody.token ?? ""}`).toBe(bearer);
+  expect(revokeAnswer.status()).toBeLessThan(300);
+  const afterExit = await admin.evaluate(async (authorization) => {
+    const response = await fetch("/api/v1/me", { headers: { Authorization: authorization } });
+    return response.status;
+  }, bearer);
+  expect(afterExit).toBe(401);
+  writeEvidence("impersonation-exit-core.json", {
+    afterExit,
+    beforeExit,
+    revokeBodyCarriesTheImpersonationToken: true,
+    revokeStatus: revokeAnswer.status(),
+  });
   writeEvidence("impersonation-core.json", {
     banner: `Estàs veient l'app com ${record.name}`,
     clubsMe,

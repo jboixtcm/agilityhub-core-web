@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- E11-W06 (the audit's web fixes before the E2E, ruling E145):
+  - adopts the staged api snapshot `a7c85d50`;
+  - a deep link survives the sign-in (`?next=` plus a 15-minute copy for the magic link's tab);
+  - a remembered ADMIN profile opens the back office through the handoff;
+  - tabs refresh one at a time (Web Locks, or a `localStorage` lease);
+  - the back office's user menu has the language and «Tanca la sessió»;
+  - the account's locale applies at sign-in, and `html lang` follows the language;
+  - D10 and 30 format instants in the club's time zone, and 30 has a retry;
+  - D6 shows `PRICE_OVERLAP`, D10 `READMISSION_PENDING`, D2 a null proposal and `CURRENCY_MISMATCH`, and 16 routes three more signup codes to their step;
+  - the members' app sends a session a screen does not allow to its profile's landing;
+  - the impersonated «Surt» revokes its grant, and D10 hides «Entra com l'abonat» under a support access;
+  - mocks: the signed-out, unavailable-30 and no-plan-proposal scenarios, and an account locale that `PATCH /me` keeps.
 - E10-W02 (E10 integration, front; T-17-12):
   - `e2e:core`'s E10 stage covers the whole console against the core, and the script «a second club in under an hour» is `docs/playbooks/segon-club-en-menys-d-una-hora.md`, with one run's times and screenshots. The run goes through the wizard, the domains, the theme with its logo, SEPA, legal, the catalogue clone, the first admin's invitation and access, the record's tabs, the activation and the members' app on the club's host.
   - The stack:

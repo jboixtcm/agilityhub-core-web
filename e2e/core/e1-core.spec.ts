@@ -170,6 +170,28 @@ test("T-01-18 password login reaches the seeded account", async ({ browser }) =>
   await context.close();
 });
 
+test("T-11-11 E11-W06 W1 · a member screen opened signed out is the one the password login opens", async ({
+  browser,
+}) => {
+  // 25 «Historial» is a member screen a notification opens (R-11-11) and needs no seeded id.
+  const context = await mobileContext(browser);
+  const page = await context.newPage();
+  await page.goto(`${clubsUrl}/historic`);
+  await page.waitForURL(/\/entrar\?next=%2Fhistoric$/u);
+  await page.getByLabel("Correu electrònic").fill("member@example.test");
+  await page.getByLabel("Contrasenya").fill(corePassword);
+  await submitPasswordLogin(page);
+  await page.waitForURL(/\/(?:historic|perfil-acces)$/u);
+  // A multi-profile account chooses on 03b first; the kept address opens after its choice.
+  if (new URL(page.url()).pathname === "/perfil-acces") {
+    await page.locator("button.profile-choice__card").filter({ hasText: /Com a alumn/u }).click();
+  }
+  await expect(page).toHaveURL(/\/historic$/u);
+  await expect(page.locator(".clubs-shell")).toBeVisible();
+  await screenshot(page, "e11-w06-historic-after-sign-in-core-375.png");
+  await context.close();
+});
+
 test("T-01-21 seeded administrator opens the real backoffice", async ({ browser }) => {
   const context = await desktopContext(browser);
   const page = await context.newPage();

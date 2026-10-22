@@ -47,6 +47,17 @@ export interface MockScenarioDefinition {
    * simulation and the run answer `409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}`.
    */
   billingPriceOverlap?: boolean;
+  /**
+   * E11-W06 W8 (the states matrix of E11-W02): `GET /club-pages` answers `500 INTERNAL_ERROR`
+   * until the browser marks the api back (`localStorage` `agilityhub.mockClubPagesBack` = `1`), so
+   * 30 shows its error and its retry reads again.
+   */
+  clubPagesUnavailable?: boolean;
+  /**
+   * E11-W06 W1 (S11 R-11-11): the browser has no session until its password sign-in — the restore's
+   * `refresh_token` grant answers `400 REFRESH_EXPIRED` — so a deep link opens 01 first.
+   */
+  signedOutUntilLogin?: boolean;
   dashboardNulls?: boolean;
   /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
   exportsQueued?: boolean;
@@ -375,8 +386,36 @@ const scenarios = {
     sessions: accountSessions,
     signupReview: "readmissionNoCard",
   },
+  /** R-04-19 (INC-39): the requested plan is no longer assignable, so D2 proposes no plan. */
+  adminSignupReviewNoPlanProposal: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signupReview: "noPlanProposal",
+  },
   member: {
     branding: canic,
+    me: member,
+    sessions: accountSessions,
+  },
+  /** E11-W06 W1: the member's device has no session until the sign-in (`signedOutUntilLogin`). */
+  memberSignedOut: {
+    branding: canic,
+    me: member,
+    sessions: accountSessions,
+    signedOutUntilLogin: true,
+  },
+  /** E11-W06 W1: the same for the back office's administrator. */
+  adminSignedOut: {
+    branding: canic,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    signedOutUntilLogin: true,
+  },
+  /** E11-W06 W8: 30's read fails until the api is back (`clubPagesUnavailable`). */
+  memberClubPagesUnavailable: {
+    branding: canic,
+    clubPagesUnavailable: true,
     me: member,
     sessions: accountSessions,
   },

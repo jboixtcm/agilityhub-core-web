@@ -1,4 +1,5 @@
 import { createApiClient } from "@agilityhub/api-client";
+import { mockScenario } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
@@ -44,6 +45,9 @@ describe("E11-W02 round 2 (review #4): a screen whose chunk cannot load never bl
       mockMode: true,
       mockRefreshTokenStore: new MemoryRefreshTokenStore(),
     });
+    // A member's session: 04 reads `/me/bookable-classes`, MEMBER only (E41; the mock answers it
+    // since E11-W06), and W13 sends a session without MEMBER to its own landing.
+    mockScenario("member");
     await client.login("laura@example.test", "secret-password");
     window.history.pushState(null, "", "/reservar");
     const i18n = await createClubsI18n({

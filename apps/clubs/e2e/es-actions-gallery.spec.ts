@@ -30,6 +30,8 @@ async function loginEs(page: Page): Promise<void> {
   await page.addInitScript(
     ({ cachedBranding }) => {
       localStorage.setItem("agilityhub.locale", "es");
+      // The account's own language too: the app applies it at the sign-in (E11-W06 W5).
+      localStorage.setItem("agilityhub.mockAccountLocale", "es");
       localStorage.setItem("agilityhub.mockScenario", "instructor");
       localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cachedBranding));
     },

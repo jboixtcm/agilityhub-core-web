@@ -36,6 +36,8 @@ async function prepare(page: Page, scenario: string, locale = "ca") {
   await page.addInitScript(
     ({ cachedBranding, language, mockScenario }) => {
       localStorage.setItem("agilityhub.locale", language);
+      // The account's own language too: the app applies it at the sign-in (E11-W06 W5).
+      localStorage.setItem("agilityhub.mockAccountLocale", language);
       localStorage.setItem("agilityhub.mockScenario", mockScenario);
       localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cachedBranding));
     },
