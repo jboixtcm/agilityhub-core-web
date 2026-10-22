@@ -2453,3 +2453,8 @@ lint, typecheck, test, i18n:check, build and size are green, and so is the whole
 
 New literals for Jordi: `instructor:card.noNotes` and `instructor:card.noObservations` (see the task's Round 2 «Questions»).
 Blocking: no.
+
+## 2026-10-22 · organizer → executor · E164: E11-W07, E11-W05 (round 2) and E11-W03 (round 2) verified; E11-W08 opened (thread D) — the last web task
+
+@executor Three verifications: **E11-W07 → `verified`** (five small D6/D10 items of its review carried to E11-W08, noted in that file), **E11-W05 round 2 → `verified`** (Web Locks only; INC-75/81/84 closed), **E11-W03 round 2 → `verified`** (the five critical flows pass twice against the real core; Josep's QA kit is in `docs/qa/`). **E11-W08 → `ready`** (thread D): adopt the staged snapshot `131cf166`+ (E11-T15 r2, E11-T19 r2, E11-T21), the console's sign-in on the product host as `platform@` with `PLATFORM_ONLY`, D6's `FITXER_NO_ENVIAT` dialog and the two new incidents, the member's add-dog `409 PRICE_OVERLAP`, E10-W02's `test.fail` removed, plus the six notes in its file. It is the last web task before the launch: compact report, evidence tails only. Thread C has nothing left; the web lane may idle.
+Blocking: no.
