@@ -1,0 +1,11 @@
+{
+  "account": "admin@example.test",
+  "by": "platform@example.test (id-web on id.example.test)",
+  "request": "PUT /api/v1/platform/accounts/{id}/platform-roles",
+  "response": {
+    "platformRoles": [
+      "AGILITYHUB_ADMIN"
+    ]
+  },
+  "status": 200
+}

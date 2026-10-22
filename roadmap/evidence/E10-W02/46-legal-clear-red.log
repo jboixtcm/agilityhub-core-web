@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (25 tests | 1 failed | 23 skipped) 303ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (25)
+     × E10-W02 round 2 #4: after a saved change, emptying the default language's text and saving again drops «Canvis desats.», asks for the text and sends nothing 46ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E10-W02 round 2 #4: after a saved change, emptying the default language's text and saving again drops «Canvis desats.», asks for the text and sends nothing
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <p
+  class="console-message console-message--success"
+  role="status"
+>
+  Canvis desats.
+</p> instead[39m
+ ❯ src/console/ClubRecordPage.test.tsx:567:54
+    565|       expect(text).toHaveAccessibleDescription("Aquest camp és obligat…
+    566|     });
+    567|     expect(screen.queryByText("Canvis desats.")).not.toBeInTheDocument…
+       |                                                      ^
+    568|     expect(patches).toHaveLength(1);
+    569|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 23 skipped (25)
+   Start at  02:52:47
+   Duration  1.70s (transform 47%, tests 19%, environment 16%, import 15%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/console/ClubRecordPage.test.tsx -t round 2 #4

@@ -139,6 +139,11 @@ echo "fifo demo seed: $evidence_directory/demo-fifo.yaml ($(wc -l <"$evidence_di
 docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/club-template-default.yaml \
   >"$evidence_directory/club-template-default.yaml" || echo "could not read /app/seeds/club-template-default.yaml" >&2
 echo "template club: $evidence_directory/club-template-default.yaml ($(wc -l <"$evidence_directory/club-template-default.yaml" | tr -d ' ') lines)"
+# E10-W02 round 2: the Cànic's club file too, whose `domains` give the hosts every stage signs in
+# on (a run whose `/branding` answers `404 UNKNOWN_HOST` shows why). Fictional data only.
+docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/club-canic.yaml \
+  >"$evidence_directory/club-canic.yaml" || echo "could not read /app/seeds/club-canic.yaml" >&2
+echo "canic club: $evidence_directory/club-canic.yaml ($(wc -l <"$evidence_directory/club-canic.yaml" | tr -d ' ') lines)"
 export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
 # Runtime-only vault keys for the fictional bank/card fixtures. They are forwarded to Core but
 # never echoed or written to evidence.

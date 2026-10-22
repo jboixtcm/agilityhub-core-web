@@ -1,0 +1,14 @@
+{
+  "action": {
+    "type": "OPEN_EXPORT",
+    "params": {},
+    "enabled": true
+  },
+  "code": "N-50",
+  "memberExportsList": {
+    "ids": "FORBIDDEN",
+    "status": 403
+  },
+  "queuedJobId": "a57f6199-e1fd-413b-a198-47f54adf0c86",
+  "title": "Les teves dades estan a punt"
+}

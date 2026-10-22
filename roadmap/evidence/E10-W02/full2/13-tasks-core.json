@@ -1,0 +1,19 @@
+{
+  "completion": 200,
+  "created": [
+    201,
+    201
+  ],
+  "dogsWithTasks": [
+    {
+      "done": 1,
+      "name": "Taca 6",
+      "rows": 2
+    },
+    {
+      "done": 0,
+      "name": "Suro 190",
+      "rows": 0
+    }
+  ]
+}

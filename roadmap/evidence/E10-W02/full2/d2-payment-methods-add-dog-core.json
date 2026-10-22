@@ -1,0 +1,8 @@
+[
+  {
+    "type": "SEPA_DD",
+    "label": "Domiciliació",
+    "current": true,
+    "assignable": false
+  }
+]

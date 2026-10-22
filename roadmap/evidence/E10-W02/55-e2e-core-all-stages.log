@@ -1,0 +1,1655 @@
+heavy.sh: 05:29 waiting for the host lock, held by: 05:28 agilityhub-core-api-c: bin/e10-smoke
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E10-W02/full2
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-21T17:17:50.976560194Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:1382321a32060d52a193a034b5e1077cd36a09568e9ca4b392e8e7695162079f]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/club-template-default.yaml (47 lines)
+canic club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/club-canic.yaml (782 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e1-e2.log (193 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-5134830967de Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-5134830967de Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 221
+Progress: resolved 858, reused 858, downloaded 0, added 678
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.6s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 13 tests using 1 worker
+
+[1/13] e2e/core/e1-core.spec.ts:157:5 › T-01-18 password login reaches the seeded account
+  1) e2e/core/e1-core.spec.ts:157:5 › T-01-18 password login reaches the seeded account ────────────
+
+    Error: expect(page).toHaveURL(expected) failed
+
+    Expected pattern: /\/inici$/u
+    Received string:  "chrome-error://chromewebdata/"
+    Timeout: 15000ms
+
+    Call log:
+      - Expect "toHaveURL" with timeout 15000ms
+        - waiting for "https://admin.example.test/entrar?handoff=ss7mFuh2VuPREVYc0_PXdmEeiUxfOg-u4VEBLjCKby8" navigation to finish...
+        33 × locator resolved to <html>…</html>
+           - unexpected value "chrome-error://chromewebdata/"
+
+
+      165 |   await page.getByLabel("Contrasenya").fill(corePassword);
+      166 |   await submitPasswordLogin(page);
+    > 167 |   await expect(page).toHaveURL(/\/inici$/u);
+          |                      ^
+      168 |   await expect(page.locator(".clubs-shell")).toBeVisible();
+      169 |
+      170 |   await context.close();
+        at /work/e2e/core/e1-core.spec.ts:167:22
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-22T03:31:19.059Z grant_type=refresh_token status=400 cookie=none context=w0c1 page=127.0.0.1:4173/entrar started=2026-10-22T03:31:19.051Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-01-18 pas...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e1-core-T-01-18-password-login-reaches-the-seeded-account/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e1-core-T-01-18-password-login-reaches-the-seeded-account/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e1-core-T-01-18-password-login-reaches-the-seeded-account/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/13] e2e/core/e1-core.spec.ts:173:5 › T-11-11 E11-W06 W1 · a member screen opened signed out is the one the password login opens
+[3/13] e2e/core/e1-core.spec.ts:195:5 › T-01-21 seeded administrator opens the real backoffice
+[4/13] e2e/core/e1-core.spec.ts:211:5 › T-01-20 club session is restored by the core
+[5/13] e2e/core/e1-core.spec.ts:234:5 › T-01-19 magic link is delivered and exchanged end to end
+[6/13] e2e/core/e1-core.spec.ts:256:5 › T-01-26 published seed enters without pending onboarding
+[7/13] e2e/core/e1-core.spec.ts:266:5 › T-01-22 apps/id resumes a real authorize flow through oauth2/session
+[8/13] e2e/core/e1-core.spec.ts:356:5 › T-02-07 E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)
+[9/13] e2e/core/e2-core.spec.ts:199:5 › T-03-42 real census flow, booking block and member profile
+[10/13] e2e/core/e2-core.spec.ts:387:5 › T-05-22/T-05-25 real catalog create, edit and deactivate round trips
+[11/13] e2e/core/e2-core.spec.ts:472:5 › T-02-13/T-14-26 real parameter history, export and audit
+[12/13] e2e/core/e2-core.spec.ts:559:5 › T-05-CP-07 real club page edit renders styled Markdown on screen 30
+[13/13] e2e/core/e2-core.spec.ts:612:5 › T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)
+  1 failed
+    e2e/core/e1-core.spec.ts:157:5 › T-01-18 password login reaches the seeded account ─────────────
+  7 did not run
+  5 passed (33.7s)
+
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e4w16.log (193 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-0983d1c67131 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-0983d1c67131 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 237
+Progress: resolved 858, reused 858, downloaded 0, added 802
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.6s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e4w16-core.spec.ts:231:5 › T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through
+[2/5] e2e/core/e4w16-core.spec.ts:352:5 › T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`
+[3/5] e2e/core/e4w16-core.spec.ts:434:5 › T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account
+[4/5] e2e/core/e4w16-core.spec.ts:639:5 › T-14-26 E4-W16 step 5 · a READY export downloads from the drawer through GET /exports/{id} and the bearer
+[5/5] e2e/core/e4w16-core.spec.ts:694:5 › T-03-34 (front) E4-W16 step 7 · D10 keeps the block, «Inactivitat», «Baixa» and the audit whatever BILLING says
+  5 passed (13.3s)
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e3.log (193 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-1de5ed16cfe9 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-1de5ed16cfe9 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 231
+Progress: resolved 858, reused 858, downloaded 0, added 794
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.5s using pnpm v9.15.9
+
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e3-signup.spec.ts:721:5 › T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)
+[2/5] e2e/core/e3-signup.spec.ts:737:5 › T-04-34 public signup is validated and enters through the N-02 welcome link
+[3/5] e2e/core/e3-signup.spec.ts:2085:5 › T-04-34 rejected signup delivers N-03
+[4/5] e2e/core/e3-signup.spec.ts:2092:5 › T-04-34 active member adds a dog and the club validates it
+[5/5] e2e/core/e3-signup.spec.ts:2096:5 › T-04-34 signup.enabled=false shows only the configured closed text
+  5 passed (35.5s)
+{"action":"OPEN_DOG","code":"N-37","deliveries":[{"channel":"APP","status":"DELIVERED"}],"dogName":"Neret E3","recipient":["accountId","displayName","memberId"],"variables":["audience","change","club_name","dog_name","dog_name_article","entityId","gender","member_first_name","member_last_names","member_name"]}
+ Network agilityhub-e10-w02-full2_default Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e4.log (193 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-82ba5844d15a Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-82ba5844d15a Created 
+tar: .: file changed as we read it
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:34) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 176
+Progress: resolved 858, reused 858, downloaded 0, added 733
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.6s using pnpm v9.15.9
+[WebServer] (node:117) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:197) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:295) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:393) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:488) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+[1/7] e2e/core/e4-core.spec.ts:488:5 › T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring
+[2/7] e2e/core/e4-core.spec.ts:623:5 › T-06-28 E2E (b) D4: «Esborrany» opens the seeded draft week, [VALIDAR LA SETMANA], the D4c modal with the 4 registrants (200), «Anul·lades», ring blocks (409 then 201)
+[3/7] e2e/core/e4-core.spec.ts:807:5 › T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n
+[4/7] e2e/core/e4-core.spec.ts:862:5 › T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every ring on D4, a new seminar published over a class with the conflict dialog; D7 exports against the core
+[5/7] e2e/core/e4-core.spec.ts:1107:5 › T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place
+[6/7] e2e/core/e4-core.spec.ts:1279:5 › T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»
+  1) e2e/core/e4-core.spec.ts:1279:5 › T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club» 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Actividades' }).getByRole('link', { name: /Seminari E4 izopim/u })
+    Expected substring: "5 plazas"
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'Actividades' }).getByRole('link', { name: /Seminari E4 izopim/u }) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Actividades' }).getByRole('link', { name: /Seminari E4 izopim/u })
+
+
+      1290 |   const block = member.getByRole("region", { name: "Actividades" });
+      1291 |   const seminarRow = block.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
+    > 1292 |   await expect(seminarRow).toContainText("5 plazas");
+           |                            ^
+      1293 |   await seminarRow.click();
+      1294 |   await member.waitForURL(`**/activitats/${seminarId}`);
+      1295 |   await expect(member.getByText("5 plazas libres de 5")).toBeVisible();
+        at /work/e2e/core/e4-core.spec.ts:1292:28
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-22T03:36:52.683Z grant_type=refresh_token status=400 cookie=none context=w0c5 page=127.0.0.1:4173/entrar started=2026-10-22T03:36:52.680Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-07-32 E2E...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e4-core-T-07-32-E2E-e-es-t-d0fd9-eads-«cancel·lada-pel-club»/error-context.md
+
+    Error Context: test-results/core-e1/e4-core-T-07-32-E2E-e-es-t-d0fd9-eads-«cancel·lada-pel-club»/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e4-core-T-07-32-E2E-e-es-t-d0fd9-eads-«cancel·lada-pel-club»/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e4-core-T-07-32-E2E-e-es-t-d0fd9-eads-«cancel·lada-pel-club»/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/7] e2e/core/e4-core.spec.ts:1449:5 › E4-W05 step 7 · the «Excel · PDF» menus of D5 and D7 with EXPORT_TOO_LARGE and while an export is pending
+  1 failed
+    e2e/core/e4-core.spec.ts:1279:5 › T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club» 
+  1 did not run
+  5 passed (37.8s)
+
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e5.log (194 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-0ea9924e2391 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-0ea9924e2391 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 210
+Progress: resolved 858, reused 858, downloaded 0, added 777
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.6s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 11 tests using 1 worker
+
+[1/11] e2e/core/e5-core.spec.ts:895:5 › E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read
+[2/11] e2e/core/e5-core.spec.ts:968:7 › week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation
+[3/11] e2e/core/e5-core.spec.ts:1080:7 › week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29
+[4/11] e2e/core/e5-core.spec.ts:1201:7 › week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim
+[5/11] e2e/core/e5-core.spec.ts:1331:7 › week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed
+  1) e2e/core/e5-core.spec.ts:1331:7 › week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Clases', exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Clases', exact: true }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Clases', exact: true })
+
+
+      647 |   await expect(
+      648 |     session.page.getByRole("heading", { exact: true, name: text[locale].classes }),
+    > 649 |   ).toBeVisible();
+          |     ^
+      650 |   return (await response.json()) as BookableClasses;
+      651 | }
+      652 |
+        at open04 (/work/e2e/core/e5-core.spec.ts:649:5)
+        at /work/e2e/core/e5-core.spec.ts:1337:22
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-22T03:38:50.997Z grant_type=refresh_token status=400 cookie=none context=w0c9 page=127.0.0.1:4173/entrar started=2026-10-22T03:38:50.994Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="week 0 at d...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e5-core-week-0-at-demoNow--7a1a3-e-from-04-and-on-03-claimed/error-context.md
+
+    Error Context: test-results/core-e1/e5-core-week-0-at-demoNow--7a1a3-e-from-04-and-on-03-claimed/error-context.md
+
+    Error Context: test-results/core-e1/e5-core-week-0-at-demoNow--7a1a3-e-from-04-and-on-03-claimed/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e5-core-week-0-at-demoNow--7a1a3-e-from-04-and-on-03-claimed/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e5-core-week-0-at-demoNow--7a1a3-e-from-04-and-on-03-claimed/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/11] e2e/core/e5-core.spec.ts:1426:7 › week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings
+[7/11] e2e/core/e5-core.spec.ts:1718:7 › week 0 at demoNow › E5-W04 step 5 · the core's statuses for JOB_UNKNOWN, SLOT_NOT_ON_GRID, DOG_ALREADY_BOOKED and OVERRIDE_NOT_ALLOWED
+[8/11] e2e/core/e5-core.spec.ts:1792:7 › week 0 at demoNow › T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run
+[9/11] e2e/core/e5-core.spec.ts:1923:5 › R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter
+[10/11] e2e/core/e5-core.spec.ts:1998:5 › R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week
+[11/11] e2e/core/e5-core.spec.ts:2105:5 › E5-W05 round 2 · E75 · GET /training-bookings?q= and GET /ring-blocks?q= answer the matching rows on the core and narrow both tabs of «Entrenaments»; GET /bookings/filter-values labels every value
+  1 failed
+    e2e/core/e5-core.spec.ts:1331:7 › week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed 
+  6 did not run
+  4 passed (40.1s)
+
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e6.log (191 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-9e5a5aaec7e4 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-9e5a5aaec7e4 Created 
+tar: .: file changed as we read it
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 115
+Progress: resolved 858, reused 858, downloaded 0, added 630
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.7s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 14 tests using 1 worker
+
+[1/14] e2e/core/e6-core.spec.ts:1163:5 › E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read
+[2/14] e2e/core/e6-core.spec.ts:1279:7 › Monday 04:00 › T-10-28 (f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked
+[3/14] e2e/core/e6-core.spec.ts:1338:7 › Monday 04:00 › T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves
+[4/14] e2e/core/e6-core.spec.ts:1472:7 › Monday 04:00 › T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert
+[5/14] e2e/core/e6-core.spec.ts:1558:7 › Monday 04:00 › T-10-29 (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF
+[6/14] e2e/core/e6-core.spec.ts:1683:7 › Monday 04:00 › T-10-28 T-10-15 (f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens, completes it as a member, and no /me answer carries DOG_OBSERVATIONS
+[7/14] e2e/core/e6-core.spec.ts:1953:7 › Monday 04:00 › T-10-30 T-10-18 (h) D14 · per-account unread marks: instructor A reads the member's note, unread for instructor B too, and then everything; B still has them unread (the note after A's read as well), never the task she wrote; D14's filter values and search on the core
+[8/14] e2e/core/e6-core.spec.ts:2171:7 › Monday 04:00 › T-10-02 T-10-15 T-10-22 E6-W04 step 5 · the core's statuses for ATTENDANCE_NOTIFIED_FINAL, TASK_ALREADY_DONE (a second completion), TASK_NOT_DONE and a member's read of the instructor card
+[9/14] e2e/core/e6-core.spec.ts:2218:7 › Monday 04:00 › T-10-01 T-10-11 T-10-22 E6-W04 review #3 · the core's statuses for ATTENDANCE_NOT_OPEN (Tuesday's class), ATTENDANCE_BOOKING_NOT_ACTIVE (a late-cancelled booking, as ADMIN), INSTRUCTOR_NOTICE_DISABLED (the parameter off) and IMPERSONATION_DENIED (an impersonated GET /instructor/day and GET /followup)
+[10/14] e2e/core/e6-core.spec.ts:2363:5 › (e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist
+[11/14] e2e/core/e6-core.spec.ts:2479:5 › T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new
+  1) e2e/core/e6-core.spec.ts:2479:5 › T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 41
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "from": Object {
+    +       "email": "no-reply@example.test",
+    +       "name": "Club Agility Cànic",
+    +     },
+    +     "headers": Object {},
+    +     "html": "<!doctype html>
+    + <html lang=\"ca\">
+    + <head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>T&#39;hem trobat a faltar</title></head>
+    + <body style=\"margin:0;background:#f4f5f7;font-family:Arial,sans-serif;color:#18212f\">
+    + <table role=\"presentation\" style=\"width:100%;padding:32px 16px\"><tr><td align=\"center\">
+    + <table role=\"presentation\" style=\"width:100%;max-width:560px;background:#ffffff;border-radius:12px;padding:32px\"><tr><td>
+    +
+    + <p style=\"font-weight:bold;font-size:18px\">Club Agility Cànic</p>
+    + <h1 style=\"font-size:24px;line-height:1.3\">T&#39;hem trobat a faltar</h1>
+    + <p style=\"font-size:16px;line-height:1.6\">Dilluns, 26 d’octubre de 2026 no vas poder venir a la classe de A+B. Recorda que pots anul·lar des de l&#39;app fins a última hora: així pot aprofitar la classe algú altre. La sessió compta dins el teu còmput.</p>
+    +
+    +
+    + <hr style=\"border:0;border-top:1px solid #e5e7eb;margin-top:32px\">
+    + <p style=\"font-size:12px;line-height:1.5;color:#526070\">Respon a aquest correu per contactar amb el club.</p>
+    +
+    + </td></tr></table></td></tr></table>
+    + </body></html>
+    + ",
+    +     "locale": "ca",
+    +     "replyTo": "canic@example.test",
+    +     "subject": "T'hem trobat a faltar",
+    +     "tags": Object {
+    +       "clubId": "66b40c18-d2b0-402c-8e9d-0cf8e1fee2ed",
+    +       "notificationId": "57d86420-2204-4742-a4f1-272a27ca9ce5",
+    +     },
+    +     "text": "T'hem trobat a faltar
+    +
+    + Dilluns, 26 d’octubre de 2026 no vas poder venir a la classe de A+B. Recorda que pots anul·lar des de l'app fins a última hora: així pot aprofitar la classe algú altre. La sessió compta dins el teu còmput.
+    +
+    + Club Agility Cànic
+    + Respon a aquest correu per contactar amb el club.",
+    +     "to": "demo.66b40c18-d2b0-402c-8e9d-0cf8e1fee2ed.81@example.test",
+    +   },
+    + ]
+
+      2553 |   expect(first.effects.items.length).toBeGreaterThan(0);
+      2554 |   expect(second.effects.items).toEqual([]);
+    > 2555 |   expect(afterSecond.filter(isN19)).toEqual([]);
+           |                                     ^
+      2556 |   // One N-19 e-mail (EMAIL is on for it, `e6-notifications.json`), with the class's whole date
+      2557 |   // (S11 T-11-33: «la data de la classe escrita sencera, mai “ahir”»).
+      2558 |   expect(n19.map(flags)).toEqual([expect.objectContaining({ ahir: false, classDay: true })]);
+        at /work/e2e/core/e6-core.spec.ts:2555:37
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-22T03:40:52.959Z grant_type=refresh_token status=400 cookie=none context=w0c13 page=127.0.0.1:4174/entrar started=2026-10-22T03:40:52.956Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-10-26 (e...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e6-core-T-10-26-e-P3-at-Tu-48f32-econd-run-sends-nothing-new/error-context.md
+
+    Error Context: test-results/core-e1/e6-core-T-10-26-e-P3-at-Tu-48f32-econd-run-sends-nothing-new/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e6-core-T-10-26-e-P3-at-Tu-48f32-econd-run-sends-nothing-new/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e6-core-T-10-26-e-P3-at-Tu-48f32-econd-run-sends-nothing-new/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[12/14] e2e/core/e6-core.spec.ts:2664:5 › T-10-31 (g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account; an activity row with its activityId links the activity's page
+[13/14] e2e/core/e6-core.spec.ts:2733:5 › (i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines
+[14/14] e2e/core/e6-core.spec.ts:2782:5 › T-10-01 T-10-27 E6-W04 review #3 · at Wednesday 00:00 the Monday sheet is closed to an instructor: 21's circles inert, and a PUT answers 422 ATTENDANCE_WINDOW_CLOSED with its editableUntil; nothing changes
+  1 failed
+    e2e/core/e6-core.spec.ts:2479:5 › T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new 
+  3 did not run
+  10 passed (29.8s)
+
+e6 notifications: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/e6-notifications.json
+ Network agilityhub-e10-w02-full2_default Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e7.log (191 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-cf4ef737bf36 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-cf4ef737bf36 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 213
+Progress: resolved 858, reused 858, downloaded 0, added 794
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.6s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+[1/11] e2e/core/e7-core.spec.ts:1301:5 › E7-W03 steps 1–2 · preflight (the S11 answers, the VAPID key, the jobs, the core's build), the processes off, POST /test/clock to demoNow (Monday 07:00) or, without it, the reason (c), (d) and (h) skip; the parameters and the scene read from the core
+[2/11] e2e/core/e7-core.spec.ts:1389:5 › T-11-35 (b) R-11-15 · screen 12: the second registrant picks «Castellano» (PATCH /me {locale: es} → 200) before the cancellation — the seed has no es account
+[3/11] e2e/core/e7-core.spec.ts:1417:5 › T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seeded class → N-08a on 11 first with the x icon, ERROR tone, its border and « · i per SMS», the bell quiet after read-all, [CANVIA DE CLASSE] → 04 with her dog; the mailbox message per registrant; the es registrant in Spanish; the SMS delivery
+e2e/core/e7-core.spec.ts:1417:5 › T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seeded class → N-08a on 11 first with the x icon, ERROR tone, its border and « · i per SMS», the bell quiet after read-all, [CANVIA DE CLASSE] → 04 with her dog; the mailbox message per registrant; the es registrant in Spanish; the SMS delivery
+real SMS skipped: no Twilio credentials on the local stack, fictional numbers
+
+[4/11] e2e/core/e7-core.spec.ts:1619:5 › T-11-37 (c) R-11-12 · D9 edits N-08a's ca and es bodies with the run's marker, [DESA] → 200; the next cancellation carries it in each registrant's language while the cards of (a)/(b) stay as they were; «Restaura el text per defecte» → not customized
+[5/11] e2e/core/e7-core.spec.ts:1778:5 › T-11-35 T-11-38 (d) R-11-03 R-11-04 · screen 12 turns «Canvis en reserves…» off under «Correu»: the next N-08a reaches the feed with « · i per SMS» and no e-mail, the log shows EMAIL «omès per preferència» and APP «lliurat»; D10 turns it back on and 12 shows it
+[6/11] e2e/core/e7-core.spec.ts:1929:5 › T-11-35 (f) R-11-07 · web push in context: no permission prompt at boot nor on 12; turning the push switch on asks once and POST /push-subscriptions → 201 with the stubbed PushManager.subscribe
+[7/11] e2e/core/e7-core.spec.ts:2058:5 › T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Enviar comunicat» with the seeded CUSTOM template, «S'enviarà a 10 abonats», [ENVIA] → 202; the log lists ten rows of one batch and no other recipient; one of them sees it in her feed, admin@ (not selected) does not; the filter shape counts what D5 lists; the push subscription is deleted at logout
+[8/11] e2e/core/e7-core.spec.ts:2352:5 › T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes and statuses for STALE_VERSION, TEMPLATE_MANDATORY, CHANNEL_NOT_ALLOWED, TEMPLATE_NOT_CATALOG, TEMPLATE_NOT_SENDABLE, NO_RECIPIENTS, INVALID_REMINDER_OPTION and PUSH_SUBSCRIPTION_INVALID
+[9/11] e2e/core/e7-core.spec.ts:2479:5 › T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-22's order, the exclusive accordion and «Normes»; the es pass of 11 and 12: « · y por SMS», [CAMBIAR DE CLASE] and the preference rows in Spanish
+  1) e2e/core/e7-core.spec.ts:2479:5 › T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-22's order, the exclusive accordion and «Normes»; the es pass of 11 and 12: « · y por SMS», [CAMBIAR DE CLASE] and the preference rows in Spanish 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Notificaciones', level: 1 })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Notificaciones', level: 1 }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Notificaciones', level: 1 })
+
+
+      2515 |   const esView = await clubsSession(browser, MEMBER_CA, "es");
+      2516 |   await open11(esView.page);
+    > 2517 |   await expect(esView.page.getByRole("heading", { level: 1, name: ui.es.title })).toBeVisible();
+           |                                                                                   ^
+      2518 |   // (d)'s card exists only when the clock let (d) run (step 2).
+      2519 |   const keys = cards.dCa === undefined ? (["aCa"] as const) : (["aCa", "dCa"] as const);
+      2520 |   for (const key of keys) {
+        at /work/e2e/core/e7-core.spec.ts:2517:83
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-22T03:42:41.356Z grant_type=refresh_token status=400 cookie=none context=w0c7 page=127.0.0.1:4173/entrar started=2026-10-22T03:42:41.352Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-11-36 T-1...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e7-core-T-11-36-T-11-34-T--e10b6--preference-rows-in-Spanish/error-context.md
+
+    Error Context: test-results/core-e1/e7-core-T-11-36-T-11-34-T--e10b6--preference-rows-in-Spanish/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e7-core-T-11-36-T-11-34-T--e10b6--preference-rows-in-Spanish/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e7-core-T-11-36-T-11-34-T--e10b6--preference-rows-in-Spanish/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[10/11] e2e/core/e7-core.spec.ts:2547:5 › T-11-35 (h) R-11-16 R-15-14 · «Recordatori de classe: 2 h abans» on 12, the clock two hours before her class, D11's [Simula] lists her booking and changes nothing, [Executa ara] gives one N-13 with the clock icon and no e-mail, a second run gives none
+[11/11] e2e/core/e7-core.spec.ts:2662:5 › (j) cleanup for idempotence · the reminder back to «Mai», the run's booking cancelled, the es member back to Catalan; the template is the seed's, the matrix restored and the push subscription deleted
+  1 failed
+    e2e/core/e7-core.spec.ts:2479:5 › T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-22's order, the exclusive accordion and «Normes»; the es pass of 11 and 12: « · y por SMS», [CAMBIAR DE CLASE] and the preference rows in Spanish 
+  2 did not run
+  8 passed (43.4s)
+
+e7 notifications: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/e7-notifications.json
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e8.log (191 lines)
+E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted
+ Container agilityhub-e10-w02-full2-playwright-run-4915a619315b Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-4915a619315b Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 232
+Progress: resolved 858, reused 858, downloaded 0, added 770
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.7s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+[1/6] e2e/core/e8-core.spec.ts:828:5 › E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins»
+[2/6] e2e/core/e8-core.spec.ts:1053:5 › E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11)
+[3/6] e2e/core/e8-core.spec.ts:1171:5 › E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable
+[4/6] e2e/core/e8-core.spec.ts:1294:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings
+[5/6] e2e/core/e8-core.spec.ts:1673:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered
+[6/6] e2e/core/e8-core.spec.ts:1765:5 › E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «cobrat»; invalid-card fallback → [Actualitza la targeta] → checkout
+E8 fake card: payment_intent.succeeded delivered (provider reference redacted)
+  6 passed (1.9m)
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e9.log (191 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-894af94074df Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-894af94074df Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 111
+Progress: resolved 858, reused 858, downloaded 0, added 616
+Progress: resolved 858, reused 858, downloaded 0, added 852
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.3s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 3 tests using 1 worker
+
+[1/3] e2e/core/e9-core.spec.ts:449:5 › E9-W04 · T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11)
+[2/3] e2e/core/e9-core.spec.ts:634:5 › E9-W05 · T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and «Registra-ho com a muntat» (R-16-02, R-16-05, R-16-10, R-16-07)
+[3/3] e2e/core/e9-core.spec.ts:1266:5 › E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′)
+  3 passed (21.2s)
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e10.log (200 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-4aa0cea211a3 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-4aa0cea211a3 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 259
+Progress: resolved 858, reused 858, downloaded 0, added 778
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.5s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:582) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:677) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:772) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e10-core.spec.ts:306:5 › E10-W02 · the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 §2, R-01-17, T-17-12)
+[2/5] e2e/core/e10-core.spec.ts:435:5 › E10-W02 · the platform account signs in to the console on the product host and lands on D19 (S17 §2 «Entrada») — expected to fail until the api signs a platform account in on a product host
+[3/5] e2e/core/e10-core.spec.ts:470:5 › E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou club» wizard (T-17-12)
+[4/5] e2e/core/e10-core.spec.ts:616:5 › E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice, /branding before and after), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)
+[5/5] e2e/core/e10-core.spec.ts:995:5 › E10-W02 · a second club in under an hour: the manual script, step by step against the core, with its times (T-17-12)
+  5 passed (27.3s)
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_export-files Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_mongo-data Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Volume agilityhub-e10-w02-full2_attachment-files Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Creating 
+ Network agilityhub-e10-w02-full2_default Creating 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_mailbox Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_attachment-files Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_mongo-data Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Volume agilityhub-e10-w02-full2_export-files Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Network agilityhub-e10-w02-full2_default Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Creating 
+ Container agilityhub-e10-w02-full2-mongo-1 Created 
+ Container agilityhub-e10-w02-full2-seed-1 Creating 
+ Container agilityhub-e10-w02-full2-seed-1 Created 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Creating 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Created 
+ Container agilityhub-e10-w02-full2-core-1 Creating 
+ Container agilityhub-e10-w02-full2-core-1 Created 
+ Container agilityhub-e10-w02-full2-mongo-1 Starting 
+ Container agilityhub-e10-w02-full2-mongo-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-seed-1 Starting 
+ Container agilityhub-e10-w02-full2-seed-1 Started 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Starting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Started 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Starting 
+ Container agilityhub-e10-w02-full2-core-1 Started 
+ Container agilityhub-e10-w02-full2-core-1 Waiting 
+ Container agilityhub-e10-w02-full2-mongo-1 Waiting 
+ Container agilityhub-e10-w02-full2-seed-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Waiting 
+ Container agilityhub-e10-w02-full2-activate-demo-club-1 Exited 
+ Container agilityhub-e10-w02-full2-seed-1 Exited 
+ Container agilityhub-e10-w02-full2-mongo-1 Healthy 
+ Container agilityhub-e10-w02-full2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E10-W02/full2/seed-e11.log (191 lines)
+ Container agilityhub-e10-w02-full2-playwright-run-07be4e2bfba5 Creating 
+ Container agilityhub-e10-w02-full2-playwright-run-07be4e2bfba5 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 155
+Progress: resolved 858, reused 858, downloaded 0, added 646
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3.8s using pnpm v9.15.9
+
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 2 tests using 1 worker
+
+[1/2] e2e/core/e11-core.spec.ts:163:5 › E11-W01 · T-14-17: screen 12 follows and downloads the member's ZIP, N-50 opens it again from a fresh launch; impersonation is refused
+[2/2] e2e/core/e11-core.spec.ts:297:5 › E11-W01 · T-14-17/T-14-18/R-14-18: D10 queues the admin data package, schedules and cancels erasure and renders consent history
+  2 passed (12.7s)
+ ELIFECYCLE  Command failed with exit code 1.

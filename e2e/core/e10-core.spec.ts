@@ -339,7 +339,8 @@ test("E10-W02 · the console's entry: the product host's branding and boot, the 
   );
   await productPage.goto(`${productUrl}/consola/clubs`);
   expect((await booted).status()).toBe(200);
-  await productPage.waitForURL(`${productUrl}/entrar`);
+  // E11-W06 W1 (S11 R-11-11): the sign-in keeps the address it was asked for.
+  await productPage.waitForURL(`${productUrl}/entrar?next=%2Fconsola%2Fclubs`);
   await expect(productPage.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
   expect((await hostPrimary(productPage)).toLowerCase()).toBe(
     product.theme.colors.primary.toLowerCase(),
@@ -418,7 +419,9 @@ test("E10-W02 · the console's entry: the product host's branding and boot, the 
   // reach the console's server, which `id.*` and `clubsadmin.*` never share. The jar goes first.
   await idContext.clearCookies();
   await open.click();
-  await expect(idPage).toHaveURL(`${productUrl}/entrar`, { timeout: 30_000 });
+  await expect(idPage).toHaveURL(`${productUrl}/entrar?next=%2Fconsola%2Fclubs`, {
+    timeout: 30_000,
+  });
   await expect(idPage.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
 
   writeFileSync(
@@ -433,9 +436,9 @@ test("E10-W02 · the platform account signs in to the console on the product hos
   browser,
 }) => {
   // The core answers `POST /oauth2/token` on the product host with `404 UNKNOWN_HOST` for every
-  // client (`probe-core.json`, question 1 of the E10-W02 report). Playwright reports this test as
-  // a failure the day the core signs the platform account in there: then the mark goes.
-  test.fail(true, "api: /oauth2/token on the product host answers 404 UNKNOWN_HOST (E10-W02 Q1)");
+  // client (`probe-core.json`, ruling E157: api E11-T19). Only that answer is expected to fail;
+  // any other refusal (`403 PLATFORM_ONLY`, a 500) or a broken screen fails outright, and the day
+  // the core signs the platform account in there the test passes (E11-W08 removes the mark).
   const context = await desktopContext(browser);
   const page = await context.newPage();
   await page.goto(`${productUrl}/entrar`);
@@ -449,16 +452,14 @@ test("E10-W02 · the platform account signs in to the console on the product hos
   );
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click({ noWaitAfter: true });
   const tokenResponse = await token;
+  const tokenCode = tokenResponse.ok() ? null : errorCodeOf(await tokenResponse.text());
   writeFileSync(
     join(evidenceDirectory, "e10w02-core-product-host-sign-in.json"),
-    `${JSON.stringify(
-      {
-        code: tokenResponse.ok() ? null : errorCodeOf(await tokenResponse.text()),
-        status: tokenResponse.status(),
-      },
-      null,
-      2,
-    )}\n`,
+    `${JSON.stringify({ code: tokenCode, status: tokenResponse.status() }, null, 2)}\n`,
+  );
+  test.fail(
+    tokenResponse.status() === 404 && tokenCode === "UNKNOWN_HOST",
+    "api: E11-T19 (/oauth2/token on the product host answers 404 UNKNOWN_HOST)",
   );
   expect(tokenResponse.status()).toBe(200);
   await page.waitForURL(`${productUrl}/consola/clubs`);
@@ -1025,9 +1026,15 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
   page.setDefaultTimeout(30_000);
   recordPlatformCalls(page);
   const failedPlatformCalls: string[] = [];
+  // The one refusal the script provokes on purpose (step 7's second clone), asserted there.
+  let refusalExpected: ((url: URL, status: number) => boolean) | undefined;
   page.on("response", (response) => {
     const url = new URL(response.url());
-    if (url.pathname.includes("/api/v1/platform/") && response.status() >= 400) {
+    if (
+      url.pathname.includes("/api/v1/platform/") &&
+      response.status() >= 400 &&
+      refusalExpected?.(url, response.status()) !== true
+    ) {
       failedPlatformCalls.push(
         `${response.request().method()} ${url.pathname} → ${String(response.status())}`,
       );
@@ -1041,7 +1048,8 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
   });
 
-  // 2. The «Nou club» wizard: eight steps, the club's colours and the template's catalogues.
+  // 2. The «Nou club» wizard: eight steps and the club's colours. Its catalogues stay empty: step 7
+  // clones them once from the template (a second clone answers 409 CATALOG_NOT_EMPTY, R-17-08).
   let clubId = "";
   await timed("2 · Assistent «Nou club»", async () => {
     await page.getByRole("button", { name: "Nou club" }).click();
@@ -1072,7 +1080,7 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     const templateOptions = await template.locator("option").allTextContents();
     notes.templates = templateOptions;
     expect(templateOptions.length).toBeGreaterThan(1);
-    await template.selectOption({ index: 1 });
+    await template.selectOption({ label: "Cap: catàlegs buits" });
     await next.click();
     await expect(
       page.getByRole("heading", { level: 2, name: /Primer administrador/u }),
@@ -1086,6 +1094,10 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     await page.getByRole("button", { name: "CREA EL CLUB" }).click();
     const createdResponse = await created;
     expect(createdResponse.status()).toBe(201);
+    // No `catalogs.fromTemplate`: «Catàlegs base» (step 7) is the script's only clone.
+    expect(
+      (createdResponse.request().postDataJSON() as { catalogs?: unknown }).catalogs,
+    ).toBeUndefined();
     const createdBody = (await createdResponse.json()) as {
       checklist?: unknown;
       club?: { id: string };
@@ -1186,11 +1198,13 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     await screenshot(page, "core-W02-08-legal-1280.png");
   });
 
-  // 7. «Catàlegs base»: levels, rings, plans, FAQ and message templates from the template club.
+  // 7. «Catàlegs base»: levels, rings, plans, FAQ and message templates from the template club,
+  // the script's only clone (the wizard chose «Cap: catàlegs buits»).
   await timed("7 · Catàlegs base: clona de la plantilla", async () => {
     await recordTab(page, "Catàlegs base");
+    const clone = page.getByRole("button", { name: "Clona d'un club plantilla" });
     const cloned = page.waitForResponse(isPlatform("POST", /\/catalog-clone$/u));
-    await page.getByRole("button", { name: "Clona d'un club plantilla" }).click();
+    await clone.click();
     const clonedResponse = await cloned;
     const clonedBody = (await clonedResponse.json()) as { copied: Record<string, number> };
     // What it copies is the template club's content (`club-template-default.yaml` in the
@@ -1210,6 +1224,28 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     ]);
     await expect(page.getByText(/^S'ha copiat:/u)).toBeVisible();
     await screenshot(page, "core-W02-09-catalegs-1280.png");
+    // The same parts once more (R-17-08): a part the first clone filled is no longer empty. While
+    // the template club is empty (every count 0) nothing was filled, and nothing is asserted.
+    const copiedTotal = Object.values(clonedBody.copied).reduce((sum, count) => sum + count, 0);
+    if (copiedTotal === 0) {
+      notes.secondClone = "skipped: the template club copied nothing";
+      return;
+    }
+    refusalExpected = (url, status) => url.pathname.endsWith("/catalog-clone") && status === 409;
+    try {
+      const again = page.waitForResponse(isPlatform("POST", /\/catalog-clone$/u));
+      await clone.click();
+      const againResponse = await again;
+      const againBody = (await againResponse.json()) as { code: string; details?: unknown };
+      notes.secondClone = { body: againBody, status: againResponse.status() };
+      expect(againResponse.status()).toBe(409);
+      expect(againBody.code).toBe("CATALOG_NOT_EMPTY");
+      await expect(
+        page.getByText(/el club ja en té\. Només es copien les parts buides\./u),
+      ).toBeVisible();
+    } finally {
+      refusalExpected = undefined;
+    }
   });
 
   // 8. The first administrator: the wizard's invitation (N-53) opens AgilityHub ID, where an
@@ -1272,25 +1308,41 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     await officeContext.close();
   });
 
-  // 9. The record's other tabs, as the platform reads them (no write).
+  // 9. The record's other tabs, as the platform reads them (no write). The section is rendered
+  // whatever its content, so each tab waits for what only its loaded state shows, then nothing in
+  // it may be an error or still loading, and no platform call of the run may have failed.
   await timed("9 · Revisió de la fitxa", async () => {
-    for (const tab of [
-      "Identitat",
-      "Localització",
-      "Mòduls",
-      "Paràmetres",
-      "Processos",
-      "Auditoria",
-      "Ús",
-    ]) {
+    // In the record's (and the script's) order.
+    const loaded: [string, (region: Locator) => Locator][] = [
+      ["Identitat", (region) => region.getByLabel("Nom", { exact: true })],
+      ["Localització", (region) => region.getByLabel("Fus horari")],
+      ["Mòduls", (region) => region.getByRole("switch").first()],
+      [
+        "Paràmetres",
+        (region) => region.getByRole("note").filter({ hasText: "Els valors del club" }),
+      ],
+      ["Processos", (region) => region.getByRole("table", { name: "Processos" })],
+      ["Auditoria", (region) => region.getByRole("table", { name: "Auditoria" })],
+      ["Ús", (region) => region.locator(".console-kpis").getByText("Abonats actius")],
+    ];
+    for (const [tab, marker] of loaded) {
       await recordTab(page, tab);
-      await expect(page.getByRole("region", { name: tab })).toBeVisible();
+      const region = page.getByRole("region", { name: tab });
+      await expect(marker(region), tab).toBeVisible();
       await page.waitForLoadState("networkidle");
+      // A table is drawn while it loads (its skeleton is a row): first nothing may still load,
+      // then the settled tab may show no error.
+      await expect(region.getByRole("status", { name: /^Carregant/u }), tab).toHaveCount(0);
+      await expect(region.getByText(/^Carregant/u), tab).toHaveCount(0);
+      await expect(region.getByRole("alert"), tab).toHaveCount(0);
     }
     notes.failedPlatformCalls = [...failedPlatformCalls];
+    expect(failedPlatformCalls).toEqual([]);
   });
 
-  // 10. The checklist, complete, and the manual activation (R-17-06).
+  // 10. The checklist and the manual activation (R-17-06). The five items the steps above complete
+  // are asserted; `templates` and `faq` follow the template club's content (step 7), so the club is
+  // activated at 5/7 while the template is empty (allowed: activation is manual).
   await timed("10 · Checklist i activació", async () => {
     const record = page.waitForResponse(isPlatform("GET", /\/api\/v1\/platform\/clubs\/[^/]+$/u));
     await page.reload();
@@ -1298,8 +1350,6 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
       onboardingChecklist: Record<string, boolean>;
     };
     notes.checklistBeforeActivation = recordBody.onboardingChecklist;
-    // The five items the steps above complete (R-17-06). `templates` and `faq` follow the
-    // template club's catalogues (step 7), recorded in the notes.
     expect(recordBody.onboardingChecklist).toMatchObject({
       branding: true,
       dns: true,
@@ -1345,5 +1395,7 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
       2,
     )}\n`,
   );
+  // Step 10 included (step 11 is the members' app, in its own context): no platform call failed.
+  expect(failedPlatformCalls).toEqual([]);
   await context.close();
 });

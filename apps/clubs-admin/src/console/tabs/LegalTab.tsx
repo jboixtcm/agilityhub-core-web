@@ -68,7 +68,8 @@ export function LegalTab({ client, club, onReload, onReplace }: ConsoleTabProps)
   const save = async (legalTextsVersion: string) => {
     if (defaultText === "") {
       // CONVENCIONS_I18N: a LocalizedText needs the club's default language; the form says so on
-      // that text before sending anything.
+      // that text before sending anything. A previous save's «Canvis desats.» goes with it.
+      write.clear();
       setDefaultTextAsked(true);
       setLocale(club.defaultLocale);
       return;

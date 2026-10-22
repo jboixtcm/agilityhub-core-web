@@ -1,0 +1,6 @@
+{
+  "afterExit": 401,
+  "beforeExit": 200,
+  "revokeBodyCarriesTheImpersonationToken": true,
+  "revokeStatus": 200
+}

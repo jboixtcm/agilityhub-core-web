@@ -1,0 +1,30 @@
+{
+  "branding": {
+    "admin.example.test": {
+      "body": "{\"code\":\"UNKNOWN_HOST\",\"message\":\"No hi ha cap club associat a aquest domini.\",\"details\":{},\"traceId\":\"287cc415-0016-4af3-8164-96fd9daffe6a\"}",
+      "status": 404
+    },
+    "app.example.test": {
+      "body": "{\"code\":\"UNKNOWN_HOST\",\"message\":\"No hi ha cap club associat a aquest domini.\",\"details\":{},\"traceId\":\"f263d4c6-5fa0-44f4-b355-0f28473e28d9\"}",
+      "status": 404
+    },
+    "fifo.example.test": {
+      "body": "{\"club\":{\"slug\":\"fifo\",\"name\":\"Club Fictici Cua\",\"city\":null,\"legalName\":null,\"taxId\":null,\"legalAddress\":null},\"theme\":{\"logoUrl\":null,\"logoDarkUrl\":null,\"markUrl\":null,\"colors\":{\"primary\":\"#2563EB\",\"onPrimary\":\"#FFFFFF\",\"background\":\"#F8FAFC\",\"surface\":\"#FFFFFF\",\"surfaceAlt\":\"#F1F5F9\",\"text\":\"#0F172A\",\"textMuted\":\"#475569\",\"border\":\"#CBD5E1\",\"success\":\"#15803D\",\"warning\":\"#A16207\",\"danger\":\"#B91C1C\",\"info\":\"#0369A1\"},\"fontFamily\":\"system-ui\",\"radius\":\"8px\",\"ringPalette\":[],\"mode\":\"light\"},\"locales\":[\"ca\",\"es\"],\"defaultLocale\":\"ca\",\"timeZone\":\"Europe/Madrid\",\"currency\":\"EUR\",\"countryProfile\":{\"code\":\"ES\",\"idDocumentTypes\":[\"DNI\",\"NIE\",\"PASSPORT\"],\"phonePrefix\":\"+34\"},\"modules\":[\"BILLING\",\"FAQ\",\"PUSH\",\"SINGLE_CLASS\",\"WAITLIST\"],\"signup\":{\"enabled\":true},\"status\":\"ACTIVE\",\"legal\":{\"privacyPolicyUrl\":\"https://fifo.example.test/privacy\"},\"pushPublicKey\":null}",
+      "status": 200
+    },
+    "clubsadmin.example.test": {
+      "body": "{\"club\":{\"slug\":null,\"name\":\"AgilityHub\",\"city\":null,\"legalName\":null,\"taxId\":null,\"legalAddress\":null},\"theme\":{\"logoUrl\":null,\"logoDarkUrl\":null,\"markUrl\":null,\"colors\":{\"primary\":\"#2563EB\",\"onPrimary\":\"#FFFFFF\",\"background\":\"#F8FAFC\",\"surface\":\"#FFFFFF\",\"surfaceAlt\":\"#F1F5F9\",\"text\":\"#0F172A\",\"textMuted\":\"#475569\",\"border\":\"#CBD5E1\",\"success\":\"#15803D\",\"warning\":\"#A16207\",\"danger\":\"#B91C1C\",\"info\":\"#0369A1\"},\"fontFamily\":\"system-ui\",\"radius\":\"8px\",\"ringPalette\":[],\"mode\":\"light\"},\"locales\":[\"ca\",\"es\",\"en\"],\"defaultLocale\":\"ca\",\"timeZone\":\"Europe/Madrid\",\"currency\":\"EUR\",\"countryProfile\":{\"code\":\"GENERIC\",\"idDocumentTypes\":[\"PASSPORT\",\"OTHER\"],\"phonePrefix\":\"\"},\"modules\":[],\"signup\":{\"enabled\":false},\"status\":\"ACTIVE\",\"legal\":{\"privacyPolicyUrl\":\"https://id.agilitydoghub.com/privacy\"},\"pushPublicKey\":null}",
+      "status": 200
+    }
+  },
+  "events": [
+    "console.debug: [vite] connecting...",
+    "console.debug: [vite] connected.",
+    "console.info: %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold",
+    "response: GET /api/v1/branding → 404",
+    "console.error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "console.error: ApiError: No club is associated with this domain.\n    at ApiError.fromResponse (http://127.0.0.1:4174/@fs/work/packages/api-client/src/api-error.ts:32:10)\n    at async Object.onResponse (http://127.0.0.1:4174/@fs/work/packages/api-client/src/client.ts:104:10)\n    at async coreFetch (http://127.0.0.1:4174/node_modules/.vite/deps/openapi-fetch.js?v=e82e3c20:106:21)\n    at async readLiveBranding (http://127.0.0.1:4174/@fs/work/packages/api-client/src/branding-cache.ts:59:17)\n    at async refreshBranding (http://127.0.0.1:4174/@fs/work/packages/api-client/src/branding-cache.ts:73:11)\n    at async bootstrap (http://127.0.0.1:4174/src/main.tsx:30:17)"
+  ],
+  "text": "No disponible\n\nNo hi ha cap club configurat per a aquesta adreça.\n\nTorna-ho a provar",
+  "url": "http://127.0.0.1:4174/entrar"
+}

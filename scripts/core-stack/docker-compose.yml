@@ -60,7 +60,17 @@ services:
     working_dir: /app
     command:
       - |
-        java -jar /app/app.jar --core.command=club:apply /app/seeds/club-canic.yaml
+        # E10-W02 round 2: since the image of 21-10 the club file seeds the club's production hosts
+        # (`app.<domain>`, `admin.<domain>`), which no local server answers. The stack applies a copy
+        # whose two domains are its own (`app.example.test`, `admin.example.test`, the hosts of the
+        # OIDC URIs above and of every stage); the folder goes along for the pages' `bodyFile`.
+        rm -rf /tmp/seeds && cp -r /app/seeds /tmp/seeds
+        sed -i -e 's/host: "app\.[^"]*"/host: "app.example.test"/' \
+          -e 's/host: "admin\.[^"]*"/host: "admin.example.test"/' /tmp/seeds/club-canic.yaml
+        # A rewrite that matched nothing stops the stack here, not at a stage's `404 UNKNOWN_HOST`.
+        grep -q 'host: "app.example.test"' /tmp/seeds/club-canic.yaml
+        grep -q 'host: "admin.example.test"' /tmp/seeds/club-canic.yaml
+        java -jar /app/app.jar --core.command=club:apply /tmp/seeds/club-canic.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-fifo.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
         if [ "$${SEED_TEMPLATE_CLUB}" = "1" ]; then

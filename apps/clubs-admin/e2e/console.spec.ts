@@ -167,6 +167,75 @@ for (const [scenario, mode] of [
   });
 }
 
+test("E10-W02 round 2 #1 (T-17-12, R-17-08): the second club's script clones the template once — the wizard with «Cap: catàlegs buits», then «Catàlegs base»; cloning the same parts again answers 409 CATALOG_NOT_EMPTY", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ viewport: { height: 900, width: 1280 } });
+  const page = await context.newPage();
+  await signIn(page, "platform");
+  await page.waitForURL("**/consola/clubs");
+  // Step 2 of `docs/playbooks/segon-club-en-menys-d-una-hora.md`: the wizard creates the club
+  // with empty catalogues (the mock's template club has all five parts).
+  await page.getByRole("button", { name: "Nou club" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Nou club" })).toBeVisible();
+  await page.getByLabel("Nom", { exact: true }).fill("Club Agility Torrent");
+  const next = page.getByRole("button", { name: "SEGÜENT" });
+  for (const stepName of ["Localització", "Mòduls", "Pagaments", "Tema", "Catàlegs base"]) {
+    await next.click();
+    await expect(
+      page.getByRole("heading", { level: 2, name: new RegExp(stepName, "u") }),
+    ).toBeVisible();
+  }
+  await page.getByLabel("Club plantilla").selectOption({ label: "Cap: catàlegs buits" });
+  await next.click();
+  await page.getByLabel("Correu electrònic").fill("marc.vidal@example.test");
+  await page.getByLabel("Nom", { exact: true }).fill("Marc Vidal");
+  await next.click();
+  const created = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      new URL(response.url()).pathname.endsWith("/platform/clubs"),
+  );
+  await page.getByRole("button", { name: "CREA EL CLUB" }).click();
+  const createdRequest = (await created).request().postDataJSON() as { catalogs?: unknown };
+  await page.waitForURL("**/identitat?creat=1");
+
+  // Step 7: «Catàlegs base» copies the template's five parts, the only clone of the script.
+  await page.getByRole("link", { exact: true, name: "Catàlegs base" }).click();
+  await page.waitForURL("**/catalegs");
+  const isClone = (response: { request: () => { method: () => string }; url: () => string }) =>
+    response.request().method() === "POST" &&
+    new URL(response.url()).pathname.endsWith("/catalog-clone");
+  const clone = page.getByRole("button", { name: "Clona d'un club plantilla" });
+  const first = page.waitForResponse(isClone);
+  await clone.click();
+  const firstResponse = await first;
+  expect(firstResponse.status()).toBe(200);
+  const copied = ((await firstResponse.json()) as { copied: Record<string, number> }).copied;
+  expect(Object.values(copied).reduce((sum, count) => sum + count, 0)).toBeGreaterThan(0);
+  await expect(
+    page.getByText(
+      "S'ha copiat: Nivells 9 · Pistes 5 · Modalitats i preus 4 · Preguntes freqüents 6 · Plantilles de comunicat 21.",
+    ),
+  ).toBeVisible();
+
+  // The same parts once more: the club is no longer empty (R-17-08).
+  const second = page.waitForResponse(isClone);
+  await clone.click();
+  const secondResponse = await second;
+  expect(secondResponse.status()).toBe(409);
+  expect(await secondResponse.json()).toMatchObject({
+    code: "CATALOG_NOT_EMPTY",
+    details: { part: "LEVELS" },
+  });
+  await expect(
+    page.getByText("Nivells: el club ja en té. Només es copien les parts buides."),
+  ).toBeVisible();
+  // The wizard sent no `catalogs.fromTemplate`: «Catàlegs base» was the only clone.
+  expect(createdRequest.catalogs).toBeUndefined();
+  await context.close();
+});
+
 test("D19 refuses a club account without the platform role (S17 §2 «Entrada»)", async ({
   browser,
 }) => {

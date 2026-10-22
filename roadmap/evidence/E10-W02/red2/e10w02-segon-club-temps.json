@@ -1,0 +1,103 @@
+{
+  "notes": {
+    "templates": [
+      "Cap: catàlegs buits",
+      "AgilityHub template · ca, es, en · EUR"
+    ],
+    "created": {
+      "checklist": {
+        "dns": false,
+        "sepa": false,
+        "branding": false,
+        "templates": false,
+        "faq": false,
+        "legal": false,
+        "firstAdmin": false
+      },
+      "keys": [
+        "club",
+        "checklist"
+      ]
+    },
+    "catalogClone": {
+      "body": {
+        "copied": {
+          "LEVELS": 0,
+          "RINGS": 0,
+          "PLANS": 0,
+          "FAQ": 0,
+          "MESSAGE_TEMPLATES": 0
+        },
+        "warnings": []
+      },
+      "request": {
+        "fromClubId": "be59c4ee-1cc3-4ed3-a017-aa8c0f6fc0da",
+        "parts": [
+          "LEVELS",
+          "RINGS",
+          "PLANS",
+          "FAQ",
+          "MESSAGE_TEMPLATES"
+        ]
+      },
+      "status": 200
+    },
+    "secondClone": "skipped: the template club copied nothing",
+    "invitation": {
+      "link": "id.example.test/magic-link?t",
+      "subject": "Invitació per administrar Club Agility Riu Blau"
+    },
+    "firstAdminSignIn": {
+      "code": null,
+      "status": 200
+    }
+  },
+  "steps": [
+    {
+      "seconds": 2,
+      "startedAt": "2026-10-22T03:27:45.905Z",
+      "step": "1 · Entra a la consola"
+    },
+    {
+      "seconds": 0.9,
+      "startedAt": "2026-10-22T03:27:47.877Z",
+      "step": "2 · Assistent «Nou club»"
+    },
+    {
+      "seconds": 0.7,
+      "startedAt": "2026-10-22T03:27:48.810Z",
+      "step": "3 · Dominis: afegeix i verifica"
+    },
+    {
+      "seconds": 0.3,
+      "startedAt": "2026-10-22T03:27:49.498Z",
+      "step": "4 · Tema: logo"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-22T03:27:49.844Z",
+      "step": "5 · Pagaments: SEPA"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-22T03:27:50.084Z",
+      "step": "6 · Legal: privacitat i consentiment d'imatge"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-22T03:27:50.270Z",
+      "step": "7 · Catàlegs base: clona de la plantilla"
+    },
+    {
+      "seconds": 2.7,
+      "startedAt": "2026-10-22T03:27:50.490Z",
+      "step": "8 · Primer administrador: invitació i primer accés"
+    },
+    {
+      "seconds": 15.3,
+      "startedAt": "2026-10-22T03:27:53.239Z",
+      "step": "9 · Revisió de la fitxa"
+    }
+  ],
+  "totalSeconds": 23
+}

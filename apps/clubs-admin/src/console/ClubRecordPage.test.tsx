@@ -549,6 +549,25 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     });
   });
 
+  it("E10-W02 round 2 #4: after a saved change, emptying the default language's text and saving again drops «Canvis desats.», asks for the text and sends nothing", async () => {
+    const patches = captureRequests((method) => method === "PATCH");
+    await openTab(CANIC, "legal");
+    fireEvent.change(screen.getByLabelText("URL de la política de privacitat"), {
+      target: { value: "https://canic.example.test/privacitat-nova" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    expect(await screen.findByText("Canvis desats.")).toBeInTheDocument();
+    expect(patches).toHaveLength(1);
+    const text = screen.getByLabelText("Text de consentiment d'imatge (Català)");
+    fireEvent.change(text, { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    await waitFor(() => {
+      expect(text).toHaveAccessibleDescription("Aquest camp és obligatori.");
+    });
+    expect(screen.queryByText("Canvis desats.")).not.toBeInTheDocument();
+    expect(patches).toHaveLength(1);
+  });
+
   it("E10-W02 T-17-12 Legal: the core's VALIDATION_ERROR {field: locales} lands on the default language's image-consent text", async () => {
     server.use(
       http.patch(`${API_BASE}/platform/clubs/:id`, () =>

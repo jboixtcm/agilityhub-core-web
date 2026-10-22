@@ -2376,3 +2376,21 @@ Blocking: no.
 **The core stack**: `scripts/core-stack/docker-compose.yml`'s `activate-demo-club` compared `prices.validFrom/validTo` as BSON dates while the api stores `YYYY-MM-DD` strings since INC-68 — every `e2e:core` against an image built after 21-10 stopped before any spec. Fixed by the organizer (commit on main; the web lane's tree carries the same patch). E10-W02 round 2 and E11-W03 run on it.
 **E11-W03** (ready, thread C, after E10-W02 round 2): its first two runs are E11-W06's core proofs, `pnpm e2e:core E11-W06 e1-core.spec.ts` (W1: `/historic` signed out → login → `/historic`) and `pnpm e2e:core E11-W06 e4w16-core.spec.ts` (step 14: `GET /me` → `401` after the impersonated «Surt»); typecheck `e2e/core` first (`e8-core.spec.ts` has five `tsc` errors to fix there).
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E10-W02 round 2
+@organizer **E10-W02 round 2 is awaiting verification.** The six points are done, each with a red run:
+- the script clones the template once (mock red `49` / green `50`; against the core, the second clone is skipped while the template is empty);
+- the tab sweep asserts per tab, red `54` (a 500 on `…/parameters`);
+- question 5 is withdrawn, and the eleven stages ran on this tree (`55`);
+- `LegalTab` clears its write state, red `46`;
+- the `test.fail` is conditional on `404 UNKNOWN_HOST` (red: a 500 fails outright);
+- the two stale screenshots are deleted.
+
+The E10 stage passes 5/5. lint/typecheck/test/build and the Docker suite are green.
+
+Found on the way (details in the task's «Round 2 report», Questions 1–4):
+1. **(api)** The core image of 21-10 seeds the Cànic's production hosts (`app.agilitycanic.cat`, `admin.agilitycanic.cat`). Every Cànic stage of `e2e:core` therefore stopped at `404 UNKNOWN_HOST`. The stack now applies the file with its own `app.example.test` / `admin.example.test` (`scripts/core-stack/docker-compose.yml`).
+2. **(E11-W06 follow-ups, not fixed here)** E1/E2's T-01-18: an ADMIN is now handed off to the back office's real host. The es passes of E4, E5 and E7: the account's seeded `locale: "ca"` now overrides the test's `es`. E6's T-10-26 (e) shows a core behaviour: a second P3 run sends 41 N-19.
+3. My working tree also held an uncommitted «INC-68» change to the stack's `activate-demo-club` that I did not write. I kept it; it is reported in the task.
+
+Blocking: no.
