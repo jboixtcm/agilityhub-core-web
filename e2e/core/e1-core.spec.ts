@@ -156,6 +156,22 @@ test.describe.configure({ mode: "serial" });
 
 test("T-01-18 password login reaches the seeded account", async ({ browser }) => {
   const context = await mobileContext(browser);
+  // E11-W03 (E10-W02 round 2, question 2): the seed's `admin@example.test` is ADMIN only, so since
+  // E11-W06 W2 the members' app hands it off to the back office (R-01-07). The core's launch URL
+  // names the back office's public host; in this run that host is the local server on 4174.
+  const handoffs: string[] = [];
+  await context.route(/\/entrar\?handoff=/u, async (route) => {
+    const requested = new URL(route.request().url());
+    if (requested.origin === adminUrl) {
+      await route.continue();
+      return;
+    }
+    handoffs.push(requested.hostname);
+    await route.fulfill({
+      headers: { Location: `${adminUrl}${requested.pathname}${requested.search}` },
+      status: 302,
+    });
+  });
   const page = await context.newPage();
 
   await page.goto(`${clubsUrl}/entrar`);
@@ -164,8 +180,9 @@ test("T-01-18 password login reaches the seeded account", async ({ browser }) =>
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByLabel("Contrasenya").fill(corePassword);
   await submitPasswordLogin(page);
-  await expect(page).toHaveURL(/\/inici$/u);
-  await expect(page.locator(".clubs-shell")).toBeVisible();
+  await page.waitForURL(`${adminUrl}/tauler`);
+  expect(handoffs).toEqual(["admin.example.test"]);
+  await expect(page.getByRole("heading", { name: "Tauler" })).toBeVisible();
 
   await context.close();
 });
@@ -184,7 +201,10 @@ test("T-11-11 E11-W06 W1 · a member screen opened signed out is the one the pas
   await page.waitForURL(/\/(?:historic|perfil-acces)$/u);
   // A multi-profile account chooses on 03b first; the kept address opens after its choice.
   if (new URL(page.url()).pathname === "/perfil-acces") {
-    await page.locator("button.profile-choice__card").filter({ hasText: /Com a alumn/u }).click();
+    await page
+      .locator("button.profile-choice__card")
+      .filter({ hasText: /Com a alumn/u })
+      .click();
   }
   await expect(page).toHaveURL(/\/historic$/u);
   await expect(page.locator(".clubs-shell")).toBeVisible();

@@ -1,0 +1,210 @@
+{
+  "byCode": [
+    {
+      "_id": "N-04",
+      "count": 78
+    },
+    {
+      "_id": "N-05",
+      "count": 7
+    },
+    {
+      "_id": "N-06",
+      "count": 13
+    },
+    {
+      "_id": "N-08a",
+      "count": 11
+    },
+    {
+      "_id": "N-09",
+      "count": 1
+    },
+    {
+      "_id": "N-11a",
+      "count": 2
+    },
+    {
+      "_id": "N-11b",
+      "count": 1
+    },
+    {
+      "_id": "N-15",
+      "count": 2
+    },
+    {
+      "_id": "N-18a",
+      "count": 2
+    },
+    {
+      "_id": "N-18b",
+      "count": 1
+    },
+    {
+      "_id": "N-19",
+      "count": 1
+    },
+    {
+      "_id": "N-20",
+      "count": 2
+    },
+    {
+      "_id": "N-21",
+      "count": 3
+    },
+    {
+      "_id": "N-22",
+      "count": 3
+    },
+    {
+      "_id": "N-28",
+      "count": 2
+    },
+    {
+      "_id": "N-29",
+      "count": 1
+    },
+    {
+      "_id": "N-32a",
+      "count": 552
+    },
+    {
+      "_id": "N-32b",
+      "count": 48
+    },
+    {
+      "_id": "N-38",
+      "count": 1
+    },
+    {
+      "_id": "N-41",
+      "count": 2
+    },
+    {
+      "_id": "N-54",
+      "count": 2
+    }
+  ],
+  "notices": [
+    {
+      "action": null,
+      "code": "N-19",
+      "createdAt": {
+        "$date": "2026-10-22T04:59:53.298Z"
+      },
+      "deliveries": [
+        {
+          "channel": "APP",
+          "status": "DELIVERED"
+        },
+        {
+          "channel": "EMAIL",
+          "status": "SENT"
+        }
+      ],
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "variables": {
+        "club_name": "Club Agility Cànic",
+        "audience": "MEMBER",
+        "member_name": "Rita Fictici013",
+        "member_first_name": "Rita",
+        "member_last_names": "Fictici013",
+        "gender": "other",
+        "dog_name": "Mel",
+        "dog_name_article": "la Mel",
+        "class_date": "dimecres, 30 de setembre de 2026",
+        "class_description": "A+B",
+        "entityId": "cbe2096d-ba5e-42a9-8ec9-78cdb696923e"
+      }
+    },
+    {
+      "action": "CLAIM_SEAT",
+      "code": "N-15",
+      "createdAt": {
+        "$date": "2026-10-22T04:59:57.504Z"
+      },
+      "deliveries": [
+        {
+          "channel": "APP",
+          "status": "DELIVERED"
+        },
+        {
+          "channel": "SMS",
+          "status": "SKIPPED_MODULE_OFF"
+        },
+        {
+          "channel": "PUSH",
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "variables": {
+        "class_date": "dimarts 27",
+        "class_time": "18:00",
+        "class_description": "General",
+        "ring_name": "Pista única",
+        "club_name": "Club Fictici Cua",
+        "audience": "MEMBER",
+        "member_name": "Fèlix Cua003",
+        "member_first_name": "Fèlix",
+        "member_last_names": "Cua003",
+        "gender": "other",
+        "dog_name": "Brisa 3",
+        "dog_name_article": "la Brisa 3",
+        "mode": "FIFO",
+        "confirm_by": "21:30",
+        "entityId": "23f08909-f819-4d1f-ab6b-a67d32bcccf9"
+      }
+    },
+    {
+      "action": "CLAIM_SEAT",
+      "code": "N-15",
+      "createdAt": {
+        "$date": "2026-10-26T03:00:06.356Z"
+      },
+      "deliveries": [
+        {
+          "channel": "APP",
+          "status": "DELIVERED"
+        },
+        {
+          "channel": "SMS",
+          "status": "SENT"
+        },
+        {
+          "channel": "PUSH",
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "variables": {
+        "class_date": "avui",
+        "class_time": "8:30",
+        "class_description": "A+B",
+        "ring_name": "Central",
+        "club_name": "Club Agility Cànic",
+        "audience": "MEMBER",
+        "member_name": "Iu Fictici086",
+        "member_first_name": "Iu",
+        "member_last_names": "Fictici086",
+        "gender": "other",
+        "dog_name": "Gira",
+        "dog_name_article": "la Gira",
+        "mode": "ALL_AT_ONCE",
+        "entityId": "a2b3909b-2ebd-4fa3-a3fe-b76980e5ce26"
+      }
+    }
+  ]
+}

@@ -49,6 +49,7 @@ export function CourseViewer({ name, scene }: { name: string; scene: ViewerScene
             <div className="course-viewer__plan" style={style}>
               <PlannerCanvas
                 course={scene.course}
+                frame="content"
                 labels={{
                   ariaLabel: t("courses:viewer.plan", { name }),
                   entry: t("courses:viewer.entry"),

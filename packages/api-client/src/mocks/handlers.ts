@@ -3892,12 +3892,36 @@ export const handlers = [
     catalogState.rings = ordered;
     return HttpResponse.json(catalogResponse(orderedCatalog(catalogState.rings)));
   }),
-  // S05 `GET /rings/{id}` (E9-W03: D16 «Geometria» and the course store read one ring).
+  // S05 `GET /rings/{id}` (E9-W03: D16 «Geometria» and the course store read one ring). As the
+  // api (E9-T07; E11-W03, INC-72): an impersonation token is refused, the ADMIN reads the whole
+  // ring, the INSTRUCTOR the reader projection (`RingReaderView`: no trainingCapacity, usage or
+  // lastChange), and a MEMBER gets 403 FORBIDDEN.
   http.get("*/api/v1/rings/:id", ({ params }) => {
+    const scenario = currentMockScenario();
+    if (scenario.me.impersonation !== undefined) {
+      return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot use this route", 403);
+    }
+    const roles = scenario.me.membership?.roles ?? [];
+    if (!roles.includes("ADMIN") && !roles.includes("INSTRUCTOR")) {
+      return apiError("FORBIDDEN", "Forbidden", 403);
+    }
     const ring = catalogState.rings.find((candidate) => candidate.id === String(params.id));
-    return ring === undefined || !callerClubOwnsTheWorld()
-      ? apiError("NOT_FOUND", "Ring not found", 404)
-      : HttpResponse.json(ring);
+    if (ring === undefined || !callerClubOwnsTheWorld()) {
+      return apiError("NOT_FOUND", "Ring not found", 404);
+    }
+    if (roles.includes("ADMIN")) return HttpResponse.json(ring);
+    const reader: components["schemas"]["RingReaderView"] = {
+      active: ring.active,
+      allowsFreeTraining: ring.allowsFreeTraining,
+      color: ring.color,
+      effectiveTrainingCapacity: ring.effectiveTrainingCapacity,
+      id: ring.id,
+      name: ring.name,
+      order: ring.order,
+      shortName: ring.shortName,
+      version: ring.version,
+    };
+    return HttpResponse.json(reader);
   }),
   http.patch("*/api/v1/rings/:id", async ({ params, request }) => {
     const ring = catalogState.rings.find((candidate) => candidate.id === String(params.id));

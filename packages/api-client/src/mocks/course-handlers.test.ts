@@ -181,6 +181,50 @@ afterAll(() => {
   server.close();
 });
 
+describe("E11-W03 INC-72 (E9-W06 review #3): GET /rings/{id} answers by role, as the api (E9-T07)", () => {
+  it("the ADMIN reads the whole Ring, the INSTRUCTOR the RingReaderView, a MEMBER and an impersonation get 403", async () => {
+    const admin = await call<Schemas["Ring"]>("admin", "GET", "/rings/ring-muntanya");
+    expect(admin.status).toBe(200);
+    // The mock world's ring ids are readable slugs (`ring-muntanya`), not the api's UUIDs: the
+    // shape is checked with a UUID in their place.
+    const uuid = "50000000-0000-4000-8000-0000000000aa";
+    valid("Ring", { ...admin.body, id: uuid });
+    expect(admin.body.usage).toBeDefined();
+
+    const instructor = await call<Schemas["RingReaderView"]>(
+      "instructor",
+      "GET",
+      "/rings/ring-muntanya",
+    );
+    expect(instructor.status).toBe(200);
+    valid("RingReaderView", { ...instructor.body, id: uuid });
+    expect(Object.keys(instructor.body).sort()).toEqual([
+      "active",
+      "allowsFreeTraining",
+      "color",
+      "effectiveTrainingCapacity",
+      "id",
+      "name",
+      "order",
+      "shortName",
+      "version",
+    ]);
+
+    const member = await call<Schemas["ApiError"]>("member", "GET", "/rings/ring-muntanya");
+    expect(member.status).toBe(403);
+    expect(member.body.code).toBe("FORBIDDEN");
+    valid("ApiError", member.body);
+
+    const impersonated = await call<Schemas["ApiError"]>(
+      "impersonated",
+      "GET",
+      "/rings/ring-muntanya",
+    );
+    expect(impersonated.status).toBe(403);
+    expect(impersonated.body.code).toBe("IMPERSONATION_DENIED");
+  });
+});
+
 describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1)", () => {
   it("GET /courses: a CoursePage of x-fields items, newest first; the owner chips; the AgilityHub library and the caller's own", async () => {
     const all = await call<Schemas["CoursePage"]>("admin", "GET", "/courses");

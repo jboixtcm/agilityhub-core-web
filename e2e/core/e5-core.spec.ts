@@ -892,7 +892,9 @@ test.afterAll(async ({ browser }) => {
   if (mondayLeftover !== undefined) expect(mondayLeftover.state).toMatch(/^CANCELLED/u);
 });
 
-test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read", async ({
+// E11-W03: the critical flow «reserva amb espera» (PLA_FRONTEND §8) is this preflight, (a)(b) and
+// (d) below, tagged `@critical-reserva` (`pnpm e2e:core <ID> critical`).
+test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read @critical-reserva", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
@@ -965,7 +967,7 @@ test.describe("week 0 at demoNow", () => {
     await cancelWeekZeroRecords(browser);
   });
 
-  test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation", async ({
+  test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation @critical-reserva", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -1198,7 +1200,7 @@ test.describe("week 0 at demoNow", () => {
     note("c-29", { code: problem.code, details: problem.details, status: refusal.status() });
   });
 
-  test("T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim", async ({
+  test("T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim @critical-reserva", async ({
     browser,
   }) => {
     test.setTimeout(420_000);

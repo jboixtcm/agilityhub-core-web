@@ -446,7 +446,9 @@ test.afterAll(async ({ browser }) => {
   expect(restored.status, "restore POST /test/clock after forced bare-ring evidence").toBe(200);
 });
 
-test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11)", async ({
+// E11-W03: the critical flow «muntatge de recorregut» (PLA_FRONTEND §8) is the three tests of
+// this file, tagged `@critical-muntatge` (`pnpm e2e:core <ID> critical`).
+test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11) @critical-muntatge", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -631,7 +633,7 @@ function isCall(method: string, path: RegExp) {
     response.request().method() === method && path.test(new URL(response.url()).pathname);
 }
 
-test("E9-W05 · T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and «Registra-ho com a muntat» (R-16-02, R-16-05, R-16-10, R-16-07)", async ({
+test("E9-W05 · T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and «Registra-ho com a muntat» (R-16-02, R-16-05, R-16-10, R-16-07) @critical-muntatge", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -1263,7 +1265,7 @@ async function setRoles(
   return api(admin.page, admin.bearer, "PUT", `/members/${memberId}/roles`, { roles });
 }
 
-test("E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′)", async ({
+test("E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′) @critical-muntatge", async ({
   browser,
 }) => {
   test.setTimeout(420_000);

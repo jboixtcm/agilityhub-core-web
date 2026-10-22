@@ -1,0 +1,48 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (34 tests | 1 failed | 33 skipped) 17ms
+   ❯ E11-W03 INC-72 (E9-W06 review #3): GET /rings/{id} answers by role, as the api (E9-T07) (1)
+     × the ADMIN reads the whole Ring, the INSTRUCTOR the RingReaderView, a MEMBER and an impersonation get 403 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E11-W03 INC-72 (E9-W06 review #3): GET /rings/{id} answers by role, as the api (E9-T07) > the ADMIN reads the whole Ring, the INSTRUCTOR the RingReaderView, a MEMBER and an impersonation get 403
+AssertionError: Ring: [
+  {
+    "instancePath": "/id",
+    "schemaPath": "#/properties/id/format",
+    "keyword": "format",
+    "params": {
+      "format": "uuid"
+    },
+    "message": "must match format \"uuid\""
+  }
+]: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ valid src/mocks/course-handlers.test.ts:36:83
+     34| function valid(name: string, value: unknown): void {
+     35|   const validate = ajv.compile({ $ref: `${schemaId}#/components/schema…
+     36|   expect(validate(value), `${name}: ${JSON.stringify(validate.errors, …
+       |                                                                                   ^
+     37| }
+     38|
+ ❯ src/mocks/course-handlers.test.ts:188:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 33 skipped (34)
+   Start at  06:50:21
+   Duration  921ms (transform 62%, import 36%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts -t INC-72

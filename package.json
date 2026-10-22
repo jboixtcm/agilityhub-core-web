@@ -20,6 +20,7 @@
     "api:generate": "pnpm --filter @agilityhub/api-client api:generate",
     "e2e": "turbo run e2e --concurrency=1",
     "e2e:core": "bash scripts/e2e-core.sh",
+    "typecheck:e2e-core": "tsc -p e2e/core/tsconfig.json --noEmit",
     "e2e:docker": "bash scripts/e2e-docker.sh",
     "size": "size-limit",
     "size-limit": "size-limit",

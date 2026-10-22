@@ -18,7 +18,11 @@
     },
     "clubs#test": {
       "dependsOn": ["^typecheck"],
-      "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-clubs-bundle*.mjs"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/check-clubs-bundle*.mjs",
+        "$TURBO_ROOT$/e2e/core/e9-core-helpers.ts"
+      ],
       "outputs": []
     },
     "@agilityhub/i18n#test": {
@@ -37,7 +41,7 @@
     },
     "clubs#build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-clubs-bundle*.mjs"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/check-clubs-bundle*.mjs"],
       "outputs": ["dist/**"]
     },
     "e2e": {

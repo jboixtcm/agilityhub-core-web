@@ -111,11 +111,11 @@ interface GateRecord {
       memberId: string;
       toMonth: string;
     };
-    feeMemberInvoiceLine?: string;
+    feeMemberInvoiceLine?: string | undefined;
     frozenMemberUntil: string | null;
     fromMonth: string;
     memberId: string;
-    simulatedLineBeforeLeave?: string;
+    simulatedLineBeforeLeave?: string | undefined;
     stateAfterApproval: string;
   };
   leave?: {
@@ -129,7 +129,7 @@ interface GateRecord {
     reasonLabelForEs: string;
   };
   pack?: {
-    clockMovedTo?: string;
+    clockMovedTo?: string | undefined;
     afterBooking: number;
     afterCancellation: number;
     afterSeededRefund: number;
@@ -148,7 +148,7 @@ interface GateRecord {
 
 /** The member who requests inactivity on 14 and her leave on 15 (T-13-32), and her family. */
 interface Lifecycle {
-  familyPartner?: MemberListItem;
+  familyPartner?: MemberListItem | undefined;
   /** A separate monthly member whose fee period is arranged for this run's billing month. */
   feeMemberId?: string;
   feeSnapshot?: {
@@ -583,7 +583,7 @@ async function setClock(browser: Browser, instant = clockInstant): Promise<void>
 
 /** The member Laura plays in T-13-32: ACTIVE, monthly plan, SEPA, nothing pending, in a family. */
 async function lifecycleCandidates(admin: Session): Promise<{
-  family?: MemberListItem;
+  family?: MemberListItem | undefined;
   feeMember: MemberListItem;
   member: MemberListItem;
 }> {
@@ -825,7 +825,10 @@ test.afterEach(() => {
   writeRecord();
 });
 
-test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins»", async ({
+// E11-W03: the critical flow «remesa simulada» (PLA_FRONTEND §8) is T-12-27 below with the two
+// lifecycle legs whose members and fee it bills, tagged `@critical-remesa` (`pnpm e2e:core <ID>
+// critical`).
+test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins» @critical-remesa", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
@@ -1050,7 +1053,7 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   await Promise.all([admin.context.close(), laura.context.close()]);
 });
 
-test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11)", async ({
+test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11) @critical-remesa", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
@@ -1291,7 +1294,7 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
   ]);
 });
 
-test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings", async ({
+test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings @critical-remesa", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -1876,7 +1879,7 @@ test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] →
   await navigateSpa(payer.page, "/rebuts");
   const payerRow = () =>
     payer.page.locator(".receipt-row").filter({
-      hasText: `Rebut ${submittedReceipt.displayNumber}`,
+      hasText: `Rebut ${submittedReceipt.displayNumber ?? ""}`,
     });
   await expect(payerRow()).toContainText("cobrat");
   await expect(payer.page.locator(".billing-card-banner")).toHaveCount(0);

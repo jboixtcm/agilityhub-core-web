@@ -1,0 +1,7 @@
+920:      "taskId": "clubs#test",
+925:        "../../e2e/core/e9-core-helpers.ts": "414f9d3ca83e2ed270405b1a1c9abaa6590ae6a1",
+926:        "../../scripts/check-clubs-bundle.mjs": "1b9a1824ecc10bd2eb0003121629d4d815818e7d",
+927:        "../../scripts/check-clubs-bundle.test.mjs": "fae10f44334dc794b8c180be792e34fc3a4ccb7e",
+1004:        "src/courses/e9-core-helpers.test.ts": "fc6ca860bfbe718dda3be76a2b806ea62f4d8a14",
+1115:          "../../e2e/core/e9-core-helpers.ts",
+1116:          "../../scripts/check-clubs-bundle*.mjs"

@@ -1160,7 +1160,10 @@ test.afterAll(async ({ browser }) => {
   }
 });
 
-test("E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read", async ({
+// E11-W03: the critical flow «passar llista» (PLA_FRONTEND §8) is this preflight, the sheet's
+// (a)(c) and (b), P8's (e) that finishes the class, and Rita's history (g), tagged
+// `@critical-llista` (`pnpm e2e:core <ID> critical`).
+test("E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read @critical-llista", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
@@ -1335,7 +1338,7 @@ test.describe("Monday 04:00", () => {
     await shot(berta.page, "22-fitxa-core-375.png");
   });
 
-  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves", async ({
+  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves @critical-llista", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1469,7 +1472,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert", async ({
+  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert @critical-llista", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -2360,7 +2363,7 @@ test.describe("Monday 04:00", () => {
   });
 });
 
-test("(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist", async ({
+test("(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist @critical-llista", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -2661,7 +2664,7 @@ async function checkHistory(
   };
 }
 
-test("T-10-31 (g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account; an activity row with its activityId links the activity's page", async ({
+test("T-10-31 (g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account; an activity row with its activityId links the activity's page @critical-llista", async ({
   browser,
 }) => {
   test.setTimeout(300_000);

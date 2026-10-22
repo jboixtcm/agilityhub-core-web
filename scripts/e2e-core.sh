@@ -52,7 +52,7 @@ done
 # E8-W04 round 2 (ruling E103): there is no Stripe test account yet, so the browser harness has no
 # real-provider branch. Supplied keys are never silently replaced by the fake provider: a run that
 # includes the E8 stage stops here, before any stack starts, and prints no part of the key.
-if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" && ( -z "${2:-}" || "${2:-}" == *e8-core* ) ]]; then
+if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" && ( -z "${2:-}" || "${2:-}" == *e8-core* || "${2:-}" == critical ) ]]; then
   echo "e2e-core: STRIPE_TEST_SECRET_KEY is set, but the E8 browser stage has no real-Stripe branch (ruling E103)." >&2
   echo "e2e-core: unset it to run the card leg on FakePaymentProvider; the signed real-Stripe delivery is api bin/e8-smoke's." >&2
   exit 3
@@ -478,6 +478,12 @@ staged=true
 if [[ -n "${2:-}" ]]; then
   staged=false
 fi
+# E11-W03: `pnpm e2e:core <ID> critical` runs only the five critical flows of PLA_FRONTEND §8, each
+# on its own fresh stack and seed: the tests tagged `@critical-<flow>` in their stage's spec.
+critical=false
+if [[ "${2:-}" == "critical" ]]; then
+  critical=true
+fi
 
 # INC-07: every run starts a fresh oauth-token-calls.log; each stage appends its framed calls.
 : > "$evidence_directory/oauth-token-calls.log"
@@ -486,7 +492,39 @@ cleanup
 # A failing stage does not hide the next one: all run, and the script exits with the failure. An
 # interrupted one (130/143) ends the script at once (`run_stage`).
 status=0
-if [[ "$staged" == true ]]; then
+if [[ "$critical" == true ]]; then
+  # 1 · «alta»: the public signup (16–19) → D2 validates it → the N-02 welcome link → 02 → 03; the
+  # rejected applicant's N-03 and a member's added dog validated by the club (N-37 below).
+  export CORE_TEST_FILES="e3-signup.spec.ts --grep @critical-alta"
+  run_stage critical-alta
+  check_n37_notification || status=1
+  cleanup
+  # 2 · «reserva amb espera»: a booking inside the 30 s hold and its cancellations; a full class's
+  # waiting list, the seat released, NOTIFIED and claimed (week 0 at the scenario's `demoNow`).
+  export CORE_TEST_FILES="e5-core.spec.ts --grep @critical-reserva"
+  export SEED_WEEK_START="$E5_WEEK_START"
+  run_stage critical-reserva
+  cleanup
+  # 3 · «passar llista»: 20 → 21 marked by two instructors (409 and the merge), «ha avisat», P8
+  # finishing the class, and the member's history (25).
+  export CORE_TEST_FILES="e6-core.spec.ts --grep @critical-llista"
+  export SEED_WEEK_START="$E5_WEEK_START"
+  run_stage critical-llista
+  save_e6_notifications
+  cleanup
+  # 4 · «remesa simulada»: D6 simulates, generates, downloads the SEPA XML, marks a return, rolls
+  # back and generates the same numbers again, with the inactivity and leave legs it bills.
+  export CORE_TEST_FILES="e8-core.spec.ts --grep @critical-remesa"
+  export SEED_WEEK_START="$E8_WEEK_START"
+  run_e8_with_card_watcher run_stage critical-remesa
+  cleanup
+  # 5 · «muntatge de recorregut»: D18's import and placement, the build sheet, a build session on
+  # two phones, the setup registered and the member's viewer. Run it Monday to Saturday (INC-72,
+  # E9-W06 review): on a Sunday the stage's same-day one-off class answers 422 CLASS_NOT_BOOKABLE.
+  export CORE_TEST_FILES="e9-core.spec.ts --grep @critical-muntatge"
+  export SEED_WEEK_START="$E4_WEEK_START"
+  run_stage critical-muntatge
+elif [[ "$staged" == true ]]; then
   export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
   run_stage e1-e2
   cleanup

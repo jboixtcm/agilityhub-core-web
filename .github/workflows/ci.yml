@@ -37,6 +37,10 @@ jobs:
       - name: Lint, typecheck, test, and build
         run: pnpm turbo run lint typecheck test build --concurrency=2
 
+      # E11-W03: the real-core specs are no workspace package, so turbo never typechecked them.
+      - name: Typecheck the real-core specs
+        run: pnpm typecheck:e2e-core
+
       - name: Check translations
         run: pnpm i18n:check
 

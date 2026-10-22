@@ -144,6 +144,65 @@ describe("T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09)", () => {
   });
 });
 
+/** The stored row of Muntanya's placement the member tests move, and the course it comes from. */
+function muntanyaStanding() {
+  const placement = courseState.placements.find(
+    (item) => item.id === PLACEMENT_IDS.muntanyaJumping,
+  );
+  const row = placement?.resolvedObstacles.find((item) => !item.type.startsWith("Tunnel"));
+  const course = courseState.courses.find((item) => item.id === placement?.courseId);
+  const model = course?.normalizedJson as
+    | { obstacles: { rotationDegrees: number | null; sourceId: string; xMeters: number | null }[] }
+    | undefined;
+  const obstacle = model?.obstacles.find((item) => item.sourceId === row?.obstacleId);
+  if (row === undefined || obstacle === undefined) throw new Error("PLACEMENT_NOT_FOUND");
+  return { obstacle, row };
+}
+
+/** The `translate(x y) rotate(a)` of the obstacle icons the member's 2D plan draws. */
+function drawnObstacles(plan: HTMLElement): { angle: number; x: number; y: number }[] {
+  return [...plan.querySelectorAll("g[transform^='translate(']")].flatMap((element) => {
+    const match = /^translate\((\S+) (\S+)\) rotate\((\S+)\)$/u.exec(
+      element.getAttribute("transform") ?? "",
+    );
+    return match === null
+      ? []
+      : [{ angle: Number(match[3]), x: Number(match[1]), y: Number(match[2]) }];
+  });
+}
+
+describe("E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-16)", () => {
+  it("E9-W06 review #2: a course moved and turned after its placement stays where the placement's resolvedObstacles put it", async () => {
+    const { obstacle, row } = muntanyaStanding();
+    // The course is edited after the placement: the obstacle moves 5 m and turns 45°.
+    obstacle.xMeters = (obstacle.xMeters ?? 0) + 5;
+    obstacle.rotationDegrees = (obstacle.rotationDegrees ?? 0) + 45;
+    await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "member");
+    const plan = await screen.findByRole("img", { name: "Plànol de Jumping del dijous" });
+    const drawn = drawnObstacles(plan).filter(
+      (item) => Math.hypot(item.x - row.x, item.y - row.y) < 0.001,
+    );
+    expect(drawn).toHaveLength(1);
+    // SVG `rotate` is clockwise under the plan's Y flip: the icon turns by minus the ring heading.
+    const angle = (-(drawn[0]?.angle ?? Number.NaN) * Math.PI) / 180;
+    const stored = (row.rotationDeg * Math.PI) / 180;
+    expect(Math.cos(angle)).toBeCloseTo(Math.cos(stored), 6);
+    expect(Math.sin(angle)).toBeCloseTo(Math.sin(stored), 6);
+  });
+
+  it("E9-W06 review #4: the plan's viewBox holds an obstacle that stands past the ring's edge", async () => {
+    const { row } = muntanyaStanding();
+    // Muntanya is 40 × 25 m; the stored obstacle stands 3 m past its east side.
+    row.x = 43;
+    await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "member");
+    const plan = await screen.findByRole("img", { name: "Plànol de Jumping del dijous" });
+    const [minX = 0, , width = 0] = (plan.getAttribute("viewBox") ?? "").split(" ").map(Number);
+    expect(minX).toBe(-1.5);
+    expect(minX + width).toBeGreaterThanOrEqual(43 + 1.5);
+    expect(drawnObstacles(plan).some((item) => Math.abs(item.x - 43) < 0.001)).toBe(true);
+  });
+});
+
 describe("the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2)", () => {
   it("R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació»", async () => {
     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instructor");

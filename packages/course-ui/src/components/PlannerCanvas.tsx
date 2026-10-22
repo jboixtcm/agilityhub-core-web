@@ -6,6 +6,7 @@ import {
   placeControlPointsInRing,
   placeCoursePoint,
   placeObstacleInRing,
+  placedCourseBoundsMeters,
   placedObstacleHeadingVector,
   type CourseData,
   type CoursePlacement,
@@ -35,6 +36,13 @@ interface Props {
    * `PlacementControls`. Absent = a read-only viewer.
    */
   onDragPlacement?: (dxMeters: number, dyMeters: number) => void;
+  /**
+   * `ring` (default): the plan shows the ring and a margin, a stable frame while the editor moves
+   * the course. `content`: the read-only viewers (E11-W03, INC-72) widen it to hold every placed
+   * obstacle, tunnel point, course zone and number too, so nothing placed past the ring's edge is
+   * cut off.
+   */
+  frame?: 'ring' | 'content';
 }
 
 /** Pointer travel (px) before a press on the plan counts as a drag rather than a click. */
@@ -242,6 +250,7 @@ export function PlannerCanvas({
   labels,
   onSelectObstacle,
   onDragPlacement,
+  frame = 'ring',
 }: Props) {
   const margin = 1.5; // m of breathing room around the ring rect
   const ringW = ring.length_m;
@@ -290,11 +299,28 @@ export function PlannerCanvas({
     return ids;
   }, [warnings]);
 
-  // SVG viewport spans the larger of ring + course bounds, plus a margin.
-  const viewMinX = -margin;
-  const viewMinY = -margin;
-  const viewW = ringW + 2 * margin;
-  const viewH = ringH + 2 * margin;
+  // SVG viewport: the ring plus a margin; with `frame="content"`, the larger of the ring and the
+  // placed course's bounds (numbers included), plus the margin. The plan's SVG Y is `ringH - y`.
+  const content = useMemo(() => {
+    if (frame !== 'content') return null;
+    const bounds = placedCourseBoundsMeters(course, placement);
+    const xs = [0, ringW, ...placedNumbers.map(({ p }) => p.x)];
+    const ys = [0, ringH, ...placedNumbers.map(({ p }) => p.y)];
+    if (bounds !== null) {
+      xs.push(bounds.min.x, bounds.max.x);
+      ys.push(bounds.min.y, bounds.max.y);
+    }
+    return {
+      maxX: Math.max(...xs),
+      maxY: Math.max(...ys),
+      minX: Math.min(...xs),
+      minY: Math.min(...ys),
+    };
+  }, [course, frame, placedNumbers, placement, ringH, ringW]);
+  const viewMinX = (content?.minX ?? 0) - margin;
+  const viewMinY = ringH - (content?.maxY ?? ringH) - margin;
+  const viewW = (content?.maxX ?? ringW) - (content?.minX ?? 0) + 2 * margin;
+  const viewH = (content?.maxY ?? ringH) - (content?.minY ?? 0) + 2 * margin;
 
   // The SVG keeps its aspect ratio (`xMidYMid meet`), so one screen pixel is the larger of the
   // two axis ratios in metres. Screen Y grows downwards; the ring's +Y is up.

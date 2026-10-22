@@ -1,0 +1,50 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/courses.test.tsx (31 tests | 2 failed | 29 skipped) 815ms
+   ❯ E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-16) (2)
+     × E9-W06 review #2: a course moved and turned after its placement stays where the placement's resolvedObstacles put it 454ms
+     × E9-W06 review #4: the plan's viewBox holds an obstacle that stands past the ring's edge 358ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-16) > E9-W06 review #2: a course moved and turned after its placement stays where the placement's resolvedObstacles put it
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/courses/courses.test.tsx:185:19
+    183|       (item) => Math.hypot(item.x - row.x, item.y - row.y) < 0.001,
+    184|     );
+    185|     expect(drawn).toHaveLength(1);
+       |                   ^
+    186|     // SVG `rotate` is clockwise under the plan's Y flip: the icon tur…
+    187|     const angle = ((-(drawn[0]?.angle ?? Number.NaN) * Math.PI) / 180)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/courses/courses.test.tsx > E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-16) > E9-W06 review #4: the plan's viewBox holds an obstacle that stands past the ring's edge
+AssertionError: expected 41.5 to be greater than or equal to 44.5
+ ❯ src/courses/courses.test.tsx:201:26
+    199|     const [minX = 0, , width = 0] = (plan.getAttribute("viewBox") ?? "…
+    200|     expect(minX).toBe(-1.5);
+    201|     expect(minX + width).toBeGreaterThanOrEqual(43 + 1.5);
+       |                          ^
+    202|     expect(drawnObstacles(plan).some((item) => Math.abs(item.x - 43) <…
+    203|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 29 skipped (31)
+   Start at  06:49:18
+   Duration  2.31s (transform 38%, tests 37%, import 12%, environment 12%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx -t INC-72

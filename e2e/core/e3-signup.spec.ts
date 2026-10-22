@@ -734,7 +734,9 @@ test("T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's iden
   await publicContext.close();
 });
 
-test("T-04-34 public signup is validated and enters through the N-02 welcome link", async ({
+// E11-W03: the critical flow «alta» (PLA_FRONTEND §8) is this test and the two that read its
+// outcome below, tagged `@critical-alta` (`pnpm e2e:core <ID> critical`).
+test("T-04-34 public signup is validated and enters through the N-02 welcome link @critical-alta", async ({
   browser,
 }) => {
   // E3-W08 adds a Pack 6 signup check, the document-required 17 and a readmission.
@@ -2085,14 +2087,14 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   adminSession = undefined;
 });
 
-test("T-04-34 rejected signup delivers N-03", () => {
+test("T-04-34 rejected signup delivers N-03 @critical-alta", () => {
   expect(rejectionMessage).toBeDefined();
   expect(
     `${rejectionMessage?.subject ?? ""} ${rejectionMessage?.text ?? ""} ${rejectionMessage?.html ?? ""}`,
   ).toMatch(/rebutj|recha|reject/iu);
 });
 
-test("T-04-34 active member adds a dog and the club validates it", () => {
+test("T-04-34 active member adds a dog and the club validates it @critical-alta", () => {
   expect(additionalDogValidated).toBe(true);
 });
 

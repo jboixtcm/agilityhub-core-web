@@ -1,0 +1,280 @@
+{
+  "created": {
+    "bookerBooking": "773c340b-8c00-4d55-a50f-3b670d46dd89",
+    "waiterEntry": "39fc63f5-12fe-4a81-9d84-18c5002802b1",
+    "waiterClaim": "5262e0c1-e1b9-4982-bace-c7bbd37739ed"
+  },
+  "demoNow": "2026-10-26T06:00:00.000Z",
+  "runId": "j2m126",
+  "steps": {
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup",
+      "billing-reminder",
+      "erasures",
+      "retention-sweep"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": false,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-anonymous-2026-10-26T06:00:00.000Z": {
+      "body": {
+        "now": "2026-10-26T06:00:00.000025708Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "answer": {
+        "body": {
+          "now": "2026-10-26T06:00:00.000025708Z"
+        },
+        "status": 200
+      },
+      "coreUrl": "http://core:8080",
+      "demoNow": "2026-10-26T06:00:00.000Z"
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "bookings.weekOpensAt": {
+        "dayOfWeek": "SUNDAY",
+        "time": "20:00"
+      },
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "training.maxPerWeek": 3,
+      "training.bookingWindowDays": 3,
+      "classes.riskReviewTime": "07:30"
+    },
+    "jobs": [
+      {
+        "enabled": false,
+        "name": "week-opening"
+      },
+      {
+        "enabled": false,
+        "name": "risk-review"
+      },
+      {
+        "enabled": false,
+        "name": "no-show-notices"
+      },
+      {
+        "enabled": false,
+        "name": "reminders"
+      },
+      {
+        "enabled": false,
+        "name": "expirations"
+      },
+      {
+        "enabled": false,
+        "name": "class-finishing"
+      },
+      {
+        "enabled": false,
+        "name": "cleanup"
+      },
+      {
+        "enabled": false,
+        "name": "billing-reminder"
+      },
+      {
+        "enabled": true,
+        "name": "erasures"
+      },
+      {
+        "enabled": true,
+        "name": "retention-sweep"
+      }
+    ],
+    "a-b-booker": {
+      "booked": {
+        "classStartsAtLocal": "2026-10-29T08:30",
+        "heldMs": 908,
+        "holdTtlMs": 30000,
+        "status": 201
+      },
+      "cancelledInTime": {
+        "late": false,
+        "state": "CANCELLED"
+      },
+      "home": {
+        "counters": {
+          "unit": "DOG",
+          "currentWeek": {
+            "count": 1,
+            "max": 2,
+            "weekKey": "2026-10-25"
+          },
+          "nextWeek": {
+            "count": 0,
+            "max": 1,
+            "weekKey": "2026-11-01"
+          }
+        },
+        "types": [
+          "CLASS",
+          "TRAINING",
+          "TRAINING",
+          "CLASS_WAITLIST",
+          "ACTIVITY"
+        ]
+      },
+      "rowStates": [
+        "BOOKABLE",
+        "WAITLIST_FULL",
+        "NOT_YET_OPEN"
+      ]
+    },
+    "b-late": {
+      "late": true,
+      "state": "CANCELLED_LATE"
+    },
+    "d-entry": {
+      "id": "39fc63f5-12fe-4a81-9d84-18c5002802b1",
+      "state": "ACTIVE",
+      "classSessionId": "98aa5ed3-e097-4181-b116-508baa5ee75d",
+      "dogId": "3cd89b33-b9de-31b3-9f13-221b2856763c",
+      "dogName": "Suro 193",
+      "dog": {
+        "id": "3cd89b33-b9de-31b3-9f13-221b2856763c",
+        "name": "Suro 193",
+        "sex": "FEMALE"
+      },
+      "memberId": "e570fe08-14f3-3667-b387-7c7f3ad81cf6",
+      "memberFirstName": "Aleix",
+      "handlerName": "Aleix",
+      "position": null,
+      "joinedAt": "2026-10-26T06:00:07.874Z",
+      "classSession": {
+        "startsAtLocal": "2026-10-29T17:40",
+        "endsAtLocal": "2026-10-29T18:40",
+        "description": "D+E",
+        "ringName": "Carretera",
+        "ringColor": "#C9CDD3",
+        "instructorName": null,
+        "instructorVisibleAt": "2026-10-28T16:40:00Z"
+      },
+      "notifiedAt": null,
+      "confirmBy": null,
+      "bookingId": null,
+      "cancelledAt": null,
+      "cancelReason": null
+    },
+    "d-waitlist": {
+      "bookerEntryAfterRelease": "NOTIFIED",
+      "claim": {
+        "bookingState": "ACTIVE",
+        "entryState": "CONSOLIDATED",
+        "status": 201
+      },
+      "join": {
+        "status": 201
+      },
+      "notified": {
+        "confirmBy": null,
+        "notifiedAt": "2026-10-26T06:00:11.644Z"
+      },
+      "release": {
+        "state": "CANCELLED"
+      }
+    },
+    "h-cleanup": {
+      "waiterClaim": {
+        "cancellation": 200,
+        "state": "CANCELLED"
+      },
+      "bookerBooking": {
+        "cancellation": null,
+        "state": "CANCELLED"
+      },
+      "waiterEntry": {
+        "cancellation": null,
+        "state": "CONSOLIDATED"
+      }
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": true,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      },
+      "billing-reminder": {
+        "enabled": true,
+        "status": 200
+      }
+    },
+    "clock-anonymous-2026-10-22T04:58:44.069Z": {
+      "body": {
+        "now": "2026-10-22T04:58:44.069004833Z"
+      },
+      "status": 200
+    },
+    "clock-restored": {
+      "body": {
+        "now": "2026-10-22T04:58:44.069004833Z"
+      },
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-26"
+}
