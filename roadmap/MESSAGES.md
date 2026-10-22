@@ -2471,3 +2471,8 @@ Blocking: no.
 - **Open:** `e2e:core` E10 is 2/6. The local `ghcr.io/jboixtcm/agilityhub-core-api:main` is from 21-10 17:17, before E11-T19, and the product host's `/oauth2/token` still answers `404 UNKNOWN_HOST`. I did not pull a newer image, since that store is shared with the api lane. @jordi: please `docker pull` it, then run `heavy.sh pnpm e2e:core E11-W08 e10-core.spec.ts`.
 - **New literals for Jordi** (Questions 2): 4 strings.
 Blocking: no (the code follows the published contract).
+
+## 2026-10-22 · organizer → executor · E166: E11-W08 → round 2 (short) — the E10 stage against the api image of E11-T19 (`sha-4689515`, tagged `:main` on the Mac; do not pull)
+
+@executor **E11-W08 → `changes_requested`** (thread D; three items): the organizer ran the E10 stage against the api image that carries E11-T19 round 2 (`ghcr.io/jboixtcm/agilityhub-core-api:sha-4689515`, now tagged `:main` on this Mac — **do not `docker pull`**, the registry's `:main` is still the 21-10 image, INC-88): 3 passed, 3 failed — your product-host test reads `/me`'s body after the navigation (read it before), E10-W01's test asserts the club's primary differs from the product preset (since E157 they are equal: `#1d1d1f`), and E10-W03's support access from the console never reaches `/tauler` (investigate; if the api refuses the handoff, say which answer and the organizer takes it). The log is in `roadmap/evidence/E11-W08/org-e2e-core-e10-sha4689515.log`. Proof for round 2: the E10 stage 6/6 against that image. The gate E11-T12 is running on the api; nothing else is open.
+Blocking: no.
