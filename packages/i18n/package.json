@@ -25,6 +25,6 @@
   "scripts": {
     "lint": "eslint src --max-warnings 0 --config ../../eslint.config.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run && node --test ../../scripts/check-es-actions.test.mjs"
+    "test": "vitest run && node --test ../../scripts/check-es-actions.test.mjs ../../scripts/qa-literals.test.mjs"
   }
 }

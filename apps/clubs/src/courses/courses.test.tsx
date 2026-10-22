@@ -201,6 +201,16 @@ describe("E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-
     expect(minX + width).toBeGreaterThanOrEqual(43 + 1.5);
     expect(drawnObstacles(plan).some((item) => Math.abs(item.x - 43) < 0.001)).toBe(true);
   });
+
+  it("E11-W03 round 2 (kit review #4): the viewBox holds the icon of a horizontal Weave centred past the ring's edge", async () => {
+    const { row } = muntanyaStanding();
+    // A Weave's icon is 6.6 m long: centred at x = 43 on the 40 m ring, it reaches x = 46.3.
+    Object.assign(row, { rotationDeg: 0, type: "Weave", x: 43 });
+    await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "member");
+    const plan = await screen.findByRole("img", { name: "Plànol de Jumping del dijous" });
+    const [minX = 0, , width = 0] = (plan.getAttribute("viewBox") ?? "").split(" ").map(Number);
+    expect(minX + width).toBeGreaterThanOrEqual(46.3 + 1.5 - 1e-9);
+  });
 });
 
 describe("the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2)", () => {

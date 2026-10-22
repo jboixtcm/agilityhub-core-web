@@ -1,0 +1,53 @@
+206a207
+> | `admin-audit:changesCount`
+413a415
+> | `admin-billing:simulation.incidentsCount`
+556a559
+> | `admin-census:followup.author.member`
+566a570
+> | `admin-census:followup.unread`
+769a774
+> | `admin-census:signupReview.pending`
+889a895
+> | `admin-courses:editor.warnings`
+1048a1055
+> | `admin-dashboard:signups.dog`
+1147a1155
+> | `admin-scheduling:calendar.validation.help`
+1148a1157
+> | `admin-scheduling:cancelModal.confirm`
+1149a1159,1160
+> | `admin-scheduling:cancelModal.intro`
+> | `admin-scheduling:cancelModal.introCount`
+1180a1192
+> | `admin-scheduling:templates.generation.done`
+1641a1654
+> | `auth:profile.adminProfile`
+1655a1669
+> | `auth:profile.instructorProfile`
+1660a1675
+> | `auth:profile.memberProfile`
+1667a1683
+> | `auth:profileChoice.admin`
+1668a1685,1686
+> | `auth:profileChoice.instructor`
+> | `auth:profileChoice.member`
+1695a1714
+> | `booking:confirm.limitDone`
+1696a1716,1717
+> | `booking:confirm.limitNote`
+> | `booking:confirm.nextBookableAt`
+1711a1733
+> | `booking:pack.consumed`
+1758a1781
+> | `census:list.selected`
+2649a2673
+> | `history:window`
+2750a2775
+> | `instructor:attendance.joinedAt`
+2754a2780
+> | `instructor:attendance.pendingTasks`
+2759a2786
+> | `instructor:attendance.waitlistRule`
+2762a2790
+> | `instructor:card.memberStatus`

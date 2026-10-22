@@ -340,6 +340,66 @@ describe("T-16-02 R-16-01/05 one heading convention: what the planners render is
   );
 });
 
+describe('E11-W03 round 2 (kit review #4): frame="content" holds every icon\'s footprint', () => {
+  const course = fixture(JUMPING);
+  const plain = course.obstacles.find(
+    (obstacle) => obstacle.controlPointsMeters === null && obstacle.obstacleType === "Jump",
+  );
+  if (plain === undefined) throw new Error("FIXTURE_WITHOUT_A_JUMP");
+  // A 40 × 25 m design on a 40 × 25 m ring, centred: course and ring coordinates are the same.
+  // A Weave's icon is 6.6 m long; each one stands 2–3 m past one edge of the ring.
+  const weave = (id: string, x: number, y: number, rotationDegrees: number) => ({
+    ...plain,
+    id,
+    obstacleType: "Weave" as const,
+    rotationDegrees,
+    sourceId: id,
+    xMeters: x,
+    yMeters: y,
+  });
+  const edges: CourseData = {
+    ...course,
+    designLengthMeters: 40,
+    designWidthMeters: 25,
+    noGoZones: [],
+    numbers: [],
+    obstacles: [
+      weave("east", 43, 12.5, 0),
+      weave("west", -3, 12.5, 0),
+      weave("north", 20, 27, 90),
+      weave("south", 20, -2, 90),
+    ],
+  };
+  const ring = ringFor(edges);
+
+  it("a long obstacle near each boundary is inside the viewBox, with the 1.5 m margin", () => {
+    expect([ring.length_m, ring.width_m]).toEqual([40, 25]);
+    const { container } = render(
+      <PlannerCanvas
+        course={edges}
+        frame="content"
+        labels={{ ariaLabel: "Vista 2D", entry: "Entrada", exit: "Sortida" }}
+        onSelectObstacle={vi.fn()}
+        placement={centred(ring)}
+        ring={ring}
+        selectedObstacleId={null}
+        warnings={[]}
+      />,
+    );
+    const [minX = 0, minY = 0, width = 0, height = 0] = (
+      container.querySelector("svg")?.getAttribute("viewBox") ?? ""
+    )
+      .split(" ")
+      .map(Number);
+    // Ring x runs as is; SVG y is `25 - y`. East reaches 43 + 3.3, west −3 − 3.3, north
+    // 27 + 3.3 (SVG −5.3), south −2 − 3.3 (SVG 30.3).
+    expect(minX + width).toBeGreaterThanOrEqual(46.3 + 1.5 - 1e-9);
+    expect(minX).toBeLessThanOrEqual(-6.3 - 1.5 + 1e-9);
+    expect(minY).toBeLessThanOrEqual(25 - 30.3 - 1.5 + 1e-9);
+    expect(minY + height).toBeGreaterThanOrEqual(25 + 5.3 + 1.5 - 1e-9);
+  });
+});
+
 function Harness({
   course,
   ring,

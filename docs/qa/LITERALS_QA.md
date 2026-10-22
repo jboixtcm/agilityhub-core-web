@@ -9,11 +9,11 @@
 
 **Com es fa la comparació**: un text compta com a «del mockup» quan tots els seus trossos fixos (fora de les variables) apareixen al text visible d'un mateix mockup, sense distingir majúscules. Un text que el mockup diu amb una paraula diferent surt aquí.
 
-**Recompte**: 2920 literals per revisar (982 B24 · 1938 B25); 2021 textos surten d'un mockup; 221 són només variables o signes; 4 dels de la taula no tenen pantalla localitzada (claus que el codi calcula).
+**Recompte**: 2958 literals per revisar (984 B24 · 1974 B25); 1998 textos surten d'un mockup; 218 són només variables o signes; 4 dels de la taula no tenen pantalla localitzada (claus que el codi calcula).
 
 ## Índex
 
-- 03 · 04 · 06 · 07 · 29 — inici, reservar, confirmar, reserva i espera (49)
+- 03 · 04 · 06 · 07 · 29 — inici, reservar, confirmar, reserva i espera (53)
 - 04 — activitats (25)
 - 08 · 24 — entrenaments i pista (12)
 - 10 · 23 — avui (quadre del dia) (19)
@@ -25,38 +25,38 @@
 - 15 — baixa (16)
 - 16–19 — alta pública (46)
 - 19 — pagament amb targeta (4)
-- 20 · 21 · 22 · 26 — instructor (32)
-- 25 — historial (8)
+- 20 · 21 · 22 · 26 — instructor (35)
+- 25 — historial (9)
 - 30 — info i preguntes freqüents (6)
 - Recorreguts a l'app (visor, registre, sessió de muntatge) (91)
 - Baixa dels avisos per correu (enllaç del correu) (6)
-- 01 · 02 · 03b — accés, activació, tria de perfil i marc de l'app (36)
-- D2 — validació d'una preinscripció (54)
-- D1 — tauler (13)
-- D3 · D3b — plantilles (25)
-- D4 · D4b · D4c — calendari de classes (47)
+- 01 · 02 · 03b — accés, activació, tria de perfil i marc de l'app (42)
+- D2 — validació d'una preinscripció (55)
+- D1 — tauler (14)
+- D3 · D3b — plantilles (26)
+- D4 · D4b · D4c — calendari de classes (51)
 - Inactivitats i baixes (pàgina nova) (45)
 - D5 · D15 — llistats d'abonats i de gossos (25)
-- D10 — fitxa d'abonat (184)
-- D6 — facturació i remeses (191)
+- D10 — fitxa d'abonat (190)
+- D6 — facturació i remeses (196)
 - D7 — activitats (100)
 - D8 — modalitats i tarifes (27)
 - D16 — pistes (12)
 - D17 — instructors i administradors (9)
 - D11 — paràmetres del club (430)
 - D9 — comunicats i plantilles d'avís (96)
-- D12 · D13 — agenda i fitxa d'alumne (16)
-- D14 — seguiment d'alumnes (11)
+- D12 · D13 — agenda i fitxa d'alumne (17)
+- D14 — seguiment d'alumnes (13)
 - Entrenaments i bloquejos de pista (backoffice) (20)
-- D18 — recorreguts (261)
+- D18 — recorreguts (262)
 - D19 — consola de clubs (435)
-- Auditoria (53)
+- Auditoria (54)
 - Accés de suport (12)
 - Marc del backoffice (accés, menú, estats de càrrega i d'error) (10)
 - AgilityHub ID (accés, compte, productes) (60)
 - 01 · 02 · 12 — accés i sessió (12)
 - Paquets compartits (transversal) (47)
-- Transversal — textos de més de tres pantalles (33)
+- Transversal — textos de més de tres pantalles (34)
 - Missatges d'error (surten a la pantalla de l'acció que falla) (251)
 - Sense pantalla localitzada (clau calculada al codi) (4)
 
@@ -70,7 +70,10 @@
 | `booking:classes.loading` | Carregant les classes | B25 | — |  |
 | `booking:confirm.chargeOnAttendance` | Aquesta classe es carregarà al proper rebut ({price}). | B25 | — |  |
 | `booking:confirm.done` | Reserva confirmada. Afegeix-la al calendari: | B25 | — |  |
+| `booking:confirm.limitDone` | {unit, select, DOG {{week, select, NEXT {La setmana vinent ja tens {count, plural, one {una classe} =2 {dues classes} other {# classes}} amb {dogArticle}{dogName}.} other {Aquesta setmana ja has fet {count, plural, one {una classe} =2 {dues classes} other {# classes}} amb {dogArticle}{dogName}.}}} other {{week, select, NEXT {La setmana vinent ja tens {count, plural, one {una classe} =2 {dues classes} other {# classes}}.} other {Aquesta setmana ja has fet {count, plural, one {una classe} =2 {dues classes} other {# classes}}.}}}} | B25 | — |  |
 | `booking:confirm.limitNoneNextWeek` | Encara no pots reservar classes de la setmana vinent. | B25 | — |  |
+| `booking:confirm.limitNote` | {unit, select, DOG {Ja tens {count, plural, one {# classe} other {# classes}} {week, select, NEXT {la setmana vinent} other {aquesta setmana}} amb {dogArticle}{dogName} (límit per gos).} other {Ja tens {count, plural, one {# classe} other {# classes}} {week, select, NEXT {la setmana vinent} other {aquesta setmana}} (límit per persona).}} | B25 | — |  |
+| `booking:confirm.nextBookableAt` | {week, select, NEXT {Podràs reservar aquesta classe a partir de {nextBookableAt}.} other {Podràs reservar per a la setmana vinent a partir de {nextBookableAt}.}} | B25 | — |  |
 | `booking:confirm.notSelectableLATE_WINDOW` | Classe {description} · fora de termini — no es pot seleccionar | B25 | — |  |
 | `booking:confirm.payAfterSwap` | En confirmar, pagaràs aquesta classe ({price}). | B25 | — |  |
 | `booking:confirm.payAndBook` | PAGAR I CONFIRMAR ({price}) | B25 | — |  |
@@ -86,6 +89,7 @@
 | `booking:list.packEmpty` | Sense sessions | B25 | — |  |
 | `booking:list.waitlistFullLabel` | Completa, llista d'espera plena ({waiting}/{max}) | B25 | — |  |
 | `booking:list.waitlistLabel` | Completa, {waiting} en llista d'espera | B25 | — |  |
+| `booking:pack.consumed` | {count, plural, one {# consumida} other {# consumides}} | B25 | — |  |
 | `booking:waitlist.confirmBy` | Tens temps fins a les {time} per agafar la plaça. | B25 | — |  |
 | `booking:waitlist.join` | APUNTA'M | B25 | — |  |
 | `booking:waitlist.joinDialog` | Vols apuntar-te a la llista d'espera de {className}? | B25 | — |  |
@@ -382,15 +386,18 @@
 
 | Clau | Text (ca) | Font | Registre | També a |
 |---|---|---|---|---|
+| `instructor:attendance.joinedAt` | {kind, select, minutes {des de fa {count} min} hours {des de fa {count} h} today {des d'avui {time}} yesterday {des d'ahir {time}} other {des del {date} {time}}} | B25 | — |  |
 | `instructor:attendance.legend` | Llegenda | B25 | — |  |
 | `instructor:attendance.loadError` | No s'ha pogut carregar la llista. | B25 | — |  |
 | `instructor:attendance.loading` | Carregant la llista | B25 | — |  |
 | `instructor:attendance.noticeAlreadySent` | avís ja enviat | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
+| `instructor:attendance.pendingTasks` | {count, plural, one {# tasca pendent} other {# tasques pendents}} | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:attendance.photoClose` | Tanca la foto de {dog} | B25 | — |  |
 | `instructor:attendance.photoOpen` | Mostra la foto de {dog} a pantalla completa | B25 | — |  |
 | `instructor:attendance.saved` | Llista desada | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:attendance.saving` | Desant la llista | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:attendance.staleToast` | Algú ha desat la llista fa un moment: revisa-la | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
+| `instructor:attendance.waitlistRule` | {mode, select, FIFO {Si s'allibera una plaça, s'avisa per ordre d'arribada: cadascú té {minutes} min per confirmar.} other {Si s'allibera una plaça, s'avisa alhora tothom qui espera.}} | B25 | — |  |
 | `instructor:card.loadError` | No s'ha pogut carregar la fitxa. | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:card.loading` | Carregant la fitxa | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:card.noClasses` | Encara no hi ha classes | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
@@ -427,6 +434,7 @@
 | `history:list` | Històric de classes, entrenaments i activitats | B25 | — |  |
 | `history:loadError` | No s'ha pogut carregar l'històric. | B25 | — |  |
 | `history:loading` | Carregant l'històric | B25 | — |  |
+| `history:window` | {months, plural, one {Darrer mes, del més recent al més antic} other {Darrers # mesos, del més recent al més antic}} | B25 | — |  |
 
 ## 30 — info i preguntes freqüents
 
@@ -570,12 +578,18 @@
 | `auth:activation.welcome` | {gender, select, FEMALE {Benvinguda, {name}!} OTHER {Hola, {name}!} other {Benvingut, {name}!}} | B25 | — |  |
 | `auth:impersonation.banner` | Estàs veient l'app com {member} | B25 | — |  |
 | `auth:impersonation.expired` | La sessió com l'abonat ha caducat | B25 | — |  |
+| `auth:profile.adminProfile` | {gender, select, FEMALE {administradora} OTHER {administrador/a} other {administrador}} | B25 | — |  |
 | `auth:profile.currentPassword` | contrasenya actual | B25 | — |  |
+| `auth:profile.instructorProfile` | {gender, select, FEMALE {instructora} OTHER {instructor/a} other {instructor}} | B25 | — |  |
 | `auth:profile.languageHelp` | Els avisos nous et arribaran en aquest idioma | B25 | — |  |
 | `auth:profile.learnLink` | Aprèn amb AgilityHub | B25 | — |  |
+| `auth:profile.memberProfile` | {gender, select, FEMALE {alumna} OTHER {alumne/a} other {alumne}} | B25 | — |  |
 | `auth:profile.passwordSaved` | Contrasenya desada | B25 | — |  |
 | `auth:profile.working` | S'està completant l'acció… | B25 | — |  |
+| `auth:profileChoice.admin` | {gender, select, FEMALE {Com a administradora} OTHER {Com a administrador/a} other {Com a administrador}} | B25 | — |  |
 | `auth:profileChoice.error` | No s'ha pogut canviar de perfil. | B25 | — |  |
+| `auth:profileChoice.instructor` | {gender, select, FEMALE {Com a instructora} OTHER {Com a instructor/a} other {Com a instructor}} | B25 | — |  |
+| `auth:profileChoice.member` | {gender, select, FEMALE {Com a alumna} OTHER {Com a alumne/a} other {Com a alumne}} | B25 | — |  |
 | `auth:profileChoice.saving` | Canviant de perfil… | B25 | — |  |
 | `common:boot.offline` | No hi ha connexió amb el servidor. | B25 | aprovat (A39.199) | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
 | `common:screen.failed` | No s'ha pogut mostrar aquesta pantalla. | B25 | aprovat (A39.211) | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
@@ -625,6 +639,7 @@
 | `admin-census:signupReview.loading` | Carregant la preinscripció… | B25 | — |  |
 | `admin-census:signupReview.newDog` | nou gos | B25 | — |  |
 | `admin-census:signupReview.nothingPaid` | No s'ha cobrat res: queda pendent | B25 | — |  |
+| `admin-census:signupReview.pending` | {count, plural, =0 {pendent des d'avui} one {pendent des de fa # dia} other {pendent des de fa # dies}} | B25 | — |  |
 | `admin-census:signupReview.readmission.documentLocked` | El document d'identitat no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió. | B25 | — |  |
 | `admin-census:signupReview.readmission.dogLocked` | La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi. | B25 | — |  |
 | `admin-census:signupReview.readmission.title` | Canvis respecte de la fitxa de baixa | B25 | — |  |
@@ -659,6 +674,7 @@
 | `admin-dashboard:risk.error` | No s'ha pogut carregar la revisió de classes en risc. | B25 | — |  |
 | `admin-dashboard:risk.loading` | Carregant la revisió de classes en risc… | B25 | — |  |
 | `admin-dashboard:risk.status.WILL_REVIEW` | el club decidirà | B25 | — |  |
+| `admin-dashboard:signups.dog` | {name} {isAddDog, select, true {(nou gos)} other {({breed})}} | B25 | — |  |
 | `admin-dashboard:signups.empty` | Cap preinscripció pendent | B25 | — |  |
 | `admin-dashboard:signups.refundRequired` | Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació | B25 | — |  |
 | `admin-dashboard:signups.submitted` | enviada el {date} | B25 | — |  |
@@ -681,6 +697,7 @@
 | `admin-scheduling:templates.empty.title` | Encara no hi ha cap plantilla | B25 | — |  |
 | `admin-scheduling:templates.form.copyName` | {name} (còpia) | B25 | — |  |
 | `admin-scheduling:templates.form.duplicateTitle` | Duplica la plantilla | B25 | — |  |
+| `admin-scheduling:templates.generation.done` | {count, plural, one {# classe generada} other {# classes generades}} | B25 | — |  |
 | `admin-scheduling:templates.generation.skipped` | {count, plural, one {# omesa} other {# omeses}} ({reasons}) | B25 | — |  |
 | `admin-scheduling:templates.gridLabel` | Quadre setmanal de la plantilla «{name}» | B25 | — |  |
 | `admin-scheduling:weeks.empty` | Encara no hi ha cap setmana | B25 | — |  |
@@ -724,8 +741,12 @@
 | `admin-scheduling:calendar.selected.exempt` | Exempta de la revisió{time, select, none {} other { de les {time}}} | B25 | — |  |
 | `admin-scheduling:calendar.selected.noInstructor` | Sense instructor | B25 | — |  |
 | `admin-scheduling:calendar.validation.done` | {count, plural, one {# classe validada} other {# classes validades}} | B25 | — |  |
+| `admin-scheduling:calendar.validation.help` | {count, plural, one {En validar, la classe passa a activa i els alumnes ja la poden reservar. No es pot validar una classe sola.} other {En validar, les # classes passen a actives alhora i els alumnes ja les poden reservar. No es pot validar una classe sola.}} | B25 | — |  |
 | `admin-scheduling:calendar.week.previous` | Setmana anterior | B25 | — |  |
+| `admin-scheduling:cancelModal.confirm` | {count, plural, one {ANUL·LA I AVISA L'ALUMNE} other {ANUL·LA I AVISA ELS # ALUMNES}} | B25 | — |  |
 | `admin-scheduling:cancelModal.confirmWaitlist` | ANUL·LA I AVISA LA LLISTA D'ESPERA | B25 | — |  |
+| `admin-scheduling:cancelModal.intro` | Aquesta classe té {count, plural, one {# alumne inscrit} other {# alumnes inscrits}}. Si l'anul·les, rebran un avís a l'app, per correu i per SMS amb el text que escriguis a sota. | B25 | — |  |
+| `admin-scheduling:cancelModal.introCount` | {count, plural, one {# alumne inscrit} other {# alumnes inscrits}} | B25 | — |  |
 | `admin-scheduling:cancelModal.introWaitlist` | Aquesta classe no té alumnes inscrits, però té {count, plural, one {# alumne a la llista d'espera} other {# alumnes a la llista d'espera}}. Si l'anul·les, rebran un avís a l'app, per correu i per SMS amb el text que escriguis a sota. | B25 | — |  |
 | `admin-scheduling:cancelModal.introWaitlistCount` | {count, plural, one {# alumne a la llista d'espera} other {# alumnes a la llista d'espera}} | B25 | — |  |
 | `admin-scheduling:cancelModal.simpleCancel` | Vols anul·lar la classe? | B25 | — |  |
@@ -925,6 +946,10 @@
 | `admin-census:member.billing.delta` | Variació de sessions | B25 | — |  |
 | `admin-census:member.billing.expiresOn` | Nova caducitat | B25 | — |  |
 | `admin-census:member.billing.invalidCard` | Targeta no vàlida | B25 | — |  |
+| `admin-census:member.billing.nextInvoice.edit` | Edita la data del proper rebut | B25 | — |  |
+| `admin-census:member.billing.nextInvoice.none` | Sense data: no es facturarà | B25 | — |  |
+| `admin-census:member.billing.nextInvoice.notBefore` | La data no pot ser anterior al {date}. | B25 | — |  |
+| `admin-census:member.billing.nextInvoice.range` | Tria una data entre el {from} i el {to}. | B25 | — |  |
 | `admin-census:member.billing.packExpiredLine` | {consumed} consumides · caducat el {date} | B25 | — |  |
 | `admin-census:member.billing.packLine` | {consumed} consumides · {remaining} disponibles · caduca el {date} | B25 | — |  |
 | `admin-census:member.billing.packNegative` | L'ajust no pot deixar el pack amb sessions negatives. | B25 | — |  |
@@ -1004,6 +1029,8 @@
 | `admin-census:plan.current` | Modalitat actual | B25 | — |  |
 | `admin-census:plan.effectiveMonth` | Mes d'efecte (opcional) | B25 | — |  |
 | `admin-census:plan.newPlan` | Modalitat nova | B25 | — |  |
+| `admin-census:plan.nextInvoiceDate` | Data del proper rebut (opcional) | B25 | — |  |
+| `admin-census:plan.nextInvoiceDefault` | Si la deixes en blanc, el proper rebut serà el {date}. | B25 | — |  |
 | `admin-census:plan.packDiscountRule` | En passar d'un pack de {minSessions} sessions o més a una quota mensual, l'entrada té un {discountPercent} % de descompte. L'import l'ha de calcular l'API. | B25 | — |  |
 | `admin-census:reactivation.action` | Reactiva l'abonat | B25 | — |  |
 | `admin-census:reactivation.description` | La reactivació no cobra entrada. Els gossos continuaran inactius fins que es reactivin un per un des de la seva fitxa. | B25 | — |  |
@@ -1025,6 +1052,7 @@
 | `admin-billing:actions.generateOnly` | 2 · GENERA ELS REBUTS | B25 | — |  |
 | `admin-billing:actions.generateRunExists` | Els rebuts d'aquest mes ja s'han generat. | B25 | — |  |
 | `admin-billing:actions.manualInvoice` | Rebut manual | B25 | — |  |
+| `admin-billing:actions.rollbackDatePassed` | Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc | B25 | — |  |
 | `admin-billing:actions.simulating` | Simulant el mes… | B25 | — |  |
 | `admin-billing:confirm.chargeBody` | Es cobraran {count} rebuts amb targeta per un total de {total}. | B25 | — |  |
 | `admin-billing:confirm.chargeTitle` | Cobra les targetes | B25 | — |  |
@@ -1116,6 +1144,7 @@
 | `admin-billing:header.months` | Canvi de mes | B25 | — |  |
 | `admin-billing:header.remittances` | Remeses › | B25 | — |  |
 | `admin-billing:kpi.card` | Amb targeta | B25 | — |  |
+| `admin-billing:kpi.submitBefore` | Presenta-la al banc abans del {date} | B25 | — |  |
 | `admin-billing:list.chips` | Estat dels rebuts | B25 | — |  |
 | `admin-billing:list.columns.issueDate` | Data d'emissió | B25 | — |  |
 | `admin-billing:list.emptyDescription` | No hi ha cap rebut d'aquest mes amb aquests filtres. | B25 | — |  |
@@ -1140,6 +1169,8 @@
 | `admin-billing:manual.memberSearch` | Cerca per nom o número | B25 | — |  |
 | `admin-billing:manual.memberSearching` | Cercant… | B25 | — |  |
 | `admin-billing:manual.noMembers` | Cap abonat coincideix amb la cerca. | B25 | — |  |
+| `admin-billing:manual.period` | Mes del rebut | B25 | — |  |
+| `admin-billing:manual.periodRange` | Tria un mes entre {from} i {to}. | B25 | — |  |
 | `admin-billing:manual.removeLine` | Treu la línia {index} | B25 | — |  |
 | `admin-billing:manual.taxInvalid` | Escriu un percentatge entre 0 i 100. | B25 | — |  |
 | `admin-billing:manual.taxPercent` | % impost (línia {index}) | B25 | — |  |
@@ -1168,6 +1199,7 @@
 | `admin-billing:remittances.title` | Remeses | B25 | — |  |
 | `admin-billing:remittances.xsd` | Validació XSD | B25 | — |  |
 | `admin-billing:remittances.xsdNotValidated` | Sense validar | B25 | — |  |
+| `admin-billing:simulation.incidentsCount` | {count, plural, one {# incidència} other {# incidències}} | B25 | — |  |
 | `admin-billing:simulation.incidentsFootnote` | Els abonats amb incidència s'ometen de la generació. | B25 | — |  |
 | `admin-billing:simulation.noIncidents` | Cap incidència | B25 | — |  |
 | `admin-billing:simulation.openRecordOf` | Obre fitxa de {name} | B25 | — |  |
@@ -1933,6 +1965,7 @@
 | `instructor:agenda.sheetLoadError` | No s'ha pogut carregar la llista. | B25 | — |  |
 | `instructor:agenda.sheetLoading` | Carregant la llista | B25 | — |  |
 | `instructor:card.attendanceSub` | {noShow, plural, one {# no presentat} other {# no presentats}} · {notified, plural, one {# avisat} other {# avisats}} | B25 | — |  |
+| `instructor:card.memberStatus` | {gender, select, FEMALE {Abonada} OTHER {Abonat/ada} other {Abonat}} | B25 | — |  |
 | `instructor:card.noTasks` | Encara no hi ha cap tasca | B25 | — |  |
 | `instructor:tasks.loadError` | No s'han pogut carregar les tasques. | B25 | — | Paquets compartits (transversal) |
 
@@ -1940,6 +1973,7 @@
 
 | Clau | Text (ca) | Font | Registre | També a |
 |---|---|---|---|---|
+| `admin-census:followup.author.member` | {name} ({gender, select, FEMALE {alumna} OTHER {alumne/a} other {alumne}}) | B25 | — |  |
 | `admin-census:followup.caption` | Tasques i notes d'alumnes, les no llegides primer | B25 | — |  |
 | `admin-census:followup.columns.unread` | Pendent de llegir | B25 | — |  |
 | `admin-census:followup.emptyDescription` | Les tasques dels instructors i les notes dels alumnes arribaran aquí. | B25 | — |  |
@@ -1950,6 +1984,7 @@
 | `admin-census:followup.readingAll` | Marcant-ho tot com a llegit | B25 | — |  |
 | `admin-census:followup.readOffline` | No hi ha connexió amb el servidor. | B25 | — |  |
 | `admin-census:followup.search` | Cerca al seguiment | B25 | — |  |
+| `admin-census:followup.unread` | {count, plural, one {# pendent de llegir} other {# pendents de llegir}} | B25 | — |  |
 | `enums:followupKind.MEMBER_NOTE` | nota d'alumne | B25 | — |  |
 
 ## Entrenaments i bloquejos de pista (backoffice)
@@ -2081,6 +2116,7 @@
 | `admin-courses:editor.stale` | Algú ha desat aquesta col·locació mentrestant. Hem mantingut la teva posició: desa de nou per substituir-la. | B24 | aprovat (A39.108) |  |
 | `admin-courses:editor.staleHint` | La geometria de la pista ha canviat des que es va desar: revisa la col·locació i desa-la de nou. | B24 | — |  |
 | `admin-courses:editor.title` | Col·locació a la pista | B24 | — |  |
+| `admin-courses:editor.warnings` | {count, plural, =0 {Cap avís} one {# avís} other {# avisos}} | B24 | — |  |
 | `admin-courses:fields.agilityhubLevel` | Nivell orientatiu | B24 | aprovat (A39.73) |  |
 | `admin-courses:fields.discipline` | Disciplina | B24 | — |  |
 | `admin-courses:fields.tags` | Etiquetes | B24 | — |  |
@@ -2688,6 +2724,7 @@
 | Clau | Text (ca) | Font | Registre | També a |
 |---|---|---|---|---|
 | `admin-audit:caption` | Entrades d'auditoria | B24 | — |  |
+| `admin-audit:changesCount` | {count, plural, =0 {Cap canvi} one {# canvi} other {# canvis}} | B24 | — |  |
 | `admin-audit:drawer.actor` | Actor | B24 | — |  |
 | `admin-audit:drawer.close` | Tanca el detall del canvi | B24 | — |  |
 | `admin-audit:drawer.genericError` | No s'ha pogut carregar el detall del canvi. | B24 | — |  |
@@ -2938,6 +2975,7 @@
 | `census:list.saveError` | No s'ha pogut desar la vista. | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |
 | `census:list.saveViewName` | Nom de la vista | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |
 | `census:list.selectAll` | Selecciona totes les files | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |
+| `census:list.selected` | {count, plural, one {# seleccionat — accions massives:} other {# seleccionats — accions massives:}} | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |
 | `census:list.sharedView` | Vista compartida | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |
 | `census:list.sortAscending` | Ordena {column} de manera ascendent | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |
 | `census:list.sortDescending` | Ordena {column} de manera descendent | B25 | — | D5 · D15 — llistats d'abonats i de gossos; D5 · D15 — llistat universal; D6 — facturació i remeses; D7 — activitats; D14 — seguiment d'alumnes; Auditoria |

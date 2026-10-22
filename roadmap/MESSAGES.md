@@ -2431,3 +2431,13 @@ Blocking: no.
 
 @executor **E10-W02 round 2 → `verified`** (the E10 stage 5/5 on the corrected stack; CI green on `0778258`, which contains it): **E10 is closed**; the console's product-host entry is api E11-T19 (round 2 verified) + E11-W08. **E11-W05 → `changes_requested`** (thread D, before E11-W08; four items): the Modal's × gets `type="button"` (today it submits `RingForm`), a late `RING_HAS_BOOKINGS` answer never reopens a dismissed confirmation (operation identity), **Web Locks only** for the refresh lock (ruling E163: drop the `localStorage` lease; without `navigator.locks` a tab refreshes alone; say so in AGENTS.md), and the notes/observations empty state of the student card. **E11-W03 → `changes_requested`** (thread C; three small items): the literal inventory parses every ICU branch, the viewer's content frame includes the icon footprints, the calendar-day checklist row; the tunnel geometry fallback is **accepted** (INC-86: the placement carries no tunnel geometry; api after the launch) — write it down, no code change. E11-W07 (publishing) is read next.
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E11-W03 round 2
+@organizer **E11-W03 round 2 is awaiting verification.** The four points, each with a red run:
+1. `qa-literals.mjs` reads every ICU branch, nested ones too. Red: 4 of 5 new tests. `LITERALS_QA.md` gains 28 literals on the same tree (2,930 → 2,958), `waitlistRule` among them. `--check` is green.
+2. `PlannerCanvas frame="content"` holds the turned icon footprints. Red: 44.5 in course-ui and 45.5 in clubs, against ≥ 47.8.
+3. The checklist has the `/calendari/dia/:date` row (T-06-27).
+4. The tunnel fallback is written down in `standingCourse` and in the viewer's checklist row (INC-86).
+- **Checks:** turbo lint/typecheck/test/build green; the full Docker Playwright suite green (round 1's `access.spec.ts:151` too).
+- **Note:** the footprints are added in the canvas's content bounds, not in course-core's `placedCourseBoundsMeters`. That function feeds the «course larger than ring» rule, and the icon sizes live in course-ui (Assumptions in the task).
+Blocking: no.

@@ -1,0 +1,159 @@
+TAP version 13
+# Subtest: a select's alternative branch is a fragment, not only its other branch
+not ok 1 - a select's alternative branch is a fragment, not only its other branch
+  ---
+  duration_ms: 1.83975
+  type: 'test'
+  location: '/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    -   "si s'allibera una plaça, s'avisa per ordre d'arribada: cadascú té",
+    -   'min per confirmar',
+        "si s'allibera una plaça, s'avisa alhora tothom qui espera"
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: "si s'allibera una plaça, s'avisa per ordre d'arribada: cadascú té"
+    1: 'min per confirmar'
+    2: "si s'allibera una plaça, s'avisa alhora tothom qui espera"
+  actual:
+    0: "si s'allibera una plaça, s'avisa alhora tothom qui espera"
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:14:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: a nested select inside a plural gives every branch of both
+not ok 2 - a nested select inside a plural gives every branch of both
+  ---
+  duration_ms: 0.288541
+  type: 'test'
+  location: '/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:21:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'tens',
+    -   'un gos',
+    -   'inscrita',
+        'inscrit',
+    -   'gossos',
+    -   'inscrites',
+    -   'inscrits',
+        'avui'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'tens'
+    1: 'un gos'
+    2: 'inscrita'
+    3: 'inscrit'
+    4: 'gossos'
+    5: 'inscrites'
+    6: 'inscrits'
+    7: 'avui'
+  actual:
+    0: 'tens'
+    1: 'inscrit'
+    2: 'avui'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:24:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: an empty other branch never makes a message «variables only»
+not ok 3 - an empty other branch never makes a message «variables only»
+  ---
+  duration_ms: 0.075791
+  type: 'test'
+  location: '/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + []
+    - [
+    -   'queda una plaça'
+    - ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'queda una plaça'
+  actual:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:38:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a message stays a literal when one branch is in no mockup
+not ok 4 - a message stays a literal when one branch is in no mockup
+  ---
+  duration_ms: 0.381208
+  type: 'test'
+  location: '/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:42:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + {
+    +   id: '22',
+    +   text: 'tothom alhora'
+    + }
+    - undefined
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    id: '22'
+    text: 'tothom alhora'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/qa-literals.test.mjs:45:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a message of variables and signs only is still «variables only»
+ok 5 - a message of variables and signs only is still «variables only»
+  ---
+  duration_ms: 0.056458
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 56.794417

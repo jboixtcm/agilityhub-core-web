@@ -301,6 +301,10 @@ export function PlannerCanvas({
 
   // SVG viewport: the ring plus a margin; with `frame="content"`, the larger of the ring and the
   // placed course's bounds (numbers included), plus the margin. The plan's SVG Y is `ringH - y`.
+  // The bounds hold what the plan draws (E11-W03 round 2): each icon's footprint turned to its
+  // heading, a fallback circle's radius, a tunnel's stroke. `placedCourseBoundsMeters` stays the
+  // anchors' rectangle: the «course larger than ring» rule reads it, and icon sizes are this
+  // package's drawing, not course data.
   const content = useMemo(() => {
     if (frame !== 'content') return null;
     const bounds = placedCourseBoundsMeters(course, placement);
@@ -310,13 +314,38 @@ export function PlannerCanvas({
       xs.push(bounds.min.x, bounds.max.x);
       ys.push(bounds.min.y, bounds.max.y);
     }
+    const reach = (point: { x: number; y: number }, halfX: number, halfY: number) => {
+      xs.push(point.x - halfX, point.x + halfX);
+      ys.push(point.y - halfY, point.y + halfY);
+    };
+    for (const { o, anchor, cps } of placed) {
+      if (cps && cps.length > 0) {
+        const half = Math.max(0.2, footprintRadiusMeters(o)) / 2;
+        for (const point of cps) reach(point, half, half);
+        continue;
+      }
+      if (!anchor) continue;
+      const footprint = OBSTACLE_FOOTPRINTS_M[o.obstacleType];
+      if (!footprint) {
+        const r = footprintRadiusMeters(o);
+        reach(anchor, r, r);
+        continue;
+      }
+      // The icon's length lies along the heading, its width across it.
+      const { x: rx, y: ry } = placedObstacleHeadingVector(o.rotationDegrees, placement);
+      reach(
+        anchor,
+        (Math.abs(rx) * footprint.lengthM + Math.abs(ry) * footprint.widthM) / 2,
+        (Math.abs(ry) * footprint.lengthM + Math.abs(rx) * footprint.widthM) / 2,
+      );
+    }
     return {
       maxX: Math.max(...xs),
       maxY: Math.max(...ys),
       minX: Math.min(...xs),
       minY: Math.min(...ys),
     };
-  }, [course, frame, placedNumbers, placement, ringH, ringW]);
+  }, [course, frame, placed, placedNumbers, placement, ringH, ringW]);
   const viewMinX = (content?.minX ?? 0) - margin;
   const viewMinY = ringH - (content?.maxY ?? ringH) - margin;
   const viewW = (content?.maxX ?? ringW) - (content?.minX ?? 0) + 2 * margin;

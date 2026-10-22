@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/viewers.test.tsx (15 tests | 1 failed | 14 skipped) 18ms
+   ❯ E11-W03 round 2 (kit review #4): frame="content" holds every icon's footprint (1)
+     × a long obstacle near each boundary is inside the viewBox, with the 1.5 m margin 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/viewers.test.tsx > E11-W03 round 2 (kit review #4): frame="content" holds every icon's footprint > a long obstacle near each boundary is inside the viewBox, with the 1.5 m margin
+AssertionError: expected 44.5 to be greater than or equal to 47.799999999
+ ❯ tests/viewers.test.tsx:396:26
+    394|     // Ring x runs as is; SVG y is `25 - y`. East reaches 43 + 3.3, we…
+    395|     // 27 + 3.3 (SVG −5.3), south −2 − 3.3 (SVG 30.3).
+    396|     expect(minX + width).toBeGreaterThanOrEqual(46.3 + 1.5 - 1e-9);
+       |                          ^
+    397|     expect(minX).toBeLessThanOrEqual(-6.3 - 1.5 + 1e-9);
+    398|     expect(minY).toBeLessThanOrEqual(25 - 30.3 - 1.5 + 1e-9);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  08:12:34
+   Duration  727ms (environment 55%, transform 25%, import 16%, tests 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run tests/viewers.test.tsx -t frame

@@ -176,6 +176,10 @@ function standingCourse(
       const turned = rotateAbout(point, anchor, turn);
       return { x: turned.x - anchor.x + target.x, y: turned.y - anchor.y + target.y };
     };
+    // Accepted fallback (ruling E163, INC-86): a stored row carries no tunnel geometry, so a
+    // tunnel's bend comes from the live course, carried to where the row stands. A bend edited
+    // after the placement shows on the member's plan until the placement carries its own
+    // geometry (api, after the launch).
     const controlPoints =
       source === undefined || anchor === null
         ? null

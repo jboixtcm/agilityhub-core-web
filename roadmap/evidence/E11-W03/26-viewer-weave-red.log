@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/courses.test.tsx (32 tests | 1 failed | 30 skipped) 825ms
+   ❯ E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-16) (3)
+     × E11-W03 round 2 (kit review #4): the viewBox holds the icon of a horizontal Weave centred past the ring's edge 369ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-16) > E11-W03 round 2 (kit review #4): the viewBox holds the icon of a horizontal Weave centred past the ring's edge
+AssertionError: expected 45.5 to be greater than or equal to 47.799999999
+ ❯ src/courses/courses.test.tsx:212:26
+    210|     const plan = await screen.findByRole("img", { name: "Plànol de Jum…
+    211|     const [minX = 0, , width = 0] = (plan.getAttribute("viewBox") ?? "…
+    212|     expect(minX + width).toBeGreaterThanOrEqual(46.3 + 1.5 - 1e-9);
+       |                          ^
+    213|   });
+    214| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 30 skipped (32)
+   Start at  08:13:11
+   Duration  2.00s (tests 43%, transform 32%, environment 12%, import 11%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx -t viewBox

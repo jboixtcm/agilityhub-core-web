@@ -30,7 +30,8 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "../../scripts/check-es-actions*.mjs",
-        "../../scripts/check-es-actions.d.mts"
+        "../../scripts/check-es-actions.d.mts",
+        "$TURBO_ROOT$/scripts/qa-literals*.mjs"
       ],
       "outputs": []
     },
