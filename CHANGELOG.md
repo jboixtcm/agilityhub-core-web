@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - 16 (add-dog): a plan the api does not quote (a price twin) is listed unavailable with «El club ha de revisar els preus d'aquesta modalitat.»; `409 PRICE_OVERLAP` routes back to the dog step;
   - mocks: `platformRefused` and `signupMemberPriceTwin` scenarios, `FITXER_NO_ENVIAT`, the plan change's next-month `billing.nextInvoiceDayOfMonth`;
   - `e2e/core/e10-core.spec.ts`: no `test.fail`; the console flows sign in as `platform@example.test` on the product host; the playbook loses limitation 1.
+  - round 2 (E166), against the api image `sha-4689515`: the product-host test keeps the first `/me` body through a route before the sign-in reloads the page; E10-W01 expects the new club's primary to equal the product host's (E157); the core stage's `VITE_CONSOLE_ORIGIN` is the product host's server (4178), so the `/suport` tab takes the console's support access again.
 
 - E11-W07 (the api's E11-T15 contract in the back office, rulings E146/E147/E156; snapshot `a7c85d50`, adopted by E11-W05):
   - D10's billing block shows «Proper rebut» (or «Sense data: no es facturarà» for a monthly member) with a drawer that sends `PUT /members/{id}/next-invoice-date {nextInvoiceDate, reason}` (±12 months of the club's month; `fieldErrors` on the fields, `READMISSION_PENDING` → D2, `INVALID_STATE` text); D6's link `?calaix=proper-rebut` opens it;

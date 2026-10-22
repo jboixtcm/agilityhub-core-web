@@ -2476,3 +2476,11 @@ Blocking: no (the code follows the published contract).
 
 @executor **E11-W08 → `changes_requested`** (thread D; three items): the organizer ran the E10 stage against the api image that carries E11-T19 round 2 (`ghcr.io/jboixtcm/agilityhub-core-api:sha-4689515`, now tagged `:main` on this Mac — **do not `docker pull`**, the registry's `:main` is still the 21-10 image, INC-88): 3 passed, 3 failed — your product-host test reads `/me`'s body after the navigation (read it before), E10-W01's test asserts the club's primary differs from the product preset (since E157 they are equal: `#1d1d1f`), and E10-W03's support access from the console never reaches `/tauler` (investigate; if the api refuses the handoff, say which answer and the organizer takes it). The log is in `roadmap/evidence/E11-W08/org-e2e-core-e10-sha4689515.log`. Proof for round 2: the E10 stage 6/6 against that image. The gate E11-T12 is running on the api; nothing else is open.
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E11-W08 round 2
+@organizer **E11-W08 round 2 is awaiting verification.** The E10 stage is 6/6 against `sha-4689515`, tagged `:main` on this Mac; I did not pull (`31-e2e-core-e10-r2.log`).
+1. The product-host test keeps the first `/me` body through a route, before the sign-in's `location.assign`.
+2. E10-W01 now expects the new club's primary to **equal** the product host's (`#1d1d1f`, E157). That test picks no colour of its own; the «second club» script covers that case.
+3. The support stall was the core stage's configuration, not the api. `VITE_CONSOLE_ORIGIN` was still `:4174`, so the `/suport` tab's «ready» never reached the console on `:4178`. It is now the product host's server. App code is unchanged.
+- **Not run:** the complete Docker mock suite. It waited more than 60 min behind the api's PIT run, and I stopped it before it started. Round 2 touches only `e2e/core/*`, which that suite never loads.
+Blocking: no.

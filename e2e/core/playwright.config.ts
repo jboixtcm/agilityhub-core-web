@@ -11,22 +11,24 @@ function requiredEnvironment(name: string): string {
 const coreUrl = requiredEnvironment("CORE_URL");
 
 /**
- * E10-W03 (S17 R-17-10): the console runs on the Cànic's admin server (4174), and a support access
- * opens a club's back-office host at its local server, never `https://{host}`.
+ * E10-W02 (S17 §2 «Entrada»): the console's product host (`clubsadmin.*`, a platform host of the
+ * core) on its own server, where the ID's «Consola de clubs» card leads.
+ */
+const PRODUCT_CONSOLE_URL = "http://127.0.0.1:4178/consola/clubs";
+
+/**
+ * E10-W03 (S17 R-17-10): a support access opens a club's back-office host at its local server,
+ * never `https://{host}`, and that `/suport` tab takes the access only from the console's origin.
+ * Since E11-W08 the console runs on the product host's server (4178), as in production
+ * (`clubsadmin.*`); the tab on 4174 answered a console on 4174 and never heard from 4178.
  */
 const SUPPORT_ENVIRONMENT = {
   VITE_CLUB_ADMIN_ORIGINS: JSON.stringify({
     "admin.example.test": "http://127.0.0.1:4174",
     "fifo.example.test": "http://127.0.0.1:4177",
   }),
-  VITE_CONSOLE_ORIGIN: "http://127.0.0.1:4174",
+  VITE_CONSOLE_ORIGIN: new URL(PRODUCT_CONSOLE_URL).origin,
 };
-
-/**
- * E10-W02 (S17 §2 «Entrada»): the console's product host (`clubsadmin.*`, a platform host of the
- * core) on its own server, where the ID's «Consola de clubs» card leads.
- */
-const PRODUCT_CONSOLE_URL = "http://127.0.0.1:4178/consola/clubs";
 
 /**
  * E10-W02: the stage that runs `e10-core.spec.ts` also serves the product host and the hosts of

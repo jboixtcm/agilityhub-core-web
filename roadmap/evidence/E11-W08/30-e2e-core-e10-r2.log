@@ -1,0 +1,200 @@
+heavy.sh: 11:17 waiting for the host lock, held by: 11:16 agilityhub-core-api: bin/e6-smoke
+heavy.sh: 11:24 got the host lock after 7 min 31 s
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web-c
+> bash scripts/e2e-core.sh E11-W08-r2 e10-core.spec.ts
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-22T05:53:44.344576769Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:3b84d3ce664a33c3f788d284f94b5c99cb03b50a079bfa78fec7ad4f4094a160]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web-c/roadmap/evidence/E11-W08-r2/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web-c/roadmap/evidence/E11-W08-r2/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web-c/roadmap/evidence/E11-W08-r2/club-template-default.yaml (302 lines)
+canic club: /Users/jordib/dev/agilityhub/agilityhub-core-web-c/roadmap/evidence/E11-W08-r2/club-canic.yaml (782 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Volume agilityhub-e11-w08-r2_mongo-data Creating 
+ Volume agilityhub-e11-w08-r2_mongo-data Creating 
+ Volume agilityhub-e11-w08-r2_mailbox Creating 
+ Volume agilityhub-e11-w08-r2_mailbox Creating 
+ Volume agilityhub-e11-w08-r2_attachment-files Creating 
+ Network agilityhub-e11-w08-r2_default Creating 
+ Network agilityhub-e11-w08-r2_default Creating 
+ Volume agilityhub-e11-w08-r2_attachment-files Creating 
+ Volume agilityhub-e11-w08-r2_export-files Creating 
+ Volume agilityhub-e11-w08-r2_export-files Creating 
+ Volume agilityhub-e11-w08-r2_mailbox Created 
+ Volume agilityhub-e11-w08-r2_mailbox Created 
+ Volume agilityhub-e11-w08-r2_mongo-data Created 
+ Volume agilityhub-e11-w08-r2_mongo-data Created 
+ Volume agilityhub-e11-w08-r2_attachment-files Created 
+ Volume agilityhub-e11-w08-r2_attachment-files Created 
+ Volume agilityhub-e11-w08-r2_export-files Created 
+ Volume agilityhub-e11-w08-r2_export-files Created 
+ Network agilityhub-e11-w08-r2_default Created 
+ Network agilityhub-e11-w08-r2_default Created 
+ Container agilityhub-e11-w08-r2-mongo-1 Creating 
+ Container agilityhub-e11-w08-r2-mongo-1 Created 
+ Container agilityhub-e11-w08-r2-seed-1 Creating 
+ Container agilityhub-e11-w08-r2-seed-1 Created 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Creating 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Created 
+ Container agilityhub-e11-w08-r2-core-1 Creating 
+ Container agilityhub-e11-w08-r2-core-1 Created 
+ Container agilityhub-e11-w08-r2-mongo-1 Starting 
+ Container agilityhub-e11-w08-r2-mongo-1 Started 
+ Container agilityhub-e11-w08-r2-mongo-1 Waiting 
+ Container agilityhub-e11-w08-r2-mongo-1 Healthy 
+ Container agilityhub-e11-w08-r2-seed-1 Starting 
+ Container agilityhub-e11-w08-r2-seed-1 Started 
+ Container agilityhub-e11-w08-r2-seed-1 Waiting 
+ Container agilityhub-e11-w08-r2-seed-1 Exited 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Starting 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Started 
+ Container agilityhub-e11-w08-r2-mongo-1 Waiting 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Waiting 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Exited 
+ Container agilityhub-e11-w08-r2-mongo-1 Healthy 
+ Container agilityhub-e11-w08-r2-core-1 Starting 
+ Container agilityhub-e11-w08-r2-core-1 Started 
+ Container agilityhub-e11-w08-r2-seed-1 Waiting 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Waiting 
+ Container agilityhub-e11-w08-r2-core-1 Waiting 
+ Container agilityhub-e11-w08-r2-mongo-1 Waiting 
+ Container agilityhub-e11-w08-r2-activate-demo-club-1 Exited 
+ Container agilityhub-e11-w08-r2-seed-1 Exited 
+ Container agilityhub-e11-w08-r2-mongo-1 Healthy 
+ Container agilityhub-e11-w08-r2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web-c/roadmap/evidence/E11-W08-r2/seed-files.log (200 lines)
+ Container agilityhub-e11-w08-r2-playwright-run-01def8bf108f Creating 
+ Container agilityhub-e11-w08-r2-playwright-run-01def8bf108f Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 69
+Progress: resolved 858, reused 858, downloaded 0, added 324
+Progress: resolved 858, reused 858, downloaded 0, added 519
+Progress: resolved 858, reused 858, downloaded 0, added 722
+Progress: resolved 858, reused 858, downloaded 0, added 846
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 6.8s using pnpm v9.15.9
+
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:582) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:677) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:772) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+[1/6] e2e/core/e10-core.spec.ts:310:5 › R-17-09 · the platform account gives a club admin AGILITYHUB_ADMIN through the api (PUT /platform/accounts/{id}/platform-roles)
+[2/6] e2e/core/e10-core.spec.ts:330:5 › E10-W02 · the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 §2, R-01-17, T-17-12)
+[3/6] e2e/core/e10-core.spec.ts:459:5 › E11-W08 · the platform account signs in to the console on the product host (password and magic link) and lands on D19; an account without the platform role gets 403 PLATFORM_ONLY (S17 §2 «Entrada», S01 R-01-02, ruling E157)
+  1) e2e/core/e10-core.spec.ts:459:5 › E11-W08 · the platform account signs in to the console on the product host (password and magic link) and lands on D19; an account without the platform role gets 403 PLATFORM_ONLY (S17 §2 «Entrada», S01 R-01-02, ruling E157) 
+
+    Error: route.fulfill: Route is already handled!
+
+      485 |     meBody(await answer.text());
+      486 |     await tokenBodyRead;
+    > 487 |     await route.fulfill({ response: answer });
+          |                 ^
+      488 |   };
+      489 |   await page.route(firstMe, keepFirstMe);
+      490 |   const token = await submitPassword(page, PLATFORM_EMAIL, corePassword);
+        at keepFirstMe (/work/e2e/core/e10-core.spec.ts:487:17)
+
+    Error: page.waitForURL: Test ended.
+    =========================== logs ===========================
+    waiting for navigation to "http://127.0.0.1:4178/consola/clubs" until "load"
+      navigated to "http://127.0.0.1:4178/consola/clubs"
+    ============================================================
+
+      511 |   expect(me.account.platformRoles).toEqual(["AGILITYHUB_ADMIN"]);
+      512 |   expect(me.membership ?? null).toBeNull();
+    > 513 |   await page.waitForURL(`${productUrl}/consola/clubs`);
+          |              ^
+      514 |   await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
+      515 |   // A token without a club: no club menu, no D1.
+      516 |   await expect(page.getByRole("link", { name: "Consola" })).toHaveAttribute("aria-current", "page");
+        at /work/e2e/core/e10-core.spec.ts:513:14
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-22T09:26:02.257Z grant_type=refresh_token status=400 cookie=none context=w0c3 page=127.0.0.1:4178/entrar started=2026-10-22T09:26:02.249Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E11-W08 · t...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e10-core-E11-W08-·-the-pla-9d118-a»-S01-R-01-02-ruling-E157-/error-context.md
+
+    Error Context: test-results/core-e1/e10-core-E11-W08-·-the-pla-9d118-a»-S01-R-01-02-ruling-E157-/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e10-core-E11-W08-·-the-pla-9d118-a»-S01-R-01-02-ruling-E157-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e10-core-E11-W08-·-the-pla-9d118-a»-S01-R-01-02-ruling-E157-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/6] e2e/core/e10-core.spec.ts:585:5 › E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou club» wizard (T-17-12)
+[5/6] e2e/core/e10-core.spec.ts:734:5 › E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice, /branding before and after), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)
+[6/6] e2e/core/e10-core.spec.ts:1118:5 › E10-W02 · a second club in under an hour: the manual script, step by step against the core, with its times (T-17-12)
+  1 failed
+    e2e/core/e10-core.spec.ts:459:5 › E11-W08 · the platform account signs in to the console on the product host (password and magic link) and lands on D19; an account without the platform role gets 403 PLATFORM_ONLY (S17 §2 «Entrada», S01 R-01-02, ruling E157) 
+  5 passed (28.2s)
+
+ ELIFECYCLE  Command failed with exit code 1.

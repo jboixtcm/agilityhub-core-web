@@ -4,7 +4,7 @@ import { request as httpRequest } from "node:http";
 import { join, resolve } from "node:path";
 import { deflateSync } from "node:zlib";
 
-import { type Browser, type Locator, type Page, type Response } from "@playwright/test";
+import { type Browser, type Locator, type Page, type Response, type Route } from "@playwright/test";
 
 import { expect, test } from "./oauth-token-log";
 
@@ -463,12 +463,35 @@ test("E11-W08 · the platform account signs in to the console on the product hos
   const context = await desktopContext(browser);
   const page = await context.newPage();
   await page.goto(`${productUrl}/entrar`);
-  const meResponse = page.waitForResponse(
-    (response) => response.url().endsWith("/api/v1/me") && response.request().method() === "GET",
-  );
+  // Round 2 #1: the sign-in reloads the page into D19 right after its first `/me`, and a browser
+  // drops a response body once its page has navigated away. The first `/me` passes through a route
+  // that keeps its body, and it is answered only after the token's body has been read. The route
+  // stays for the page's life (every later `/me` falls through): removing it while the first one
+  // is paused would release that request before it is fulfilled.
+  let tokenRead: () => void = () => undefined;
+  const tokenBodyRead = new Promise<void>((resolveRead) => {
+    tokenRead = resolveRead;
+  });
+  let meBody: (body: string) => void = () => undefined;
+  const meAnswer = new Promise<string>((resolveMe) => {
+    meBody = resolveMe;
+  });
+  let firstMeKept = false;
+  await page.route("**/api/v1/me", async (route: Route) => {
+    if (route.request().method() !== "GET" || firstMeKept) {
+      await route.fallback();
+      return;
+    }
+    firstMeKept = true;
+    const answer = await route.fetch();
+    meBody(await answer.text());
+    await tokenBodyRead;
+    await route.fulfill({ response: answer });
+  });
   const token = await submitPassword(page, PLATFORM_EMAIL, corePassword);
   const tokenBody = (await token.json()) as Record<string, unknown>;
-  const me = (await meResponse.then((response) => response.json())) as {
+  tokenRead();
+  const me = JSON.parse(await meAnswer) as {
     account: { platformRoles: string[] };
     membership?: unknown;
   };
@@ -642,8 +665,11 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
   ).toBeVisible();
   await expect(page.getByRole("region", { name: "Checklist d'onboarding" })).toBeVisible();
 
-  // Round 2 #2: run on the Cànic's admin host, the new club gets the product's theme (the
-  // `--ah-product-light-*` tokens of packages/ui), never the host's branding.
+  // E10-W01 round 2 #2: the new club gets the product's theme (the `--ah-product-light-*` tokens of
+  // packages/ui). Since E11-W08 the console runs on the product host, whose branding is the product
+  // preset itself (E157), so the host's primary equals the new club's. This test picks no colour of
+  // its own; a club that does is the «second club» script below (its wizard's «Tema», then its
+  // hosts' primary in steps 8 and 11).
   const product = productLightTheme();
   const sent = createdResponse.request().postDataJSON() as { theme: StoredTheme };
   expect(sent.theme).toEqual(product);
@@ -658,9 +684,10 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
     mode: product.mode,
     radius: product.radius,
   });
-  expect((await hostPrimary(page)).toLowerCase()).not.toBe(
+  expect((await hostPrimary(page)).toLowerCase()).toBe(
     (product.colors.primary ?? "").toLowerCase(),
   );
+  expect((stored.colors.primary ?? "").toLowerCase()).toBe((await hostPrimary(page)).toLowerCase());
   await screenshot(page, "core-D19-fitxa-checklist-1280.png");
   await context.close();
 });
