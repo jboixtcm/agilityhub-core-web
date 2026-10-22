@@ -44,6 +44,28 @@ function openInApp(event: MouseEvent<HTMLAnchorElement>, path: string) {
   navigateInApp(path);
 }
 
+/** A block with no text: the api sends `null` (or an empty string once cleared). */
+function isBlank(text: string | null | undefined): boolean {
+  return text == null || text.trim() === "";
+}
+
+/** The files of a notes or observations block, opened in a new tab. */
+function CardAttachments({
+  attachments,
+}: {
+  attachments: readonly components["schemas"]["CardAttachment"][];
+}) {
+  return attachments.length === 0 ? null : (
+    <p className="instructor-card__clips">
+      {attachments.map((attachment) => (
+        <a href={attachment.url} key={attachment.id} rel="noopener noreferrer" target="_blank">
+          <Icon aria-hidden="true" name="clip" /> {attachment.name}
+        </a>
+      ))}
+    </p>
+  );
+}
+
 /**
  * Screen 22 «Fitxa d'alumne» (`/instructor/alumnes/:dogId`, S10 §2, R-10-08, R-10-09): the api's
  * card as delivered — its 30-day metrics («—» without classes), the five last classes with their
@@ -264,23 +286,15 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
       {note === undefined ? null : (
         <>
           <h2 className="instructor-screen__section">{t("instructor:card.memberNotes")}</h2>
-          <Card className="instructor-card__block">
-            <p>{note.text ?? t("instructor:card.noValue")}</p>
-            {note.attachments.length === 0 ? null : (
-              <p className="instructor-card__clips">
-                {note.attachments.map((attachment) => (
-                  <a
-                    href={attachment.url}
-                    key={attachment.id}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <Icon aria-hidden="true" name="clip" /> {attachment.name}
-                  </a>
-                ))}
-              </p>
-            )}
-          </Card>
+          {isBlank(note.text) && note.attachments.length === 0 ? (
+            // E11-W05 round 2 #4: the UI kit's empty state, as the last classes.
+            <EmptyState icon="clip" title={t("instructor:card.noNotes")} />
+          ) : (
+            <Card className="instructor-card__block">
+              {isBlank(note.text) ? null : <p>{note.text}</p>}
+              <CardAttachments attachments={note.attachments} />
+            </Card>
+          )}
         </>
       )}
       {tasks === undefined ? null : (
@@ -323,26 +337,22 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
       {observations === undefined ? null : (
         <>
           <h2 className="instructor-screen__section">{t("instructor:card.observations")}</h2>
-          <Card className="instructor-card__block instructor-card__block--private">
-            <p>{observations.text ?? t("instructor:card.noValue")}</p>
-            {observations.attachments.length === 0 ? null : (
-              <p className="instructor-card__clips">
-                {observations.attachments.map((attachment) => (
-                  <a
-                    href={attachment.url}
-                    key={attachment.id}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    <Icon aria-hidden="true" name="clip" /> {attachment.name}
-                  </a>
-                ))}
+          {isBlank(observations.text) && observations.attachments.length === 0 ? (
+            // E11-W05 round 2 #4: the UI kit's empty state; who can read it stays said.
+            <EmptyState
+              description={t("instructor:card.observationsHint")}
+              icon="lock"
+              title={t("instructor:card.noObservations")}
+            />
+          ) : (
+            <Card className="instructor-card__block instructor-card__block--private">
+              {isBlank(observations.text) ? null : <p>{observations.text}</p>}
+              <CardAttachments attachments={observations.attachments} />
+              <p className="instructor-card__meta">
+                <Icon aria-hidden="true" name="lock" /> {t("instructor:card.observationsHint")}
               </p>
-            )}
-            <p className="instructor-card__meta">
-              <Icon aria-hidden="true" name="lock" /> {t("instructor:card.observationsHint")}
-            </p>
-          </Card>
+            </Card>
+          )}
         </>
       )}
       {tasksModule ? (

@@ -216,6 +216,68 @@ describe("D16 RING_HAS_BOOKINGS (R-05-07, R-05-08; E11-W05 step 3)", () => {
     expect(centralTrainings().filter(([, state]) => state === "ACTIVE")).toHaveLength(4);
   });
 
+  it("R-05-08 (E11-W05 round 2 #1): the confirmation's × inside the form closes it and sends no PATCH", async () => {
+    const bodies = capturePatches();
+    await renderRings();
+    const form = await openCentralForm();
+    fireEvent.click(within(form).getByRole("switch", { name: "Reservable per entrenaments" }));
+    fireEvent.click(within(form).getByRole("button", { name: "DESA" }));
+    const confirm = await screen.findByRole("dialog", { name: CONFIRM_TITLE });
+    expect(bodies).toHaveLength(1);
+
+    fireEvent.click(within(confirm).getByRole("button", { name: "Tanca" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: CONFIRM_TITLE })).not.toBeInTheDocument();
+    });
+    // Give a stray submit the time to reach the mock.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(bodies).toHaveLength(1);
+    expect(screen.queryByRole("dialog", { name: CONFIRM_TITLE })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Edita la pista Central" })).toBeVisible();
+    expect(centralTrainings().filter(([, state]) => state === "ACTIVE")).toHaveLength(4);
+  });
+
+  it("R-05-07 (the R-06-11 pattern, E11-W05 round 2 #2): a late RING_HAS_BOOKINGS for a dismissed ring never opens its confirmation", async () => {
+    const bodies = capturePatches();
+    let release: () => void = () => undefined;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    // Falls through to the stateful mock once released.
+    server.use(
+      http.patch("*/api/v1/rings/:id", async () => {
+        await held;
+      }),
+    );
+    await renderRings();
+    // A = Central: «Elimina» → in use → [Desactiva], whose answer is held.
+    fireEvent.click(await screen.findByRole("button", { name: "Elimina Central" }));
+    const remove = await screen.findByRole("dialog", { name: "Elimina la pista" });
+    fireEvent.click(within(remove).getByRole("button", { name: "Elimina" }));
+    fireEvent.click(await within(remove).findByRole("button", { name: "Desactiva" }));
+    await waitFor(() => {
+      expect(bodies).toHaveLength(1);
+    });
+    // The admin dismisses it and selects B = Petita meanwhile.
+    fireEvent.click(within(remove).getByRole("button", { name: "Cancel·la" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Elimina la pista" })).not.toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Elimina Petita" }));
+    const removeB = await screen.findByRole("dialog", { name: "Elimina la pista" });
+    expect(removeB).toHaveTextContent("Petita");
+
+    // A's 422 RING_HAS_BOOKINGS arrives late.
+    release();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(screen.queryByRole("dialog", { name: CONFIRM_TITLE })).not.toBeInTheDocument();
+    const stillB = screen.getByRole("dialog", { name: "Elimina la pista" });
+    expect(stillB).toHaveTextContent("Petita");
+    expect(within(stillB).getByRole("button", { name: "Elimina" })).toBeEnabled();
+    expect(bodies).toEqual([{ active: false, version: 1 }]);
+    expect(centralTrainings().filter(([, state]) => state === "ACTIVE")).toHaveLength(4);
+  });
+
   it("R-05-08: the confirmation's own failure shows inside it (a change made elsewhere meanwhile)", async () => {
     await renderRings();
     const form = await openCentralForm();

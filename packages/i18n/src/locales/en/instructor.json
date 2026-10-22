@@ -101,6 +101,8 @@
     "observationsWide": "Observations — private (instructors and administration)",
     "taskDoneOn": "done on {date}",
     "noTasks": "No tasks yet",
+    "noNotes": "No notes yet",
+    "noObservations": "No observations yet",
     "table": {
       "date": "Date",
       "levels": "Levels",

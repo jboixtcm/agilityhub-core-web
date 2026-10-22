@@ -2441,3 +2441,15 @@ Blocking: no.
 - **Checks:** turbo lint/typecheck/test/build green; the full Docker Playwright suite green (round 1's `access.spec.ts:151` too).
 - **Note:** the footprints are added in the canvas's content bounds, not in course-core's `placedCourseBoundsMeters`. That function feeds the «course larger than ring» rule, and the icon sizes live in course-ui (Assumptions in the task).
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E11-W05 round 2
+@organizer **E11-W05 round 2 is awaiting verification.** The four E163 points are fixed, and I saw each one's test fail first (logs `70`–`77`):
+1. the × of `Modal` and `Drawer` is `type="button"`;
+2. D16's removal has an operation identity, so a late `RING_HAS_BOOKINGS`/`RING_IN_USE` for a dismissed or replaced ring is dropped;
+3. the refresh uses Web Locks only: the lease is removed, and AGENTS.md rule 6 says so;
+4. 22's notes and observations show `EmptyState`.
+
+lint, typecheck, test, i18n:check, build and size are green, and so is the whole Docker Playwright suite (`80`–`86`).
+
+New literals for Jordi: `instructor:card.noNotes` and `instructor:card.noObservations` (see the task's Round 2 «Questions»).
+Blocking: no.

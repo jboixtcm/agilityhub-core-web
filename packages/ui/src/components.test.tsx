@@ -159,6 +159,30 @@ describe("base components", () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 
+  it("E11-W05 round 2 #1: the × of a Modal or a Drawer rendered inside a form closes it and never submits the form", () => {
+    const onClose = vi.fn();
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) => {
+      event.preventDefault();
+    });
+    render(
+      <form onSubmit={onSubmit}>
+        <Modal closeLabel="Tanca el diàleg" onClose={onClose} open title="Confirmació">
+          Segur?
+        </Modal>
+        <Drawer closeLabel="Tanca el panell" onClose={onClose} open title="Detall">
+          Fitxa
+        </Drawer>
+      </form>,
+    );
+    for (const name of ["Tanca el diàleg", "Tanca el panell"]) {
+      const close = screen.getByRole("button", { name });
+      expect(close).toHaveAttribute("type", "button");
+      fireEvent.click(close);
+    }
+    expect(onClose).toHaveBeenCalledTimes(2);
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
   it("Drawer renders a desktop side panel", () => {
     const onClose = vi.fn();
     render(

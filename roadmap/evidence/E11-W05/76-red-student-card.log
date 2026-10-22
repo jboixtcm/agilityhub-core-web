@@ -1,0 +1,672 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+ ❯ src/states.test.tsx (62 tests | 1 failed | 61 skipped) 5425ms
+   ❯ E11-W02 step 4 and E11-W05 step 5 (b): the members' app says when its data is loading, failed or empty (62)
+     × 22 (E11-W05 step 5 (b), round 2 #4): the student card's three blocks — last classes, notes and observations — show the UI kit's empty state, never «—» 5423ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4 and E11-W05 step 5 (b): the members' app says when its data is loading, failed or empty > 22 (E11-W05 step 5 (b), round 2 #4): the student card's three blocks — last classes, notes and observations — show the UI kit's empty state, never «—»
+TestingLibraryElementError: Unable to find role="heading" and name "Encara no hi ha cap nota"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"instructor-screen instructor-card"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mFitxa d'alumne[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Cerca un alumne"[39m
+                [33mclass[39m=[32m"instructor-screen__search"[39m
+                [33mhref[39m=[32m"/instructor/alumnes"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__header"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"instructor-card__who"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Foto de Duna"[39m
+                [33mclass[39m=[32m"instructor-card__photo"[39m
+                [33msrc[39m=[32m"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20120%20120'%3E%3Crect%20width%3D'120'%20height%3D'120'%20fill%3D'tan'%2F%3E%3Ccircle%20cx%3D'60'%20cy%3D'58'%20r%3D'30'%20fill%3D'saddlebrown'%2F%3E%3Ccircle%20cx%3D'50'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Ccircle%20cx%3D'70'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Cellipse%20cx%3D'60'%20cy%3D'66'%20rx%3D'7'%20ry%3D'5'%20fill%3D'black'%2F%3E%3C%2Fsvg%3E"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"instructor-card__name"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mLaura + Duna[0m
+                [36m</h2>[39m
+                [36m<p>[39m
+                  [0mBorder collie · 4 anys[0m
+                [36m</p>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"instructor-card__chips"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+                [36m>[39m
+                  [0mC · fa 10 mesos[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"instructor-card__metrics"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<dt>[39m
+                  [0massistència 30 dies[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [0m86%[0m
+                [36m</dd>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<dt>[39m
+                  [0mclasses 30 dies[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [0m7[0m
+                [36m</dd>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<dt>[39m
+                  [0mentren./setm. 30 dies[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [0m2,3[0m
+                [36m</dd>[39m
+              [36m</div>[39m
+            [36m</dl>[39m
+          [36m</div>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0m5 darreres classes[0m
+          [36m</h2>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"ah-empty-state"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-cal"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<h2>[39m
+              [0mEncara no hi ha classes[0m
+            [36m</h2>[39m
+          [36m</section>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mNotes als instructors (de l'alumne)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__block"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m—[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mTasques (les veu i marca l'alumne)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__block"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"instructor-card__tasks"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0m2 pendents[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0m1 feta[0m
+              [36m</span>[39m
+              [36m<a[39m
+                [33mclass[39m=[32m"instructor-card__manage-link"[39m
+                [33mhref[39m=[32m"/instructor/alumnes/dog-duna/tasques"[39m
+              [36m>[39m
+                [0mgestiona-les ›[0m
+              [36m</a>[39m
+            [36m</p>[39m
+            [36m<p>[39m
+              [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"instructor-card__meta"[39m
+            [36m>[39m
+              [0m31-07 · Estel[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mObservacions (privades)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__block instructor-card__block--private"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m—[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"instructor-card__meta"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mNomés instructors i administració[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary instructor-card__manage"[39m
+            [33mhref[39m=[32m"/instructor/alumnes/dog-duna/tasques"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mGestionar tasques i notes[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"instructor-screen instructor-card"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mFitxa d'alumne[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Cerca un alumne"[39m
+                [33mclass[39m=[32m"instructor-screen__search"[39m
+                [33mhref[39m=[32m"/instructor/alumnes"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__header"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"instructor-card__who"[39m
+            [36m>[39m
+              [36m<img[39m
+                [33malt[39m=[32m"Foto de Duna"[39m
+                [33mclass[39m=[32m"instructor-card__photo"[39m
+                [33msrc[39m=[32m"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20120%20120'%3E%3Crect%20width%3D'120'%20height%3D'120'%20fill%3D'tan'%2F%3E%3Ccircle%20cx%3D'60'%20cy%3D'58'%20r%3D'30'%20fill%3D'saddlebrown'%2F%3E%3Ccircle%20cx%3D'50'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Ccircle%20cx%3D'70'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Cellipse%20cx%3D'60'%20cy%3D'66'%20rx%3D'7'%20ry%3D'5'%20fill%3D'black'%2F%3E%3C%2Fsvg%3E"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"instructor-card__name"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mLaura + Duna[0m
+                [36m</h2>[39m
+                [36m<p>[39m
+                  [0mBorder collie · 4 anys[0m
+                [36m</p>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"instructor-card__chips"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+                [36m>[39m
+                  [0mC · fa 10 mesos[0m
+                [36m</span>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"instructor-card__metrics"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<dt>[39m
+                  [0massistència 30 dies[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [0m86%[0m
+                [36m</dd>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<dt>[39m
+                  [0mclasses 30 dies[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [0m7[0m
+                [36m</dd>[39m
+              [36m</div>[39m
+              [36m<div>[39m
+                [36m<dt>[39m
+                  [0mentren./setm. 30 dies[0m
+                [36m</dt>[39m
+                [36m<dd>[39m
+                  [0m2,3[0m
+                [36m</dd>[39m
+              [36m</div>[39m
+            [36m</dl>[39m
+          [36m</div>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0m5 darreres classes[0m
+          [36m</h2>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"ah-empty-state"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-cal"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<h2>[39m
+              [0mEncara no hi ha classes[0m
+            [36m</h2>[39m
+          [36m</section>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mNotes als instructors (de l'alumne)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__block"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m—[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mTasques (les veu i marca l'alumne)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__block"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"instructor-card__tasks"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0m2 pendents[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0m1 feta[0m
+              [36m</span>[39m
+              [36m<a[39m
+                [33mclass[39m=[32m"instructor-card__manage-link"[39m
+                [33mhref[39m=[32m"/instructor/alumnes/dog-duna/tasques"[39m
+              [36m>[39m
+                [0mgestiona-les ›[0m
+              [36m</a>[39m
+            [36m</p>[39m
+            [36m<p>[39m
+              [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"instructor-card__meta"[39m
+            [36m>[39m
+              [0m31-07 · Estel[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"instructor-screen__section"[39m
+          [36m>[39m
+            [0mObservacions (privades)[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card instructor-card__block instructor-card__block--private"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m—[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"instructor-card__meta"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mNomés instructors i administració[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary instructor-card__manage"[39m
+            [33mhref[39m=[32m"/instructor/alumnes/dog-duna/tasques"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mGestionar tasques i notes[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:279:34
+    277|       "Encara no hi ha cap observació",
+    278|     ]) {
+    279|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    280|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    281|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 61 skipped (62)
+   Start at  08:14:34
+   Duration  6.78s (tests 81%, transform 11%, environment 4%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/states.test.tsx -t round 2 #4

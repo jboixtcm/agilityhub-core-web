@@ -14,6 +14,7 @@ import {
 } from "./auth-client";
 import { MemoryRefreshTokenStore } from "./mock-refresh-token";
 import { createAuthenticatedApiClient } from "./refresh-interceptor";
+import { installWebLocks } from "./testing";
 
 const API_BASE_URL = "https://club.example.test/api/v1";
 const IDENTITY_BASE_URL = "https://id.example.test";
@@ -473,124 +474,57 @@ describe("T-01-21 AuthClient session flow", () => {
     return state;
   }
 
-  it("R-01-06 (E11-W06 W3) three clients sharing one cookie jar restore together → the token endpoint is called sequentially, never two in flight, and all three end signed in", async () => {
-    const family = sharedCookieFamily();
-    const tabs = [1, 2, 3].map(
-      () => new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL }),
-    );
-
-    const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
-
-    expect(restored).toEqual([memberMe, memberMe, memberMe]);
-    expect(family.refreshes).toBe(3);
-    expect(family.maxInFlight).toBe(1);
-    expect(family.revoked).toBe(false);
-    expect(new Set(tabs.map((tab) => tab.getAccessToken())).size).toBe(3);
-    // The lease of the fallback is released.
-    expect(localStorage).toHaveLength(0);
-  });
-
-  /**
-   * One `localStorage` seen from several tabs: a write lands in the shared store at once, in order,
-   * and reaches the other tabs' view `lagMs` later (the browser's cross-process delay).
-   */
-  function laggedTabStorages(count: number, lagMs: number): Storage[] {
-    const shared = new Map<string, string>();
-    const views = Array.from({ length: count }, () => new Map<string, string>());
-    const write = (
-      writer: Map<string, string>,
-      key: string,
-      apply: (map: Map<string, string>) => void,
-    ) => {
-      apply(shared);
-      apply(writer);
-      views.forEach((view) => {
-        if (view === writer) return;
-        setTimeout(() => {
-          const value = shared.get(key);
-          if (value === undefined) view.delete(key);
-          else view.set(key, value);
-        }, lagMs);
-      });
-    };
-    return views.map((view) => ({
-      clear: () => {
-        view.clear();
-      },
-      getItem: (key: string) => view.get(key) ?? null,
-      key: (position: number) => [...view.keys()][position] ?? null,
-      get length() {
-        return view.size;
-      },
-      removeItem: (key: string) => {
-        write(view, key, (map) => map.delete(key));
-      },
-      setItem: (key: string, value: string) => {
-        write(view, key, (map) => map.set(key, value));
-      },
-    }));
-  }
-
-  it("R-01-06 / E160 #2: two clients sharing one storage (seen with a delay) and no Web Locks → one refresh at a time", async () => {
-    const family = sharedCookieFamily();
-    const storages = laggedTabStorages(2, 10);
-    const tabs = storages.map(
-      (refreshLeaseStorage) =>
-        new AuthClient({
-          apiBaseUrl: API_BASE_URL,
-          identityBaseUrl: IDENTITY_BASE_URL,
-          refreshLeaseStorage,
-        }),
-    );
-
-    const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
-
-    expect(restored).toEqual([memberMe, memberMe]);
-    expect(family.refreshes).toBe(2);
-    expect(family.maxInFlight).toBe(1);
-    expect(family.revoked).toBe(false);
-    await delay(20);
-    expect(storages.map((storage) => storage.length)).toEqual([0, 0]);
-  });
-
-  it("R-01-06 / E160 #2: the lease is renewed while a refresh slower than the lease is pending", async () => {
-    vi.useFakeTimers({ shouldAdvanceTime: true });
+  it("R-01-06 (E11-W06 W3) three clients sharing one cookie jar restore together with Web Locks → the token endpoint is called sequentially, never two in flight, and all three end signed in", async () => {
+    const removeWebLocks = installWebLocks();
     try {
-      let inFlight = 0;
-      let maxInFlight = 0;
-      let release: (() => void) | undefined;
-      const gate = new Promise<void>((resolve) => {
-        release = resolve;
-      });
-      server.use(
-        http.post(TOKEN_ENDPOINT, async () => {
-          inFlight += 1;
-          maxInFlight = Math.max(maxInFlight, inFlight);
-          await gate;
-          inFlight -= 1;
-          return HttpResponse.json(tokens("access-refresh"));
-        }),
-      );
-      const [first, second] = [1, 2].map(
+      const family = sharedCookieFamily();
+      const tabs = [1, 2, 3].map(
         () => new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL }),
       );
-      const slow = first?.refresh();
-      await vi.waitFor(() => {
-        expect(inFlight).toBe(1);
-      });
-      // Past the 10 s lease while the first refresh is still pending.
-      await vi.advanceTimersByTimeAsync(11_000);
-      const late = second?.refresh();
-      await vi.advanceTimersByTimeAsync(500);
-      expect(inFlight).toBe(1);
 
-      release?.();
-      await vi.advanceTimersByTimeAsync(500);
-      await expect(Promise.all([slow, late])).resolves.toHaveLength(2);
-      expect(maxInFlight).toBe(1);
+      const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
+
+      expect(restored).toEqual([memberMe, memberMe, memberMe]);
+      expect(family.refreshes).toBe(3);
+      expect(family.maxInFlight).toBe(1);
+      expect(family.revoked).toBe(false);
+      expect(new Set(tabs.map((tab) => tab.getAccessToken())).size).toBe(3);
       expect(localStorage).toHaveLength(0);
     } finally {
-      vi.useRealTimers();
+      removeWebLocks();
+    }
+  });
+
+  it("R-01-06 (E11-W05 round 2 #3, ruling E163): without Web Locks a tab refreshes on its own at once — nothing in localStorage holds it back or is written", async () => {
+    expect("locks" in navigator).toBe(false);
+    let refreshes = 0;
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => {
+        refreshes += 1;
+        return HttpResponse.json(tokens("access-refresh"));
+      }),
+    );
+    // What the removed fallback lease left behind (another tab, or a release that never ran).
+    localStorage.setItem(
+      "agilityhub.refresh:clubs-app",
+      JSON.stringify({ expiresAt: Date.now() + 10_000, owner: "other-tab" }),
+    );
+    try {
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      const outcome = await Promise.race([
+        client.refresh().then(() => "refreshed"),
+        delay(1_000).then(() => "waiting"),
+      ]);
+
+      expect(outcome).toBe("refreshed");
+      expect(refreshes).toBe(1);
+      expect(client.getAccessToken()).toBe("access-refresh");
+      expect(Object.keys(localStorage)).toEqual(["agilityhub.refresh:clubs-app"]);
+    } finally {
+      localStorage.clear();
     }
   });
 
@@ -645,19 +579,28 @@ describe("T-01-21 AuthClient session flow", () => {
       }),
       http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
     );
-    // Another tab holds the refresh lease.
-    localStorage.setItem(
-      "agilityhub.refresh:clubs-app",
-      JSON.stringify({ expiresAt: Date.now() + 10_000, owner: "other-tab" }),
-    );
-    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
-    const waiting = client.refresh();
-    await client.login("biel.roca@example.test", "secret-password");
-    localStorage.removeItem("agilityhub.refresh:clubs-app");
+    const removeWebLocks = installWebLocks();
+    try {
+      // Another tab holds the refresh lock.
+      let releaseOther: () => void = () => undefined;
+      const otherTab = new Promise<void>((resolve) => {
+        releaseOther = resolve;
+      });
+      void navigator.locks.request("agilityhub.refresh:clubs-app", () => otherTab);
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      const waiting = client.refresh();
+      await client.login("biel.roca@example.test", "secret-password");
+      releaseOther();
 
-    await expect(waiting).resolves.toMatchObject({ access_token: "access-login" });
-    expect(refreshes).toBe(0);
-    expect(client.getAccessToken()).toBe("access-login");
+      await expect(waiting).resolves.toMatchObject({ access_token: "access-login" });
+      expect(refreshes).toBe(0);
+      expect(client.getAccessToken()).toBe("access-login");
+    } finally {
+      removeWebLocks();
+    }
   });
 
   it.each([400, 401])(

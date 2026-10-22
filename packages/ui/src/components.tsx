@@ -397,6 +397,8 @@ export function Modal({
               className="ah-overlay__close"
               onClick={onClose}
               ref={closeRef}
+              // Inside a form (D16's confirmation in `RingForm`), a typeless button submits it.
+              type="button"
             >
               <Icon aria-hidden="true" name="x" />
             </button>
@@ -425,6 +427,7 @@ export function Drawer({ children, closeLabel, onClose, open, title }: OverlayPr
             className="ah-overlay__close"
             onClick={onClose}
             ref={closeRef}
+            type="button"
           >
             <Icon aria-hidden="true" name="x" />
           </button>

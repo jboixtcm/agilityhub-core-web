@@ -101,6 +101,8 @@
     "observationsWide": "Observacions — privades (instructors i administració)",
     "taskDoneOn": "feta el {date}",
     "noTasks": "Encara no hi ha cap tasca",
+    "noNotes": "Encara no hi ha cap nota",
+    "noObservations": "Encara no hi ha cap observació",
     "table": {
       "date": "Data",
       "levels": "Nivells",

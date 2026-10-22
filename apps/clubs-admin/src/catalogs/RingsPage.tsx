@@ -121,7 +121,11 @@ function RingBookingsDialog({
   );
 }
 
-/** The confirmation's state: the conflict, its resend in flight and the resend's failure. */
+/**
+ * The confirmation's state: the conflict, its resend in flight and the resend's failure. Each
+ * open/drop starts a new operation: a resend that answers after its confirmation was closed only
+ * reloads the list (the change happened), never touches the confirmation shown now.
+ */
 function useRingBookings(
   client: ApiClient,
   onSaved: () => void,
@@ -130,12 +134,22 @@ function useRingBookings(
   const [conflict, setConflict] = useState<RingBookingsConflict>();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  const operation = useRef(0);
   const drop = useCallback(() => {
+    operation.current += 1;
     setConflict(undefined);
     setError(undefined);
+    setPending(false);
+  }, []);
+  const open = useCallback((next: RingBookingsConflict) => {
+    operation.current += 1;
+    setConflict(next);
+    setError(undefined);
+    setPending(false);
   }, []);
   const confirm = async () => {
     if (conflict === undefined || pending) return;
+    const current = operation.current;
     setPending(true);
     setError(undefined);
     try {
@@ -143,15 +157,15 @@ function useRingBookings(
         body: { ...conflict.body, cancelBookings: true },
         params: { path: { id: conflict.ringId } },
       });
-      setConflict(undefined);
+      if (operation.current === current) setConflict(undefined);
       onSaved();
     } catch (cause) {
-      setError(messageForError(cause));
+      if (operation.current === current) setError(messageForError(cause));
     } finally {
-      setPending(false);
+      if (operation.current === current) setPending(false);
     }
   };
-  return { conflict, confirm, drop, error, open: setConflict, pending };
+  return { conflict, confirm, drop, error, open, pending };
 }
 
 /** The values a `RING_HAS_BOOKINGS` answer is about: a later edit makes it someone else's. */
@@ -394,6 +408,17 @@ export function RingsPage({ client }: { client: ApiClient }) {
   const [feedback, setFeedback] = useState<string>();
   const showFreeTraining = branding.modules.includes("FREE_TRAINING");
   const ringBookings = useRingBookings(client, data.reload, messageForError);
+  /**
+   * The removal shown now (the R-06-11 pattern): dismissing it or selecting another ring starts a
+   * new one, and an answer for an older one (a late `RING_IN_USE` or `RING_HAS_BOOKINGS`) is dropped.
+   */
+  const removal = useRef(0);
+  const selectRemoving = (ring: Ring | undefined) => {
+    removal.current += 1;
+    setRemoving(ring);
+    setRemoveBlocked(false);
+    setRemovePending(false);
+  };
 
   const reorder = async (sourceId: string, targetId: string) => {
     const ordered = moveBefore(data.items, sourceId, targetId);
@@ -410,21 +435,22 @@ export function RingsPage({ client }: { client: ApiClient }) {
     if (removing === undefined || removePending) {
       return;
     }
+    const current = removal.current;
     setRemovePending(true);
     try {
       await client.DELETE("/rings/{id}", { params: { path: { id: removing.id } } });
-      setRemoving(undefined);
-      setRemoveBlocked(false);
       data.reload();
+      if (removal.current === current) selectRemoving(undefined);
     } catch (error) {
+      if (removal.current !== current) return;
       if (error instanceof Error && "code" in error && error.code === "RING_IN_USE") {
         setRemoveBlocked(true);
       } else {
         setFeedback(messageForError(error));
-        setRemoving(undefined);
+        selectRemoving(undefined);
       }
     } finally {
-      setRemovePending(false);
+      if (removal.current === current) setRemovePending(false);
     }
   };
 
@@ -434,24 +460,25 @@ export function RingsPage({ client }: { client: ApiClient }) {
     }
     const ring = removing;
     const body: RingPatch = { active: false, version: ring.version };
+    const current = removal.current;
     setRemovePending(true);
     try {
       await client.PATCH("/rings/{id}", { body, params: { path: { id: ring.id } } });
-      setRemoving(undefined);
-      setRemoveBlocked(false);
       data.reload();
+      if (removal.current === current) selectRemoving(undefined);
     } catch (error) {
+      // Dismissed, or another ring selected, while it was on its way: no longer this screen's.
+      if (removal.current !== current) return;
       const bookings = ringBookingsOf(error);
       if (bookings === undefined) {
         setFeedback(messageForError(error));
       } else {
         // R-05-07: the live trainings first; the confirmation belongs to this ring.
-        setRemoving(undefined);
-        setRemoveBlocked(false);
+        selectRemoving(undefined);
         ringBookings.open({ action: "deactivate", body, bookings, ringId: ring.id });
       }
     } finally {
-      setRemovePending(false);
+      if (removal.current === current) setRemovePending(false);
     }
   };
 
@@ -514,8 +541,7 @@ export function RingsPage({ client }: { client: ApiClient }) {
           setEditing({ item: ring });
         }}
         onRemove={(ring) => {
-          setRemoving(ring);
-          setRemoveBlocked(false);
+          selectRemoving(ring);
         }}
         onReorder={(source, target) => void reorder(source, target)}
         rowName={(ring) => ring.name}
@@ -547,8 +573,7 @@ export function RingsPage({ client }: { client: ApiClient }) {
       <Modal
         closeLabel={t("admin-catalogs:common.close")}
         onClose={() => {
-          setRemoving(undefined);
-          setRemoveBlocked(false);
+          selectRemoving(undefined);
         }}
         open={removing !== undefined}
         title={t("admin-catalogs:rings.removeTitle")}
@@ -561,8 +586,7 @@ export function RingsPage({ client }: { client: ApiClient }) {
         <div className="catalog-form__actions">
           <Button
             onClick={() => {
-              setRemoving(undefined);
-              setRemoveBlocked(false);
+              selectRemoving(undefined);
             }}
             variant="ghost"
           >

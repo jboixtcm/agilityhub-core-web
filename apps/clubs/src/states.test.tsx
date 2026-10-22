@@ -44,8 +44,19 @@ async function emptied(request: Request): Promise<Response | undefined> {
   for (const [key, value] of Object.entries(page)) {
     if (Array.isArray(value)) page[key] = [];
     else if (typeof value === "number" && key.startsWith("total")) page[key] = 0;
+    else if (isTextBlock(value)) page[key] = { ...value, attachments: [], text: null };
   }
   return HttpResponse.json(page);
+}
+
+/** A text block with attachments (22's notes and observations): empty is `text: null`, no files. */
+function isTextBlock(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "text" in value &&
+    Array.isArray((value as { attachments?: unknown }).attachments)
+  );
 }
 
 async function renderAt(path: string, email: string, reads: "empty" | "fail" | "pending") {
@@ -256,4 +267,20 @@ describe("E11-W02 step 4 and E11-W05 step 5 (b): the members' app says when its 
       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error)")).not.toBeNull();
     },
   );
+
+  it("22 (E11-W05 step 5 (b), round 2 #4): the student card's three blocks — last classes, notes and observations — show the UI kit's empty state, never «—»", async () => {
+    mockScenario("instructor");
+    await renderAt("/instructor/alumnes/dog-duna", INSTRUCTOR, "empty");
+    for (const empty of [
+      "Encara no hi ha classes",
+      "Encara no hi ha cap nota",
+      "Encara no hi ha cap observació",
+    ]) {
+      const title = await screen.findByRole("heading", { name: empty }, { timeout: 5_000 });
+      expect(title.closest(".ah-empty-state:not(.ah-empty-state--error)")).not.toBeNull();
+    }
+    expect(screen.queryByText("—")).not.toBeInTheDocument();
+    // Still the private block: its hint stays.
+    expect(screen.getByText("Només instructors i administració")).toBeVisible();
+  });
 });

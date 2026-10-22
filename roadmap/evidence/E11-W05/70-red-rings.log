@@ -1,0 +1,124 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/catalogs/RingsPage.test.tsx (6 tests | 2 failed) 759ms
+   ❯ D16 RING_HAS_BOOKINGS (R-05-07, R-05-08; E11-W05 step 3) (6)
+     × R-05-08 (E11-W05 round 2 #1): the confirmation's × inside the form closes it and sends no PATCH 102ms
+     × R-05-07 (the R-06-11 pattern, E11-W05 round 2 #2): a late RING_HAS_BOOKINGS for a dismissed ring never opens its confirmation 211ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/RingsPage.test.tsx > D16 RING_HAS_BOOKINGS (R-05-07, R-05-08; E11-W05 step 3) > R-05-08 (E11-W05 round 2 #1): the confirmation's × inside the form closes it and sends no PATCH
+AssertionError: expected [ { active: true, …(5) }, …(1) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/catalogs/RingsPage.test.tsx:234:20
+    232|     // Give a stray submit the time to reach the mock.
+    233|     await new Promise((resolve) => setTimeout(resolve, 50));
+    234|     expect(bodies).toHaveLength(1);
+       |                    ^
+    235|     expect(screen.queryByRole("dialog", { name: CONFIRM_TITLE })).not.…
+    236|     expect(screen.getByRole("dialog", { name: "Edita la pista Central"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/catalogs/RingsPage.test.tsx > D16 RING_HAS_BOOKINGS (R-05-07, R-05-08; E11-W05 step 3) > R-05-07 (the R-06-11 pattern, E11-W05 round 2 #2): a late RING_HAS_BOOKINGS for a dismissed ring never opens its confirmation
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <section
+  aria-labelledby="_r_i_"
+  aria-modal="true"
+  class="ah-modal"
+  role="dialog"
+>
+  <div
+    class="ah-overlay__header"
+  >
+    <h2
+      id="_r_i_"
+    >
+      Aquesta pista té reserves d'entrenament
+    </h2>
+    <button
+      aria-label="Tanca"
+      class="ah-overlay__close"
+    >
+      <svg
+        aria-hidden="true"
+        class="ah-icon"
+      >
+        <use
+          href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="ah-overlay__body"
+  >
+    <p>
+      Si continues, aquestes reserves quedaran anul·lades pel club i se'n farà l'avís:
+    </p>
+    <ul
+      class="calendar-list"
+    >
+      <li>
+        Sergio + Thai · dl 3 8:30
+      </li>
+      <li>
+        Pau + Blat · dl 3 9:00
+      </li>
+      <li>
+        Marc + Chun-li · dl 3 16:30
+      </li>
+    </ul>
+    <div
+      class="catalog-form__actions"
+    >
+      <button
+        class="ah-button ah-button--ghost"
+        type="button"
+      >
+        <span
+          class="ah-button__content"
+        >
+          Torna enrere
+        </span>
+      </button>
+      <button
+        class="ah-button ah-button--danger"
+        type="button"
+      >
+        <span
+          class="ah-button__content"
+        >
+          Anul·la les reserves i desactiva la pista
+        </span>
+      </button>
+    </div>
+  </div>
+</section> instead[39m
+ ❯ src/catalogs/RingsPage.test.tsx:273:71
+    271|     release();
+    272|     await new Promise((resolve) => setTimeout(resolve, 100));
+    273|     expect(screen.queryByRole("dialog", { name: CONFIRM_TITLE })).not.…
+       |                                                                       ^
+    274|     const stillB = screen.getByRole("dialog", { name: "Elimina la pist…
+    275|     expect(stillB).toHaveTextContent("Petita");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  08:09:43
+   Duration  1.91s (tests 41%, transform 27%, environment 17%, import 11%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/RingsPage.test.tsx

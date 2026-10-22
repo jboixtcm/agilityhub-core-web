@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - an unlabelled payment channel reads its type;
   - E160: 03b's automatic ADMIN handoff only on an automatic entry and once; the `localStorage` refresh lease is mutually exclusive and renewed; an expired session reopens `/entrar?next=…`;
   - E155: the es action guard's narrower noun rule; «Recuperar la contraseña» in apps/id and apps/clubs; «Filtros de las ejecuciones».
+  - round 2 (E163): the × of `Modal`/`Drawer` is `type="button"` (inside D16's form it no longer submits); D16 drops a late `RING_IN_USE`/`RING_HAS_BOOKINGS` answer for a dismissed or replaced removal (operation identity); the cross-tab refresh uses Web Locks only — the `localStorage` lease is gone, and without `navigator.locks` a tab refreshes alone (AGENTS.md); 22's notes and observations show the UI kit's empty state.
 
 - E11-W03 (the five critical flows and the QA kit):
   - `pnpm e2e:core <ID> critical` runs the five critical flows of PLA_FRONTEND §8 against the real core, each on a fresh stack and seed: «alta», «reserva amb espera», «passar llista», «remesa simulada» and «muntatge de recorregut» (the tests tagged `@critical-<flow>` in their stage's spec);
