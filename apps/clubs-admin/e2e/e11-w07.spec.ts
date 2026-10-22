@@ -91,7 +91,10 @@ for (const viewport of viewports) {
     }) => {
       await signIn(page, recordNow);
       await page.goto(`${baseUrl}/abonats/member-laura`);
-      const section = page.locator("section.member-billing__next");
+      // E11-W08 E164 (c): the row of «Dades i pagament», as the mockup draws it.
+      const section = page
+        .locator(".census-record__data-row")
+        .filter({ has: page.locator("dt", { hasText: "Proper rebut" }) });
       await expect(section).toContainText("Proper rebut");
       await expect(section).toContainText("01/09/2026");
       await section.scrollIntoViewIfNeeded();
@@ -131,16 +134,17 @@ for (const viewport of viewports) {
       await shot(page, `62-D6-submission-due-${width}.png`);
     });
 
-    test(`E11-W07 step 5 (R-12-14): on 01/09 the rollback is disabled with COLLECTION_DATE_PASSED's text (${width} px)`, async ({
+    test(`E11-W07 step 5 (R-12-14): on 01/09 the amount asks to mark the remittance sent; the rollback asks for FITXER_NO_ENVIAT since E11-W08 (${width} px)`, async ({
       page,
     }) => {
       await signIn(page, collectionDateNow);
       await page.goto(`${baseUrl}/facturacio?mes=2026-09`);
-      const rollback = page.getByRole("button", { name: "Retrocedeix la remesa" });
-      await expect(rollback).toBeDisabled();
-      await expect(rollback).toHaveAccessibleDescription(
-        "Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc",
-      );
+      await expect(
+        page.getByText(
+          "Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc",
+        ),
+      ).toBeVisible();
+      await expect(page.getByRole("button", { name: "Retrocedeix la remesa" })).toBeEnabled();
       await shot(page, `63-D6-collection-date-passed-${width}.png`);
     });
   });

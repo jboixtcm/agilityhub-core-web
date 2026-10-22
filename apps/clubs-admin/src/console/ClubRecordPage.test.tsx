@@ -625,6 +625,37 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(text).not.toHaveAccessibleDescription("Aquest camp és obligatori.");
   });
 
+  it("E11-W08 E164 (f) (E10-W02 round 2): a {field: locales} refusal read from another language's tab selects the default language's tab, where the error is", async () => {
+    server.use(
+      http.patch(`${API_BASE}/platform/clubs/:id`, () =>
+        HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: { field: "locales" },
+            message: "Les dades de la petició no són vàlides.",
+            traceId: "e11-w08-legal",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await openTab(MINIM, "legal");
+    fireEvent.change(await screen.findByLabelText("Text de consentiment d'imatge (Català)"), {
+      target: { value: "Autoritzo les fotos del meu gos." },
+    });
+    fireEvent.change(screen.getByLabelText("URL de la política de privacitat"), {
+      target: { value: "https://minim.example.test/privacitat" },
+    });
+    fireEvent.click(screen.getByRole("tab", { name: "ES" }));
+    expect(screen.getByLabelText("Text de consentiment d'imatge (Castellà)")).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    const text = await screen.findByLabelText("Text de consentiment d'imatge (Català)");
+    await waitFor(() => {
+      expect(text).toHaveAccessibleDescription("Aquest camp és obligatori.");
+    });
+    expect(screen.getByRole("tab", { name: "CA" })).toHaveAttribute("aria-selected", "true");
+  });
+
   it("E10-W03 #8 (E10-W01 review #3): an unknown tab segment shows Identitat and the address says /identitat", async () => {
     const replaced = vi.spyOn(window.history, "replaceState");
     await openTab(MINIM, "parametres-antics");

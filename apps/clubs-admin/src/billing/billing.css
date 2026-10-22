@@ -328,6 +328,20 @@
   margin: 0;
 }
 
+/* E156 (R-12-14): the rollback past the collection date, for a file never sent to the bank. */
+.billing-modal__warning {
+  display: grid;
+  gap: var(--ah-space-1);
+  margin: 0 0 var(--ah-space-3);
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-text);
+  border-left: 3px solid var(--ah-color-warning);
+}
+
+.billing-modal__warning p {
+  margin: 0;
+}
+
 .billing-modal__actions {
   display: flex;
   flex-wrap: wrap;

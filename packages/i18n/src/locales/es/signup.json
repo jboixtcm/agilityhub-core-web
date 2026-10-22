@@ -86,7 +86,8 @@
     "packPrice": "{price} · {months} meses",
     "maintenance": "{withEntry, select, yes {Entrada a cuenta: {entry} · cuota mínima durante el tratamiento: {fee}/mes} other {Cuota mínima durante el tratamiento: {fee}/mes}}",
     "selectPlan": "Seleccionar {plan}",
-    "activate": "ACTIVAR"
+    "activate": "ACTIVAR",
+    "priceOverlap": "El club tiene que revisar los precios de esta modalidad."
   },
   "family": {
     "title": "Más de un perro en la familia",

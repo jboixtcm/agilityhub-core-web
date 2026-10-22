@@ -631,6 +631,105 @@ describe("E11-W06 W1 (S11 R-11-11): N-01's D2 link survives the back office's si
   });
 });
 
+describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host", () => {
+  const REFUSAL = "Aquest accés és només per a l'equip AgilityHub.";
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  /** The token requests the page sent, as `grant_type → client_id`. */
+  function recordTokenRequests() {
+    const grants: { clientId: null | string; grant: null | string }[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (new URL(request.url).pathname !== "/oauth2/token") return;
+      void request
+        .clone()
+        .text()
+        .then((body) => {
+          const form = new URLSearchParams(body);
+          grants.push({ clientId: form.get("client_id"), grant: form.get("grant_type") });
+        });
+    });
+    return grants;
+  }
+
+  function signInWithPassword(email: string) {
+    fireEvent.change(screen.getByLabelText("Correu electrònic"), { target: { value: email } });
+    fireEvent.click(screen.getByRole("button", { name: "Tinc contrasenya" }));
+    fireEvent.change(screen.getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+  }
+
+  it("an AGILITYHUB_ADMIN signs in with client_id clubs-admin and lands on /consola/clubs", async () => {
+    mockScenario("platform");
+    const grants = recordTokenRequests();
+    window.history.pushState(null, "", "/entrar");
+    const assign = stubFullLoads();
+    await renderApplication(authClient(), currentMockScenario().branding);
+    signInWithPassword("pol.ferrer@example.test");
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/consola/clubs");
+    });
+    expect(grants).toContainEqual({ clientId: "clubs-admin", grant: "password" });
+    server.events.removeAllListeners();
+  });
+
+  it("403 PLATFORM_ONLY: an account without the platform role is told the console is the AgilityHub team's", async () => {
+    mockScenario("platformRefused");
+    window.history.pushState(null, "", "/entrar");
+    const assign = stubFullLoads();
+    await renderApplication(authClient(), currentMockScenario().branding);
+    signInWithPassword("aina.serra@example.test");
+    expect(await screen.findByRole("alert")).toHaveTextContent(REFUSAL);
+    expect(assign).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "ENTRA" })).toBeEnabled();
+  });
+
+  it("the magic link /activacio?t= on the product host opens the console, and the token leaves the address", async () => {
+    mockScenario("platform");
+    const grants = recordTokenRequests();
+    window.history.pushState(null, "", "/activacio?t=mock-magic-token");
+    const assign = stubFullLoads();
+    await renderApplication(authClient(), currentMockScenario().branding);
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/consola/clubs");
+    });
+    expect(grants).toContainEqual({
+      clientId: "clubs-admin",
+      grant: "urn:agilityhub:grant:magic-link",
+    });
+    expect(window.location.search).toBe("");
+    server.events.removeAllListeners();
+  });
+
+  it("the magic link of an account without the platform role says so (403 PLATFORM_ONLY)", async () => {
+    mockScenario("platformRefused");
+    window.history.pushState(null, "", "/activacio?t=mock-magic-token");
+    const assign = stubFullLoads();
+    await renderApplication(authClient(), currentMockScenario().branding);
+    expect(await screen.findByText(REFUSAL)).toBeVisible();
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("an invalid or used magic link says so and leads back to /entrar", async () => {
+    mockScenario("platform");
+    window.history.pushState(null, "", "/activacio?t=invalid");
+    await renderApplication(authClient(), currentMockScenario().branding);
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Aquest enllaç ja no és vàlid" }),
+    ).toBeVisible();
+    expect(screen.getByRole("link", { name: "Envia-me'n un de nou" })).toHaveAttribute(
+      "href",
+      "/entrar",
+    );
+  });
+});
+
 describe("E4-W18 step 2 (review #3): the back office's handoff is the caller's own session", () => {
   const RETRY_MESSAGE = "No s'ha pogut completar l'accés. Torna-ho a provar.";
   const REFUSED_MESSAGE = "Aquest accés al backoffice no és vàlid o ha caducat.";

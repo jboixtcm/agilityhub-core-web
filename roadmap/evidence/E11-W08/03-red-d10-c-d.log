@@ -1,0 +1,237 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (c): «Proper rebut» is read once, in the data card's row (mockup D10), with its edit action; the billing block has no copy of it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (c): «Proper rebut» is read once, in the data card's row (mockup D10), with its edit action; the billing block has no copy of it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (c): «Proper rebut» is read once, in the data card's row (mockup D10), with its edit action; the billing block has no copy of it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/census/CensusRecordPage.test.tsx (42 tests | 4 failed | 38 skipped) 387ms
+   ❯ E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record (4)
+     × E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address 194ms
+     × E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct 81ms
+     × E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again 66ms
+     × E164 (c): «Proper rebut» is read once, in the data card's row (mockup D10), with its edit action; the billing block has no copy of it 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address
+AssertionError: expected '?calaix=proper-rebut' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ ?calaix=proper-rebut
+
+ ❯ src/census/CensusRecordPage.test.tsx:991:36
+    989|       expect(screen.queryByRole("dialog", { name: "Proper rebut" })).t…
+    990|     });
+    991|     expect(window.location.search).toBe("");
+       |                                    ^
+    992|
+    993|     // The overview is read again: its «Proper rebut» row (date · amou…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct
+AssertionError: expected <aside …(4)>…(2)</aside> to be null
+
+- Expected:
+null
+
++ Received:
+<aside
+  aria-labelledby="_r_1o_"
+  aria-modal="true"
+  class="ah-drawer"
+  role="dialog"
+>
+  <div
+    class="ah-overlay__header"
+  >
+    <h2
+      id="_r_1o_"
+    >
+      Proper rebut
+    </h2>
+    <button
+      aria-label="Tanca"
+      class="ah-overlay__close"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        class="ah-icon"
+      >
+        <use
+          href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="ah-overlay__body"
+  >
+    <form
+      class="census-record__form"
+    >
+      <fieldset
+        class="member-billing__fields"
+      >
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="next-invoice-date"
+          >
+            Data del proper rebut
+          </label>
+          <input
+            class="ah-input"
+            id="next-invoice-date"
+            max="2027-10-31"
+            min="2025-10-01"
+            required=""
+            type="date"
+            value=""
+          />
+        </div>
+        <div
+          class="ah-form-field"
+        >
+          <label
+            class="ah-form-field__label"
+            for="next-invoice-reason"
+          >
+            Motiu
+          </label>
+          <input
+            class="ah-input"
+            id="next-invoice-reason"
+            maxlength="200"
+            required=""
+            value=""
+          />
+        </div>
+      </fieldset>
+      <div
+        class="census-record__dialog-actions"
+      >
+        <button
+          class="ah-button ah-button--ghost"
+          type="button"
+        >
+          <span
+            class="ah-button__content"
+          >
+            Cancel·la
+          </span>
+        </button>
+        <button
+          class="ah-button ah-button--primary"
+          type="submit"
+        >
+          <span
+            class="ah-button__content"
+          >
+            Desa
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</aside>
+
+ ❯ src/census/CensusRecordPage.test.tsx:1019:68
+    1017|     // The plans are read: the member's own is a pack.
+    1018|     expect(await screen.findByText("Pack 10", { selector: "strong" }))…
+    1019|     expect(screen.queryByRole("dialog", { name: "Proper rebut" })).toB…
+       |                                                                    ^
+    1020|     expect(screen.queryByText("Proper rebut")).toBeNull();
+    1021|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again
+AssertionError: expected '?calaix=proper-rebut&tab=dades' to be '?tab=dades' // Object.is equality
+
+Expected: "?tab=dades"
+Received: "?calaix=proper-rebut&tab=dades"
+
+ ❯ src/census/CensusRecordPage.test.tsx:1032:36
+    1030|     });
+    1031|     expect(window.location.pathname).toBe("/abonats/member-laura");
+    1032|     expect(window.location.search).toBe("?tab=dades");
+       |                                    ^
+    1033|   });
+    1034|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record > E164 (c): «Proper rebut» is read once, in the data card's row (mockup D10), with its edit action; the billing block has no copy of it
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  /^Proper rebut01\/09\/2026 · 90,00\s€\sEdita$/u[39m
+Received:
+[31m  Proper rebut01/09/2026 · 90,00 €[39m
+ ❯ src/census/CensusRecordPage.test.tsx:1039:17
+    1037|     const row = (await screen.findByText("Proper rebut", { selector: "…
+    1038|     if (row === null) throw new TypeError("No «Proper rebut» row");
+    1039|     expect(row).toHaveTextContent(/^Proper rebut01\/09\/2026 · 90,00\s…
+       |                 ^
+    1040|     expect(
+    1041|       within(row as HTMLElement).getByRole("button", { name: "Edita la…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 38 skipped (42)
+   Start at  09:29:57
+   Duration  1.51s (transform 40%, tests 27%, environment 16%, import 14%, setup 3%)
+

@@ -789,8 +789,116 @@ function landingPath(authClient: AuthClient): string {
     : clubLandingPath(clubRoles);
 }
 
+/**
+ * S01 R-01-02 (ruling E157): on the console's product host the api signs `clubs-admin` in only for
+ * an AGILITYHUB_ADMIN; anyone else is `403 PLATFORM_ONLY`, told as the console's own refusal (S17
+ * §2 «Entrada»). Undefined for any other failure.
+ */
+function usePlatformOnlyMessage() {
+  const { i18n, t } = useTranslation("auth");
+  return useCallback(
+    async (cause: unknown): Promise<string | undefined> => {
+      if (!isApiError(cause, "PLATFORM_ONLY")) return undefined;
+      await i18n.loadNamespaces("console");
+      return t("console:access.description");
+    },
+    [i18n, t],
+  );
+}
+
+/**
+ * The back office's magic link (S01 R-01-04: `https://{host}/activacio?t=…`; on the console's
+ * product host only an AGILITYHUB_ADMIN gets one, S17 §2 «Entrada»): the one-time token leaves the
+ * address, is redeemed with `client_id = clubs-admin`, and the account lands where it belongs.
+ */
+function ActivationPage({ authClient }: { authClient: AuthClient }) {
+  const { t } = useTranslation("auth");
+  const platformOnlyMessage = usePlatformOnlyMessage();
+  const [token] = useState(() => {
+    const parameters = new URLSearchParams(window.location.search);
+    return parameters.get("t") ?? parameters.get("token");
+  });
+  const started = useRef(false);
+  const [failure, setFailure] = useState<
+    { kind: "invalid" } | { kind: "refused"; message: string } | { kind: "unanswered" }
+  >();
+  const [pending, setPending] = useState(token !== null && token !== "");
+
+  const exchange = useCallback(
+    (code: string) => {
+      setPending(true);
+      setFailure(undefined);
+      authClient.exchangeMagicLink(code).then(
+        () => {
+          window.location.assign(takeReturnPath() ?? landingPath(authClient));
+        },
+        async (cause: unknown) => {
+          const refused = await platformOnlyMessage(cause);
+          // A link the api never answered (offline, 5xx) may still be good: a retry, never «no és
+          // vàlid».
+          const unanswered = isApiError(cause) && (cause.status === 0 || cause.status >= 500);
+          setFailure(
+            refused !== undefined
+              ? { kind: "refused", message: refused }
+              : unanswered
+                ? { kind: "unanswered" }
+                : { kind: "invalid" },
+          );
+          setPending(false);
+        },
+      );
+    },
+    [authClient, platformOnlyMessage],
+  );
+
+  useEffect(() => {
+    if (started.current || token === null || token === "") return;
+    started.current = true;
+    window.history.replaceState(null, "", "/activacio");
+    exchange(token);
+  }, [exchange, token]);
+
+  if (token === null || token === "" || failure?.kind === "invalid") {
+    return (
+      <main className="access-page">
+        <Card className="access-card">
+          <h1>{t("auth:activation.invalidTitle")}</h1>
+          <p>{t("auth:activation.invalidDescription")}</p>
+          <a className="ah-button ah-button--primary" href="/entrar">
+            {t("auth:activation.resend")}
+          </a>
+        </Card>
+      </main>
+    );
+  }
+  return (
+    <main className="access-page">
+      <Card className="access-card">
+        <h1>{t("auth:admin.title")}</h1>
+        {pending ? <p role="status">{t("auth:activation.loading")}</p> : null}
+        {failure?.kind === "refused" ? <p role="alert">{failure.message}</p> : null}
+        {failure?.kind === "unanswered" ? (
+          <>
+            <p role="alert">{t("auth:access.genericError")}</p>
+            <Button
+              disabled={pending}
+              onClick={() => {
+                exchange(token);
+              }}
+              type="button"
+            >
+              {t("auth:activation.retry")}
+            </Button>
+          </>
+        ) : null}
+      </Card>
+    </main>
+  );
+}
+
 function AccessPage({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation("auth");
+  const platformOnlyMessage = usePlatformOnlyMessage();
   // R-01-13: the one-time code of 03b («Obre el backoffice»), read once.
   const [handoff] = useState(() => new URLSearchParams(window.location.search).get("handoff"));
   const handoffStarted = useRef(false);
@@ -816,15 +924,16 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
     window.location.assign(takeReturnPath() ?? landingPath(authClient));
   }, [authClient]);
   const failHandoff = useCallback(
-    (cause: unknown) => {
+    async (cause: unknown) => {
       const transient =
         authClient.hasPendingHandoff() ||
         (isApiError(cause) && (cause.status === 0 || cause.status >= 500));
+      const refused = transient ? undefined : await platformOnlyMessage(cause);
       setHandoffUnanswered(transient);
-      setError(transient ? undefined : t("auth:admin.handoffError"));
+      setError(transient ? undefined : (refused ?? t("auth:admin.handoffError")));
       setPending(null);
     },
-    [authClient, t],
+    [authClient, platformOnlyMessage, t],
   );
 
   useEffect(() => {
@@ -892,8 +1001,8 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
     try {
       await authClient.login(email, password);
       window.location.assign(takeReturnPath() ?? landingPath(authClient));
-    } catch {
-      setError(t("auth:access.genericError"));
+    } catch (cause) {
+      setError((await platformOnlyMessage(cause)) ?? t("auth:access.genericError"));
       setPending(null);
     }
   };
@@ -1012,7 +1121,9 @@ export function App({ authClient }: { authClient: AuthClient }) {
     session.roles.length === 0 && session.platformRoles.includes("AGILITYHUB_ADMIN");
   // A platform-only account on an unknown path is shown D19's list and the address is replaced
   // by it, so the address, the lit «Consola» entry and a reload agree (E10-W01 round 2 #6).
-  const ownPath = ["/_gallery", "/acces", "/entrar", SUPPORT_PATH].includes(requested.pathname);
+  const ownPath = ["/_gallery", "/acces", "/activacio", "/entrar", SUPPORT_PATH].includes(
+    requested.pathname,
+  );
   const strayPlatformPath =
     platformOnly && currentRoute(requested.pathname) === undefined && !ownPath;
   // E11-W02 round 2 (INC-41): a club account on an unknown path, or on a club screen its roles
@@ -1046,6 +1157,9 @@ export function App({ authClient }: { authClient: AuthClient }) {
   }
   if (pathname === "/entrar") {
     return <AccessPage authClient={authClient} />;
+  }
+  if (pathname === "/activacio") {
+    return <ActivationPage authClient={authClient} />;
   }
   // S17 R-17-10: the tab «Entra com a administrador del club» opened, before any session.
   if (pathname === SUPPORT_PATH) {

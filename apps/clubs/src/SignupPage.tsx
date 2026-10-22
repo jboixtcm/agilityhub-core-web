@@ -169,6 +169,8 @@ const CODE_ROUTES: Readonly<Record<string, { field?: string; step: SignupStep }>
   MEMBER_ALREADY_EXISTS: { step: "person" },
   PAYMENT_METHOD_NOT_AVAILABLE: { field: "paymentMethod", step: "payment" },
   PLAN_NOT_AVAILABLE: { field: "plan", step: "dog" },
+  // E11-W08 (S04 §6, ruling E138): the plan's quote would read one of two current prices.
+  PRICE_OVERLAP: { field: "plan", step: "dog" },
   SIGNUP_ALREADY_PENDING: { step: "person" },
 };
 
@@ -579,6 +581,8 @@ function codeMessage(code: string, t: Translate, fallback: string): string {
       return t("signup:common.invalidEmail");
     case "INVALID_PHONE":
       return t("signup:common.invalidPhone");
+    case "PRICE_OVERLAP":
+      return t("signup:dog.priceOverlap");
     case "SIGNUP_ALREADY_PENDING":
       return t("signup:person.alreadyPending");
     case "NOT_BLANK":
@@ -1333,7 +1337,14 @@ function DogStep({
   // marks `current`. A member without one (S05 B34) chooses among the offered plans.
   const memberPlan = addDog ? config.plans.find((plan) => plan.current === true) : undefined;
   const choosesPlan = !addDog || memberPlan === undefined;
-  const planChosen = config.plans.some((plan) => plan.id === draft.planId);
+  // S04 §6 (ruling E138): with BILLING the add-dog quotes every plan it can take; a plan it does
+  // not quote has two current prices of one concept, and its submission would be `409
+  // PRICE_OVERLAP`. It is listed as unavailable until the club reviews its prices.
+  const unquoted = (plan: SignupPlan): boolean =>
+    addDog &&
+    config.upfront !== undefined &&
+    !config.upfront.planQuotes.some((quote) => quote.planId === plan.id);
+  const planChosen = config.plans.some((plan) => plan.id === draft.planId && !unquoted(plan));
   // S05 R-05-19: the price slot of 17 — «{price}/mes», «{price}/classe» or the pack's price, else
   // the plan's `priceLabel`.
   const planPrice = (plan: SignupPlan): string => {
@@ -1626,19 +1637,26 @@ function DogStep({
             {...invalidProps("signup-plans", errors.plan)}
           >
             {config.plans.map((plan) => {
+              const unavailable = unquoted(plan);
+              const selected = draft.planId === plan.id && !unavailable;
               const planClassName = [
                 "signup-plan",
                 plan.type === "PACK" ? "signup-plan--pack" : "",
                 plan.maintenanceFee === undefined ? "" : "signup-plan--therapy",
-                draft.planId === plan.id ? "signup-plan--selected" : "",
+                selected ? "signup-plan--selected" : "",
+                unavailable ? "signup-plan--unavailable" : "",
               ]
                 .filter(Boolean)
                 .join(" ");
               return (
                 <Card className={planClassName} key={plan.id}>
                   <button
+                    aria-describedby={
+                      unavailable ? `signup-plan-${plan.id}-unavailable` : undefined
+                    }
                     aria-label={t("signup:dog.selectPlan", { plan: plan.name })}
-                    aria-pressed={draft.planId === plan.id}
+                    aria-pressed={selected}
+                    disabled={unavailable}
                     onClick={() => {
                       onChange((current) => ({ ...current, planId: plan.id }));
                     }}
@@ -1686,7 +1704,15 @@ function DogStep({
                     {plan.offerLabel === undefined || !familyOffers ? null : (
                       <small>{plan.offerLabel}</small>
                     )}
-                    {draft.planId === plan.id ? (
+                    {unavailable ? (
+                      <small
+                        className="signup-plan__unavailable"
+                        id={`signup-plan-${plan.id}-unavailable`}
+                      >
+                        {t("signup:dog.priceOverlap")}
+                      </small>
+                    ) : null}
+                    {selected ? (
                       <span className="signup-plan__activate">{t("signup:dog.activate")}</span>
                     ) : null}
                   </button>

@@ -41,6 +41,7 @@ import {
   ChargeCardsModal,
   GenerateModal,
   MarkPaidModal,
+  type RollbackKeyword,
   RollbackModal,
 } from "./BillingModals";
 import { InvoiceDrawer } from "./InvoiceDrawer";
@@ -213,6 +214,7 @@ export function BillingPage({
   );
   const [reload, setReload] = useState(0);
   const [modal, setModal] = useState<ModalState>();
+  const [rollbackKeyword, setRollbackKeyword] = useState<RollbackKeyword>("RETROCEDIR");
   const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set());
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const nextFeedback = useRef(1);
@@ -268,6 +270,15 @@ export function BillingPage({
   const simulation = month?.simulation ?? undefined;
   const run = month?.run ?? undefined;
   const liveRun = run !== undefined && run.status !== "ROLLED_BACK" ? run : undefined;
+  // R-12-14 (E147, E156): a GENERATED remittance on or past its collection date may be at the bank.
+  // Alone, that blocker is lifted by the word of a file never sent; with any other, the action
+  // stays disabled and names every blocker (E164 (b)).
+  const rollbackBlockers = liveRun?.rollbackBlockers ?? [];
+  const rollbackDatePassed = rollbackBlockers.includes("COLLECTION_DATE_PASSED");
+  const rollbackDateOnly = rollbackDatePassed && rollbackBlockers.length === 1;
+  const rollbackBlockedText = `${t("admin-billing:errors.notRollbackable")} ${rollbackBlockers
+    .map((blocker) => t(`enums:rollbackBlocker.${blocker}`))
+    .join("; ")}`;
   // The club's providers (`GET /club`); if that read failed, the ones the month itself bills
   // (`simulation.kpis.byProvider`, the api's own figures) — never a guess.
   const clubProviders =
@@ -909,10 +920,13 @@ export function BillingPage({
                 {t("admin-billing:actions.chargeCards")}
               </Button>
             ) : null}
-            {run?.rollbackable === true ? (
+            {run?.rollbackable === true || rollbackDateOnly ? (
               <Button
                 className="billing-action"
                 onClick={() => {
+                  // E156: past the collection date (its only blocker) the dialog asks for the word
+                  // of a file never sent to the bank; the word is fixed while the dialog is open.
+                  setRollbackKeyword(rollbackDateOnly ? "FITXER_NO_ENVIAT" : "RETROCEDIR");
                   setModal("rollback");
                 }}
                 variant="ghost"
@@ -920,10 +934,10 @@ export function BillingPage({
                 <Icon aria-hidden="true" name="undo" />
                 {t("admin-billing:actions.rollback")}
               </Button>
-            ) : liveRun?.rollbackBlockers.includes("COLLECTION_DATE_PASSED") === true ? (
-              // E147 (R-12-14): the bank may have the file already — the action stays, disabled, and
-              // says why (the second confirmation word that lifts it comes with E11-W08).
-              <span title={t("admin-billing:actions.rollbackDatePassed")}>
+            ) : rollbackDatePassed ? (
+              // E147 (R-12-14): the collection date with another blocker — the action stays,
+              // disabled, and names every blocker (E164 (b)).
+              <span title={rollbackBlockedText}>
                 <Button
                   aria-describedby="billing-rollback-why"
                   className="billing-action"
@@ -934,7 +948,7 @@ export function BillingPage({
                   {t("admin-billing:actions.rollback")}
                 </Button>
                 <span className="ah-sr-only" id="billing-rollback-why">
-                  {t("admin-billing:actions.rollbackDatePassed")}
+                  {rollbackBlockedText}
                 </span>
               </span>
             ) : null}
@@ -1062,8 +1076,14 @@ export function BillingPage({
               label={t("admin-billing:kpi.amount")}
               notice={
                 // R-12-15 (E147): a generated remittance still has to go to the bank; from the day
-                // before its collection date (`submissionDue`, the api's club-local day) it warns.
-                month.remittance?.status === "GENERATED" ? (
+                // before its collection date (`submissionDue`, the api's club-local day) it warns,
+                // and once that date has come it asks to mark it sent (E164 (a)).
+                month.remittance?.status === "GENERATED" && rollbackDatePassed ? (
+                  <span className="billing-kpi__due" data-tone="warning">
+                    <Icon aria-hidden="true" name="warn" />
+                    {t("admin-billing:kpi.collectionDatePassed")}
+                  </span>
+                ) : month.remittance?.status === "GENERATED" ? (
                   <span
                     className="billing-kpi__due"
                     {...(month.remittance.submissionDue ? { "data-tone": "warning" } : {})}
@@ -1257,6 +1277,7 @@ export function BillingPage({
           client={client}
           invoiceCount={detail?.invoiceIds.length}
           keys={keys}
+          keyword={rollbackKeyword}
           monthTitle={monthTitle}
           onBlocked={refreshAll}
           onClose={() => {
@@ -1396,11 +1417,21 @@ function Kpi({
   );
 }
 
-/** D10 for an incident: a member without a next receipt date opens that date's drawer (E146). */
+/**
+ * D10 for an incident: a member without a next receipt date opens that date's drawer (E146); one
+ * without a usable SEPA mandate, or a family holder without a payment method, opens the payment
+ * method's (E156).
+ */
 function recordPath(memberId: string, code?: BillingIncident["code"]): string {
-  return code === "NO_NEXT_INVOICE_DATE"
-    ? `/abonats/${memberId}?calaix=proper-rebut`
-    : `/abonats/${memberId}`;
+  switch (code) {
+    case "NO_NEXT_INVOICE_DATE":
+      return `/abonats/${memberId}?calaix=proper-rebut`;
+    case "MANDATE_PENDING":
+    case "NO_PAYMENT_METHOD":
+      return `/abonats/${memberId}?calaix=pagament`;
+    default:
+      return `/abonats/${memberId}`;
+  }
 }
 
 function MemberRows({

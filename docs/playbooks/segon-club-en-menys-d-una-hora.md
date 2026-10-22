@@ -37,13 +37,13 @@ l'organitzador, verificació d'E10-W02 del 21-10).
 
 | # | Pas | Què es fa (consola D19, `/consola/clubs`) | Resultat esperat | Estimació | Passada manual |
 |---|---|---|---|---|---|
-| 1 | Entra a la consola | AgilityHub ID → «Consola de clubs» → [OBRE LA CONSOLA]. Avui, des del backoffice d'un club, amb un compte que té el rol de plataforma (vegeu «Limitacions d'avui», 1). | La llista «Consola de clubs». | 1 min | |
+| 1 | Entra a la consola | AgilityHub ID → «Consola de clubs» → [OBRE LA CONSOLA], o directament el host de producte de la consola, a `/entrar`: contrasenya o enllaç del correu (només per a un compte amb el rol de plataforma; la resta rep «Aquest accés és només per a l'equip AgilityHub.»). | La llista «Consola de clubs». | 1 min | |
 | 2 | Assistent «Nou club» | [Nou club] i els vuit passos: Identitat, Localització, Mòduls, Pagaments (es pot deixar per més tard), Tema («Colors del club»), Catàlegs base («Cap: catàlegs buits»: es clonen al pas 7), Primer administrador i Revisió. Després, [CREA EL CLUB]. | La fitxa del club «En posada en marxa», amb la checklist d'onboarding. El primer administrador rep la invitació (N-53). | 10 min | |
 | 3 | Dominis | Pestanya Dominis. [Afegeix domini] per a l'app dels abonats i per al backoffice. Al proveïdor de DNS es crea el CNAME que indica la consola (o el TXT). Després, [Verifica] a cada domini. | Els dos dominis «verificat» i «principal». L'app del club s'obre al seu host. | 10 min, més la propagació del DNS | |
 | 4 | Tema | Pestanya Tema: [Tria una imatge] per al logo (i la marca, si n'hi ha), amb la previsualització en viu i el contrast AA. Després, [DESA]. | «Canvis desats.» i, a la checklist, «Marca: logo i colors propis» fet. | 3 min | |
 | 5 | Pagaments | Pestanya Pagaments › Domiciliació SEPA: el creditor, l'identificador, el sufix i l'IBAN. Després, [DESA]. | «configurat» i «Proveïdor de pagament configurat» fet. L'IBAN no es torna a mostrar. | 4 min | |
 | 6 | Legal | Pestanya Legal: l'URL de privacitat i el text de consentiment d'imatge en l'idioma predeterminat (i en els altres, si es té). Després, [DESA]. | «Canvis desats.» i «Política de privacitat» fet. | 3 min | |
-| 7 | Catàlegs base | Pestanya Catàlegs base: el club plantilla i les parts. Després, [Clona d'un club plantilla]. És l'única clonació del guió: només es copia sobre parts buides, i una segona clonació de les mateixes parts respon «…: el club ja en té. Només es copien les parts buides.» (R-17-08). | «S'ha copiat: …», amb els avisos d'idioma si n'hi ha. Avui el club plantilla és buit (vegeu «Limitacions d'avui», 2). | 2 min | |
+| 7 | Catàlegs base | Pestanya Catàlegs base: el club plantilla i les parts. Després, [Clona d'un club plantilla]. És l'única clonació del guió: només es copia sobre parts buides, i una segona clonació de les mateixes parts respon «…: el club ja en té. Només es copien les parts buides.» (R-17-08). | «S'ha copiat: …», amb els avisos d'idioma si n'hi ha. Avui el club plantilla és buit (vegeu «Limitacions d'avui», 1). | 2 min | |
 | 8 | Primer administrador | L'administrador obre l'enllaç de la invitació. A AgilityHub ID tria una contrasenya («Canvia la contrasenya»). Després entra al backoffice del club, al seu domini. La pestanya Equip el mostra. | El tauler (D1) del club amb el seu tema, i «Primer administrador amb accés» fet. | 5 min | |
 | 9 | Revisió de la fitxa | Pestanyes Identitat, Localització, Mòduls, Paràmetres, Processos, Auditoria i Ús. | Cap error de càrrega. | 5 min | |
 | 10 | Checklist i activació | Fitxa: la checklist. Pestanya Estat → [Activa el club]. L'activació és sempre manual (R-17-06), i es pot fer amb punts pendents. | «S'ha canviat l'estat del club.» i l'estat «Actiu». | 2 min | |
@@ -74,7 +74,7 @@ el seu registre, `roadmap/evidence/E10-W02/55-e2e-core-all-stages.log` (l'etapa 
 | | **Total** | **10** |
 
 La checklist abans d'activar: `dns`, `sepa`, `branding`, `legal` i `firstAdmin` fets;
-`templates` i `faq` pendents (vegeu «Limitacions d'avui», 2). El pas 7 va copiar 0 de cada part,
+`templates` i `faq` pendents (vegeu «Limitacions d'avui», 1). El pas 7 va copiar 0 de cada part,
 de manera que la prova no va fer la segona clonació (la que respon `409 CATALOG_NOT_EMPTY`).
 
 Les captures de la passada són a `roadmap/evidence/E10-W02/full2/`:
@@ -92,24 +92,12 @@ Les captures de la passada són a `roadmap/evidence/E10-W02/full2/`:
 
 ## Limitacions d'avui (22-10-2026)
 
-1. **L'entrada a la consola pel host de producte.** El core respon `404 UNKNOWN_HOST` a
-   `POST /oauth2/token` a `clubsadmin.*`, per a tots els clients. Només AgilityHub ID (`id-web`, al
-   host de l'ID) inicia la sessió d'un compte de plataforma sense club.
-
-   La consola arrenca al host de producte amb el branding del producte, però encara no hi pot
-   entrar ningú. Mentrestant, el compte de plataforma dona el rol `AGILITYHUB_ADMIN` a un
-   administrador de club (`PUT /platform/accounts/{id}/platform-roles`), que fa servir la consola
-   des del backoffice del seu club.
-
-   És un defecte de l'api (decisió E157): l'api E11-T19 fa que el host de producte emeti sessions
-   `clubs-admin` als comptes de plataforma (i `403 PLATFORM_ONLY` a la resta), i el web ho adopta
-   a E11-W08.
-2. **El club plantilla és buit.** `club-template-default` no porta nivells, pistes, modalitats,
+1. **El club plantilla és buit.** `club-template-default` no porta nivells, pistes, modalitats,
    FAQ ni plantilles de comunicat (el conjunt inicial és l'api E11-T18). La clonació del pas 7
    copia 0 i «Plantilles de comunicat» i «Preguntes freqüents» queden pendents.
 
    El club es pot activar igualment (5 de 7). El seu administrador crea la FAQ i les plantilles al
    seu backoffice.
-3. **El DNS.** La propagació d'un registre nou no depèn de la consola i queda fora de l'hora.
+2. **El DNS.** La propagació d'un registre nou no depèn de la consola i queda fora de l'hora.
    Normalment són minuts. Si [Verifica] diu que no troba cap dels dos registres, cal tornar-ho a
    provar més tard.

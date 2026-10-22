@@ -86,7 +86,8 @@
     "packPrice": "{price} · {months} mesos",
     "maintenance": "{withEntry, select, yes {Entrada a compte: {entry} · quota mínima durant el tractament: {fee}/mes} other {Quota mínima durant el tractament: {fee}/mes}}",
     "selectPlan": "Selecciona {plan}",
-    "activate": "ACTIVAR"
+    "activate": "ACTIVAR",
+    "priceOverlap": "El club ha de revisar els preus d'aquesta modalitat."
   },
   "family": {
     "title": "Més d'un gos a la família",

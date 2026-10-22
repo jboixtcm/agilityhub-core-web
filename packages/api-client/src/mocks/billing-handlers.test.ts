@@ -9,6 +9,7 @@ import type { components } from "../generated/schema";
 
 import {
   BILLING_MOCK_NOW,
+  billingState,
   ERASED_MEMBER_ID,
   mockScenario,
   resetBillingMockState,
@@ -549,6 +550,27 @@ describe("S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/roll
       status: 400,
     });
     expect((await month()).run?.status).toBe("GENERATED");
+  });
+
+  it("E11-W08 (R-12-14, E156): on the collection date RETROCEDIR is 409 {COLLECTION_DATE_PASSED}; FITXER_NO_ENVIAT lifts that blocker only", async () => {
+    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    const runId = await liveRunId();
+    expect(await failure(rollback(runId))).toEqual({
+      code: "RUN_NOT_ROLLBACKABLE",
+      details: { reasons: ["COLLECTION_DATE_PASSED"] },
+      status: 409,
+    });
+    // Another blocker as well: the second word lifts the date, never the rest.
+    billingState.world.nextNumber += 1;
+    expect(await failure(rollback(runId, "FITXER_NO_ENVIAT"))).toEqual({
+      code: "RUN_NOT_ROLLBACKABLE",
+      details: { reasons: ["MANUAL_INVOICE_AFTER"] },
+      status: 409,
+    });
+    billingState.world.nextNumber -= 1;
+    const { data, response } = await rollback(runId, "FITXER_NO_ENVIAT");
+    expect(response.status).toBe(200);
+    expect(data).toEqual({ cancelledInvoices: 168, restoredMembers: 168 });
   });
 
   it("T-12-13 RETROCEDIR cancels the 168 receipts {ROLLBACK}: the month reads zero chips, they list only under CANCELLED with rolledBack, a second rollback is 409 {reasons: []}", async () => {

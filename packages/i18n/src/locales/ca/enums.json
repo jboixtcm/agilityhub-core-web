@@ -298,7 +298,9 @@
     "CARD_INVALID": "targeta no vàlida",
     "CURRENCY_MISMATCH": "moneda diferent de la del club",
     "PROVIDER_DISABLED": "proveïdor de pagament desactivat",
-    "NO_NEXT_INVOICE_DATE": "sense data del proper rebut"
+    "NO_NEXT_INVOICE_DATE": "sense data del proper rebut",
+    "NO_PAYMENT_METHOD": "sense mètode de pagament",
+    "MANDATE_PENDING": "mandat SEPA pendent"
   },
   "paymentChannel": {
     "CASH": "Efectiu",

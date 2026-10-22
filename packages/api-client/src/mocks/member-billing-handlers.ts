@@ -7,7 +7,7 @@ import { censusMembers, censusRecordState, ERASED_MEMBER_ID, erasedMemberOvervie
 import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
 import { clubLocalDate } from "./fixtures/planning";
-import { findParameter } from "./fixtures/settings";
+import { billingDayState, findParameter } from "./fixtures/settings";
 import { readmissionPendingRefusal } from "./readmission-pending";
 import { currentMockScenario, currentMockScenarioName } from "./scenarios";
 
@@ -845,10 +845,16 @@ export const memberBillingHandlers = [
       updated.planId = body.planId;
       updated.priceId = body.priceId;
       // A member without a date moving to a MONTHLY plan gets the request's, else next month's
-      // invoice day (the catalog's default `billing.nextInvoiceDayOfMonth` = 1); an existing date
-      // never moves.
+      // `billing.nextInvoiceDayOfMonth` (the value `GET /parameters/{key}` reads, E164 (e)), at
+      // most that month's last day; an existing date never moves.
       const monthly = catalogState.plans.find((plan) => plan.id === body.planId)?.type === "MONTHLY";
-      if (monthly) updated.nextInvoiceDate ??= body.nextInvoiceDate ?? `${shiftMonth(clubMonth(), 1)}-01`;
+      const nextMonth = shiftMonth(clubMonth(), 1);
+      const lastDay = Number(monthEnd(nextMonth).slice(8));
+      const day = Math.min(Math.max(1, billingDayState.nextInvoiceDayOfMonth), lastDay);
+      if (monthly) {
+        updated.nextInvoiceDate ??=
+          body.nextInvoiceDate ?? `${nextMonth}-${String(day).padStart(2, "0")}`;
+      }
       updated.version += 1;
     });
     return new HttpResponse(null, { status: 204 });

@@ -8,6 +8,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- E11-W08 (the api snapshot `131cf166`: E11-T15 round 2, E11-T13 round 2, E11-T19; rulings E138, E156, E157, E164):
+  - adopts the staged snapshot (`openapi.next.json` removed); mock domains carry `checkedAt`/`failedChecks`;
+  - the console signs in on the product host with `client_id = clubs-admin`: `403 PLATFORM_ONLY` reads «Aquest accés és només per a l'equip AgilityHub.» on `/entrar` (password, handoff) and on the new back-office `/activacio?t=` (the magic link), which lands on D19;
+  - D6: past the collection date, with `COLLECTION_DATE_PASSED` as the only blocker, the rollback asks for `FITXER_NO_ENVIAT` after «Només si el fitxer no s'ha enviat mai al banc»; with another blocker it stays disabled and names every blocker; the amount KPI asks to mark the remittance sent instead of «Presenta-la al banc abans del …»;
+  - D6: `MANDATE_PENDING` and `NO_PAYMENT_METHOD` incidents labelled in ca/es/en, linked to D10's payment method (`?calaix=pagament`);
+  - D10: «Proper rebut» lives in the «Dades i pagament» row (date · amount, edit, drawer) as in the mockup; the billing block's copy is gone; `?calaix=proper-rebut` opens the drawer only for a monthly member or one with a date and leaves the address on close;
+  - the console's Legal tab selects the default language's tab on a `{field: locales}` refusal;
+  - 16 (add-dog): a plan the api does not quote (a price twin) is listed unavailable with «El club ha de revisar els preus d'aquesta modalitat.»; `409 PRICE_OVERLAP` routes back to the dog step;
+  - mocks: `platformRefused` and `signupMemberPriceTwin` scenarios, `FITXER_NO_ENVIAT`, the plan change's next-month `billing.nextInvoiceDayOfMonth`;
+  - `e2e/core/e10-core.spec.ts`: no `test.fail`; the console flows sign in as `platform@example.test` on the product host; the playbook loses limitation 1.
+
 - E11-W07 (the api's E11-T15 contract in the back office, rulings E146/E147/E156; snapshot `a7c85d50`, adopted by E11-W05):
   - D10's billing block shows «Proper rebut» (or «Sense data: no es facturarà» for a monthly member) with a drawer that sends `PUT /members/{id}/next-invoice-date {nextInvoiceDate, reason}` (±12 months of the club's month; `fieldErrors` on the fields, `READMISSION_PENDING` → D2, `INVALID_STATE` text); D6's link `?calaix=proper-rebut` opens it;
   - D10's plan change to a MONTHLY plan offers an optional next invoice date to a member without one, with what an empty one means;

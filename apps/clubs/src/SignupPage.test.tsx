@@ -2830,3 +2830,102 @@ describe("T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the thera
     );
   });
 });
+
+describe("E11-W08 step 5 (S04 §2 16, §6, ruling E138): the member's add-dog on a plan with a price twin", () => {
+  const REVIEW = "El club ha de revisar els preus d'aquesta modalitat.";
+
+  it("GET /signup: the member's own plan, with a twin, is neither current nor quoted, so it is listed unavailable with the club's review text; another plan goes on", async () => {
+    const config = await addDogConfigJson("signupMemberPriceTwin");
+    const upfront = config.upfront as {
+      additionalDogOptions?: unknown;
+      planQuotes: { planId: string }[];
+    };
+    expect(config.plans.some((plan) => plan.current === true)).toBe(false);
+    expect(upfront.additionalDogOptions).toBeUndefined();
+    expect(upfront.planQuotes.map((quote) => quote.planId)).not.toContain(MEMBER_PLAN);
+
+    const navigate = vi.fn();
+    seedDraft({ mode: "add-dog", planId: "" });
+    await renderSignup({
+      addDog: true,
+      navigate,
+      path: "/gossos/nou",
+      scenario: "signupMemberPriceTwin",
+    });
+    const own = await screen.findByRole("button", { name: "Selecciona Abonat" });
+    expect(own).toBeDisabled();
+    expect(own).toHaveAccessibleDescription(REVIEW);
+    fireEvent.click(own);
+    expect(own).toHaveAttribute("aria-pressed", "false");
+    const continueButton = screen.getByRole("button", { name: "CONTINUA" });
+    expect(continueButton).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Selecciona Pack 6" }));
+    expect(continueButton).toBeEnabled();
+    fireEvent.click(continueButton);
+    expect(navigate).toHaveBeenCalledWith("/gossos/nou/pagament");
+  });
+
+  it("a draft kept on the twinned plan is not a choice: [CONTINUA] stays disabled", async () => {
+    seedDraft({ mode: "add-dog", planId: MEMBER_PLAN });
+    await renderSignup({ addDog: true, path: "/gossos/nou", scenario: "signupMemberPriceTwin" });
+    expect(await screen.findByRole("button", { name: "Selecciona Abonat" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
+    expect(screen.getByRole("button", { name: "CONTINUA" })).toBeDisabled();
+  });
+
+  it("POST /me/dogs/signup 409 PRICE_OVERLAP (the family fare the dog moves the member to) brings the member back to the dog step with the review text, and no checkout", async () => {
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    server.use(
+      http.post("*/api/v1/me/dogs/signup", () =>
+        apiErrorResponse("PRICE_OVERLAP", 409, {
+          concept: "MONTHLY_FEE",
+          conflictingPriceId: "10000000-0000-4000-8000-0000000000f2",
+          planId: "10000000-0000-4000-8000-000000000004",
+          priceId: "10000000-0000-4000-8000-0000000000f1",
+        }),
+      ),
+    );
+    seedDraft({ mode: "add-dog", planId: "" });
+    await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament" });
+    expect(await screen.findByText(/Pas 2 de 2/u)).toBeVisible();
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/gossos/nou");
+    });
+    expect(await screen.findByText(/Pas 1 de 2/u)).toBeVisible();
+    expect(await screen.findByText(REVIEW)).toBeVisible();
+    expect(navigate).not.toHaveBeenCalledWith("/gossos/nou/enviada");
+    expect(requestsTo(recorded, "POST", "/me/dogs/signup")).toHaveLength(1);
+    expect(requestsTo(recorded, "POST", "/checkout-sessions")).toHaveLength(0);
+  });
+
+  it("the mock's own submission on the twinned plan is the api's 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}", async () => {
+    mockScenario("signupMemberPriceTwin");
+    const response = await fetch(`${window.location.origin}/api/v1/me/dogs/signup`, {
+      body: JSON.stringify({
+        dog: { birthMonth: "2022-03", breed: "Mestís", chip: "941000099999999", name: "Kiwi", sex: "FEMALE" },
+        planIdRequested: MEMBER_PLAN,
+      }),
+      headers: {
+        Authorization: "Bearer mock-access-token",
+        "Content-Type": "application/json",
+        "Idempotency-Key": crypto.randomUUID(),
+      },
+      method: "POST",
+    });
+    expect(response.status).toBe(409);
+    const body = (await response.json()) as { code: string; details: Record<string, unknown> };
+    expect(body.code).toBe("PRICE_OVERLAP");
+    expect(Object.keys(body.details).sort()).toEqual([
+      "concept",
+      "conflictingPriceId",
+      "planId",
+      "priceId",
+    ]);
+    expect(body.details.planId).toBe(MEMBER_PLAN);
+  });
+});

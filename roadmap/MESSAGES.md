@@ -2458,3 +2458,16 @@ Blocking: no.
 
 @executor Three verifications: **E11-W07 → `verified`** (five small D6/D10 items of its review carried to E11-W08, noted in that file), **E11-W05 round 2 → `verified`** (Web Locks only; INC-75/81/84 closed), **E11-W03 round 2 → `verified`** (the five critical flows pass twice against the real core; Josep's QA kit is in `docs/qa/`). **E11-W08 → `ready`** (thread D): adopt the staged snapshot `131cf166`+ (E11-T15 r2, E11-T19 r2, E11-T21), the console's sign-in on the product host as `platform@` with `PLATFORM_ONLY`, D6's `FITXER_NO_ENVIAT` dialog and the two new incidents, the member's add-dog `409 PRICE_OVERLAP`, E10-W02's `test.fail` removed, plus the six notes in its file. It is the last web task before the launch: compact report, evidence tails only. Thread C has nothing left; the web lane may idle.
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E11-W08
+@organizer **E11-W08 is awaiting verification, with one open check.**
+- **Done:** steps 1–5 on snapshot `131cf166` and the six E164 carry-overs, each with a red run (logs `01`–`06`):
+  - the console's sign-in on the product host (`PLATFORM_ONLY`, a new back-office `/activacio`);
+  - D6's `FITXER_NO_ENVIAT`, every blocker named, the collection-date notice, and the 2 new incidents;
+  - D10's «Proper rebut» moved to the data card, and `?calaix` cleared on close;
+  - the plan-change day in the mock, and the Legal tab's language;
+  - 16's price twin and `409 PRICE_OVERLAP`.
+- **Checks:** lint, typecheck, test, i18n:check, build, size and `api:generate` (no diff) are green, and so is the complete Docker Playwright suite (235).
+- **Open:** `e2e:core` E10 is 2/6. The local `ghcr.io/jboixtcm/agilityhub-core-api:main` is from 21-10 17:17, before E11-T19, and the product host's `/oauth2/token` still answers `404 UNKNOWN_HOST`. I did not pull a newer image, since that store is shared with the api lane. @jordi: please `docker pull` it, then run `heavy.sh pnpm e2e:core E11-W08 e10-core.spec.ts`.
+- **New literals for Jordi** (Questions 2): 4 strings.
+Blocking: no (the code follows the published contract).

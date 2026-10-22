@@ -968,7 +968,7 @@ describe("E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by 
 });
 
 describe("E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record", () => {
-  it("E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save «Proper rebut» and the data card read the new date", async () => {
+  it("E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address", async () => {
     vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
     onTestFinished(() => {
       vi.useRealTimers();
@@ -988,14 +988,61 @@ describe("E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record"
     await waitFor(() => {
       expect(screen.queryByRole("dialog", { name: "Proper rebut" })).toBeNull();
     });
+    expect(window.location.search).toBe("");
 
-    const section = screen.getByRole("heading", { level: 3, name: "Proper rebut" }).closest("section");
-    expect(section).toHaveTextContent("01/11/2026");
     // The overview is read again: its «Proper rebut» row (date · amount) follows the write.
     const row = screen.getByText("Proper rebut", { selector: "dt" }).closest("div");
     await waitFor(() => {
       expect(row).toHaveTextContent("01/11/2026");
     });
+  });
+
+  it("E164 (d): ?calaix=proper-rebut opens nothing for a pack member without a date, who has no next receipt to correct", async () => {
+    server.use(
+      http.get("*/api/v1/members/member-laura/overview", async ({ request }) => {
+        const real = await getResponse(handlers, request);
+        const overview = (await real?.json()) as {
+          member: Record<string, unknown>;
+          nextInvoice?: unknown;
+        };
+        overview.member.planId = "plan-pack-10";
+        overview.member.nextInvoiceDate = null;
+        delete overview.nextInvoice;
+        return HttpResponse.json(overview);
+      }),
+    );
+    window.history.pushState(null, "", "/abonats/member-laura?calaix=proper-rebut");
+    await renderRecord("member");
+    expect(await screen.findByText("Dades i pagament")).toBeVisible();
+    // The plans are read: the member's own is a pack.
+    expect(await screen.findByText("Pack 10", { selector: "strong" })).toBeVisible();
+    expect(screen.queryByRole("dialog", { name: "Proper rebut" })).toBeNull();
+    expect(screen.queryByText("Proper rebut")).toBeNull();
+  });
+
+  it("E164 (d): the drawer D6's link opened leaves no ?calaix=proper-rebut behind once closed, so a reload does not open it again", async () => {
+    window.history.pushState(null, "", "/abonats/member-laura?calaix=proper-rebut&tab=dades");
+    await renderRecord("member");
+    const drawer = await screen.findByRole("dialog", { name: "Proper rebut" });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Cancel·la" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Proper rebut" })).toBeNull();
+    });
+    expect(window.location.pathname).toBe("/abonats/member-laura");
+    expect(window.location.search).toBe("?tab=dades");
+  });
+
+  it("E164 (c): «Proper rebut» is read once, in the data card's row (mockup D10), with its edit action; the billing block has no copy of it", async () => {
+    await renderRecord("member");
+    const row = (await screen.findByText("Proper rebut", { selector: "dt" })).closest("div");
+    if (row === null) throw new TypeError("No «Proper rebut» row");
+    expect(row).toHaveTextContent(/^Proper rebut01\/09\/2026 · 90,00\s€\sEdita$/u);
+    expect(
+      within(row as HTMLElement).getByRole("button", { name: "Edita la data del proper rebut" }),
+    ).toBeVisible();
+    expect(await screen.findByText("2026-0912")).toBeVisible();
+    expect(screen.getAllByText("Proper rebut")).toHaveLength(1);
+    expect(screen.queryByRole("heading", { name: "Proper rebut" })).toBeNull();
   });
 });
 

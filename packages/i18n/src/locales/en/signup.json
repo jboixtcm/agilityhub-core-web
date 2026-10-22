@@ -86,7 +86,8 @@
     "packPrice": "{price} · {months} months",
     "maintenance": "{withEntry, select, yes {Deposit: {entry} · minimum fee during treatment: {fee}/month} other {Minimum fee during treatment: {fee}/month}}",
     "selectPlan": "Select {plan}",
-    "activate": "ACTIVATE"
+    "activate": "ACTIVATE",
+    "priceOverlap": "The club needs to review this plan's prices."
   },
   "family": {
     "title": "More than one dog in the family",

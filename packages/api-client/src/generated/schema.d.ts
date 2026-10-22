@@ -662,7 +662,7 @@ export interface paths {
         put?: never;
         /**
          * Request a login or password-reset magic link
-         * @description ANON. R-01-04: neutral 202 whether the account/membership exists or not; no email enumeration. The mailed N-25 link is https://{client host}/activacio?t=… (club clients) or https://{ID host}/magic-link?t=… (the ID); with purpose RESET it ends with &purpose=reset (screen 02: «Ja hi ets»), a LOGIN link carries no purpose. Shares the configured authentication IP quota with /oauth2/token.
+         * @description ANON. R-01-04: neutral 202 whether the account/membership exists or not; no email enumeration. The mailed N-25 link is https://{client host}/activacio?t=… (club clients) or https://{ID host}/magic-link?t=… (the ID); clubs-admin on the console's product host mails https://{product host}/activacio?t=… only to an account holding AGILITYHUB_ADMIN (a link without club context); with purpose RESET it ends with &purpose=reset (screen 02: «Ja hi ets»), a LOGIN link carries no purpose. Shares the configured authentication IP quota with /oauth2/token.
          */
         post: operations["magicLink"];
         delete?: never;
@@ -782,7 +782,7 @@ export interface paths {
         put?: never;
         /**
          * rollbackBillingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-14 [Retrocedeix la remesa] with the typed confirmation (exactly RETROCEDIR, otherwise 400 VALIDATION_ERROR): one transaction under the billing lock — every invoice of the run rolled back (the live ones CANCELLED{ROLLBACK}; one the admin cancelled meanwhile keeps its reason), a new FAILED{ROLLBACK} collection each, remittance ROLLED_BACK (file kept), the numbering given back, each member's nextInvoiceDate restored, PendingCharge.invoiceId cleared; RemittanceRolledBack, InvoiceCancelled each, one REMITTANCE_ROLLED_BACK audit entry. The month can then be simulated and generated again with the same numbers. Not allowed → 409 RUN_NOT_ROLLBACKABLE {reasons[]: REMITTANCE_SUBMITTED · COLLECTION_SUBMITTED · INVOICE_PAID · MANUAL_INVOICE_AFTER (an invoice numbered after the run)}; a run already rolled back → 409 RUN_NOT_ROLLBACKABLE {reasons: []}. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-14 [Retrocedeix la remesa] with the typed confirmation (exactly RETROCEDIR, or FITXER_NO_ENVIAT for a file that never reached the bank — E156: it lifts only COLLECTION_DATE_PASSED; anything else → 400 VALIDATION_ERROR; the audit entry records the word): one transaction under the billing lock — every invoice of the run rolled back (the live ones CANCELLED{ROLLBACK}; one the admin cancelled meanwhile keeps its reason), a new FAILED{ROLLBACK} collection each, remittance ROLLED_BACK (file kept), the numbering given back, each member's nextInvoiceDate restored, PendingCharge.invoiceId cleared; RemittanceRolledBack, InvoiceCancelled each, one REMITTANCE_ROLLED_BACK audit entry. The month can then be simulated and generated again with the same numbers. Not allowed → 409 RUN_NOT_ROLLBACKABLE {reasons[]: REMITTANCE_SUBMITTED · COLLECTION_SUBMITTED · INVOICE_PAID · MANUAL_INVOICE_AFTER (an invoice numbered after the run) · COLLECTION_DATE_PASSED (a GENERATED remittance on or after its collection date, club-local; with FITXER_NO_ENVIAT it is not listed)}; a run already rolled back → 409 RUN_NOT_ROLLBACKABLE {reasons: []}. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["rollbackBillingRun"];
         delete?: never;
@@ -3226,7 +3226,7 @@ export interface paths {
         put?: never;
         /**
          * Submit an additional dog
-         * @description R-04-25. MEMBER; accepts valid impersonation with actor attribution. Idempotency-Key required. Verifies member ownership and ACTIVE status.
+         * @description R-04-25. MEMBER; accepts valid impersonation with actor attribution. Idempotency-Key required. Verifies member ownership and ACTIVE status. With BILLING, a quote that would read a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138): the requested plan (the member's own, which GET /signup no longer lists as current) or the family fare the added dog moves the member to → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId} on that plan, and nothing is written.
          */
         post: operations["addDog"];
         delete?: never;
@@ -5326,7 +5326,7 @@ export interface paths {
         put?: never;
         /**
          * startSupportAccess
-         * @description S17 R-17-10. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. A SUPPORT grant of platform.supportAccessMinutes (60) and its token: a clubs-admin access token (no refresh token) with the club's clubId, roles [ADMIN], actorAccountId and sub = the calling platform account, support = true and no platformRoles. Every request with it re-checks the grant: once it expires, is ended with POST /oauth2/revoke, or its account is no longer an active AGILITYHUB_ADMIN, the token is 401 UNAUTHENTICATED. It never reaches the personal-data exports and their files, the SEPA files (full IBANs), a member impersonation or the account's own credentials and sessions: 403 SUPPORT_RESTRICTED; IBANs stay masked elsewhere. GET /me answers it with an ADMIN membership and support {actorName, expiresAt}. Audited SUPPORT_ACCESS_STARTED {reason, details.expiresAt} in the club's own audit, and every action taken with it is audited with origin = PLATFORM_SUPPORT; publishes SupportAccessStarted. A replay of the same key answers the same token.
+         * @description S17 R-17-10. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. A SUPPORT grant of platform.supportAccessMinutes (60) and its token: a clubs-admin access token (no refresh token) with the club's clubId, roles [ADMIN], actorAccountId and sub = the calling platform account, support = true and no platformRoles. Every request with it re-checks the grant: once it expires, is ended with POST /oauth2/revoke, or its account is no longer an active AGILITYHUB_ADMIN, the token is 401 UNAUTHENTICATED. It never reaches the personal-data exports and their files, the SEPA files (full IBANs), a member impersonation, the account's own credentials and sessions, scheduling or cancelling a member's erasure (POST and DELETE /members/{id}/erasure; GET stays readable) or ending a support access: 403 SUPPORT_RESTRICTED; IBANs stay masked elsewhere. GET /me answers it with an ADMIN membership and support {actorName, expiresAt}. Audited SUPPORT_ACCESS_STARTED {reason, details.expiresAt} in the club's own audit, and every action taken with it is audited with origin = PLATFORM_SUPPORT; publishes SupportAccessStarted. A replay of the same key answers the same token.
          */
         post: operations["startSupportAccess"];
         delete?: never;
@@ -7106,7 +7106,7 @@ export interface paths {
         put?: never;
         /**
          * Issue tokens using an OAuth2 or AgilityHub grant
-         * @description ANON with client authentication. Club context comes from the host, never request data. Password and magic-link grants issue sessions; refresh tokens rotate on every use. Handoff codes issue a destination session once within 60 seconds. Authorization-code grants support S256 PKCE, scoped claims and confidential clients. COOKIE clients receive ah_refresh (HttpOnly, Secure, SameSite=Strict, host-only, Path=/oauth2/token); refresh_token is omitted from JSON. Cookie refresh requires explicit client_id and a same-host Origin or Referer. BODY clients retain JSON refresh tokens. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
+         * @description ANON with client authentication. Club context comes from the host, never request data. On the console's product host (a platform host other than the ID's, which resolves no club) clubs-admin's password, magic-link, handoff and refresh grants issue a session without club context (platformRoles, no clubId/roles, aud clubs-admin, ah_refresh on that host) to an account holding AGILITYHUB_ADMIN, and 403 PLATFORM_ONLY to any other account. It issues and renews only those sessions: a refresh token or an authorization code bound to a club is 400 VALIDATION_ERROR (oauth2Error invalid_grant) there, never renewed with its club; every grant of any other client there is 404 UNKNOWN_HOST and leaves its link or code unused. Password and magic-link grants issue sessions; refresh tokens rotate on every use. Handoff codes issue a destination session once within 60 seconds. Authorization-code grants support S256 PKCE, scoped claims and confidential clients. COOKIE clients receive ah_refresh (HttpOnly, Secure, SameSite=Strict, host-only, Path=/oauth2/token); refresh_token is omitted from JSON. Cookie refresh requires explicit client_id and a same-host Origin or Referer. BODY clients retain JSON refresh tokens. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
          */
         post: operations["token"];
         delete?: never;
@@ -7962,7 +7962,7 @@ export interface components {
             memberName: string;
         };
         /** @enum {string} */
-        BillingIncidentCode: "NO_BANK_ACCOUNT" | "NO_PLAN" | "NO_PRICE" | "CARD_INVALID" | "CURRENCY_MISMATCH" | "PROVIDER_DISABLED" | "MEMBER_NOT_ACTIVE" | "PAYMENT_METHOD_CHANGED" | "NO_NEXT_INVOICE_DATE";
+        BillingIncidentCode: "NO_BANK_ACCOUNT" | "NO_PLAN" | "NO_PRICE" | "CARD_INVALID" | "CURRENCY_MISMATCH" | "PROVIDER_DISABLED" | "MEMBER_NOT_ACTIVE" | "PAYMENT_METHOD_CHANGED" | "NO_NEXT_INVOICE_DATE" | "NO_PAYMENT_METHOD" | "MANDATE_PENDING";
         /** @description S12 §6 GET /billing/periods/{period}: the month as D6 shows it; simulation, run and remittance are null until they exist */
         BillingPeriod: {
             counts: components["schemas"]["InvoiceCounts"];
@@ -13928,6 +13928,16 @@ export interface components {
         PlatformDomain: {
             /** @enum {string} */
             app: "clubs" | "clubs-admin";
+            /**
+             * Format: date-time
+             * @description E10-T03 round 2 (E125 #3, S15 P9): the last periodic DNS re-check that answered (or the last verification); null before the first. A skipped lookup does not set it.
+             */
+            checkedAt?: string | null;
+            /**
+             * Format: int32
+             * @description E10-T03 round 2 (E125 #3, S15 P9): the failed re-checks in a row since the last good one or the last verification (0 before the first); the third makes a VERIFIED domain BROKEN (R-17-03).
+             */
+            failedChecks: number;
             host: string;
             primary: boolean;
             /** @enum {string} */
@@ -14981,7 +14991,7 @@ export interface components {
         /** @enum {string} */
         RollbackBlocker: "REMITTANCE_SUBMITTED" | "COLLECTION_SUBMITTED" | "INVOICE_PAID" | "MANUAL_INVOICE_AFTER" | "COLLECTION_DATE_PASSED";
         RollbackRequest: {
-            /** @description The word D6's confirmation dialog asks to type (R-12-14) */
+            /** @description The word D6's confirmation dialog asks to type (R-12-14): RETROCEDIR, or FITXER_NO_ENVIAT when the file was never sent to the bank — it lifts only COLLECTION_DATE_PASSED (E156) */
             confirmation: string;
             reason: string;
         };
@@ -15424,7 +15434,7 @@ export interface components {
             /** @enum {string} */
             billingMode?: "MONTHLY_FEE" | "MAINTENANCE";
             conditions: string;
-            /** @description R-04-09: add-dog mode (MEMBER) only. true on the member's own plan, listed even when the public offer hides it (M8); false on the others. A member without a plan, or whose plan is no longer assignable, gets the offer with no current plan, and POST /me/dogs/signup then requires planIdRequested. Absent in the public signup */
+            /** @description R-04-09: add-dog mode (MEMBER) only. true on the member's own plan, listed even when the public offer hides it (M8); false on the others. A member without a plan, or whose plan is no longer assignable or has a price twin (ruling E138), gets the offer with no current plan, and POST /me/dogs/signup then requires planIdRequested. Absent in the public signup */
             current?: boolean;
             description: string;
             entryFee?: components["schemas"]["Money"];
@@ -15489,9 +15499,9 @@ export interface components {
             /** Format: date */
             nextInvoiceDate?: string;
             /** Format: uuid */
-            planId?: string;
+            planId?: string | null;
             /** Format: uuid */
-            priceId?: string;
+            priceId?: string | null;
         };
         SignupQuoteLine: {
             amount: components["schemas"]["Money"];
@@ -15559,7 +15569,7 @@ export interface components {
         /** @description Club texts resolved in the response locale, placeholders already interpolated by the server ({deadlineDay}, {twoDogsMonthlyFee}) */
         SignupTexts: {
             cashConditions: string;
-            /** @description null when the club has no family fare (R-04-13) */
+            /** @description null when the club has no family fare (R-04-13), or with BILLING when that fare has a price twin (ruling E138): never an amount read from one of two current prices */
             familyGroupIntro?: string | null;
             freeTrainingConditions: string;
             imageConsent: string;
@@ -15573,13 +15583,13 @@ export interface components {
             totalDue: components["schemas"]["Money"];
         };
         SignupUpfrontConfig: {
-            /** @description Add-dog mode: TODAY always, ALTERNATIVE only up to billing.upfrontCutoffDay */
+            /** @description Add-dog mode: TODAY always, ALTERNATIVE only up to billing.upfrontCutoffDay. Absent without a current plan, or when the quote would read a price twin (ruling E138) */
             additionalDogOptions?: components["schemas"]["SignupConfigChoice"][];
             /** @description Deprecated by planQuotes: the options of the first monthly plan only */
             firstMonthOptions: components["schemas"]["SignupConfigChoice"][];
             /** Format: int32 */
             firstMonthSplitDay: number;
-            /** @description R-04-14/15: one quote per offered plan (add-dog mode: also the member's own plan), computed like the submission */
+            /** @description R-04-14/15: one quote per offered plan (add-dog mode: also the member's own plan), computed like the submission. Add-dog mode: no quote that would read a price twin (ruling E138); its submission answers 409 PRICE_OVERLAP */
             planQuotes: components["schemas"]["SignupPlanQuote"][];
             /** Format: date */
             today: string;
@@ -40429,7 +40439,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION, PRICE_OVERLAP */
             409: components["responses"]["StaleVersion"];
             /** @description MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED */
             422: {
@@ -70070,7 +70080,7 @@ export interface operations {
                     "application/json": components["schemas"]["TokenResponse"];
                 };
             };
-            /** @description Invalid grant: MAGIC_LINK_INVALID, HANDOFF_INVALID, REFRESH_EXPIRED, REFRESH_REUSED; malformed form: VALIDATION_ERROR */
+            /** @description Invalid grant: MAGIC_LINK_INVALID, HANDOFF_INVALID, REFRESH_EXPIRED, REFRESH_REUSED; malformed form: VALIDATION_ERROR; VALIDATION_ERROR with details.oauth2Error invalid_grant for an invalid authorization code or, on the console's product host, a club-bound refresh token or code */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -70088,7 +70098,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NO_MEMBERSHIP, MEMBERSHIP_SUSPENDED, ACCOUNT_BLOCKED */
+            /** @description NO_MEMBERSHIP, MEMBERSHIP_SUSPENDED, ACCOUNT_BLOCKED; PLATFORM_ONLY (clubs-admin on the console's product host without AGILITYHUB_ADMIN) */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -70097,7 +70107,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not Found */
+            /** @description UNKNOWN_HOST: a host that resolves no club, except the ID host's global grants and the console's product host for clubs-admin; there, any other client's grant */
             404: {
                 headers: {
                     [name: string]: unknown;

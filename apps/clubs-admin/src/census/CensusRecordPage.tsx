@@ -7,14 +7,7 @@ import {
   type ListItemWith,
   uploadSigned,
 } from "@agilityhub/api-client";
-import {
-  type ClubFormats,
-  fmtMaskedIban,
-  formatMoneyMinor,
-  isPlainDate,
-  normalizeLocale,
-  useClubFormats,
-} from "@agilityhub/i18n";
+import { type ClubFormats, fmtMaskedIban, isPlainDate, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -44,6 +37,7 @@ import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
 import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
 import { MemberLeaveDrawer } from "./MemberLeaveDrawer";
+import { MemberNextInvoice, NEXT_INVOICE_DRAWER } from "./MemberNextInvoice";
 import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
 import { MemberPlanDrawer } from "./MemberPlanDrawer";
 import { MemberDataExportButton, MemberPrivacyCard } from "./MemberPrivacyCard";
@@ -600,7 +594,6 @@ function MemberSummary({
   const formats = useClubFormats();
   const member = overview.member;
   const modules = branding.modules;
-  const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
   const [reason, setReason] = useState("");
   const [roles, setRoles] = useState<Role[]>(member.roles as Role[]);
   const [pending, setPending] = useState(false);
@@ -748,11 +741,27 @@ function MemberSummary({
                 )}
               </DataRow>
             ) : null}
-            {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
-              <DataRow label={t("admin-census:member.fields.nextInvoice")}>
-                <strong>{formatDate(overview.nextInvoice.date, formats)}</strong> ·{" "}
-                {formatMoneyMinor(overview.nextInvoice.amount, normalizeLocale(locale))}
-              </DataRow>
+            {modules.includes("BILLING") ? (
+              // Mockup D10 «Proper rebut» (E146, E164 (c)): the date, the amount, its correction;
+              // D6's NO_NEXT_INVOICE_DATE incident links here with `?calaix=proper-rebut`.
+              <MemberNextInvoice
+                client={client}
+                drawerRequested={
+                  new URLSearchParams(window.location.search).get("calaix") === NEXT_INVOICE_DRAWER
+                }
+                key={member.id}
+                memberId={member.id}
+                monthly={memberPlan === undefined ? undefined : memberPlan.type === "MONTHLY"}
+                nextInvoice={overview.nextInvoice}
+                nextInvoiceDate={member.nextInvoiceDate ?? null}
+                onChanged={(nextInvoiceDate) => {
+                  // The record shows the api's date now, and its next receipt is read again.
+                  onChange({ ...overview, member: { ...member, nextInvoiceDate } });
+                  onReload();
+                }}
+                readOnly={erased}
+                row={(label, content) => <DataRow label={label}>{content}</DataRow>}
+              />
             ) : null}
             <DataRow label={t("admin-census:member.fields.consents")}>
               {imageNotice === null ? null : (
@@ -875,18 +884,7 @@ function MemberSummary({
           <MemberBillingBlock
             client={client}
             dogs={overview.dogs}
-            // D6's NO_NEXT_INVOICE_DATE incident links here with `?calaix=proper-rebut` (E146).
-            initialNextInvoiceOpen={
-              new URLSearchParams(window.location.search).get("calaix") === "proper-rebut"
-            }
             memberId={member.id}
-            monthly={memberPlan?.type === "MONTHLY"}
-            nextInvoiceDate={member.nextInvoiceDate ?? null}
-            onNextInvoiceDateChanged={(nextInvoiceDate) => {
-              // The record shows the api's date now, and its next receipt is read again.
-              onChange({ ...overview, member: { ...member, nextInvoiceDate } });
-              onReload();
-            }}
             onPackAdjusted={() => {
               onReload();
             }}

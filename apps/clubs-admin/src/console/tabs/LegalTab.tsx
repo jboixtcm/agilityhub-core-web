@@ -56,10 +56,16 @@ export function LegalTab({ client, club, onReload, onReplace }: ConsoleTabProps)
   // E10-W02: the core refuses a `legal` without the image-consent text in the club's default
   // language as `VALIDATION_ERROR {field: "locales"}` (a LocalizedText needs its `defaultLocale`,
   // CONVENCIONS_I18N), a field this form does not have: it is shown on that text until it changes.
+  const localesRefused = apiFieldErrors(write.error).some((entry) => entry.field === "locales");
   const defaultMissing =
-    (defaultTextAsked && defaultText === "") ||
-    (sentDefaultText === defaultText &&
-      apiFieldErrors(write.error).some((entry) => entry.field === "locales"));
+    (defaultTextAsked && defaultText === "") || (sentDefaultText === defaultText && localesRefused);
+  // E164 (f): a refusal read from another language's tab brings the default one, where it is said
+  // (once per answer, adopted while rendering).
+  const [refusalShown, setRefusalShown] = useState<unknown>();
+  if (localesRefused && write.error !== refusalShown) {
+    setRefusalShown(write.error);
+    setLocale(club.defaultLocale);
+  }
   const imageTextError =
     locale === club.defaultLocale && defaultMissing
       ? t("console:fieldErrors.REQUIRED")

@@ -45,8 +45,12 @@ type CardChargesResult = components["schemas"]["CardChargesResult"];
 type PeriodSimulation = components["schemas"]["PeriodSimulation"];
 type RollbackResult = components["schemas"]["RollbackResult"];
 
-/** The word the rollback asks to type, exactly as the api checks it (R-12-14), in every language. */
-export const ROLLBACK_KEYWORD = "RETROCEDIR";
+/**
+ * The words the rollback asks to type, exactly as the api checks them (R-12-14), in every language:
+ * `RETROCEDIR`, or `FITXER_NO_ENVIAT` for a file that never reached the bank — it lifts only
+ * `COLLECTION_DATE_PASSED` (ruling E156).
+ */
+export type RollbackKeyword = "FITXER_NO_ENVIAT" | "RETROCEDIR";
 
 function Actions({ children }: { children: ReactNode }) {
   return <div className="billing-modal__actions">{children}</div>;
@@ -259,13 +263,15 @@ export function GenerateModal({
 }
 
 /**
- * [Retrocedeix la remesa] (R-12-14): what will be undone, the word «RETROCEDIR» typed exactly and a
- * reason; `409 RUN_NOT_ROLLBACKABLE` lists the api's reasons.
+ * [Retrocedeix la remesa] (R-12-14): what will be undone, the confirmation word typed exactly and a
+ * reason; `409 RUN_NOT_ROLLBACKABLE` lists the api's reasons. Past the collection date (the only
+ * blocker) the word is `FITXER_NO_ENVIAT`, after «Només si el fitxer no s'ha enviat mai al banc».
  */
 export function RollbackModal({
   client,
   invoiceCount,
   keys,
+  keyword: requiredKeyword,
   monthTitle,
   onBlocked,
   onClose,
@@ -276,6 +282,8 @@ export function RollbackModal({
   /** The run's receipts (`run.invoiceIds`), `undefined` until the run's detail is read. */
   invoiceCount: number | undefined;
   keys: SubmissionKeys;
+  /** The word this dialog asks for, fixed when it opened. */
+  keyword: RollbackKeyword;
   monthTitle: string;
   onBlocked: () => void;
   onClose: () => void;
@@ -292,13 +300,14 @@ export function RollbackModal({
   const reasons = (
     Array.isArray(errorDetails(failure).reasons) ? errorDetails(failure).reasons : []
   ) as RollbackBlocker[];
-  const confirmed = keyword === ROLLBACK_KEYWORD;
+  const confirmed = keyword === requiredKeyword;
+  const fileNotSent = requiredKeyword === "FITXER_NO_ENVIAT";
 
   const rollback = async () => {
     if (!confirmed) return;
     setPending(true);
     setFailure(undefined);
-    const body = { confirmation: ROLLBACK_KEYWORD, reason };
+    const body = { confirmation: requiredKeyword, reason };
     try {
       const result = await keys.send(JSON.stringify(["rollback", runId, body]), (key) =>
         client.POST("/billing/runs/{id}/rollback", {
@@ -347,6 +356,15 @@ export function RollbackModal({
         </>
       ) : (
         <>
+          {fileNotSent ? (
+            // E156: the bank may have the file already; the second word is for one it never got.
+            <div className="billing-modal__warning">
+              <p>{t("admin-billing:kpi.collectionDatePassed")}</p>
+              <p>
+                <strong>{t("admin-billing:confirm.rollbackFileNotSent")}</strong>
+              </p>
+            </div>
+          ) : null}
           <p className="billing-modal__body">{t("admin-billing:confirm.rollbackIntro")}</p>
           <ul className="billing-modal__list">
             {invoiceCount === undefined ? null : (
@@ -358,7 +376,7 @@ export function RollbackModal({
           </ul>
           <FormField
             id="billing-rollback-keyword"
-            label={t("admin-billing:confirm.rollbackKeywordLabel", { keyword: ROLLBACK_KEYWORD })}
+            label={t("admin-billing:confirm.rollbackKeywordLabel", { keyword: requiredKeyword })}
             {...(errorFields(failure).includes("confirmation")
               ? { error: t("errors:VALIDATION_ERROR") }
               : {})}

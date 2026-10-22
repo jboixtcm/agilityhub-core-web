@@ -116,6 +116,12 @@ export interface MockScenarioDefinition {
   unlabelledPaymentChannel?: string;
   /** R-04-09 (S05 B34): the member adding a dog has no plan, so 17 offers the plans to choose. */
   signupMemberWithoutPlan?: boolean;
+  /**
+   * S04 §6 (E11-T13 round 2, ruling E138, INC-68): the member's own plan has two current prices of
+   * one concept (a legacy twin). `GET /signup` lists it neither `current` nor quoted and sends no
+   * `additionalDogOptions`; `POST /me/dogs/signup` on it answers `409 PRICE_OVERLAP`.
+   */
+  signupPriceTwin?: boolean;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
   signupReview?: SignupReviewVariant;
   /**
@@ -203,6 +209,15 @@ const scenarios = {
       theme: { ...canic.theme, logoDarkUrl: null, logoUrl: null, markUrl: null },
     },
     me: platformMe,
+    sessions: accountSessions,
+  },
+  /**
+   * E11-W08 (S01 R-01-02, ruling E157): a club ADMIN without the platform role on the console's
+   * product host — no session there, and every `clubs-admin` grant is `403 PLATFORM_ONLY`.
+   */
+  platformRefused: {
+    branding: productBranding,
+    me: meAdmin as Me,
     sessions: accountSessions,
   },
   admin: {
@@ -1021,6 +1036,13 @@ const scenarios = {
     me: member,
     sessions: accountSessions,
     signupMemberWithoutPlan: true,
+  },
+  /** E11-W08 step 5: the member's own plan has a price twin (`409 PRICE_OVERLAP` on 16). */
+  signupMemberPriceTwin: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    sessions: accountSessions,
+    signupPriceTwin: true,
   },
   /** R-04-08: `signup.requireDogDocumentAtSignup = true` (a submission without a file is 422). */
   signupDocumentRequired: {

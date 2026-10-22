@@ -1,0 +1,923 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (27 tests | 1 failed | 26 skipped) 10137ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (27)
+     × E11-W08 E164 (f) (E10-W02 round 2): a {field: locales} refusal read from another language's tab selects the default language's tab, where the error is 10135ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E11-W08 E164 (f) (E10-W02 round 2): a {field: locales} refusal read from another language's tab selects the default language's tab, where the error is
+TestingLibraryElementError: Unable to find a label with the text of: Text de consentiment d'imatge (Català)
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Mínim[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mminim[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mEn configuració[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"console-checklist-title"[39m
+        [33mclass[39m=[32m"ah-card console-card console-checklist"[39m
+        [33mrole[39m=[32m"region"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"console-checklist-title"[39m
+        [36m>[39m
+          [0mChecklist d'onboarding[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"console-checklist-summary"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m4/7[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary__missing"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"console-checklist-summary__dot"[39m
+              [36m>[39m
+                [0m · [0m
+              [36m</span>[39m
+              [0mfalten: Dominis verificats, Preguntes freqüents, Política de privacitat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</p>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"console-checklist__items"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mDominis verificats[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mProveïdor de pagament configurat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mMarca: logo i colors propis[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPlantilles de comunicat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPreguntes freqüents[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPolítica de privacitat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPrimer administrador amb accés[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Seccions de la fitxa del club"[39m
+        [33mclass[39m=[32m"console-tabs"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+        [36m>[39m
+          [0mIdentitat[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/localitzacio"[39m
+        [36m>[39m
+          [0mLocalització[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/dominis"[39m
+        [36m>[39m
+          [0mDominis[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/tema"[39m
+        [36m>[39m
+          [0mTema[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/moduls"[39m
+        [36m>[39m
+          [0mMòduls[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/pagaments"[39m
+        [36m>[39m
+          [0mPagaments[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/legal"[39m
+        [36m>[39m
+          [0mLegal[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/parametres"[39m
+        [36m>[39m
+          [0mParàmetres[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/catalegs"[39m
+        [36m>[39m
+          [0mCatàlegs base[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/equip"[39m
+        [36m>[39m
+          [0mEquip[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/processos"[39m
+        [36m>[39m
+          [0mProcessos[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/auditoria"[39m
+        [36m>[39m
+          [0mAuditoria[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/us"[39m
+        [36m>[39m
+          [0mÚs[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/estat"[39m
+        [36m>[39m
+          [0mEstat[0m
+        [36m</a>[39m
+      [36m</nav>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Legal"[39m
+        [33mclass[39m=[32m"console-tab-panel"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"console-tab-panel__writes"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"console-form"[39m
+          [36m>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"console-fieldset"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card console-card"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mLegal[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-form-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-form-field__label"[39m
+                    [33mfor[39m=[32m"console-legal-privacy"[39m
+                  [36m>[39m
+                    [0mURL de la política de privacitat[0m
+                  [36m</label>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"ah-input"[39m
+                    [33mid[39m=[32m"console-legal-privacy"[39m
+                    [33mrequired[39m=[32m""[39m
+                    [33mtype[39m=[32m"url"[39m
+                    [33mvalue[39m=[32m"https://minim.example.test/privacitat"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33maria-label[39m=[32m"Idiomes"[39m
+                  [33mclass[39m=[32m"catalog-locale-tabs"[39m
+                  [33mrole[39m=[32m"tablist"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-selected[39m=[32m"false"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mCA[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-selected[39m=[32m"true"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mES[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-selected[39m=[32m"false"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mEN[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-form-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-form-field__label"[39m
+                    [33mfor[39m=[32m"console-legal-image"[39m
+                  [36m>[39m
+                    [0mText de consentiment d'imatge (Castellà)[0m
+                  [36m</label>[39m
+                  [36m<textarea[39m
+                    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                    [33mid[39m=[32m"console-legal-image"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card console-card"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mVersió dels textos legals[0m
+                [36m</h2>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"console-muted"[39m
+                [36m>[39m
+                  [0mCada versió queda registrada amb els consentiments que s'hi donen.[0m
+                [36m</p>[39m
+                [36m<p>[39m
+                  [0mEncara no s'ha publicat cap versió dels textos legals.[0m
+                [36m</p>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mPublica una versió nova[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-message console-message--danger"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mRevisa els camps destacats.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"console-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDescarta els canvis[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDESA[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</form>[39m
+        [36m</fieldset>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Mínim[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mminim[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mEn configuració[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"console-checklist-title"[39m
+        [33mclass[39m=[32m"ah-card console-card console-checklist"[39m
+        [33mrole[39m=[32m"region"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"console-checklist-title"[39m
+        [36m>[39m
+          [0mChecklist d'onboarding[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"console-checklist-summary"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m4/7[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary__missing"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"console-checklist-summary__dot"[39m
+              [36m>[39m
+                [0m · [0m
+              [36m</span>[39m
+              [0mfalten: Dominis verificats, Preguntes freqüents, Política de privacitat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</p>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"console-checklist__items"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mDominis verificats[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mProveïdor de pagament configurat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mMarca: logo i colors propis[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPlantilles de comunicat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPreguntes freqüents[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPolítica de privacitat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPrimer administrador amb accés[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Seccions de la fitxa del club"[39m
+        [33mclass[39m=[32m"console-tabs"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"[39m
+        [36m>[39m
+          [0mIdentitat[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/localitzacio"[39m
+        [36m>[39m
+          [0mLocalització[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/dominis"[39m
+        [36m>[39m
+          [0mDominis[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/tema"[39m
+        [36m>[39m
+          [0mTema[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/moduls"[39m
+        [36m>[39m
+          [0mMòduls[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/pagaments"[39m
+        [36m>[39m
+          [0mPagaments[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/legal"[39m
+        [36m>[39m
+          [0mLegal[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/parametres"[39m
+        [36m>[39m
+          [0mParàmetres[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/catalegs"[39m
+        [36m>[39m
+          [0mCatàlegs base[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/equip"[39m
+        [36m>[39m
+          [0mEquip[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/processos"[39m
+        [36m>[39m
+          [0mProcessos[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/auditoria"[39m
+        [36m>[39m
+          [0mAuditoria[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/us"[39m
+        [36m>[39m
+          [0mÚs[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000002/estat"[39m
+        [36m>[39m
+          [0mEstat[0m
+        [36m</a>[39m
+      [36m</nav>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Legal"[39m
+        [33mclass[39m=[32m"console-tab-panel"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"console-tab-panel__writes"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"console-form"[39m
+          [36m>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"console-fieldset"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card console-card"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mLegal[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-form-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-form-field__label"[39m
+                    [33mfor[39m=[32m"console-legal-privacy"[39m
+                  [36m>[39m
+                    [0mURL de la política de privacitat[0m
+                  [36m</label>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"ah-input"[39m
+                    [33mid[39m=[32m"console-legal-privacy"[39m
+                    [33mrequired[39m=[32m""[39m
+                    [33mtype[39m=[32m"url"[39m
+                    [33mvalue[39m=[32m"https://minim.example.test/privacitat"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33maria-label[39m=[32m"Idiomes"[39m
+                  [33mclass[39m=[32m"catalog-locale-tabs"[39m
+                  [33mrole[39m=[32m"tablist"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-selected[39m=[32m"false"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mCA[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-selected[39m=[32m"true"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mES[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-selected[39m=[32m"false"[39m
+                    [33mrole[39m=[32m"tab"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mEN[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-form-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-form-field__label"[39m
+                    [33mfor[39m=[32m"console-legal-image"[39m
+                  [36m>[39m
+                    [0mText de consentiment d'imatge (Castellà)[0m
+                  [36m</label>[39m
+                  [36m<textarea[39m
+                    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                    [33mid[39m=[32m"console-legal-image"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card console-card"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mVersió dels textos legals[0m
+                [36m</h2>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"console-muted"[39m
+                [36m>[39m
+                  [0mCada versió queda registrada amb els consentiments que s'hi donen.[0m
+                [36m</p>[39m
+                [36m<p>[39m
+                  [0mEncara no s'ha publicat cap versió dels textos legals.[0m
+                [36m</p>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mPublica una versió nova[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-message console-message--danger"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mRevisa els camps destacats.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"console-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDescarta els canvis[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDESA[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</form>[39m
+        [36m</fieldset>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/console/ClubRecordPage.test.tsx:652:31
+    650|     expect(screen.getByLabelText("Text de consentiment d'imatge (Caste…
+    651|     fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    652|     const text = await screen.findByLabelText("Text de consentiment d'…
+       |                               ^
+    653|     await waitFor(() => {
+    654|       expect(text).toHaveAccessibleDescription("Aquest camp és obligat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 skipped (27)
+   Start at  09:33:12
+   Duration  11.29s (tests 90%, transform 5%, environment 2%, import 2%)
+

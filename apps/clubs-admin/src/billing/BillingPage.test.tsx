@@ -2214,18 +2214,6 @@ describe("E11-W07 step 5 (E147): the remittance's collection date, NO_NEXT_INVOI
     expect(screen.queryByText(/Presenta-la al banc/u)).toBeNull();
   });
 
-  it("R-12-14: on the collection date the rollback is disabled with its reason (COLLECTION_DATE_PASSED), never opened", async () => {
-    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
-    await renderPage();
-    const rollback = await screen.findByRole("button", { name: "Retrocedeix la remesa" });
-    expect(rollback).toBeDisabled();
-    expect(rollback).toHaveAccessibleDescription(
-      "Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc",
-    );
-    fireEvent.click(rollback);
-    expect(screen.queryByRole("dialog")).toBeNull();
-  });
-
   it("R-12-07: a NO_NEXT_INVOICE_DATE incident reads its label and opens the member's next-receipt drawer on D10", async () => {
     billingState.world.simulations.get("2026-09")?.simulation.incidents.push({
       code: "NO_NEXT_INVOICE_DATE",
@@ -2300,5 +2288,157 @@ describe("E11-W07 step 6 (R-12-19): the manual receipt's period", () => {
     // The field's own error is the only alert.
     expect(within(dialog).getAllByRole("alert")).toHaveLength(1);
     expect(dialog).not.toHaveTextContent("No s'ha pogut completar l'operació.");
+  });
+});
+
+describe("E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents", () => {
+  const DATE_PASSED =
+    "Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc";
+  const amountKpi = async () => {
+    const kpi = (await screen.findByText("Import de la remesa")).closest(".billing-kpi");
+    if (!(kpi instanceof HTMLElement)) throw new TypeError("No remittance KPI");
+    return kpi;
+  };
+  const rollbackPath = () => `/billing/runs/${billingState.world.runs[0]?.run.id ?? ""}/rollback`;
+
+  it("E164 (a), R-12-15: once COLLECTION_DATE_PASSED is a blocker, «Presenta-la al banc abans del …» gives way to «marca la remesa com a enviada»", async () => {
+    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    await renderPage();
+    const kpi = await amountKpi();
+    const notice = await within(kpi).findByText(DATE_PASSED);
+    expect(notice).toHaveAttribute("data-tone", "warning");
+    expect(within(kpi).queryByText(/Presenta-la al banc/u)).toBeNull();
+  });
+
+  it("R-12-14 (E156): with COLLECTION_DATE_PASSED alone, the rollback asks for FITXER_NO_ENVIAT after «Només si el fitxer no s'ha enviat mai al banc», and sends it", async () => {
+    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    await renderPage();
+    const action = await screen.findByRole("button", { name: "Retrocedeix la remesa" });
+    expect(action).toBeEnabled();
+    fireEvent.click(action);
+    const dialog = await screen.findByRole("dialog", {
+      name: "Retrocedeix la remesa · Setembre 2026",
+    });
+    expect(within(dialog).getByText(DATE_PASSED)).toBeVisible();
+    expect(
+      within(dialog).getByText("Només si el fitxer no s'ha enviat mai al banc"),
+    ).toBeVisible();
+    const confirm = within(dialog).getByRole("button", { name: "Retrocedeix" });
+    const keyword = within(dialog).getByLabelText("Escriu FITXER_NO_ENVIAT per confirmar-ho");
+    expect(within(dialog).queryByLabelText("Escriu RETROCEDIR per confirmar-ho")).toBeNull();
+    // The usual word does not lift the collection date.
+    fireEvent.change(keyword, { target: { value: "RETROCEDIR" } });
+    expect(confirm).toBeDisabled();
+    fireEvent.change(keyword, { target: { value: "FITXER_NO_ENVIAT" } });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "El fitxer no es va pujar al banc" },
+    });
+    expect(confirm).toBeEnabled();
+    fireEvent.click(confirm);
+    expect(await screen.findByText("168 rebuts anul·lats")).toBeVisible();
+    const [rollback] = requests("POST", rollbackPath());
+    expect(rollback?.body).toEqual({
+      confirmation: "FITXER_NO_ENVIAT",
+      reason: "El fitxer no es va pujar al banc",
+    });
+    expect(rollback?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/u);
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: "Retrocedeix la remesa" })).toBeNull();
+    });
+  });
+
+  it("R-12-14: a rollbackable month still asks for RETROCEDIR (no second word)", async () => {
+    await renderPage();
+    fireEvent.click(await screen.findByRole("button", { name: "Retrocedeix la remesa" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByLabelText("Escriu RETROCEDIR per confirmar-ho")).toBeVisible();
+    expect(within(dialog).queryByText("Només si el fitxer no s'ha enviat mai al banc")).toBeNull();
+  });
+
+  it("E164 (b), R-12-14: COLLECTION_DATE_PASSED with another blocker keeps the action disabled and names every blocker", async () => {
+    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    // A manual receipt numbered after the run (MANUAL_INVOICE_AFTER).
+    billingState.world.nextNumber += 1;
+    await renderPage();
+    const rollback = await screen.findByRole("button", { name: "Retrocedeix la remesa" });
+    expect(rollback).toBeDisabled();
+    expect(rollback).toHaveAccessibleDescription(
+      "No es pot retrocedir la remesa: s'ha emès un rebut manual després de la generació; la data de cobrament ja ha arribat",
+    );
+    fireEvent.click(rollback);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("R-12-14: a 409 RUN_NOT_ROLLBACKABLE to FITXER_NO_ENVIAT lists the api's reasons inside the dialog", async () => {
+    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    server.use(
+      http.post("*/api/v1/billing/runs/:id/rollback", () =>
+        HttpResponse.json(
+          {
+            code: "RUN_NOT_ROLLBACKABLE",
+            details: { reasons: ["REMITTANCE_SUBMITTED"] },
+            message: "Run not rollbackable",
+            traceId: "t-rollback",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+    await renderPage();
+    fireEvent.click(await screen.findByRole("button", { name: "Retrocedeix la remesa" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText("Escriu FITXER_NO_ENVIAT per confirmar-ho"), {
+      target: { value: "FITXER_NO_ENVIAT" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Retrocedeix" }));
+    const alert = await within(dialog).findByRole("alert");
+    expect(alert).toHaveTextContent("No es pot retrocedir la remesa:");
+    expect(within(alert).getByRole("listitem")).toHaveTextContent(
+      "la remesa ja s'ha enviat al banc",
+    );
+  });
+
+  it.each([
+    ["MANDATE_PENDING", "mandat SEPA pendent"],
+    ["NO_PAYMENT_METHOD", "sense mètode de pagament"],
+  ] as const)(
+    "R-12-07 (E156): a %s incident reads its label and opens the member's payment method on D10",
+    async (code, label) => {
+      billingState.world.simulations.get("2026-09")?.simulation.incidents.push({
+        code,
+        memberId: "61000000-0000-4000-8000-000000000021",
+        memberName: "Marta Puig",
+      });
+      const { onNavigate } = await renderPage();
+      const row = (await screen.findByText("Marta Puig")).closest("tr");
+      if (row === null) throw new TypeError("No incident row");
+      expect(row).toHaveTextContent(`Marta Puig${label}Obre fitxa`);
+      const link = within(row).getByRole("link", { name: "Obre fitxa de Marta Puig" });
+      const path = "/abonats/61000000-0000-4000-8000-000000000021?calaix=pagament";
+      expect(link).toHaveAttribute("href", path);
+      fireEvent.click(link);
+      expect(onNavigate).toHaveBeenCalledWith(path);
+    },
+  );
+
+  it("R-12-07: every BillingIncidentCode of the snapshot has its label in ca, es and en", async () => {
+    const snapshot = JSON.parse(
+      readFileSync(
+        resolve(import.meta.dirname, "../../../../packages/api-client/openapi/openapi.json"),
+        "utf8",
+      ),
+    ) as { components: { schemas: { BillingIncidentCode: { enum: string[] } } } };
+    const codes = snapshot.components.schemas.BillingIncidentCode.enum;
+    expect(codes).toEqual(expect.arrayContaining(["MANDATE_PENDING", "NO_PAYMENT_METHOD"]));
+    for (const locale of ["ca", "es", "en"] as const) {
+      const enums = (await loadNamespace(locale, "enums")) as Record<
+        string,
+        Record<string, string>
+      >;
+      expect(
+        codes.filter((code) => (enums.billingIncident?.[code] ?? "").trim() === ""),
+        locale,
+      ).toEqual([]);
+    }
   });
 });

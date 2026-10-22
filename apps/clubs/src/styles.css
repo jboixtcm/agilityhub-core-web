@@ -1534,6 +1534,21 @@ div.lifecycle-error p {
   cursor: pointer;
 }
 
+/* S04 §6 (ruling E138): a plan the add-dog cannot quote (a price twin) stays listed, unavailable. */
+.signup-plan--unavailable > button {
+  cursor: not-allowed;
+}
+
+.signup-plan--unavailable .signup-plan__head {
+  color: var(--ah-color-text-muted);
+}
+
+.signup-plan__unavailable {
+  color: var(--ah-color-text);
+  border-left: 3px solid var(--ah-color-warning);
+  padding-left: var(--ah-space-2);
+}
+
 .signup-plan__head {
   display: flex;
   align-items: baseline;

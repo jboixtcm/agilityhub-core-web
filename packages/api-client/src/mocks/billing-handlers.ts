@@ -714,7 +714,12 @@ export const billingHandlers = [
     if (stored === undefined) return notFound();
     const payload = await body<RollbackRequest>(request);
     return keyed(request, JSON.stringify({ id: params.id, payload }), () => {
-      if (payload?.confirmation !== "RETROCEDIR") return validationError("confirmation");
+      // R-12-14 (E156): `FITXER_NO_ENVIAT`, for a file that never reached the bank, lifts only
+      // COLLECTION_DATE_PASSED, which the refusal then never lists.
+      const fileNotSent = payload?.confirmation === "FITXER_NO_ENVIAT";
+      if (payload?.confirmation !== "RETROCEDIR" && !fileNotSent) {
+        return validationError("confirmation");
+      }
       if (typeof payload.reason !== "string" || payload.reason.length > 500) {
         return validationError("reason");
       }
@@ -726,7 +731,9 @@ export const billingHandlers = [
         remittance.submittedAt = now();
         remittance.submittedByAccountId = BILLING_ADMIN_ACCOUNT_ID;
       }
-      const reasons = rollbackBlockers(target, stored);
+      const reasons = rollbackBlockers(target, stored).filter(
+        (reason) => !fileNotSent || reason !== "COLLECTION_DATE_PASSED",
+      );
       if (
         reasons.length > 0 ||
         (stored.run.status !== "GENERATED" && stored.run.status !== "CHARGING")

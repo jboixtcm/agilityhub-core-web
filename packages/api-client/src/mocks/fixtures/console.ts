@@ -135,6 +135,8 @@ function initialClubs(): PlatformClub[] {
       domains: [
         {
           app: "clubs",
+          checkedAt: "2026-09-01T08:20:00Z",
+          failedChecks: 0,
           host: "app.example.test",
           primary: true,
           status: "VERIFIED",
@@ -143,6 +145,8 @@ function initialClubs(): PlatformClub[] {
         },
         {
           app: "clubs-admin",
+          checkedAt: "2026-09-01T08:25:00Z",
+          failedChecks: 0,
           host: "admin.example.test",
           primary: true,
           status: "VERIFIED",
@@ -198,6 +202,8 @@ function initialClubs(): PlatformClub[] {
       domains: [
         {
           app: "clubs",
+          checkedAt: null,
+          failedChecks: 0,
           host: "minim.example.test",
           primary: false,
           status: "PENDING",

@@ -229,6 +229,7 @@ describe("E10-W03 step 2 · «Entra com a administrador del club» from D19 «Es
   it("the host is the primary verified clubs-admin domain, else another verified one, never a pending one", () => {
     const domain = (host: string, status: "BROKEN" | "PENDING" | "VERIFIED", primary = false) => ({
       app: "clubs-admin" as const,
+      failedChecks: 0,
       host,
       primary,
       status,

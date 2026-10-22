@@ -251,6 +251,7 @@ export function signupConfig({
   familyGroup,
   member,
   packs,
+  priceTwinPlanIds = [],
   privacyPolicyUrl,
   stripe,
   today = SIGNUP_MOCK_TODAY,
@@ -263,6 +264,11 @@ export function signupConfig({
   privacyPolicyUrl: string;
   stripe: boolean;
   member?: SignupConfig["member"];
+  /**
+   * Add-dog mode (ruling E138, E11-T13 round 2): plans with a price twin — never `current`, never
+   * quoted, and no `additionalDogOptions` read from one.
+   */
+  priceTwinPlanIds?: readonly string[];
   /** The club's date (`CLUB.timeZone`) the quotes are computed for. */
   today?: string;
 }): SignupConfig {
@@ -292,7 +298,8 @@ export function signupConfig({
   if (member !== undefined) {
     const own = translatedConfig(locale).plans.find((plan) => plan.id === member.planId);
     const assignable = own !== undefined && (packs || own.type !== "PACK");
-    memberPlanId = assignable ? own.id : undefined;
+    // A plan with a price twin is listed, but never as the member's current one (E138).
+    memberPlanId = assignable && !priceTwinPlanIds.includes(own.id) ? own.id : undefined;
     if (assignable && !config.plans.some((plan) => plan.id === own.id)) {
       config.plans = [...config.plans, own];
     }
@@ -312,6 +319,12 @@ export function signupConfig({
       addDog: member !== undefined,
       memberPlanId,
     });
+    if (member !== undefined && priceTwinPlanIds.length > 0) {
+      // No quote that would read one of two current prices (E138): its submission is a 409.
+      config.upfront.planQuotes = config.upfront.planQuotes.filter(
+        (quote) => !priceTwinPlanIds.includes(quote.planId),
+      );
+    }
     if (stripe) {
       config.paymentMethods?.splice(1, 0, {
         label: signupPaymentLabel("CARD", locale),

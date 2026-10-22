@@ -1,0 +1,717 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/App.test.tsx (42 tests | 4 failed | 37 skipped) 30204ms
+   ❯ E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host (5)
+     × 403 PLATFORM_ONLY: an account without the platform role is told the console is the AgilityHub team's 25ms
+     × the magic link /activacio?t= on the product host opens the console, and the token leaves the address 10043ms
+     × the magic link of an account without the platform role says so (403 PLATFORM_ONLY) 10013ms
+     × an invalid or used magic link says so and leads back to /entrar 10027ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host > 403 PLATFORM_ONLY: an account without the platform role is told the console is the AgilityHub team's
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquest accés és només per a l'equip AgilityHub.[39m
+Received:
+[31m  No s'ha pogut completar l'accés. Torna-ho a provar.[39m
+ ❯ src/App.test.tsx:688:46
+    686|     await renderApplication(authClient(), currentMockScenario().brandi…
+    687|     await signInWithPassword("aina.serra@example.test");
+    688|     expect(await screen.findByRole("alert")).toHaveTextContent(REFUSAL…
+       |                                              ^
+    689|     expect(assign).not.toHaveBeenCalled();
+    690|     expect(screen.getByRole("button", { name: "ENTRA" })).toBeEnabled(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/App.test.tsx > E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host > the magic link /activacio?t= on the product host opens the console, and the token leaves the address
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/consola/clubs' ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"light"[39m
+  [33mdata-theme[39m=[32m"light"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: light; --ah-color-primary: #2563EB; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #F8FAFC; --ah-color-surface: #FFFFFF; --ah-color-surface-2: #F1F5F9; --ah-color-text: #0F172A; --ah-color-text-muted: #475569; --ah-color-border: #CBD5E1; --ah-color-success: #15803D; --ah-color-warning: #A16207; --ah-color-danger: #B91C1C; --ah-color-info: #0369A1; --ah-font-sans: system-ui; --ah-font-display: system-ui; --ah-radius-sm: 8px; --ah-radius-md: 8px;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#F8FAFC"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"admin-shell"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"admin-shell__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"admin-shell__brand"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"admin-shell__mark"[39m
+            [36m>[39m
+              [0mA[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mAgilityHub[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"admin-shell__actions"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"admin-user-menu"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33maria-label[39m=[32m"Menú d’usuari"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<aside[39m
+          [33mclass[39m=[32m"ah-sidebar"[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"Navegació d’administració"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33mclass[39m=[32m"ah-sidebar__group"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mPlataforma[0m
+              [36m</h2>[39m
+              [36m<a[39m
+                [33maria-current[39m=[32m"page"[39m
+                [33mclass[39m=[32m"ah-sidebar__entry"[39m
+                [33mhref[39m=[32m"/consola/clubs"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span>[39m
+                  [0mConsola[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</section>[39m
+          [36m</nav>[39m
+        [36m</aside>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"admin-shell__content"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"console-page"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"console-page__header"[39m
+            [36m>[39m
+              [36m<div>[39m
+                [36m<h1>[39m
+                  [0mConsola de clubs[0m
+                [36m</h1>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"console-muted"[39m
+                [36m>[39m
+                  [0mEls clubs de la plataforma, el seu estat i l'ús del mes.[0m
+                [36m</p>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mNou club[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</header>[39m
+            [36m<section[39m
+              [33maria-label[39m=[32m"Clubs de la plataforma"[39m
+              [33mclass[39m=[32m"ah-universal-list"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-universal-list__search"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCerca per nom o slug[0m
+                  [36m</span>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<input[39m
+                    [33maria-label[39m=[32m"Cerca per nom o slug"[39m
+                    [33mplaceholder[39m=[32m"Cerca per nom o slug"[39m
+                    [33mtype[39m=[32m"search"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Estat"[39m
+               ...
+ ❯ src/App.test.tsx:700:22
+    698|     await renderApplication(authClient(), currentMockScenario().brandi…
+    699|     await waitFor(() => {
+    700|       expect(assign).toHaveBeenCalledWith("/consola/clubs");
+       |                      ^
+    701|     });
+    702|     expect(grants).toContainEqual({
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/App.test.tsx > E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host > the magic link of an account without the platform role says so (403 PLATFORM_ONLY)
+TestingLibraryElementError: Unable to find an element with the text: Aquest accés és només per a l'equip AgilityHub.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"admin-shell"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"admin-shell__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__brand"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"admin-shell__mark"[39m
+          [36m>[39m
+            [0mA[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0mAgilityHub[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"admin-user-menu"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33maria-label[39m=[32m"Menú d’usuari"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"ah-sidebar"[39m
+      [36m>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"Navegació d’administració"[39m
+        [36m/>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"admin-shell__content"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"admin-shell"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"admin-shell__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__brand"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"admin-shell__mark"[39m
+          [36m>[39m
+            [0mA[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0mAgilityHub[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"admin-user-menu"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33maria-label[39m=[32m"Menú d’usuari"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"ah-sidebar"[39m
+      [36m>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"Navegació d’administració"[39m
+        [36m/>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"admin-shell__content"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:715:25
+    713|     const assign = stubFullLoads();
+    714|     await renderApplication(authClient(), currentMockScenario().brandi…
+    715|     expect(await screen.findByText(REFUSAL)).toBeVisible();
+       |                         ^
+    716|     expect(assign).not.toHaveBeenCalled();
+    717|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/App.test.tsx > E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host > an invalid or used magic link says so and leads back to /entrar
+TestingLibraryElementError: Unable to find role="heading" and name "Aquest enllaç ja no és vàlid"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"admin-shell"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"admin-shell__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__brand"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"admin-shell__mark"[39m
+          [36m>[39m
+            [0mA[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0mAgilityHub[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"admin-user-menu"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33maria-label[39m=[32m"Menú d’usuari"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"ah-sidebar"[39m
+      [36m>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"Navegació d’administració"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"ah-sidebar__group"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPlataforma[0m
+            [36m</h2>[39m
+            [36m<a[39m
+              [33maria-current[39m=[32m"page"[39m
+              [33mclass[39m=[32m"ah-sidebar__entry"[39m
+              [33mhref[39m=[32m"/consola/clubs"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mConsola[0m
+              [36m</span>[39m
+            [36m</a>[39m
+          [36m</section>[39m
+        [36m</nav>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"admin-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"console-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"console-page__header"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<h1>[39m
+                [0mConsola de clubs[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"console-muted"[39m
+              [36m>[39m
+                [0mEls clubs de la plataforma, el seu estat i l'ús del mes.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNou club[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</header>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Clubs de la plataforma"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca per nom o slug[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca per nom o slug"[39m
+                  [33mplaceholder[39m=[32m"Cerca per nom o slug"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Estat"[39m
+                [33mclass[39m=[32m"ah-universal-list__status"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTots els estats[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ONBOARDING"[39m
+                [36m>[39m
+                  [0mEn configuració[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ACTIVE"[39m
+                [36m>[39m
+                  [0mActiu[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"SUSPENDED"[39m
+                [36m>[39m
+                  [0mSuspès[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m""...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"admin-shell"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"admin-shell__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__brand"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"admin-shell__mark"[39m
+          [36m>[39m
+            [0mA[0m
+          [36m</span>[39m
+          [36m<strong>[39m
+            [0mAgilityHub[0m
+          [36m</strong>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"admin-shell__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"admin-user-menu"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-expanded[39m=[32m"false"[39m
+              [33maria-haspopup[39m=[32m"menu"[39m
+              [33maria-label[39m=[32m"Menú d’usuari"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"ah-sidebar"[39m
+      [36m>[39m
+        [36m<nav[39m
+          [33maria-label[39m=[32m"Navegació d’administració"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"ah-sidebar__group"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPlataforma[0m
+            [36m</h2>[39m
+            [36m<a[39m
+              [33maria-current[39m=[32m"page"[39m
+              [33mclass[39m=[32m"ah-sidebar__entry"[39m
+              [33mhref[39m=[32m"/consola/clubs"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-globe"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mConsola[0m
+              [36m</span>[39m
+            [36m</a>[39m
+          [36m</section>[39m
+        [36m</nav>[39m
+      [36m</aside>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"admin-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"console-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"console-page__header"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<h1>[39m
+                [0mConsola de clubs[0m
+              [36m</h1>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"console-muted"[39m
+              [36m>[39m
+                [0mEls clubs de la plataforma, el seu estat i l'ús del mes.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNou club[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</header>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Clubs de la plataforma"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca per nom o slug[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca per nom o slug"[39m
+                  [33mplaceholder[39m=[32m"Cerca per nom o slug"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Estat"[39m
+                [33mclass[39m=[32m"ah-universal-list__status"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTots els estats[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ONBOARDING"[39m
+                [36m>[39m
+                  [0mEn configuració[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ACTIVE"[39m
+                [36m>[39m
+                  [0mActiu[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"SUSPENDED"[39m
+                [36m>[39m
+                  [0mSuspès[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m""...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:724:20
+    722|     await renderApplication(authClient(), currentMockScenario().brandi…
+    723|     expect(
+    724|       await screen.findByRole("heading", { level: 1, name: "Aquest enl…
+       |                    ^
+    725|     ).toBeVisible();
+    726|     expect(screen.getByRole("link", { name: "Envia-me'n un de nou" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed | 37 skipped (42)
+   Start at  09:16:09
+   Duration  31.67s (tests 96%, transform 3%, import 1%, environment 1%)
+

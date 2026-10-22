@@ -25,8 +25,10 @@ const ID_HOST = "id.example.test";
 const PRODUCT_HOST = "clubsadmin.example.test";
 /** The seed's platform account (api E10-T03): `AGILITYHUB_ADMIN`, no club role. */
 const PLATFORM_EMAIL = "platform@example.test";
-/** The seeded club admin of the Cànic, given the platform role through the api (`beforeAll`). */
+/** The seeded club admin of the Cànic: the club's own tab, and the R-17-09 proof's account. */
 const CLUB_ADMIN_EMAIL = "admin@example.test";
+/** A seeded member of the Cànic, without the platform role: `403 PLATFORM_ONLY` on the product host. */
+const MEMBER_EMAIL = "member@example.test";
 
 mkdirSync(evidenceDirectory, { recursive: true });
 
@@ -151,10 +153,10 @@ async function platformToken(): Promise<string> {
 }
 
 /**
- * E10-W02 (organizer note E125): no database grant any more. The platform account gives the
- * Cànic's seeded admin `AGILITYHUB_ADMIN` through the api (R-17-09, the «Equip» tab's switch), so
- * the console runs on the Cànic's admin host: the product host does not sign anyone in yet (the
- * test marked `fail` below).
+ * R-17-09 (organizer note E125): the platform account gives the Cànic's seeded admin
+ * `AGILITYHUB_ADMIN` through the api (the «Equip» tab's switch), never through the database. Since
+ * E11-W08 the console runs on the product host with the seed's platform account; this grant stays
+ * as the rule's own proof.
  */
 async function grantPlatformRoleThroughTheApi(email: string): Promise<void> {
   const auth = { Authorization: `Bearer ${await platformToken()}` };
@@ -263,27 +265,49 @@ async function hostPrimary(page: Page): Promise<string> {
   );
 }
 
-/** The Cànic's seeded admin, given `AGILITYHUB_ADMIN` through the api (`beforeAll`). */
-async function loginPlatformAdmin(page: Page): Promise<void> {
-  await page.goto(`${adminUrl}/entrar`);
-  await page.getByLabel("Correu electrònic").fill(CLUB_ADMIN_EMAIL);
-  const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
-  if (await reveal.isVisible()) await reveal.click();
-  await page.getByLabel("Contrasenya").fill(corePassword);
-  const me = page.waitForResponse(
-    (response) => response.url().endsWith("/api/v1/me") && response.request().method() === "GET",
-  );
-  await page.getByRole("button", { exact: true, name: "ENTRA" }).click({ noWaitAfter: true });
-  expect((await me).status()).toBe(200);
-  // A club role lands on D1; the platform role adds «Plataforma › Consola» to its menu.
-  await page.waitForURL("**/tauler");
-  await expect(page.getByRole("link", { name: "Consola" })).toHaveAttribute(
-    "href",
-    "/consola/clubs",
+/** The `/oauth2/token` password grant a page sends, by its form. */
+function isPasswordGrant(response: Response): boolean {
+  return (
+    new URL(response.url()).pathname === "/oauth2/token" &&
+    new URLSearchParams(response.request().postData() ?? "").get("grant_type") === "password"
   );
 }
 
-test.beforeAll(async () => {
+/** `/entrar` of a back office: the e-mail, the password revealed and typed, [ENTRA]. */
+async function submitPassword(page: Page, email: string, password: string): Promise<Response> {
+  await page.getByLabel("Correu electrònic").fill(email);
+  const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
+  if (await reveal.isVisible()) await reveal.click();
+  await page.getByLabel("Contrasenya").fill(password);
+  const token = page.waitForResponse(isPasswordGrant);
+  await page.getByRole("button", { exact: true, name: "ENTRA" }).click({ noWaitAfter: true });
+  return token;
+}
+
+/**
+ * E11-W08 (S17 §2 «Entrada», ruling E157): the seed's platform account signs in to the console on
+ * the product host with `client_id = clubs-admin` and lands on D19, without a club.
+ */
+async function loginPlatformAdmin(page: Page): Promise<void> {
+  await page.goto(`${productUrl}/entrar`);
+  const token = await submitPassword(page, PLATFORM_EMAIL, corePassword);
+  expect(token.status(), await token.text()).toBe(200);
+  expect(new URLSearchParams(token.request().postData() ?? "").get("client_id")).toBe(
+    "clubs-admin",
+  );
+  await page.waitForURL(`${productUrl}/consola/clubs`);
+  await expect(page.getByRole("link", { name: "Consola" })).toHaveAttribute("aria-current", "page");
+}
+
+/** The Cànic's seeded admin on the club's own back office (its D1). */
+async function loginClubAdmin(page: Page): Promise<void> {
+  await page.goto(`${adminUrl}/entrar`);
+  const token = await submitPassword(page, CLUB_ADMIN_EMAIL, corePassword);
+  expect(token.status()).toBe(200);
+  await page.waitForURL("**/tauler");
+}
+
+test("R-17-09 · the platform account gives a club admin AGILITYHUB_ADMIN through the api (PUT /platform/accounts/{id}/platform-roles)", async () => {
   await grantPlatformRoleThroughTheApi(CLUB_ADMIN_EMAIL);
 });
 
@@ -432,39 +456,108 @@ test("E10-W02 · the console's entry: the product host's branding and boot, the 
   await consoleContext.close();
 });
 
-test("E10-W02 · the platform account signs in to the console on the product host and lands on D19 (S17 §2 «Entrada») — expected to fail until the api signs a platform account in on a product host", async ({
+test("E11-W08 · the platform account signs in to the console on the product host (password and magic link) and lands on D19; an account without the platform role gets 403 PLATFORM_ONLY (S17 §2 «Entrada», S01 R-01-02, ruling E157)", async ({
   browser,
 }) => {
-  // The core answers `POST /oauth2/token` on the product host with `404 UNKNOWN_HOST` for every
-  // client (`probe-core.json`, ruling E157: api E11-T19). Only that answer is expected to fail;
-  // any other refusal (`403 PLATFORM_ONLY`, a 500) or a broken screen fails outright, and the day
-  // the core signs the platform account in there the test passes (E11-W08 removes the mark).
+  test.setTimeout(180_000);
   const context = await desktopContext(browser);
   const page = await context.newPage();
   await page.goto(`${productUrl}/entrar`);
-  await page.getByLabel("Correu electrònic").fill(PLATFORM_EMAIL);
-  await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill(corePassword);
-  const token = page.waitForResponse(
-    (response) =>
-      new URL(response.url()).pathname === "/oauth2/token" &&
-      new URLSearchParams(response.request().postData() ?? "").get("grant_type") === "password",
+  const meResponse = page.waitForResponse(
+    (response) => response.url().endsWith("/api/v1/me") && response.request().method() === "GET",
   );
-  await page.getByRole("button", { exact: true, name: "ENTRA" }).click({ noWaitAfter: true });
-  const tokenResponse = await token;
-  const tokenCode = tokenResponse.ok() ? null : errorCodeOf(await tokenResponse.text());
-  writeFileSync(
-    join(evidenceDirectory, "e10w02-core-product-host-sign-in.json"),
-    `${JSON.stringify({ code: tokenCode, status: tokenResponse.status() }, null, 2)}\n`,
-  );
-  test.fail(
-    tokenResponse.status() === 404 && tokenCode === "UNKNOWN_HOST",
-    "api: E11-T19 (/oauth2/token on the product host answers 404 UNKNOWN_HOST)",
-  );
-  expect(tokenResponse.status()).toBe(200);
+  const token = await submitPassword(page, PLATFORM_EMAIL, corePassword);
+  const tokenBody = (await token.json()) as Record<string, unknown>;
+  const me = (await meResponse.then((response) => response.json())) as {
+    account: { platformRoles: string[] };
+    membership?: unknown;
+  };
+  // The token answer without its secrets: its shape, never a token.
+  const notes: Record<string, unknown> = {
+    password: {
+      clientId: new URLSearchParams(token.request().postData() ?? "").get("client_id"),
+      fields: Object.keys(tokenBody).sort(),
+      host: PRODUCT_HOST,
+      me: { membership: me.membership ?? null, platformRoles: me.account.platformRoles },
+      refreshCookie: (await token.headerValue("set-cookie"))?.split("=")[0] ?? null,
+      status: token.status(),
+      tokenType: tokenBody.token_type,
+    },
+  };
+  expect(token.status()).toBe(200);
+  expect(tokenBody.refresh_token).toBeUndefined();
+  expect(me.account.platformRoles).toEqual(["AGILITYHUB_ADMIN"]);
+  expect(me.membership ?? null).toBeNull();
   await page.waitForURL(`${productUrl}/consola/clubs`);
   await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
+  // A token without a club: no club menu, no D1.
+  await expect(page.getByRole("link", { name: "Consola" })).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("link", { name: "Tauler" })).toHaveCount(0);
+  await screenshot(page, "core-E11W08-consola-host-producte-1280.png");
+  // A reload keeps the session: the refresh cookie of the product host renews it.
+  const refreshed = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === "/oauth2/token" &&
+      new URLSearchParams(response.request().postData() ?? "").get("grant_type") ===
+        "refresh_token",
+  );
+  await page.reload();
+  expect((await refreshed).status()).toBe(200);
+  await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
   await context.close();
+
+  // The magic link on the product host: `https://{product host}/activacio?t=…`, into D19.
+  const linkContext = await desktopContext(browser);
+  const linkPage = await linkContext.newPage();
+  const mailboxBefore = mailboxFiles();
+  await linkPage.goto(`${productUrl}/entrar`);
+  await linkPage.getByLabel("Correu electrònic").fill(PLATFORM_EMAIL);
+  await linkPage.getByRole("button", { name: "Envia'm l'enllaç" }).click();
+  await expect(linkPage.getByRole("status")).toBeVisible();
+  let link: URL | undefined;
+  await expect
+    .poll(
+      () => {
+        link = messagesFor(PLATFORM_EMAIL, mailboxBefore)
+          .flatMap(linksOf)
+          .find((candidate) => candidate.pathname === "/activacio");
+        return link !== undefined;
+      },
+      { timeout: 20_000 },
+    )
+    .toBe(true);
+  notes.magicLink = link === undefined ? null : describeLink(link);
+  expect(link?.host).toBe(PRODUCT_HOST);
+  const exchanged = linkPage.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === "/oauth2/token" &&
+      new URLSearchParams(response.request().postData() ?? "").get("grant_type") ===
+        "urn:agilityhub:grant:magic-link",
+  );
+  await linkPage.goto(`${productUrl}${link?.pathname ?? ""}${link?.search ?? ""}`);
+  expect((await exchanged).status()).toBe(200);
+  await linkPage.waitForURL(`${productUrl}/consola/clubs`);
+  await expect(linkPage.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
+  await linkContext.close();
+
+  // An account without the platform role: 403 PLATFORM_ONLY, told on the sign-in page.
+  const refusedContext = await desktopContext(browser);
+  const refusedPage = await refusedContext.newPage();
+  await refusedPage.goto(`${productUrl}/entrar`);
+  const refused = await submitPassword(refusedPage, MEMBER_EMAIL, corePassword);
+  notes.refused = { code: errorCodeOf(await refused.text()), status: refused.status() };
+  writeFileSync(
+    join(evidenceDirectory, "e11w08-core-product-host-sign-in.json"),
+    `${JSON.stringify(notes, null, 2)}\n`,
+  );
+  expect(refused.status()).toBe(403);
+  expect(errorCodeOf(await refused.text())).toBe("PLATFORM_ONLY");
+  await expect(refusedPage.getByRole("alert")).toHaveText(
+    "Aquest accés és només per a l'equip AgilityHub.",
+  );
+  await expect(refusedPage).toHaveURL(`${productUrl}/entrar`);
+  await screenshot(refusedPage, "core-E11W08-platform-only-1280.png");
+  await refusedContext.close();
 });
 
 test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou club» wizard (T-17-12)", async ({
@@ -474,11 +567,10 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
   const context = await desktopContext(browser);
   const page = await context.newPage();
   recordPlatformCalls(page);
-  await loginPlatformAdmin(page);
 
-  // Step 1: the global role adds «Plataforma › Consola» to the club admin's menu.
+  // Step 1: the platform account lands on D19's list on the product host (E11-W08).
   const list = page.waitForResponse(isPlatform("GET", /\/api\/v1\/platform\/clubs$/u));
-  await page.getByRole("link", { name: "Consola" }).click();
+  await loginPlatformAdmin(page);
   expect((await list).status()).toBe(200);
   await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
 
@@ -809,13 +901,17 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   await expect(support.getByRole("link", { name: "Consola" })).toHaveCount(0);
   await screenshot(support, "core-D19-suport-backoffice-1280.png");
 
-  // Step 3: the club's ADMIN (the same seeded admin, in its own tab) ends it from «Auditoria».
-  await navigateSpa(page, "/auditoria");
-  const accessCard = page.getByRole("region", { name: "Accessos de suport en curs" });
+  // Step 3: the club's ADMIN, on its own back office (its own browser: every local server is
+  // 127.0.0.1, and a cookie ignores the port), ends it from «Auditoria».
+  const clubContext = await desktopContext(browser);
+  const clubPage = await clubContext.newPage();
+  await loginClubAdmin(clubPage);
+  await navigateSpa(clubPage, "/auditoria");
+  const accessCard = clubPage.getByRole("region", { name: "Accessos de suport en curs" });
   const item = accessCard.getByRole("listitem").filter({ hasText: reason });
   await expect(item).toHaveCount(1);
-  await screenshot(page, "core-D19-auditoria-acces-suport-1280.png");
-  const ended = page.waitForResponse(
+  await screenshot(clubPage, "core-D19-auditoria-acces-suport-1280.png");
+  const ended = clubPage.waitForResponse(
     (response) =>
       response.request().method() === "DELETE" &&
       response.url().includes("/api/v1/support-accesses/"),
@@ -823,6 +919,7 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   await item.getByRole("button", { name: "Acaba l'accés" }).click();
   expect((await ended).status()).toBe(204);
   await expect(accessCard.getByText(/S'ha acabat l'accés de suport de/u)).toBeVisible();
+  await clubContext.close();
   // The support tab's token answers 401 from its next request: the tab says the access ended.
   await support.reload();
   await expect(
@@ -1044,7 +1141,6 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
   // 1. Into the console.
   await timed("1 · Entra a la consola", async () => {
     await loginPlatformAdmin(page);
-    await page.getByRole("link", { name: "Consola" }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
   });
 

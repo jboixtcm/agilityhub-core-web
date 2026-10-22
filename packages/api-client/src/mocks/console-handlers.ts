@@ -1235,6 +1235,8 @@ function domainHandlers() {
       }
       const domain: PlatformDomain = {
         app: body.app,
+        checkedAt: null,
+        failedChecks: 0,
         host,
         primary: false,
         status: "PENDING",
@@ -1312,6 +1314,8 @@ function domainHandlers() {
             ? {
                 ...candidate,
                 primary: candidate.primary || !hasPrimary,
+                checkedAt: now(),
+                failedChecks: 0,
                 status: "VERIFIED" as const,
                 verification: null,
                 verifiedAt: now(),

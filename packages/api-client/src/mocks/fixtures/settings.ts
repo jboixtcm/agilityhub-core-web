@@ -387,6 +387,14 @@ export function replaceParameter(next: Parameter): void {
   }
 }
 
+/**
+ * `billing.nextInvoiceDayOfMonth` of the mock club (CATALEG_PARAMETRES «Quotes i remesa», default
+ * 1, R-12-06): what `GET /parameters/{key}` answers, and the day of next month the plan change gives
+ * a member without a date (E164 (e)) — one value, so D10's sentence and the mock agree.
+ */
+export const billingDayState = { nextInvoiceDayOfMonth: 1 };
+
 export function resetSettingsState(): void {
   settingsState.parameters = structuredClone(initialParameters);
+  billingDayState.nextInvoiceDayOfMonth = 1;
 }

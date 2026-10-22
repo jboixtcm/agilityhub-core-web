@@ -1,12 +1,13 @@
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import openapiDocument from "../../openapi/openapi.json";
 import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 
 import { censusRecordState } from "./fixtures/census";
+import { billingDayState, resetSettingsState } from "./fixtures/settings";
 import {
   ERASED_MEMBER_ID,
   mockScenario,
@@ -387,5 +388,44 @@ describe("E11-W06 W10 (S04 R-04-06, INC-39) · a record frozen by a pending read
       params,
     });
     expect(blocked.response.status).toBe(201);
+  });
+});
+
+describe("E11-W08 E164 (e) (R-12-06, E146) · the plan change gives a member without a date next month's billing.nextInvoiceDayOfMonth", () => {
+  beforeEach(() => {
+    // Club-local 05/10/2026: next month is November.
+    vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    resetSettingsState();
+  });
+
+  async function changeToMonthly() {
+    censusRecordState.memberOverview.member.nextInvoiceDate = null;
+    censusRecordState.memberOverview.member.planId = "plan-pack-10";
+    const changed = await client.POST("/members/{id}/plan-change", {
+      body: { planId: "plan-member", priceId: "price-member" },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: LIVE_MEMBER_ID } },
+    });
+    expect(changed.response.status).toBe(204);
+    const overview = await client.GET("/members/{id}/overview", {
+      params: { path: { id: LIVE_MEMBER_ID } },
+    });
+    return overview.data?.member.nextInvoiceDate;
+  }
+
+  it("the day the parameter reads (5) is the day the member gets: 05/11/2026", async () => {
+    billingDayState.nextInvoiceDayOfMonth = 5;
+    const parameter = await client.GET("/parameters/{key}", {
+      params: { path: { key: "billing.nextInvoiceDayOfMonth" } },
+    });
+    expect(parameter.data?.value).toBe(5);
+    expect(await changeToMonthly()).toBe("2026-11-05");
+  });
+
+  it("the parameter's maximum (28) gives 28/11/2026", async () => {
+    billingDayState.nextInvoiceDayOfMonth = 28;
+    expect(await changeToMonthly()).toBe("2026-11-28");
   });
 });

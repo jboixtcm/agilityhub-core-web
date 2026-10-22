@@ -87,6 +87,7 @@ import {
 import { findTemplate, messagingState } from "./fixtures/messaging";
 import { NOTIFICATIONS_MOCK_NOW, UNSUBSCRIBE_TOKENS } from "./fixtures/notifications";
 import {
+  billingDayState,
   findParameter,
   replaceParameter,
   resetSettingsState,
@@ -1181,6 +1182,9 @@ function signupConfiguration(request: Request) {
     privacyPolicyUrl: scenario.branding.legal.privacyPolicyUrl,
     stripe: scenario.signupStripe === true,
     today: signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY,
+    ...(scenario.signupPriceTwin === true && signupMemberFixture.planId !== undefined
+      ? { priceTwinPlanIds: [signupMemberFixture.planId] }
+      : {}),
     ...(request.headers.has("Authorization")
       ? {
           member:
@@ -2176,6 +2180,19 @@ export const handlers = [
     } else if (!offer.some((plan) => plan.id === requested)) {
       return apiError("PLAN_NOT_AVAILABLE", "Plan not available", 422);
     }
+    // S04 §6 (E11-T13 round 2, ruling E138): a quote that would read one of two current prices of
+    // a concept is refused on that plan, and nothing is written.
+    if (
+      currentMockScenario().signupPriceTwin === true &&
+      requested === signupMemberFixture.planId
+    ) {
+      return apiErrorWithDetails("PRICE_OVERLAP", "Two current prices of one concept", 409, {
+        concept: "MONTHLY_FEE",
+        conflictingPriceId: "10000000-0000-4000-8000-0000000000f2",
+        planId: requested,
+        priceId: "10000000-0000-4000-8000-0000000000f1",
+      });
+    }
     if (missingRequiredDogDocument(request, body.documents)) {
       return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
     }
@@ -2435,7 +2452,8 @@ export const handlers = [
           label: "Dia del proper rebut",
           module: "BILLING",
           type: "INT",
-          value: 1,
+          // The plan change reads the same value (E164 (e)).
+          value: billingDayState.nextInvoiceDayOfMonth,
           version: 1,
         });
       }
@@ -2678,11 +2696,22 @@ export const handlers = [
     const form = new URLSearchParams(await request.text());
     const grant = form.get("grant_type");
     const scenario = currentMockScenario();
+    // S01 R-01-02 (ruling E157, api E11-T19): the console's product host (a branding without a
+    // club) signs `clubs-admin` in only for an AGILITYHUB_ADMIN; any other account is `403
+    // PLATFORM_ONLY`, and it never got a refresh cookie on that host (`400 REFRESH_EXPIRED`).
+    const refusedOnProductHost =
+      form.get("client_id") === "clubs-admin" &&
+      scenario.branding.club.slug === null &&
+      !scenario.me.account.platformRoles.includes("AGILITYHUB_ADMIN");
+    if (refusedOnProductHost && grant === "refresh_token") {
+      return apiError("REFRESH_EXPIRED", "No session", 400);
+    }
     if (grant === "urn:agilityhub:grant:magic-link") {
       const token = form.get("token") ?? "";
       if (scenario.invalidMagicLink === true || token === "invalid") {
         return apiError("MAGIC_LINK_INVALID", "Magic link invalid", 400);
       }
+      if (refusedOnProductHost) return apiError("PLATFORM_ONLY", "Platform accounts only", 403);
       resetPasswordMarkUntil = token.startsWith("reset")
         ? Date.now() + RESET_PASSWORD_MARK_MS
         : undefined;
@@ -2694,6 +2723,7 @@ export const handlers = [
         // T-01-12: a code is redeemed once; a second use is `400 HANDOFF_INVALID`.
         return apiError("HANDOFF_INVALID", "Handoff invalid", 400);
       }
+      if (refusedOnProductHost) return apiError("PLATFORM_ONLY", "Platform accounts only", 403);
       if (token.startsWith(IMPERSONATION_HANDOFF_PREFIX)) {
         redeemHandoff(token);
         return HttpResponse.json(mockImpersonationTokens());
@@ -2707,6 +2737,7 @@ export const handlers = [
       if (form.get("password") === "wrong-password") {
         return apiError("INVALID_CREDENTIALS", "Invalid credentials", 401);
       }
+      if (refusedOnProductHost) return apiError("PLATFORM_ONLY", "Platform accounts only", 403);
     }
     if (scenario.signedOutUntilLogin === true) {
       // No refresh cookie until this browser signs in with its password: the restore is `400

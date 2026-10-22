@@ -298,7 +298,9 @@
     "CARD_INVALID": "tarjeta no válida",
     "CURRENCY_MISMATCH": "moneda distinta de la del club",
     "PROVIDER_DISABLED": "proveedor de pago desactivado",
-    "NO_NEXT_INVOICE_DATE": "sin fecha del próximo recibo"
+    "NO_NEXT_INVOICE_DATE": "sin fecha del próximo recibo",
+    "NO_PAYMENT_METHOD": "sin método de pago",
+    "MANDATE_PENDING": "mandato SEPA pendiente"
   },
   "paymentChannel": {
     "CASH": "Efectivo",

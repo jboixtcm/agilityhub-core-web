@@ -1,0 +1,586 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (69 tests | 7 failed | 61 skipped) 20895ms
+   ❯ E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents (8)
+     × E164 (a), R-12-15: once COLLECTION_DATE_PASSED is a blocker, «Presenta-la al banc abans del …» gives way to «marca la remesa com a enviada» 10201ms
+     × R-12-14 (E156): with COLLECTION_DATE_PASSED alone, the rollback asks for FITXER_NO_ENVIAT after «Només si el fitxer no s'ha enviat mai al banc», and sends it 154ms
+     × E164 (b), R-12-14: COLLECTION_DATE_PASSED with another blocker keeps the action disabled and names every blocker 117ms
+     × R-12-14: a 409 RUN_NOT_ROLLBACKABLE to FITXER_NO_ENVIAT lists the api's reasons inside the dialog 10108ms
+     × R-12-07 (E156): a MANDATE_PENDING incident reads its label and opens the member's payment method on D10 93ms
+     × R-12-07 (E156): a NO_PAYMENT_METHOD incident reads its label and opens the member's payment method on D10 78ms
+     × R-12-07: every BillingIncidentCode of the snapshot has its label in ca, es and en 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > E164 (a), R-12-15: once COLLECTION_DATE_PASSED is a blocker, «Presenta-la al banc abans del …» gives way to «marca la remesa com a enviada»
+TestingLibraryElementError: Unable to find an element with the text: Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card billing-kpi"[39m
+[36m>[39m
+  [36m<strong[39m
+    [33mclass[39m=[32m"billing-kpi__value"[39m
+  [36m>[39m
+    [0m6.480 €[0m
+  [36m</strong>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__label"[39m
+  [36m>[39m
+    [0mImport de la remesa[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__detail"[39m
+  [36m>[39m
+    [0mdata de cobrament: 01/09[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__due"[39m
+    [33mdata-tone[39m=[32m"warning"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [0mPresenta-la al banc abans del 01/09[0m
+  [36m</span>[39m
+  [36m<a[39m
+    [33mclass[39m=[32m"billing-kpi__link"[39m
+    [33mhref[39m=[32m"/facturacio/remeses?mes=2026-09"[39m
+  [36m>[39m
+    [0mRemeses ›[0m
+  [36m</a>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card billing-kpi"[39m
+[36m>[39m
+  [36m<strong[39m
+    [33mclass[39m=[32m"billing-kpi__value"[39m
+  [36m>[39m
+    [0m6.480 €[0m
+  [36m</strong>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__label"[39m
+  [36m>[39m
+    [0mImport de la remesa[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__detail"[39m
+  [36m>[39m
+    [0mdata de cobrament: 01/09[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__due"[39m
+    [33mdata-tone[39m=[32m"warning"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-warn"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [0mPresenta-la al banc abans del 01/09[0m
+  [36m</span>[39m
+  [36m<a[39m
+    [33mclass[39m=[32m"billing-kpi__link"[39m
+    [33mhref[39m=[32m"/facturacio/remeses?mes=2026-09"[39m
+  [36m>[39m
+    [0mRemeses ›[0m
+  [36m</a>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:2308:38
+    2306|     await renderPage();
+    2307|     const kpi = await amountKpi();
+    2308|     const notice = await within(kpi).findByText(DATE_PASSED);
+       |                                      ^
+    2309|     expect(notice).toHaveAttribute("data-tone", "warning");
+    2310|     expect(within(kpi).queryByText(/Presenta-la al banc/u)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > R-12-14 (E156): with COLLECTION_DATE_PASSED alone, the rollback asks for FITXER_NO_ENVIAT after «Només si el fitxer no s'ha enviat mai al banc», and sends it
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  aria-describedby="billing-rollback-why"
+  class="ah-button ah-button--ghost billing-action"
+  disabled=""
+  type="button"
+/>[39m
+ ❯ src/billing/BillingPage.test.tsx:2317:20
+    2315|     await renderPage();
+    2316|     const action = await screen.findByRole("button", { name: "Retroced…
+    2317|     expect(action).toBeEnabled();
+       |                    ^
+    2318|     fireEvent.click(action);
+    2319|     const dialog = await screen.findByRole("dialog", {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > E164 (b), R-12-14: COLLECTION_DATE_PASSED with another blocker keeps the action disabled and names every blocker
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAccessibleDescription()[22m
+
+Expected element to have accessible description:
+[32m  No es pot retrocedir la remesa: s'ha emès un rebut manual després de la generació; la data de cobrament ja ha arribat[39m
+Received:
+[31m  Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc[39m
+ ❯ src/billing/BillingPage.test.tsx:2365:22
+    2363|     const rollback = await screen.findByRole("button", { name: "Retroc…
+    2364|     expect(rollback).toBeDisabled();
+    2365|     expect(rollback).toHaveAccessibleDescription(
+       |                      ^
+    2366|       "No es pot retrocedir la remesa: s'ha emès un rebut manual despr…
+    2367|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > R-12-14: a 409 RUN_NOT_ROLLBACKABLE to FITXER_NO_ENVIAT lists the api's reasons inside the dialog
+TestingLibraryElementError: Unable to find role="dialog"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Exportacions"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m/>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSetembre 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA REMESA SEPA (XML)[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-rollback-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRetrocedeix la remesa[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-rollback-why"[39m
+          [36m>[39m
+            [0mJa ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense compte bancari informat[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Exportacions"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m/>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSetembre 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA REMESA SEPA (XML)[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-rollback-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRetrocedeix la remesa[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-rollback-why"[39m
+          [36m>[39m
+            [0mJa ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense compte bancari informat[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:2389:33
+    2387|     await renderPage();
+    2388|     fireEvent.click(await screen.findByRole("button", { name: "Retroce…
+    2389|     const dialog = await screen.findByRole("dialog");
+       |                                 ^
+    2390|     fireEvent.change(within(dialog).getByLabelText("Escriu FITXER_NO_E…
+    2391|       target: { value: "FITXER_NO_ENVIAT" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > R-12-07 (E156): a MANDATE_PENDING incident reads its label and opens the member's payment method on D10
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Marta Puigmandat SEPA pendentObre fitxa[39m
+Received:
+[31m  Marta PuigbillingIncident.MANDATE_PENDINGObre fitxa[39m
+ ❯ src/billing/BillingPage.test.tsx:2415:19
+    2413|       const row = (await screen.findByText("Marta Puig")).closest("tr"…
+    2414|       if (row === null) throw new TypeError("No incident row");
+    2415|       expect(row).toHaveTextContent(`Marta Puig${label}Obre fitxa`);
+       |                   ^
+    2416|       const link = within(row).getByRole("link", { name: "Obre fitxa d…
+    2417|       const path = "/abonats/61000000-0000-4000-8000-000000000021?cala…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > R-12-07 (E156): a NO_PAYMENT_METHOD incident reads its label and opens the member's payment method on D10
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Marta Puigsense mètode de pagamentObre fitxa[39m
+Received:
+[31m  Marta PuigbillingIncident.NO_PAYMENT_METHODObre fitxa[39m
+ ❯ src/billing/BillingPage.test.tsx:2415:19
+    2413|       const row = (await screen.findByText("Marta Puig")).closest("tr"…
+    2414|       if (row === null) throw new TypeError("No incident row");
+    2415|       expect(row).toHaveTextContent(`Marta Puig${label}Obre fitxa`);
+       |                   ^
+    2416|       const link = within(row).getByRole("link", { name: "Obre fitxa d…
+    2417|       const path = "/abonats/61000000-0000-4000-8000-000000000021?cala…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past the collection date and the new incidents > R-12-07: every BillingIncidentCode of the snapshot has its label in ca, es and en
+AssertionError: ca: expected [ 'NO_PAYMENT_METHOD', …(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "NO_PAYMENT_METHOD",
++   "MANDATE_PENDING",
++ ]
+
+ ❯ src/billing/BillingPage.test.tsx:2441:9
+    2439|         codes.filter((code) => (enums.billingIncident?.[code] ?? "").t…
+    2440|         locale,
+    2441|       ).toEqual([]);
+       |         ^
+    2442|     }
+    2443|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 1 passed | 61 skipped (69)
+   Start at  09:22:48
+   Duration  21.99s (tests 95%, transform 3%, environment 1%, import 1%)
+

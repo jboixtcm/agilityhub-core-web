@@ -1,0 +1,51 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+
+ ❯ src/mocks/census-handlers.test.ts (112 tests | 2 failed | 110 skipped) 22ms
+   ❯ E11-W08 E164 (e) (R-12-06, E146) · the plan change gives a member without a date next month's billing.nextInvoiceDayOfMonth (2)
+     × the day the parameter reads (5) is the day the member gets: 05/11/2026 11ms
+     × a day past the month's end is its last day (28 → 28/11; 31 is never configured, R-12-06's max is 28) 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E11-W08 E164 (e) (R-12-06, E146) · the plan change gives a member without a date next month's billing.nextInvoiceDayOfMonth > the day the parameter reads (5) is the day the member gets: 05/11/2026
+AssertionError: expected 1 to be 5 // Object.is equality
+
+- Expected
++ Received
+
+- 5
++ 1
+
+ ❯ src/mocks/census-handlers.test.ts:423:35
+    421|       params: { path: { key: "billing.nextInvoiceDayOfMonth" } },
+    422|     });
+    423|     expect(parameter.data?.value).toBe(5);
+       |                                   ^
+    424|     expect(await changeToMonthly()).toBe("2026-11-05");
+    425|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E11-W08 E164 (e) (R-12-06, E146) · the plan change gives a member without a date next month's billing.nextInvoiceDayOfMonth > a day past the month's end is its last day (28 → 28/11; 31 is never configured, R-12-06's max is 28)
+AssertionError: expected '2026-11-01' to be '2026-11-28' // Object.is equality
+
+Expected: "2026-11-28"
+Received: "2026-11-01"
+
+ ❯ src/mocks/census-handlers.test.ts:429:37
+    427|   it("a day past the month's end is its last day (28 → 28/11; 31 is ne…
+    428|     billingDayState.nextInvoiceDayOfMonth = 28;
+    429|     expect(await changeToMonthly()).toBe("2026-11-28");
+       |                                     ^
+    430|   });
+    431| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 110 skipped (112)
+   Start at  09:32:23
+   Duration  880ms (transform 63%, import 34%, tests 3%)
+

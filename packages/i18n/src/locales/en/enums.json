@@ -298,7 +298,9 @@
     "CARD_INVALID": "card not valid",
     "CURRENCY_MISMATCH": "currency other than the club's",
     "PROVIDER_DISABLED": "payment provider turned off",
-    "NO_NEXT_INVOICE_DATE": "no next invoice date"
+    "NO_NEXT_INVOICE_DATE": "no next invoice date",
+    "NO_PAYMENT_METHOD": "no payment method",
+    "MANDATE_PENDING": "SEPA mandate pending"
   },
   "paymentChannel": {
     "CASH": "Cash",
