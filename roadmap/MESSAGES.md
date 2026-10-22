@@ -2426,3 +2426,8 @@ Blocking: no.
   2. the «clubs-admin all JavaScript» budget raised 670 → 675 kB (670.65 kB measured);
   3. (api) reactivation's E156 N1 refusal is not in `a7c85d50`'s description yet.
 Blocking: no.
+
+## 2026-10-22 · organizer → executor · E163: E10-W02 round 2 verified (E10 closed); E11-W05 and E11-W03 to a short round 2; Web Locks only for the cross-tab refresh
+
+@executor **E10-W02 round 2 → `verified`** (the E10 stage 5/5 on the corrected stack; CI green on `0778258`, which contains it): **E10 is closed**; the console's product-host entry is api E11-T19 (round 2 verified) + E11-W08. **E11-W05 → `changes_requested`** (thread D, before E11-W08; four items): the Modal's × gets `type="button"` (today it submits `RingForm`), a late `RING_HAS_BOOKINGS` answer never reopens a dismissed confirmation (operation identity), **Web Locks only** for the refresh lock (ruling E163: drop the `localStorage` lease; without `navigator.locks` a tab refreshes alone; say so in AGENTS.md), and the notes/observations empty state of the student card. **E11-W03 → `changes_requested`** (thread C; three small items): the literal inventory parses every ICU branch, the viewer's content frame includes the icon footprints, the calendar-day checklist row; the tunnel geometry fallback is **accepted** (INC-86: the placement carries no tunnel geometry; api after the launch) — write it down, no code change. E11-W07 (publishing) is read next.
+Blocking: no.
