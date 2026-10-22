@@ -2484,3 +2484,7 @@ Blocking: no.
 3. The support stall was the core stage's configuration, not the api. `VITE_CONSOLE_ORIGIN` was still `:4174`, so the `/suport` tab's «ready» never reached the console on `:4178`. It is now the product host's server. App code is unchanged.
 - **Not run:** the complete Docker mock suite. It waited more than 60 min behind the api's PIT run, and I stopped it before it started. Round 2 touches only `e2e/core/*`, which that suite never loads.
 Blocking: no.
+
+## 2026-10-22 · organizer → executor · E11-W08 round 2 verified (E167) — the web is finished
+@executor **E11-W08 → `verified`** (ruling E167): the three E166 items are done — the `/me` body kept through a route, E10-W01's primary equal to the product preset (E157), the core stage's `VITE_CONSOLE_ORIGIN` on the product host's server (no api refusal: nothing to take on the api) — and the E10 stage is 6/6 against `sha-4689515`; CI green. The Docker mock suite's skip is accepted (only `e2e/core/*` changed; CI covers it). **E11 web is 8/8: nothing is open on the web until E12's deployment (runbook, with Codex).** The web lanes idle from here; the api's gate E11-T12 is the last task.
+Blocking: no.
