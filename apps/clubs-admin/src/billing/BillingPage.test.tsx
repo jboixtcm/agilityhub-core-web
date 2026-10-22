@@ -249,7 +249,8 @@ describe("T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2)
     const kpis = [...document.querySelectorAll(".billing-kpi")].map((kpi) => kpi.textContent);
     expect(kpis).toEqual([
       "168Rebuts del messimulats el 25/08",
-      "6.480 €Import de la remesadata de cobrament: 01/09Remeses ›",
+      // E11-W07 (R-12-15): the GENERATED remittance still has to go to the bank.
+      "6.480 €Import de la remesadata de cobrament: 01/09Presenta-la al banc abans del 01/09Remeses ›",
       "4En efectiupendents de marcar cobrat",
       "2Quota d'inactivitat20 € el 1r mes · 10 €/mes",
     ]);
@@ -1913,6 +1914,8 @@ describe("R-12-19 and R-12-26: the manual receipt and the accounting export", ()
       ],
       memberId: "member-laura",
       note: "",
+      // E11-W07 (R-12-19): the page's month.
+      period: "2026-09",
     });
     await waitFor(() => {
       expect(screen.queryByRole("button", { name: "Retrocedeix la remesa" })).toBeNull();
@@ -2173,5 +2176,129 @@ describe("E11-W06 W9 (S12 §6, INC-68, E138): 409 PRICE_OVERLAP on the simulatio
       "href",
       "/modalitats",
     );
+  });
+});
+
+describe("E11-W07 step 5 (E147): the remittance's collection date, NO_NEXT_INVOICE_DATE and COLLECTION_DATE_PASSED on D6", () => {
+  const amountKpi = async () => {
+    const kpi = (await screen.findByText("Import de la remesa")).closest(".billing-kpi");
+    if (!(kpi instanceof HTMLElement)) throw new TypeError("No remittance KPI");
+    return kpi;
+  };
+
+  it("R-12-15: a GENERATED remittance reads «Presenta-la al banc abans del 01/09»; from 31/08 (submissionDue) in the warning tone", async () => {
+    await renderPage();
+    const due = await within(await amountKpi()).findByText("Presenta-la al banc abans del 01/09");
+    expect(due).not.toHaveAttribute("data-tone", "warning");
+    cleanup();
+
+    vi.setSystemTime(new Date("2026-08-31T08:00:00Z"));
+    await renderPage();
+    const warning = await within(await amountKpi()).findByText(
+      "Presenta-la al banc abans del 01/09",
+    );
+    expect(warning).toHaveAttribute("data-tone", "warning");
+  });
+
+  it("R-12-15: a submitted remittance no longer asks to be submitted", async () => {
+    const api = client();
+    const remittances = await api.GET("/remittances", { params: { query: {} } });
+    const september = remittances.data?.items.find((item) => item.period === "2026-09");
+    if (september === undefined) throw new TypeError("No September remittance");
+    await api.POST("/remittances/{id}/submission", {
+      body: { submittedAt: "2026-08-26" },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: september.id } },
+    });
+    await renderPage();
+    await screen.findByText("data de cobrament: 01/09");
+    expect(screen.queryByText(/Presenta-la al banc/u)).toBeNull();
+  });
+
+  it("R-12-14: on the collection date the rollback is disabled with its reason (COLLECTION_DATE_PASSED), never opened", async () => {
+    vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    await renderPage();
+    const rollback = await screen.findByRole("button", { name: "Retrocedeix la remesa" });
+    expect(rollback).toBeDisabled();
+    expect(rollback).toHaveAccessibleDescription(
+      "Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc",
+    );
+    fireEvent.click(rollback);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("R-12-07: a NO_NEXT_INVOICE_DATE incident reads its label and opens the member's next-receipt drawer on D10", async () => {
+    billingState.world.simulations.get("2026-09")?.simulation.incidents.push({
+      code: "NO_NEXT_INVOICE_DATE",
+      memberId: "61000000-0000-4000-8000-000000000021",
+      memberName: "Marta Puig",
+    });
+    const { onNavigate } = await renderPage();
+    const row = (await screen.findByText("Marta Puig")).closest("tr");
+    if (row === null) throw new TypeError("No incident row");
+    expect(row).toHaveTextContent("Marta Puigsense data del proper rebutObre fitxa");
+    const link = within(row).getByRole("link", { name: "Obre fitxa de Marta Puig" });
+    const path = "/abonats/61000000-0000-4000-8000-000000000021?calaix=proper-rebut";
+    expect(link).toHaveAttribute("href", path);
+    fireEvent.click(link);
+    expect(onNavigate).toHaveBeenCalledWith(path);
+  });
+});
+
+describe("E11-W07 step 6 (R-12-19): the manual receipt's period", () => {
+  async function fillManual() {
+    fireEvent.click(await screen.findByRole("button", { name: "Rebut manual" }));
+    const dialog = await screen.findByRole("dialog", { name: "Rebut manual" });
+    fireEvent.change(within(dialog).getByLabelText("Abonat"), { target: { value: "Laura" } });
+    fireEvent.click(
+      await within(dialog).findByRole("radio", { name: "Laura Serra Vidal · núm. 87" }),
+    );
+    fireEvent.change(within(dialog).getByLabelText("Concepte (línia 1)"), {
+      target: { value: "Material" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Import (línia 1)"), {
+      target: { value: "15" },
+    });
+    return dialog;
+  }
+
+  it("R-12-19: the period defaults to the page's month, is bounded to three months around the club's month and is sent", async () => {
+    await renderPage({ search: "?mes=2026-10" });
+    const dialog = await fillManual();
+    const period = within(dialog).getByLabelText("Mes del rebut");
+    expect(period).toHaveValue("2026-10");
+    expect(period).toHaveAttribute("min", "2026-05");
+    expect(period).toHaveAttribute("max", "2026-11");
+    fireEvent.change(period, { target: { value: "2026-07" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
+    expect(await screen.findByText("Rebut 2026-1080 creat.")).toBeVisible();
+    expect(requests("POST", "/invoices")[0]?.body).toMatchObject({
+      memberId: "member-laura",
+      period: "2026-07",
+    });
+  });
+
+  it("R-12-19: the api's 400 {field: period} sits on the month field, with no second alert", async () => {
+    server.use(
+      http.post("*/api/v1/invoices", () =>
+        HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: { field: "period" },
+            message: "Validation failed",
+            traceId: "t-period",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await renderPage();
+    const dialog = await fillManual();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
+    const field = within(dialog).getByLabelText("Mes del rebut").closest(".ah-form-field");
+    if (!(field instanceof HTMLElement)) throw new TypeError("No period field");
+    expect(await within(field).findByText("Tria un mes entre 05/2026 i 11/2026.")).toBeVisible();
+    // The field's own error is the only alert.
+    expect(within(dialog).getAllByRole("alert")).toHaveLength(1);
+    expect(dialog).not.toHaveTextContent("No s'ha pogut completar l'operació.");
   });
 });

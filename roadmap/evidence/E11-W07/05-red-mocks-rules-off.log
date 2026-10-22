@@ -1,0 +1,63 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+> vitest run src/mocks/billing-handlers.test.ts src/mocks/console-handlers.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+
+ ❯ src/mocks/billing-handlers.test.ts (56 tests | 2 failed) 566ms
+   ❯ S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) (9)
+     × E11-W07 (E147, R-12-14/R-12-15): submissionDue from the day before the collection date; on 01/09 the GENERATED remittance blocks the rollback {COLLECTION_DATE_PASSED} 10ms
+   ❯ S12 R-12-19 · POST /invoices/{id}/cancellation and the manual receipt POST /invoices (T-12-05, T-12-18) (5)
+     × E11-W07 (R-12-19): the receipt's period is kept; more than three months from the issue month (08/2026) → 400 {field: period} before any number 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/billing-handlers.test.ts > S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) > E11-W07 (E147, R-12-14/R-12-15): submissionDue from the day before the collection date; on 01/09 the GENERATED remittance blocks the rollback {COLLECTION_DATE_PASSED}
+AssertionError: expected { byProvider: { …(2) }, …(4) } to match object { …(2) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "rollbackBlockers": [
+-     "COLLECTION_DATE_PASSED",
+-   ],
+-   "rollbackable": false,
++   "rollbackBlockers": [],
++   "rollbackable": true,
+  }
+
+ ❯ src/mocks/billing-handlers.test.ts:713:33
+    711|     vi.setSystemTime(new Date("2026-08-31T22:30:00Z"));
+    712|     const runId = await liveRunId();
+    713|     expect((await month()).run).toMatchObject({
+       |                                 ^
+    714|       rollbackBlockers: ["COLLECTION_DATE_PASSED"],
+    715|       rollbackable: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/billing-handlers.test.ts > S12 R-12-19 · POST /invoices/{id}/cancellation and the manual receipt POST /invoices (T-12-05, T-12-18) > E11-W07 (R-12-19): the receipt's period is kept; more than three months from the issue month (08/2026) → 400 {field: period} before any number
+Error: Expected an ApiError
+ ❯ failure src/mocks/billing-handlers.test.ts:51:9
+     49|     throw error;
+     50|   }
+     51|   throw new Error("Expected an ApiError");
+       |         ^
+     52| }
+     53|
+ ❯ src/mocks/billing-handlers.test.ts:1093:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 66 passed (68)
+   Start at  07:11:59
+   Duration  1.63s (transform 49%, import 26%, tests 25%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 test: `vitest run src/mocks/billing-handlers.test.ts src/mocks/console-handlers.test.ts`
+Exit status 1

@@ -3,12 +3,13 @@ import { fileURLToPath } from "node:url";
 
 import Ajv2020, { type AnySchema } from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, onTestFinished, vi } from "vitest";
 
 import openapiDocument from "../../openapi/openapi.json";
 import pendingDocument from "../../openapi/pending.json";
 
 import {
+  BILLING_MOCK_NOW,
   BILLING_MOCK_PERIOD,
   createBillingWorld,
   eur,
@@ -1099,6 +1100,11 @@ describe("E8-W01 billing fixtures follow the S12 contract (BillingPeriod, Billin
   });
 
   it("collects September on 01/09 (ruling A28): the run and its remittance of the 164 direct debits", () => {
+    // The world's day (26/08): on the real clock the collection date has passed (E147).
+    vi.useFakeTimers({ now: new Date(BILLING_MOCK_NOW), toFake: ["Date"] });
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
     const world = createBillingWorld();
     const stored = periodRun(world, BILLING_MOCK_PERIOD);
     if (stored === undefined) throw new TypeError("Missing September's run");

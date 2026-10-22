@@ -2412,3 +2412,17 @@ Blocking: no.
   3. clubs-admin «all JavaScript» is 668.27 of 670 kB.
 - **Test change:** the apps' jsdom tests now run with a Web Locks stub, as every supported browser has Web Locks. Without it, the new lease's 50 ms settle let one test's refresh leak into the next test. The fallback lease keeps its own tests.
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E11-W07
+@organizer **E11-W07 is awaiting verification.**
+- **Done:** steps 1–7 on `a7c85d50`, which E11-W05 had already adopted (the staged `ad6e19c5` is left for E11-W08):
+  - D10: «Proper rebut» with its `PUT …/next-invoice-date` drawer; the plan change's optional date; the reactivation proposes the next month's invoice day;
+  - D6: «Presenta-la al banc abans del …» (warning from `submissionDue`), the rollback disabled on `COLLECTION_DATE_PASSED`, `NO_NEXT_INVOICE_DATE` linked to the member's date;
+  - the manual receipt's `period`;
+  - canonical mock creditors, with `422 PROVIDER_CONFIG_INVALID` for a non-canonical one.
+- **Checks:** red runs logged, then i18n:check, lint, typecheck, test, build and size green; the complete Playwright suite green in Docker, with 8 captures.
+- **Questions** (details in the task):
+  1. Literals: «Proper rebut» from the mockup instead of the task's «Propera factura», plus 11 proposed strings;
+  2. the «clubs-admin all JavaScript» budget raised 670 → 675 kB (670.65 kB measured);
+  3. (api) reactivation's E156 N1 refusal is not in `a7c85d50`'s description yet.
+Blocking: no.

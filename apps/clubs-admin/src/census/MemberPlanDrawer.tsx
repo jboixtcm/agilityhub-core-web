@@ -1,9 +1,10 @@
-import { isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
-import { Button, Drawer, FormField, Input, Select } from "@agilityhub/ui";
+import { apiFieldErrors, isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import { useClubFormats } from "@agilityhub/i18n";
+import { Button, Drawer, FormField, Input, Select, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { formatMoney, useBillingLocale } from "../billing/shared";
+import { clubToday, formatMoney, invoiceDayOf, shiftPeriod, useBillingLocale, useNextInvoiceDay } from "../billing/shared";
 import { isReadmissionPending } from "../dashboard/readmission";
 import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 
@@ -20,6 +21,8 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   open: boolean;
 }) {
   const { t } = useTranslation(["admin-census", "common", "errors"]);
+  const branding = useBranding();
+  const formats = useClubFormats();
   const billingLocale = useBillingLocale();
   const keys = useSubmissionKeys();
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -27,6 +30,11 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   const [planId, setPlanId] = useState("");
   const [priceId, setPriceId] = useState("");
   const [effectiveMonth, setEffectiveMonth] = useState("");
+  const [nextInvoiceDate, setNextInvoiceDate] = useState("");
+  // R-12-06: without a date the api puts this day of next month (club-local).
+  const nextInvoiceDay = useNextInvoiceDay(client, open && member.nextInvoiceDate == null);
+  const clubMonth = clubToday(branding.timeZone).slice(0, 7);
+  const firstAllowed = `${clubMonth}-01`;
   const [discountPercent, setDiscountPercent] = useState<number>();
   const [minimumPackSessions, setMinimumPackSessions] = useState<number>();
   const [failure, setFailure] = useState<unknown>();
@@ -83,15 +91,20 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
     discountPercent !== undefined &&
     (current.pack?.sessions ?? 0) >= minimumPackSessions &&
     selected?.type === "MONTHLY";
+  // E146 (R-12-06): only a member without a date gets one from a change to a MONTHLY plan; an
+  // existing date never moves here (D10's «Proper rebut» corrects it).
+  const asksInvoiceDate = selected?.type === "MONTHLY" && member.nextInvoiceDate == null;
+  const invoiceDateRefused = apiFieldErrors(failure).some((entry) => entry.field === "nextInvoiceDate");
   const error = useMemo(() => {
     if (failure === undefined) return undefined;
+    if (invoiceDateRefused) return undefined;
     if (isInProgress(failure)) return t("common:inProgress");
     // S04 R-04-06 (E11-W06 W10): a record frozen by a pending readmission points to D2.
     if (isReadmissionPending(failure)) return <ReadmissionPendingMessage memberId={member.id} />;
     return isApiError(failure)
       ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
       : t("admin-census:common.genericError");
-  }, [failure, member.id, t]);
+  }, [failure, invoiceDateRefused, member.id, t]);
   const close = () => {
     keys.drop(member.id);
     setFailure(undefined);
@@ -123,6 +136,7 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
               planId,
               priceId,
               ...(effectiveMonth === "" ? {} : { effectiveMonth }),
+              ...(asksInvoiceDate && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
             };
             setPending(true);
             setFailure(undefined);
@@ -152,8 +166,22 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
             <FormField id="member-plan-effective-month" label={t("admin-census:plan.effectiveMonth")}>
               <Input id="member-plan-effective-month" onChange={(event) => { setEffectiveMonth(event.currentTarget.value); }} type="month" value={effectiveMonth} />
             </FormField>
+            {asksInvoiceDate ? (
+              <>
+                <FormField
+                  {...(invoiceDateRefused ? { error: t("admin-census:member.billing.nextInvoice.notBefore", { date: formats.formatPlainDate(firstAllowed) }) } : {})}
+                  id="member-plan-next-invoice-date"
+                  label={t("admin-census:plan.nextInvoiceDate")}
+                >
+                  <Input id="member-plan-next-invoice-date" min={firstAllowed} onChange={(event) => { setNextInvoiceDate(event.currentTarget.value); }} type="date" value={nextInvoiceDate} />
+                </FormField>
+                {nextInvoiceDay === undefined ? null : (
+                  <p>{t("admin-census:plan.nextInvoiceDefault", { date: formats.formatPlainDate(invoiceDayOf(shiftPeriod(clubMonth, 1), nextInvoiceDay)) })}</p>
+                )}
+              </>
+            ) : null}
             {packToMonthly ? <p>{t("admin-census:plan.packDiscountRule", { discountPercent, minSessions: minimumPackSessions })}</p> : null}
-            <Button disabled={planId === "" || priceId === ""} loading={pending} type="submit">{t("admin-census:common.save")}</Button>
+            <Button disabled={planId === "" || priceId === "" || pending} loading={pending} type="submit">{t("admin-census:common.save")}</Button>
           </form>
           {error === undefined ? null : <p role="alert">{error}</p>}
         </>

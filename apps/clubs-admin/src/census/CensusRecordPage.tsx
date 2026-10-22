@@ -875,7 +875,18 @@ function MemberSummary({
           <MemberBillingBlock
             client={client}
             dogs={overview.dogs}
+            // D6's NO_NEXT_INVOICE_DATE incident links here with `?calaix=proper-rebut` (E146).
+            initialNextInvoiceOpen={
+              new URLSearchParams(window.location.search).get("calaix") === "proper-rebut"
+            }
             memberId={member.id}
+            monthly={memberPlan?.type === "MONTHLY"}
+            nextInvoiceDate={member.nextInvoiceDate ?? null}
+            onNextInvoiceDateChanged={(nextInvoiceDate) => {
+              // The record shows the api's date now, and its next receipt is read again.
+              onChange({ ...overview, member: { ...member, nextInvoiceDate } });
+              onReload();
+            }}
             onPackAdjusted={() => {
               onReload();
             }}

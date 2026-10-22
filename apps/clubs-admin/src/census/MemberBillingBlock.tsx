@@ -10,6 +10,7 @@ import {
   Badge,
   Button,
   Card,
+  Drawer,
   FormField,
   Input,
   Modal,
@@ -20,7 +21,9 @@ import {
 import { useEffect, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
-import { clubToday } from "../billing/shared";
+import { clubToday, periodEnd, shiftPeriod } from "../billing/shared";
+import { isReadmissionPending } from "../dashboard/readmission";
+import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 
 type Dog = components["schemas"]["MemberOverview"]["dogs"][number];
 type Invoice = components["schemas"]["InvoiceListItem"];
@@ -38,13 +41,24 @@ const invoiceTones = {
 export function MemberBillingBlock({
   client,
   dogs,
+  initialNextInvoiceOpen = false,
   memberId,
+  monthly = false,
+  nextInvoiceDate,
+  onNextInvoiceDateChanged,
   onPackAdjusted,
   readOnly = false,
 }: {
   client: ApiClient;
   dogs: readonly Dog[];
+  /** D6's `NO_NEXT_INVOICE_DATE` link (`?calaix=proper-rebut`) opens the date's drawer. */
+  initialNextInvoiceOpen?: boolean;
   memberId: string;
+  /** The member's plan is `MONTHLY`: without a date the run never bills it (R-12-01). */
+  monthly?: boolean;
+  /** `Member.nextInvoiceDate` (club-local `YYYY-MM-DD`, `null` without one). */
+  nextInvoiceDate?: string | null;
+  onNextInvoiceDateChanged?: (date: string) => void;
   onPackAdjusted?: () => void;
   readOnly?: boolean;
 }) {
@@ -78,6 +92,20 @@ export function MemberBillingBlock({
   const [delta, setDelta] = useState("");
   const [reason, setReason] = useState("");
   const [expiresOn, setExpiresOn] = useState("");
+  // E146 (S12 §6): the next receipt's date, set or corrected with its reason.
+  const [nextOpen, setNextOpen] = useState(initialNextInvoiceOpen && !readOnly);
+  const [nextDraft, setNextDraft] = useState(nextInvoiceDate ?? "");
+  const [nextReason, setNextReason] = useState("");
+  const [nextPending, setNextPending] = useState(false);
+  const [nextFailure, setNextFailure] = useState<unknown>();
+  // The api's answer until D10 reads the member again (then the record's date is the truth).
+  const [savedNext, setSavedNext] = useState<{ base: string | null | undefined; date: string }>();
+  const shownNext =
+    savedNext !== undefined && savedNext.base === nextInvoiceDate ? savedNext.date : nextInvoiceDate;
+  // E146: from the 1st of the club's month twelve months back to the end of the month twelve ahead.
+  const clubMonth = clubToday(branding.timeZone).slice(0, 7);
+  const nextMin = `${shiftPeriod(clubMonth, -12)}-01`;
+  const nextMax = periodEnd(shiftPeriod(clubMonth, 12));
 
   useEffect(() => {
     let active = true;
@@ -204,6 +232,54 @@ export function MemberBillingBlock({
     }
   };
 
+  const openNext = () => {
+    setNextFailure(undefined);
+    setNextDraft(shownNext ?? "");
+    setNextReason("");
+    setNextOpen(true);
+  };
+  const saveNext = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setNextPending(true);
+    setNextFailure(undefined);
+    const body = { nextInvoiceDate: nextDraft, reason: nextReason.trim() };
+    try {
+      const result = await client.PUT("/members/{id}/next-invoice-date", {
+        body,
+        params: { path: { id: memberId } },
+      });
+      const date = result.data?.nextInvoiceDate ?? body.nextInvoiceDate;
+      setSavedNext({ base: nextInvoiceDate, date });
+      setNextOpen(false);
+      onNextInvoiceDateChanged?.(date);
+    } catch (cause) {
+      setNextFailure(cause);
+    } finally {
+      setNextPending(false);
+    }
+  };
+  const nextFields = apiFieldErrors(nextFailure).map((entry) => entry.field);
+  const nextDateError = nextFields.includes("nextInvoiceDate")
+    ? t("admin-census:member.billing.nextInvoice.range", {
+        from: formats.formatPlainDate(nextMin),
+        to: formats.formatPlainDate(nextMax),
+      })
+    : undefined;
+  const nextReasonError = nextFields.includes("reason") ? t("errors:VALIDATION_ERROR") : undefined;
+  const nextAlert =
+    nextFailure === undefined ||
+    (nextFields.length > 0 &&
+      nextFields.every((field) => field === "nextInvoiceDate" || field === "reason")) ? null : isReadmissionPending(
+        nextFailure,
+      ) ? (
+      // S04 R-04-06: a record frozen by a pending readmission points to D2.
+      <ReadmissionPendingMessage memberId={memberId} />
+    ) : isApiError(nextFailure) ? (
+      t(`errors:${nextFailure.code}`, { defaultValue: t("admin-census:common.genericError") })
+    ) : (
+      t("admin-census:common.genericError")
+    );
+
   const readError = (failed: boolean) =>
     failed ? (
       <div role="alert">
@@ -225,6 +301,30 @@ export function MemberBillingBlock({
   return (
     <Card className="member-billing">
       <h2>{t("admin-census:member.billing.title")}</h2>
+      {shownNext == null && !monthly ? null : (
+        <section className="member-billing__next">
+          <div className="member-billing__heading">
+            <h3>{t("admin-census:member.billing.nextInvoice.title")}</h3>
+            {readOnly ? null : (
+              <Button
+                aria-label={t("admin-census:member.billing.nextInvoice.edit")}
+                onClick={openNext}
+                variant="secondary"
+              >
+                {t("admin-census:common.edit")}
+              </Button>
+            )}
+          </div>
+          {shownNext == null ? (
+            // R-12-07 (A39): a monthly member without a date is a simulation incident.
+            <Badge tone="warning">{t("admin-census:member.billing.nextInvoice.none")}</Badge>
+          ) : (
+            <p>
+              <strong>{formats.formatPlainDate(shownNext)}</strong>
+            </p>
+          )}
+        </section>
+      )}
       <section>
         <h3>{t("admin-census:member.billing.receipts")}</h3>
         <ul className="census-record__invoice-list">
@@ -535,6 +635,66 @@ export function MemberBillingBlock({
           </Button>
         </form>
       </Modal>
+      <Drawer
+        closeLabel={t("admin-census:common.close")}
+        onClose={() => {
+          if (!nextPending) setNextOpen(false);
+        }}
+        open={nextOpen && !readOnly}
+        title={t("admin-census:member.billing.nextInvoice.title")}
+      >
+        <form className="census-record__form" onSubmit={(event) => void saveNext(event)}>
+          <fieldset className="member-billing__fields" disabled={nextPending}>
+            <FormField
+              {...(nextDateError === undefined ? {} : { error: nextDateError })}
+              id="next-invoice-date"
+              label={t("admin-census:member.billing.nextInvoice.date")}
+            >
+              <Input
+                id="next-invoice-date"
+                max={nextMax}
+                min={nextMin}
+                onChange={(event) => {
+                  setNextDraft(event.currentTarget.value);
+                }}
+                required
+                type="date"
+                value={nextDraft}
+              />
+            </FormField>
+            <FormField
+              {...(nextReasonError === undefined ? {} : { error: nextReasonError })}
+              id="next-invoice-reason"
+              label={t("admin-census:member.billing.reason")}
+            >
+              <Input
+                id="next-invoice-reason"
+                maxLength={200}
+                onChange={(event) => {
+                  setNextReason(event.currentTarget.value);
+                }}
+                required
+                value={nextReason}
+              />
+            </FormField>
+          </fieldset>
+          {nextAlert === null ? null : <p role="alert">{nextAlert}</p>}
+          <div className="census-record__dialog-actions">
+            <Button
+              disabled={nextPending}
+              onClick={() => {
+                setNextOpen(false);
+              }}
+              variant="ghost"
+            >
+              {t("admin-census:common.cancel")}
+            </Button>
+            <Button disabled={nextPending} loading={nextPending} type="submit">
+              {t("admin-census:common.save")}
+            </Button>
+          </div>
+        </form>
+      </Drawer>
     </Card>
   );
 }

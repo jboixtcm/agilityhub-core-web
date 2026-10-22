@@ -1,10 +1,10 @@
-import { isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import { apiFieldErrors, isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Badge, Button, Drawer, FormField, Input, Modal, Select, Textarea, Toast, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { clubToday, formatMoney, useBillingLocale } from "../billing/shared";
+import { clubToday, formatMoney, invoiceDayOf, shiftPeriod, useBillingLocale, useNextInvoiceDay } from "../billing/shared";
 
 type Member = components["schemas"]["Member"];
 type Leave = components["schemas"]["LeaveRequest"];
@@ -43,7 +43,10 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
   const [note, setNote] = useState("");
   const [planId, setPlanId] = useState(member.planId ?? "");
   const [priceId, setPriceId] = useState(member.priceId ?? "");
-  const [nextInvoiceDate, setNextInvoiceDate] = useState(member.nextInvoiceDate ?? "");
+  // E156 N1 (R-13-16): the reactivation proposes the first invoice day of the month after the
+  // club's current month, never the LEFT member's stale date (the api refuses one before the 1st of
+  // the current month, and a catch-up would bill every month of the leave).
+  const [editedInvoiceDate, setEditedInvoiceDate] = useState<string>();
   const [confirmCancel, setConfirmCancel] = useState(false);
   const [confirmDirect, setConfirmDirect] = useState(false);
   const [reactivationOpen, setReactivationOpen] = useState(false);
@@ -54,6 +57,11 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
   const [reload, setReload] = useState(0);
   const [erased, setErased] = useState(false);
   const billing = branding.modules.includes("BILLING");
+  const invoiceDay = useNextInvoiceDay(client, open && billing && member.status === "LEFT");
+  const clubMonth = clubToday(branding.timeZone).slice(0, 7);
+  const nextInvoiceDate =
+    editedInvoiceDate ?? (invoiceDay === undefined ? "" : invoiceDayOf(shiftPeriod(clubMonth, 1), invoiceDay));
+  const invoiceDateRefused = apiFieldErrors(failure).some((entry) => entry.field === "nextInvoiceDate");
 
   useEffect(() => {
     if (!open) return undefined;
@@ -446,7 +454,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
           }}
         >
           <p>{t("admin-census:reactivation.description")}</p>
-          {errorMessage === undefined ? null : <p role="alert">{errorMessage}</p>}
+          {errorMessage === undefined || invoiceDateRefused ? null : <p role="alert">{errorMessage}</p>}
           {billing ? (
             <>
               <FormField id="reactivation-plan" label={t("admin-census:reactivation.plan")}>
@@ -485,12 +493,18 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
                   ))}
                 </Select>
               </FormField>
-              <FormField id="reactivation-invoice-date" label={t("admin-census:reactivation.nextInvoiceDate")}>
+              <FormField
+                {...(invoiceDateRefused
+                  ? { error: t("admin-census:member.billing.nextInvoice.notBefore", { date: formats.formatPlainDate(`${clubMonth}-01`) }) }
+                  : {})}
+                id="reactivation-invoice-date"
+                label={t("admin-census:reactivation.nextInvoiceDate")}
+              >
                 <Input
                   id="reactivation-invoice-date"
-                  min={today}
+                  min={`${clubMonth}-01`}
                   onChange={(event) => {
-                    setNextInvoiceDate(event.currentTarget.value);
+                    setEditedInvoiceDate(event.currentTarget.value);
                   }}
                   required
                   type="date"
@@ -499,7 +513,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
               </FormField>
             </>
           ) : null}
-          <Button loading={pending} type="submit">
+          <Button disabled={pending} loading={pending} type="submit">
             {t("admin-census:reactivation.action")}
           </Button>
         </form>

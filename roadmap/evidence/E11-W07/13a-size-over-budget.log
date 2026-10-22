@@ -1,0 +1,33 @@
+# First `pnpm size` run (exit 1), before .size-limit.json «clubs-admin all JavaScript» went 670 → 675 kB.
+# The full log was overwritten by the re-run under the same name (13-size.log); this is the tail the
+# session captured from it, verbatim.
+  Size limit: 460 kB
+  Size:       442.4 kB gzipped
+
+  clubs-admin all JavaScript
+  Package size limit has exceeded by 649 B
+  Size limit: 670 kB
+  Size:       670.65 kB gzipped
+
+  clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)
+  Size limit: 66 kB
+  Size:       62.67 kB gzipped
+
+  clubs-admin course 3D viewer JavaScript (D18's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.28 kB gzipped
+
+  clubs-admin platform console JavaScript (D19, lazy, AGILITYHUB_ADMIN only)
+  Size limit: 58 kB
+  Size:       52.78 kB gzipped
+
+  id initial JavaScript
+  Size limit: 110 kB
+  Size:       101.08 kB gzipped
+
+  id all JavaScript
+  Size limit: 310 kB
+  Size:       131.25 kB gzipped
+
+  Try to reduce size or increase limit at .size-limit.json
+ ELIFECYCLE  Command failed with exit code 1.

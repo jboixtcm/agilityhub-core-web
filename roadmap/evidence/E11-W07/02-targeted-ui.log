@@ -1,0 +1,57 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+> vitest run src/census/MemberBillingBlock.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx src/console/ClubRecordPage.test.tsx src/census/CensusRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/census/MemberBillingBlock.test.tsx (13 tests | 2 failed) 897ms
+   ❯ E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt (4)
+     × E146: «Proper rebut» reads the member's date with an edit action; a monthly member without one reads «Sense data: no es facturarà» 22ms
+     × E146: the drawer bounds the date to ±12 months of the club's month, PUTs {nextInvoiceDate, reason} and the block and D10 read the api's date 58ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt > E146: «Proper rebut» reads the member's date with an edit action; a monthly member without one reads «Sense data: no es facturarà»
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Proper rebut01/09/2026[39m
+Received:
+[31m  Proper rebutEdita01/09/2026[39m
+ ❯ src/census/MemberBillingBlock.test.tsx:380:21
+    378|   it("E146: «Proper rebut» reads the member's date with an edit action…
+    379|     const { section } = await renderNext();
+    380|     expect(section).toHaveTextContent("Proper rebut01/09/2026");
+       |                     ^
+    381|     expect(within(section).getByRole("button", { name: "Edita la data …
+    382|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt > E146: the drawer bounds the date to ±12 months of the club's month, PUTs {nextInvoiceDate, reason} and the block and D10 read the api's date
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Proper rebut01/12/2026[39m
+Received:
+[31m  Proper rebutEdita01/12/2026[39m
+ ❯ src/census/MemberBillingBlock.test.tsx:422:21
+    420|     expect(bodies).toEqual([{ nextInvoiceDate: "2026-12-01", reason: "…
+    421|     expect(onNextInvoiceDateChanged).toHaveBeenCalledWith("2026-12-01"…
+    422|     expect(section).toHaveTextContent("Proper rebut01/12/2026");
+       |                     ^
+    423|   });
+    424|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  2 failed | 176 passed (178)
+   Start at  07:09:47
+   Duration  32.91s (tests 77%, transform 11%, environment 7%, import 4%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/MemberBillingBlock.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx src/console/ClubRecordPage.test.tsx src/census/CensusRecordPage.test.tsx`
+Exit status 1

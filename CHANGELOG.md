@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- E11-W07 (the api's E11-T15 contract in the back office, rulings E146/E147/E156; snapshot `a7c85d50`, adopted by E11-W05):
+  - D10's billing block shows «Proper rebut» (or «Sense data: no es facturarà» for a monthly member) with a drawer that sends `PUT /members/{id}/next-invoice-date {nextInvoiceDate, reason}` (±12 months of the club's month; `fieldErrors` on the fields, `READMISSION_PENDING` → D2, `INVALID_STATE` text); D6's link `?calaix=proper-rebut` opens it;
+  - D10's plan change to a MONTHLY plan offers an optional next invoice date to a member without one, with what an empty one means;
+  - D10's reactivation proposes the first invoice day of the month after the club's month (`billing.nextInvoiceDayOfMonth`), never the LEFT member's stale date; the api's 400 lands on the field;
+  - D6: «Presenta-la al banc abans del {date}» with a GENERATED remittance (warning from `submissionDue`), the rollback disabled with its reason on `COLLECTION_DATE_PASSED`, `NO_NEXT_INVOICE_DATE` incidents linked to the member's date;
+  - D6's manual receipt sends its `period` (the page's month, ±3 months);
+  - mocks: the new route, the blocker, `period`, a canonical creditor (`ES10ZZZG00000000`, console `ES10000G00000000`) and `422 PROVIDER_CONFIG_INVALID` for a non-canonical one;
+  - «clubs-admin all JavaScript» budget 670 → 675 kB (670.65 kB measured).
+
 - E11-W05 (the last web correction pass, INC-75, rulings E137/E142/E153–E160):
   - adopts the api snapshot `a7c85d50` (`ClassCancellation.reviewTime`, `byAccountId: null`); `pending.json` stays empty;
   - a refused preference no longer discards an unrelated queued one (step 0);

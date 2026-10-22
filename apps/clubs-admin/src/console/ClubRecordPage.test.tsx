@@ -437,6 +437,34 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     ).toBeInTheDocument();
   });
 
+  it("E11-W07 step 7 (E147): the fixture's canonical creditor saves; one with the check digits 00 → 422 PROVIDER_CONFIG_INVALID on its field", async () => {
+    const writes = captureRequests(
+      (method, url) => method === "PUT" && url.pathname.endsWith("/payment-providers/SEPA_XML"),
+    );
+    await openTab(CANIC, "pagaments");
+    const sepa = screen
+      .getByRole("heading", { name: "Domiciliació SEPA" })
+      .closest(".console-card");
+    if (!(sepa instanceof HTMLElement)) throw new TypeError("No SEPA card");
+    const creditor = within(sepa).getByLabelText("Identificador de creditor");
+    expect(creditor).toHaveValue("ES10000G00000000");
+    fireEvent.click(within(sepa).getByRole("button", { name: "DESA" }));
+    expect(await within(sepa).findByText("Canvis desats.")).toBeInTheDocument();
+
+    fireEvent.change(creditor, { target: { value: "ES00ZZZG00000000" } });
+    fireEvent.click(within(sepa).getByRole("button", { name: "DESA" }));
+    const field = creditor.closest(".ah-form-field");
+    if (!(field instanceof HTMLElement)) throw new TypeError("No creditor field");
+    expect(
+      await within(field).findByText("La configuració del proveïdor no és vàlida."),
+    ).toBeInTheDocument();
+    expect(writes.map((write) => (write.body as { creditorId?: string }).creditorId)).toEqual([
+      "ES10000G00000000",
+      "ES00ZZZG00000000",
+    ]);
+    expect(stored(CANIC).paymentProviders.SEPA_XML?.creditorId).toBe("ES10000G00000000");
+  });
+
   it("Pagaments: the IBAN is write-only, PROVIDER_IN_USE says how many members, and Stripe is tested once configured (R-17-05)", async () => {
     const writes = captureRequests(
       (method, url) => method !== "GET" && url.pathname.includes("/payment-providers"),
@@ -454,7 +482,7 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     fireEvent.click(within(sepa).getByRole("button", { name: "DESA" }));
     expect(await within(sepa).findByText("Canvis desats.")).toBeInTheDocument();
     expect(writes[0]?.body).toEqual({
-      creditorId: "ES12000G00000000",
+      creditorId: "ES10000G00000000",
       creditorName: brandingCanicFixture.club.legalName,
       enabled: true,
       suffix: "000",

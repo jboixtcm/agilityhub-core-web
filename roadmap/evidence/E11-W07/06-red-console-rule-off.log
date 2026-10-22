@@ -1,0 +1,74 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+> vitest run src/console/ClubRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (26 tests | 1 failed) 11521ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (26)
+     × E11-W07 step 7 (E147): the fixture's canonical creditor saves; one with the check digits 00 → 422 PROVIDER_CONFIG_INVALID on its field 10039ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E11-W07 step 7 (E147): the fixture's canonical creditor saves; one with the check digits 00 → 422 PROVIDER_CONFIG_INVALID on its field
+TestingLibraryElementError: Unable to find an element with the text: La configuració del proveïdor no és vàlida.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-form-field"[39m
+[36m>[39m
+  [36m<label[39m
+    [33mclass[39m=[32m"ah-form-field__label"[39m
+    [33mfor[39m=[32m"console-sepa-creditor-id"[39m
+  [36m>[39m
+    [0mIdentificador de creditor[0m
+  [36m</label>[39m
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"console-sepa-creditor-id"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"ES00ZZZG00000000"[39m
+  [36m/>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-form-field"[39m
+[36m>[39m
+  [36m<label[39m
+    [33mclass[39m=[32m"ah-form-field__label"[39m
+    [33mfor[39m=[32m"console-sepa-creditor-id"[39m
+  [36m>[39m
+    [0mIdentificador de creditor[0m
+  [36m</label>[39m
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"console-sepa-creditor-id"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m"ES00ZZZG00000000"[39m
+  [36m/>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/console/ClubRecordPage.test.tsx:459:27
+    457|     if (!(field instanceof HTMLElement)) throw new TypeError("No credi…
+    458|     expect(
+    459|       await within(field).findByText("La configuració del proveïdor no…
+       |                           ^
+    460|     ).toBeInTheDocument();
+    461|     expect(writes.map((write) => (write.body as { creditorId?: string …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 25 passed (26)
+   Start at  07:12:02
+   Duration  12.97s (tests 89%, transform 6%, import 2%, environment 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/console/ClubRecordPage.test.tsx`
+Exit status 1

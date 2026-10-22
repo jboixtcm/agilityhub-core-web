@@ -371,6 +371,23 @@ function providerSummary(
   return { ...previous, configured: true, enabled, instructions: body.instructions ?? null };
 }
 
+/**
+ * A SEPA creditor identifier (`CCkkBBBnnn…`) whose check digits `kk` are the ISO 7064 mod 97-10 of
+ * the national id followed by the country code and `00` (letters as 10–35; the business code `BBB`
+ * is left out), as the api validates it (E147): `ES10ZZZG00000000` passes, `ES00ZZZG00000000` not.
+ */
+export function canonicalCreditorId(value: string): boolean {
+  const id = value.replaceAll(" ", "").toUpperCase();
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{3}[A-Z0-9]{1,28}$/u.test(id)) return false;
+  const digits = `${id.slice(7)}${id.slice(0, 2)}00`
+    .split("")
+    .map((char) => String(Number.parseInt(char, 36)))
+    .join("");
+  let rest = 0;
+  for (const digit of digits) rest = (rest * 10 + Number(digit)) % 97;
+  return String(98 - rest).padStart(2, "0") === id.slice(2, 4);
+}
+
 function providerInvalid(field: string) {
   return apiError("PROVIDER_CONFIG_INVALID", "Provider configuration is invalid", 422, { field });
 }
@@ -1003,6 +1020,8 @@ export const consoleHandlers = [
         for (const field of ["creditorName", "creditorId", "suffix"] as const) {
           if ((body[field] ?? "").trim() === "") return providerInvalid(field);
         }
+        // E147 (E11-T15 F8): the creditor identifier's check digits are validated on save.
+        if (!canonicalCreditorId(body.creditorId ?? "")) return providerInvalid("creditorId");
         const iban = body.iban?.replaceAll(" ", "");
         if (iban === undefined && !previous.configured) return providerInvalid("iban");
         if (iban !== undefined && !/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(iban)) {

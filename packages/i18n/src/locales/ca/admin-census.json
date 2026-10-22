@@ -93,7 +93,9 @@
     "newPlan": "Modalitat nova",
     "price": "Tarifa",
     "effectiveMonth": "Mes d'efecte (opcional)",
-    "packDiscountRule": "En passar d'un pack de {minSessions} sessions o més a una quota mensual, l'entrada té un {discountPercent} % de descompte. L'import l'ha de calcular l'API."
+    "packDiscountRule": "En passar d'un pack de {minSessions} sessions o més a una quota mensual, l'entrada té un {discountPercent} % de descompte. L'import l'ha de calcular l'API.",
+    "nextInvoiceDate": "Data del proper rebut (opcional)",
+    "nextInvoiceDefault": "Si la deixes en blanc, el proper rebut serà el {date}."
   },
   "inactivityLeavePage": {
     "title": "Inactivitats i baixes",
@@ -377,7 +379,15 @@
       "amountExceeds": "L'import pagat no pot superar l'import degut.",
       "planNotPack": "Aquest concepte necessita una modalitat de pack.",
       "packNegative": "L'ajust no pot deixar el pack amb sessions negatives.",
-      "invalidCard": "Targeta no vàlida"
+      "invalidCard": "Targeta no vàlida",
+      "nextInvoice": {
+        "title": "Proper rebut",
+        "none": "Sense data: no es facturarà",
+        "edit": "Edita la data del proper rebut",
+        "date": "Data del proper rebut",
+        "range": "Tria una data entre el {from} i el {to}.",
+        "notBefore": "La data no pot ser anterior al {date}."
+      }
     },
     "language": "idioma: {locale}",
     "number": "núm. {number}",

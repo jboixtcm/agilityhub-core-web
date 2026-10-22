@@ -146,6 +146,105 @@ describe("E8-W03 round 2 member plan change", () => {
     expect(within(drawer).queryByText(/10 sessions|40 %/u)).not.toBeInTheDocument();
   });
 
+  describe("E11-W07 step 3 (E146, R-12-06): a pack member moving to a MONTHLY plan", () => {
+    // Club-local 05/10/2026: without a date the api puts November's invoice day (the 1st).
+    beforeEach(() => {
+      vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    async function choose(member: components["schemas"]["Member"], planId: string) {
+      const writes: unknown[] = [];
+      server.use(
+        http.post("*/api/v1/members/:id/plan-change", async ({ request }) => {
+          writes.push(await request.clone().json());
+          return new HttpResponse(null, { status: 204 });
+        }),
+      );
+      await renderDrawer(member);
+      const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+      await within(drawer).findByRole("option", { name: "Abonat" });
+      fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: planId } });
+      const price = await within(drawer).findByLabelText("Tarifa");
+      await waitFor(() => {
+        expect(within(price).getAllByRole("option").length).toBeGreaterThan(1);
+      });
+      const values = within(price).getAllByRole("option").map((item) => item.getAttribute("value") ?? "");
+      fireEvent.change(price, { target: { value: values.includes("price-member") ? "price-member" : values[1] } });
+      return { drawer, writes };
+    }
+
+    it("R-12-06: the optional «Data del proper rebut» says what an empty one means; empty → no nextInvoiceDate in the body", async () => {
+      const member = { ...(await loadMember()), nextInvoiceDate: null, planId: "plan-pack-10" };
+      const { drawer, writes } = await choose(member, "plan-member");
+      const date = within(drawer).getByLabelText("Data del proper rebut (opcional)");
+      expect(date).not.toBeRequired();
+      expect(date).toHaveAttribute("min", "2026-10-01");
+      expect(
+        await within(drawer).findByText("Si la deixes en blanc, el proper rebut serà el 01/11/2026."),
+      ).toBeVisible();
+      fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+      await waitFor(() => {
+        expect(writes).toEqual([{ planId: "plan-member", priceId: "price-member" }]);
+      });
+    });
+
+    it("R-12-06: a filled date travels as nextInvoiceDate; the api's 400 on it lands on the field", async () => {
+      const member = { ...(await loadMember()), nextInvoiceDate: null, planId: "plan-pack-10" };
+      const { drawer, writes } = await choose(member, "plan-member");
+      fireEvent.change(within(drawer).getByLabelText("Data del proper rebut (opcional)"), {
+        target: { value: "2026-12-01" },
+      });
+      fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+      await waitFor(() => {
+        expect(writes).toEqual([
+          { nextInvoiceDate: "2026-12-01", planId: "plan-member", priceId: "price-member" },
+        ]);
+      });
+      cleanup();
+      server.resetHandlers();
+
+      server.use(
+        http.post("*/api/v1/members/:id/plan-change", () =>
+          HttpResponse.json(
+            {
+              code: "VALIDATION_ERROR",
+              details: { fieldErrors: [{ code: "INVALID_VALUE", field: "nextInvoiceDate" }] },
+              message: "Validation failed",
+              traceId: "t-plan",
+            },
+            { status: 400 },
+          ),
+        ),
+      );
+      await renderDrawer(member);
+      const again = await screen.findByRole("dialog", { name: "Modalitat" });
+      await within(again).findByRole("option", { name: "Abonat" });
+      fireEvent.change(within(again).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
+      fireEvent.change(await within(again).findByLabelText("Tarifa"), { target: { value: "price-member" } });
+      await within(again).findByRole("option", { name: /60,00.*€/u });
+      fireEvent.change(within(again).getByLabelText("Data del proper rebut (opcional)"), {
+        target: { value: "2026-10-15" },
+      });
+      fireEvent.click(within(again).getByRole("button", { name: "Desa" }));
+      const field = within(again).getByLabelText("Data del proper rebut (opcional)").closest(".ah-form-field");
+      if (!(field instanceof HTMLElement)) throw new TypeError("No date field");
+      expect(await within(field).findByText("La data no pot ser anterior al 01/10/2026.")).toBeVisible();
+      expect(within(again).getAllByRole("alert")).toHaveLength(1);
+    });
+
+    it("R-12-06: a member who already has a date (or a non-monthly target) gets no date field — it never moves on a plan change", async () => {
+      const member = await loadMember();
+      const { drawer } = await choose({ ...member, planId: "plan-pack-10" }, "plan-member");
+      expect(within(drawer).queryByLabelText("Data del proper rebut (opcional)")).toBeNull();
+      cleanup();
+      const pack = await choose({ ...member, nextInvoiceDate: null }, "plan-pack-6");
+      expect(within(pack.drawer).queryByLabelText("Data del proper rebut (opcional)")).toBeNull();
+    });
+  });
+
   it("E8-W03 round 3 #9 does not expose a dead second-dog link", async () => {
     const member = await loadMember();
     await renderDrawer(member);

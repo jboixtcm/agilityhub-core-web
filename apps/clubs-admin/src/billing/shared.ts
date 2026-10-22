@@ -75,6 +75,44 @@ export function clubToday(timeZone: string, now: Date = new Date()): string {
   }).format(now);
 }
 
+/** The last day of a `YYYY-MM` month (`YYYY-MM-DD`). */
+export function periodEnd(period: string): string {
+  const [year = 0, month = 1] = period.split("-").map(Number);
+  return `${period}-${String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(2, "0")}`;
+}
+
+/** Day `day` of a `YYYY-MM` month, kept inside the month (a 31 in a 30-day month is its last day). */
+export function invoiceDayOf(period: string, day: number): string {
+  const last = Number(periodEnd(period).slice(8));
+  return `${period}-${String(Math.min(Math.max(1, day), last)).padStart(2, "0")}`;
+}
+
+/**
+ * `billing.nextInvoiceDayOfMonth` (CATALEG_PARAMETRES, default 1): R-12-06's day of month M+1.
+ * `undefined` while it is read; the catalog's default when the club's value cannot be read.
+ */
+export function useNextInvoiceDay(client: ApiClient, enabled = true): number | undefined {
+  const [day, setDay] = useState<number>();
+  useEffect(() => {
+    if (!enabled) return undefined;
+    let current = true;
+    void client
+      .GET("/parameters/{key}", { params: { path: { key: "billing.nextInvoiceDayOfMonth" } } })
+      .then(
+        (result) => {
+          if (current) setDay(typeof result.data?.value === "number" ? result.data.value : 1);
+        },
+        () => {
+          if (current) setDay(1);
+        },
+      );
+    return () => {
+      current = false;
+    };
+  }, [client, enabled]);
+  return day;
+}
+
 /**
  * D6's «Estat» (S12 §2): the label and tone of a receipt, from the api's `status`, method and
  * `refundedTotal` — never a status of its own.

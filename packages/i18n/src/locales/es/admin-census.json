@@ -91,7 +91,9 @@
     "newPlan": "Modalidad nueva",
     "price": "Tarifa",
     "effectiveMonth": "Mes de efecto (opcional)",
-    "packDiscountRule": "Al pasar de un bono de {minSessions} sesiones o más a una cuota mensual, la entrada tiene un {discountPercent} % de descuento. El importe debe calcularlo la API."
+    "packDiscountRule": "Al pasar de un bono de {minSessions} sesiones o más a una cuota mensual, la entrada tiene un {discountPercent} % de descuento. El importe debe calcularlo la API.",
+    "nextInvoiceDate": "Fecha del próximo recibo (opcional)",
+    "nextInvoiceDefault": "Si la dejas en blanco, el próximo recibo será el {date}."
   },
   "inactivityLeavePage": {
     "title": "Inactividades y bajas",
@@ -369,7 +371,15 @@
       "amountExceeds": "El importe pagado no puede superar el importe debido.",
       "planNotPack": "Este concepto necesita una modalidad de bono.",
       "packNegative": "El ajuste no puede dejar el bono con sesiones negativas.",
-      "invalidCard": "Tarjeta no válida"
+      "invalidCard": "Tarjeta no válida",
+      "nextInvoice": {
+        "title": "Próximo recibo",
+        "none": "Sin fecha: no se facturará",
+        "edit": "Editar la fecha del próximo recibo",
+        "date": "Fecha del próximo recibo",
+        "range": "Elige una fecha entre el {from} y el {to}.",
+        "notBefore": "La fecha no puede ser anterior al {date}."
+      }
     },
     "language": "idioma: {locale}",
     "number": "n.º {number}",

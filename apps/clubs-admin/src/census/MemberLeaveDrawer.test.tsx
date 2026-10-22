@@ -7,7 +7,7 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 
 import { MemberLeaveDrawer } from "./MemberLeaveDrawer";
 
@@ -210,6 +210,9 @@ describe("T-13-31 admin leave lifecycle", () => {
   });
 
   it("E8-W03 round 2 #12 submits reactivation and formats prices through club money rules", async () => {
+    // Club-local 05/10/2026: the proposed date is 01/11 (E11-W07 step 4).
+    vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+    onTestFinished(() => { vi.useRealTimers(); });
     const member = await loadMember();
     const writes: unknown[] = [];
     server.use(http.post("*/api/v1/members/:id/reactivation", async ({ request }) => {
@@ -225,6 +228,63 @@ describe("T-13-31 admin leave lifecycle", () => {
     fireEvent.change(price, { target: { value: "price-member" } });
     fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
     await waitFor(() => { expect(writes).toEqual([{ nextInvoiceDate: "2026-11-01", planId: "plan-member", priceId: "price-member" }]); });
+  });
+
+  describe("E11-W07 step 4 (E156 N1, R-13-16): the reactivation proposes the next invoice day, never the stale date", () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    async function openReactivation(member: components["schemas"]["Member"]) {
+      await renderDrawer(member);
+      fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
+      const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
+      fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+      const price = within(modal).getByLabelText("Tarifa");
+      await within(price).findByRole("option", { name: /60,00.*€/u });
+      fireEvent.change(price, { target: { value: "price-member" } });
+      return modal;
+    }
+
+    it("E156 N1: a LEFT member with nextInvoiceDate 2026-04-01 on 20/11/2026 → the field shows 2026-12-01 (the 1st of the month after the club's)", async () => {
+      vi.useFakeTimers({ now: new Date("2026-11-20T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+      const member = await loadMember();
+      const writes: unknown[] = [];
+      server.use(http.post("*/api/v1/members/:id/reactivation", async ({ request }) => {
+        writes.push(await request.json());
+        return HttpResponse.json({ ...member, status: "ACTIVE" });
+      }));
+      const modal = await openReactivation({ ...member, nextInvoiceDate: "2026-04-01", status: "LEFT" });
+      const date = within(modal).getByLabelText("Data del proper rebut");
+      await waitFor(() => { expect(date).toHaveValue("2026-12-01"); });
+      expect(date).toHaveAttribute("min", "2026-11-01");
+      fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
+      await waitFor(() => { expect(writes).toEqual([{ nextInvoiceDate: "2026-12-01", planId: "plan-member", priceId: "price-member" }]); });
+    });
+
+    it("E156 N1: the club's billing.nextInvoiceDayOfMonth (5) is the proposed day; the api's 400 fieldErrors[nextInvoiceDate] lands on the field", async () => {
+      vi.useFakeTimers({ now: new Date("2026-11-20T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+      server.use(
+        http.get("*/api/v1/parameters/billing.nextInvoiceDayOfMonth", () =>
+          HttpResponse.json({ block: "general", constraints: { max: 28, min: 1 }, default: 1, editableBy: "CLUB", help: "", history: [], isOverride: true, key: "billing.nextInvoiceDayOfMonth", label: "Dia del proper rebut", module: "BILLING", type: "INT", value: 5, version: 2 }),
+        ),
+        http.post("*/api/v1/members/:id/reactivation", () =>
+          HttpResponse.json(
+            { code: "VALIDATION_ERROR", details: { fieldErrors: [{ code: "INVALID_VALUE", field: "nextInvoiceDate" }] }, message: "Validation failed", traceId: "t-react" },
+            { status: 400 },
+          ),
+        ),
+      );
+      const member = await loadMember();
+      const modal = await openReactivation({ ...member, nextInvoiceDate: "2026-04-01", status: "LEFT" });
+      const date = within(modal).getByLabelText("Data del proper rebut");
+      await waitFor(() => { expect(date).toHaveValue("2026-12-05"); });
+      fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
+      const field = date.closest(".ah-form-field");
+      if (!(field instanceof HTMLElement)) throw new TypeError("No date field");
+      expect(await within(field).findByText("La data no pot ser anterior al 01/11/2026.")).toBeVisible();
+      expect(within(modal).getAllByRole("alert")).toHaveLength(1);
+    });
   });
 
   it("E8-W03 round 2 #6 makes MEMBER_ERASED terminal and notifies D10", async () => {

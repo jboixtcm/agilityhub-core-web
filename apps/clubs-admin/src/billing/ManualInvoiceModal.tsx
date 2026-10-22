@@ -6,6 +6,7 @@ import {
   listFields,
   type SubmissionKeys,
 } from "@agilityhub/api-client";
+import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -19,7 +20,15 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { errorFields, type Invoice, minorUnits, useBillingErrorMessage } from "./shared";
+import {
+  clubToday,
+  errorFields,
+  type Invoice,
+  isPeriod,
+  minorUnits,
+  shiftPeriod,
+  useBillingErrorMessage,
+} from "./shared";
 
 type MemberListItem = components["schemas"]["MemberListItem"];
 
@@ -69,15 +78,31 @@ export function ManualInvoiceModal({
   keys,
   onClose,
   onCreated,
+  period: pageMonth,
 }: {
   client: ApiClient;
   keys: SubmissionKeys;
   onClose: () => void;
   onCreated: (invoice: Invoice) => void;
+  /** D6's month: the receipt's default `period` (R-12-19). */
+  period?: string;
 }) {
   const { t } = useTranslation(["admin-billing", "errors"]);
   const branding = useBranding();
+  const formats = useClubFormats();
   const errorMessage = useBillingErrorMessage();
+  // E11-T15 (R-12-19): the month the receipt is for, at most three months either side of the
+  // club-local issue month; the page's month when it is one of them.
+  const issueMonth = clubToday(branding.timeZone).slice(0, 7);
+  const firstPeriod = shiftPeriod(issueMonth, -3);
+  const lastPeriod = shiftPeriod(issueMonth, 3);
+  const [receiptPeriod, setReceiptPeriod] = useState(() =>
+    pageMonth !== undefined && pageMonth >= firstPeriod && pageMonth <= lastPeriod
+      ? pageMonth
+      : issueMonth,
+  );
+  const periodValid =
+    isPeriod(receiptPeriod) && receiptPeriod >= firstPeriod && receiptPeriod <= lastPeriod;
   const [query, setQuery] = useState("");
   // The last answer, with the text it answers: a list for an older text is never shown.
   const [found, setFound] = useState<{ members: Member[]; text: string }>();
@@ -160,9 +185,11 @@ export function ManualInvoiceModal({
     lines.some((_, index) => linePart(field, index) !== undefined) ||
     field === "memberId" ||
     field === "note" ||
+    field === "period" ||
     (field === "includeInNextRun" && sepa);
   const valid =
     member !== undefined &&
+    periodValid &&
     lineErrors.every(
       (item) =>
         item.amount === undefined && item.description === undefined && item.tax === undefined,
@@ -182,6 +209,7 @@ export function ManualInvoiceModal({
       })),
       memberId: member.id,
       note: note.trim(),
+      period: receiptPeriod,
     };
     try {
       const result = await keys.send(JSON.stringify(["manual-invoice", body]), (key) =>
@@ -294,6 +322,31 @@ export function ManualInvoiceModal({
             </fieldset>
           )}
         </div>
+
+        <FormField
+          {...((submitted && !periodValid) || fields.includes("period")
+            ? {
+                error: t("admin-billing:manual.periodRange", {
+                  from: formats.formatPlainDate(`${firstPeriod}-01`, "monthYear"),
+                  to: formats.formatPlainDate(`${lastPeriod}-01`, "monthYear"),
+                }),
+              }
+            : {})}
+          id="billing-manual-period"
+          label={t("admin-billing:manual.period")}
+        >
+          <Input
+            id="billing-manual-period"
+            max={lastPeriod}
+            min={firstPeriod}
+            onChange={(event) => {
+              setReceiptPeriod(event.currentTarget.value);
+            }}
+            required
+            type="month"
+            value={receiptPeriod}
+          />
+        </FormField>
 
         <fieldset className="billing-manual__lines">
           <legend>{t("admin-billing:manual.lines")}</legend>

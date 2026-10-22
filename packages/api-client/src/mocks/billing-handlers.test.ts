@@ -698,6 +698,29 @@ describe("S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/roll
     });
   });
 
+  it("E11-W07 (E147, R-12-14/R-12-15): submissionDue from the day before the collection date; on 01/09 the GENERATED remittance blocks the rollback {COLLECTION_DATE_PASSED}", async () => {
+    expect((await month()).remittance).toMatchObject({
+      requestedCollectionDate: "2026-09-01",
+      status: "GENERATED",
+      submissionDue: false,
+    });
+    vi.setSystemTime(new Date("2026-08-31T08:00:00Z"));
+    expect((await month()).remittance?.submissionDue).toBe(true);
+    expect((await month()).run).toMatchObject({ rollbackBlockers: [], rollbackable: true });
+    // Club-local 01/09 at 00:30 (22:30 UTC the day before): the collection date has come.
+    vi.setSystemTime(new Date("2026-08-31T22:30:00Z"));
+    const runId = await liveRunId();
+    expect((await month()).run).toMatchObject({
+      rollbackBlockers: ["COLLECTION_DATE_PASSED"],
+      rollbackable: false,
+    });
+    expect(await failure(rollback(runId))).toEqual({
+      code: "RUN_NOT_ROLLBACKABLE",
+      details: { reasons: ["COLLECTION_DATE_PASSED"] },
+      status: 409,
+    });
+  });
+
   it("T-12-13 a cash receipt already PAID → rollbackable false {INVOICE_PAID}", async () => {
     const runId = await liveRunId();
     expect((await pay(await receipt("2026-0915"))).response.status).toBe(200);
@@ -1061,6 +1084,18 @@ describe("S12 R-12-19 · POST /invoices/{id}/cancellation and the manual receipt
     });
     // None of the refusals took a number.
     expect((await adjustment("member-laura")).data?.number).toBe(1080);
+  });
+
+  it("E11-W07 (R-12-19): the receipt's period is kept; more than three months from the issue month (08/2026) → 400 {field: period} before any number", async () => {
+    const lines = [{ base: eur(1500), description: "Material", taxPercent: 0 }];
+    for (const period of ["2026-12", "2026-04", "2026-9"]) {
+      expect(
+        await failure(createManual({ lines, memberId: "member-laura", note: "", period })),
+      ).toEqual({ code: "VALIDATION_ERROR", details: { field: "period" }, status: 400 });
+    }
+    const created = await createManual({ lines, memberId: "member-laura", note: "", period: "2026-11" });
+    expect(created.data).toMatchObject({ number: 1080, period: "2026-11" });
+    expect((await adjustment("member-laura")).data?.period).toBe("2026-08");
   });
 });
 

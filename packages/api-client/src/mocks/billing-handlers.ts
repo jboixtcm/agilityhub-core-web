@@ -812,6 +812,17 @@ export const billingHandlers = [
           !Number.isInteger(line.base.amountMinor),
       );
       if (invalidLine >= 0) return validationError(`lines[${String(invalidLine)}]`);
+      // E11-T15 (R-12-19): the receipt's month, at most three months either side of the issue
+      // month (`{field: period}`), refused before any number is taken.
+      const issueMonth = today().slice(0, 7);
+      if (
+        payload.period !== undefined &&
+        (!isPeriod(payload.period) ||
+          payload.period < shiftPeriod(issueMonth, -3) ||
+          payload.period > shiftPeriod(issueMonth, 3))
+      ) {
+        return apiError("VALIDATION_ERROR", "Validation failed", 400, { field: "period" });
+      }
       if (!callerClubOwnsTheWorld()) return notFound();
       if (memberId === ERASED_MEMBER_ID) return apiError("MEMBER_ERASED", "Member erased", 409);
       const target = world();
@@ -908,7 +919,7 @@ export const billingHandlers = [
                   type: "MANUAL",
                 },
         rolledBack: false,
-        period: issueDate.slice(0, 7),
+        period: payload.period ?? issueDate.slice(0, 7),
         refundedTotal: eur(0),
         remittanceId: null,
         runId: null,

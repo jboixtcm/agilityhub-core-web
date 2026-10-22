@@ -122,7 +122,8 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
 
     await expect(page.locator(".billing-kpi")).toHaveText([
       /^168\s*Rebuts del mes\s*simulats el 25\/08$/u,
-      /^6\.480\s€\s*Import de la remesa\s*data de cobrament: 01\/09\s*Remeses ›$/u,
+      // E11-W07 (R-12-15): the GENERATED remittance still has to go to the bank.
+      /^6\.480\s€\s*Import de la remesa\s*data de cobrament: 01\/09\s*Presenta-la al banc abans del 01\/09\s*Remeses ›$/u,
       /^4\s*En efectiu\s*pendents de marcar cobrat$/u,
       /^2\s*Quota d'inactivitat\s*20\s€ el 1r mes · 10\s€\/mes$/u,
     ]);

@@ -199,6 +199,26 @@
   opacity: 0.8;
 }
 
+/* R-12-15 (E147): «Presenta-la al banc abans del …», warning from the day before (submissionDue). */
+.billing-kpi__due {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.billing-kpi__due[data-tone="warning"] {
+  color: var(--ah-color-text);
+  border-left: 3px solid var(--ah-color-warning);
+  padding-left: var(--ah-space-2);
+}
+
+.billing-kpi__due[data-tone="warning"] svg {
+  color: var(--ah-color-warning);
+}
+
 .billing-toolbar__count {
   color: var(--ah-color-text-muted);
   font-size: 0.75rem;

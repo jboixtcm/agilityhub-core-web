@@ -2,9 +2,11 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { catalogState } from "./fixtures/catalogs";
 import { censusMembers, censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview, resetCensusRecordState } from "./fixtures/census";
 import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
+import { clubLocalDate } from "./fixtures/planning";
 import { findParameter } from "./fixtures/settings";
 import { readmissionPendingRefusal } from "./readmission-pending";
 import { currentMockScenario, currentMockScenarioName } from "./scenarios";
@@ -22,6 +24,7 @@ type LeaveDecisionRequest = components["schemas"]["LeaveDecisionRequest"];
 type DirectLeaveRequest = components["schemas"]["DirectLeaveRequest"];
 type ReactivationRequest = components["schemas"]["ReactivationRequest"];
 type PlanChangeRequest = components["schemas"]["MemberPlanChangeRequest"];
+type NextInvoiceDateRequest = components["schemas"]["NextInvoiceDateRequest"];
 
 const MOCK_NOW = "2026-10-05T10:00:00Z";
 const MOCK_CURRENT_MONTH = "2026-10";
@@ -33,6 +36,24 @@ function monthEnd(month: string): string {
   const monthNumber = Number(match[2]);
   const lastDay = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
   return `${month}-${String(lastDay).padStart(2, "0")}`;
+}
+
+/** The club-local month of the mock's clock (the api reads the club's zone). */
+function clubMonth(): string {
+  return clubLocalDate(new Date()).slice(0, 7);
+}
+
+function shiftMonth(month: string, months: number): string {
+  const [year = 0, number = 1] = month.split("-").map(Number);
+  const index = year * 12 + (number - 1) + months;
+  return `${String(Math.floor(index / 12))}-${String((index % 12) + 1).padStart(2, "0")}`;
+}
+
+/** `400 VALIDATION_ERROR {fieldErrors: [{field: nextInvoiceDate, code: INVALID_VALUE}]}` (E146). */
+function invoiceDateRefused() {
+  return error("VALIDATION_ERROR", 400, {
+    fieldErrors: [{ code: "INVALID_VALUE", field: "nextInvoiceDate" }],
+  });
 }
 
 function normalizeOverviewInvoiceStatus(status: string): components["schemas"]["InvoiceStatus"] {
@@ -791,6 +812,10 @@ export const memberBillingHandlers = [
     if (member === undefined) return error("NOT_FOUND", 404);
     if (member.status !== "LEFT") return error("MEMBER_NOT_LEFT", 409);
     const body = (await request.json()) as ReactivationRequest;
+    // E156 N1 (E11-T15 round 2): never before the first day of the club's current month.
+    if (body.nextInvoiceDate !== undefined && body.nextInvoiceDate < `${clubMonth()}-01`) {
+      return invoiceDateRefused();
+    }
     updateLifecycleMember(requestedId, (updated) => {
       Object.assign(updated, body, {
         displayStatus: { kind: "ACTIVE", label: "alta" },
@@ -812,12 +837,61 @@ export const memberBillingHandlers = [
     const frozen = readmissionPendingRefusal();
     if (frozen !== undefined) return frozen;
     const body = (await request.json()) as PlanChangeRequest;
+    // E11-T15 (R-12-06): not before the first day of the club's current month.
+    if (body.nextInvoiceDate !== undefined && body.nextInvoiceDate < `${clubMonth()}-01`) {
+      return invoiceDateRefused();
+    }
     updateLifecycleMember(requestedId, (updated) => {
       updated.planId = body.planId;
       updated.priceId = body.priceId;
+      // A member without a date moving to a MONTHLY plan gets the request's, else next month's
+      // invoice day (the catalog's default `billing.nextInvoiceDayOfMonth` = 1); an existing date
+      // never moves.
+      const monthly = catalogState.plans.find((plan) => plan.id === body.planId)?.type === "MONTHLY";
+      if (monthly) updated.nextInvoiceDate ??= body.nextInvoiceDate ?? `${shiftMonth(clubMonth(), 1)}-01`;
       updated.version += 1;
     });
     return new HttpResponse(null, { status: 204 });
+  }),
+  http.put("*/api/v1/members/:id/next-invoice-date", async ({ params, request }) => {
+    const refused = moduleOff("BILLING");
+    if (refused !== undefined) return refused;
+    const requestedId = String(params.id);
+    if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
+    const member = lifecycleMemberOverview(requestedId)?.member;
+    if (member === undefined) return error("NOT_FOUND", 404);
+    const frozen = readmissionPendingRefusal();
+    if (frozen !== undefined) return frozen;
+    const body = (await request.json().catch(() => null)) as Partial<NextInvoiceDateRequest> | null;
+    // E146: from the first day of the club's current month twelve months back to the last day of
+    // the month twelve months ahead.
+    const month = clubMonth();
+    const date = body?.nextInvoiceDate;
+    if (
+      typeof date !== "string" ||
+      !/^\d{4}-\d{2}-\d{2}$/u.test(date) ||
+      date < `${shiftMonth(month, -12)}-01` ||
+      date > monthEnd(shiftMonth(month, 12))
+    ) {
+      return invoiceDateRefused();
+    }
+    if (typeof body?.reason !== "string" || body.reason.trim() === "" || body.reason.length > 200) {
+      return error("VALIDATION_ERROR", 400, {
+        fieldErrors: [{ code: typeof body?.reason === "string" && body.reason.length > 200 ? "INVALID_VALUE" : "REQUIRED", field: "reason" }],
+      });
+    }
+    if (member.status !== "ACTIVE") return error("INVALID_STATE", 409);
+    // The same date again changes nothing.
+    if (member.nextInvoiceDate !== date) {
+      updateLifecycleMember(requestedId, (updated) => {
+        updated.nextInvoiceDate = date;
+        updated.version += 1;
+      });
+      const overview = lifecycleMemberOverview(requestedId);
+      if (overview?.nextInvoice !== undefined) overview.nextInvoice = { ...overview.nextInvoice, date };
+    }
+    const answer: components["schemas"]["NextInvoiceDate"] = { nextInvoiceDate: date };
+    return HttpResponse.json(answer);
   }),
   http.post("*/api/v1/members/:id/card-setup-link", ({ params }) => {
     if (String(params.id) !== censusRecordState.memberOverview.member.id) return error("NOT_FOUND", 404);

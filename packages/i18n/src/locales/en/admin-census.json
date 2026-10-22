@@ -91,7 +91,9 @@
     "newPlan": "New plan",
     "price": "Price",
     "effectiveMonth": "Effective month (optional)",
-    "packDiscountRule": "When moving from a pack of {minSessions} sessions or more to a monthly plan, the entry fee has a {discountPercent}% discount. The API must calculate the amount."
+    "packDiscountRule": "When moving from a pack of {minSessions} sessions or more to a monthly plan, the entry fee has a {discountPercent}% discount. The API must calculate the amount.",
+    "nextInvoiceDate": "Next invoice date (optional)",
+    "nextInvoiceDefault": "If you leave it blank, the next invoice will be on {date}."
   },
   "inactivityLeavePage": {
     "title": "Inactivity and leave",
@@ -369,7 +371,15 @@
       "amountExceeds": "The paid amount cannot exceed the amount due.",
       "planNotPack": "This concept requires a pack plan.",
       "packNegative": "The adjustment cannot leave the pack with negative sessions.",
-      "invalidCard": "Invalid card"
+      "invalidCard": "Invalid card",
+      "nextInvoice": {
+        "title": "Next invoice",
+        "none": "No date: it will not be invoiced",
+        "edit": "Edit the next invoice date",
+        "date": "Next invoice date",
+        "range": "Choose a date between {from} and {to}.",
+        "notBefore": "The date cannot be before {date}."
+      }
     },
     "language": "language: {locale}",
     "number": "no. {number}",

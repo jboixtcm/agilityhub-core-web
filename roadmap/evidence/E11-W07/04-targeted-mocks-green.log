@@ -1,0 +1,13 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+> vitest run src/mocks/billing-handlers.test.ts src/mocks/console-handlers.test.ts src/mocks/census-handlers.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+
+
+ Test Files  3 passed (3)
+      Tests  178 passed (178)
+   Start at  07:11:45
+   Duration  1.70s (transform 46%, import 29%, tests 25%)
+

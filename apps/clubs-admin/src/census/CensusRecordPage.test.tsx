@@ -4,6 +4,7 @@ import {
   handlers,
   mockScenario,
   resetCensusRecordState,
+  resetMemberBillingState,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -12,7 +13,7 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, onTestFinished, vi } from "vitest";
 
 import { CountersRefreshContext } from "../dashboard/counters";
 
@@ -963,6 +964,38 @@ describe("E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by 
         name: "Preinscripcions pendents",
       }),
     ).toHaveAttribute("href", "/preinscripcions/member-laura");
+  });
+});
+
+describe("E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record", () => {
+  it("E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save «Proper rebut» and the data card read the new date", async () => {
+    vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+    onTestFinished(() => {
+      vi.useRealTimers();
+      resetMemberBillingState();
+    });
+    window.history.pushState(null, "", "/abonats/member-laura?calaix=proper-rebut");
+    await renderRecord("member");
+    const drawer = await screen.findByRole("dialog", { name: "Proper rebut" });
+    expect(within(drawer).getByLabelText("Data del proper rebut")).toHaveValue("2026-09-01");
+    fireEvent.change(within(drawer).getByLabelText("Data del proper rebut"), {
+      target: { value: "2026-11-01" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Motiu"), {
+      target: { value: "Pagat fins a octubre" },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Proper rebut" })).toBeNull();
+    });
+
+    const section = screen.getByRole("heading", { level: 3, name: "Proper rebut" }).closest("section");
+    expect(section).toHaveTextContent("01/11/2026");
+    // The overview is read again: its «Proper rebut» row (date · amount) follows the write.
+    const row = screen.getByText("Proper rebut", { selector: "dt" }).closest("div");
+    await waitFor(() => {
+      expect(row).toHaveTextContent("01/11/2026");
+    });
   });
 });
 

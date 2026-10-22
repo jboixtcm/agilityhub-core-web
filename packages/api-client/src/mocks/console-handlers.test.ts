@@ -7,6 +7,7 @@ import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 import type { components } from "../generated/schema";
 
+import { canonicalCreditorId } from "./console-handlers";
 import {
   CONSOLE_CLUB_IDS,
   clubTemplates,
@@ -101,6 +102,24 @@ afterEach(() => {
 });
 afterAll(() => {
   server.close();
+});
+
+describe("E11-W07 step 7 (E147): the SEPA creditor identifier's check digits", () => {
+  it("ISO 7064 mod 97-10 over the national id + country + 00, the business code left out", () => {
+    expect(canonicalCreditorId("ES10ZZZG00000000")).toBe(true);
+    expect(canonicalCreditorId("ES10000G00000000")).toBe(true);
+    expect(canonicalCreditorId("es10 zzz g00000000")).toBe(true);
+    // The e2e core seed's second club (e10-core.spec.ts).
+    expect(canonicalCreditorId("ES37ZZZG12345674")).toBe(true);
+    for (const value of ["ES00ZZZG00000000", "ES12000G00000000", "ES11ZZZG00000000", "ES10ZZZ", ""]) {
+      expect(canonicalCreditorId(value)).toBe(false);
+    }
+    // Every fixture creditor is canonical.
+    for (const club of consoleState.clubs) {
+      const id = club.paymentProviders.SEPA_XML?.creditorId;
+      if (typeof id === "string") expect(canonicalCreditorId(id), id).toBe(true);
+    }
+  });
 });
 
 describe("E10-W01 · the console's mock world follows the E10-T01 contract", () => {

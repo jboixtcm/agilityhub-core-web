@@ -36,6 +36,7 @@ import {
   shiftPeriod,
   useBillingErrorMessage,
   useBillingLocale,
+  useNextInvoiceDay,
 } from "./shared";
 
 type BillingRunResult = components["schemas"]["BillingRunResult"];
@@ -63,29 +64,6 @@ function Alert({ children }: { children: ReactNode }) {
  * The strong confirmation of button 2 (S12 §2, R-12-11): «Es generaran {n} rebuts per un total de
  * {import}…» from the simulation's KPIs, then `POST /billing/runs` with one key per payload.
  */
-/** `billing.nextInvoiceDayOfMonth` (CATALEG_PARAMETRES, default 1): R-12-06's day of month M+1. */
-function useNextInvoiceDay(client: ApiClient): number | undefined {
-  const [day, setDay] = useState<number>();
-  useEffect(() => {
-    let current = true;
-    void client
-      .GET("/parameters/{key}", { params: { path: { key: "billing.nextInvoiceDayOfMonth" } } })
-      .then(
-        (result) => {
-          if (current) setDay(typeof result.data?.value === "number" ? result.data.value : 1);
-        },
-        () => {
-          // The catalog's default when the club's value cannot be read.
-          if (current) setDay(1);
-        },
-      );
-    return () => {
-      current = false;
-    };
-  }, [client]);
-  return day;
-}
-
 export function GenerateModal({
   client,
   keys,

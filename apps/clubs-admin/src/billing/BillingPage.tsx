@@ -920,6 +920,23 @@ export function BillingPage({
                 <Icon aria-hidden="true" name="undo" />
                 {t("admin-billing:actions.rollback")}
               </Button>
+            ) : liveRun?.rollbackBlockers.includes("COLLECTION_DATE_PASSED") === true ? (
+              // E147 (R-12-14): the bank may have the file already — the action stays, disabled, and
+              // says why (the second confirmation word that lifts it comes with E11-W08).
+              <span title={t("admin-billing:actions.rollbackDatePassed")}>
+                <Button
+                  aria-describedby="billing-rollback-why"
+                  className="billing-action"
+                  disabled
+                  variant="ghost"
+                >
+                  <Icon aria-hidden="true" name="undo" />
+                  {t("admin-billing:actions.rollback")}
+                </Button>
+                <span className="ah-sr-only" id="billing-rollback-why">
+                  {t("admin-billing:actions.rollbackDatePassed")}
+                </span>
+              </span>
             ) : null}
           </>
         )}
@@ -1043,6 +1060,24 @@ export function BillingPage({
                     })
               }
               label={t("admin-billing:kpi.amount")}
+              notice={
+                // R-12-15 (E147): a generated remittance still has to go to the bank; from the day
+                // before its collection date (`submissionDue`, the api's club-local day) it warns.
+                month.remittance?.status === "GENERATED" ? (
+                  <span
+                    className="billing-kpi__due"
+                    {...(month.remittance.submissionDue ? { "data-tone": "warning" } : {})}
+                  >
+                    {month.remittance.submissionDue ? <Icon aria-hidden="true" name="warn" /> : null}
+                    {t("admin-billing:kpi.submitBefore", {
+                      date: formats.formatPlainDate(
+                        month.remittance.requestedCollectionDate,
+                        "dayMonthNumeric",
+                      ),
+                    })}
+                  </span>
+                ) : undefined
+              }
               link={
                 // The remittances page (no mockup, no sidebar entry): reached from the amount, and
                 // only by a club that remits (a cash-only club has no remittance to list).
@@ -1305,6 +1340,7 @@ export function BillingPage({
             say(t("admin-billing:manual.created", { number: invoice.displayNumber }));
             refreshAll();
           }}
+          {...(memberHistory ? {} : { period })}
         />
       ) : null}
       {invoiceId === undefined ? null : (
@@ -1340,11 +1376,13 @@ function Kpi({
   detail,
   label,
   link,
+  notice,
   value,
 }: {
   detail?: string | undefined;
   label: string;
   link?: ReactNode;
+  notice?: ReactNode;
   value: string;
 }) {
   return (
@@ -1352,9 +1390,17 @@ function Kpi({
       <strong className="billing-kpi__value">{value}</strong>
       <span className="billing-kpi__label">{label}</span>
       {detail === undefined ? null : <span className="billing-kpi__detail">{detail}</span>}
+      {notice}
       {link}
     </Card>
   );
+}
+
+/** D10 for an incident: a member without a next receipt date opens that date's drawer (E146). */
+function recordPath(memberId: string, code?: BillingIncident["code"]): string {
+  return code === "NO_NEXT_INVOICE_DATE"
+    ? `/abonats/${memberId}?calaix=proper-rebut`
+    : `/abonats/${memberId}`;
 }
 
 function MemberRows({
@@ -1362,7 +1408,7 @@ function MemberRows({
   onNavigate,
   text,
 }: {
-  items: readonly { memberId: string; memberName: string }[];
+  items: readonly { code?: BillingIncident["code"]; memberId: string; memberName: string }[];
   onNavigate: (path: string) => void;
   text: (index: number) => ReactNode;
 }) {
@@ -1378,11 +1424,11 @@ function MemberRows({
               <a
                 aria-label={t("admin-billing:simulation.openRecordOf", { name: item.memberName })}
                 className="ah-button ah-button--ghost billing-open"
-                href={`/abonats/${item.memberId}`}
+                href={recordPath(item.memberId, item.code)}
                 onClick={(event) => {
                   if (event.button !== 0 || event.metaKey || event.ctrlKey) return;
                   event.preventDefault();
-                  onNavigate(`/abonats/${item.memberId}`);
+                  onNavigate(recordPath(item.memberId, item.code));
                 }}
               >
                 {t("admin-billing:simulation.openRecord")}

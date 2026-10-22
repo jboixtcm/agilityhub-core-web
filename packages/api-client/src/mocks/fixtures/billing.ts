@@ -43,10 +43,14 @@ export const BILLING_MOCK_PERIOD = "2026-09";
 const CURRENCY = "EUR";
 const SERIES = "2026";
 const ADMIN_ACCOUNT_ID = "10000000-0000-4000-8000-000000000001";
-/** The club's creditor (CLUB.paymentProviders.SEPA_XML), as the remittance snapshot carries it. */
+/**
+ * The club's creditor (CLUB.paymentProviders.SEPA_XML), as the remittance snapshot carries it. A
+ * canonical identifier (E147, E11-T15 F8): «10» are the ISO 7064 mod 97-10 check digits of
+ * `G00000000` + `ES`, as the api validates them on save.
+ */
 const CREDITOR = {
   bic: null,
-  id: "ES00ZZZG00000000",
+  id: "ES10ZZZG00000000",
   maskedIban: "ES00 **** **** **** **** 0042",
   name: "Club Agility Fictici",
 };
@@ -787,6 +791,14 @@ export function rollbackBlockers(world: BillingWorld, stored: StoredRun): Rollba
   }
   if (invoices.some((item) => item.invoice.status === "PAID")) blockers.push("INVOICE_PAID");
   if (world.nextNumber > stored.lastNumber + 1) blockers.push("MANUAL_INVOICE_AFTER");
+  // E147 (R-12-14): a GENERATED remittance whose collection date has come (club-local) may be at
+  // the bank already.
+  if (
+    remittance?.status === "GENERATED" &&
+    clubLocalDate(new Date()) >= remittance.requestedCollectionDate
+  ) {
+    blockers.push("COLLECTION_DATE_PASSED");
+  }
   return blockers;
 }
 

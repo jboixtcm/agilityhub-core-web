@@ -1,0 +1,4026 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+> vitest run src/census/MemberBillingBlock.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/billing/BillingPage.test.tsx src/console/ClubRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/census/MemberPlanDrawer.test.tsx (9 tests | 2 failed) 610ms
+   ❯ E8-W03 round 2 member plan change (9)
+     ❯ E11-W07 step 3 (E146, R-12-06): a pack member moving to a MONTHLY plan (3)
+       × R-12-06: the optional «Data del proper rebut» says what an empty one means; empty → no nextInvoiceDate in the body 47ms
+       × R-12-06: a filled date travels as nextInvoiceDate; the api's 400 on it lands on the field 42ms
+ ❯ src/console/ClubRecordPage.test.tsx (26 tests | 2 failed) 11680ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (26)
+     × E11-W07 step 7 (E147): the fixture's canonical creditor saves; one with the check digits 00 → 422 PROVIDER_CONFIG_INVALID on its field 19ms
+     × Pagaments: the IBAN is write-only, PROVIDER_IN_USE says how many members, and Stripe is tested once configured (R-17-05) 10029ms
+ ❯ src/census/MemberLeaveDrawer.test.tsx (19 tests | 2 failed) 20883ms
+   ❯ T-13-31 admin leave lifecycle (16)
+     ❯ E11-W07 step 4 (E156 N1, R-13-16): the reactivation proposes the next invoice day, never the stale date (2)
+       × E156 N1: a LEFT member with nextInvoiceDate 2026-04-01 on 20/11/2026 → the field shows 2026-12-01 (the 1st of the month after the club's) 10044ms
+       × E156 N1: the club's billing.nextInvoiceDayOfMonth (5) is the proposed day; the api's 400 fieldErrors[nextInvoiceDate] lands on the field 10047ms
+ ❯ src/census/MemberBillingBlock.test.tsx (13 tests | 4 failed) 40655ms
+   ❯ E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt (4)
+     × E146: «Proper rebut» reads the member's date with an edit action; a monthly member without one reads «Sense data: no es facturarà» 10009ms
+     × E146: the drawer bounds the date to ±12 months of the club's month, PUTs {nextInvoiceDate, reason} and the block and D10 read the api's date 10010ms
+     × E146: 400 VALIDATION_ERROR fieldErrors land on the date and on the reason, inside the drawer 10010ms
+     × R-04-06: 409 INVALID_STATE {READMISSION_PENDING} points to D2; any other 409 INVALID_STATE reads the generic state text 10006ms
+ ❯ src/billing/BillingPage.test.tsx (62 tests | 5 failed) 51150ms
+   ❯ E11-W07 step 5 (E147): the remittance's collection date, NO_NEXT_INVOICE_DATE and COLLECTION_DATE_PASSED on D6 (4)
+     × R-12-15: a GENERATED remittance reads «Presenta-la al banc abans del 01/09»; from 31/08 (submissionDue) in the warning tone 10068ms
+     × R-12-14: on the collection date the rollback is disabled with its reason (COLLECTION_DATE_PASSED), never opened 10068ms
+     × R-12-07: a NO_NEXT_INVOICE_DATE incident reads its label and opens the member's next-receipt drawer on D10 93ms
+   ❯ E11-W07 step 6 (R-12-19): the manual receipt's period (2)
+     × R-12-19: the period defaults to the page's month, is bounded to three months around the club's month and is sent 542ms
+     × R-12-19: the api's 400 {field: period} sits on the month field, with no second alert 672ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W07 step 5 (E147): the remittance's collection date, NO_NEXT_INVOICE_DATE and COLLECTION_DATE_PASSED on D6 > R-12-15: a GENERATED remittance reads «Presenta-la al banc abans del 01/09»; from 31/08 (submissionDue) in the warning tone
+TestingLibraryElementError: Unable to find an element with the text: Presenta-la al banc abans del 01/09. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card billing-kpi"[39m
+[36m>[39m
+  [36m<strong[39m
+    [33mclass[39m=[32m"billing-kpi__value"[39m
+  [36m>[39m
+    [0m6.480 €[0m
+  [36m</strong>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__label"[39m
+  [36m>[39m
+    [0mImport de la remesa[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__detail"[39m
+  [36m>[39m
+    [0mdata de cobrament: 01/09[0m
+  [36m</span>[39m
+  [36m<a[39m
+    [33mclass[39m=[32m"billing-kpi__link"[39m
+    [33mhref[39m=[32m"/facturacio/remeses?mes=2026-09"[39m
+  [36m>[39m
+    [0mRemeses ›[0m
+  [36m</a>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card billing-kpi"[39m
+[36m>[39m
+  [36m<strong[39m
+    [33mclass[39m=[32m"billing-kpi__value"[39m
+  [36m>[39m
+    [0m6.480 €[0m
+  [36m</strong>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__label"[39m
+  [36m>[39m
+    [0mImport de la remesa[0m
+  [36m</span>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"billing-kpi__detail"[39m
+  [36m>[39m
+    [0mdata de cobrament: 01/09[0m
+  [36m</span>[39m
+  [36m<a[39m
+    [33mclass[39m=[32m"billing-kpi__link"[39m
+    [33mhref[39m=[32m"/facturacio/remeses?mes=2026-09"[39m
+  [36m>[39m
+    [0mRemeses ›[0m
+  [36m</a>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:2188:49
+    2186|   it("R-12-15: a GENERATED remittance reads «Presenta-la al banc abans…
+    2187|     await renderPage();
+    2188|     const due = await within(await amountKpi()).findByText("Presenta-l…
+       |                                                 ^
+    2189|     expect(due).not.toHaveAttribute("data-tone", "warning");
+    2190|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W07 step 5 (E147): the remittance's collection date, NO_NEXT_INVOICE_DATE and COLLECTION_DATE_PASSED on D6 > R-12-14: on the collection date the rollback is disabled with its reason (COLLECTION_DATE_PASSED), never opened
+TestingLibraryElementError: Unable to find role="button" and name "Retrocedeix la remesa"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Exportacions"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m/>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSetembre 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA REMESA SEPA (XML)[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense compte bancari informat[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mPau Riera[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense tarifa assignada[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000013"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"billing-simulation__footnote"[39m
+          [36m>[39m
+            [0mEls abonats amb incidència s'ometen de la generació.[0m
+          [36m</p>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+          [36m>[39m
+            [0mActius amb pagament en efectiu[0m
+          [36m</h3>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+  ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Exportacions"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m/>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSetembre 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA REMESA SEPA (XML)[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense compte bancari informat[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mPau Riera[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense tarifa assignada[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000013"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"billing-simulation__footnote"[39m
+          [36m>[39m
+            [0mEls abonats amb incidència s'ometen de la generació.[0m
+          [36m</p>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+          [36m>[39m
+            [0mActius amb pagament en efectiu[0m
+          [36m</h3>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+  ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:2217:35
+    2215|     vi.setSystemTime(new Date("2026-09-01T08:00:00Z"));
+    2216|     await renderPage();
+    2217|     const rollback = await screen.findByRole("button", { name: "Retroc…
+       |                                   ^
+    2218|     expect(rollback).toBeDisabled();
+    2219|     expect(rollback).toHaveAccessibleDescription(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W07 step 5 (E147): the remittance's collection date, NO_NEXT_INVOICE_DATE and COLLECTION_DATE_PASSED on D6 > R-12-07: a NO_NEXT_INVOICE_DATE incident reads its label and opens the member's next-receipt drawer on D10
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"href"[32m[39m[2m, [22m[32m[32m"/abonats/61000000-0000-4000-8000-000000000021?calaix=proper-rebut"[32m[39m[2m) // element.getAttribute("href") === "/abonats/61000000-0000-4000-8000-000000000021?calaix=proper-rebut"[22m
+
+Expected the element to have attribute:
+[32m  href="/abonats/61000000-0000-4000-8000-000000000021?calaix=proper-rebut"[39m
+Received:
+[31m  href="/abonats/61000000-0000-4000-8000-000000000021"[39m
+ ❯ src/billing/BillingPage.test.tsx:2238:18
+    2236|     const link = within(row).getByRole("link", { name: "Obre fitxa de …
+    2237|     const path = "/abonats/61000000-0000-4000-8000-000000000021?calaix…
+    2238|     expect(link).toHaveAttribute("href", path);
+       |                  ^
+    2239|     fireEvent.click(link);
+    2240|     expect(onNavigate).toHaveBeenCalledWith(path);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W07 step 6 (R-12-19): the manual receipt's period > R-12-19: the period defaults to the page's month, is bounded to three months around the club's month and is sent
+TestingLibraryElementError: Unable to find a label with the text of: Mes del rebut
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_3f_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_3f_"[39m
+    [36m>[39m
+      [0mRebut manual[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"billing-manual"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33maria-describedby[39m=[32m"billing-manual-member-results"[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"billing-manual-member"[39m
+          [33mplaceholder[39m=[32m"Cerca per nom o número"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m"Laura"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mid[39m=[32m"billing-manual-member-results"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"billing-manual__members"[39m
+        [36m>[39m
+          [36m<legend[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</legend>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal · núm. 87[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 1 · núm. 93[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 11 · núm. 103[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 21 · núm. 113[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 31 · núm. 123[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 41 · núm. 133[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 51 · núm. 143[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 61 · núm. 153[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 71 · núm. 163[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 81 · núm. 173[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 91 · núm. 183[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 101 · núm. 193[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 111 · núm. 203[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 121 · núm. 213[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 131 · núm. 223[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 141 · núm. 233[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 151 · núm. 243[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 161 · núm. 253[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 171 · núm. 263[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</fieldset>[39m
+      [36m</div>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"billing-manual__lines"[39m
+      [36m>[39m
+        [36m<legend>[39m
+          [0mLínies[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-manual__line"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-description-1"[39m
+            [36m>[39m
+              [0mConcepte (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-description-1"[39m
+              [33mmaxlength[39m=[32m"140"[39m
+              [33mvalue[39m=[32m"Material"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-amount-1"[39m
+            [36m>[39m
+              [0mImport (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-amount-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m"15"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-tax-1"[39m
+            [36m>[39m
+              [0m% impost (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-tax-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m"0"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mAfegeix una línia[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</fieldset>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"billing-manual__check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [0mCobra'l amb la propera remesa[0m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-note"[39m
+        [36m>[39m
+          [0mNota[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"billing-manual-note"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCrea el rebut[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/billing/BillingPage.test.tsx:2264:35
+    2262|     await renderPage({ search: "?mes=2026-10" });
+    2263|     const dialog = await fillManual();
+    2264|     const period = within(dialog).getByLabelText("Mes del rebut");
+       |                                   ^
+    2265|     expect(period).toHaveValue("2026-10");
+    2266|     expect(period).toHaveAttribute("min", "2026-05");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E11-W07 step 6 (R-12-19): the manual receipt's period > R-12-19: the api's 400 {field: period} sits on the month field, with no second alert
+TestingLibraryElementError: Unable to find a label with the text of: Mes del rebut
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_3h_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_3h_"[39m
+    [36m>[39m
+      [0mRebut manual[0m
+    [36m</h2>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"billing-manual"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33maria-describedby[39m=[32m"billing-manual-member-results"[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"billing-manual-member"[39m
+          [33mplaceholder[39m=[32m"Cerca per nom o número"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m"Laura"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mid[39m=[32m"billing-manual-member-results"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"billing-manual__members"[39m
+        [36m>[39m
+          [36m<legend[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</legend>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal · núm. 87[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 1 · núm. 93[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 11 · núm. 103[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 21 · núm. 113[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 31 · núm. 123[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 41 · núm. 133[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 51 · núm. 143[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 61 · núm. 153[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 71 · núm. 163[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 81 · núm. 173[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 91 · núm. 183[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 101 · núm. 193[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 111 · núm. 203[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 121 · núm. 213[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 131 · núm. 223[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 141 · núm. 233[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 151 · núm. 243[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 161 · núm. 253[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<label>[39m
+            [36m<input[39m
+              [33mname[39m=[32m"billing-manual-member-choice"[39m
+              [33mtype[39m=[32m"radio"[39m
+            [36m/>[39m
+            [0mLaura Serra Vidal 171 · núm. 263[0m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</fieldset>[39m
+      [36m</div>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"billing-manual__lines"[39m
+      [36m>[39m
+        [36m<legend>[39m
+          [0mLínies[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-manual__line"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-description-1"[39m
+            [36m>[39m
+              [0mConcepte (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-description-1"[39m
+              [33mmaxlength[39m=[32m"140"[39m
+              [33mvalue[39m=[32m"Material"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-amount-1"[39m
+            [36m>[39m
+              [0mImport (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-amount-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m"15"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-tax-1"[39m
+            [36m>[39m
+              [0m% impost (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-tax-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m"0"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mAfegeix una línia[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</fieldset>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"billing-manual__check"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [0mCobra'l amb la propera remesa[0m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-note"[39m
+        [36m>[39m
+          [0mNota[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"billing-manual-note"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-busy[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-spinner"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+          [36m>[39m
+            [0mCrea el rebut[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mCreant el rebut…[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/billing/BillingPage.test.tsx:2294:34
+    2292|     const dialog = await fillManual();
+    2293|     fireEvent.click(within(dialog).getByRole("button", { name: "Crea e…
+    2294|     const field = within(dialog).getByLabelText("Mes del rebut").close…
+       |                                  ^
+    2295|     if (!(field instanceof HTMLElement)) throw new TypeError("No perio…
+    2296|     expect(await within(field).findByText("Tria un mes entre 05/2026 i…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt > E146: «Proper rebut» reads the member's date with an edit action; a monthly member without one reads «Sense data: no es facturarà»
+TestingLibraryElementError: Unable to find role="heading" and name "Proper rebut"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ renderNext src/census/MemberBillingBlock.test.tsx:362:35
+    360|     );
+    361|     if (!expectSection) return { onNextInvoiceDateChanged, section: do…
+    362|     const section = (await screen.findByRole("heading", { name: "Prope…
+       |                                   ^
+    363|     if (section === null) throw new TypeError("No next-receipt section…
+    364|     return { onNextInvoiceDateChanged, section };
+ ❯ src/census/MemberBillingBlock.test.tsx:379:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt > E146: the drawer bounds the date to ±12 months of the club's month, PUTs {nextInvoiceDate, reason} and the block and D10 read the api's date
+TestingLibraryElementError: Unable to find role="heading" and name "Proper rebut"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ renderNext src/census/MemberBillingBlock.test.tsx:362:35
+    360|     );
+    361|     if (!expectSection) return { onNextInvoiceDateChanged, section: do…
+    362|     const section = (await screen.findByRole("heading", { name: "Prope…
+       |                                   ^
+    363|     if (section === null) throw new TypeError("No next-receipt section…
+    364|     return { onNextInvoiceDateChanged, section };
+ ❯ src/census/MemberBillingBlock.test.tsx:407:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt > E146: 400 VALIDATION_ERROR fieldErrors land on the date and on the reason, inside the drawer
+TestingLibraryElementError: Unable to find role="heading" and name "Proper rebut"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ renderNext src/census/MemberBillingBlock.test.tsx:362:35
+    360|     );
+    361|     if (!expectSection) return { onNextInvoiceDateChanged, section: do…
+    362|     const section = (await screen.findByRole("heading", { name: "Prope…
+       |                                   ^
+    363|     if (section === null) throw new TypeError("No next-receipt section…
+    364|     return { onNextInvoiceDateChanged, section };
+ ❯ src/census/MemberBillingBlock.test.tsx:444:51
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > E11-W07 step 2 (E146, S12 §6 PUT /members/{id}/next-invoice-date): D10's next receipt > R-04-06: 409 INVALID_STATE {READMISSION_PENDING} points to D2; any other 409 INVALID_STATE reads the generic state text
+TestingLibraryElementError: Unable to find role="heading" and name "Proper rebut"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card member-billing"[39m
+    [36m>[39m
+      [36m<h2>[39m
+        [0mFacturació[0m
+      [36m</h2>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mRebuts recents[0m
+        [36m</h3>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__invoice-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0912[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota setembre 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0812[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota agost 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0712[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota juliol 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m60,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0m2026-0610[0m
+              [36m</strong>[39m
+              [36m<small>[39m
+                [0mQuota familiar juny 2026[0m
+              [36m</small>[39m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m95,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+        [36m>[39m
+          [0mTots els rebuts ›[0m
+        [36m</a>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__heading"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [0mPagaments a l'acte[0m
+          [36m</h3>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRegistra un pagament[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__plain-list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<span>[39m
+              [0mEntrada[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m30,00 €[0m
+              [0m /[0m
+              [0m [0m
+              [0m30,00 €[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</section>[39m
+      [36m<section>[39m
+        [36m<h3>[39m
+          [0mPacks[0m
+        [36m</h3>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"member-billing__pack"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mRock[0m
+              [0m · [0m
+              [0mPack 10[0m
+            [36m</strong>[39m
+            [0m [0m
+            [0m—[0m
+            [0m [0m
+            [0m6 consumides · 4 disponibles · caduca el 12/11/2026[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAjusta[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ renderNext src/census/MemberBillingBlock.test.tsx:362:35
+    360|     );
+    361|     if (!expectSection) return { onNextInvoiceDateChanged, section: do…
+    362|     const section = (await screen.findByRole("heading", { name: "Prope…
+       |                                   ^
+    363|     if (section === null) throw new TypeError("No next-receipt section…
+    364|     return { onNextInvoiceDateChanged, section };
+ ❯ src/census/MemberBillingBlock.test.tsx:462:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E11-W07 step 4 (E156 N1, R-13-16): the reactivation proposes the next invoice day, never the stale date > E156 N1: a LEFT member with nextInvoiceDate 2026-04-01 on 20/11/2026 → the field shows 2026-12-01 (the 1st of the month after the club's)
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32m2026-12-01[39m[2m)[22m
+
+Expected the element to have value:
+[32m  2026-12-01[39m
+Received:
+[31m  2026-04-01[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_1k_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+            [33minert[39m=[32m""[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_1k_"[39m
+            [36m>[39m
+              [0mBaixa (amb data)[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33minert[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mReactiva l'abonat[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-overlay"[39m
+            [36m>[39m
+              [36m<section[39m
+                [33maria-labelledby[39m=[32m"_r_1n_"[39m
+                [33maria-modal[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-modal"[39m
+                [33mrole[39m=[32m"dialog"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-overlay__header"[39m
+                [36m>[39m
+                  [36m<h2[39m
+                    [33mid[39m=[32m"_r_1n_"[39m
+                  [36m>[39m
+                    [0mReactiva l'abonat[0m
+                  [36m</h2>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Tanca"[39m
+                    [33mclass[39m=[32m"ah-overlay__close"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-overlay__body"[39m
+                [36m>[39m
+                  [36m<form[39m
+                    [33mclass[39m=[32m"census-record__form"[39m
+                  [36m>[39m
+                    [36m<p>[39m
+                      [0mLa reactivació no cobra entrada. Els gossos continuaran inactius fins que es reactivin un per un des de la seva fitxa.[0m
+                    [36m</p>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"reactivation-plan"[39m
+                      [36m>[39m
+                        [0mModalitat[0m
+                      [36m</label>[39m
+                      [36m<select[39m
+                        [33mclass[39m=[32m"ah-input ah-select"[39m
+                        [33mid[39m=[32m"reactivation-plan"[39m
+                        [33mrequired[39m=[32m""[39m
+                      [36m>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m""[39m
+                        [36m>[39m
+                          [0mTria una opció[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-member"[39m
+                        [36m>[39m
+                          [0mAbonat[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-family"[39m
+                        [36m>[39m
+                          [0mAbonat · 2 gossos[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-pack-6"[39m
+                        [36m>[39m
+                          [0mPack 6[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-pack-10"[39m
+                        [36m>[39m
+                          [0mPack 10[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-therapy"[39m
+                        [36m>[39m
+                          [0mTeràpia[0m
+                        [36m</option>[39m
+                      [36m</select>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"reactivation-price"[39m
+                      [36m>[39m
+                        [0mTarifa[0m
+                      [36m</label>[39m
+                      [36m<select[39m
+                        [33mclass[39m=[32m"ah-input ah-select"[39m
+                        [33mid[39m=[32m"reactivation-price"[39m
+                        [33mrequired[39m=[32m""[39m
+                      [36m>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m""[39m
+                        [36m>[39m
+                          [0mTria una opció[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"price-member-old"[39m
+                        [36m>[39m
+                          [0m55,00 €[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"price-member"[39m
+                        [36m>[39m
+                          [0m60,00 €[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"price-member-next"[39m
+                        [36m>[39m
+                          [0m65,00 €[0m
+                        [36m</option>[39m
+                      [36m</select>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"reactivation-invoice-date"[39m
+                      [36m>[39m
+                        [0mData del proper rebut[0m
+                      [36m</label>[39m
+                      [36m<input[39m
+                        [33mclass[39m=[32m"ah-input"[39m
+                        [33mid[39m=[32m"reactivation-invoice-date"[39m
+                        [33mmin[39m=[32m"2026-11-20"[39m
+                        [33mrequired[39m=[32m""[39m
+                        [33mtype[39m=[32m"date"[39m
+                        [33mvalue[39m=[32m"2026-04-01"[39m
+                      [36m/>[39m
+                    [36m</div>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                      [33mtype[39m=[32m"submit"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mReactiva l'abonat[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</form>[39m
+                [36m</div>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/census/MemberLeaveDrawer.test.tsx:259:42
+    257|       const modal = await openReactivation({ ...member, nextInvoiceDat…
+    258|       const date = within(modal).getByLabelText("Data del proper rebut…
+    259|       await waitFor(() => { expect(date).toHaveValue("2026-12-01"); });
+       |                                          ^
+    260|       expect(date).toHaveAttribute("min", "2026-11-01");
+    261|       fireEvent.click(within(modal).getByRole("button", { name: "React…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E11-W07 step 4 (E156 N1, R-13-16): the reactivation proposes the next invoice day, never the stale date > E156 N1: the club's billing.nextInvoiceDayOfMonth (5) is the proposed day; the api's 400 fieldErrors[nextInvoiceDate] lands on the field
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32m2026-12-05[39m[2m)[22m
+
+Expected the element to have value:
+[32m  2026-12-05[39m
+Received:
+[31m  2026-04-01[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_1o_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+            [33minert[39m=[32m""[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_1o_"[39m
+            [36m>[39m
+              [0mBaixa (amb data)[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33minert[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mReactiva l'abonat[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-overlay"[39m
+            [36m>[39m
+              [36m<section[39m
+                [33maria-labelledby[39m=[32m"_r_1r_"[39m
+                [33maria-modal[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-modal"[39m
+                [33mrole[39m=[32m"dialog"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-overlay__header"[39m
+                [36m>[39m
+                  [36m<h2[39m
+                    [33mid[39m=[32m"_r_1r_"[39m
+                  [36m>[39m
+                    [0mReactiva l'abonat[0m
+                  [36m</h2>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Tanca"[39m
+                    [33mclass[39m=[32m"ah-overlay__close"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-overlay__body"[39m
+                [36m>[39m
+                  [36m<form[39m
+                    [33mclass[39m=[32m"census-record__form"[39m
+                  [36m>[39m
+                    [36m<p>[39m
+                      [0mLa reactivació no cobra entrada. Els gossos continuaran inactius fins que es reactivin un per un des de la seva fitxa.[0m
+                    [36m</p>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"reactivation-plan"[39m
+                      [36m>[39m
+                        [0mModalitat[0m
+                      [36m</label>[39m
+                      [36m<select[39m
+                        [33mclass[39m=[32m"ah-input ah-select"[39m
+                        [33mid[39m=[32m"reactivation-plan"[39m
+                        [33mrequired[39m=[32m""[39m
+                      [36m>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m""[39m
+                        [36m>[39m
+                          [0mTria una opció[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-member"[39m
+                        [36m>[39m
+                          [0mAbonat[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-family"[39m
+                        [36m>[39m
+                          [0mAbonat · 2 gossos[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-pack-6"[39m
+                        [36m>[39m
+                          [0mPack 6[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-pack-10"[39m
+                        [36m>[39m
+                          [0mPack 10[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"plan-therapy"[39m
+                        [36m>[39m
+                          [0mTeràpia[0m
+                        [36m</option>[39m
+                      [36m</select>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"reactivation-price"[39m
+                      [36m>[39m
+                        [0mTarifa[0m
+                      [36m</label>[39m
+                      [36m<select[39m
+                        [33mclass[39m=[32m"ah-input ah-select"[39m
+                        [33mid[39m=[32m"reactivation-price"[39m
+                        [33mrequired[39m=[32m""[39m
+                      [36m>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m""[39m
+                        [36m>[39m
+                          [0mTria una opció[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"price-member-old"[39m
+                        [36m>[39m
+                          [0m55,00 €[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"price-member"[39m
+                        [36m>[39m
+                          [0m60,00 €[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"price-member-next"[39m
+                        [36m>[39m
+                          [0m65,00 €[0m
+                        [36m</option>[39m
+                      [36m</select>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-form-field"[39m
+                    [36m>[39m
+                      [36m<label[39m
+                        [33mclass[39m=[32m"ah-form-field__label"[39m
+                        [33mfor[39m=[32m"reactivation-invoice-date"[39m
+                      [36m>[39m
+                        [0mData del proper rebut[0m
+                      [36m</label>[39m
+                      [36m<input[39m
+                        [33mclass[39m=[32m"ah-input"[39m
+                        [33mid[39m=[32m"reactivation-invoice-date"[39m
+                        [33mmin[39m=[32m"2026-11-20"[39m
+                        [33mrequired[39m=[32m""[39m
+                        [33mtype[39m=[32m"date"[39m
+                        [33mvalue[39m=[32m"2026-04-01"[39m
+                      [36m/>[39m
+                    [36m</div>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                      [33mtype[39m=[32m"submit"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mReactiva l'abonat[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</form>[39m
+                [36m</div>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/census/MemberLeaveDrawer.test.tsx:281:42
+    279|       const modal = await openReactivation({ ...member, nextInvoiceDat…
+    280|       const date = within(modal).getByLabelText("Data del proper rebut…
+    281|       await waitFor(() => { expect(date).toHaveValue("2026-12-05"); });
+       |                                          ^
+    282|       fireEvent.click(within(modal).getByRole("button", { name: "React…
+    283|       const field = date.closest(".ah-form-field");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  src/census/MemberPlanDrawer.test.tsx > E8-W03 round 2 member plan change > E11-W07 step 3 (E146, R-12-06): a pack member moving to a MONTHLY plan > R-12-06: the optional «Data del proper rebut» says what an empty one means; empty → no nextInvoiceDate in the body
+TestingLibraryElementError: Unable to find a label with the text of: Data del proper rebut (opcional)
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_5_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_5_"[39m
+    [36m>[39m
+      [0mModalitat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record__fieldset"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mModalitat actual[0m
+      [36m</h3>[39m
+      [36m<p>[39m
+        [0mPack 10[0m
+      [36m</p>[39m
+    [36m</section>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-plan"[39m
+        [36m>[39m
+          [0mModalitat nova[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"member-plan"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-member"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-family"[39m
+          [36m>[39m
+            [0mAbonat · 2 gossos[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-6"[39m
+          [36m>[39m
+            [0mPack 6[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-10"[39m
+          [36m>[39m
+            [0mPack 10[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-therapy"[39m
+          [36m>[39m
+            [0mTeràpia[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-price"[39m
+        [36m>[39m
+          [0mTarifa[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"member-price"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-old"[39m
+          [36m>[39m
+            [0m55,00 €[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member"[39m
+          [36m>[39m
+            [0m60,00 €[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-next"[39m
+          [36m>[39m
+            [0m65,00 €[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-plan-effective-month"[39m
+        [36m>[39m
+          [0mMes d'efecte (opcional)[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"member-plan-effective-month"[39m
+          [33mtype[39m=[32m"month"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<p>[39m
+        [0mEn passar d'un pack de 10 sessions o més a una quota mensual, l'entrada té un 40 % de descompte. L'import l'ha de calcular l'API.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberPlanDrawer.test.tsx:182:35
+    180|       const member = { ...(await loadMember()), nextInvoiceDate: null,…
+    181|       const { drawer, writes } = await choose(member, "plan-member");
+    182|       const date = within(drawer).getByLabelText("Data del proper rebu…
+       |                                   ^
+    183|       expect(date).not.toBeRequired();
+    184|       expect(date).toHaveAttribute("min", "2026-10-01");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  src/census/MemberPlanDrawer.test.tsx > E8-W03 round 2 member plan change > E11-W07 step 3 (E146, R-12-06): a pack member moving to a MONTHLY plan > R-12-06: a filled date travels as nextInvoiceDate; the api's 400 on it lands on the field
+TestingLibraryElementError: Unable to find a label with the text of: Data del proper rebut (opcional)
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_6_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_6_"[39m
+    [36m>[39m
+      [0mModalitat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record__fieldset"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mModalitat actual[0m
+      [36m</h3>[39m
+      [36m<p>[39m
+        [0mPack 10[0m
+      [36m</p>[39m
+    [36m</section>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-plan"[39m
+        [36m>[39m
+          [0mModalitat nova[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"member-plan"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-member"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-family"[39m
+          [36m>[39m
+            [0mAbonat · 2 gossos[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-6"[39m
+          [36m>[39m
+            [0mPack 6[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-10"[39m
+          [36m>[39m
+            [0mPack 10[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-therapy"[39m
+          [36m>[39m
+            [0mTeràpia[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-price"[39m
+        [36m>[39m
+          [0mTarifa[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"member-price"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-old"[39m
+          [36m>[39m
+            [0m55,00 €[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member"[39m
+          [36m>[39m
+            [0m60,00 €[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-next"[39m
+          [36m>[39m
+            [0m65,00 €[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-plan-effective-month"[39m
+        [36m>[39m
+          [0mMes d'efecte (opcional)[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"member-plan-effective-month"[39m
+          [33mtype[39m=[32m"month"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<p>[39m
+        [0mEn passar d'un pack de 10 sessions o més a una quota mensual, l'entrada té un 40 % de descompte. L'import l'ha de calcular l'API.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberPlanDrawer.test.tsx:197:39
+    195|       const member = { ...(await loadMember()), nextInvoiceDate: null,…
+    196|       const { drawer, writes } = await choose(member, "plan-member");
+    197|       fireEvent.change(within(drawer).getByLabelText("Data del proper …
+       |                                       ^
+    198|         target: { value: "2026-12-01" },
+    199|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E11-W07 step 7 (E147): the fixture's canonical creditor saves; one with the check digits 00 → 422 PROVIDER_CONFIG_INVALID on its field
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32mES10000G00000000[39m[2m)[22m
+
+Expected the element to have value:
+[32m  ES10000G00000000[39m
+Received:
+[31m  ES12000G00000000[39m
+ ❯ src/console/ClubRecordPage.test.tsx:450:22
+    448|     if (!(sepa instanceof HTMLElement)) throw new TypeError("No SEPA c…
+    449|     const creditor = within(sepa).getByLabelText("Identificador de cre…
+    450|     expect(creditor).toHaveValue("ES10000G00000000");
+       |                      ^
+    451|     fireEvent.click(within(sepa).getByRole("button", { name: "DESA" })…
+    452|     expect(await within(sepa).findByText("Canvis desats.")).toBeInTheD…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > Pagaments: the IBAN is write-only, PROVIDER_IN_USE says how many members, and Stripe is tested once configured (R-17-05)
+TestingLibraryElementError: Unable to find an element with the text: Canvis desats.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card console-card"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mDomiciliació SEPA[0m
+  [36m</h2>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"console-provider-state"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [0mconfigurat[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+    [36m>[39m
+      [0mactivat[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<form[39m
+    [33mclass[39m=[32m"console-form"[39m
+  [36m>[39m
+    [36m<fieldset[39m
+      [33mclass[39m=[32m"console-fieldset"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"console-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-creditor-name"[39m
+          [36m>[39m
+            [0mNom del creditor[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-creditor-name"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Club Agility Cànic"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field ah-form-field--error"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-creditor-id"[39m
+          [36m>[39m
+            [0mIdentificador de creditor[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-describedby[39m=[32m"console-sepa-creditor-id-error"[39m
+            [33maria-invalid[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-creditor-id"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"ES12000G00000000"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field__error"[39m
+            [33mid[39m=[32m"console-sepa-creditor-id-error"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [0mLa configuració del proveïdor no és vàlida.[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-suffix"[39m
+          [36m>[39m
+            [0mSufix[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-suffix"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"000"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-iban"[39m
+          [36m>[39m
+            [0mIBAN[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-iban"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field__help"[39m
+            [33mid[39m=[32m"console-sepa-iban-help"[39m
+          [36m>[39m
+            [0mIBAN desat: ES·· ···· ···· ···· ···· 4821. Deixa-ho en blanc per mantenir-lo.[0m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mProveïdor activat[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Proveïdor activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</fieldset>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"console-message console-message--danger"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [0mLa configuració del proveïdor no és vàlida.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mRetira el proveïdor[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDESA[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</form>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card console-card"[39m
+[36m>[39m
+  [36m<h2>[39m
+    [0mDomiciliació SEPA[0m
+  [36m</h2>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"console-provider-state"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+    [36m>[39m
+      [0mconfigurat[0m
+    [36m</span>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+    [36m>[39m
+      [0mactivat[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<form[39m
+    [33mclass[39m=[32m"console-form"[39m
+  [36m>[39m
+    [36m<fieldset[39m
+      [33mclass[39m=[32m"console-fieldset"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"console-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-creditor-name"[39m
+          [36m>[39m
+            [0mNom del creditor[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-creditor-name"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"Club Agility Cànic"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field ah-form-field--error"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-creditor-id"[39m
+          [36m>[39m
+            [0mIdentificador de creditor[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33maria-describedby[39m=[32m"console-sepa-creditor-id-error"[39m
+            [33maria-invalid[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-creditor-id"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"ES12000G00000000"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field__error"[39m
+            [33mid[39m=[32m"console-sepa-creditor-id-error"[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [0mLa configuració del proveïdor no és vàlida.[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-suffix"[39m
+          [36m>[39m
+            [0mSufix[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-suffix"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m"000"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-sepa-iban"[39m
+          [36m>[39m
+            [0mIBAN[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"off"[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"console-sepa-iban"[39m
+            [33mtype[39m=[32m"text"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field__help"[39m
+            [33mid[39m=[32m"console-sepa-iban-help"[39m
+          [36m>[39m
+            [0mIBAN desat: ES·· ···· ···· ···· ···· 4821. Deixa-ho en blanc per mantenir-lo.[0m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mProveïdor activat[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Proveïdor activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</fieldset>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"console-message console-message--danger"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [0mLa configuració del proveïdor no és vàlida.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mRetira el proveïdor[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDESA[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</form>[39m
+[36m</div>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/console/ClubRecordPage.test.tsx:483:31
+    481|     if (!(sepa instanceof HTMLElement)) throw new TypeError("No SEPA c…
+    482|     fireEvent.click(within(sepa).getByRole("button", { name: "DESA" })…
+    483|     expect(await within(sepa).findByText("Canvis desats.")).toBeInTheD…
+       |                               ^
+    484|     expect(writes[0]?.body).toEqual({
+    485|       creditorId: "ES10000G00000000",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯
+
+
+ Test Files  5 failed (5)
+      Tests  15 failed | 114 passed (129)
+   Start at  07:03:14
+   Duration  53.33s (tests 92%, transform 3%, environment 2%, import 1%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/MemberBillingBlock.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/billing/BillingPage.test.tsx src/console/ClubRecordPage.test.tsx`
+Exit status 1

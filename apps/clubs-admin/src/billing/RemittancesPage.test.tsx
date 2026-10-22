@@ -384,7 +384,8 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
     // The creditor's account in the one masked format (R-03-27), as the api masks it: never an IBAN.
     expect(within(drawer).getByText("···· ···· ···· ···· 0042")).toBeVisible();
     expect(drawer).not.toHaveTextContent("ES00 ****");
-    expect(within(drawer).getByText("ES00ZZZG00000000")).toBeVisible();
+    // The canonical creditor of the fixture (E147).
+    expect(within(drawer).getByText("ES10ZZZG00000000")).toBeVisible();
     expect(drawer).toHaveTextContent("Identificador de creditor");
   });
 

@@ -170,7 +170,8 @@ function initialClubs(): PlatformClub[] {
         SEPA_XML: {
           ...unconfigured,
           configured: true,
-          creditorId: "ES12000G00000000",
+          // Canonical (E147): «10» are the mod 97-10 check digits of `G00000000` + `ES`.
+          creditorId: "ES10000G00000000",
           creditorName: brandingCanic.club.legalName,
           enabled: true,
           ibanMasked: "ES·· ···· ···· ···· ···· 4821",
