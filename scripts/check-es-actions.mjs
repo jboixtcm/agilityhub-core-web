@@ -143,6 +143,8 @@ const NOUN_HOMOGRAPHS = new Set([
   "recarga",
   "reserva",
 ]);
+/** The homographs whose noun is masculine («el programa»); the others are feminine. */
+const MASCULINE_HOMOGRAPHS = new Set(["programa"]);
 const PARTICIPLE =
   /^(?:\p{L}+(?:ad|id)[oa]s?|(?:abiert|cubiert|devuelt|dich|escrit|hech|puest|resuelt|rot|vist|vuelt)[oa]s?)$/u;
 
@@ -222,11 +224,24 @@ function looksImperative(key, value) {
   if (EXPLANATION_SUFFIXES.some((suffix) => segment.endsWith(suffix))) return false;
   if (NOUN_HOMOGRAPHS.has(lower)) {
     const rest = text.slice(word.length);
-    const next = /^\s+(\p{L}+)/u.exec(rest)?.[1]?.toLocaleLowerCase("es");
-    if (rest.startsWith(":") || next === "de" || next === "del") return false;
-    if (next !== undefined && PARTICIPLE.test(next)) return false;
+    const words = /^\s+(\p{L}+)(?:\s+(\p{L}+))?/u.exec(rest);
+    const next = words?.[1]?.toLocaleLowerCase("es");
+    const after = words?.[2]?.toLocaleLowerCase("es");
+    if (rest.startsWith(":")) return false;
+    // A noun complement («Reserva de pista»), never the adverb «de nuevo» (E11-W05, E155 #1).
+    if ((next === "de" || next === "del") && after !== "nuevo") return false;
+    if (next !== undefined && agreesWithHomograph(lower, next)) return false;
   }
   return true;
+}
+
+/**
+ * A participle that agrees with the noun reading of `homograph` («Descarga completada», «Programa
+ * cancelado»): singular, feminine except «programa». A plural or another gender is the action's
+ * object («Descarga resultados», «Muestra salidas»).
+ */
+function agreesWithHomograph(homograph, next) {
+  return PARTICIPLE.test(next) && next.endsWith(MASCULINE_HOMOGRAPHS.has(homograph) ? "o" : "a");
 }
 
 /** The es action labels still in the imperative: `[{key, value}]`, `[]` when the catalog is clean. */

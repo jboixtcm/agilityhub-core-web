@@ -15,6 +15,11 @@ const CATALOG = {
       remove: "Quita de la lista",
       addDog: "＋ AÑADE UN PERRO",
       swap: "Anula {oldDay} y confirma {newDay}",
+      // E11-W05 step 5 (E155 #1): «de nuevo» is no noun complement; a participle that does not
+      // agree with the homograph is a noun (the action's object), not the homograph's adjective.
+      retry2: "Prueba de nuevo",
+      download: "Descarga resultados",
+      show: "Muestra salidas",
     },
     infinitive: {
       save: "Guardar",
@@ -24,6 +29,8 @@ const CATALOG = {
       confirmed: "Reserva confirmada",
       ringBooking: "Reserva de pista",
       checklistItem: "Marca: logo y colores propios",
+      done: "Descarga completada",
+      program: "Programa cancelado",
     },
     instruction: {
       level: "Selecciona el nivel inicial.",
@@ -46,6 +53,9 @@ test("an imperative action label is flagged, whatever its case, its «＋» or i
     "fixture:imperative.remove",
     "fixture:imperative.addDog",
     "fixture:imperative.swap",
+    "fixture:imperative.retry2",
+    "fixture:imperative.download",
+    "fixture:imperative.show",
   ]);
 });
 
@@ -57,6 +67,8 @@ test("infinitives, nouns, sentences, placeholders, the reader's own voice and en
     "fixture:noun.confirmed",
     "fixture:noun.ringBooking",
     "fixture:noun.checklistItem",
+    "fixture:noun.done",
+    "fixture:noun.program",
     "fixture:instruction.level",
     "fixture:instruction.choosePlaceholder",
     "fixture:readerVoice",

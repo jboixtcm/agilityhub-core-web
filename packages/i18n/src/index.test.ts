@@ -33,6 +33,33 @@ describe("@agilityhub/i18n", () => {
     expect(flaggedActions(catalog)).toEqual([]);
   });
 
+  it("E11-W05 step 5 (E155 #2): the password recovery control says «Recuperar la contraseña» in es, the same in apps/id and apps/clubs", async () => {
+    const auth = (await import("./locales/es/auth.json")).default;
+    const id = (await import("./locales/es/id.json")).default;
+    expect(auth.access.forgot.action).toBe("Recuperar la contraseña");
+    // apps/id's button holds the question and the action in one string.
+    expect(id.login.forgot).toBe(`${auth.access.forgot.question} ${auth.access.forgot.action}`);
+  });
+
+  it.each(["ca", "es", "en"] as const)(
+    "E11-W05 step 5 (E155 #3): every %s errors message ends as a sentence, so the es action guard reads none as a label",
+    async (locale) => {
+      const errors = (await import(`./locales/${locale}/errors.json`)) as {
+        default: Record<string, unknown>;
+      };
+      const unfinished = Object.entries(errors.default).filter(
+        ([, message]) => typeof message !== "string" || !/[.…:?!]$/u.test(message.trim()),
+      );
+      expect(Object.keys(errors.default).length).toBeGreaterThan(200);
+      expect(unfinished).toEqual([]);
+    },
+  );
+
+  it("E11-W05 step 5 (E155 #4): D11's run filters name a group, not an action", async () => {
+    const settings = (await import("./locales/es/admin-settings.json")).default;
+    expect(settings.jobs.runs.filters).toBe("Filtros de las ejecuciones");
+  });
+
   it("loads namespaces on demand", async () => {
     const instance = await createI18n({
       branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },

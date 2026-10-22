@@ -2,7 +2,7 @@ import { isModuleEnabled, type ClubModule, useBranding } from "@agilityhub/ui";
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { type AuthClient, type Me, type Role } from "./auth-client";
+import { type AuthClient, isSessionExpiry, type Me, type Role } from "./auth-client";
 import { accessPathFor, dropReturnPath, rememberReturnPath } from "./return-path";
 
 /**
@@ -24,9 +24,9 @@ export interface SessionSnapshot {
   platformRoles: readonly PlatformRole[];
   roles: readonly Role[];
   /**
-   * An `anonymous` session that was signed in on this page (a sign-out, or a session that ended):
-   * 01 opens plain, with no address to return to (E11-W06 W1). Absent for a visit that never had
-   * a session here.
+   * An `anonymous` session that was signed out on this page: 01 opens plain, with no address to
+   * return to (E11-W06 W1). Absent for a visit that never had a session here, and for a session
+   * that ended by itself, which returns to its address like a cold start (E160 #3).
    */
   signedOut?: true;
   status: SessionStatus;
@@ -111,7 +111,9 @@ function navigateToAccess(path: string): void {
 
 /** The address the visit asked for (path and query), as 01 returns to it after the sign-in. */
 function requestedPath(): string {
-  return typeof window === "undefined" ? "/" : `${window.location.pathname}${window.location.search}`;
+  return typeof window === "undefined"
+    ? "/"
+    : `${window.location.pathname}${window.location.search}`;
 }
 
 export function SessionProvider({ children, client }: SessionProviderProps) {
@@ -128,10 +130,15 @@ export function SessionProvider({ children, client }: SessionProviderProps) {
         setSession(sessionFromMe(me));
       }
     };
-    const signedOut = () => {
+    const signedOut = (event: Event) => {
       if (mounted) {
+        // E160 #3: a session that ended by itself keeps the address, as a cold start does; only a
+        // sign-out opens 01 plain.
+        const expired = isSessionExpiry(event);
         setSession((current) =>
-          current.status === "signedIn" ? { ...anonymousSession, signedOut: true } : anonymousSession,
+          current.status === "signedIn" && !expired
+            ? { ...anonymousSession, signedOut: true }
+            : anonymousSession,
         );
       }
     };

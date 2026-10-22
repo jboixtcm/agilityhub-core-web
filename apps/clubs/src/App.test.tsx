@@ -481,17 +481,48 @@ describe("E11-W06 W1 (S11 R-11-11, S01 §2 01/02): a deep link survives the sign
     expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
   });
 
-  it.each(["/entrar?next=%2F%2Fevil.example%2Fespera", "/entrar?next=https%3A%2F%2Fevil.example%2F", "/entrar?next=%2Fentrar"])(
-    "a `next` to another origin or to /entrar is ignored (%s → /inici)",
-    async (access) => {
-      window.history.pushState(null, "", access);
-      await renderApplication(authClient());
-      passwordLogin();
-      await waitFor(() => {
-        expect(window.location.pathname).toBe("/inici");
-      });
-    },
-  );
+  it("E160 #3 (S01 §2 01): a session on /reserves/r1 whose refresh fails → /entrar?next=%2Freserves%2Fr1 → after login lands on /reserves/r1", async () => {
+    mockScenario("member");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    window.history.pushState(null, "", "/reserves/r1");
+    const assign = stubPageLoads();
+    await renderApplication(client);
+    refuseRefresh();
+
+    // A read answered 401: the refresh is refused (`400 REFRESH_EXPIRED`), the session has ended.
+    await expect(client.recoverFromUnauthorized()).resolves.toBe(false);
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalled();
+    });
+    // Every load the expiry opens is 01 with the address, never a plain 01 (the last one wins).
+    expect(assign.mock.calls.map((call) => String(call[0]))).toEqual(
+      assign.mock.calls.map(() => "/entrar?next=%2Freserves%2Fr1"),
+    );
+    cleanup();
+    vi.unstubAllGlobals();
+
+    window.history.pushState(null, "", "/entrar?next=%2Freserves%2Fr1");
+    await renderApplication(authClient());
+    passwordLogin();
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/reserves/r1");
+    });
+    expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
+  });
+
+  it.each([
+    "/entrar?next=%2F%2Fevil.example%2Fespera",
+    "/entrar?next=https%3A%2F%2Fevil.example%2F",
+    "/entrar?next=%2Fentrar",
+  ])("a `next` to another origin or to /entrar is ignored (%s → /inici)", async (access) => {
+    window.history.pushState(null, "", access);
+    await renderApplication(authClient());
+    passwordLogin();
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
+  });
 
   it("a kept path waits for onboarding and 03b, and opens after the profile is chosen", async () => {
     mockScenario("multiProfile");
@@ -601,9 +632,9 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     });
     recorded.stop();
     expect(recorded.requests).toContain("POST /api/v1/auth/handoff");
-    expect(recorded.requests.filter((request) => /\/me\/(home|bookable-classes)$/u.test(request))).toEqual(
-      [],
-    );
+    expect(
+      recorded.requests.filter((request) => /\/me\/(home|bookable-classes)$/u.test(request)),
+    ).toEqual([]);
   });
 
   it("R-01-13 the remembered ADMIN's handoff fails → 03b's error, and its cards stay to retry or choose", async () => {
@@ -632,6 +663,60 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
     });
+  });
+
+  it("R-01-07 / E160 #1: a remembered ADMIN who opens 03b through «Canviar de perfil» sees the cards and no POST /auth/handoff", async () => {
+    mockScenario("admin");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    const assign = stubPageLoads();
+    await renderApplication(client);
+    const recorded = recordApiRequests();
+
+    fireEvent.click(await screen.findByRole("link", { name: /Canviar de perfil/u }));
+
+    expect(await screen.findByRole("button", { name: /Com a administradora/u })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /Com a instructora/u })).toBeEnabled();
+    expect(window.location.pathname).toBe("/perfil-acces");
+    // A reload of that entry is still the explicit visit.
+    expect(window.history.state).toEqual({ profileChange: true });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    recorded.stop();
+    expect(recorded.requests).not.toContain("POST /api/v1/auth/handoff");
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("R-01-13 / E160 #1: choosing ADMIN on 03b (remembered) opens one handoff, never a second automatic one", async () => {
+    mockScenario("admin");
+    const admin = (await (await fetch(`${window.location.origin}/api/v1/me`)).json()) as {
+      membership: Record<string, unknown>;
+    };
+    // No remembered choice: the sign-in lands on 03b's cards; `updateProfile` then remembers ADMIN.
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({
+          ...admin,
+          membership: { ...admin.membership, activeProfile: null, rememberProfile: false },
+        }),
+      ),
+    );
+    window.history.pushState(null, "", "/entrar");
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+    const recorded = recordApiRequests();
+    passwordLogin("aina.serra@example.test");
+
+    fireEvent.click(await screen.findByRole("button", { name: /Com a administradora/u }));
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    recorded.stop();
+    expect(
+      recorded.requests.filter((request) => request === "POST /api/v1/auth/handoff"),
+    ).toHaveLength(1);
+    expect(assign).toHaveBeenCalledTimes(1);
   });
 
   it("R-01-07 a remembered MEMBER on an account that lost the role falls back to 03b", async () => {

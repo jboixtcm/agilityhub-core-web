@@ -2394,3 +2394,21 @@ Found on the way (details in the task's «Round 2 report», Questions 1–4):
 3. My working tree also held an uncommitted «INC-68» change to the stack's `activate-demo-club` that I did not write. I kept it; it is reported in the task.
 
 Blocking: no.
+
+## 2026-10-22 · executor → organizer · E11-W05
+@organizer **E11-W05 is awaiting verification.**
+- **Done:**
+  - steps 0–7 on snapshot `a7c85d50`;
+  - E155's four `es` items: the noun rule, with 219 of 219 still flagged on `85c4b469~1`; «Recuperar la contraseña»; final periods; «Filtros de las ejecuciones»;
+  - E160's three carry-overs, each with a red test: 03b's handoff, the refresh lease, `/entrar?next=` on expiry.
+- **Checks:** lint, typecheck, test, i18n:check, size and build are green. The complete Playwright suite is green in Docker, with 14 captures.
+- **Questions** (details in the task's «Questions»):
+  1. `ClassCancellation.reviewTime`: the snapshot says «the club's classes.riskReviewTime when the view is read», but step 2 says «the time that review ran». I followed the contract; the web shows whatever the api sends.
+  2. New literals for Jordi:
+     - the two new enum labels;
+     - D16's «Pista desactivada»;
+     - A41.1's sentence;
+     - en «their».
+  3. clubs-admin «all JavaScript» is 668.27 of 670 kB.
+- **Test change:** the apps' jsdom tests now run with a Web Locks stub, as every supported browser has Web Locks. Without it, the new lease's 50 ms settle let one test's refresh leak into the next test. The fallback lease keeps its own tests.
+Blocking: no.

@@ -5,11 +5,11 @@
   
   clubs initial JavaScript
   Size limit: 300 kB
-  Size:       149.94 kB gzipped
+  Size:       151.55 kB gzipped
   
   clubs all JavaScript
   Size limit: 420 kB
-  Size:       309.97 kB gzipped
+  Size:       311.6 kB gzipped
   
   clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)
   Size limit: 40 kB
@@ -21,11 +21,11 @@
   
   clubs-admin initial JavaScript
   Size limit: 460 kB
-  Size:       438.48 kB gzipped
+  Size:       440.6 kB gzipped
   
   clubs-admin all JavaScript
   Size limit: 670 kB
-  Size:       665.83 kB gzipped
+  Size:       668.27 kB gzipped
   
   clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)
   Size limit: 66 kB
@@ -41,9 +41,9 @@
   
   id initial JavaScript
   Size limit: 110 kB
-  Size:       100.1 kB gzipped
+  Size:       101.08 kB gzipped
   
   id all JavaScript
   Size limit: 310 kB
-  Size:       130.27 kB gzipped
+  Size:       131.25 kB gzipped
   

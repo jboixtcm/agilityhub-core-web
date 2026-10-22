@@ -1,0 +1,84 @@
+TAP version 13
+# Subtest: an imperative action label is flagged, whatever its case, its «＋» or its placeholders
+not ok 1 - an imperative action label is flagged, whatever its case, its «＋» or its placeholders
+  ---
+  duration_ms: 2.659625
+  type: 'test'
+  location: '/Users/jordib/dev/agilityhub/agilityhub-core-web-c/scripts/check-es-actions.test.mjs:48:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'fixture:imperative.save',
+        'fixture:imperative.saveChanges',
+        'fixture:imperative.retry',
+        'fixture:imperative.remove',
+        'fixture:imperative.addDog',
+        'fixture:imperative.swap',
+    -   'fixture:imperative.retry2',
+    -   'fixture:imperative.download',
+    -   'fixture:imperative.show'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'fixture:imperative.save'
+    1: 'fixture:imperative.saveChanges'
+    2: 'fixture:imperative.retry'
+    3: 'fixture:imperative.remove'
+    4: 'fixture:imperative.addDog'
+    5: 'fixture:imperative.swap'
+    6: 'fixture:imperative.retry2'
+    7: 'fixture:imperative.download'
+    8: 'fixture:imperative.show'
+  actual:
+    0: 'fixture:imperative.save'
+    1: 'fixture:imperative.saveChanges'
+    2: 'fixture:imperative.retry'
+    3: 'fixture:imperative.remove'
+    4: 'fixture:imperative.addDog'
+    5: 'fixture:imperative.swap'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web-c/scripts/check-es-actions.test.mjs:49:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: infinitives, nouns, sentences, placeholders, the reader's own voice and enum values are not
+ok 2 - infinitives, nouns, sentences, placeholders, the reader's own voice and enum values are not
+  ---
+  duration_ms: 0.15425
+  type: 'test'
+  ...
+# Subtest: a key in KEEP is not flagged and is reported as kept, with its reason
+ok 3 - a key in KEEP is not flagged and is reported as kept, with its reason
+  ---
+  duration_ms: 0.13525
+  type: 'test'
+  ...
+# Subtest: the same label is flagged once its key leaves KEEP
+ok 4 - the same label is flagged once its key leaves KEEP
+  ---
+  duration_ms: 0.117708
+  type: 'test'
+  ...
+# Subtest: every KEEP entry carries a one-line reason
+ok 5 - every KEEP entry carries a one-line reason
+  ---
+  duration_ms: 0.1785
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 4
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 68.579416

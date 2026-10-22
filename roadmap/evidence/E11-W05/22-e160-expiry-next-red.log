@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+
+ ❯ src/App.test.tsx (85 tests | 1 failed | 84 skipped) 83ms
+   ❯ E11-W06 W1 (S11 R-11-11, S01 §2 01/02): a deep link survives the sign-in (7)
+     × E160 #3 (S01 §2 01): a session on /reserves/r1 whose refresh fails → /entrar?next=%2Freserves%2Fr1 → after login lands on /reserves/r1 81ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E11-W06 W1 (S11 R-11-11, S01 §2 01/02): a deep link survives the sign-in > E160 #3 (S01 §2 01): a session on /reserves/r1 whose refresh fails → /entrar?next=%2Freserves%2Fr1 → after login lands on /reserves/r1
+AssertionError: expected [ '/entrar', '/entrar' ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "/entrar?next=%2Freserves%2Fr1",
+-   "/entrar?next=%2Freserves%2Fr1",
++   "/entrar",
++   "/entrar",
+  ]
+
+ ❯ src/App.test.tsx:499:62
+    497|     });
+    498|     // Every load the expiry opens is 01 with the address, never a pla…
+    499|     expect(assign.mock.calls.map((call) => String(call[0]))).toEqual(
+       |                                                              ^
+    500|       assign.mock.calls.map(() => "/entrar?next=%2Freserves%2Fr1"),
+    501|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 84 skipped (85)
+   Start at  04:43:44
+   Duration  1.40s (transform 53%, environment 19%, import 17%, tests 6%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E160 #3

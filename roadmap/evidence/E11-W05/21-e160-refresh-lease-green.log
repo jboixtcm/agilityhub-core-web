@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth
+
+
+ Test Files  3 passed (3)
+      Tests  46 passed (46)
+   Start at  04:49:07
+   Duration  2.80s (tests 59%, environment 27%, transform 8%, import 6%)
+

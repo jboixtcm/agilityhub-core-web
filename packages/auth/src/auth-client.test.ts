@@ -490,6 +490,110 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(localStorage).toHaveLength(0);
   });
 
+  /**
+   * One `localStorage` seen from several tabs: a write lands in the shared store at once, in order,
+   * and reaches the other tabs' view `lagMs` later (the browser's cross-process delay).
+   */
+  function laggedTabStorages(count: number, lagMs: number): Storage[] {
+    const shared = new Map<string, string>();
+    const views = Array.from({ length: count }, () => new Map<string, string>());
+    const write = (
+      writer: Map<string, string>,
+      key: string,
+      apply: (map: Map<string, string>) => void,
+    ) => {
+      apply(shared);
+      apply(writer);
+      views.forEach((view) => {
+        if (view === writer) return;
+        setTimeout(() => {
+          const value = shared.get(key);
+          if (value === undefined) view.delete(key);
+          else view.set(key, value);
+        }, lagMs);
+      });
+    };
+    return views.map((view) => ({
+      clear: () => {
+        view.clear();
+      },
+      getItem: (key: string) => view.get(key) ?? null,
+      key: (position: number) => [...view.keys()][position] ?? null,
+      get length() {
+        return view.size;
+      },
+      removeItem: (key: string) => {
+        write(view, key, (map) => map.delete(key));
+      },
+      setItem: (key: string, value: string) => {
+        write(view, key, (map) => map.set(key, value));
+      },
+    }));
+  }
+
+  it("R-01-06 / E160 #2: two clients sharing one storage (seen with a delay) and no Web Locks → one refresh at a time", async () => {
+    const family = sharedCookieFamily();
+    const storages = laggedTabStorages(2, 10);
+    const tabs = storages.map(
+      (refreshLeaseStorage) =>
+        new AuthClient({
+          apiBaseUrl: API_BASE_URL,
+          identityBaseUrl: IDENTITY_BASE_URL,
+          refreshLeaseStorage,
+        }),
+    );
+
+    const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
+
+    expect(restored).toEqual([memberMe, memberMe]);
+    expect(family.refreshes).toBe(2);
+    expect(family.maxInFlight).toBe(1);
+    expect(family.revoked).toBe(false);
+    await delay(20);
+    expect(storages.map((storage) => storage.length)).toEqual([0, 0]);
+  });
+
+  it("R-01-06 / E160 #2: the lease is renewed while a refresh slower than the lease is pending", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      let inFlight = 0;
+      let maxInFlight = 0;
+      let release: (() => void) | undefined;
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      server.use(
+        http.post(TOKEN_ENDPOINT, async () => {
+          inFlight += 1;
+          maxInFlight = Math.max(maxInFlight, inFlight);
+          await gate;
+          inFlight -= 1;
+          return HttpResponse.json(tokens("access-refresh"));
+        }),
+      );
+      const [first, second] = [1, 2].map(
+        () => new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL }),
+      );
+      const slow = first?.refresh();
+      await vi.waitFor(() => {
+        expect(inFlight).toBe(1);
+      });
+      // Past the 10 s lease while the first refresh is still pending.
+      await vi.advanceTimersByTimeAsync(11_000);
+      const late = second?.refresh();
+      await vi.advanceTimersByTimeAsync(500);
+      expect(inFlight).toBe(1);
+
+      release?.();
+      await vi.advanceTimersByTimeAsync(500);
+      await expect(Promise.all([slow, late])).resolves.toHaveLength(2);
+      expect(maxInFlight).toBe(1);
+      expect(localStorage).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.refresh:<clientId>»", async () => {
     const family = sharedCookieFamily();
     const names: string[] = [];

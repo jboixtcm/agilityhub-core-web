@@ -8,6 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- E11-W05 (the last web correction pass, INC-75, rulings E137/E142/E153–E160):
+  - adopts the api snapshot `a7c85d50` (`ClassCancellation.reviewTime`, `byAccountId: null`); `pending.json` stays empty;
+  - a refused preference no longer discards an unrelated queued one (step 0);
+  - money from minor units through one currency-aware helper (`fmtMinor`/`formatMoneyMinor`, `majorUnits`/`minorUnits` in `@agilityhub/i18n`), 35 sites; EUR unchanged, JPY without decimals;
+  - D4's «revisió de les {time}» from the api's `reviewTime` and the exempt chip from `classes.riskReviewTime`;
+  - D16 asks before cancelling live trainings (`422 RING_HAS_BOOKINGS` → resend with `cancelBookings`), shows `replacedBySetupId` and `RING_INACTIVE`;
+  - «Document d'identitat» on 28, D5, D2 and 16;
+  - neutral forms for `gender = OTHER`;
+  - `errors` in «tu/tú»;
+  - es «revertir» and «bono»;
+  - A39's approved literals;
+  - the back office draws every screen inside a boundary (chunk failure: «L'aplicació s'ha actualitzat»);
+  - 21/22/tasks empty states;
+  - F5 keeps the browser's scroll restoration;
+  - the audit's `between` ends at 23:59:59.999 club time;
+  - an unlabelled payment channel reads its type;
+  - E160: 03b's automatic ADMIN handoff only on an automatic entry and once; the `localStorage` refresh lease is mutually exclusive and renewed; an expired session reopens `/entrar?next=…`;
+  - E155: the es action guard's narrower noun rule; «Recuperar la contraseña» in apps/id and apps/clubs; «Filtros de las ejecuciones».
+
 - E11-W06 (the audit's web fixes before the E2E, ruling E145):
   - adopts the staged api snapshot `a7c85d50`;
   - a deep link survives the sign-in (`?next=` plus a 15-minute copy for the magic link's tab);

@@ -31,7 +31,7 @@
     "submit": "ENTRAR",
     "entering": "ENTRANDO…",
     "magic": "Envíame un enlace para entrar",
-    "forgot": "¿Has olvidado la contraseña? Recupérala",
+    "forgot": "¿Has olvidado la contraseña? Recuperar la contraseña",
     "emailRequired": "Escribe tu correo",
     "countdown": "Demasiados intentos. Vuelve a intentarlo dentro de {seconds} s",
     "magicSent": "Si la cuenta existe, recibirás el enlace"

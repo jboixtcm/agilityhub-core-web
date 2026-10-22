@@ -148,10 +148,13 @@ test.describe("T-01-19 activation screen", () => {
     });
   });
 
-  test("uses masculine greeting for male and non-binary accounts", async ({ browser }) => {
+  // E11-W05 step 4 (E142, A40.3): `OTHER` reads the neutral «Hola, {name}!», no longer the masculine.
+  test("uses the masculine greeting for a male account and the neutral one for a non-binary account", async ({
+    browser,
+  }) => {
     for (const [scenario, heading] of [
       ["activationMale", "Benvingut, Marc!"],
-      ["activationNonBinary", "Benvingut, Àlex!"],
+      ["activationNonBinary", "Hola, Àlex!"],
     ] as const) {
       const page = await browser.newPage();
       await prepareScenario(page, scenario);

@@ -1,0 +1,57 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth
+
+ ❯ src/auth-client.test.ts (33 tests | 2 failed | 31 skipped) 100ms
+   ❯ T-01-21 AuthClient session flow (18)
+     × R-01-06 / E160 #2: two clients sharing one storage (seen with a delay) and no Web Locks → one refresh at a time 44ms
+     × R-01-06 / E160 #2: the lease is renewed while a refresh slower than the lease is pending 53ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 / E160 #2: two clients sharing one storage (seen with a delay) and no Web Locks → one refresh at a time
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/auth-client.test.ts:546:32
+    544|     expect(restored).toEqual([memberMe, memberMe]);
+    545|     expect(family.refreshes).toBe(2);
+    546|     expect(family.maxInFlight).toBe(1);
+       |                                ^
+    547|     expect(family.revoked).toBe(false);
+    548|     await delay(20);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 / E160 #2: the lease is renewed while a refresh slower than the lease is pending
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/auth-client.test.ts:581:24
+    579|       const late = second?.refresh();
+    580|       await vi.advanceTimersByTimeAsync(500);
+    581|       expect(inFlight).toBe(1);
+       |                        ^
+    582|
+    583|       release?.();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 31 skipped (33)
+   Start at  04:41:25
+   Duration  600ms (environment 50%, tests 19%, transform 18%, import 12%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/auth-client.test.ts -t E160

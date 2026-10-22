@@ -3,10 +3,10 @@
 > node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs && node scripts/check-es-actions.mjs
 
 i18n check passed
-ca: 5160 keys
-es: 5160 keys
-en: 5160 keys
-3983 statically used keys, 0 unused
+ca: 5162 keys
+es: 5162 keys
+en: 5162 keys
+3986 statically used keys, 0 unused
 251 codes, 0 missing
 150 catalog parameters (118 in D11, 32 system-only), 11 blocks, 0 missing
 check-es-actions: packages/i18n/src/locales/es

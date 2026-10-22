@@ -263,7 +263,10 @@ function profileLanding(profile: Role | null | undefined, roles: readonly Role[]
   if (profile === "INSTRUCTOR" && roles.includes("INSTRUCTOR")) {
     return "/instructor/dia";
   }
-  if ((profile === "MEMBER" || profile === undefined || profile === null) && roles.includes("MEMBER")) {
+  if (
+    (profile === "MEMBER" || profile === undefined || profile === null) &&
+    roles.includes("MEMBER")
+  ) {
     return "/inici";
   }
   return "/perfil-acces";
@@ -1218,6 +1221,20 @@ function roleCopy(role: Role, gender: IcuGender, t: ReturnType<typeof useTransla
   };
 }
 
+/**
+ * E160 #1: the history entry of an explicit visit to 03b («Canviar de perfil» on the profile), as
+ * opposed to the landing the sign-in or the app's entry opens. It survives a reload of that entry.
+ */
+const PROFILE_CHANGE_STATE = { profileChange: true } as const;
+
+function isProfileChange(state: unknown): boolean {
+  return (
+    typeof state === "object" &&
+    state !== null &&
+    (state as { profileChange?: unknown }).profileChange === true
+  );
+}
+
 function ProfileChoicePage({
   authClient,
   navigate,
@@ -1230,7 +1247,9 @@ function ProfileChoicePage({
   const [remember, setRemember] = useState(true);
   const [pending, setPending] = useState<Role>();
   const [error, setError] = useState(false);
-  const backofficeStarted = useRef(false);
+  // E160 #1: one automatic handoff per entry, never on «Canviar de perfil» (the account changes a
+  // remembered choice there) and never again once a card was chosen.
+  const backofficeStarted = useRef(isProfileChange(window.history.state));
   // R-01-07, R-01-13 (E11-W06 W2): an ADMIN the access opens without asking (one role, or the
   // remembered choice) goes to the back office at once, with 03b's pending and error states; on an
   // error the cards stay to try again or to choose another profile.
@@ -1263,6 +1282,8 @@ function ProfileChoicePage({
   const gender = icuGender(me.membership.gender);
 
   const selectProfile = async (role: Role) => {
+    // The choice saved below may make ADMIN the remembered profile: it opens its own handoff.
+    backofficeStarted.current = true;
     setPending(role);
     setError(false);
     try {
@@ -1493,7 +1514,22 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
           </button>
         )}
         {profiles.length > 1 ? (
-          <a href="/perfil-acces">
+          <a
+            href="/perfil-acces"
+            onClick={(event) => {
+              if (
+                event.button !== 0 ||
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey
+              ) {
+                return;
+              }
+              event.preventDefault();
+              navigateTo("/perfil-acces", { state: PROFILE_CHANGE_STATE });
+            }}
+          >
             <Icon aria-hidden="true" name="user" />
             <span>{t("auth:profile.changeProfile")}</span>
             <small>

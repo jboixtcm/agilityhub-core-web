@@ -4,4 +4,4 @@ Already up to date
 
 . prepare$ node packages/config/scripts/prepare-husky.mjs
 . prepare: Done
-Done in 848ms using pnpm v9.15.9
+Done in 874ms using pnpm v9.15.9

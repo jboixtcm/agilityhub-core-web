@@ -7,6 +7,7 @@ import {
 } from "@agilityhub/api-client";
 
 import type { MockRefreshTokenStore } from "./mock-refresh-token";
+import { accessPathFor, rememberReturnPath } from "./return-path";
 
 const DEFAULT_API_BASE_URL = "/api/v1";
 const DEFAULT_IDENTITY_BASE_URL = "";
@@ -27,6 +28,13 @@ const HANDOFF_ME_ATTEMPTS = 3;
 const REFRESH_LOCK_PREFIX = "agilityhub.refresh:";
 const REFRESH_LEASE_MS = 10_000;
 const REFRESH_LEASE_POLL_MS = 50;
+/**
+ * E160 #2: a write to `localStorage` reaches the other tabs a moment later, so two tabs can both
+ * see the lease free and both write it. Each one reads it back after this pause and only the last
+ * writer goes on; the holder renews it every `REFRESH_LEASE_RENEW_MS` while its refresh is pending.
+ */
+const REFRESH_LEASE_SETTLE_MS = 50;
+const REFRESH_LEASE_RENEW_MS = 3_000;
 /**
  * S01 D10 and R-01-09 (E47): the impersonated session lives in this tab's session storage only
  * (never `localStorage`), so it survives the app's full-page navigations and dies with the tab.
@@ -65,6 +73,19 @@ export type UpdateMeRequest = components["schemas"]["AccountPatchRequest"];
 export type UpdatePasswordRequest = components["schemas"]["PasswordRequest"];
 type AccountLocale = NonNullable<UpdateMeRequest["locale"]>;
 
+/** The `signedOut` event's detail: `expired` when the session ended by itself (E160 #3). */
+export interface SignedOutDetail {
+  expired: boolean;
+}
+
+/** Whether a `signedOut` event is a session that ended by itself rather than a sign-out. */
+export function isSessionExpiry(event: Event): boolean {
+  return (
+    event instanceof CustomEvent &&
+    (event.detail as Partial<SignedOutDetail> | null)?.expired === true
+  );
+}
+
 export interface AuthClientOptions {
   apiBaseUrl?: string;
   clientId?: string;
@@ -81,6 +102,11 @@ export interface AuthClientOptions {
   mockMode?: boolean;
   mockRefreshTokenStore?: MockRefreshTokenStore;
   navigate?: (path: string) => void;
+  /**
+   * Where the refresh lease lives when the browser has no Web Locks (R-01-06): the window's
+   * `localStorage` by default. A test gives each simulated tab its own view of one storage.
+   */
+  refreshLeaseStorage?: Storage;
   /** Where a session that cannot be refreshed lands: `/entrar` (clubs apps), `/login` (id). */
   signInPath?: string;
 }
@@ -187,24 +213,39 @@ function readLease(storage: Storage, name: string): RefreshLease | undefined {
   }
 }
 
+function writeLease(storage: Storage, name: string, owner: string): boolean {
+  try {
+    storage.setItem(name, JSON.stringify({ expiresAt: Date.now() + REFRESH_LEASE_MS, owner }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * The fallback of Web Locks: a lease in `localStorage` that expires after 10 s (a tab closed while
- * it held it), polled until it is free. Without storage there is nothing to share.
+ * it held it), polled until it is free. A tab that wrote it waits `REFRESH_LEASE_SETTLE_MS` and goes
+ * on only if the lease is still its own (E160 #2: mutual exclusion), then renews it until it is
+ * released, so a refresh slower than the lease never lets another tab in. Without storage there is
+ * nothing to share.
  */
-async function acquireRefreshLease(name: string): Promise<() => void> {
-  const storage = sharedStorage();
+async function acquireRefreshLease(
+  name: string,
+  storage: Storage | undefined,
+): Promise<() => void> {
   if (storage === undefined) return () => undefined;
   const owner = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
   for (;;) {
     const held = readLease(storage, name);
     if (held === undefined || held.expiresAt <= Date.now()) {
-      try {
-        storage.setItem(name, JSON.stringify({ expiresAt: Date.now() + REFRESH_LEASE_MS, owner }));
-      } catch {
-        return () => undefined;
-      }
+      if (!writeLease(storage, name, owner)) return () => undefined;
+      await new Promise((resolve) => setTimeout(resolve, REFRESH_LEASE_SETTLE_MS));
       if (readLease(storage, name)?.owner === owner) {
+        const renewal = setInterval(() => {
+          if (readLease(storage, name)?.owner === owner) writeLease(storage, name, owner);
+        }, REFRESH_LEASE_RENEW_MS);
         return () => {
+          clearInterval(renewal);
           if (readLease(storage, name)?.owner === owner) storage.removeItem(name);
         };
       }
@@ -213,7 +254,11 @@ async function acquireRefreshLease(name: string): Promise<() => void> {
   }
 }
 
-async function withRefreshLock<T>(name: string, task: () => Promise<T>): Promise<T> {
+async function withRefreshLock<T>(
+  name: string,
+  task: () => Promise<T>,
+  leaseStorage: Storage | undefined,
+): Promise<T> {
   const locks =
     typeof navigator === "undefined"
       ? undefined
@@ -221,7 +266,7 @@ async function withRefreshLock<T>(name: string, task: () => Promise<T>): Promise
   if (locks !== undefined && typeof locks.request === "function") {
     return locks.request(name, task);
   }
-  const release = await acquireRefreshLease(name);
+  const release = await acquireRefreshLease(name, leaseStorage);
   try {
     return await task();
   } finally {
@@ -279,6 +324,7 @@ export class AuthClient extends EventTarget {
   private restoreInFlight: Promise<Me | null> | null = null;
   private retryAttempt = 0;
   private retryCancel: (() => void) | undefined;
+  private readonly refreshLeaseStorage: Storage | undefined;
   private readonly signInPath: string;
   private signedOutNotified = false;
   private slidingRefreshActive = false;
@@ -295,6 +341,7 @@ export class AuthClient extends EventTarget {
     }
     this.mockRefreshTokenStore = options.mockRefreshTokenStore;
     this.navigate = options.navigate ?? defaultNavigate;
+    this.refreshLeaseStorage = options.refreshLeaseStorage;
     this.signInPath = options.signInPath ?? DEFAULT_SIGN_IN_PATH;
     this.apiClient = createApiClient({
       baseUrl: this.apiBaseUrl,
@@ -890,8 +937,22 @@ export class AuthClient extends EventTarget {
       return;
     }
     this.clearLocalSession();
-    this.emitSignedOut();
-    this.navigate(this.signInPath);
+    this.emitSignedOut(true);
+    this.navigate(this.expiredSessionPath());
+  }
+
+  /**
+   * E160 #3 (S01 §2 01, E11-W06 W1): a session that ended by itself keeps the address it was on,
+   * as a cold start does — `/entrar?next=…`, mirrored for the magic link's tab. The ID pages
+   * (`/login`) have no return path.
+   */
+  private expiredSessionPath(): string {
+    if (this.signInPath !== DEFAULT_SIGN_IN_PATH || typeof window === "undefined") {
+      return this.signInPath;
+    }
+    const requested = `${window.location.pathname}${window.location.search}`;
+    rememberReturnPath(requested);
+    return accessPathFor(requested);
   }
 
   /** `token`: the JWT to revoke in the body (`RevokeRequest.token`); without it, the bearer's `sid`. */
@@ -1021,10 +1082,11 @@ export class AuthClient extends EventTarget {
     }
   }
 
-  private emitSignedOut(): void {
+  /** `expired`: the session ended by itself (a refused refresh), not by a sign-out (E160 #3). */
+  private emitSignedOut(expired = false): void {
     if (!this.signedOutNotified) {
       this.signedOutNotified = true;
-      this.dispatchEvent(new Event("signedOut"));
+      this.dispatchEvent(new CustomEvent<SignedOutDetail>("signedOut", { detail: { expired } }));
     }
   }
 
@@ -1068,26 +1130,30 @@ export class AuthClient extends EventTarget {
    */
   private async performRefresh(): Promise<TokenResponse> {
     const generation = this.tokenGeneration;
-    return withRefreshLock(`${REFRESH_LOCK_PREFIX}${this.clientId}`, async () => {
-      const current = this.currentTokens;
-      if (
-        this.tokenGeneration !== generation &&
-        current !== null &&
-        this.accessToken === current.access_token &&
-        this.refreshAt !== null &&
-        Date.now() < this.refreshAt
-      ) {
-        return current;
-      }
-      const tokens = await this.issueToken(
-        new URLSearchParams({
-          client_id: this.clientId,
-          grant_type: "refresh_token",
-        }),
-      );
-      this.acceptTokens(tokens);
-      return tokens;
-    });
+    return withRefreshLock(
+      `${REFRESH_LOCK_PREFIX}${this.clientId}`,
+      async () => {
+        const current = this.currentTokens;
+        if (
+          this.tokenGeneration !== generation &&
+          current !== null &&
+          this.accessToken === current.access_token &&
+          this.refreshAt !== null &&
+          Date.now() < this.refreshAt
+        ) {
+          return current;
+        }
+        const tokens = await this.issueToken(
+          new URLSearchParams({
+            client_id: this.clientId,
+            grant_type: "refresh_token",
+          }),
+        );
+        this.acceptTokens(tokens);
+        return tokens;
+      },
+      this.refreshLeaseStorage ?? sharedStorage(),
+    );
   }
 
   private refreshInBackground(): void {

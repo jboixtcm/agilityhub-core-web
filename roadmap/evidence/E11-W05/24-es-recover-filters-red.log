@@ -1,0 +1,51 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/index.test.ts (7 tests | 2 failed | 5 skipped) 12ms
+   ❯ @agilityhub/i18n (7)
+     × E11-W05 step 5 (E155 #2): the password recovery control says «Recuperar la contraseña» in es, the same in apps/id and apps/clubs 7ms
+     × E11-W05 step 5 (E155 #4): D11's run filters name a group, not an action 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/index.test.ts > @agilityhub/i18n > E11-W05 step 5 (E155 #2): the password recovery control says «Recuperar la contraseña» in es, the same in apps/id and apps/clubs
+AssertionError: expected 'Recuperarla' to be 'Recuperar la contraseña' // Object.is equality
+
+Expected: "Recuperar la contraseña"
+Received: "Recuperarla"
+
+ ❯ src/index.test.ts:39:39
+     37|     const auth = (await import("./locales/es/auth.json")).default;
+     38|     const id = (await import("./locales/es/id.json")).default;
+     39|     expect(auth.access.forgot.action).toBe("Recuperar la contraseña");
+       |                                       ^
+     40|     // apps/id's button holds the question and the action in one strin…
+     41|     expect(id.login.forgot).toBe(`${auth.access.forgot.question} ${aut…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/index.test.ts > @agilityhub/i18n > E11-W05 step 5 (E155 #4): D11's run filters name a group, not an action
+AssertionError: expected 'Filtrar las ejecuciones' to be 'Filtros de las ejecuciones' // Object.is equality
+
+Expected: "Filtros de las ejecuciones"
+Received: "Filtrar las ejecuciones"
+
+ ❯ src/index.test.ts:46:40
+     44|   it("E11-W05 step 5 (E155 #4): D11's run filters name a group, not an…
+     45|     const settings = (await import("./locales/es/admin-settings.json")…
+     46|     expect(settings.jobs.runs.filters).toBe("Filtros de las ejecucione…
+       |                                        ^
+     47|   });
+     48|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 5 skipped (7)
+   Start at  04:47:57
+   Duration  265ms (transform 72%, import 20%, tests 7%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/index.test.ts -t E155

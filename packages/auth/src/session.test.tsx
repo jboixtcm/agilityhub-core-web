@@ -19,6 +19,7 @@ import {
   SessionProvider,
   useSession,
 } from "./session";
+import { installWebLocks } from "./testing";
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -96,7 +97,12 @@ const server = setupServer(
   http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
 );
 
+// The guards' tests run the refresh lock as the supported browsers do (E160 #2): a synchronous test
+// must not leave a refresh pending in the fallback's settle pause for the next test to receive.
+let removeWebLocks: () => void = () => undefined;
+
 beforeAll(() => {
+  removeWebLocks = installWebLocks();
   server.listen({ onUnhandledRequest: "error" });
 });
 
@@ -107,6 +113,7 @@ afterEach(() => {
 
 afterAll(() => {
   server.close();
+  removeWebLocks();
 });
 
 function SessionDetails() {

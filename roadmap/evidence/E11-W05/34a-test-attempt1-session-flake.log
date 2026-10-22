@@ -1,0 +1,321 @@
+
+> agilityhub-core-web@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c
+> turbo run test
+
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running test in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:typecheck: cache hit, replaying logs d4749fbcab628743
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/ui:typecheck: cache hit, replaying logs 101b1b3ba50a84cb
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/i18n:test: cache miss, executing 45f47cb7621eec66
+@agilityhub/course-core:test: cache hit, replaying logs 65fa9f6847f7b7eb
+@agilityhub/ui:test: cache hit, replaying logs 5d2bc05066fc6057
+@agilityhub/shared-types:typecheck: cache hit, replaying logs 7874ef022804ec1c
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/shared-types
+@agilityhub/i18n:typecheck: cache hit, replaying logs 564501dc4e39ee32
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+@agilityhub/shared-types:test: cache hit, replaying logs 92bd95f3df24e115
+@agilityhub/course-core:test:  [32m✓[39m tests/heading.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/ui[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/polish-styles.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance-contrast.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/modules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/i18n:typecheck: 
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 148[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/path.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 128[2mms[22m[39m
+@agilityhub/ui:test: [90mstderr[2m | src/day-grid.test.tsx[2m > [22m[2mDayGrid presenter (screens 10 / 23)[2m > [22m[2mrenders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [22m[39m[DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+@agilityhub/course-ui:test: cache miss, executing fd85148672bcb689
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/shared-types[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/course-data-json-schema.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m378 passed[39m[22m[90m (378)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 16:49:08
+@agilityhub/course-core:test: [2m   Duration [22m 745ms[2m (transform 71%, import 18%, tests 7%, worker 4%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 2.82s[39m[2m · 71% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+@agilityhub/ui:test:  [32m✓[39m src/lazy-boundary.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 212[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 210[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 245[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/slot-grid.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 275[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[32m 297[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance-sheet.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 237[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[32m 246[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/course-ui:typecheck: cache hit, replaying logs 5465696cfff3c0d7
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+@agilityhub/shared-types:test:  [32m✓[39m tests/json-schemas.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 16:49:15
+@agilityhub/ui:test:  [32m✓[39m src/attendance.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[32m 207[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m36 tests[22m[2m)[22m[33m 426[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 562[2mms[22m[39m
+@agilityhub/shared-types:test: [2m   Duration [22m 710ms[2m (transform 75%, import 19%, tests 6%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/course-ui:typecheck: 
+@agilityhub/course-ui:typecheck: > @agilityhub/course-ui@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/course-ui
+@agilityhub/ui:test:  [32m✓[39m src/tasks-panel.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 439[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/schedule-contrast.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/chunk-reload.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/universal-list-layout.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+@agilityhub/course-ui:typecheck: > tsc --noEmit
+@agilityhub/course-ui:typecheck: 
+@agilityhub/ui:test: [2m      Tests [22m [1m[32m194 passed[39m[22m[90m (194)[39m
+@agilityhub/ui:test: [2m   Start at [22m 23:12:40
+@agilityhub/ui:test: [2m   Duration [22m 2.29s[2m (environment 61%, setup 15%, tests 13%, transform 10%, import 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/api-client:test: cache miss, executing 512b0ace278d938a
+@agilityhub/api-client:typecheck: cache hit, replaying logs 41c8b77d26af8249
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/auth:test: cache miss, executing d3a66afb5198a30a
+@agilityhub/auth:typecheck: cache hit, replaying logs c20896bd59b1b7fa
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs:test: cache miss, executing 59a98671accdab29
+clubs-admin:test: cache miss, executing c0e8f48d809f0376
+id:test: cache miss, executing de13656c60da9b6a
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+@agilityhub/i18n:test: > vitest run && node --test ../../scripts/check-es-actions.test.mjs
+@agilityhub/i18n:test: 
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs
+clubs:test: > vitest run && pnpm test:bundle-check
+clubs:test: 
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/id
+id:test: > vitest run
+id:test: 
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test: > @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/course-ui
+@agilityhub/course-ui:test: > vitest run
+@agilityhub/course-ui:test: 
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth[39m
+@agilityhub/auth:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/masking.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+clubs:test: 
+clubs:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs[39m
+clubs:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/locale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/course-ui[39m
+@agilityhub/course-ui:test: 
+id:test: 
+id:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/id[39m
+id:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/clubs-preload.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/activities.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+clubs-admin:test: 
+clubs-admin:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin[39m
+clubs-admin:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/course-texts.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 140[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/clubs-resources.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 276[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/return-path.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/copy-decisions.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 700[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/format.test.ts [2m([22m[2m106 tests[22m[2m)[22m[32m 213[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/index.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 284[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+@agilityhub/i18n:test: [2m      Tests [22m [1m[32m159 passed[39m[22m[90m (159)[39m
+@agilityhub/i18n:test: [2m   Start at [22m 04:50:11
+@agilityhub/i18n:test: [2m   Duration [22m 2.36s[2m (transform 68%, tests 19%, import 13%)[22m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m  Transform [22m [33mtransforming modules took 6.28s[39m[2m · 68% of tracked time, re-done on every run[22m
+@agilityhub/i18n:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/i18n:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/i18n:test: 
+@agilityhub/api-client:test:  [32m✓[39m src/branding-cache.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 476[2mms[22m[39m
+@agilityhub/i18n:test: TAP version 13
+@agilityhub/i18n:test: # Subtest: an imperative action label is flagged, whatever its case, its «＋» or its placeholders
+@agilityhub/i18n:test: ok 1 - an imperative action label is flagged, whatever its case, its «＋» or its placeholders
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 2.240209
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: infinitives, nouns, sentences, placeholders, the reader's own voice and enum values are not
+@agilityhub/i18n:test: ok 2 - infinitives, nouns, sentences, placeholders, the reader's own voice and enum values are not
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.186333
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: a key in KEEP is not flagged and is reported as kept, with its reason
+@agilityhub/i18n:test: ok 3 - a key in KEEP is not flagged and is reported as kept, with its reason
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.117791
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: the same label is flagged once its key leaves KEEP
+@agilityhub/i18n:test: ok 4 - the same label is flagged once its key leaves KEEP
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.104917
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: every KEEP entry carries a one-line reason
+@agilityhub/i18n:test: ok 5 - every KEEP entry carries a one-line reason
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.252292
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: 1..5
+@agilityhub/i18n:test: # tests 5
+@agilityhub/i18n:test: # suites 0
+@agilityhub/i18n:test: # pass 5
+@agilityhub/i18n:test: # fail 0
+@agilityhub/i18n:test: # cancelled 0
+@agilityhub/i18n:test: # skipped 0
+@agilityhub/i18n:test: # todo 0
+@agilityhub/i18n:test: # duration_ms 361.703917
+@agilityhub/auth:test:  [31m❯[39m src/session.test.tsx [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 743[2mms[22m[39m
+@agilityhub/auth:test:    [31m❯[39m T-01-21 session and guards [2m(9)[22m
+@agilityhub/auth:test:      [32m✓[39m redirects anonymous users to /entrar without rendering protected content[32m 214[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m E11-W06 W1 (S11 R-11-11): RequireAuth passes the requested path to navigate and keeps it for the magic link's tab[32m 113[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m exposes /me roles and active profile and renders only an allowed role[32m 18[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m T-17-12 (E10-W01 step 1): the console guard reads the account's platform roles, with or without a membership[32m 14[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m T-17-12 (E10-W01 step 1): the refusal never shows while the session is still loading[32m 1[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m T-17-10 (E10-W01 step 1): an impersonation never carries the actor's platform roles[32m 3[2mms[22m[39m
+@agilityhub/auth:test: [31m     [31m×[31m E4-W16 step 3 (INC-19): a restore that fails offline or with a 5xx stays loading (no redirect) and signs in on the retry[39m[32m 168[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m E4-W16 step 2 (INC-18): an expired impersonation is its own state: no redirect to /entrar, no protected content[32m 6[2mms[22m[39m
+@agilityhub/auth:test:      [32m✓[39m renders the translated unavailable page and omits disabled module items[32m 201[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/auth-client.test.ts [2m([22m[2m33 tests[22m[2m)[22m[33m 2589[2mms[22m[39m
+@agilityhub/auth:test:    [32m✓[39m T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie [2m(3)[22m
+@agilityhub/auth:test:      [33m[2m✓[22m[39m /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it[33m 321[2mms[22m[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [41m[1m FAIL [22m[49m src/session.test.tsx[2m > [22mT-01-21 session and guards[2m > [22mE4-W16 step 3 (INC-19): a restore that fails offline or with a 5xx stays loading (no redirect) and signs in on the retry
+@agilityhub/auth:test: [31m[1mTestingLibraryElementError[22m: Unable to find an element with the text: loading:none. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+@agilityhub/auth:test: 
+@agilityhub/auth:test: Ignored nodes: comments, script, style
+@agilityhub/auth:test: [36m<body>[31m
+@agilityhub/auth:test:   [36m<div>[31m
+@agilityhub/auth:test:     [36m<output>[31m
+@agilityhub/auth:test:       [0msignedIn:MEMBER[0m
+@agilityhub/auth:test:     [36m</output>[31m
+@agilityhub/auth:test:     [36m<p>[31m
+@agilityhub/auth:test:       [0mProtected content[0m
+@agilityhub/auth:test:     [36m</p>[31m
+@agilityhub/auth:test:   [36m</div>[31m
+@agilityhub/auth:test: [36m</body>[31m[39m
+@agilityhub/auth:test: [90m [2m❯[22m Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+@agilityhub/auth:test: [90m [2m❯[22m ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+@agilityhub/auth:test: [90m [2m❯[22m ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+@agilityhub/auth:test: [90m [2m❯[22m ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+@agilityhub/auth:test: [36m [2m❯[22m src/session.test.tsx:[2m334:19[22m[39m
+@agilityhub/auth:test:     [90m332|[39m       setTimeout(resolve, 30);
+@agilityhub/auth:test:     [90m333|[39m     });
+@agilityhub/auth:test:     [90m334|[39m     expect(screen.getByText("loading:none")).toBeInTheDocument();
+@agilityhub/auth:test:     [90m   |[39m                   [31m^[39m
+@agilityhub/auth:test:     [90m335|[39m     expect(navigate).not.toHaveBeenCalled();
+@agilityhub/auth:test:     [90m336|[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+@agilityhub/auth:test: [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m45 passed[39m[22m[90m (46)[39m
+@agilityhub/auth:test: [2m   Start at [22m 04:50:10
+@agilityhub/auth:test: [2m   Duration [22m 5.28s[2m (tests 31%, environment 30%, import 22%, transform 17%)[22m
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs-admin:test:  ELIFECYCLE  Test failed. See above for more details.
+id:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/course-ui:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/api-client:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/auth#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/auth) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    11 successful, 17 total
+Cached:    10 cached, 17 total
+  Time:    6.404s 
+Failed:    @agilityhub/auth#test
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Test failed. See above for more details.
