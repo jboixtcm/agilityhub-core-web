@@ -1,0 +1,33 @@
+{
+  "yaml_parse": "passed",
+  "before_after_comparison": "Only checks.timeout-minutes=45 and MSW --log-order=stream changed; every other workflow node identical",
+  "prettier": "passed",
+  "git_diff_check": "passed",
+  "turbo_dry_run_command": "pnpm exec turbo run e2e --concurrency=1 --log-order=stream --dry=json",
+  "turbo_dry_run_exit": 0,
+  "runnable_e2e_tasks": [
+    {
+      "task": "@agilityhub/course-ui#e2e",
+      "command": "playwright test",
+      "cache": false
+    },
+    {
+      "task": "clubs#e2e",
+      "command": "playwright test",
+      "cache": false
+    },
+    {
+      "task": "clubs-admin#e2e",
+      "command": "playwright test",
+      "cache": false
+    },
+    {
+      "task": "id#e2e",
+      "command": "playwright test",
+      "cache": false
+    }
+  ],
+  "task_validation": "passed",
+  "workflow_sha256": "bc10047732642563a1cb472db4b2a10436b84a0c50b15c69146d18158840b6b1",
+  "validation_note": "Initial task-set assertion counted seven Turbo synthetic <NONEXISTENT> package tasks. Filtered non-runnable entries; all four real test suites remain unchanged. No application or test-runner source changed."
+}

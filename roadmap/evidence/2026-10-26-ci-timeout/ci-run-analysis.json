@@ -1,0 +1,199 @@
+{
+  "runs": [
+    {
+      "run_id": "40365668876",
+      "head_sha": "d4a1e69d5b86ab11790b742393fa60d2c5ff9d45",
+      "url": "https://github.com/jboixtcm/agilityhub-core-web/actions/runs/40365668876",
+      "conclusion": "cancelled",
+      "job_seconds": 1862,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 3,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out repository",
+          "seconds": 35,
+          "conclusion": "success"
+        },
+        {
+          "name": "Enable pnpm",
+          "seconds": 2,
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Node.js",
+          "seconds": 8,
+          "conclusion": "success"
+        },
+        {
+          "name": "Install dependencies",
+          "seconds": 3,
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint, typecheck, test, and build",
+          "seconds": 601,
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck the real-core specs",
+          "seconds": 5,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check translations",
+          "seconds": 1,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check generated API types",
+          "seconds": 3,
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Chromium",
+          "seconds": 560,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Playwright with MSW",
+          "seconds": 594,
+          "conclusion": "cancelled"
+        },
+        {
+          "name": "Check Clubs bundle size",
+          "seconds": 0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Upload Playwright screenshots",
+          "seconds": 43,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Node.js",
+          "seconds": 0,
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Post Enable pnpm",
+          "seconds": 0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out repository",
+          "seconds": 1,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0,
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "run_id": "39763808029",
+      "head_sha": "74eb670ae1bc7c95bbbac690941945edc667bc4b",
+      "url": "https://github.com/jboixtcm/agilityhub-core-web/actions/runs/39763808029",
+      "conclusion": "success",
+      "job_seconds": 1791,
+      "steps": [
+        {
+          "name": "Set up job",
+          "seconds": 1,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check out repository",
+          "seconds": 24,
+          "conclusion": "success"
+        },
+        {
+          "name": "Enable pnpm",
+          "seconds": 1,
+          "conclusion": "success"
+        },
+        {
+          "name": "Set up Node.js",
+          "seconds": 4,
+          "conclusion": "success"
+        },
+        {
+          "name": "Install dependencies",
+          "seconds": 3,
+          "conclusion": "success"
+        },
+        {
+          "name": "Lint, typecheck, test, and build",
+          "seconds": 443,
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck the real-core specs",
+          "seconds": 3,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check translations",
+          "seconds": 1,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check generated API types",
+          "seconds": 3,
+          "conclusion": "success"
+        },
+        {
+          "name": "Install Chromium",
+          "seconds": 567,
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Playwright with MSW",
+          "seconds": 722,
+          "conclusion": "success"
+        },
+        {
+          "name": "Check Clubs bundle size",
+          "seconds": 1,
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload Playwright screenshots",
+          "seconds": 14,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Set up Node.js",
+          "seconds": 0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Enable pnpm",
+          "seconds": 0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Check out repository",
+          "seconds": 0,
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "seconds": 0,
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "timeout_annotation": "The job has exceeded the maximum execution time of 30m0s",
+  "log_excerpts": [
+    "Frontend checks\tLint, typecheck, test, and build\t2026-10-26T17:18:28.3096690Z  Tasks:    38 successful, 38 total",
+    "Frontend checks\tInstall Chromium\t2026-10-26T17:27:39.5530412Z Fetched 25.9 MB in 8min 48s (49.1 kB/s)",
+    "Frontend checks\tRun Playwright with MSW\t2026-10-26T17:37:51.4408592Z ##[error]The operation was canceled."
+  ],
+  "conclusion": "Aggregate job deadline exhausted after 10m checks and9m20 Chromium installation; previous green MSW required12m02. No completed assertion failure reported; cancelled browser task logs were buffered."
+}

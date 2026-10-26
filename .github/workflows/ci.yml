@@ -17,7 +17,9 @@ jobs:
   checks:
     name: Frontend checks
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Cold checks (~10m), browser dependencies (~10m) and the full MSW suite
+    # (~12m) exceed 30m on hosted runners; retain time for size/artifact gates.
+    timeout-minutes: 45
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -53,7 +55,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run Playwright with MSW
-        run: pnpm turbo run e2e --concurrency=1
+        run: pnpm turbo run e2e --concurrency=1 --log-order=stream
 
       - name: Check Clubs bundle size
         run: pnpm size-limit
