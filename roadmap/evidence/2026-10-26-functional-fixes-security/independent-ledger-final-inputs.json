@@ -1,0 +1,38 @@
+{
+  "command": "python3 roadmap/evidence/2026-10-26-functional-fixes-security/review-final-ledger.py --require-complete",
+  "exitCode": 0,
+  "files": [
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/FINAL_COMMANDS.md",
+      "sha256": "2dc09ff2f7da05eb6257c5c9cedb4613006f05e62733dbe76a0d6f96df9457c1"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/collect-final-runs.py",
+      "sha256": "7be24b58cb1214adeb4cafd0dda486ff4654790c53e585278dd18de42a6cd39a"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+      "sha256": "9403421f7ee04c9112aac89b08412e2291ecf8d8e021ee7069d1f49ca6aaea2a"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/48-harness-final-inputs.json",
+      "sha256": "5f4bf9eccdd6af5439533ad4d69e2607a25af218d3692597c68524ded52170c9"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/54-final-browser-tested-inputs.json",
+      "sha256": "6c74fd3841e8dbc6d38e1aac3bc3aef60b44fd95d5cc9d8977ee1c1172a80681"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/review-final-ledger.py",
+      "sha256": "1c2e7bb43fdf5a149733382d192a0e93f7d313888acb1aecfbaa6fd664bb3a48"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/independent-ledger-final.json",
+      "sha256": "099dff865a26f6bd46ebe969a6f950c79fbdb7a8f00d7049e8fd868d54e04019"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/independent-ledger-final-review.md",
+      "sha256": "57c27034c23a804e0a3495a4e2c28ee19e6bfbd0735a55e5c285237fa02ed807"
+    }
+  ]
+}

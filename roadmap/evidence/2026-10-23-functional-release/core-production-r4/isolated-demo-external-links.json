@@ -1,0 +1,21 @@
+{
+  "productLinks": [
+    {
+      "text": "OBRE LEARN",
+      "href": "https://learn.agilitydoghub.com/",
+      "target": ""
+    },
+    {
+      "text": "OBRE CLUBS",
+      "href": "https://clubs.agilitydoghub.com/",
+      "target": ""
+    }
+  ],
+  "profileLink": {
+    "text": "Aprèn amb AgilityHub",
+    "href": "https://learn.agilitydoghub.com",
+    "target": "_blank"
+  },
+  "externallyNavigated": false,
+  "scope": "Read visible DOM hrefs only; no external product navigation or authentication"
+}

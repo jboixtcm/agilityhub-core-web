@@ -1,0 +1,1 @@
+bash -c 'pnpm exec prettier --write apps/clubs-admin/e2e/responsive-shell.spec.ts && pnpm exec eslint apps/clubs-admin/src/App.tsx apps/clubs-admin/src/styles.css apps/clubs-admin/src/instructor/week-agenda.css apps/clubs-admin/src/billing/billing.css apps/clubs-admin/e2e/responsive-shell.spec.ts --max-warnings 0'

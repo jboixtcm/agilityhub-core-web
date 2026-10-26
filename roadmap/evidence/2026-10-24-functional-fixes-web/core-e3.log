@@ -1,0 +1,174 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh 2026-10-24-functional-fixes-web/core-e3 'e3-signup.spec.ts --trace=off'
+
+E4_WEEK_START=2026-10-26 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-11-02 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: agilityhub-core-api:review-fixes-20261024 arm64 revision= created=2026-10-24T08:13:53.586905258Z digests=[agilityhub-core-api@sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9 ghcr.io/jboixtcm/agilityhub-core-api@sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic-demo.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e3/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e3/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e3/club-template-default.yaml (302 lines)
+demo club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e3/club-canic-demo.yaml (785 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Volume agilityhub-functional-fixes-web-e3_mongo-data Creating 
+ Volume agilityhub-functional-fixes-web-e3_export-files Creating 
+ Volume agilityhub-functional-fixes-web-e3_export-files Creating 
+ Volume agilityhub-functional-fixes-web-e3_attachment-files Creating 
+ Volume agilityhub-functional-fixes-web-e3_attachment-files Creating 
+ Network agilityhub-functional-fixes-web-e3_default Creating 
+ Network agilityhub-functional-fixes-web-e3_default Creating 
+ Volume agilityhub-functional-fixes-web-e3_mailbox Creating 
+ Volume agilityhub-functional-fixes-web-e3_mailbox Creating 
+ Volume agilityhub-functional-fixes-web-e3_mongo-data Creating 
+ Volume agilityhub-functional-fixes-web-e3_mailbox Created 
+ Volume agilityhub-functional-fixes-web-e3_mailbox Created 
+ Volume agilityhub-functional-fixes-web-e3_mongo-data Created 
+ Volume agilityhub-functional-fixes-web-e3_mongo-data Created 
+ Volume agilityhub-functional-fixes-web-e3_attachment-files Created 
+ Volume agilityhub-functional-fixes-web-e3_attachment-files Created 
+ Volume agilityhub-functional-fixes-web-e3_export-files Created 
+ Volume agilityhub-functional-fixes-web-e3_export-files Created 
+ Network agilityhub-functional-fixes-web-e3_default Created 
+ Network agilityhub-functional-fixes-web-e3_default Created 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Creating 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Created 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Creating 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Created 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Creating 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Created 
+ Container agilityhub-functional-fixes-web-e3-core-1 Creating 
+ Container agilityhub-functional-fixes-web-e3-core-1 Created 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Starting 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Started 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Healthy 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Starting 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Started 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Exited 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Starting 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Started 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Exited 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Healthy 
+ Container agilityhub-functional-fixes-web-e3-core-1 Starting 
+ Container agilityhub-functional-fixes-web-e3-core-1 Started 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-core-1 Waiting 
+ Container agilityhub-functional-fixes-web-e3-activate-demo-club-1 Exited 
+ Container agilityhub-functional-fixes-web-e3-seed-1 Exited 
+ Container agilityhub-functional-fixes-web-e3-mongo-1 Healthy 
+ Container agilityhub-functional-fixes-web-e3-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e3/seed-files.log (191 lines)
+ Container agilityhub-functional-fixes-web-e3-playwright-run-3c762f53f97e Creating 
+ Container agilityhub-functional-fixes-web-e3-playwright-run-3c762f53f97e Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 139
+Progress: resolved 858, reused 858, downloaded 0, added 621
+Progress: resolved 858, reused 858, downloaded 0, added 855
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.1s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:291) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e3-signup.spec.ts:726:5 › T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)
+[2/5] e2e/core/e3-signup.spec.ts:744:5 › T-04-34 public signup is validated and enters through the N-02 welcome link @critical-alta
+  1) e2e/core/e3-signup.spec.ts:744:5 › T-04-34 public signup is validated and enters through the N-02 welcome link @critical-alta 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.signup-upfront').getByRole('radio')
+    Expected: 1
+    Received: 0
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.signup-upfront').getByRole('radio') with timeout 15000ms
+      - waiting for locator('.signup-upfront').getByRole('radio')
+        34 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+      193 |     );
+      194 |   const card = page.locator(".signup-upfront");
+    > 195 |   await expect(card.getByRole("radio")).toHaveCount(quote.options.length);
+          |                                         ^
+      196 |   for (const [index, option] of quote.options.entries()) {
+      197 |     const label = addDog
+      198 |       ? option.option === "TODAY"
+        at expectQuoteCard (/work/e2e/core/e3-signup.spec.ts:195:41)
+        at /work/e2e/core/e3-signup.spec.ts:1120:9
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-26T07:51:02.985Z grant_type=refresh_token status=400 cookie=none context=w0c2 page=127.0.0.1:4173/apuntat-hi started=2026-10-26T07:51:02.959Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-04-34...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e3-signup-T-04-34-public-s-ee101--welcome-link-critical-alta/error-context.md
+
+
+[3/5] e2e/core/e3-signup.spec.ts:2095:5 › T-04-34 rejected signup delivers N-03 @critical-alta
+[4/5] e2e/core/e3-signup.spec.ts:2102:5 › T-04-34 active member adds a dog and the club validates it @critical-alta
+[5/5] e2e/core/e3-signup.spec.ts:2106:5 › T-04-34 signup.enabled=false shows only the configured closed text
+  1 failed
+    e2e/core/e3-signup.spec.ts:744:5 › T-04-34 public signup is validated and enters through the N-02 welcome link @critical-alta 
+  3 did not run
+  1 passed (54.2s)
+
+ ELIFECYCLE  Command failed with exit code 1.

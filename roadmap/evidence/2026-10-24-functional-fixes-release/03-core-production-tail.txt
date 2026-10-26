@@ -1,0 +1,40 @@
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.1s using pnpm v9.15.9
+[WebServer] 
+[WebServer] Attention:
+[WebServer] Turborepo now collects completely anonymous telemetry regarding usage.
+[WebServer] This information is used to shape the Turborepo roadmap and prioritize features.
+[WebServer] You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+[WebServer] https://turborepo.dev/docs/telemetry
+[WebServer] 
+
+
+Running 4 tests using 1 worker
+
+[1/4] roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:32:5 › compiled three-SPA HTTPS: independent host-only sessions, deep reloads and ID logout isolation
+[2/4] roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:113:5 › compiled member UI: delayed loading, offline stale copy, disabled writes and online recovery
+[3/4] roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:143:5 › compiled cold boot: readable server-failure state and retry recover from a transient branding outage
+[4/4] roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:159:5 › D11 mandatory privacy processes have translated labels and no unusable disable action
+  4 passed (26.4s)

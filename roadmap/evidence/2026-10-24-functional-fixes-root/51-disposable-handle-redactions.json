@@ -1,0 +1,16 @@
+[
+  {
+    "file": "roadmap/evidence/2026-10-24-functional-fixes-web/core-e3-r2/d2-readmission-add-file-core.json",
+    "beforeSha256": "a2f66d4aed085c1b0c0a74b333df3e28c9a0df1c325dbd75e07272fa6497cb09",
+    "afterSha256": "268d82ba29d0e5d9f6c339d0fd3dbc105a78cfeede6128482a4cd6f0dd975a9b",
+    "redactedHandles": 2,
+    "scope": "Disposable fictional attachment UUIDs only; same file count, filenames and response evidence."
+  },
+  {
+    "file": "roadmap/evidence/2026-10-24-functional-fixes-web/core-e3-r5/d2-readmission-add-file-core.json",
+    "beforeSha256": "81c90aa39870471e024ae1fb7ffa1327fd581911fb6bd63c9685a8d79ab5bef1",
+    "afterSha256": "264b163453bf7712355ff8d11d19be24ab3609da694b53c50c53c4bef03423d4",
+    "redactedHandles": 2,
+    "scope": "Disposable fictional attachment UUIDs only; same file count, filenames and response evidence."
+  }
+]

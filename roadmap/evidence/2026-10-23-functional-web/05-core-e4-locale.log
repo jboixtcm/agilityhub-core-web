@@ -1,0 +1,140 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh 2026-10-23-functional-web/core-e4-locale 'e4-core.spec.ts --trace=off'
+
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: agilityhub-core-api:review-20261023 arm64 revision= created=2026-10-23T21:12:16.526540801Z digests=[agilityhub-core-api@sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e ghcr.io/jboixtcm/agilityhub-core-api@sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-web/core-e4-locale/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-web/core-e4-locale/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-web/core-e4-locale/club-template-default.yaml (302 lines)
+canic club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-web/core-e4-locale/club-canic.yaml (782 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-2026-10-23-functional-web-core-e4-locale_default Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_export-files Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_attachment-files Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_attachment-files Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_export-files Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mongo-data Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mongo-data Creating 
+ Network agilityhub-2026-10-23-functional-web-core-e4-locale_default Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mailbox Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mailbox Creating 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mongo-data Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mongo-data Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mailbox Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_mailbox Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_attachment-files Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_attachment-files Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_export-files Created 
+ Volume agilityhub-2026-10-23-functional-web-core-e4-locale_export-files Created 
+ Network agilityhub-2026-10-23-functional-web-core-e4-locale_default Created 
+ Network agilityhub-2026-10-23-functional-web-core-e4-locale_default Created 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Creating 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Created 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Creating 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Created 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Creating 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Created 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-core-1 Creating 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-core-1 Created 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Starting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Started 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Healthy 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Starting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Started 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Exited 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Starting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Started 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Exited 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Healthy 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-core-1 Starting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-core-1 Started 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-core-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Waiting 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-activate-demo-club-1 Exited 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-seed-1 Exited 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-mongo-1 Healthy 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-web/core-e4-locale/seed-files.log (191 lines)
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-playwright-run-cf37a9d4a804 Creating 
+ Container agilityhub-2026-10-23-functional-web-core-e4-locale-playwright-run-cf37a9d4a804 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 43
+Progress: resolved 858, reused 858, downloaded 0, added 324
+Progress: resolved 858, reused 858, downloaded 0, added 551
+Progress: resolved 858, reused 858, downloaded 0, added 764
+Progress: resolved 858, reused 858, downloaded 0, added 848
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 6.5s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+[1/7] e2e/core/e4-core.spec.ts:539:5 › T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring
+[2/7] e2e/core/e4-core.spec.ts:674:5 › T-06-28 E2E (b) D4: «Esborrany» opens the seeded draft week, [VALIDAR LA SETMANA], the D4c modal with the 4 registrants (200), «Anul·lades», ring blocks (409 then 201)
+[3/7] e2e/core/e4-core.spec.ts:858:5 › T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n
+[4/7] e2e/core/e4-core.spec.ts:913:5 › T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every ring on D4, a new seminar published over a class with the conflict dialog; D7 exports against the core
+[5/7] e2e/core/e4-core.spec.ts:1158:5 › T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place
+[6/7] e2e/core/e4-core.spec.ts:1330:5 › T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»
+[7/7] e2e/core/e4-core.spec.ts:1520:5 › E4-W05 step 7 · the «Excel · PDF» menus of D5 and D7 with EXPORT_TOO_LARGE and while an export is pending
+  7 passed (29.2s)

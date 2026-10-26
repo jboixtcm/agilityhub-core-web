@@ -1,0 +1,10 @@
+{
+  "previousManifest": "48-harness-final-inputs.json",
+  "finalManifest": "54-final-browser-tested-inputs.json",
+  "inputCount": 948,
+  "changedInputs": [
+    "e2e/core/e8-core.spec.ts"
+  ],
+  "applicationCodeAndApiUnchanged": true,
+  "reason": "The E8 fixture selected an intentionally passwordless family member. Its normal owner now authenticates through the actual magic-link UI and fresh local mail, ignoring atomically unpublished temporary mailbox files. Account identity, locale restore, selected family and financial assertions remain."
+}

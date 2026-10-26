@@ -1,0 +1,14 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/audit/ExportsDrawer.test.tsx
+  33:28  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+  61:17  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+  66:16  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/catalogs/JobsCardRuntime.test.tsx
+  32:17  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+  37:16  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+  61:15  error  Unsafe assignment of an `any` value                                                                                 @typescript-eslint/no-unsafe-assignment
+
+✖ 6 problems (6 errors, 0 warnings)
+  5 errors and 0 warnings potentially fixable with the `--fix` option.
+

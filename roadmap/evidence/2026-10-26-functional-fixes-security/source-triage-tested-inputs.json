@@ -1,0 +1,7 @@
+{
+  "Dockerfile": "d02ce49bbbdf1d0430ca3be9407e447f912cc0775bb49e8f50a0c87486919683",
+  "src/main/java/com/agilityhub/core/configuration/EmailConfiguration.java": "a3b85d68dc0cbd7cdc4437f14ebf3abcb253e8b679b4b341a743e52ea255409a",
+  "src/main/java/com/agilityhub/core/configuration/MessagingConfiguration.java": "6bcd2e1d3679eaed8e1e423f65c869f2e6ee56fb112f4e1137a530d6d3359898",
+  "src/main/java/com/agilityhub/core/clubs/messaging/application/SystemEmailRenderer.java": "942e8fc1cb8ed4bc2f87aed4b3fe624cb89c89cf6c258a89a19d0c62e4466031",
+  "src/main/java/com/agilityhub/core/clubs/messaging/application/engine/NotificationEmailRenderer.java": "320a75a596bdf5ad04da555dcdbeb061dcb379c82d9881d491014a29829cf0d9"
+}

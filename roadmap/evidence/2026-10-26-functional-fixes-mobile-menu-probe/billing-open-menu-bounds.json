@@ -1,0 +1,347 @@
+[
+  {
+    "name": "Filtre\n▾",
+    "viewport": 375,
+    "documentWidth": 375,
+    "scrollX": 0,
+    "left": 16,
+    "right": 359,
+    "width": 343,
+    "controls": [
+      {
+        "tag": "LABEL",
+        "text": "ColumnaEstatAbonatMètodeGeneracióRemesaData d'emissióImportTipus",
+        "left": 33,
+        "right": 342,
+        "width": 309
+      },
+      {
+        "tag": "SELECT",
+        "text": "EstatAbonatMètodeGeneracióRemesaData d'emissióImportTipus",
+        "left": 33,
+        "right": 342,
+        "width": 309
+      },
+      {
+        "tag": "LABEL",
+        "text": "Operadorés igual ano és igual aés un deno és cap de",
+        "left": 33,
+        "right": 342,
+        "width": 309
+      },
+      {
+        "tag": "SELECT",
+        "text": "és igual ano és igual aés un deno és cap de",
+        "left": 33,
+        "right": 342,
+        "width": 309
+      },
+      {
+        "tag": "LABEL",
+        "text": "Valorpendent (0)remesat (0)cobrat (0)impagat (0)anul·lat (0)",
+        "left": 33,
+        "right": 342,
+        "width": 309
+      },
+      {
+        "tag": "SELECT",
+        "text": "pendent (0)remesat (0)cobrat (0)impagat (0)anul·lat (0)",
+        "left": 33,
+        "right": 342,
+        "width": 309
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Afegeix el filtre",
+        "left": 33,
+        "right": 156,
+        "width": 123
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Neteja",
+        "left": 164,
+        "right": 232,
+        "width": 68
+      }
+    ]
+  },
+  {
+    "name": "Columnes\n▾",
+    "viewport": 375,
+    "documentWidth": 375,
+    "scrollX": 0,
+    "left": -127.203125,
+    "right": 215.796875,
+    "width": 343,
+    "controls": [
+      {
+        "tag": "LABEL",
+        "text": "Núm.",
+        "left": -78.203125,
+        "right": -23.203125,
+        "width": 55
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Abonat",
+        "left": -78.203125,
+        "right": -12.203125,
+        "width": 66
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Concepte",
+        "left": -78.203125,
+        "right": 3.796875,
+        "width": 82
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Import",
+        "left": -78.203125,
+        "right": -14.203125,
+        "width": 64
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Mètode",
+        "left": -78.203125,
+        "right": -9.203125,
+        "width": 69
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Estat",
+        "left": -78.203125,
+        "right": -26.203125,
+        "width": 52
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Data d'emissió",
+        "left": -78.203125,
+        "right": 34.796875,
+        "width": 113
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -33.203125,
+        "width": 45
+      },
+      {
+        "tag": "LABEL",
+        "text": "Mes",
+        "left": -78.203125,
+        "right": -32.203125,
+        "width": 46
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Tipus",
+        "left": -78.203125,
+        "right": -24.203125,
+        "width": 54
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Data de cobrament",
+        "left": -78.203125,
+        "right": 62.796875,
+        "width": 141
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -14.203125,
+        "width": 64
+      },
+      {
+        "tag": "LABEL",
+        "text": "Remesa",
+        "left": -78.203125,
+        "right": -6.203125,
+        "width": 72
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -78.203125,
+        "right": -65.203125,
+        "width": 13
+      }
+    ]
+  },
+  {
+    "name": "Vistes\n▾",
+    "viewport": 375,
+    "documentWidth": 375,
+    "scrollX": 0,
+    "left": -41.203125,
+    "right": 301.796875,
+    "width": 343,
+    "controls": [
+      {
+        "tag": "LABEL",
+        "text": "VistesCap vista desada",
+        "left": -24.203125,
+        "right": 284.796875,
+        "width": 309
+      },
+      {
+        "tag": "SELECT",
+        "text": "Cap vista desada",
+        "left": -24.203125,
+        "right": 284.796875,
+        "width": 309
+      },
+      {
+        "tag": "LABEL",
+        "text": "Nom de la vista",
+        "left": -24.203125,
+        "right": 284.796875,
+        "width": 309
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -24.203125,
+        "right": 284.796875,
+        "width": 309
+      },
+      {
+        "tag": "LABEL",
+        "text": "Vista compartida",
+        "left": -24.203125,
+        "right": 284.796875,
+        "width": 309
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -24.203125,
+        "right": -11.203125,
+        "width": 13
+      },
+      {
+        "tag": "LABEL",
+        "text": "Vista per defecte",
+        "left": -24.203125,
+        "right": 284.796875,
+        "width": 309
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "left": -24.203125,
+        "right": -11.203125,
+        "width": 13
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Desa la vista",
+        "left": -24.203125,
+        "right": 78.796875,
+        "width": 103
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Canvia el nom",
+        "left": 86.796875,
+        "right": 201.796875,
+        "width": 115
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Elimina la vista",
+        "left": -24.203125,
+        "right": 95.796875,
+        "width": 120
+      }
+    ]
+  },
+  {
+    "name": "Excel · PDF",
+    "viewport": 375,
+    "documentWidth": 375,
+    "scrollX": 0,
+    "left": -13.203125,
+    "right": 130.796875,
+    "width": 144,
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "Excel",
+        "left": -4.203125,
+        "right": 121.796875,
+        "width": 126
+      },
+      {
+        "tag": "BUTTON",
+        "text": "PDF",
+        "left": -4.203125,
+        "right": 121.796875,
+        "width": 126
+      }
+    ]
+  }
+]

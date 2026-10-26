@@ -1,0 +1,25 @@
+[
+  {
+    "event": "A body ends with its hold mounted"
+  },
+  {
+    "event": "A cleanup DELETE starts",
+    "path": "/api/v1/seat-holds/hold-1"
+  },
+  {
+    "event": "B starts after original 20 ms teardown with A DELETE pending"
+  },
+  {
+    "event": "A cleanup DELETE reaches MSW in B"
+  },
+  {
+    "event": "B recorder receives DELETE",
+    "owner": "test-A-cleanup",
+    "path": "/api/v1/seat-holds/hold-1"
+  },
+  {
+    "event": "B recorder receives DELETE",
+    "owner": "test-B-explicit-cancel",
+    "path": "/api/v1/seat-holds/hold-1"
+  }
+]

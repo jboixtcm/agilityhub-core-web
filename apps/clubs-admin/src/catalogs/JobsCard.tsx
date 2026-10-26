@@ -90,6 +90,11 @@ function errorText(t: Translate, cause: unknown): string {
 
 /** The run history's page size (CONVENCIONS_API §4 sizes). */
 const RUNS_PAGE_SIZE = 20;
+/** S15 R-15-01: these legal-duty processes have no switch; manual runs remain supported. */
+function hasSwitch(job: JobSummary): boolean {
+  return job.jobName !== "ERASURES" && job.jobName !== "RETENTION_SWEEP";
+}
+
 const RUN_STATUSES: readonly RunStatus[] = ["SUCCEEDED", "PARTIAL", "FAILED", "SKIPPED", "RUNNING"];
 const RUN_TRIGGERS: readonly NonNullable<JobRunListItem["trigger"]>[] = [
   "SCHEDULE",
@@ -713,6 +718,7 @@ export function JobsCard({
   };
 
   const setEnabled = async (job: JobSummary, enabled: boolean) => {
+    if (!hasSwitch(job)) return;
     setPending({ kind: "switch", name: job.name });
     setFeedback(undefined);
     setModalError(undefined);
@@ -847,19 +853,21 @@ export function JobsCard({
                   </button>
                 </div>
                 <div className="jobs-card__actions">
-                  <Switch
-                    checked={job.enabled}
-                    disabled={busy}
-                    label={t("admin-settings:jobs.switchLabel", { name: jobName(job) })}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        void setEnabled(job, true);
-                      } else {
-                        setModalError(undefined);
-                        setConfirm({ job, kind: "disable" });
-                      }
-                    }}
-                  />
+                  {!hasSwitch(job) ? null : (
+                    <Switch
+                      checked={job.enabled}
+                      disabled={busy}
+                      label={t("admin-settings:jobs.switchLabel", { name: jobName(job) })}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          void setEnabled(job, true);
+                        } else {
+                          setModalError(undefined);
+                          setConfirm({ job, kind: "disable" });
+                        }
+                      }}
+                    />
+                  )}
                   <Button
                     aria-label={t("admin-settings:jobs.dryRunLabel", { name: jobName(job) })}
                     disabled={busy}

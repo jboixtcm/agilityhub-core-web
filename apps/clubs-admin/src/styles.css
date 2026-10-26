@@ -148,7 +148,15 @@ select {
   background: var(--ah-color-surface-2);
 }
 
-.admin-shell > .ah-sidebar {
+.admin-shell__navigation {
+  min-width: 0;
+}
+
+.admin-shell__navigation-toggle {
+  display: none;
+}
+
+.admin-shell__navigation > .ah-sidebar {
   width: 100%;
   min-height: 100%;
   overflow: auto;
@@ -156,6 +164,7 @@ select {
 
 .admin-shell__content {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
   padding: var(--ah-space-8);
   align-items: start;
@@ -902,8 +911,67 @@ select {
 }
 
 @media (max-width: 60rem) {
+  .admin-shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+
+  .admin-shell__header {
+    min-height: 4rem;
+    padding-inline: var(--ah-space-4);
+  }
+
+  .admin-shell__brand {
+    min-width: 0;
+    gap: var(--ah-space-2);
+  }
+
+  .admin-shell__brand strong {
+    overflow-wrap: anywhere;
+  }
+
+  .admin-shell__brand img,
+  .admin-shell__mark,
+  .admin-shell__actions {
+    flex-shrink: 0;
+  }
+
+  .admin-shell__navigation-toggle {
+    display: grid;
+    flex-shrink: 0;
+    width: 2.75rem;
+    min-height: 2.75rem;
+    padding: var(--ah-space-2);
+    color: var(--ah-color-text);
+    background: transparent;
+    border: 1px solid var(--ah-color-border);
+    border-radius: var(--ah-radius-sm);
+    cursor: pointer;
+    place-items: center;
+  }
+
+  .admin-shell__navigation-toggle:focus-visible {
+    outline: 2px solid var(--ah-color-primary);
+    outline-offset: 2px;
+  }
+
+  .admin-shell__navigation {
+    display: none;
+    grid-column: 1;
+    grid-row: 2;
+    max-height: calc(100dvh - 4rem);
+    overflow-y: auto;
+    border-bottom: 1px solid var(--ah-color-border);
+  }
+
+  .admin-shell__navigation--open {
+    display: block;
+  }
+
   .admin-shell__content {
-    padding: var(--ah-space-5);
+    grid-column: 1;
+    grid-row: 3;
+    padding: var(--ah-space-4);
   }
 
   .census-page .ah-universal-list__table-wrap {
@@ -1809,6 +1877,7 @@ select {
 .dashboard-page,
 .signup-review-page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   width: 100%;
   min-width: 0;
   gap: var(--ah-space-5);
@@ -1955,7 +2024,15 @@ select {
 
 .dashboard-chart {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: var(--ah-space-4);
+}
+
+.dashboard-chart .ah-bar-chart {
+  position: relative;
+  min-width: 0;
+  overflow-x: auto;
 }
 
 .dashboard-chart__legend span {
@@ -2284,7 +2361,11 @@ select {
   .dashboard-grid,
   .signup-review-grid,
   .signup-review-decision {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-page .ah-card > header {
+    flex-wrap: wrap;
   }
 
   .dashboard-signups__row,

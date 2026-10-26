@@ -1,0 +1,27 @@
+--- a/e2e/core/e3-signup.spec.ts
++++ b/e2e/core/e3-signup.spec.ts
+@@ -192,7 +192,9 @@
+       `No quote for ${planName ?? "the first plan"}: ${JSON.stringify(config.upfront)}`,
+     );
+   const card = page.locator(".signup-upfront");
+-  await expect(card.getByRole("radio")).toHaveCount(quote.options.length);
++  const multipleOptions = quote.options.length > 1;
++  await expect(card.getByRole("radio")).toHaveCount(multipleOptions ? quote.options.length : 0);
++  await expect(card.locator("fieldset")).toHaveCount(multipleOptions ? 1 : 0);
+   for (const [index, option] of quote.options.entries()) {
+     const label = addDog
+       ? option.option === "TODAY"
+@@ -205,7 +207,12 @@
+         : option.portion === "HALF"
+           ? /^Alta el dia .+ \(mig mes\)/u
+           : /^Alta l’1 .+ \(mes complet\)/u;
+-    const text = (await card.locator("fieldset label").nth(index).textContent()) ?? "";
++    // INC-11: a single eligible option is a plain quote line, not a selectable choice.
++    const optionRow = multipleOptions
++      ? card.locator("fieldset label").nth(index)
++      : card.locator(".signup-upfront__line").filter({ hasText: label });
++    await expect(optionRow).toHaveCount(1);
++    const text = (await optionRow.textContent()) ?? "";
+     expect(text).toMatch(label);
+     expect(text).toContain(euros(option.amountDue));
+   }

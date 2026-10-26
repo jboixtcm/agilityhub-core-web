@@ -1,0 +1,8 @@
+{
+  "injectedFaults": 1,
+  "refreshStatuses": [
+    503,
+    200
+  ],
+  "route": "/perfil"
+}

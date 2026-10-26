@@ -1,0 +1,13 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run core-api-store.payloads.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  1 passed (1)
+      Tests  25 passed (25)
+   Start at  21:19:55
+   Duration  279ms (transform 66%, import 23%, tests 10%, worker 1%)
+

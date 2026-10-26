@@ -1,0 +1,26 @@
+{
+  "password": {
+    "clientId": "clubs-admin",
+    "fields": [
+      "access_token",
+      "expires_in",
+      "scope",
+      "token_type"
+    ],
+    "host": "clubsadmin.example.test",
+    "me": {
+      "membership": null,
+      "platformRoles": [
+        "AGILITYHUB_ADMIN"
+      ]
+    },
+    "refreshCookie": "ah_refresh",
+    "status": 200,
+    "tokenType": "Bearer"
+  },
+  "magicLink": "clubsadmin.example.test/activacio?t",
+  "refused": {
+    "code": "PLATFORM_ONLY",
+    "status": 403
+  }
+}

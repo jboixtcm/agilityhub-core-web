@@ -485,6 +485,42 @@ async function clubsSession(
   return session;
 }
 
+/** Account.locale wins over anonymous localStorage; exercise the real profile selector. */
+async function withAccountLocale(
+  session: Session,
+  locale: Locale,
+  action: () => Promise<void>,
+): Promise<void> {
+  const { page } = session;
+  await page.goto(`${clubsUrl}/perfil`);
+  const language = page
+    .locator(".profile-language-card")
+    .getByRole("combobox", { exact: true, name: "Idioma" });
+  await expect(language).toBeEnabled();
+  const previous = await language.inputValue();
+  const change = async (value: string): Promise<void> => {
+    const patching = page.waitForResponse(isCall("PATCH", /\/api\/v1\/me$/u));
+    await language.selectOption(value);
+    const patched = await patching;
+    expect(patched.status(), "PATCH /me locale").toBe(200);
+    expect(((await patched.json()) as Schemas["Me"]).account.locale).toBe(value);
+    expect(patched.request().postDataJSON()).toMatchObject({ locale: value });
+    await expect(page.locator("html")).toHaveAttribute("lang", value);
+    await expect(language).toHaveValue(value);
+    await expect(language).toBeEnabled();
+  };
+  try {
+    if (previous !== locale) await change(locale);
+    await action();
+  } finally {
+    if (previous !== locale) {
+      await page.goto(`${clubsUrl}/perfil`);
+      await expect(language).toBeEnabled();
+      await change(previous);
+    }
+  }
+}
+
 async function adminSession(browser: Browser, email: string = ADMIN): Promise<Session> {
   const key = `admin|${email}`;
   const known = sessions.get(key);
@@ -2486,6 +2522,11 @@ test("T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat
   const { classId, names } = theScene();
   expect((await setCoreClock(browser, instants.nextMorning)).status).toBe(200);
   const admin = await adminSession(browser);
+  const nilId = rowOf(await readSheet(admin, classId), cast.nil.dog).memberId;
+  const nil = await call<Pick<Schemas["Member"], "contactEmails">>(admin, `/members/${nilId}`);
+  expect(nil.status).toBe(200);
+  const nilEmails = nil.body.contactEmails.map((entry) => entry.email.toLowerCase());
+  expect(nilEmails.length).toBeGreaterThan(0);
   await navigateSpa(admin.page, "/parametres#processos");
   const mailboxBefore = mailboxFiles();
   const first = await runJob(admin, "no-show-notices", "Avisos de no presentat", false);
@@ -2498,9 +2539,9 @@ test("T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat
       },
     )
     .not.toBeNull();
-  const afterFirst = newMessages(mailboxBefore);
   // N-19's e-mail (the core stored it as EMAIL SENT, `e6-notifications.json`): the message that
-  // names Nil's dog or the class's date. Its date must be the class's, never «ahir» (R-10-06).
+  // addressed to Nil for this class. N-19's template names neither member nor dog. Its date
+  // must be the class's, never «ahir» (R-10-06).
   const classDay = caDayMonth(weekStart);
   const flags = (message: MailMessage) => {
     const body = messageText(message);
@@ -2508,21 +2549,28 @@ test("T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat
       ...messageSummary(message),
       ahir: /\bahir\b/iu.test(body),
       classDay: body.includes(classDay),
-      dog: body.includes(cast.nil.dog),
-      member: body.includes(cast.nil.name),
+      recipient: (Array.isArray(message.to) ? message.to : [message.to]).some(
+        (email) => email !== undefined && nilEmails.includes(email.toLowerCase()),
+      ),
       // N-19's title in the notification catalog (S11 §3).
       title: (message.subject ?? "").replaceAll("’", "'") === "T'hem trobat a faltar",
     };
   };
   const isN19 = (message: MailMessage) => {
     const found = flags(message);
-    return found.title || found.dog || found.classDay;
+    // INC-85: only Nil's delivery is settled above. Other seeded members' first-run e-mails
+    // can arrive during the second run; the common N-19 title/date never identifies his notice.
+    return found.title && found.recipient && found.classDay;
   };
+  // The attendance notice can settle on the APP channel before its e-mail reaches the sink.
+  await expect
+    .poll(() => newMessages(mailboxBefore).filter(isN19).length, { timeout: 60_000 })
+    .toBeGreaterThan(0);
+  const afterFirst = newMessages(mailboxBefore);
   const n19 = afterFirst.filter(isN19);
   const mailboxMiddle = mailboxFiles();
   const second = await runJob(admin, "no-show-notices", "Avisos de no presentat", false);
   expect(second.status).toBe("SUCCEEDED");
-  const afterSecond = newMessages(mailboxMiddle);
   const card = admin.page.getByRole("region", { name: "Processos automàtics" });
   await shotOf(card, admin.page, "D11-processos-e6-core-1280.png");
 
@@ -2531,6 +2579,7 @@ test("T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat
   const sheet = await open21(berta.page, classId);
   expect(rowOf(sheet, cast.nil.dog).noShowNotice?.sentAt ?? null).not.toBeNull();
   await expect(sheetRow(berta.page, names.nil)).toContainText(sheetText.ca.alreadySent);
+  const afterSecond = newMessages(mailboxMiddle);
   note("e-p3", {
     first: {
       counters: first.effects.counters,
@@ -2740,43 +2789,51 @@ test("(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip th
   const { classId, names } = theScene();
   const berta = await clubsSession(browser, theScene().instructorA, "/instructor/dia", "es");
   const { page } = berta;
-  await open20(page, weekStart);
-  await expect(page.getByRole("heading", { level: 1, name: sheetText.es.dayTitle })).toBeVisible();
-  const sheet = await open21(page, classId);
-  const alba = rowOf(sheet, cast.alba.dog);
-  await expect(page.locator(".instructor-sheet__meta")).toContainText("3/5");
-  const albaRow = sheetRow(page, names.alba);
-  await expect(
-    albaRow.getByText(sheetText.es.notice(shortTime(alba.notice?.atLocal ?? "")), { exact: true }),
-  ).toBeVisible();
-  await expect(albaRow.getByText(sheetText.es.seatReleased, { exact: true })).toBeVisible();
-  await expect(albaRow.getByText(sheetText.es.noticeWaitlist, { exact: true })).toBeVisible();
-  await expect(sheetRow(page, names.nil)).toContainText(sheetText.es.alreadySent);
-  const states = castStates(sheet);
-  await expectCircles(page, "es", {
-    [names.alba]: "NOTIFIED",
-    [names.marti]: "PRESENT",
-    [names.nil]: "NO_SHOW",
-    [names.rita]: "PRESENT",
-  });
-  // A save in Spanish and back: Rita to «pendiente» and «presente» again (the window is open
-  // until T1, R-10-03), so the seed's states stay.
-  await circle(page, "es", names.rita, sheetText.es.pending).click();
-  const away = await save21(page, "es");
-  expect(away.status).toBe(200);
-  await expect(page.getByText(sheetText.es.saved)).toBeVisible();
-  await circle(page, "es", names.rita, sheetText.es.present).click();
-  const back = await save21(page, "es");
-  expect(back.status).toBe(200);
-  expect(castStates(back.body)).toEqual(states);
+  await withAccountLocale(berta, "es", async () => {
+    await open20(page, weekStart);
+    await expect(
+      page.getByRole("heading", { level: 1, name: sheetText.es.dayTitle }),
+    ).toBeVisible();
+    const sheet = await open21(page, classId);
+    const alba = rowOf(sheet, cast.alba.dog);
+    await expect(page.locator(".instructor-sheet__meta")).toContainText("3/5");
+    const albaRow = sheetRow(page, names.alba);
+    await expect(
+      albaRow.getByText(sheetText.es.notice(shortTime(alba.notice?.atLocal ?? "")), {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(albaRow.getByText(sheetText.es.seatReleased, { exact: true })).toBeVisible();
+    await expect(albaRow.getByText(sheetText.es.noticeWaitlist, { exact: true })).toBeVisible();
+    await expect(sheetRow(page, names.nil)).toContainText(sheetText.es.alreadySent);
+    const states = castStates(sheet);
+    await expectCircles(page, "es", {
+      [names.alba]: "NOTIFIED",
+      [names.marti]: "PRESENT",
+      [names.nil]: "NO_SHOW",
+      [names.rita]: "PRESENT",
+    });
+    // A save in Spanish and back: Rita to «pendiente» and «presente» again (the window is open
+    // until T1, R-10-03), so the seed's states stay.
+    await circle(page, "es", names.rita, sheetText.es.pending).click();
+    const away = await save21(page, "es");
+    expect(away.status).toBe(200);
+    await expect(page.getByText(sheetText.es.saved)).toBeVisible();
+    await circle(page, "es", names.rita, sheetText.es.present).click();
+    const back = await save21(page, "es");
+    expect(back.status).toBe(200);
+    expect(castStates(back.body)).toEqual(states);
 
-  const rita = await clubsSession(browser, RITA, "/inici", "es");
-  const shown = await checkHistory(rita.page, "es", theScene().melId);
-  await shot(rita.page, "25-historic-core-es-375.png");
-  note("i-es", {
-    history: shown,
-    roundTrip: [away.status, back.status],
-    states: castStates(back.body),
+    const rita = await clubsSession(browser, RITA, "/inici", "es");
+    await withAccountLocale(rita, "es", async () => {
+      const shown = await checkHistory(rita.page, "es", theScene().melId);
+      await shot(rita.page, "25-historic-core-es-375.png");
+      note("i-es", {
+        history: shown,
+        roundTrip: [away.status, back.status],
+        states: castStates(back.body),
+      });
+    });
   });
 });
 

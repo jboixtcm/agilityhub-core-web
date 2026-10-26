@@ -1,0 +1,11 @@
+Image: sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e
+Profile: local
+Request: GET http://127.0.0.1:18080/api/v1/openapi.json; Host id.example.test; no Authorization
+HTTP status: 200
+Actual path: roadmap/evidence/2026-10-23-web-review/core-e1/openapi-served.json
+Actual SHA-256: b75c50d15260f2dc15217b81a490f4c043647f00e6174462bdc1fb573290c23c
+Snapshot path: /Users/jordib/dev/agilityhub/agilityhub-core-api/docs/openapi/openapi.json
+Snapshot SHA-256: ba7a26b3aba270b51d04bf8ab3091142cf21a7be3b2ac050002900ef401e8a79
+Parsed JSON equal (object key order ignored, array order preserved): True
+Actual canonical SHA-256: c403ce6a9bf18be6b6f09c13c63bdcdbd0042b67465081738238a1ac9b6a5a29
+Snapshot canonical SHA-256: c403ce6a9bf18be6b6f09c13c63bdcdbd0042b67465081738238a1ac9b6a5a29

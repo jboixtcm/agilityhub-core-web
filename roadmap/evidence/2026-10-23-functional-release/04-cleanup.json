@@ -1,0 +1,8 @@
+{
+  "containers": [],
+  "networks": [],
+  "volumes": [],
+  "retainedSensitiveArtifactPaths": [],
+  "localTlsFixtureRemoved": true,
+  "allOwnedRuntimeResourcesRemoved": true
+}

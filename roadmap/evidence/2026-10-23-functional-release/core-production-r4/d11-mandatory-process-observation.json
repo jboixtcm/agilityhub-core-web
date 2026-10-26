@@ -1,0 +1,14 @@
+{
+  "rawLabels": [
+    "jobs.name.ERASURES",
+    "jobs.name.RETENTION_SWEEP"
+  ],
+  "switchVisible": true,
+  "response": {
+    "status": 404,
+    "code": "JOB_UNKNOWN",
+    "details": {
+      "reason": "NO_SWITCH"
+    }
+  }
+}

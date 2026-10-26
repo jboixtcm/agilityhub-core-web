@@ -1,0 +1,23 @@
+{
+  "review": "INC-99 final browser41 Spanish mounted-library original screenshots",
+  "date": "2026-10-26",
+  "scope": "Both complete original-size screenshots, not contact-sheet-only review",
+  "files": [
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/50-registrar-montado-biblioteca-es-375.png",
+      "sha256": "b0c6ccfa6dc2b28e3f271f8db9fd2ca10c769e7d8f841acce34cfb0161783b94"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/50-registrar-montado-biblioteca-es-1280.png",
+      "sha256": "a85af1525c3e91a842cc04e5b0c096f169d506ce4373b4dca3d74eee0ef46c3e"
+    }
+  ],
+  "observations": [
+    "MEDIUM renders nivel Medio",
+    "EASY renders nivel Fácil",
+    "Custom C–D remains nivel C–D",
+    "The course without a level has no level label",
+    "Controls and content remain within the 375px and centered desktop layouts"
+  ],
+  "limitations": "Browser screenshots cover Spanish EASY/MEDIUM, custom and absent levels; focused unit tests additionally cover HARD and all three locales."
+}

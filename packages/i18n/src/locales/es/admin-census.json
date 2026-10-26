@@ -398,7 +398,7 @@
       "erased": "suprimido",
       "export": "Descargar los datos (RGPD)",
       "exportPreparing": "Se está preparando el paquete de datos.",
-      "exportQueued": "El paquete se está preparando. Lo encontrarás en Exportaciones.",
+      "exportRequested": "Paquete de datos solicitado. Consulta su estado en Exportaciones.",
       "consents": {
         "title": "Historial de consentimientos",
         "loading": "Cargando los consentimientos…",

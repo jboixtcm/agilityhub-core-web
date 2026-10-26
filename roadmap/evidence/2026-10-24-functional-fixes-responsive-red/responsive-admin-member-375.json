@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 558,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "HEADER",
+      "className": "census-record__header",
+      "text": "Pau Rieranúm. 123alta des de 2023membre del grup familiarWhatsAppDescarrega les ",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__identity",
+      "text": "Pau Rieranúm. 123alta des de 2023membre del grup familiar",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "H1",
+      "className": "",
+      "text": "Pau Riera",
+      "left": 276,
+      "right": 386,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--neutral",
+      "text": "núm. 123",
+      "left": 398,
+      "right": 470,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--success",
+      "text": "alta des de 2023",
+      "left": 276,
+      "right": 393,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--neutral",
+      "text": "membre del grup familiar",
+      "left": 276,
+      "right": 456,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__header-actions",
+      "text": "WhatsAppDescarrega les dades (RGPD)Reenvia accésEntra com l'abonatEdita",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "census-record__action-link",
+      "text": "WhatsApp",
+      "left": 445.203125,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 458.203125,
+      "right": 472,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 459.927734375,
+      "right": 470.275390625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "member-privacy__export",
+      "text": "Descarrega les dades (RGPD)",
+      "left": 352,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost",
+      "text": "Descarrega les dades (RGPD)",
+      "left": 352,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Descarrega les dades (RGPD)",
+      "left": 365,
+      "right": 545,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost",
+      "text": "Reenvia accés",
+      "left": 443,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Reenvia accés",
+      "left": 456,
+      "right": 545,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost",
+      "text": "Entra com l'abonat",
+      "left": 313.40625,
+      "right": 474.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Entra com l'abonat",
+      "left": 326.40625,
+      "right": 461.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--secondary",
+      "text": "Edita",
+      "left": 482.203125,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Edita",
+      "left": 495.203125,
+      "right": 545,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 495.203125,
+      "right": 509,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 496.927734375,
+      "right": 507.275390625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-tabs",
+      "text": "FitxaTasquesAuditoriaDades i pagamentContactelaura.serra@example.test · feina.la",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-tabs__list",
+      "text": "FitxaTasquesAuditoria",
+      "left": 276,
+      "right": 558,
+      "overflowX": "auto"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-tabs__tab",
+      "text": "Tasques",
+      "left": 351,
+      "right": 449,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-tabs__tab",
+      "text": "Auditoria",
+      "left": 453,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-tabs__panel",
+      "text": "Dades i pagamentContactelaura.serra@example.test · feina.laura@example.test · +3",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__grid",
+      "text": "Dades i pagamentContactelaura.serra@example.test · feina.laura@example.test · +3",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-card",
+      "text": "Dades i pagamentContactelaura.serra@example.test · feina.laura@example.test · +3",
+      "left": 276,
+      "right": 558,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "H2",
+      "className": "census-record__section-title",
+      "text": "Dades i pagament",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DL",
+      "className": "census-record__data-list",
+      "text": "Contactelaura.serra@example.test · feina.laura@example.test · +34 655100101 (Lau",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__data-row",
+      "text": "Contactelaura.serra@example.test · feina.laura@example.test · +34 655100101 (Lau",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DT",
+      "className": "",
+      "text": "Contacte",
+      "left": 301,
+      "right": 421,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DD",
+      "className": "",
+      "text": "laura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +3",
+      "left": 433,
+      "right": 533,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__data-row",
+      "text": "ModalitatAbonat · 2 gossos Edita",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DT",
+      "className": "",
+      "text": "Modalitat",
+      "left": 301,
+      "right": 421,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DD",
+      "className": "",
+      "text": "Abonat · 2 gossos Edita",
+      "left": 433,
+      "right": 533,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "Abonat · 2 gossos",
+      "left": 433,
+      "right": 495,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost census-record__inline-action",
+      "text": "Edita",
+      "left": 478,
+      "right": 526,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Edita",
+      "left": 487,
+      "right": 517,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__data-row",
+      "text": "Mode de facturacióQuota mensual",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DT",
+      "className": "",
+      "text": "Mode de facturació",
+      "left": 301,
+      "right": 421,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DD",
+      "className": "",
+      "text": "Quota mensual",
+      "left": 433,
+      "right": 533,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__data-row",
+      "text": "PagamentDomiciliació · ···· ···· ···· ···· 2231 canvi només admin Edita",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DT",
+      "className": "",
+      "text": "Pagament",
+      "left": 301,
+      "right": 421,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DD",
+      "className": "",
+      "text": "Domiciliació · ···· ···· ···· ···· 2231 canvi només admin Edita",
+      "left": 433,
+      "right": 533,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "· ···· ···· ···· ···· 2231",
+      "left": 433,
+      "right": 515,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--neutral",
+      "text": "canvi només admin",
+      "left": 433,
+      "right": 533,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost census-record__inline-action",
+      "text": "Edita",
+      "left": 433,
+      "right": 481,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Edita",
+      "left": 442,
+      "right": 472,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "census-record__data-row",
+      "text": "Proper rebut01/09/2026 · 90,00 € Edita",
+      "left": 293,
+      "right": 541,
+      "overflowX": "visible"
+    }
+  ]
+}

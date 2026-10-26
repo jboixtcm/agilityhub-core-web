@@ -3,6 +3,8 @@ import { join, resolve } from "node:path";
 
 import { type Browser, type BrowserContext, type Page } from "@playwright/test";
 
+import type { components } from "../../packages/api-client/src/generated/schema";
+
 import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 const clubsUrl = "http://127.0.0.1:4173";
@@ -108,6 +110,68 @@ async function loginMember(page: Page, email = "member@example.test"): Promise<v
 async function screenshot(page: Page, name: string): Promise<void> {
   await page.evaluate(async () => document.fonts.ready);
   await page.screenshot({ fullPage: true, path: join(evidenceDirectory, name) });
+}
+
+/** INC-91: both canonical seed values must agree in current detail, history and D10. */
+async function verifyImageConsents(page: Page, authorization: string): Promise<void> {
+  type Schemas = components["schemas"];
+  const read = (path: string) =>
+    page.evaluate(
+      async ({ path, authorization }) => {
+        const response = await fetch(`/api/v1${path}`, {
+          headers: { Authorization: authorization },
+        });
+        return { status: response.status, body: (await response.json()) as unknown };
+      },
+      { path, authorization },
+    );
+  const listed = await read("/members?page=0&size=200&fields=memberNumber,fullName");
+  expect(listed.status).toBe(200);
+  const members = listed.body as Schemas["ListPageMemberListItem"];
+  const evidence = [];
+  for (const memberNumber of [6, 7]) {
+    const row = members.items.find((item) => item.memberNumber === memberNumber);
+    if (row === undefined)
+      throw new Error(`Missing fictional consent member ${String(memberNumber)}`);
+    const detail = await read(`/members/${row.id}`);
+    const history = await read(`/members/${row.id}/consents`);
+    expect(detail.status).toBe(200);
+    expect(history.status).toBe(200);
+    const member = detail.body as Schemas["Member"];
+    const consents = history.body as Schemas["ConsentHistoryEntry"][];
+    const expected = memberNumber === 6;
+    expect(member.consents?.imageRights.granted).toBe(expected);
+    const imageHistory = consents.filter((entry) => entry.type === "IMAGE_USE");
+    expect(imageHistory).toHaveLength(1);
+    expect(imageHistory[0]?.granted).toBe(expected);
+    await navigateSpa(page, `/abonats/${row.id}`);
+    await expect(page.getByRole("heading", { name: member.fullName, exact: true })).toBeVisible();
+    // INC-98: changing records must replace the block, without duplicating it or carrying feedback.
+    await expect(page.locator(".notification-preferences")).toHaveCount(1);
+    if (memberNumber === 7) {
+      await expect(page.getByText("Les reserves s'han bloquejat.", { exact: true })).toHaveCount(0);
+    }
+    const badge = page
+      .locator(".member-privacy__consents li")
+      .filter({ hasText: "Drets d'imatge" });
+    await expect(badge.locator(".ah-badge")).toHaveText(expected ? "acceptat" : "revocat");
+    const warning = page.getByText(/No autoritza l'ús de la seva imatge/u);
+    if (expected) await expect(warning).toHaveCount(0);
+    else await expect(warning).toBeVisible();
+    await screenshot(page, `D10-consent-${String(memberNumber)}-core-1280.png`);
+    evidence.push({
+      memberNumber,
+      expected,
+      current: member.consents?.imageRights.granted,
+      history: imageHistory.map(({ granted }) => granted),
+      detailStatus: detail.status,
+      historyStatus: history.status,
+    });
+  }
+  writeFileSync(
+    join(evidenceDirectory, "consent-consistency.json"),
+    JSON.stringify(evidence, null, 2),
+  );
 }
 
 async function navigateSpa(page: Page, path: string): Promise<void> {
@@ -332,6 +396,10 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
   expect((await blockResponse).status()).toBe(201);
   await expect(admin.getByText("Reserves bloquejades")).toBeVisible();
   await screenshot(admin, "D10-abonat-bloquejat-core-1280.png");
+
+  const authorization = (await overviewAnswer.request().allHeaders()).authorization;
+  if (authorization === undefined) throw new Error("Missing census session authorization");
+  await verifyImageConsents(admin, authorization);
 
   await navigateSpa(admin, "/gossos");
   await expect(admin.getByText("242 actius")).toBeVisible();

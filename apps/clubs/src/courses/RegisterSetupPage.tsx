@@ -34,7 +34,14 @@ import "../training/training.css";
 import { clubToday } from "../training/shared";
 
 import "./courses.css";
-import { coursePaths, kindLabel, SETUP_KINDS, type SetupKind, useActiveSetup } from "./shared";
+import {
+  agilityhubLevelLabel,
+  coursePaths,
+  kindLabel,
+  SETUP_KINDS,
+  type SetupKind,
+  useActiveSetup,
+} from "./shared";
 
 type CourseListItem = components["schemas"]["CourseListItem"];
 type AgilityhubLevel = "EASY" | "HARD" | "MEDIUM";
@@ -411,7 +418,11 @@ export function RegisterSetupPage({
                                 : [t(`enums:courseDiscipline.${item.discipline}`)]),
                               ...(item.level == null
                                 ? []
-                                : [t("courses:level", { level: item.level })]),
+                                : [
+                                    t("courses:level", {
+                                      level: agilityhubLevelLabel(t, item.level),
+                                    }),
+                                  ]),
                             ].join(t("courses:separator"))}
                           </span>
                         </label>

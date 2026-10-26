@@ -1,0 +1,16 @@
+{
+  "body": {
+    "code": "VALIDATION_ERROR",
+    "message": "Revisa els camps destacats.",
+    "details": {
+      "fieldErrors": [
+        {
+          "code": "READ_ONLY",
+          "field": "paymentMethod"
+        }
+      ]
+    },
+    "traceId": "b285c83f-d0fb-4b4d-b627-a8dba26ebd0c"
+  },
+  "status": 400
+}

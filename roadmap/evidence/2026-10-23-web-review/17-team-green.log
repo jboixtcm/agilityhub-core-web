@@ -1,0 +1,694 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/TeamPage.test.tsx (4 tests | 2 failed) 10222ms
+   ❯ T-05-24 D17 team identities and recovery (INC-41 W3-14) (4)
+     × cannot silently grant the role to the first of two homonyms 10101ms
+     × shows the approved future-class count when deactivation is refused 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-24 D17 team identities and recovery (INC-41 W3-14) > cannot silently grant the role to the first of two homonyms
+TestingLibraryElementError: Unable to find role="option"
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mNou instructor[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"catalog-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"team-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"team-member"[39m
+          [33mlist[39m=[32m"team-member-options"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+        [36m<datalist[39m
+          [33mid[39m=[32m"team-member-options"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"Alex Serra · 101"[39m
+          [36m>[39m
+            [0mAlex Serra[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"Alex Serra · 202"[39m
+          [36m>[39m
+            [0mAlex Serra[0m
+          [36m</option>[39m
+        [36m</datalist>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field__help"[39m
+          [33mid[39m=[32m"team-member-help"[39m
+        [36m>[39m
+          [0mCerca un abonat en alta amb compte.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"instructor-short-name"[39m
+        [36m>[39m
+          [0mNom curt[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"instructor-short-name"[39m
+          [33mmaxlength[39m=[32m"12"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"instructor-color"[39m
+        [36m>[39m
+          [0mColor[0m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-color-picker"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F2B58C"[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#8FCE8F"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#C9CDD3"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F5D67A"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#85B8E8"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"instructor-color"[39m
+            [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m"#F2B58C"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mNou instructor[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"catalog-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"team-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"team-member"[39m
+          [33mlist[39m=[32m"team-member-options"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+        [36m<datalist[39m
+          [33mid[39m=[32m"team-member-options"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"Alex Serra · 101"[39m
+          [36m>[39m
+            [0mAlex Serra[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"Alex Serra · 202"[39m
+          [36m>[39m
+            [0mAlex Serra[0m
+          [36m</option>[39m
+        [36m</datalist>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field__help"[39m
+          [33mid[39m=[32m"team-member-help"[39m
+        [36m>[39m
+          [0mCerca un abonat en alta amb compte.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"instructor-short-name"[39m
+        [36m>[39m
+          [0mNom curt[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"instructor-short-name"[39m
+          [33mmaxlength[39m=[32m"12"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"instructor-color"[39m
+        [36m>[39m
+          [0mColor[0m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-color-picker"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F2B58C"[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#8FCE8F"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#C9CDD3"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F5D67A"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#85B8E8"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"instructor-color"[39m
+            [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m"#F2B58C"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/TeamPage.test.tsx:81:26
+     79|     const dialog = await screen.findByRole("dialog", { name: "Nou inst…
+     80|     const input = within(dialog).getByLabelText("Abonat");
+     81|     await within(dialog).findAllByRole("option");
+       |                          ^
+     82|     fireEvent.change(input, { target: { value: "Alex Serra" } });
+     83|     fireEvent.change(within(dialog).getByLabelText("Nom curt"), { targ…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-24 D17 team identities and recovery (INC-41 W3-14) > shows the approved future-class count when deactivation is refused
+TestingLibraryElementError: Unable to find an accessible element with the role "switch" and name "Actiu"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Edita l'instructor":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_8_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------combobox:
+
+  Name "Abonat":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mid[39m=[32m"team-member"[39m
+    [33mlist[39m=[32m"team-member-options"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m"Alex Serra"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Nom curt":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"instructor-short-name"[39m
+    [33mmaxlength[39m=[32m"12"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m"Alex"[39m
+  [36m/>[39m
+
+  Name "Color":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mid[39m=[32m"instructor-color"[39m
+    [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+    [33mrequired[39m=[32m""[39m
+    [33mvalue[39m=[32m"#F2B58C"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "#F2B58C":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#F2B58C"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#8FCE8F":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#8FCE8F"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#C9CDD3":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#C9CDD3"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#F5D67A":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#F5D67A"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "#85B8E8":
+  [36m<button[39m
+    [33maria-label[39m=[32m"#85B8E8"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Cancel·la":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "DESA":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Activa":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Activa"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_8_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_8_"[39m
+    [36m>[39m
+      [0mEdita l'instructor[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"catalog-form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"team-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mid[39m=[32m"team-member"[39m
+          [33mlist[39m=[32m"team-member-options"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m"Alex Serra"[39m
+        [36m/>[39m
+        [36m<datalist[39m
+          [33mid[39m=[32m"team-member-options"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"Alex Serra · 201"[39m
+          [36m>[39m
+            [0mAlex Serra[0m
+          [36m</option>[39m
+        [36m</datalist>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field__help"[39m
+          [33mid[39m=[32m"team-member-help"[39m
+        [36m>[39m
+          [0mCerca un abonat en alta amb compte.[0m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"instructor-short-name"[39m
+        [36m>[39m
+          [0mNom curt[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"instructor-short-name"[39m
+          [33mmaxlength[39m=[32m"12"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m"Alex"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"instructor-color"[39m
+        [36m>[39m
+          [0mColor[0m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-color-picker"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F2B58C"[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#8FCE8F"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #8FCE8F;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#C9CDD3"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #C9CDD3;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#F5D67A"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #F5D67A;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"#85B8E8"[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mstyle[39m=[32m"--catalog-color: #85B8E8;"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m/>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"instructor-color"[39m
+            [33mpattern[39m=[32m"#[0-9A-Fa-f]{6}"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mvalue[39m=[32m"#F2B58C"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"catalog-switch-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mActiva[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Activa"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"catalog-form__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/TeamPage.test.tsx:144:36
+    142|     fireEvent.click(await screen.findByRole("button", { name: "Edita A…
+    143|     const dialog = await screen.findByRole("dialog", { name: "Edita l'…
+    144|     fireEvent.click(within(dialog).getByRole("switch", { name: "Actiu"…
+       |                                    ^
+    145|     fireEvent.click(within(dialog).getByRole("button", { name: "DESA" …
+    146|     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  21:25:31
+   Duration  11.33s (tests 91%, transform 5%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/TeamPage.test.tsx

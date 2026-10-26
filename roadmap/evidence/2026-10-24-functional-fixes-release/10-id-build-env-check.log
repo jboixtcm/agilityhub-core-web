@@ -1,0 +1,8 @@
+{
+  "taskId": "id#build",
+  "inferredConfiguredVariables": [
+    "VITE_CLUBS_URL=5b8c730824bf1de9f4d1dc6e3b762397ba72a1e79294f27656fe4786e5066de7",
+    "VITE_LEARN_ENABLED=fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+  ],
+  "executedBuild": false
+}

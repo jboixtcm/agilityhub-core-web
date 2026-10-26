@@ -6,6 +6,8 @@ import { deflateSync } from "node:zlib";
 
 import { type Browser, type Locator, type Page, type Response, type Route } from "@playwright/test";
 
+import type { components } from "../../packages/api-client/src/generated/schema";
+
 import { expect, test } from "./oauth-token-log";
 
 const adminUrl = "http://127.0.0.1:4174";
@@ -70,11 +72,14 @@ async function navigateSpa(page: Page, path: string): Promise<void> {
   }, path);
 }
 
-async function desktopContext(browser: Browser) {
+async function desktopContext(browser: Browser, adminDeviceLocale: "ca" | "es" = "ca") {
   const context = await browser.newContext({ viewport: { height: 900, width: 1280 } });
-  await context.addInitScript(() => {
-    localStorage.setItem("agilityhub.locale", "ca");
-  });
+  await context.addInitScript(
+    ({ adminOrigin, locale }) => {
+      localStorage.setItem("agilityhub.locale", location.origin === adminOrigin ? locale : "ca");
+    },
+    { adminOrigin: adminUrl, locale: adminDeviceLocale },
+  );
   return context;
 }
 
@@ -149,7 +154,7 @@ async function platformToken(): Promise<string> {
     },
   });
   expect(answer.status, String(errorCodeOf(answer.body))).toBe(200);
-  return (JSON.parse(answer.body) as { access_token: string }).access_token;
+  return (JSON.parse(answer.body) as components["schemas"]["TokenResponse"]).access_token;
 }
 
 /**
@@ -164,7 +169,7 @@ async function grantPlatformRoleThroughTheApi(email: string): Promise<void> {
     headers: auth,
   });
   expect(clubs.status, clubs.body).toBe(200);
-  const canic = (JSON.parse(clubs.body) as { items: { id: string; slug: string }[] }).items.find(
+  const canic = (JSON.parse(clubs.body) as components["schemas"]["PlatformClubPage"]).items.find(
     (club) => club.slug === "canic",
   );
   expect(canic).toBeDefined();
@@ -175,7 +180,7 @@ async function grantPlatformRoleThroughTheApi(email: string): Promise<void> {
     { headers: auth },
   );
   expect(admins.status, admins.body).toBe(200);
-  const admin = (JSON.parse(admins.body) as { accountId: string; email: string }[]).find(
+  const admin = (JSON.parse(admins.body) as components["schemas"]["PlatformAdmin"][]).find(
     (candidate) => candidate.email === email,
   );
   expect(admin).toBeDefined();
@@ -203,18 +208,12 @@ async function grantPlatformRoleThroughTheApi(email: string): Promise<void> {
     )}\n`,
   );
   expect(granted.status, granted.body).toBe(200);
-  expect((JSON.parse(granted.body) as { platformRoles: string[] }).platformRoles).toEqual([
-    "AGILITYHUB_ADMIN",
-  ]);
+  expect(
+    (JSON.parse(granted.body) as components["schemas"]["PlatformRoles"]).platformRoles,
+  ).toEqual(["AGILITYHUB_ADMIN"]);
 }
 
-interface StoredTheme {
-  colors: Record<string, string>;
-  fontFamily: string;
-  mode: string;
-  radius: string;
-  ringPalette: string[];
-}
+type StoredTheme = components["schemas"]["Theme"];
 
 const colorByToken: Record<string, string> = {
   background: "background",
@@ -244,7 +243,7 @@ function productLightTheme(): StoredTheme {
   return {
     colors: Object.fromEntries(
       Object.entries(colorByToken).map(([token, key]) => [key, read(`light-${token}`)]),
-    ),
+    ) as components["schemas"]["Colors"],
     fontFamily: read("font-family"),
     mode: "light",
     radius: read("radius"),
@@ -318,13 +317,13 @@ test.afterAll(() => {
   );
 });
 
-interface ProductBranding {
-  club: { name: string; slug: null | string };
-  locales: string[];
-  modules: string[];
-  signup: { enabled: boolean };
-  status: string;
-  theme: { colors: { primary: string }; mode: string };
+type ProductBranding = components["schemas"]["BrandingResponse"];
+
+function verificationOf(domain: components["schemas"]["PlatformDomain"]) {
+  const challenge = domain.verification;
+  expect(challenge, "a pending domain must provide its DNS instructions").toBeTruthy();
+  if (challenge == null) throw new Error("Missing domain verification instructions");
+  return challenge;
 }
 
 test("E10-W02 · the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 §2, R-01-17, T-17-12)", async ({
@@ -399,16 +398,14 @@ test("E10-W02 · the console's entry: the product host's branding and boot, the 
   await idPage.getByRole("button", { exact: true, name: "ENTRA" }).click();
   const issuedAnswer = await issued;
   expect(issuedAnswer.status).toBe(200);
-  const idToken = (JSON.parse(issuedAnswer.body) as { access_token: string }).access_token;
+  const idToken = (JSON.parse(issuedAnswer.body) as components["schemas"]["TokenResponse"])
+    .access_token;
   await idPage.waitForURL("**/account");
   // R-01-17: the account's own token, without a club (the ID host's `/me`).
   const bearer = { Authorization: `Bearer ${idToken}` };
   const idMe = await coreRequest("GET", "/api/v1/me", ID_HOST, { headers: bearer });
   expect(idMe.status, idMe.body).toBe(200);
-  const me = JSON.parse(idMe.body) as {
-    account: { platformRoles: string[] };
-    membership?: unknown;
-  };
+  const me = JSON.parse(idMe.body) as components["schemas"]["Me"];
   expect(me.account.platformRoles).toEqual(["AGILITYHUB_ADMIN"]);
   expect(me.membership ?? null).toBeNull();
   await idPage.goto(`${idUrl}/products`);
@@ -423,10 +420,7 @@ test("E10-W02 · the console's entry: the product host's branding and boot, the 
   // and the console's own read.
   const productMe = await coreRequest("GET", "/api/v1/me", PRODUCT_HOST, { headers: bearer });
   expect(productMe.status, productMe.body).toBe(200);
-  const productMeBody = JSON.parse(productMe.body) as {
-    account: { platformRoles: string[] };
-    membership?: unknown;
-  };
+  const productMeBody = JSON.parse(productMe.body) as components["schemas"]["Me"];
   expect(productMeBody.account.platformRoles).toEqual(["AGILITYHUB_ADMIN"]);
   expect(productMeBody.membership ?? null).toBeNull();
   const productClubs = await coreRequest("GET", "/api/v1/platform/clubs", PRODUCT_HOST, {
@@ -491,10 +485,7 @@ test("E11-W08 · the platform account signs in to the console on the product hos
   const token = await submitPassword(page, PLATFORM_EMAIL, corePassword);
   const tokenBody = (await token.json()) as Record<string, unknown>;
   tokenRead();
-  const me = JSON.parse(await meAnswer) as {
-    account: { platformRoles: string[] };
-    membership?: unknown;
-  };
+  const me = JSON.parse(await meAnswer) as components["schemas"]["Me"];
   // The token answer without its secrets: its shape, never a token.
   const notes: Record<string, unknown> = {
     password: {
@@ -671,9 +662,10 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
   // its own; a club that does is the «second club» script below (its wizard's «Tema», then its
   // hosts' primary in steps 8 and 11).
   const product = productLightTheme();
-  const sent = createdResponse.request().postDataJSON() as { theme: StoredTheme };
+  const sent = createdResponse.request().postDataJSON() as components["schemas"]["ClubDefinition"];
   expect(sent.theme).toEqual(product);
-  const stored = ((await (await createdRecord).json()) as { theme: StoredTheme }).theme;
+  const stored = ((await (await createdRecord).json()) as components["schemas"]["PlatformClub"])
+    .theme;
   writeFileSync(
     join(evidenceDirectory, "e10-core-created-theme.json"),
     `${JSON.stringify({ hostPrimary: await hostPrimary(page), product, stored }, null, 2)}\n`,
@@ -684,10 +676,8 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
     mode: product.mode,
     radius: product.radius,
   });
-  expect((await hostPrimary(page)).toLowerCase()).toBe(
-    (product.colors.primary ?? "").toLowerCase(),
-  );
-  expect((stored.colors.primary ?? "").toLowerCase()).toBe((await hostPrimary(page)).toLowerCase());
+  expect((await hostPrimary(page)).toLowerCase()).toBe(product.colors.primary.toLowerCase());
+  expect(stored.colors.primary.toLowerCase()).toBe((await hostPrimary(page)).toLowerCase());
   await screenshot(page, "core-D19-fitxa-checklist-1280.png");
   await context.close();
 });
@@ -736,7 +726,8 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   browser,
 }) => {
   test.setTimeout(300_000);
-  const context = await desktopContext(browser);
+  // Only the support popup's origin starts in es; its actor and the console remain ca.
+  const context = await desktopContext(browser, "es");
   const page = await context.newPage();
   recordPlatformCalls(page);
   await loginPlatformAdmin(page);
@@ -754,11 +745,8 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   const addedResponse = await added;
   expect(addedResponse.status()).toBe(201);
   expect(addedResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
-  const domain = (await addedResponse.json()) as {
-    status: string;
-    verification: { cnameTarget: string; recordName: string; recordValue: string };
-  };
-  notes.added = { status: domain.status, verification: Object.keys(domain.verification).sort() };
+  const domain = (await addedResponse.json()) as components["schemas"]["PlatformDomain"];
+  notes.added = { status: domain.status, verification: Object.keys(verificationOf(domain)).sort() };
   expect(domain.status).toBe("PENDING");
   // T-17-03: until it is verified, the host opens no club.
   const brandingBefore = await brandingFor(host);
@@ -768,11 +756,15 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   const records = page.locator(".console-card").filter({
     has: page.getByRole("heading", { name: `Registres DNS de ${host}` }),
   });
-  await expect(records.getByText(domain.verification.cnameTarget, { exact: true })).toBeVisible();
-  await expect(records.getByText(domain.verification.recordName, { exact: true })).toBeVisible();
-  await expect(records.getByText(domain.verification.recordValue, { exact: true })).toBeVisible();
+  await expect(
+    records.getByText(verificationOf(domain).cnameTarget, { exact: true }),
+  ).toBeVisible();
+  await expect(records.getByText(verificationOf(domain).recordName, { exact: true })).toBeVisible();
+  await expect(
+    records.getByText(verificationOf(domain).recordValue, { exact: true }),
+  ).toBeVisible();
   await screenshot(page, "core-D19-dominis-afegit-1280.png");
-  await publishFakeCname(page, host, domain.verification.cnameTarget);
+  await publishFakeCname(page, host, verificationOf(domain).cnameTarget);
   const verified = page.waitForResponse(isPlatform("POST", /\/verification$/u));
   await page.getByRole("button", { name: `Verifica ${host}` }).click();
   const verification = await verified;
@@ -782,7 +774,7 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   };
   const row = page.getByRole("row").filter({ hasText: host });
   expect(verification.status()).toBe(200);
-  const verifiedDomain = (await verification.json()) as { method: string; status: string };
+  const verifiedDomain = (await verification.json()) as components["schemas"]["DomainVerification"];
   expect(verifiedDomain).toMatchObject({ method: "CNAME", status: "VERIFIED" });
   await expect(
     page.getByText(new RegExp(`S'ha verificat ${host.replace(/\./gu, "\\.")}`, "u")),
@@ -801,7 +793,7 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
     await makePrimary(target, name).click();
     const response = await chosen;
     expect(response.status()).toBe(200);
-    const domains = (await response.json()) as { app: string; host: string; primary: boolean }[];
+    const domains = (await response.json()) as components["schemas"]["PlatformDomain"][];
     return domains
       .filter((candidate) => candidate.app === "clubs" && candidate.primary)
       .map((candidate) => candidate.host);
@@ -849,20 +841,15 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   await page.getByRole("button", { name: "Afegeix domini" }).click();
   const missingAddedResponse = await missingAdded;
   expect(missingAddedResponse.status()).toBe(201);
-  const missingDomain = (await missingAddedResponse.json()) as {
-    status: string;
-    verification: { cnameTarget: string; recordName: string; recordValue: string };
-  };
+  const missingDomain =
+    (await missingAddedResponse.json()) as components["schemas"]["PlatformDomain"];
   expect(missingDomain.status).toBe("PENDING");
   const missingRow = page.getByRole("row").filter({ hasText: missingHost });
   await expect(missingRow.getByText("pendent")).toBeVisible();
   const missingVerificationResponse = page.waitForResponse(isPlatform("POST", /\/verification$/u));
   await missingRow.getByRole("button", { name: `Verifica ${missingHost}` }).click();
   const missingVerification = await missingVerificationResponse;
-  const missingError = (await missingVerification.json()) as {
-    code: string;
-    details: Record<string, unknown>;
-  };
+  const missingError = (await missingVerification.json()) as components["schemas"]["ApiError"];
   notes.missingVerification = {
     body: missingError,
     status: missingVerification.status(),
@@ -871,10 +858,10 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   expect(missingError).toMatchObject({
     code: "HOST_NOT_VERIFIED",
     details: {
-      cnameTarget: missingDomain.verification.cnameTarget,
+      cnameTarget: verificationOf(missingDomain).cnameTarget,
       host: missingHost,
-      recordName: missingDomain.verification.recordName,
-      recordValue: missingDomain.verification.recordValue,
+      recordName: verificationOf(missingDomain).recordName,
+      recordValue: verificationOf(missingDomain).recordValue,
     },
   });
   await expect(
@@ -916,15 +903,32 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   await expect(banner).toContainText("Accés de suport de l'equip AgilityHub ·");
   const withSupport = supportMes.find(
     (body) => typeof body === "object" && body !== null && "support" in body,
-  ) as { membership?: { roles?: string[] }; support: Record<string, unknown> } | undefined;
+  ) as components["schemas"]["Me"] | undefined;
   notes.supportMe =
     withSupport === undefined
       ? null
       : {
           roles: withSupport.membership?.roles ?? null,
-          support: Object.keys(withSupport.support).sort(),
+          support: Object.keys(withSupport.support ?? {}).sort(),
         };
   expect(withSupport).toBeDefined();
+  // INC-96: support uses its actor account locale, as its JWT and /me do, without
+  // persisting another device preference or offering a PATCH that support cannot perform.
+  expect(withSupport?.account.locale).toBe("ca");
+  await expect(support.locator("html")).toHaveAttribute("lang", withSupport?.account.locale ?? "");
+  expect(await support.evaluate(() => localStorage.getItem("agilityhub.locale"))).toBe("es");
+  await support.locator(".admin-user-menu > button").click();
+  await expect(support.locator(".admin-user-menu select")).toBeDisabled();
+  await expect(support.locator(".admin-user-menu select")).toHaveValue(
+    withSupport?.account.locale ?? "",
+  );
+  await support.locator(".admin-user-menu > button").click();
+  notes.supportLocale = {
+    account: withSupport?.account.locale,
+    devicePreference: "es",
+    devicePreferencePreserved: true,
+    selectorDisabled: true,
+  };
   await expect(support.getByRole("link", { name: "Consola" })).toHaveCount(0);
   await screenshot(support, "core-D19-suport-backoffice-1280.png");
 
@@ -949,9 +953,11 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   await clubContext.close();
   // The support tab's token answers 401 from its next request: the tab says the access ended.
   await support.reload();
+  await expect(support.locator("html")).toHaveAttribute("lang", "es");
+  expect(await support.evaluate(() => localStorage.getItem("agilityhub.locale"))).toBe("es");
   await expect(
     support.getByText(
-      /L'accés de suport ha acabat: ha caducat o l'administrador del club l'ha acabat/u,
+      /El acceso de soporte ha terminado: ha caducado o el administrador del club lo ha terminado/u,
     ),
   ).toBeVisible();
   await screenshot(support, "core-D19-suport-acabat-1280.png");
@@ -963,6 +969,8 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   await page.getByRole("button", { name: "Entra com a administrador del club" }).click();
   const leaving = await second;
   await leaving.waitForURL("**/tauler", { timeout: 60_000 });
+  await expect(leaving.locator("html")).toHaveAttribute("lang", "ca");
+  expect(await leaving.evaluate(() => localStorage.getItem("agilityhub.locale"))).toBe("es");
   // The tab's support bearer (its session storage), used below and never written anywhere.
   const supportToken = await leaving.evaluate(() => {
     const stored = JSON.parse(sessionStorage.getItem("agilityhub.impersonation") ?? "{}") as {
@@ -971,6 +979,42 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
     return stored.token ?? "";
   });
   expect(supportToken).not.toBe("");
+  // Exercise the restricted routes with the real support token; never retain its value.
+  const supportHeaders = {
+    Authorization: `Bearer ${supportToken}`,
+    "Content-Type": "application/json",
+  };
+  const membersForSupport = await coreRequest(
+    "GET",
+    "/api/v1/members?size=20",
+    "admin.example.test",
+    { headers: supportHeaders },
+  );
+  expect(membersForSupport.status).toBe(200);
+  const memberForSupport = (JSON.parse(membersForSupport.body) as { items: { id: string }[] })
+    .items[0];
+  expect(memberForSupport).toBeDefined();
+  const restricted: { method: string; path: string; status: number; code: unknown }[] = [];
+  for (const [method, path] of [
+    ["GET", "/api/v1/exports"],
+    ["POST", `/api/v1/members/${memberForSupport?.id ?? ""}/data-export`],
+    ["POST", `/api/v1/members/${memberForSupport?.id ?? ""}/erasure`],
+    ["DELETE", `/api/v1/members/${memberForSupport?.id ?? ""}/erasure`],
+  ] as const) {
+    const result = await coreRequest(method, path, "admin.example.test", {
+      headers: supportHeaders,
+      ...(method === "POST" ? { body: "{}" } : {}),
+    });
+    expect(result.status).toBe(403);
+    expect(errorCodeOf(result.body)).toBe("SUPPORT_RESTRICTED");
+    restricted.push({
+      method,
+      path: path.replace(memberForSupport?.id ?? "", "{memberId}"),
+      status: result.status,
+      code: errorCodeOf(result.body),
+    });
+  }
+  notes.supportRestrictedRoutes = restricted;
   const meBeforeExit = await meStatusWith(leaving, supportToken);
   expect(meBeforeExit).toBe(200);
   const revoked = leaving.waitForResponse((response) => response.url().endsWith("/oauth2/revoke"));
@@ -982,12 +1026,20 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   expect(revokeResponse.ok()).toBe(true);
   expect(revokeResponse.request().headers().authorization).toBe(`Bearer ${supportToken}`);
   await expect(leaving).toHaveURL(/\/suport\?sortit=1$/u);
+  await expect(leaving.locator("html")).toHaveAttribute("lang", "es");
+  expect(await leaving.evaluate(() => localStorage.getItem("agilityhub.locale"))).toBe("es");
   await expect(
-    leaving.getByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    leaving.getByText("Has salido del acceso de soporte. Ya puedes cerrar esta pestaña."),
   ).toBeVisible();
+  await screenshot(leaving, "core-D19-suport-sortit-es-1280.png");
   // R-17-10 (round 3 #3): the grant is dead, not only forgotten by the tab.
   const meAfterExit = await meStatusWith(leaving, supportToken);
-  notes.revoke = { meAfterExit, meBeforeExit, revoke: revokeResponse.status() };
+  notes.revoke = {
+    meAfterExit,
+    meBeforeExit,
+    restoredDeviceLocale: "es",
+    revoke: revokeResponse.status(),
+  };
   expect(meAfterExit).toBe(401);
 
   writeFileSync(
@@ -1219,15 +1271,13 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     expect(createdResponse.status()).toBe(201);
     // No `catalogs.fromTemplate`: «Catàlegs base» (step 7) is the script's only clone.
     expect(
-      (createdResponse.request().postDataJSON() as { catalogs?: unknown }).catalogs,
+      (createdResponse.request().postDataJSON() as components["schemas"]["ClubDefinition"])
+        .catalogs,
     ).toBeUndefined();
-    const createdBody = (await createdResponse.json()) as {
-      checklist?: unknown;
-      club?: { id: string };
-      id?: string;
-    };
-    clubId = createdBody.club?.id ?? createdBody.id ?? "";
-    notes.created = { checklist: createdBody.checklist ?? null, keys: Object.keys(createdBody) };
+    const createdBody =
+      (await createdResponse.json()) as components["schemas"]["PlatformClubCreated"];
+    clubId = createdBody.club.id;
+    notes.created = { checklist: createdBody.checklist, keys: Object.keys(createdBody) };
     await page.waitForURL("**/identitat?creat=1");
     await expect(page.getByRole("heading", { level: 1, name: SECOND_CLUB.name })).toBeVisible();
     await expect(page.getByRole("region", { name: "Checklist d'onboarding" })).toBeVisible();
@@ -1251,11 +1301,9 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
       await page.getByRole("button", { name: "Afegeix domini" }).click();
       const addedResponse = await added;
       expect(addedResponse.status()).toBe(201);
-      const domain = (await addedResponse.json()) as {
-        verification: { cnameTarget: string };
-      };
+      const domain = (await addedResponse.json()) as components["schemas"]["PlatformDomain"];
       // The operator creates the CNAME at the club's DNS provider: here, the core's fake DNS.
-      await publishFakeCname(page, host, domain.verification.cnameTarget);
+      await publishFakeCname(page, host, verificationOf(domain).cnameTarget);
       const verified = page.waitForResponse(isPlatform("POST", /\/verification$/u));
       await page.getByRole("button", { name: `Verifica ${host}` }).click();
       const verification = await verified;
@@ -1329,7 +1377,7 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     const cloned = page.waitForResponse(isPlatform("POST", /\/catalog-clone$/u));
     await clone.click();
     const clonedResponse = await cloned;
-    const clonedBody = (await clonedResponse.json()) as { copied: Record<string, number> };
+    const clonedBody = (await clonedResponse.json()) as components["schemas"]["CatalogCloneResult"];
     // What it copies is the template club's content (`club-template-default.yaml` in the
     // evidence): the run records the counts, it does not decide them.
     notes.catalogClone = {
@@ -1359,7 +1407,7 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
       const again = page.waitForResponse(isPlatform("POST", /\/catalog-clone$/u));
       await clone.click();
       const againResponse = await again;
-      const againBody = (await againResponse.json()) as { code: string; details?: unknown };
+      const againBody = (await againResponse.json()) as components["schemas"]["ApiError"];
       notes.secondClone = { body: againBody, status: againResponse.status() };
       expect(againResponse.status()).toBe(409);
       expect(againBody.code).toBe("CATALOG_NOT_EMPTY");
@@ -1469,9 +1517,7 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
   await timed("10 · Checklist i activació", async () => {
     const record = page.waitForResponse(isPlatform("GET", /\/api\/v1\/platform\/clubs\/[^/]+$/u));
     await page.reload();
-    const recordBody = (await (await record).json()) as {
-      onboardingChecklist: Record<string, boolean>;
-    };
+    const recordBody = (await (await record).json()) as components["schemas"]["PlatformClub"];
     notes.checklistBeforeActivation = recordBody.onboardingChecklist;
     expect(recordBody.onboardingChecklist).toMatchObject({
       branding: true,

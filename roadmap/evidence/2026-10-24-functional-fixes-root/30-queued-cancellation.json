@@ -1,0 +1,14 @@
+{
+  "cancelledPids": [
+    17958,
+    18624,
+    18678,
+    18680
+  ],
+  "executedTests": false,
+  "stages": [
+    "e4w16-r2 and following",
+    "30-full-browser-postfix"
+  ],
+  "reason": "Before lock acquisition; coordinate tablet breakpoint correction and deterministic booking test cleanup."
+}

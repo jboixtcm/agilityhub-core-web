@@ -1,0 +1,78 @@
+{
+  "apiManifest": {
+    "countRetained": 2241,
+    "countCurrent": 2241,
+    "changed": [],
+    "unchangedDuringGate": true,
+    "commandExit": 0
+  },
+  "tests": {
+    "surefire-reports": {
+      "retained": {
+        "tests": 4948,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "retainedClasses": 474,
+      "allFreshAtRun": true,
+      "currentXmlTotals": {
+        "tests": 4948,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "currentXmlClasses": 474
+    },
+    "failsafe-reports": {
+      "retained": {
+        "tests": 2308,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "retainedClasses": 174,
+      "allFreshAtRun": true,
+      "currentXmlTotals": {
+        "tests": 2308,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "currentXmlClasses": 174
+    }
+  },
+  "cli": {
+    "attempt-01": {
+      "assertions": 44,
+      "passed": 44,
+      "failed": [],
+      "commands": 22,
+      "exitAssertions": 22,
+      "commandsHaveExit": true,
+      "cleanup": {
+        "ownedContainersRemoved": true,
+        "networkRemoved": true
+      }
+    },
+    "report-attempt-01": {
+      "assertions": 24,
+      "passed": 24,
+      "failed": [],
+      "commands": 8,
+      "exitAssertions": 8,
+      "commandsHaveExit": true,
+      "cleanup": {
+        "ownedContainersRemoved": true,
+        "networkRemoved": true
+      }
+    }
+  },
+  "productionSeed": {
+    "matchesBeforeAudit": true,
+    "matchesGitHead": true,
+    "sha256": "956d7a01e69e7d3a23ad8170fa548fd6356e3854c0f3461d15cfff6027162915"
+  },
+  "openapiBytesMatchWeb": true,
+  "image": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9 arm64"
+}

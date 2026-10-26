@@ -1,0 +1,214 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+Not implemented: navigation to another Document
+ ❯ src/auth-client.test.ts (46 tests | 14 failed) 1143ms
+   ❯ T-01-21 AuthClient session flow (31)
+     × T-01-04 a delayed refresh (200) cannot replace a newer sign-in 3ms
+     × T-01-04 a delayed refresh (401) cannot replace a newer sign-in 5ms
+     × T-01-04 a refresh response after logout cannot restore the token or schedule another refresh 2ms
+     × T-01-04 a restore /me response after logout cannot sign the account back in 2ms
+     ❯ T-01-04 a superseded password session (2)
+       × ignores a late token answer after logout 1ms
+       × ignores a late me answer after logout 1ms
+     ❯ T-01-04 a superseded magic link session (2)
+       × ignores a late token answer after logout 1ms
+       × ignores a late me answer after logout 1ms
+     ❯ T-01-04 a superseded account handoff session (2)
+       × ignores a late token answer after logout 1ms
+       × ignores a late me answer after logout 1ms
+     × T-01-04 a late password /me (200) cannot replace or clear a newer account 1ms
+     × T-01-04 a late password /me (401) cannot replace or clear a newer account 1ms
+     × T-01-04 a late password /me (503) cannot replace or clear a newer account 2ms
+     × T-01-11 a late impersonation /me cannot restore the grant after logout 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a delayed refresh (200) cannot replace a newer sign-in
+AssertionError: expected 'access-old-refresh' to be 'access-new-login' // Object.is equality
+
+Expected: "access-new-login"
+Received: "access-old-refresh"
+
+ ❯ src/auth-client.test.ts:641:39
+    639|       await recovery;
+    640|
+    641|       expect(client.getAccessToken()).toBe("access-new-login");
+       |                                       ^
+    642|       expect(client.getMe()).toEqual(memberMe);
+    643|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a delayed refresh (401) cannot replace a newer sign-in
+AssertionError: expected null to be 'access-new-login' // Object.is equality
+
+- Expected:
+"access-new-login"
+
++ Received:
+null
+
+ ❯ src/auth-client.test.ts:641:39
+    639|       await recovery;
+    640|
+    641|       expect(client.getAccessToken()).toBe("access-new-login");
+       |                                       ^
+    642|       expect(client.getMe()).toEqual(memberMe);
+    643|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a refresh response after logout cannot restore the token or schedule another refresh
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/auth-client.test.ts:674:28
+    672|     releaseRefresh();
+    673|
+    674|     expect(await recovery).toBe(false);
+       |                            ^
+    675|     expect(client.getAccessToken()).toBeNull();
+    676|     expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a restore /me response after logout cannot sign the account back in
+AssertionError: expected { account: { …(8) }, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "account": {
+    "email": "biel.roca@example.test",
+    "emailVerifiedAt": "2026-08-01T08:00:00Z",
+    "hasPassword": true,
+    "id": "10000000-0000-4000-8000-000000000002",
+    "locale": "ca",
+    "name": "Biel Roca",
+    "onboardingPending": false,
+    "platformRoles": [],
+  },
+  "features": [
+    "FREE_TRAINING",
+    "COURSES",
+  ],
+  "membership": {
+    "activeProfile": "MEMBER",
+    "clubId": "50000000-0000-4000-8000-000000000001",
+    "defaultProfile": "MEMBER",
+    "gender": "MALE",
+    "memberId": "20000000-0000-4000-8000-000000000002",
+    "profiles": [
+      "MEMBER",
+    ],
+    "rememberProfile": true,
+    "roles": [
+      "MEMBER",
+    ],
+  },
+}
+
+ ❯ src/auth-client.test.ts:705:26
+    703|     releaseMe();
+    704|
+    705|     await expect(restore).resolves.toBeNull();
+       |                          ^
+    706|     expect(signedIn).not.toHaveBeenCalled();
+    707|     expect(client.getAccessToken()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded password session > ignores a late token answer after logout
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded password session > ignores a late me answer after logout
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded magic link session > ignores a late token answer after logout
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded magic link session > ignores a late me answer after logout
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded account handoff session > ignores a late token answer after logout
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded account handoff session > ignores a late me answer after logout
+AssertionError: expected 'accepted' to be 'superseded' // Object.is equality
+
+Expected: "superseded"
+Received: "accepted"
+
+ ❯ src/auth-client.test.ts:755:31
+    753|       await client.logout();
+    754|       release();
+    755|       expect(await operation).toBe("superseded");
+       |                               ^
+    756|       expect(client.getAccessToken()).toBeNull();
+    757|       expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a late password /me (200) cannot replace or clear a newer account
+AssertionError: expected 'accepted' to be 'superseded' // Object.is equality
+
+Expected: "superseded"
+Received: "accepted"
+
+ ❯ src/auth-client.test.ts:808:25
+    806|       await client.login("new@example.test", "password");
+    807|       release();
+    808|       expect(await old).toBe("superseded");
+       |                         ^
+    809|       expect(client.getAccessToken()).toBe("access-new");
+    810|       expect(client.getMe()).toEqual(newerMe);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a late password /me (401) cannot replace or clear a newer account
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a late password /me (503) cannot replace or clear a newer account
+AssertionError: expected null to be 'access-new' // Object.is equality
+
+- Expected:
+"access-new"
+
++ Received:
+null
+
+ ❯ src/auth-client.test.ts:809:39
+    807|       release();
+    808|       expect(await old).toBe("superseded");
+    809|       expect(client.getAccessToken()).toBe("access-new");
+       |                                       ^
+    810|       expect(client.getMe()).toEqual(newerMe);
+    811|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 a late impersonation /me cannot restore the grant after logout
+AssertionError: expected 'accepted' to be 'superseded' // Object.is equality
+
+Expected: "superseded"
+Received: "accepted"
+
+ ❯ src/auth-client.test.ts:839:23
+    837|     await client.logout();
+    838|     release();
+    839|     expect(await old).toBe("superseded");
+       |                       ^
+    840|     expect(client.getAccessToken()).toBeNull();
+    841|     expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/14]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  14 failed | 45 passed (59)
+   Start at  21:24:30
+   Duration  1.68s (tests 52%, environment 31%, transform 10%, import 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run`
+Exit status 1

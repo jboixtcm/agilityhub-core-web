@@ -1,0 +1,8 @@
+{
+  "e2e/core/functional-auth.spec.ts": "a7b6236e40f653c8d99e85cf66d20cd1f2c75d8cf62ff2541d3c01e96d0f1dad",
+  "scripts/e2e-core.sh": "51cfb7472b3d9218c8ac0b750b5b432a301a069fc974c0366383a4dec7135f2c",
+  "scripts/core-stack/docker-compose.yml": "2c84304dfab3bc9960d5be31ad89215664ad72044eb91376b697a6a33bd64b67",
+  "packages/auth/src/auth-client.ts": "e34025ef71f902d54f851b23f7db89bfba358be34bad7640257c649ecbd5505f",
+  "packages/auth/src/session.tsx": "066fa112413430d00b54dd4497bf852ea21d662b65fec7e32d09dbc9dbb80cfa",
+  "apps/clubs/src/App.tsx": "369779dbcd6ded596fe5052fe184e3dc68ccbbf59f5837370ec1953862ae0774"
+}

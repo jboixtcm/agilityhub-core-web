@@ -1,0 +1,1 @@
+env HEAVY_WAIT_MIN=120 CORE_IMAGE=agilityhub-core-api:review-fixes-20261024 CORE_PROJECT_NAME=agilityhub-functional-release-e11-r2 bash scripts/e2e-core.sh 2026-10-24-functional-fixes-release/core-e11-r2 'e11-core.spec.ts --trace=off'

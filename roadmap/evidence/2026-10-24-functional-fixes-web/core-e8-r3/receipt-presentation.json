@@ -1,0 +1,84 @@
+{
+  "generatedAndOwnedIdMatch": true,
+  "owned": {
+    "displayNumber": "2026-0115",
+    "lines": [
+      {
+        "description": "Quota Abonat — Novembre 2026",
+        "origin": "MONTHLY_FEE",
+        "total": {
+          "amountMinor": 6000,
+          "currency": "EUR"
+        }
+      },
+      {
+        "description": "Quota inactivitat — Desembre 2026",
+        "origin": "INACTIVITY_FEE",
+        "total": {
+          "amountMinor": 2000,
+          "currency": "EUR"
+        }
+      }
+    ],
+    "period": "2026-12",
+    "total": {
+      "amountMinor": 8000,
+      "currency": "EUR"
+    }
+  },
+  "list": {
+    "displayNumber": "2026-0115",
+    "lines": [
+      {
+        "description": "Quota Abonat — Novembre 2026",
+        "origin": "MONTHLY_FEE",
+        "total": {
+          "amountMinor": 6000,
+          "currency": "EUR"
+        }
+      },
+      {
+        "description": "Quota inactivitat — Desembre 2026",
+        "origin": "INACTIVITY_FEE",
+        "total": {
+          "amountMinor": 2000,
+          "currency": "EUR"
+        }
+      }
+    ],
+    "period": "2026-12",
+    "total": {
+      "amountMinor": 8000,
+      "currency": "EUR"
+    }
+  },
+  "listIdMatchesGenerated": true,
+  "rowHrefMatchesGenerated": true,
+  "detail": {
+    "displayNumber": "2026-0115",
+    "lines": [
+      {
+        "description": "Quota Abonat — Novembre 2026",
+        "origin": "MONTHLY_FEE",
+        "total": {
+          "amountMinor": 6000,
+          "currency": "EUR"
+        }
+      },
+      {
+        "description": "Quota inactivitat — Desembre 2026",
+        "origin": "INACTIVITY_FEE",
+        "total": {
+          "amountMinor": 2000,
+          "currency": "EUR"
+        }
+      }
+    ],
+    "period": "2026-12",
+    "total": {
+      "amountMinor": 8000,
+      "currency": "EUR"
+    }
+  },
+  "detailIdMatchesGenerated": true
+}

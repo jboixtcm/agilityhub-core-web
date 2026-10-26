@@ -1,0 +1,1 @@
+bash -c 'pnpm exec eslint packages/ui/src/universal-list.css apps/clubs-admin/src/billing/billing.css apps/clubs-admin/e2e/responsive-shell.spec.ts --max-warnings 0 && pnpm exec prettier --check packages/ui/src/universal-list.css apps/clubs-admin/src/billing/billing.css apps/clubs-admin/e2e/responsive-shell.spec.ts'

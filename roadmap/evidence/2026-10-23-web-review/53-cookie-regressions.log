@@ -1,0 +1,139 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > logs in with the password grant, keeps access in memory, and loads /me 15ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > normalizes the core's omitted empty scope before loading /me 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > routes OAuth2 requests to identity and application auth requests to core 4ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-12 exchanges the R-01-13 handoff code through the contract token field 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 refreshes via the cookie and coalesces concurrent 401 responses 24ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > preserves mutation bodies while adding cookie credentials and 401 retry support 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > emits signedOut and redirects to /entrar when refresh fails 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > revokes the cookie session with an empty body and bearer access token 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 restores a session from the HttpOnly cookie without a body token 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 coalesces restore calls until both refresh and /me complete 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W06 W3) three clients sharing one cookie jar restore together with Web Locks → the token endpoint is called sequentially, never two in flight, and all three end signed in 81ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W05 round 2 #3, ruling E163): without Web Locks a tab refreshes on its own at once — nothing in localStorage holds it back or is written 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.session-cookie:<identity origin>» 81ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W06 W3) a tab that waited for another tab's refresh and meanwhile got a live token skips its own 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a delayed refresh (200) cannot replace a newer sign-in 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a delayed refresh (401) cannot replace a newer sign-in 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a refresh response after logout cannot restore the token or schedule another refresh 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a restore /me response after logout cannot sign the account back in 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded password session > ignores a late token answer after logout 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded password session > ignores a late me answer after logout 2ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded magic link session > ignores a late token answer after logout 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded magic link session > ignores a late me answer after logout 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded account handoff session > ignores a late token answer after logout 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a superseded account handoff session > ignores a late me answer after logout 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a late password /me (200) cannot replace or clear a newer account 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a late password /me (401) cannot replace or clear a newer account 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a late password /me (503) cannot replace or clear a newer account 3ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 a late impersonation /me cannot restore the grant after logout 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 an old handoff /me (200) cannot cancel a newer login waiting for its token 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 an old handoff /me (401) cannot cancel a newer login waiting for its token 1ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 an old handoff /me (503) cannot cancel a newer login waiting for its token 1ms
+ × src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a rejected magic-link token (400) after logout cannot trigger cookie restoration 3ms
+   → expected [ …(2) ] to deeply equal [ 'urn:agilityhub:grant:magic-link' ]
+ × src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a rejected magic-link token (503) after logout cannot trigger cookie restoration 1ms
+   → expected [ …(2) ] to deeply equal [ 'urn:agilityhub:grant:magic-link' ]
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 treats a 400 cookie refresh response as an anonymous session 0ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 treats a 401 cookie refresh response as an anonymous session 0ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 a new handoff confirms independently of an older pending handoff 52ms
+ ✓ src/auth-client.test.ts > T-01-21 AuthClient session flow > rejects a mock refresh store unless the build-time mock flag is enabled 0ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > after acceptImpersonation, focus, pageshow and visibilitychange never call /oauth2/token 22ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > a 401 ends the impersonation: no refresh, the expired event and mark, and the tab never reads the cookie again 1ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > step 1: a handoff code whose /me carries `impersonation` enters the mode, wins over the cookie and survives a full-page load of the tab 45ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > an impersonation whose expiry has passed is not restored, and «Surt» revokes it with its own token without refreshing 3ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > S01 R-01-10 (E11-W06 step 14, ruling E151): «Surt» of an impersonated session revokes its grant — RevokeRequest.token is the impersonation JWT 2ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie > handoff → /me 503 → no refresh_token call; the retry succeeds and the impersonated session (the banner's /me) is entered 102ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie > /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it 310ms
+ ✓ src/auth-client.test.ts > T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie > a refused /me (401) after a redeemed handoff ends it anonymous: no cookie now, nor after a reload, until the user signs in 4ms
+ ✓ src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > a focus or pageshow refreshes only near refreshAt, and visibilitychange too 98ms
+ ✓ src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > offline, then a 5xx: the background refresh keeps the token and retries when the device is back online 199ms
+ ✓ src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > a 400 of the token endpoint ends the session and lands on the app's sign-in path (/login in apps/id) 54ms
+ ✓ src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > restoreSession on a 5xx rejects (the session stays unknown) and signs in when the retry succeeds 53ms
+ ✓ src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > the 401 interceptor keeps the session when the refresh fails offline 4ms
+ ✓ src/auth-client.test.ts > E4-W16 step 3 (INC-19): a transient refresh or restore failure keeps the session > logout with a rejected bearer refreshes once and retries the revoke, so the cookie is revoked 3ms
+ ✓ src/auth-client.test.ts > T-01-26 onboarding contract > loads, postpones and completes onboarding through the generated operations 3ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never dispatches a mutation after identity changes during the locale await 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never dispatches a mutation after identity changes during the token await 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never dispatches a mutation after identity changes during the middleware await 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old password result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old profile result 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old account result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old read onboarding result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old complete onboarding result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old postpone onboarding result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old handoff redirect result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old OIDC redirect result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old session list result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old session revocation result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old password result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old profile result 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old account result 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old read onboarding result 3ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old complete onboarding result 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old postpone onboarding result 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old handoff redirect result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old OIDC redirect result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old session list result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old session revocation result 1ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays or expires the newer account when the old PUT's response arrives late 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays or expires the newer account when the old PUT's refresh arrives late 2ms
+ ✓ src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays or expires the newer impersonation when the old PUT's response arrives late 1ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > a late A refresh finishes before the newer password sets cookie B 1ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > a late A refresh finishes before the newer magic link sets cookie B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > a late A refresh finishes before the newer handoff sets cookie B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > a late revoke cookie-clear finishes before login B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > a late delete cookie-clear finishes before login B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > logout waits for and revokes an already dispatched first grant 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > logout revokes the actual first grant despite a cancelled second login (malformed body: false) 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > logout revokes the actual first grant despite a cancelled second login (malformed body: true) 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > cancels superseded queued grants and revokes before dispatch 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with Web Locks > different client IDs at the same identity origin share the cookie writer lock 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > a late A refresh finishes before the newer password sets cookie B 1ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > a late A refresh finishes before the newer magic link sets cookie B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > a late A refresh finishes before the newer handoff sets cookie B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > a late revoke cookie-clear finishes before login B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > a late delete cookie-clear finishes before login B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > logout waits for and revokes an already dispatched first grant 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > logout revokes the actual first grant despite a cancelled second login (malformed body: false) 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > logout revokes the actual first grant despite a cancelled second login (malformed body: true) 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > cancels superseded queued grants and revokes before dispatch 0ms
+ ✓ src/auth-client.test.ts > T-01-04 cookie response ordering with page queue > different client IDs at the same identity origin share the cookie writer lock 0ms
+ ✓ src/auth-client.test.ts > T-01-04 a late successful initial API response cannot deliver A data into B 0ms
+ ✓ src/auth-client.test.ts > T-01-04 a late successful replay API response cannot deliver A data into B 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a rejected magic-link token (400) after logout cannot trigger cookie restoration
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a rejected magic-link token (503) after logout cannot trigger cookie restoration
+AssertionError: expected [ …(2) ] to deeply equal [ 'urn:agilityhub:grant:magic-link' ]
+
+- Expected
++ Received
+
+  [
+    "urn:agilityhub:grant:magic-link",
++   "refresh_token",
+  ]
+
+ ❯ src/auth-client.test.ts:950:22
+    948|       await exchange;
+    949|       await expect(restoring).resolves.toBeNull();
+    950|       expect(grants).toEqual(["urn:agilityhub:grant:magic-link"]);
+       |                      ^
+    951|       expect(client.getMe()).toBeNull();
+    952|       expect(client.getAccessToken()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 98 passed (100)
+   Start at  21:56:57
+   Duration  1.70s (tests 77%, environment 14%, transform 6%, import 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/auth-client.test.ts --reporter=verbose

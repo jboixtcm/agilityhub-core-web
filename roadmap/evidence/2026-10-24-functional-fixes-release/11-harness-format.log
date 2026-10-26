@@ -1,0 +1,4 @@
+apps/id/src/App.test.tsx 73ms
+e2e/core/e10-core.spec.ts 105ms
+Checking formatting...
+All matched files use Prettier code style!

@@ -1,0 +1,192 @@
+{
+  "capturedAt": "2026-10-26T08:58:45.937493+00:00",
+  "purpose": "Read-only historical incident cross-review reference identity, not a new full acceptance run",
+  "references": [
+    {
+      "label": "Historical incident register",
+      "path": "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/INCIDENCIES_OBERTES.md",
+      "sha256": "0382ffdd58494736d42eeba0eda7ceb28896118ea5620352ef41210f4a3943e0"
+    },
+    {
+      "label": "INC86 contract",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/courses/domain/CourseParts.java",
+      "sha256": "71a3430c21bf73bbdf29c2288795da077f34198822e150ecff490ef0dc2dfadc"
+    },
+    {
+      "label": "INC86 persistence",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/courses/application/PlacementService.java",
+      "sha256": "9e77d8bf5f3b68bf2a060f48b24bc0247f325cebd2b301f63ca675e5ad0b7f74"
+    },
+    {
+      "label": "INC86 API regression",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/test/java/com/agilityhub/core/courses/api/PlacementsIT.java",
+      "sha256": "8858fed61f64aaaef8bdce6a402657a583782afb715e079a162fb50ed224dff6"
+    },
+    {
+      "label": "INC86 current API report",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/target/failsafe-reports/TEST-com.agilityhub.core.courses.api.PlacementsIT.xml",
+      "sha256": "f14a1f84bfb86b5697bcd349a63299d117f12fc858068d82d5755aaca9ab3975"
+    },
+    {
+      "label": "INC86 viewer and legacy fallback",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/courses/viewer-model.ts",
+      "sha256": "ed8e3a855f9e2fb1b1c77e516b2b411369c44f769d16e5ff2173bc21a90021d9"
+    },
+    {
+      "label": "INC86 viewer regressions",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/courses/viewer-model.test.ts",
+      "sha256": "3ecd0013307751cf190e0b29d555f687e692da81abd578d1103a76aa35f48337"
+    },
+    {
+      "label": "INC86 payload regressions",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/core-api-store.payloads.test.ts",
+      "sha256": "11ba3c477c18dfbd3624610b5e550f28ecde73587b3b19317ac5663ddaa60883"
+    },
+    {
+      "label": "Tunnel QA row corrected after this review",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/docs/qa/CHECKLIST_QA.md",
+      "sha256": "561c123002d5c27080a6ea7e5910b4ec4726911d6d543f6c4332b1daa17a0911"
+    },
+    {
+      "label": "INC88 release preflight",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/deploy/release-preflight.py",
+      "sha256": "baee636bbe4314d1a65d0691d147e6b720c78c36455ca121a6e77e6ffcbe7fd1"
+    },
+    {
+      "label": "INC90 Dockerfile",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/Dockerfile",
+      "sha256": "d02ce49bbbdf1d0430ca3be9407e447f912cc0775bb49e8f50a0c87486919683"
+    },
+    {
+      "label": "INC90 refreshed image scan report",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/REPORT.md",
+      "sha256": "06d222b4996bac739b243a983a447b63b92ccc12ef0fa22198e7004a8460768e"
+    },
+    {
+      "label": "INC76 accepted baseline E142",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/docs/DECISIONS_PENDENTS.md",
+      "sha256": "23b6346073f01561a4bb0e263cfe4c1db3e45e61dbccc6b4ff898ad46b905cf2"
+    },
+    {
+      "label": "INC76 current lazy screens",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/App.tsx",
+      "sha256": "14f78ce19f663d8416f5abf81218a071d8a811127910757860ea0b652b85deae"
+    },
+    {
+      "label": "INC80 sidebar",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/components.tsx",
+      "sha256": "682ea03bcf2a05152733fd092ee8d5539cc6d446cdfbddf813d374d520671007"
+    },
+    {
+      "label": "INC80 popup source",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/census/CensusRecordPage.tsx",
+      "sha256": "f9437a3bf21b6a88793d9cfcf1be3c08471138f8b54c22af1f02c375e7838969"
+    },
+    {
+      "label": "INC80 popup unit test",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/census/CensusRecordPage.test.tsx",
+      "sha256": "7fbf49eb2713ab283f8cbc298b027bc73324522dd89969f78626ca281e9fc57e"
+    },
+    {
+      "label": "INC80 current bundle gate43",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/43-final-bundle-size.log",
+      "sha256": "04e9868410582afc99947fe6a7fd87213d5dcd278d2d86dfd8169439c7a35a59"
+    },
+    {
+      "label": "INC45 inventory source",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/test/java/com/agilityhub/core/configuration/SecurityInventoryIT.java",
+      "sha256": "027b7bf03495ae1f105afbdae68453393614423f7edf7e7af6eee4a4f0743f86"
+    },
+    {
+      "label": "INC45 current API report",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/target/failsafe-reports/TEST-com.agilityhub.core.configuration.SecurityInventoryIT.xml",
+      "sha256": "e00735073ac569c7667b39a00a70f48d2570464d4f926d15929f7acc4737ea49"
+    },
+    {
+      "label": "INC52 retry implementation",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/clubs/messaging/application/engine/NotificationDispatcher.java",
+      "sha256": "e59e994dd0dfe847cc59ad9919b5ecc6e685f2d79e21bdf87941b2240586d084"
+    },
+    {
+      "label": "INC52 regression",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/test/java/com/agilityhub/core/clubs/messaging/application/engine/NotificationDispatcherIT.java",
+      "sha256": "e990c6eb8782efa219f5c854b044d326456292b845a17fdd25ac4a69aec3dc29"
+    },
+    {
+      "label": "INC55 regression",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/preferences-saver.test.ts",
+      "sha256": "0efca5cc633c6cd30ea297bd49286173e888f2dd037003a9b7b231cd74b89daa"
+    },
+    {
+      "label": "INC56 current real-API tests",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e7-core.spec.ts",
+      "sha256": "160e7cfb1bb3722741fa4f5434b9e87872d02c006c6e0c365a1cb8f82de47bb5"
+    },
+    {
+      "label": "Historical web correction review",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/tasks/E11-W02.md",
+      "sha256": "dfe7f539a24c2a5d5b20a756c535962f39296446003024fe7bf9b2f008545b9a"
+    },
+    {
+      "label": "Historical follow-up correction review",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/tasks/E11-W05.md",
+      "sha256": "b02eaf1d6f9b2fedad3efab26f56e8a15b215cce3d0989b952df3053cf9f1784"
+    },
+    {
+      "label": "Future hosted demo prerequisites",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/docs/DEPLOYMENT.md",
+      "sha256": "6866b44b92ec1410230bcda5f4034212c80530e1f50e2aeae2b32c0276a41eca"
+    },
+    {
+      "label": "Production topology/runbook",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/docs/DEPLOY.md",
+      "sha256": "b24b74d2bede5fb2e5d2b95a2f760d8f1ac501556b2f0eb93e74d6dfb4ce6a2a"
+    },
+    {
+      "label": "Current API/CLI provenance",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/independent-api-cli-review.json",
+      "sha256": "005dc0173f1c29b58d09a64f4ab69216ab8a139d91ca26efdb8a812f7474c8d7"
+    },
+    {
+      "label": "INC83 completed API review",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/roadmap/evidence/2026-10-23-review/README.md",
+      "sha256": "7546eeacd2247f690fdf7ac67b242ec7afaa9912cfbcf4d68a481a1a8e56c669"
+    },
+    {
+      "label": "INC83 duplicate-key classification",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/clubs/activities/application/ActivityTransactions.java",
+      "sha256": "c621fdf6a41ec84efeeac74e8778b4cf8317cf6d676f77813190af69761695ce"
+    },
+    {
+      "label": "INC83 narrow census projection",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/clubs/census/application/CensusErasure.java",
+      "sha256": "43dbdce008bc0f3540fd2c3be4f927f99664e7b138d8915a1ea8edfe3dd319b6"
+    },
+    {
+      "label": "INC83 concurrent index helper",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/shared/application/IndexDrops.java",
+      "sha256": "aec3c4563f224fb6b98c7cf890b25f8ab8631bf6cb0fe75277eb7178642b3db4"
+    },
+    {
+      "label": "INC83 signup review",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/src/main/java/com/agilityhub/core/clubs/census/application/SignupService.java",
+      "sha256": "972857f7c2c32ad3d6d8457f0eafac0f2f1d99c0f9b72e67424968b0bbea4449"
+    },
+    {
+      "label": "INC83 spec trace",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/roadmap/evidence/E11-T12/trace.py",
+      "sha256": "b325d6073e78e0956ef03765bf4b0551a76cd9244f2430a0e8d8b5ccbf3f2750"
+    },
+    {
+      "label": "INC83 Python regressions in CI",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/.github/workflows/ci.yml",
+      "sha256": "29447e5fc3348b18a816a0d800b9c977b22983fab7afd5b79be5fb522aeca5d6"
+    },
+    {
+      "label": "INC85 generated E10 response types",
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e10-core.spec.ts",
+      "sha256": "1b200f28828a2d6d3aee82948772a618e4cd4bef0febc995feba35bd9f442fbb"
+    }
+  ],
+  "finalizedAt": "2026-10-26T09:02:25.483860+00:00"
+}

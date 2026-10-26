@@ -209,7 +209,7 @@ describe("T-14-26 member audit and exports", () => {
     fireEvent.click(screen.getByRole("button", { name: "Excel" }));
 
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
-    expect(drawer).toHaveTextContent("Preparant l'exportació…");
+    expect(await within(drawer).findByText("Preparant l'exportació…")).toBeVisible();
     // E4-W16 step 5 (INC-21): a button, not a link: the file needs GET /exports/{id} and the
     // bearer (the download itself is asserted in list-exports.test.tsx).
     expect(
@@ -252,6 +252,18 @@ describe("T-14-26 member audit and exports", () => {
     "routes a queued %s list export into the global drawer",
     async (kind, title, path) => {
       server.use(
+        // The requested job must exist in the status read: a 202 alone is not ongoing progress.
+        http.get("*/api/v1/exports", () =>
+          HttpResponse.json([
+            {
+              createdAt: "2026-10-24T10:00:00Z",
+              format: "XLSX",
+              id: "00000000-0000-4000-8000-000000000402",
+              kind: "LIST",
+              status: "QUEUED",
+            },
+          ]),
+        ),
         http.get(`*/api/v1/${kind}/export`, () =>
           HttpResponse.json(
             {

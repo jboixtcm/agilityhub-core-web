@@ -32,6 +32,22 @@ export const canic: Branding = {
 
 export const without = (module: string) => canic.modules.filter((item) => item !== module);
 
+const pendingRequests = new Set<Promise<Response>>();
+
+async function settleBookingRequests(): Promise<void> {
+  const nextTick = () =>
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
+  // Unmount schedules the hold release on the next tick. Keep its handlers and fixture alive
+  // until the captured transport settles, including releases delayed before reaching MSW.
+  await nextTick();
+  while (pendingRequests.size > 0) {
+    await Promise.allSettled([...pendingRequests]);
+    await nextTick();
+  }
+}
+
 /** Test hooks of the booking suites: MSW, the pinned clock and a fresh booking world per case. */
 export function setupBookingWorld(): void {
   beforeAll(() => {
@@ -48,10 +64,7 @@ export function setupBookingWorld(): void {
   });
   afterEach(async () => {
     cleanup();
-    // A confirmation that unmounts releases its hold on the next tick: let it land in this test.
-    await new Promise((resolve) => {
-      setTimeout(resolve, 20);
-    });
+    await settleBookingRequests();
     server.resetHandlers();
     vi.useRealTimers();
     vi.unstubAllGlobals();
@@ -66,7 +79,20 @@ export function setupBookingWorld(): void {
 }
 
 export function apiClient(locale = "ca") {
-  return createApiClient({ baseUrl: `${window.location.origin}/api/v1`, getLocale: () => locale });
+  const fetch = globalThis.fetch;
+  return createApiClient({
+    baseUrl: `${window.location.origin}/api/v1`,
+    fetch: (input, init) => {
+      const request = fetch(input, init);
+      pendingRequests.add(request);
+      const settled = () => {
+        pendingRequests.delete(request);
+      };
+      void request.then(settled, settled);
+      return request;
+    },
+    getLocale: () => locale,
+  });
 }
 
 async function signedIn(): Promise<AuthClient> {

@@ -10,7 +10,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, onTestFinished, vi } from "vitest";
@@ -54,20 +54,165 @@ async function renderRecord(
     storage: undefined,
   });
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
-  render(
+  const page = (recordId: string) => (
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={recordBranding}>
         <CountersRefreshContext.Provider value={refreshCounters}>
           {kind === "member" ? (
-            <MemberRecordPage client={client} id={memberId} />
+            <MemberRecordPage client={client} id={recordId} />
           ) : (
-            <DogRecordPage client={client} id="dog-duna" />
+            <DogRecordPage client={client} id={recordId} />
           )}
         </CountersRefreshContext.Provider>
       </BrandingProvider>
-    </I18nextProvider>,
+    </I18nextProvider>
   );
+  const view = render(page(kind === "member" ? memberId : "dog-duna"));
+  return {
+    client,
+    navigate: (recordId: string) => {
+      window.history.pushState(
+        null,
+        "",
+        `/${kind === "member" ? "abonats" : "gossos"}/${recordId}`,
+      );
+      view.rerender(page(recordId));
+    },
+  };
 }
+
+describe("T-03-39 INC-98 record navigation isolates member and dog state", () => {
+  it("shows one preferences card and no previous booking feedback after navigating to another member", async () => {
+    const reads: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "GET") reads.push(new URL(request.url).pathname);
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    const view = await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const { data: preferences } = await view.client.GET("/members/{id}/notification-preferences", {
+      params: { path: { id: "member-laura" } },
+    });
+    if (preferences === undefined) throw new TypeError("Missing member preferences fixture");
+    const { data: nextOverview } = await view.client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-eva" } },
+    });
+    if (nextOverview === undefined) throw new TypeError("Missing next member fixture");
+    const nextMemberId = nextOverview.member.id;
+    // The standard fixture exposes preferences only for Laura. Eva needs her own response;
+    // an orphaned Laura block must never stand in for a successful read of Eva's preferences.
+    server.use(
+      http.get(`*/api/v1/members/${nextMemberId}/notification-preferences`, () =>
+        HttpResponse.json({ ...preferences, reminderMinutesBefore: null }),
+      ),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja les reserves" }));
+    const dialog = screen.getByRole("dialog", { name: "Bloqueja les reserves" });
+    fireEvent.change(within(dialog).getByLabelText("Motiu del bloqueig"), {
+      target: { value: "Fictional pending receipt" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Bloqueja les reserves" }));
+    expect(await screen.findByText("Les reserves s'han bloquejat.")).toBeVisible();
+    reads.length = 0;
+
+    view.navigate("member-eva");
+    await screen.findByRole("heading", { name: "Eva Perez Prunell" });
+    expect(await screen.findByLabelText("Recordatori de classe")).toHaveValue("");
+    expect(document.querySelectorAll(".notification-preferences")).toHaveLength(1);
+    expect(screen.queryByText("Les reserves s'han bloquejat.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
+    expect(reads).toContain(`/api/v1/members/${nextMemberId}/notification-preferences`);
+    expect(reads).toContain(`/api/v1/members/${nextMemberId}/consents`);
+    expect(reads.filter((path) => path.includes("/members/member-laura/"))).toEqual([]);
+  });
+
+  it("a delayed member save cannot replace the next member or reopen its edit drawer", async () => {
+    let release: () => void = () => undefined;
+    const delayed = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.patch("*/api/v1/members/member-laura", async ({ request }) => {
+        const response = await getResponse(handlers, request);
+        await delayed;
+        return response;
+      }),
+    );
+    const view = await renderRecord("member");
+    const save = vi.spyOn(view.client, "PATCH");
+    onTestFinished(() => {
+      release();
+      save.mockRestore();
+    });
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const edit = screen.getAllByRole("button", { name: "Edita" }).at(0);
+    if (edit === undefined) throw new TypeError("Missing member edit action");
+    fireEvent.click(edit);
+    const drawer = screen.getByRole("dialog", { name: "Edita l'abonat" });
+    fireEvent.change(within(drawer).getByLabelText("Nom"), { target: { value: "Delayed Laura" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(save).toHaveBeenCalledTimes(1);
+    });
+    const pending = save.mock.results[0]?.value as ReturnType<typeof view.client.PATCH>;
+    view.navigate("member-eva");
+    await screen.findByRole("heading", { name: "Eva Perez Prunell" });
+    const oldDrawerClosed = screen.queryByRole("dialog", { name: "Edita l'abonat" }) === null;
+    await act(async () => {
+      release();
+      await pending;
+    });
+    expect(screen.getByRole("heading", { name: "Eva Perez Prunell" })).toBeVisible();
+    expect(oldDrawerClosed).toBe(true);
+    expect(screen.queryByText("Les dades de l'abonat s'han desat.")).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /Delayed Laura/u })).not.toBeInTheDocument();
+  });
+
+  it("a delayed dog save and its open draft cannot cross into the next dog's record", async () => {
+    let release: () => void = () => undefined;
+    const delayed = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.patch("*/api/v1/dogs/dog-duna", async ({ request }) => {
+        const response = await getResponse(handlers, request);
+        await delayed;
+        return response;
+      }),
+    );
+    const view = await renderRecord("dog");
+    const save = vi.spyOn(view.client, "PATCH");
+    onTestFinished(() => {
+      release();
+      save.mockRestore();
+    });
+    await screen.findByRole("heading", { name: "Duna" });
+    const header = document.querySelector<HTMLElement>(".census-record__header");
+    if (header === null) throw new TypeError("Missing dog record header");
+    fireEvent.click(within(header).getByRole("button", { name: "Edita" }));
+    const drawer = screen.getByRole("dialog", { name: "Edita les dades del gos" });
+    fireEvent.change(within(drawer).getByLabelText("Nom"), { target: { value: "Delayed Duna" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(save).toHaveBeenCalledTimes(1);
+    });
+    const pending = save.mock.results[0]?.value as ReturnType<typeof view.client.PATCH>;
+    view.navigate("dog-rock");
+    await screen.findByRole("heading", { name: "Rock" });
+    const oldDrawerClosed =
+      screen.queryByRole("dialog", { name: "Edita les dades del gos" }) === null;
+    await act(async () => {
+      release();
+      await pending;
+    });
+    expect(screen.getByRole("heading", { name: "Rock" })).toBeVisible();
+    expect(oldDrawerClosed).toBe(true);
+    expect(screen.queryByRole("heading", { name: "Delayed Duna" })).not.toBeInTheDocument();
+  });
+});
 
 describe("T-03-39 D10 member record", () => {
   it("E8-W05 #4: a pack adjustment refreshes both billing and the D10 dog row", async () => {
@@ -554,7 +699,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
       method: "post",
       name: "«Descarrega les dades (RGPD)» (POST /members/{id}/data-export, E11-W01 round 2 #3)",
       path: "/members/:id/data-export",
-      saved: "El paquet s'està preparant. El trobaràs a Exportacions.",
+      saved: "Paquet de dades sol·licitat. Consulta'n l'estat a Exportacions.",
       // No dialog: the page says it, as for «Desbloqueja les reserves».
       send: () => {
         headerAction("Descarrega les dades (RGPD)");
@@ -969,7 +1114,11 @@ describe("E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by 
 
 describe("E11-W07 step 2 (E146, S12 §6): D10's next receipt date on the record", () => {
   it("E146: D6's link (?calaix=proper-rebut) opens the date's drawer; after the save the data card's «Proper rebut» reads the new date and the link leaves the address", async () => {
-    vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+    vi.useFakeTimers({
+      now: new Date("2026-10-05T10:00:00Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date"],
+    });
     onTestFinished(() => {
       vi.useRealTimers();
       resetMemberBillingState();
@@ -1074,9 +1223,7 @@ describe("E11-W06 W7 (CONVENCIONS_I18N §1, R-06-14): D10 shows an instant on th
     const registered = screen.getByText("Alta", { selector: "dt" }).closest("div");
     expect(registered).toHaveTextContent("05/10/2026");
     expect(screen.getByText("04/10/2020")).toBeVisible();
-    expect(document.querySelector(".census-record__level-current")).toHaveTextContent(
-      "05/10/2026",
-    );
+    expect(document.querySelector(".census-record__level-current")).toHaveTextContent("05/10/2026");
     expect(document.body).not.toHaveTextContent("04/10/2026");
   });
 });

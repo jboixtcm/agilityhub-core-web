@@ -1,0 +1,6 @@
+Listing tests:
+  production-functional.spec.ts:32:5 › compiled three-SPA HTTPS: independent host-only sessions, deep reloads and ID logout isolation
+  production-functional.spec.ts:109:5 › compiled member UI: delayed loading, offline stale copy, disabled writes and online recovery
+  production-functional.spec.ts:139:5 › compiled cold boot: readable server-failure state and retry recover from a transient branding outage
+  production-functional.spec.ts:155:5 › D11 mandatory privacy processes have translated labels and no unusable disable action
+Total: 4 tests in 1 file

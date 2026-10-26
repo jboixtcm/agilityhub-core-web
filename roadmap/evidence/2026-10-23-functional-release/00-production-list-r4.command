@@ -1,0 +1,1 @@
+env CORE_EVIDENCE_DIRECTORY="$PWD/roadmap/evidence/2026-10-23-functional-release/production-list" pnpm exec playwright test --config=roadmap/evidence/2026-10-23-functional-release/playwright.production.config.ts --list

@@ -111,7 +111,9 @@ if [[ "$anchors_only" == true ]]; then
   exit 0
 fi
 
-core_image="ghcr.io/jboixtcm/agilityhub-core-api:main"
+# Review a specific local image without retagging or replacing the historical default.
+export CORE_IMAGE="${CORE_IMAGE:-ghcr.io/jboixtcm/agilityhub-core-api:main}"
+core_image="$CORE_IMAGE"
 if ! docker image inspect "$core_image" >/dev/null 2>&1; then
   echo "The published core image is not available locally: $core_image" >&2
   exit 1
@@ -139,11 +141,11 @@ echo "fifo demo seed: $evidence_directory/demo-fifo.yaml ($(wc -l <"$evidence_di
 docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/club-template-default.yaml \
   >"$evidence_directory/club-template-default.yaml" || echo "could not read /app/seeds/club-template-default.yaml" >&2
 echo "template club: $evidence_directory/club-template-default.yaml ($(wc -l <"$evidence_directory/club-template-default.yaml" | tr -d ' ') lines)"
-# E10-W02 round 2: the Cànic's club file too, whose `domains` give the hosts every stage signs in
-# on (a run whose `/branding` answers `404 UNKNOWN_HOST` shows why). Fictional data only.
-docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/club-canic.yaml \
-  >"$evidence_directory/club-canic.yaml" || echo "could not read /app/seeds/club-canic.yaml" >&2
-echo "canic club: $evidence_directory/club-canic.yaml ($(wc -l <"$evidence_directory/club-canic.yaml" | tr -d ' ') lines)"
+# INC-94: retain the actual demo definition, including non-operative manual-payment copy.
+# The production club configuration is intentionally not copied into these demo evidences.
+docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/club-canic-demo.yaml \
+  >"$evidence_directory/club-canic-demo.yaml" || echo "could not read /app/seeds/club-canic-demo.yaml" >&2
+echo "demo club: $evidence_directory/club-canic-demo.yaml ($(wc -l <"$evidence_directory/club-canic-demo.yaml" | tr -d ' ') lines)"
 export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
 # Runtime-only vault keys for the fictional bank/card fixtures. They are forwarded to Core but
 # never echoed or written to evidence.
@@ -229,6 +231,11 @@ run_core_suite() {
   if [[ "$CORE_TEST_FILES" == *e8-core* ]]; then
     check_e8_seed_totals "$1" || return $?
   fi
+  # Seed commands intentionally do not dispatch their domain events. Core health alone can
+  # precede that backlog draining, so an immediate signup's N-02 gets queued behind it.
+  # Read-only bounded readiness keeps the browser's 15-second delivery assertion meaningful.
+  node "$repository_root/scripts/core-stack/wait-for-outbox.mjs" "$compose_file" \
+    "$evidence_directory/outbox-ready-$1.jsonl" || return $?
   # E4-W16 round 2: `--no-deps`, because the stack is already up and seeded. Without it `run` walks
   # `depends_on` (core → activate-demo-club → seed) and starts the exited seed again next to the
   # running core, and that second `seed:demo` fails now and then (runs 91 and 94 of E4-W16).

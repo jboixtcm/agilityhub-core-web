@@ -1,0 +1,15 @@
+{
+  "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+  "baselineInputs": 946,
+  "currentInputs": 948,
+  "changed": [
+    "scripts/e2e-core.sh"
+  ],
+  "added": [
+    "scripts/core-stack/wait-for-outbox.mjs",
+    "scripts/core-stack/wait-for-outbox.test.mjs"
+  ],
+  "removed": [],
+  "productFilesChanged": false,
+  "rationale": "Only the local disposable-stack readiness barrier and its regression tests changed after the final product/API/UI gates. The API image, product source, browser specs and 15-second delivery assertions remain unchanged. Earlier successful stages retain their exact baseline manifests; affected E3 is repeated and remaining E6\u2013E8 use the new harness."
+}

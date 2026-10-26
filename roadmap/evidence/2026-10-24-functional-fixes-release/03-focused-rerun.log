@@ -1,0 +1,10 @@
+heavy.sh: 09:04 waiting for the host lock, held by: 09:04 agilityhub-core-web: bash -c pnpm --filter @agilityhub/auth exec vitest run src/account-locale.test.tsx && pnpm --filter clubs exec vitest run src/App.test.tsx -t "INC-96|CONVENCIONS_I18N" && pnpm --filter clubs-admin exec vitest run src/App.test.tsx -t "INC-96|CONVENCIONS_I18N" && pnpm exec eslint packages/auth/src/account-locale.ts packages/auth/src/account-locale.test.tsx apps/clubs/src/App.tsx apps/clubs/src/App.test.tsx apps/clubs-admin/src/UserMenu.tsx apps/clubs-admin/src/App.test.tsx --max-warnings 0 && pnpm --filter @agilityhub/auth typecheck
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  2 passed (2)
+      Tests  42 passed (42)
+   Start at  09:04:39
+   Duration  3.57s (tests 64%, transform 19%, environment 8%, import 7%, setup 2%)
+

@@ -1,0 +1,379 @@
+http://127.0.0.1:4174/activitats/4bb4857e-06ec-42a7-b79d-3bfd119c5912/inscrits
+- banner:
+  - strong: Club Agility Cànic
+  - button "Exportacions"
+  - button "Menú d’usuari"
+- complementary:
+  - navigation "Navegació d’administració":
+    - heading "Tauler" [level=2]
+    - link "Tauler":
+      - /url: /tauler
+    - heading "Instructor" [level=2]
+    - link "Agenda de la setmana":
+      - /url: /agenda
+    - link "Alumnes":
+      - /url: /alumnes
+    - heading "Persones" [level=2]
+    - link "Preinscripcions 3":
+      - /url: /tauler
+    - link "Abonats":
+      - /url: /abonats
+    - link "Gossos":
+      - /url: /gossos
+    - link "Inactivitats i baixes 1":
+      - /url: /inactivitats
+    - link "Seguiment alumnes":
+      - /url: /seguiment
+    - heading "Camp" [level=2]
+    - link "Plantilla setmanal":
+      - /url: /plantilles
+    - link "Calendari de classes":
+      - /url: /calendari
+    - link "Entrenaments":
+      - /url: /entrenaments
+    - link "Activitats":
+      - /url: /activitats
+    - link "Recorreguts":
+      - /url: /recorreguts
+    - heading "Gestió" [level=2]
+    - link "Facturació":
+      - /url: /facturacio
+    - link "Modalitats i tarifes":
+      - /url: /modalitats
+    - link "Comunicats":
+      - /url: /comunicats
+    - heading "Configuració" [level=2]
+    - link "Pistes":
+      - /url: /pistes
+    - link "Instructors i administradors":
+      - /url: /equip
+    - link "Paràmetres":
+      - /url: /parametres
+    - link "Auditoria":
+      - /url: /auditoria
+- main:
+  - link "Torna a l'activitat":
+    - /url: /activitats/4bb4857e-06ec-42a7-b79d-3bfd119c5912
+  - heading "Inscrits — Seminari de handling" [level=1]
+  - region "Inscrits de l'activitat":
+    - text: Cerca un abonat
+    - searchbox "Cerca un abonat"
+    - combobox "Estat":
+      - option "Tots" [selected]
+      - option "inscrita"
+      - option "en llista d'espera"
+      - option "anul·lada"
+    - group: Filtre
+    - group: Columnes
+    - group: Vistes
+    - group:
+      - text: Excel · PDF
+      - button "Excel"
+      - button "PDF"
+    - table "Inscrits de l'activitat":
+      - caption: Inscrits de l'activitat
+      - rowgroup:
+        - row "Ordena Abonat de manera ascendent Ordena Estat de manera ascendent Ordena Data d'inscripció de manera descendent Origen Contacte":
+          - columnheader "Ordena Abonat de manera ascendent":
+            - button "Ordena Abonat de manera ascendent": Abonat
+          - columnheader "Ordena Estat de manera ascendent":
+            - button "Ordena Estat de manera ascendent": Estat
+          - columnheader "Ordena Data d'inscripció de manera descendent":
+            - button "Ordena Data d'inscripció de manera descendent": Data d'inscripció
+          - columnheader "Origen"
+          - columnheader "Contacte"
+      - rowgroup:
+        - row "Aleix Fictici021 · 21 inscrita 24/10/2026 07:55 app +34 600000021 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.21@example.test Obre la fitxa de Aleix Fictici021":
+          - cell "Aleix Fictici021 · 21":
+            - link "Aleix Fictici021 · 21":
+              - /url: /abonats/6112a15b-8a52-39b9-9317-6542421c189a
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/6112a15b-8a52-39b9-9317-6542421c189a
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/6112a15b-8a52-39b9-9317-6542421c189a
+          - cell "app":
+            - link "app":
+              - /url: /abonats/6112a15b-8a52-39b9-9317-6542421c189a
+          - cell "+34 600000021 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.21@example.test":
+            - link "+34 600000021 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.21@example.test":
+              - /url: /abonats/6112a15b-8a52-39b9-9317-6542421c189a
+          - cell "Obre la fitxa de Aleix Fictici021":
+            - link "Obre la fitxa de Aleix Fictici021":
+              - /url: /abonats/6112a15b-8a52-39b9-9317-6542421c189a
+        - row "Gala Fictici091 · 91 inscrita 24/10/2026 07:55 app +34 600000091 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.91@example.test Obre la fitxa de Gala Fictici091":
+          - cell "Gala Fictici091 · 91":
+            - link "Gala Fictici091 · 91":
+              - /url: /abonats/246930a0-9dba-36bf-8b81-345dbc02e2be
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/246930a0-9dba-36bf-8b81-345dbc02e2be
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/246930a0-9dba-36bf-8b81-345dbc02e2be
+          - cell "app":
+            - link "app":
+              - /url: /abonats/246930a0-9dba-36bf-8b81-345dbc02e2be
+          - cell "+34 600000091 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.91@example.test":
+            - link "+34 600000091 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.91@example.test":
+              - /url: /abonats/246930a0-9dba-36bf-8b81-345dbc02e2be
+          - cell "Obre la fitxa de Gala Fictici091":
+            - link "Obre la fitxa de Gala Fictici091":
+              - /url: /abonats/246930a0-9dba-36bf-8b81-345dbc02e2be
+        - row "Arnau Fictici177 · 177 inscrita 24/10/2026 07:55 app +34 600000177 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.177@example.test Obre la fitxa de Arnau Fictici177":
+          - cell "Arnau Fictici177 · 177":
+            - link "Arnau Fictici177 · 177":
+              - /url: /abonats/f00ee47a-5149-3331-be1f-f93814491da3
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/f00ee47a-5149-3331-be1f-f93814491da3
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/f00ee47a-5149-3331-be1f-f93814491da3
+          - cell "app":
+            - link "app":
+              - /url: /abonats/f00ee47a-5149-3331-be1f-f93814491da3
+          - cell "+34 600000177 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.177@example.test":
+            - link "+34 600000177 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.177@example.test":
+              - /url: /abonats/f00ee47a-5149-3331-be1f-f93814491da3
+          - cell "Obre la fitxa de Arnau Fictici177":
+            - link "Obre la fitxa de Arnau Fictici177":
+              - /url: /abonats/f00ee47a-5149-3331-be1f-f93814491da3
+        - row "Ferran Fictici155 · 155 inscrita 24/10/2026 07:55 app +34 600000155 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.155@example.test Obre la fitxa de Ferran Fictici155":
+          - cell "Ferran Fictici155 · 155":
+            - link "Ferran Fictici155 · 155":
+              - /url: /abonats/b8f07e04-8e61-324f-8ef5-a893e5142818
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/b8f07e04-8e61-324f-8ef5-a893e5142818
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/b8f07e04-8e61-324f-8ef5-a893e5142818
+          - cell "app":
+            - link "app":
+              - /url: /abonats/b8f07e04-8e61-324f-8ef5-a893e5142818
+          - cell "+34 600000155 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.155@example.test":
+            - link "+34 600000155 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.155@example.test":
+              - /url: /abonats/b8f07e04-8e61-324f-8ef5-a893e5142818
+          - cell "Obre la fitxa de Ferran Fictici155":
+            - link "Obre la fitxa de Ferran Fictici155":
+              - /url: /abonats/b8f07e04-8e61-324f-8ef5-a893e5142818
+        - row "Laia Fictici085 · 85 inscrita 24/10/2026 07:55 app +34 600000085 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.85@example.test Obre la fitxa de Laia Fictici085":
+          - cell "Laia Fictici085 · 85":
+            - link "Laia Fictici085 · 85":
+              - /url: /abonats/237af8cf-eeb1-3843-875f-19b51632ba2b
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/237af8cf-eeb1-3843-875f-19b51632ba2b
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/237af8cf-eeb1-3843-875f-19b51632ba2b
+          - cell "app":
+            - link "app":
+              - /url: /abonats/237af8cf-eeb1-3843-875f-19b51632ba2b
+          - cell "+34 600000085 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.85@example.test":
+            - link "+34 600000085 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.85@example.test":
+              - /url: /abonats/237af8cf-eeb1-3843-875f-19b51632ba2b
+          - cell "Obre la fitxa de Laia Fictici085":
+            - link "Obre la fitxa de Laia Fictici085":
+              - /url: /abonats/237af8cf-eeb1-3843-875f-19b51632ba2b
+        - row "Pol Fictici115 · 115 inscrita 24/10/2026 07:55 app +34 600000115 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.115@example.test Obre la fitxa de Pol Fictici115":
+          - cell "Pol Fictici115 · 115":
+            - link "Pol Fictici115 · 115":
+              - /url: /abonats/11da3687-816e-3c8a-8712-fd9663346a93
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/11da3687-816e-3c8a-8712-fd9663346a93
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/11da3687-816e-3c8a-8712-fd9663346a93
+          - cell "app":
+            - link "app":
+              - /url: /abonats/11da3687-816e-3c8a-8712-fd9663346a93
+          - cell "+34 600000115 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.115@example.test":
+            - link "+34 600000115 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.115@example.test":
+              - /url: /abonats/11da3687-816e-3c8a-8712-fd9663346a93
+          - cell "Obre la fitxa de Pol Fictici115":
+            - link "Obre la fitxa de Pol Fictici115":
+              - /url: /abonats/11da3687-816e-3c8a-8712-fd9663346a93
+        - row "Queralt Fictici071 · 71 inscrita 24/10/2026 07:55 app +34 600000071 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.71@example.test Obre la fitxa de Queralt Fictici071":
+          - cell "Queralt Fictici071 · 71":
+            - link "Queralt Fictici071 · 71":
+              - /url: /abonats/5f11f010-1971-3a50-8d36-ecb8a64df1e2
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/5f11f010-1971-3a50-8d36-ecb8a64df1e2
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/5f11f010-1971-3a50-8d36-ecb8a64df1e2
+          - cell "app":
+            - link "app":
+              - /url: /abonats/5f11f010-1971-3a50-8d36-ecb8a64df1e2
+          - cell "+34 600000071 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.71@example.test":
+            - link "+34 600000071 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.71@example.test":
+              - /url: /abonats/5f11f010-1971-3a50-8d36-ecb8a64df1e2
+          - cell "Obre la fitxa de Queralt Fictici071":
+            - link "Obre la fitxa de Queralt Fictici071":
+              - /url: /abonats/5f11f010-1971-3a50-8d36-ecb8a64df1e2
+        - row "Guillem Fictici126 · 126 inscrita 24/10/2026 07:55 app +34 600000126 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.126@example.test Obre la fitxa de Guillem Fictici126":
+          - cell "Guillem Fictici126 · 126":
+            - link "Guillem Fictici126 · 126":
+              - /url: /abonats/9ec3655a-a53c-3876-bcdd-dfa207e01f26
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/9ec3655a-a53c-3876-bcdd-dfa207e01f26
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/9ec3655a-a53c-3876-bcdd-dfa207e01f26
+          - cell "app":
+            - link "app":
+              - /url: /abonats/9ec3655a-a53c-3876-bcdd-dfa207e01f26
+          - cell "+34 600000126 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.126@example.test":
+            - link "+34 600000126 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.126@example.test":
+              - /url: /abonats/9ec3655a-a53c-3876-bcdd-dfa207e01f26
+          - cell "Obre la fitxa de Guillem Fictici126":
+            - link "Obre la fitxa de Guillem Fictici126":
+              - /url: /abonats/9ec3655a-a53c-3876-bcdd-dfa207e01f26
+        - row "Pau Fictici073 · 73 inscrita 24/10/2026 07:55 app +34 600000073 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.73@example.test Obre la fitxa de Pau Fictici073":
+          - cell "Pau Fictici073 · 73":
+            - link "Pau Fictici073 · 73":
+              - /url: /abonats/635c887e-b8f6-3577-896d-029c2737fd55
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/635c887e-b8f6-3577-896d-029c2737fd55
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/635c887e-b8f6-3577-896d-029c2737fd55
+          - cell "app":
+            - link "app":
+              - /url: /abonats/635c887e-b8f6-3577-896d-029c2737fd55
+          - cell "+34 600000073 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.73@example.test":
+            - link "+34 600000073 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.73@example.test":
+              - /url: /abonats/635c887e-b8f6-3577-896d-029c2737fd55
+          - cell "Obre la fitxa de Pau Fictici073":
+            - link "Obre la fitxa de Pau Fictici073":
+              - /url: /abonats/635c887e-b8f6-3577-896d-029c2737fd55
+        - row "Lluc Fictici168 · 168 inscrita 24/10/2026 07:55 app +34 600000168 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.168@example.test Obre la fitxa de Lluc Fictici168":
+          - cell "Lluc Fictici168 · 168":
+            - link "Lluc Fictici168 · 168":
+              - /url: /abonats/18a70f82-903b-30c5-b5d2-9a5666dc183b
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/18a70f82-903b-30c5-b5d2-9a5666dc183b
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/18a70f82-903b-30c5-b5d2-9a5666dc183b
+          - cell "app":
+            - link "app":
+              - /url: /abonats/18a70f82-903b-30c5-b5d2-9a5666dc183b
+          - cell "+34 600000168 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.168@example.test":
+            - link "+34 600000168 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.168@example.test":
+              - /url: /abonats/18a70f82-903b-30c5-b5d2-9a5666dc183b
+          - cell "Obre la fitxa de Lluc Fictici168":
+            - link "Obre la fitxa de Lluc Fictici168":
+              - /url: /abonats/18a70f82-903b-30c5-b5d2-9a5666dc183b
+        - row "Pau Fictici160 · 160 inscrita 24/10/2026 07:55 app +34 600000160 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.160@example.test Obre la fitxa de Pau Fictici160":
+          - cell "Pau Fictici160 · 160":
+            - link "Pau Fictici160 · 160":
+              - /url: /abonats/32f9714a-4c02-3680-94bc-5bda59dbf2b1
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/32f9714a-4c02-3680-94bc-5bda59dbf2b1
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/32f9714a-4c02-3680-94bc-5bda59dbf2b1
+          - cell "app":
+            - link "app":
+              - /url: /abonats/32f9714a-4c02-3680-94bc-5bda59dbf2b1
+          - cell "+34 600000160 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.160@example.test":
+            - link "+34 600000160 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.160@example.test":
+              - /url: /abonats/32f9714a-4c02-3680-94bc-5bda59dbf2b1
+          - cell "Obre la fitxa de Pau Fictici160":
+            - link "Obre la fitxa de Pau Fictici160":
+              - /url: /abonats/32f9714a-4c02-3680-94bc-5bda59dbf2b1
+        - row "Laia Fictici144 · 144 inscrita 24/10/2026 07:55 app +34 600000144 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.144@example.test Obre la fitxa de Laia Fictici144":
+          - cell "Laia Fictici144 · 144":
+            - link "Laia Fictici144 · 144":
+              - /url: /abonats/2a6a17d9-e20c-36b8-b748-be2198b826c1
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/2a6a17d9-e20c-36b8-b748-be2198b826c1
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/2a6a17d9-e20c-36b8-b748-be2198b826c1
+          - cell "app":
+            - link "app":
+              - /url: /abonats/2a6a17d9-e20c-36b8-b748-be2198b826c1
+          - cell "+34 600000144 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.144@example.test":
+            - link "+34 600000144 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.144@example.test":
+              - /url: /abonats/2a6a17d9-e20c-36b8-b748-be2198b826c1
+          - cell "Obre la fitxa de Laia Fictici144":
+            - link "Obre la fitxa de Laia Fictici144":
+              - /url: /abonats/2a6a17d9-e20c-36b8-b748-be2198b826c1
+        - row "Aina Fictici167 · 167 inscrita 24/10/2026 07:55 app +34 600000167 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.167@example.test Obre la fitxa de Aina Fictici167":
+          - cell "Aina Fictici167 · 167":
+            - link "Aina Fictici167 · 167":
+              - /url: /abonats/15b17f27-dcbe-3fbe-9a11-06a865575f9f
+          - cell "inscrita":
+            - link "inscrita":
+              - /url: /abonats/15b17f27-dcbe-3fbe-9a11-06a865575f9f
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/15b17f27-dcbe-3fbe-9a11-06a865575f9f
+          - cell "app":
+            - link "app":
+              - /url: /abonats/15b17f27-dcbe-3fbe-9a11-06a865575f9f
+          - cell "+34 600000167 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.167@example.test":
+            - link "+34 600000167 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.167@example.test":
+              - /url: /abonats/15b17f27-dcbe-3fbe-9a11-06a865575f9f
+          - cell "Obre la fitxa de Aina Fictici167":
+            - link "Obre la fitxa de Aina Fictici167":
+              - /url: /abonats/15b17f27-dcbe-3fbe-9a11-06a865575f9f
+        - row "Gala Fictici084 · 84 en llista d'espera (1) 24/10/2026 07:55 app +34 600000084 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.84@example.test Obre la fitxa de Gala Fictici084":
+          - cell "Gala Fictici084 · 84":
+            - link "Gala Fictici084 · 84":
+              - /url: /abonats/b76cd2fd-d703-3c30-a1ca-63255882ac07
+          - cell "en llista d'espera (1)":
+            - link "en llista d'espera (1)":
+              - /url: /abonats/b76cd2fd-d703-3c30-a1ca-63255882ac07
+          - cell "24/10/2026 07:55":
+            - link "24/10/2026 07:55":
+              - /url: /abonats/b76cd2fd-d703-3c30-a1ca-63255882ac07
+          - cell "app":
+            - link "app":
+              - /url: /abonats/b76cd2fd-d703-3c30-a1ca-63255882ac07
+          - cell "+34 600000084 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.84@example.test":
+            - link "+34 600000084 · demo.b5f99b8e-ef6c-4859-80f9-d07904f0a420.84@example.test":
+              - /url: /abonats/b76cd2fd-d703-3c30-a1ca-63255882ac07
+          - cell "Obre la fitxa de Gala Fictici084":
+            - link "Obre la fitxa de Gala Fictici084":
+              - /url: /abonats/b76cd2fd-d703-3c30-a1ca-63255882ac07
+        - row "Aleix Fictici009 · 9 en llista d'espera (2) 24/10/2026 07:56 app +34 600000009 · member.4@example.test Obre la fitxa de Aleix Fictici009":
+          - cell "Aleix Fictici009 · 9":
+            - link "Aleix Fictici009 · 9":
+              - /url: /abonats/439f89ae-dc14-378d-b45c-6aa6fb7ae717
+          - cell "en llista d'espera (2)":
+            - link "en llista d'espera (2)":
+              - /url: /abonats/439f89ae-dc14-378d-b45c-6aa6fb7ae717
+          - cell "24/10/2026 07:56":
+            - link "24/10/2026 07:56":
+              - /url: /abonats/439f89ae-dc14-378d-b45c-6aa6fb7ae717
+          - cell "app":
+            - link "app":
+              - /url: /abonats/439f89ae-dc14-378d-b45c-6aa6fb7ae717
+          - cell "+34 600000009 · member.4@example.test":
+            - link "+34 600000009 · member.4@example.test":
+              - /url: /abonats/439f89ae-dc14-378d-b45c-6aa6fb7ae717
+          - cell "Obre la fitxa de Aleix Fictici009":
+            - link "Obre la fitxa de Aleix Fictici009":
+              - /url: /abonats/439f89ae-dc14-378d-b45c-6aa6fb7ae717
+    - button "Pàgina anterior" [disabled]
+    - text: Pàgina 1 de 1
+    - button "Pàgina següent" [disabled]
+    - text: files per pàgina
+    - combobox "files per pàgina":
+      - option "20 files per pàgina"
+      - option "50 files per pàgina" [selected]
+      - option "200 files per pàgina"
+      - option "1000 files per pàgina"

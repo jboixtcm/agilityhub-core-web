@@ -1,0 +1,69 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (105 tests | 2 failed) 1241ms
+   ❯ T-01-21 AuthClient session flow (37)
+     × emits signedOut and redirects to /entrar when refresh fails 4ms
+   ❯ T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes (5)
+     × a 401 ends the impersonation: no refresh, the expired event and mark, and the tab never reads the cookie again 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > emits signedOut and redirects to /entrar when refresh fails
+AssertionError: expected Error: The session changed while its requ… to match object { Object (code, status) }
+
+- Expected
++ Received
+
+- {
+-   "code": "UNAUTHENTICATED",
+-   "status": 401,
++ SessionChangedError {
++   "message": "The session changed while its request was pending",
+  }
+
+ ❯ src/auth-client.test.ts:319:39
+    317|     const apiClient = createAuthenticatedApiClient(client, { baseUrl: …
+    318|
+    319|     await expect(apiClient.GET("/me")).rejects.toMatchObject({
+       |                                       ^
+    320|       code: "UNAUTHENTICATED",
+    321|       status: 401,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > a 401 ends the impersonation: no refresh, the expired event and mark, and the tab never reads the cookie again
+AssertionError: expected Error: The session changed while its requ… to match object { status: 401 }
+
+- Expected
++ Received
+
+- {
+-   "status": 401,
++ SessionChangedError {
++   "message": "The session changed while its request was pending",
+  }
+
+ ❯ src/auth-client.test.ts:1108:39
+    1106|     const apiClient = createAuthenticatedApiClient(client, { baseUrl: …
+    1107|
+    1108|     await expect(apiClient.GET("/me")).rejects.toMatchObject({ status:…
+       |                                       ^
+    1109|
+    1110|     expect(tokenRequests).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 116 passed (118)
+   Start at  22:00:41
+   Duration  1.80s (tests 53%, environment 29%, transform 10%, import 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run`
+Exit status 1

@@ -1,0 +1,570 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCardRuntime.test.tsx (3 tests | 3 failed) 219ms
+   ❯ T-15-32 / INC-92 / INC-93: the runtime job catalog (3)
+     × labels every published job in ca and only offers supported switches 129ms
+     × labels every published job in es and only offers supported switches 46ms
+     × labels every published job in en and only offers supported switches 42ms
+ ❯ src/audit/ExportsDrawer.test.tsx (6 tests | 6 failed) 10212ms
+   ❯ T-14-26 / INC-95: preparing describes the requested export's current state (6)
+     × removes preparing when the requested job becomes READY even if another job is queued 3101ms
+     × removes preparing when the requested job becomes FAILED even if another job is queued 3031ms
+     × removes preparing when the requested job becomes EXPIRED even if another job is queued 3026ms
+     × does not claim a completed job is preparing on first open 20ms
+     × does not borrow an unrelated queued job's status when the requested job is absent 12ms
+     × does not retain a progress claim after reading the status fails 1018ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/audit/ExportsDrawer.test.tsx > T-14-26 / INC-95: preparing describes the requested export's current state > removes preparing when the requested job becomes READY even if another job is queued
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Preparant l'exportació…
+Received:
+  ExportacionsEls fitxers preparats es poden descarregar durant set dies.Preparant l'exportació…71000000-0000-4000-8000-000000000001.zipPreparadaCreada el 24/10/26 12:00Descarrega 71000000-0000-4000-8000-000000000001.zip71000000-0000-4000-8000-000000000002.zipEn cuaCreada el 24/10/26 12:00
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<button[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mOpen requested export[0m
+      [36m</button>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_0_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_0_"[39m
+            [36m>[39m
+              [0mExportacions[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca les exportacions"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"exports-drawer"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"exports-drawer__notice"[39m
+                [33mrole[39m=[32m"status"[39m
+              [36m>[39m
+                [0mPreparant l'exportació…[0m
+              [36m</p>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"exports-drawer__list"[39m
+              [36m>[39m
+                [36m<li>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"exports-drawer__heading"[39m
+                  [36m>[39m
+                    [36m<strong>[39m
+                      [0m71000000-0000-4000-8000-000000000001.zip[0m
+                    [36m</strong>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                    [36m>[39m
+                      [0mPreparada[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<small>[39m
+                    [0mCreada el 24/10/26 12:00[0m
+                  [36m</small>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost exports-drawer__download"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                      [0mDescarrega 71000000-0000-4000-8000-000000000001.zip[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</li>[39m
+                [36m<li>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"exports-drawer__heading"[39m
+                  [36m>[39m
+                    [36m<strong>[39m
+                      [0m71000000-0000-4000-8000-000000000002.zip[0m
+                    [36m</strong>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+                    [36m>[39m
+                      [0mEn cua[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<small>[39m
+                    [0mCreada el 24/10/26 12:00[0m
+                  [36m</small>[39m
+                [36m</li>[39m
+              [36m</ul>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ timeout src/audit/ExportsDrawer.test.tsx:87:30
+     85|         () => {
+     86|           expect(reads).toBeGreaterThan(1);
+     87|           expect(drawer).not.toHaveTextContent(preparing);
+       |                              ^
+     88|         },
+     89|         { timeout: 3_000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/audit/ExportsDrawer.test.tsx > T-14-26 / INC-95: preparing describes the requested export's current state > removes preparing when the requested job becomes FAILED even if another job is queued
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Preparant l'exportació…
+Received:
+  ExportacionsEls fitxers preparats es poden descarregar durant set dies.Preparant l'exportació…71000000-0000-4000-8000-000000000001.zipErrorCreada el 24/10/26 12:00No s'ha pogut preparar el fitxer.71000000-0000-4000-8000-000000000002.zipEn cuaCreada el 24/10/26 12:00
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<button[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mOpen requested export[0m
+      [36m</button>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_1_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_1_"[39m
+            [36m>[39m
+              [0mExportacions[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca les exportacions"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"exports-drawer"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"exports-drawer__notice"[39m
+                [33mrole[39m=[32m"status"[39m
+              [36m>[39m
+                [0mPreparant l'exportació…[0m
+              [36m</p>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"exports-drawer__list"[39m
+              [36m>[39m
+                [36m<li>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"exports-drawer__heading"[39m
+                  [36m>[39m
+                    [36m<strong>[39m
+                      [0m71000000-0000-4000-8000-000000000001.zip[0m
+                    [36m</strong>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+                    [36m>[39m
+                      [0mError[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<small>[39m
+                    [0mCreada el 24/10/26 12:00[0m
+                  [36m</small>[39m
+                  [36m<small[39m
+                    [33mclass[39m=[32m"exports-drawer__error"[39m
+                  [36m>[39m
+                    [0mNo s'ha pogut preparar el fitxer.[0m
+                  [36m</small>[39m
+                [36m</li>[39m
+                [36m<li>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"exports-drawer__heading"[39m
+                  [36m>[39m
+                    [36m<strong>[39m
+                      [0m71000000-0000-4000-8000-000000000002.zip[0m
+                    [36m</strong>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+                    [36m>[39m
+                      [0mEn cua[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<small>[39m
+                    [0mCreada el 24/10/26 12:00[0m
+                  [36m</small>[39m
+                [36m</li>[39m
+              [36m</ul>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ timeout src/audit/ExportsDrawer.test.tsx:87:30
+     85|         () => {
+     86|           expect(reads).toBeGreaterThan(1);
+     87|           expect(drawer).not.toHaveTextContent(preparing);
+       |                              ^
+     88|         },
+     89|         { timeout: 3_000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/audit/ExportsDrawer.test.tsx > T-14-26 / INC-95: preparing describes the requested export's current state > removes preparing when the requested job becomes EXPIRED even if another job is queued
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Preparant l'exportació…
+Received:
+  ExportacionsEls fitxers preparats es poden descarregar durant set dies.Preparant l'exportació…71000000-0000-4000-8000-000000000001.zipCaducadaCreada el 24/10/26 12:0071000000-0000-4000-8000-000000000002.zipEn cuaCreada el 24/10/26 12:00
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<button[39m
+        [33minert[39m=[32m""[39m
+      [36m>[39m
+        [0mOpen requested export[0m
+      [36m</button>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_2_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_2_"[39m
+            [36m>[39m
+              [0mExportacions[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca les exportacions"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"exports-drawer"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"exports-drawer__notice"[39m
+                [33mrole[39m=[32m"status"[39m
+              [36m>[39m
+                [0mPreparant l'exportació…[0m
+              [36m</p>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"exports-drawer__list"[39m
+              [36m>[39m
+                [36m<li>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"exports-drawer__heading"[39m
+                  [36m>[39m
+                    [36m<strong>[39m
+                      [0m71000000-0000-4000-8000-000000000001.zip[0m
+                    [36m</strong>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+                    [36m>[39m
+                      [0mCaducada[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<small>[39m
+                    [0mCreada el 24/10/26 12:00[0m
+                  [36m</small>[39m
+                [36m</li>[39m
+                [36m<li>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"exports-drawer__heading"[39m
+                  [36m>[39m
+                    [36m<strong>[39m
+                      [0m71000000-0000-4000-8000-000000000002.zip[0m
+                    [36m</strong>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+                    [36m>[39m
+                      [0mEn cua[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<small>[39m
+                    [0mCreada el 24/10/26 12:00[0m
+                  [36m</small>[39m
+                [36m</li>[39m
+              [36m</ul>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ timeout src/audit/ExportsDrawer.test.tsx:87:30
+     85|         () => {
+     86|           expect(reads).toBeGreaterThan(1);
+     87|           expect(drawer).not.toHaveTextContent(preparing);
+       |                              ^
+     88|         },
+     89|         { timeout: 3_000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/audit/ExportsDrawer.test.tsx > T-14-26 / INC-95: preparing describes the requested export's current state > does not claim a completed job is preparing on first open
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Preparant l'exportació…
+Received:
+  ExportacionsEls fitxers preparats es poden descarregar durant set dies.Preparant l'exportació…71000000-0000-4000-8000-000000000001.zipPreparadaCreada el 24/10/26 12:00Descarrega 71000000-0000-4000-8000-000000000001.zip
+ ❯ src/audit/ExportsDrawer.test.tsx:98:24
+     96|     const drawer = await openDrawer();
+     97|     await screen.findByRole("button", { name: `Descarrega ${requestedI…
+     98|     expect(drawer).not.toHaveTextContent(preparing);
+       |                        ^
+     99|   });
+    100|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/audit/ExportsDrawer.test.tsx > T-14-26 / INC-95: preparing describes the requested export's current state > does not borrow an unrelated queued job's status when the requested job is absent
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Preparant l'exportació…
+Received:
+  ExportacionsEls fitxers preparats es poden descarregar durant set dies.Preparant l'exportació…71000000-0000-4000-8000-000000000002.zipEn cuaCreada el 24/10/26 12:00
+ ❯ src/audit/ExportsDrawer.test.tsx:105:24
+    103|     const drawer = await openDrawer();
+    104|     await screen.findByText(`${otherId}.zip`);
+    105|     expect(drawer).not.toHaveTextContent(preparing);
+       |                        ^
+    106|   });
+    107|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/audit/ExportsDrawer.test.tsx > T-14-26 / INC-95: preparing describes the requested export's current state > does not retain a progress claim after reading the status fails
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  Preparant l'exportació…
+Received:
+  ExportacionsEls fitxers preparats es poden descarregar durant set dies.Preparant l'exportació…No s'han pogut carregar les exportacions.71000000-0000-4000-8000-000000000001.zipEn cuaCreada el 24/10/26 12:00
+ ❯ src/audit/ExportsDrawer.test.tsx:121:24
+    119|     expect(await screen.findByText(preparing)).toBeVisible();
+    120|     await screen.findByRole("alert", undefined, { timeout: 3_000 });
+    121|     expect(drawer).not.toHaveTextContent(preparing);
+       |                        ^
+    122|   });
+    123| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/catalogs/JobsCardRuntime.test.tsx > T-15-32 / INC-92 / INC-93: the runtime job catalog > labels every published job in ca and only offers supported switches
+AssertionError: ca:ERASURES: expected undefined to be type of 'string'
+
+Expected: "string"
+Received: "undefined"
+
+ ❯ src/catalogs/JobsCardRuntime.test.tsx:62:56
+     60|       for (const job of jobs) {
+     61|         const label = i18n.getResource(locale, "admin-settings", `jobs…
+     62|         expect.soft(label, `${locale}:${job.jobName}`).toBeTypeOf("str…
+       |                                                        ^
+     63|         const row = card.querySelector(`[data-job="${job.name}"]`);
+     64|         expect(row).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/catalogs/JobsCardRuntime.test.tsx > T-15-32 / INC-92 / INC-93: the runtime job catalog > labels every published job in ca and only offers supported switches
+ FAIL  src/catalogs/JobsCardRuntime.test.tsx > T-15-32 / INC-92 / INC-93: the runtime job catalog > labels every published job in es and only offers supported switches
+ FAIL  src/catalogs/JobsCardRuntime.test.tsx > T-15-32 / INC-92 / INC-93: the runtime job catalog > labels every published job in en and only offers supported switches
+AssertionError: expected 'jobs.name.ERASURES' not to match /jobs\.name\./u
+
+- Expected:
+/jobs\.name\./u
+
++ Received:
+"jobs.name.ERASURES"
+
+ ❯ src/catalogs/JobsCardRuntime.test.tsx:66:62
+     64|         expect(row).not.toBeNull();
+     65|         if (!(row instanceof HTMLElement)) throw new Error("Missing ru…
+     66|         expect(row.querySelector("strong")?.textContent).not.toMatch(/…
+       |                                                              ^
+     67|         const mandatory = job.jobName === "ERASURES" || job.jobName ==…
+     68|         expect
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/catalogs/JobsCardRuntime.test.tsx > T-15-32 / INC-92 / INC-93: the runtime job catalog > labels every published job in es and only offers supported switches
+AssertionError: es:ERASURES: expected undefined to be type of 'string'
+
+Expected: "string"
+Received: "undefined"
+
+ ❯ src/catalogs/JobsCardRuntime.test.tsx:62:56
+     60|       for (const job of jobs) {
+     61|         const label = i18n.getResource(locale, "admin-settings", `jobs…
+     62|         expect.soft(label, `${locale}:${job.jobName}`).toBeTypeOf("str…
+       |                                                        ^
+     63|         const row = card.querySelector(`[data-job="${job.name}"]`);
+     64|         expect(row).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/catalogs/JobsCardRuntime.test.tsx > T-15-32 / INC-92 / INC-93: the runtime job catalog > labels every published job in en and only offers supported switches
+AssertionError: en:ERASURES: expected undefined to be type of 'string'
+
+Expected: "string"
+Received: "undefined"
+
+ ❯ src/catalogs/JobsCardRuntime.test.tsx:62:56
+     60|       for (const job of jobs) {
+     61|         const label = i18n.getResource(locale, "admin-settings", `jobs…
+     62|         expect.soft(label, `${locale}:${job.jobName}`).toBeTypeOf("str…
+       |                                                        ^
+     63|         const row = card.querySelector(`[data-job="${job.name}"]`);
+     64|         expect(row).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  9 failed (9)
+   Start at  09:01:58
+   Duration  11.86s (tests 77%, transform 9%, environment 8%, import 4%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCardRuntime.test.tsx src/audit/ExportsDrawer.test.tsx

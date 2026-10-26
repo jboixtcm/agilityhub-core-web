@@ -1,0 +1,1779 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/CensusRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+Encountered two children with the same key, `61000000-0000-4000-8000-000000000002`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `61000000-0000-4000-8000-000000000002`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/census/CensusRecordPage.test.tsx (45 tests | 3 failed) 4506ms
+   ❯ T-03-39 INC-98 record navigation isolates member and dog state (3)
+     × shows one preferences card and no previous booking feedback after navigating to another member 311ms
+     × a delayed member save cannot replace the next member or reopen its edit drawer 334ms
+     × a delayed dog save and its open draft cannot cross into the next dog's record 154ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+AssertionError: expected <div …(1)><h2 …(1)></h2>
+…(8)</div>
+…(1) to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/census/CensusRecordPage.test.tsx:106:68
+    104|     await screen.findByRole("heading", { name: "Eva Perez Prunell" });
+    105|     await screen.findByLabelText("Recordatori de classe");
+    106|     expect(document.querySelectorAll(".notification-preferences")).toH…
+       |                                                                    ^
+    107|     expect(screen.queryByText("Les reserves s'han bloquejat.")).not.to…
+    108|     expect(screen.getByRole("button", { name: "Bloqueja les reserves" …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed member save cannot replace the next member or reopen its edit drawer
+TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "Eva Perez Prunell"
+
+Here are the accessible roles:
+
+  status:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"census-record__feedback census-record__feedback--success"[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  Name "Carregant les preferències d'avisos":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Carregant les preferències d'avisos"[39m
+    [33mclass[39m=[32m"ah-skeleton"[39m
+    [33mrole[39m=[32m"status"[39m
+    [33mstyle[39m=[32m"height: 12rem;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"census-record__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Delayed Laura Serra Vidal":
+  [36m<h1 />[39m
+
+  Name "Dades i pagament":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  Name "Gossos":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  Name "Preferències d'avisos (mantenibles aquí i al perfil)":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  Name "Preferències d'avisos (mantenibles aquí i al perfil)":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  Name "Preferències d'avisos (mantenibles aquí i al perfil)":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  Name "Facturació":
+  [36m<h2 />[39m
+
+  Name "Rebuts recents":
+  [36m<h3 />[39m
+
+  Name "Pagaments a l'acte":
+  [36m<h3 />[39m
+
+  Name "Packs":
+  [36m<h3 />[39m
+
+  Name "Auditoria":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  Name "Privacitat i dades":
+  [36m<h2 />[39m
+
+  Name "Historial de consentiments":
+  [36m<h3 />[39m
+
+  Name "Supressió de dades":
+  [36m<h3 />[39m
+
+  Name "Reserves":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+    [33mid[39m=[32m"member-bookings-title"[39m
+  [36m/>[39m
+
+  Name "Classes":
+  [36m<h3 />[39m
+
+  Name "Entrenaments":
+  [36m<h3 />[39m
+
+  Name "Notes als instructors":
+  [36m<h2[39m
+    [33mclass[39m=[32m"census-record__section-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "WhatsApp":
+  [36m<a[39m
+    [33mclass[39m=[32m"census-record__action-link"[39m
+    [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+    [33mrel[39m=[32m"noreferrer"[39m
+    [33mtarget[39m=[32m"_blank"[39m
+  [36m/>[39m
+
+  Name "Laura Serra Vidal · núm. 87":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura"[39m
+  [36m/>[39m
+
+  Name "Joan Antoni Serra · núm. 112":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-joan"[39m
+  [36m/>[39m
+
+  Name "Duna · border collieC":
+  [36m<a[39m
+    [33mclass[39m=[32m"census-record__dog-link"[39m
+    [33mhref[39m=[32m"/gossos/dog-duna"[39m
+  [36m/>[39m
+
+  Name "Rock · mestísDPot entrenar solPack 10: 6/4 · caduca 12-11":
+  [36m<a[39m
+    [33mclass[39m=[32m"census-record__dog-link"[39m
+    [33mhref[39m=[32m"/gossos/dog-rock"[39m
+  [36m/>[39m
+
+  Name "Avisos enviats ›":
+  [36m<a[39m
+    [33mclass[39m=[32m"notification-preferences__log"[39m
+    [33mhref[39m=[32m"/notificacions?filter=memberId%3Aeq%3Amember-laura"[39m
+  [36m/>[39m
+
+  Name "Avisos enviats ›":
+  [36m<a[39m
+    [33mclass[39m=[32m"notification-preferences__log"[39m
+    [33mhref[39m=[32m"/notificacions?filter=memberId%3Aeq%3Amember-laura"[39m
+  [36m/>[39m
+
+  Name "Tots els rebuts ›":
+  [36m<a[39m
+    [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+  [36m/>[39m
+
+  Name "Tota l'auditoria ›":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura/auditoria"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Descarrega les dades (RGPD)":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reenvia accés":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Entra com l'abonat":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita la data del proper rebut":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Edita la data del proper rebut"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Edita":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Registra un pagament":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Ajusta":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Inactivitat":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bloqueja les reserves":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Baixa (amb data)":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tablist:
+
+  Name "Apartats de la fitxa":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+    [33mclass[39m=[32m"ah-tabs__list"[39m
+    [33mrole[39m=[32m"tablist"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tab:
+
+  Name "Fitxa":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"_r_1q_-panel-summary"[39m
+    [33maria-selected[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-tabs__tab"[39m
+    [33mid[39m=[32m"_r_1q_-tab-summary"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tasques":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"_r_1q_-panel-tasks"[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-tabs__tab"[39m
+    [33mid[39m=[32m"_r_1q_-tab-tasks"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Auditoria":
+  [36m<button[39m
+    [33maria-controls[39m=[32m"_r_1q_-panel-audit"[39m
+    [33maria-selected[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-tabs__tab"[39m
+    [33mid[39m=[32m"_r_1q_-tab-audit"[39m
+    [33mrole[39m=[32m"tab"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  tabpanel:
+
+  Name "Fitxa":
+  [36m<div[39m
+    [33maria-labelledby[39m=[32m"_r_1q_-tab-summary"[39m
+    [33mclass[39m=[32m"ah-tabs__panel"[39m
+    [33mid[39m=[32m"_r_1q_-panel-summary"[39m
+    [33mrole[39m=[32m"tabpanel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  term:
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  Name "":
+  [36m<dt />[39m
+
+  --------------------------------------------------
+  definition:
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  Name "":
+  [36m<dd />[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"census-record__dog-list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"census-record__invoice-list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"census-record__plain-list"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"member-privacy__consents"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  img:
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Sempre actiu a l'app":
+  [36m<svg[39m
+    [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  switch:
+
+  Name "Correu: Operativa (reserves i canvis fets per l'abonat)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis fets per l'abonat)"[39m
+    [33mclass[39m=[32m"ah-switch"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Comunicats personals":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Correu: Comunicats personals"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Canvis en reserves (fets pel club)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Correu: Canvis en reserves (fets pel club)"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Comunicats del club":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Correu: Comunicats del club"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Notificacions push de comunicats del club":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Notificacions push de comunicats del club"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Operativa (reserves i canvis fets per l'abonat)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis fets per l'abonat)"[39m
+    [33mclass[39m=[32m"ah-switch"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Comunicats personals":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Correu: Comunicats personals"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Canvis en reserves (fets pel club)":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Correu: Canvis en reserves (fets pel club)"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Correu: Comunicats del club":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Correu: Comunicats del club"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Notificacions push de comunicats del club":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"Notificacions push de comunicats del club"[39m
+    [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+    [33mrole[39m=[32m"switch"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Recordatori de classe Recordatori de classe":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select notification-preferences__reminder"[39m
+    [33mid[39m=[32m"member-reminder-member-laura"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select notification-preferences__reminder"[39m
+    [33mid[39m=[32m"member-reminder-member-laura"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Mai":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "1 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"60"[39m
+  [36m/>[39m
+
+  Name "2 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"120"[39m
+  [36m/>[39m
+
+  Name "4 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"240"[39m
+  [36m/>[39m
+
+  Name "6 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"360"[39m
+  [36m/>[39m
+
+  Name "12 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"720"[39m
+  [36m/>[39m
+
+  Name "24 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"1440"[39m
+  [36m/>[39m
+
+  Name "Mai":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "1 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"60"[39m
+  [36m/>[39m
+
+  Name "2 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"120"[39m
+  [36m/>[39m
+
+  Name "4 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"240"[39m
+  [36m/>[39m
+
+  Name "6 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"360"[39m
+  [36m/>[39m
+
+  Name "12 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"720"[39m
+  [36m/>[39m
+
+  Name "24 h abans":
+  [36m<option[39m
+    [33mvalue[39m=[32m"1440"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"census-record__muted"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"member-bookings__note"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Reserves":
+  [36m<div[39m
+    [33maria-labelledby[39m=[32m"member-bookings-title"[39m
+    [33mclass[39m=[32m"ah-card member-bookings"[39m
+    [33mrole[39m=[32m"region"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Classes":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  Name "Entrenaments":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Classes":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  Name "Entrenaments":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Dia i hora Classe Pista Gos Estat Origen":
+  [36m<tr />[39m
+
+  Name "dc 21/10 · 18:50 B+C Central Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 19/10 · 18:50 B+C Central Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 10/08 · 19:00 D i sup. Muntanya Rock confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 18:50 B+C Central Duna confirmada app":
+  [36m<tr />[39m
+
+  Name "Dia i hora Pista Gos Estat Origen":
+  [36m<tr />[39m
+
+  Name "dt 04/08 · 8:00 Muntanya Rock confirmada app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 16:30 Carretera Rock cancel·lada pel club app":
+  [36m<tr />[39m
+
+  Name "dl 03/08 · 7:00 Muntanya Rock confirmada club":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Dia i hora":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Classe":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pista":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Origen":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Dia i hora":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pista":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Gos":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Estat":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Origen":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "dc 21/10 · 18:50":
+  [36m<td />[39m
+
+  Name "B+C":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 19/10 · 18:50":
+  [36m<td />[39m
+
+  Name "B+C":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 10/08 · 19:00":
+  [36m<td />[39m
+
+  Name "D i sup.":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 18:50":
+  [36m<td />[39m
+
+  Name "B+C":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Duna":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dt 04/08 · 8:00":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 16:30":
+  [36m<td />[39m
+
+  Name "Carretera":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "cancel·lada pel club":
+  [36m<td />[39m
+
+  Name "app":
+  [36m<td />[39m
+
+  Name "dl 03/08 · 7:00":
+  [36m<td />[39m
+
+  Name "Muntanya":
+  [36m<td />[39m
+
+  Name "Rock":
+  [36m<td />[39m
+
+  Name "confirmada":
+  [36m<td />[39m
+
+  Name "club":
+  [36m<td />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__feedback census-record__feedback--success"[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [0mLes dades de l'abonat s'han desat.[0m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mDelayed Laura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-privacy__export"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mDescarrega les dades (RGPD)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1q_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1q_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1q_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1q_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1q_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1q_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_1q_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_1q_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+              ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:148:19
+    146|       await pending;
+    147|     });
+    148|     expect(screen.getByRole("heading", { name: "Eva Perez Prunell" }))…
+       |                   ^
+    149|     expect(oldDrawerClosed).toBe(true);
+    150|     expect(screen.queryByText("Les dades de l'abonat s'han desat.")).n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > a delayed dog save and its open draft cannot cross into the next dog's record
+TestingLibraryElementError: Found multiple elements with the role "button" and name "Edita"
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+  [33mtype[39m=[32m"button"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-button__content"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [0mEdita[0m
+  [36m</span>[39m
+[36m</button>[39m
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+  [33mtype[39m=[32m"button"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-button__content"[39m
+  [36m>[39m
+    [0mEdita[0m
+  [36m</span>[39m
+[36m</button>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mDuna[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0mactiu[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+          [36m>[39m
+            [0mC[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-swap"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mTransfereix[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mDona de baixa[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"census-record__section-title"[39m
+          [36m>[39m
+            [0mDades del gos[0m
+          [36m</h2>[39m
+          [36m<dl[39m
+            [33mclass[39m=[32m"census-record__data-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mAbonat[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"/abonats/member-laura"[39m
+                [36m>[39m
+                  [0mLaura Serra Vidal[0m
+                  [0m · núm. 87[0m
+                [36m</a>[39m
+              [36m</dd>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mGuia[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0m—[0m
+              [36m</dd>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mRaça[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mborder collie[0m
+              [36m</dd>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mSexe[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0mfemella[0m
+              [36m</dd>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mData de naixement[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0m12/03/2022[0m
+              [36m</dd>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mXip[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0m941000000000001[0m
+              [36m</dd>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__data-row"[39m
+            [36m>[39m
+              [36m<dt>[39m
+                [0mAlta[0m
+              [36m</dt>[39m
+              [36m<dd>[39m
+                [0m03/02/2023[0m
+              [36m</dd>[39m
+            [36m</div>[39m
+          [36m</dl>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__section-heading"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"census-record__section-title"[39m
+            [36m>[39m
+              [0mNivell i historial[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mCanvia el nivell[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"census-record__level-current"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"census-level-chip"[39m
+            [36m>[39m
+              [0mC[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mNivell C[0m
+            [36m</strong>[39m
+            [0mdes de 01/02/2025[0m
+          [36m</p>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"census-record__history"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<strong>[39m
+                [0mC[0m
+              [36m</strong>[39m
+              [0m [0m
+              [0m· [0m
+              [0m01/02/2025[0m
+              [0m —[0m
+              [0m [0m
+              [0mactual[0m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__section-heading"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"census-record__section-title"[39m
+            [36m>[39m
+              [0mEntrenament lliure[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mEdita[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mNo pot entrenar sol[0m
+          [36m</span>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"census-record__muted"[39m
+          [36m>[39m
+            [0mEl dret ve del nivell.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"census-record__section-title"[39m
+          [36m>[39m
+            [0mLlicències[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0m—[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__section-heading"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"census-record__section-title"[39m
+            [36m>[39m
+              [0mFoto[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mCanvia la foto[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__photo-placeholder"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mEncara no hi ha cap foto[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"census-record__section-title"[39m
+          [36m>[39m
+            [0mNotes als instructors[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mTreballar la calma a la sortida.[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"census-record__muted"[39m
+          [36m>[39m
+            [0mTasques[0m
+            [0m:[0m
+            [0m [0m
+            [0m2 pendents · 1 fetes[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"census-record__section-title"[39m
+        [36m>[39m
+          [0mDocuments[0m
+        [36m</h2>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"census-record__documents"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__document-head"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0mCartilla de vacunes[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mrebut[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<ul>[39m
+              [36m<li>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"https://files.example.test/cartilla_Duna_1.jpg"[39m
+                  [33mrel[39m=[32m"noreferrer"[39m
+                  [33mtarget[39m=[32m"_blank"[39m
+                [36m>[39m
+                  [0mcartilla_Duna_1.jpg[0m
+                [36m</a>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mRetira[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__document-head"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0mAssegurança[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mRecorda la cartilla[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"census-record__upload-form"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"dog-document-type"[39m
+            [36m>[39m
+              [0mTipus de document[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"dog-document-type"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"VACCINATION_CARD"[39m
+              [36m>[39m
+                [0mCartilla de vacunes[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"INSURANCE"[39m
+              [36m>[39m
+                [0mAssegurança[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"dog-document-name"[39m
+            [36m>[39m
+              [0mNom del document[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"dog-document-name"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"dog-document-file"[39m
+            [36m>[39m
+              [0mFitxer[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33maccept[39m=[32m"image/*,application/pdf"[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"dog-document-file"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"file"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-up"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mPuja el document[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:173:28
+    171|     });
+    172|     await screen.findByRole("heading", { name: "Duna" });
+    173|     fireEvent.click(screen.getByRole("button", { name: "Edita" }));
+       |                            ^
+    174|     const drawer = screen.getByRole("dialog", { name: "Edita les dades…
+    175|     fireEvent.change(within(drawer).getByLabelText("Nom"), { target: {…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 42 passed (45)
+   Start at  10:25:19
+   Duration  5.71s (tests 80%, transform 11%, environment 4%, import 4%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/CensusRecordPage.test.tsx`
+Exit status 1

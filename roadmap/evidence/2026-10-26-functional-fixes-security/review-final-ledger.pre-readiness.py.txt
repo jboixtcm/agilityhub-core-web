@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+"""Independent read-only accounting from retained commands, logs and source hashes.
+
+Print JSON only. This executes no tests, browsers, builds, Docker or provider calls.
+--require-complete fails while any of the 91 selected real-browser cases is missing.
+"""
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+WEB = Path(__file__).resolve().parents[3]
+EVIDENCE = WEB / "roadmap/evidence"
+ROOT = EVIDENCE / "2026-10-24-functional-fixes-root"
+IMAGE = "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+BASELINE = json.loads((ROOT / "40-final-ci-tested-inputs.json").read_text())
+GROUPS = [
+    ("web", "core-e2-r5", 5), ("web", "core-e3-r4", 5),
+    ("web", "core-e4", 7), ("web", "core-e5", 11),
+    ("web", "core-e6", 14), ("web", "core-e7", 11), ("web", "core-e8", 6),
+    ("root", "core-e1-r3", 8), ("root", "core-e4w16-r2", 5),
+    ("root", "core-e9-r2", 3), ("root", "core-e10-r2", 6),
+    ("root", "core-auth-r2", 3), ("release", "01-core-d11-r3", 1),
+    ("release", "02-core-e11-r3", 2), ("release", "03-core-production-r3", 4),
+]
+EXTRA_HARNESS = {
+    "roadmap/evidence/2026-10-24-functional-fixes-release/" + name
+    for name in (
+        "check-https-config.py", "https-compose.override.yml", "https-server.mjs",
+        "playwright.production.config.ts", "production-functional.spec.ts",
+        "run-check.py", "run-core.py", "run-image-scan.py", "with-https-compose.py",
+    )
+}
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+
+
+def clean_log(path):
+    return re.sub(r"\x1b\[[0-9;]*m", "", path.read_text())
+
+
+issues = []
+current_mismatches = [name for name, value in BASELINE.items() if digest(WEB / name) != value]
+if current_mismatches:
+    issues.append("Current product/test inputs differ from gate40")
+
+ci = clean_log(ROOT / "40-final-ci.log")
+vitest = {name: int(count) for name, count in re.findall(r"^(.*):\s+Tests\s+(\d+) passed", ci, re.M)}
+node = {}
+for name, kind, value in re.findall(r"^(.*): # (tests|pass|fail|skipped) (\d+)$", ci, re.M):
+    node.setdefault(name, {})[kind] = int(value)
+if sum(vitest.values()) != 3616 or sum(row["pass"] for row in node.values()) != 20:
+    issues.append("Unexpected CI test total")
+if any(row["pass"] != row["tests"] or row["fail"] != 0 or row["skipped"] != 0 for row in node.values()):
+    issues.append("Node TAP suite incomplete")
+
+command_sections = []
+parts = re.split(r"^## (.+)\n", (ROOT / "FINAL_COMMANDS.md").read_text(), flags=re.M)
+for index in range(1, len(parts), 2):
+    name, body = parts[index:index + 2]
+    command = re.search(r"```sh\n(.*?)\n```", body, re.S).group(1)
+    tail = re.search(r"```text\n(.*?)\n```", body, re.S).group(1)
+    reported = re.search(r"Exit: (\d+)\. Inputs: (\d+), unchanged", body)
+    summary = json.loads((ROOT / (name + ".summary.json")).read_text())
+    checks = {
+        "commandMatches": command == (ROOT / (name + ".command")).read_text().strip(),
+        "exitMatches": int(reported[1]) == summary.get("commandExitCode", summary.get("exitCode")),
+        "inputCountMatches": int(reported[2]) == summary["inputCount"],
+        "unchangedClaimMatches": summary.get("inputsUnchanged") is True,
+        "tailMatches": tail == "\n".join((ROOT / (name + ".log")).read_text().splitlines()[-40:]),
+    }
+    if not all(checks.values()):
+        issues.append("Command appendix mismatch: " + name)
+    command_sections.append({"name": name, **checks})
+
+groups = []
+all_identities = []
+for lane, stem, expected in GROUPS:
+    folder = EVIDENCE / ("2026-10-24-functional-fixes-" + lane)
+    summary_path = folder / (stem + ".summary.json")
+    if not summary_path.exists():
+        groups.append({"stage": stem, "status": "pending", "expected": expected})
+        continue
+    summary = json.loads(summary_path.read_text())
+    log = clean_log(folder / (stem + ".log"))
+    inputs = json.loads((folder / (stem + "-tested-inputs.json")).read_text())
+    entries = re.findall(r"^\[(\d+)/(\d+)\] (.+)$", log, re.M)
+    identities = [entry[2] for entry in entries]
+    allowed_extras = EXTRA_HARNESS if stem == "03-core-production-r3" else set()
+    checks = {
+        "exitZero": summary.get("commandExitCode", summary.get("exitCode")) == 0,
+        "sameImage": summary.get("imageId") == IMAGE,
+        "unchanged": summary.get("inputsUnchanged") is True and summary.get("changedInputs") == [],
+        "inputCountMatches": summary.get("inputCount") == len(inputs),
+        "baselineMatches": all(inputs.get(name) == value for name, value in BASELINE.items()),
+        "onlyExpectedExtras": set(inputs) - set(BASELINE) == allowed_extras,
+        "extraHashesMatchCurrent": all(digest(WEB / name) == inputs[name] for name in allowed_extras if name in inputs),
+        "ownedCleanupEmpty": summary.get("cleanupComplete") is True and summary.get("cleanup") == {"containers": [], "networks": [], "volumes": []},
+        "exactPassSummary": re.findall(r"\b(\d+) passed \(", log) == [str(expected)],
+        "noSkippedSummary": not re.search(r"\b[1-9]\d* skipped", log),
+        "caseNumbersComplete": [(int(n), int(total)) for n, total, _ in entries] == [(n, expected) for n in range(1, expected + 1)],
+        "caseIdentitiesUnique": len(set(identities)) == expected,
+    }
+    if stem == "core-e7":
+        record = json.loads((folder / stem / "e7-core-run.json").read_text())
+        checks["testClock200"] = record.get("steps", {}).get("clock", {}).get("status") == 200
+        checks["noClockSkippedRecords"] = not any(key in record.get("steps", {}) for key in ("c-skipped", "d-skipped", "h-skipped"))
+    if stem == "core-e8":
+        record = json.loads((folder / stem / "e8-gate-record.json").read_text())
+        checks["familyPartnerChecked"] = record.get("permissions", {}).get("familyPartnerChecked") is True
+    ok = all(checks.values())
+    if not ok:
+        issues.append("Real-browser evidence mismatch: " + stem)
+    if ok:
+        all_identities.extend(identities)
+    groups.append({"stage": stem, "expected": expected, "status": "passed" if ok else "attention", "checks": checks, "caseIdentities": identities})
+
+if len(all_identities) != len(set(all_identities)):
+    issues.append("Duplicate test identities across selected final stages")
+collector = json.loads(subprocess.check_output([sys.executable, str(ROOT / "collect-final-runs.py")], text=True))
+passed = sum(row["expected"] for row in groups if row["status"] == "passed")
+expected = sum(row[2] for row in GROUPS)
+if collector["passedUniqueCases"] != passed or collector["expectedUniqueCases"] != expected:
+    issues.append("Independent total disagrees with root collector")
+complete = all(row["status"] == "passed" for row in groups)
+result = {
+    "scope": "Independent retained-evidence accounting; no tests or external operations executed",
+    "status": "attention" if issues else "complete" if complete else "partial",
+    "issues": issues,
+    "baselineInputs": len(BASELINE), "currentMismatches": current_mismatches,
+    "vitestSuites": vitest, "vitestPassed": sum(vitest.values()),
+    "nodeSuites": node, "nodePassed": sum(row["pass"] for row in node.values()),
+    "commandSections": command_sections,
+    "expectedUniqueCases": expected, "passedUniqueCases": passed,
+    "collectorAgrees": collector["passedUniqueCases"] == passed,
+    "groups": groups,
+}
+print(json.dumps(result, indent=2))
+raise SystemExit(1 if issues or ("--require-complete" in sys.argv and not complete) else 0)

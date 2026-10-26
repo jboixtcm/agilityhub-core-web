@@ -1,0 +1,22 @@
+[
+  {
+    "memberNumber": 6,
+    "expected": true,
+    "current": true,
+    "history": [
+      true
+    ],
+    "detailStatus": 200,
+    "historyStatus": 200
+  },
+  {
+    "memberNumber": 7,
+    "expected": false,
+    "current": false,
+    "history": [
+      false
+    ],
+    "detailStatus": 200,
+    "historyStatus": 200
+  }
+]

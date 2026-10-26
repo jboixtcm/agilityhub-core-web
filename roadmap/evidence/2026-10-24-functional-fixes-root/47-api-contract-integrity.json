@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-26T08:50:55.396403+00:00",
+  "apiInputCount": 2241,
+  "changedInputs": [],
+  "apiOpenapi": "ba7a26b3aba270b51d04bf8ab3091142cf21a7be3b2ac050002900ef401e8a79",
+  "webOpenapi": "ba7a26b3aba270b51d04bf8ab3091142cf21a7be3b2ac050002900ef401e8a79",
+  "productionSeed": "956d7a01e69e7d3a23ad8170fa548fd6356e3854c0f3461d15cfff6027162915",
+  "productionSeedEqualsHead": true,
+  "demoSeed": "3f9272c7fc7a2313d712835710616b1fe5e10856f730c2450fca022ed4fbd95b",
+  "contractsEqual": true
+}

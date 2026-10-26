@@ -1,0 +1,13 @@
+{
+  "tabs": 3,
+  "rounds": 2,
+  "refreshStatuses": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+  ],
+  "cookieHttpOnly": true
+}

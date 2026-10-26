@@ -31,6 +31,7 @@ type InstructorPatch = components["schemas"]["InstructorPatch"];
 type InstructorReaderView = components["schemas"]["InstructorReaderView"];
 /** What the picker and the rows show of a member: the name and the dogs (`fields`, CONVENCIONS_API §4). */
 const MEMBER_FIELDS = ["fullName", "dogs"] as const;
+const MEMBER_REQUEST_FIELDS = [...MEMBER_FIELDS, "memberNumber"] as const;
 type Member = ListItemWith<components["schemas"]["MemberListItem"], (typeof MEMBER_FIELDS)[number]>;
 type TeamKind = "administrator" | "instructor";
 
@@ -66,6 +67,11 @@ function TeamMemberPicker({
   const [members, setMembers] = useState<Member[]>(
     initialMember === undefined ? [] : [initialMember],
   );
+  // A name (even a name plus dog) is not an identity: include the club's member number.
+  const optionText = (member: Member) =>
+    `${memberText(member, member.fullName, (name, dog) =>
+      t("admin-catalogs:team.memberWithDog", { dog, name }),
+    )} · ${member.memberNumber == null ? "—" : String(member.memberNumber)}`;
 
   useEffect(() => {
     if (disabled) {
@@ -76,7 +82,7 @@ function TeamMemberPicker({
       .GET("/members", {
         params: {
           query: {
-            fields: listFields(MEMBER_FIELDS),
+            fields: listFields(MEMBER_REQUEST_FIELDS),
             filter: ["status:eq:ACTIVE"],
             ...(query.trim() === "" ? {} : { q: query.trim() }),
             size: 20,
@@ -107,15 +113,15 @@ function TeamMemberPicker({
           onChange={(event) => {
             const value = event.currentTarget.value;
             setQuery(value);
-            const member = members.find((candidate) => candidate.fullName === value);
-            onMemberId(member?.id ?? "");
+            const matches = members.filter((candidate) => optionText(candidate) === value);
+            onMemberId(matches.length === 1 ? (matches[0]?.id ?? "") : "");
           }}
           required
           value={query}
         />
         <datalist id="team-member-options">
           {members.map((member) => (
-            <option key={member.id} value={member.fullName}>
+            <option key={member.id} value={optionText(member)}>
               {memberText(member, member.fullName, (name, dog) =>
                 t("admin-catalogs:team.memberWithDog", { dog, name }),
               )}
@@ -163,6 +169,7 @@ function TeamPersonForm({
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (memberId === "") return;
     setPending(true);
     setError(undefined);
     try {
@@ -192,7 +199,13 @@ function TeamPersonForm({
       onSaved();
       onClose();
     } catch (reason) {
-      setError(messageForError(reason));
+      setError(
+        isApiError(reason, "INSTRUCTOR_IN_USE") && item !== undefined && "usage" in item
+          ? t("admin-catalogs:team.instructorInUse", {
+              count: item.usage.futureClassSessions,
+            })
+          : messageForError(reason),
+      );
     } finally {
       setPending(false);
     }
@@ -272,7 +285,12 @@ function TeamPersonForm({
         <Button onClick={onClose} variant="ghost">
           {t("admin-catalogs:common.cancel")}
         </Button>
-        <Button loading={pending} loadingLabel={t("admin-catalogs:common.saving")} type="submit">
+        <Button
+          disabled={memberId === ""}
+          loading={pending}
+          loadingLabel={t("admin-catalogs:common.saving")}
+          type="submit"
+        >
           {t("admin-catalogs:common.save")}
         </Button>
       </div>
@@ -302,15 +320,24 @@ export function TeamPage({ client }: { client: ApiClient }) {
     return result.data.items;
   }, [client]);
   const loadMembers = useCallback(async () => {
-    const result = await client.GET("/members", {
-      params: {
-        query: { fields: listFields(MEMBER_FIELDS), filter: ["status:eq:ACTIVE"], size: 200 },
-      },
-    });
-    if (result.data === undefined) {
-      throw new TypeError("Member response did not contain data");
+    const members: Member[] = [];
+    // Existing team rows can refer to LEFT members, and to any page of the census.
+    for (let page = 0; ; page += 1) {
+      const result = await client.GET("/members", {
+        params: {
+          query: {
+            fields: listFields(MEMBER_REQUEST_FIELDS),
+            page,
+            size: 200,
+            sort: ["memberNumber,asc"],
+          },
+        },
+      });
+      if (result.data === undefined) throw new TypeError("Member response did not contain data");
+      members.push(...itemsWith(result.data.items, MEMBER_FIELDS));
+      if (result.data.items.length === 0 || members.length >= result.data.totalItems)
+        return members;
     }
-    return itemsWith(result.data.items, MEMBER_FIELDS);
   }, [client]);
   const instructors = useCatalogData(loadInstructors, client);
   const administrators = useCatalogData(loadAdministrators, client);
@@ -336,6 +363,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
   const reload = () => {
     instructors.reload();
     administrators.reload();
+    members.reload();
   };
 
   const remove = async () => {

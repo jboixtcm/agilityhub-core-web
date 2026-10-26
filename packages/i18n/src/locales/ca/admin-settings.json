@@ -894,7 +894,9 @@
       "PAYMENT_TIMEOUTS": "Temps de pagament exhaurit",
       "CLASS_FINISHING": "Tancament de classes",
       "CLEANUP": "Neteja tècnica",
-      "BILLING_REMINDER": "Recordatori de facturació"
+      "BILLING_REMINDER": "Recordatori de facturació",
+      "ERASURES": "Supressió de dades",
+      "RETENTION_SWEEP": "Retenció de dades"
     },
     "cadence": {
       "DAILY": "cada dia a les {time}",

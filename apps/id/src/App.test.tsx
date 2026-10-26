@@ -324,8 +324,8 @@ describe("T-01-22 apps/id", () => {
     );
   });
 
-  it("renders password and product pages and completes global logout", async () => {
-    const { fetcher } = testFetcher();
+  it("T-01-13 renders password and products and returns to login after revoking ID's session", async () => {
+    const { fetcher, requests } = testFetcher();
     const client = createClient(fetcher);
     await client.login("biel.roca@example.test", "secret-password");
 
@@ -341,6 +341,10 @@ describe("T-01-22 apps/id", () => {
       "href",
       "https://learn.agilitydoghub.com",
     );
+    expect(screen.getByRole("link", { name: /OBRE CLUBS/u })).toHaveAttribute(
+      "href",
+      "https://clubs.agilitydoghub.com",
+    );
     // E10-W01 step 1: the club console is the AgilityHub team's only (S17 §2 row «Entrada»).
     expect(screen.queryByRole("link", { name: /OBRE LA CONSOLA/u })).toBeNull();
     cleanup();
@@ -349,10 +353,139 @@ describe("T-01-22 apps/id", () => {
     const navigate = vi.fn<(destination: string) => void>();
     await renderApp(client, "ca", navigate);
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith(
-        `/connect/logout?post_logout_redirect_uri=${encodeURIComponent(`${window.location.origin}/login`)}`,
-      );
+      expect(navigate).toHaveBeenCalledWith("/login");
     });
+    expect(requests).toContainEqual(
+      expect.objectContaining({ method: "POST", url: "http://id.test/oauth2/revoke" }),
+    );
+    expect(client.getMe()).toBeNull();
+  });
+
+  it("T-01-13 the Clubs product follows its deployment URL without hiding Learn by default", async () => {
+    vi.stubEnv("VITE_CLUBS_URL", "https://clubs-demo.example.test");
+    try {
+      const { fetcher } = testFetcher();
+      const client = createClient(fetcher);
+      await client.login("biel.roca@example.test", "secret-password");
+      window.history.replaceState(null, "", "/products");
+      await renderApp(client);
+      expect(await screen.findByRole("link", { name: /OBRE CLUBS/u })).toHaveAttribute(
+        "href",
+        "https://clubs-demo.example.test",
+      );
+      expect(screen.getByRole("link", { name: /OBRE LEARN/u })).toHaveAttribute(
+        "href",
+        "https://learn.agilitydoghub.com",
+      );
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("T-01-13 an isolated demo hides the entire Learn card and keeps the Clubs default", async () => {
+    vi.stubEnv("VITE_LEARN_ENABLED", "false");
+    vi.stubEnv("VITE_CLUBS_URL", "");
+    try {
+      const { fetcher } = testFetcher();
+      const client = createClient(fetcher);
+      await client.login("biel.roca@example.test", "secret-password");
+      window.history.replaceState(null, "", "/account");
+      await renderApp(client);
+      expect(
+        await screen.findByRole("link", { name: /Consulta els teus productes/u }),
+      ).toHaveAttribute("href", "/products");
+      cleanup();
+      window.history.replaceState(null, "", "/products");
+      await renderApp(client);
+      expect(await screen.findByRole("link", { name: /OBRE CLUBS/u })).toHaveAttribute(
+        "href",
+        "https://clubs.agilitydoghub.com",
+      );
+      expect(screen.queryByRole("link", { name: /OBRE LEARN/u })).toBeNull();
+      expect(screen.queryByRole("heading", { name: "AgilityHub Learn" })).toBeNull();
+      expect(document.querySelector('a[href="https://learn.agilitydoghub.com"]')).toBeNull();
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
+  it("T-01-13 restores a cold ID logout before revocation and never redirects on a failed attempt", async () => {
+    const { fetcher, requests } = testFetcher();
+    const client = new AuthClient({
+      apiBaseUrl: "http://id.test/api/v1",
+      clientId: "id-web",
+      fetch: fetcher,
+      identityBaseUrl: "http://id.test",
+      signInPath: "/login",
+    });
+    const logout = vi
+      .spyOn(client, "logout")
+      .mockRejectedValueOnce(new Error("fictional offline failure"));
+    const navigate = vi.fn<(destination: string) => void>();
+    window.history.replaceState(null, "", "/logout");
+    await renderApp(client, "ca", navigate);
+    expect(await screen.findByRole("alert")).toHaveTextContent("No s'ha pogut completar l'acció");
+    expect(navigate).not.toHaveBeenCalled();
+    expect(logout).toHaveBeenCalledOnce();
+    expect(requests[0]).toMatchObject({ method: "POST", url: "http://id.test/oauth2/token" });
+    expect(new URLSearchParams(requests[0]?.body).get("grant_type")).toBe("refresh_token");
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/login");
+    });
+    expect(logout).toHaveBeenCalledTimes(2);
+    expect(requests).toContainEqual(
+      expect.objectContaining({ method: "POST", url: "http://id.test/oauth2/revoke" }),
+    );
+  });
+
+  it.each(["unmounted", "replaced"] as const)(
+    "T-01-13 an %s logout page cannot revoke the replacement account after a late restore",
+    async (transition) => {
+      const { fetcher } = testFetcher();
+      const client = createClient(fetcher);
+      let finish: ((value: Me | null) => void) | undefined;
+      vi.spyOn(client, "restoreSession").mockReturnValue(
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+      );
+      const logout = vi.spyOn(client, "logout");
+      const navigate = vi.fn<(destination: string) => void>();
+      window.history.replaceState(null, "", "/logout");
+      await renderApp(client, "ca", navigate);
+      if (transition === "unmounted") cleanup();
+      await client.login("biel.roca@example.test", "secret-password");
+      finish?.(client.getMe());
+      // Drain the late continuation: neither its server mutation nor navigation may run.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+      expect(logout).not.toHaveBeenCalled();
+      expect(navigate).not.toHaveBeenCalled();
+      expect(client.getMe()?.account.id).toBe(me.account.id);
+    },
+  );
+
+  it("T-01-13 an already expired cookie leaves logout at login without claiming a server revoke", async () => {
+    const fetcher = vi.fn(() =>
+      Promise.resolve(json({ code: "REFRESH_EXPIRED", message: "Expired" }, 400)),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: "http://id.test/api/v1",
+      identityBaseUrl: "http://id.test",
+      clientId: "id-web",
+      fetch: fetcher,
+    });
+    const navigate = vi.fn<(destination: string) => void>();
+    const logout = vi.spyOn(client, "logout");
+    window.history.replaceState(null, "", "/logout");
+    await renderApp(client, "ca", navigate);
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/login");
+    });
+    expect(logout).not.toHaveBeenCalled();
+    expect(client.getMe()).toBeNull();
   });
 
   it("E10-W01 step 1: an AGILITYHUB_ADMIN without a club sees the club console among the products (S17 §2 «Entrada»)", async () => {

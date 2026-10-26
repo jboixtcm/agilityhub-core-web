@@ -1,0 +1,15 @@
+{
+  "scope": "Read-only application-source triage supplement; not a proof of universal non-reachability.",
+  "findings": [
+    "Both Thymeleaf engines use ClassLoaderTemplateResolver with templates/ prefix and .html suffix; render calls use the fixed email/system and email/notification names. User-facing message values enter the context, not a dynamic template name.",
+    "No explicit ProcessBuilder, Runtime.getRuntime, gzwrite or GnuTLS invocation was found under src/main/java. The runtime image includes curl, and its Docker healthcheck uses a loopback HTTP health endpoint. Native/JVM/transitive uses are not ruled out by this source search."
+  ],
+  "followUp": "Retain medium/low advisories and fixed-version maintenance candidates; rebuild/rescan the chosen hosting architecture before deployment. Escalate any refreshed high/critical finding to the coordinator.",
+  "sources": [
+    "Dockerfile",
+    "src/main/java/com/agilityhub/core/configuration/EmailConfiguration.java",
+    "src/main/java/com/agilityhub/core/configuration/MessagingConfiguration.java",
+    "src/main/java/com/agilityhub/core/clubs/messaging/application/SystemEmailRenderer.java",
+    "src/main/java/com/agilityhub/core/clubs/messaging/application/engine/NotificationEmailRenderer.java"
+  ]
+}

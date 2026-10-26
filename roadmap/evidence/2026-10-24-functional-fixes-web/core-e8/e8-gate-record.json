@@ -1,0 +1,61 @@
+{
+  "clockInstant": "2026-11-23T07:00:00+01:00",
+  "leaveDate": "2026-11-30",
+  "period": "2026-12",
+  "weekStart": "2026-11-23",
+  "clock": [
+    {
+      "instant": "2026-11-23T07:00:00+01:00",
+      "status": 200
+    },
+    {
+      "instant": "2026-11-29T19:01:00.000Z",
+      "status": 200
+    }
+  ],
+  "inactivity": {
+    "bookedInside": {
+      "classStartsAtLocal": "2026-12-07T08:30",
+      "stateAfterApproval": "CANCELLED",
+      "stateOn04": "NOT_BOOKABLE/INACTIVITY"
+    },
+    "cancelledBookings": 1,
+    "feeArrangement": {
+      "amountMinor": 2000,
+      "currency": "EUR",
+      "fromMonth": "2026-12",
+      "memberId": "dff3c537-48c6-3806-9143-75ed26db9c51",
+      "toMonth": "2026-12"
+    },
+    "frozenMemberUntil": "2026-11-30",
+    "fromMonth": "2026-12",
+    "memberId": "99c7fe5e-2812-3a7c-ada3-edd54ca0c013",
+    "stateAfterApproval": "APPROVED",
+    "simulatedLineBeforeLeave": "Quota inactivitat — Desembre 2026"
+  },
+  "pack": {
+    "afterBooking": 4,
+    "afterCancellation": 5,
+    "afterSeededRefund": 5,
+    "before": 5,
+    "expiredRemaining": 10,
+    "memberId": "02bd4e4c-f7d0-3c20-ae25-145df11d02cb"
+  },
+  "card": {
+    "banner": {
+      "shown": true,
+      "source": "synthetic-invalid-flag"
+    },
+    "cardSetup": {
+      "host": "checkout.test",
+      "navigated": true,
+      "redirectOrigin": "https://fifo.example.test",
+      "status": 201
+    },
+    "failedChip": 0,
+    "paidChip": 1,
+    "settledWithoutReload": true,
+    "skipped": 0,
+    "submitted": 1
+  }
+}

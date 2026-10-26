@@ -1,0 +1,42 @@
+[
+  {
+    "file": "dark-after-three-nudges-canvas.png",
+    "sha256": "373c7c4279da489f3b095cb0705d17d439c28869b6fc3c32a44e6fe4da24d250",
+    "openedForVisualReview": true
+  },
+  {
+    "file": "dark-after-three-nudges.png",
+    "sha256": "6515d286988e6c7b13468408d2e38403064c1d8da1fba606f5563d786ff8155c",
+    "openedForVisualReview": true
+  },
+  {
+    "file": "dark-before-canvas.png",
+    "sha256": "e4c78d58e9bd72ad8e5714f7899edb5f4a544d140f5f6758be89179b7bb816b5",
+    "openedForVisualReview": true
+  },
+  {
+    "file": "dark-before.png",
+    "sha256": "4277ff0b98c2ed7c0f7f0e979d2365312efd328812e9831487bc3ccc0e9a99bc",
+    "openedForVisualReview": false
+  },
+  {
+    "file": "light-after-three-nudges-canvas.png",
+    "sha256": "f04a71e71a141f8fdf8a00d413c8302e5ae924157b288539f04cd9f6c4ef45e8",
+    "openedForVisualReview": true
+  },
+  {
+    "file": "light-after-three-nudges.png",
+    "sha256": "e1de6d8baf52057133c9208ceec0ccd75bebacb579f95753de62af571d65e56f",
+    "openedForVisualReview": true
+  },
+  {
+    "file": "light-before-canvas.png",
+    "sha256": "572c8fb8e5e637931120e19315be604d9f3d41622d8d41efae4e663f605c5ba6",
+    "openedForVisualReview": true
+  },
+  {
+    "file": "light-before.png",
+    "sha256": "f1a34c4aec7218214dfa60211ff5c24147a721b5153f61118d265c0894e0989d",
+    "openedForVisualReview": false
+  }
+]

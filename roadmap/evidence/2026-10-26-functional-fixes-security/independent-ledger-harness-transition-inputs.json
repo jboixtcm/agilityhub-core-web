@@ -1,0 +1,41 @@
+{
+  "scope": "Independent baseline-pair review; final suite incomplete",
+  "files": [
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/48-harness-only-delta.json",
+      "sha256": "4fd1c503b47cdfcdb8ca52a730f498e68fe8f4b4f9037fced983094b0661770b"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/48-harness-final-inputs.json",
+      "sha256": "5f4bf9eccdd6af5439533ad4d69e2607a25af218d3692597c68524ded52170c9"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/collect-final-runs.py",
+      "sha256": "83c4803c9ffb39817b0617b30fd5fadeabad3f1b103a278edf06d061e7d6edde"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/core-stack/wait-for-outbox.mjs",
+      "sha256": "f905a27932038611e787dafe675d2ec961aca0d8677b623b9c885c0f27d0d5f8"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/core-stack/wait-for-outbox.test.mjs",
+      "sha256": "449e9fa3d93da2ca7fef5a3c10555fd4c9a2de188b8183d2c99be51f3e4763cd"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/scripts/e2e-core.sh",
+      "sha256": "4633824f73984c3fd9ae5bd70ffd30e4786418c7d5ed497fcea39e81644567f1"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/12-outbox-readiness-checks.log",
+      "sha256": "7fedee7f12260f0fa75b1eeb2f23438ef171eb4b85645cf2365e99f67d03cc6c"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/review-final-ledger.py",
+      "sha256": "9e9035463665663f1c1ce64a2b591deff1e45b07383a05a8acd96fdfc34f29df"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/independent-ledger-harness-transition.json",
+      "sha256": "139c1821686f1ff546872bf813b7a0cdb57b3327cc187abcec0754fff0279c91"
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "attempt-01": {
+    "exitRecordsMatch": true,
+    "commands": [
+      {
+        "command": "01-seed-canic.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "02-seed-other.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "03-dry-partial.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "04-apply-partial.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "05-resume-drift.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "06-resume-complete.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "07-stale-resume.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "08-legacy-full-repeat.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "09-production-no-confirmation.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "10-production-reset.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "11-reapply-without-file.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "12-duplicate-steps.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "13-invalid-step.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "14-production-local-storage.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "15-report-wrong-tenant.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "16-report-staging.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "17-welcome-dry.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "18-welcome-local-send.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "19-welcome-repeat.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "20-welcome-mailbox-failure.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "21-welcome-uncertain-repeat.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "22-welcome-other-tenant.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      }
+    ],
+    "image": {
+      "tag": "agilityhub-core-api:review-fixes-20261024",
+      "id": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "profile": "local",
+      "network": "internal, no published ports, no provider egress"
+    }
+  },
+  "report-attempt-01": {
+    "exitRecordsMatch": true,
+    "commands": [
+      {
+        "command": "01-seed-canic.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "02-production-dry.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "03-production-report-outage.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "04-report-only-recovery.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "05-report-only-repeat.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "06-unapproved-production-repeat.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "07-approved-reapply.command",
+        "savedExit": 0,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      },
+      {
+        "command": "08-stale-approval.command",
+        "savedExit": 1,
+        "matchesAssertion": true,
+        "matchesExpected": true
+      }
+    ],
+    "image": {
+      "tag": "agilityhub-core-api:review-fixes-20261024",
+      "id": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "profile": "staging",
+      "commandEnvironment": "production",
+      "network": "internal; no published ports or real providers",
+      "s3EmulatorImage": "sha256:b279c01f4cfb8f985a482e4014cabc1e2697b9d7a6c8c8db2e40f4d9f93687c7"
+    }
+  },
+  "liveCleanup": {
+    "containers": [],
+    "networks": [],
+    "volumes": [],
+    "privateTempDirectoryCount": 0
+  }
+}

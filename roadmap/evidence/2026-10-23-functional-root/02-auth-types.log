@@ -1,0 +1,4 @@
+
+> agilityhub-core-web@0.0.0 typecheck:e2e-core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> tsc -p e2e/core/tsconfig.json --noEmit
+

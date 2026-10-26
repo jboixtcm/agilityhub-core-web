@@ -1,0 +1,11 @@
+$ pnpm exec eslint e2e/core/e8-core.spec.ts --max-warnings 0
+$ pnpm typecheck:e2e-core
+
+> agilityhub-core-web@0.0.0 typecheck:e2e-core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> tsc -p e2e/core/tsconfig.json --noEmit
+
+$ pnpm exec prettier --check e2e/core/e8-core.spec.ts
+Checking formatting...
+All matched files use Prettier code style!
+
+exitCode=0

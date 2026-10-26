@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-26T09:38:48.313047+00:00",
+  "resources": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "sharedHeavyLockAbsent": true,
+  "unrelatedRunningContainers": [
+    "course-design-workshop-postgres",
+    "avanta-telephony-infra-webphone-1",
+    "avanta-telephony-infra-spring-demo-1",
+    "avanta-telephony-infra-asterisk-1",
+    "avanta-telephony-infra-coturn-1"
+  ],
+  "scope": "Read-only check of review-owned prefixes; unrelated course-workshop/Avanta services preserved. Tested local image and evidence retained; no deploy or cleanup of unrelated resources.",
+  "complete": true
+}

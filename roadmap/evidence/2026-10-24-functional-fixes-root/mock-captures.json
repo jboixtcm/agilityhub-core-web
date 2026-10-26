@@ -1,0 +1,1193 @@
+{
+  "total": 169,
+  "groups": {
+    "member-gallery": 52,
+    "admin-gallery": 43,
+    "other-flows": 74
+  },
+  "captures": [
+    {
+      "file": "03-inici-375.png",
+      "width": 375,
+      "height": 819,
+      "group": "other-flows",
+      "sha256": "e9a6a8428899ffabe2ee50405fb17302c29682261b9dd14d87112d2852e287e3"
+    },
+    {
+      "file": "04-reservar-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "a98303adcdf75ff2ae5589920c87e5b2605a61a2315aed58a695fae31d54e5da"
+    },
+    {
+      "file": "06-confirmar-canvi-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "28b617d06510ddf45d54bd44416cc6d1da4f87b573fb1ae992911339c557905c"
+    },
+    {
+      "file": "07-anullada-tard-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "557af84f1404589ca8189d2085f2668d14447e874c5004962a77ba23510719d0"
+    },
+    {
+      "file": "07-detall-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "27de1a1492aa50dbaa2d216295dbed7fc3a99bd655750ab508c0aa5aeb405e5c"
+    },
+    {
+      "file": "07-espera-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "d78c4cc26b8d944ffc30e8c4c33362ba72c337afcb684766a9a21ee8b874ca67"
+    },
+    {
+      "file": "16-add-dog-price-overlap-refused-375.png",
+      "width": 375,
+      "height": 1569,
+      "group": "other-flows",
+      "sha256": "5929ca446622980d80d8cfb8414fab482b76096a4f26140d63d508606548dbcc"
+    },
+    {
+      "file": "16-add-dog-price-twin-375.png",
+      "width": 375,
+      "height": 1539,
+      "group": "other-flows",
+      "sha256": "985bf8dada8572c8ef0d3097cf7444e40c115eb068bb89acf8bf4b073301752a"
+    },
+    {
+      "file": "20-console-product-host-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "188beba490e68dc063d503774ed1ef9f91f71d2c1742ee1a1ad8db4a512d5f25"
+    },
+    {
+      "file": "21-console-platform-only-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "56a3d569cfae53b9147735330ed92dbb8ccac23ccdef8e52009c3954abf58fe6"
+    },
+    {
+      "file": "22-D6-rollback-file-not-sent-1280.png",
+      "width": 1280,
+      "height": 3254,
+      "group": "other-flows",
+      "sha256": "ad19974a356273df47d372bfabe5e7697bdecc57aecae82c8377c155206ebc76"
+    },
+    {
+      "file": "22-D6-rollback-file-not-sent-375.png",
+      "width": 632,
+      "height": 5353,
+      "group": "other-flows",
+      "sha256": "33efe274a8c90615d08aa81af0c743b054aff7c8850c2810c881845cdaad2bab"
+    },
+    {
+      "file": "23-D10-next-invoice-row-1280.png",
+      "width": 1280,
+      "height": 2518,
+      "group": "other-flows",
+      "sha256": "ac6e65b036932799113cc476d959bda6d7d01698eab93d432133d4bf88d30741"
+    },
+    {
+      "file": "23-D10-next-invoice-row-375.png",
+      "width": 558,
+      "height": 4762,
+      "group": "other-flows",
+      "sha256": "549fe877c87ca3a1321ee4cc0d4a604f4bf5c9f0794f5154cc4ec9cbc20eae7a"
+    },
+    {
+      "file": "23-classe-inscrits-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "5be6e7eceec8af1d42783330db768feca590e9efe264d64dbe4747965e074e12"
+    },
+    {
+      "file": "29-confirmar-normal-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "81e2c6e0685dbda5c9fbf6a581f6512212680a89865326a6f34d5b4a322d5d26"
+    },
+    {
+      "file": "29-limit-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "adc94b038da4e6193c3237ab878616eee1edbdcafe8572d1d7471a1b3ac84df8"
+    },
+    {
+      "file": "29-properament-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "d03b62a55a3d95092f1cd442efc644e20234bcda8024708b078095f0cefa83e4"
+    },
+    {
+      "file": "29-temps-esgotat-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "bd48cbb6bd01a995466938077350296f88cbcdddb319c90271970a9eb3145c93"
+    },
+    {
+      "file": "50-03b-admin-landing-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "f79140c85ea00e9aa1be913fe244f5ca21696cc5cdebb15529c8325890626655"
+    },
+    {
+      "file": "50-21-empty-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "1a032997b955453bd40695e4752d0378ebda624880b727a9d6136e2b4913220d"
+    },
+    {
+      "file": "50-21-empty-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "5c736ceecab8db08d75693db3de3f054bc7847f307176d3adbdad6fa9db06533"
+    },
+    {
+      "file": "50-28-id-document-ca-1280.png",
+      "width": 1280,
+      "height": 1219,
+      "group": "other-flows",
+      "sha256": "43f65e67abad4c499cb815f97f83d16551e0d9966d5703d24a37e222cb4e575f"
+    },
+    {
+      "file": "50-28-id-document-ca-375.png",
+      "width": 375,
+      "height": 1255,
+      "group": "other-flows",
+      "sha256": "cee190b2dc8d6ee8fc7c1c0bb6a7d5708b7e1e60d20720dac7396a3952ca8145"
+    },
+    {
+      "file": "50-28-id-document-es-1280.png",
+      "width": 1280,
+      "height": 1219,
+      "group": "other-flows",
+      "sha256": "dec2691c8a3ed1adb1b0b96597ea81007708eba3ffd370fcaacca1648e09a996"
+    },
+    {
+      "file": "50-28-id-document-es-375.png",
+      "width": 375,
+      "height": 1273,
+      "group": "other-flows",
+      "sha256": "83dd46e6d9f5536959fb1514b87e160aa3f7948d94ea28665c9266328f21277b"
+    },
+    {
+      "file": "50-30-info-retry-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "ab218e29b422dafca00c75457c6aea0cbe149a68dfa3c0632aff8a9a1623de9b"
+    },
+    {
+      "file": "50-D10-dog-dates-1280.png",
+      "width": 1280,
+      "height": 1326,
+      "group": "other-flows",
+      "sha256": "06314c1bc19e08e6a15a60483d1bc11e76a161f9363d23dd5ccefa2073339673"
+    },
+    {
+      "file": "50-D10-readmission-pending-1280.png",
+      "width": 1280,
+      "height": 2426,
+      "group": "other-flows",
+      "sha256": "d78336cfef4dc245115e1b75c71813aa2643fe14c003316d3194b3d8cc3b8960"
+    },
+    {
+      "file": "50-D16-ring-bookings-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "74757c205d00690ddd0184d1094b54d404ac87428aa2fd8758d202297c71dda6"
+    },
+    {
+      "file": "50-D16-ring-bookings-375.png",
+      "width": 375,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "575dbea57ca6268061e782130c76a1366d2ceff6b5046c0607e46772247a709f"
+    },
+    {
+      "file": "50-D2-no-plan-proposal-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "e0019f76b75492771244cdf72bd4bc9ddc42a93ae3a9dc9c1166c6d90cda2f9a"
+    },
+    {
+      "file": "50-D4-review-0800-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "1e26a06ed3bb74c25afb1695379e608e403bf0401c172e8816d7ba408e3faaf5"
+    },
+    {
+      "file": "50-D4-review-0800-375.png",
+      "width": 660,
+      "height": 1553,
+      "group": "other-flows",
+      "sha256": "018d434e68e9f559558dab104ad2509bb2c25da77c0eb05a5e1794e27dc605c0"
+    },
+    {
+      "file": "50-D5-unlabelled-channel-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "596bbb27254e3c56d8bfc8bc8f5719d2814550add4dde25d857f2e2528ab9d79"
+    },
+    {
+      "file": "50-D5-unlabelled-channel-375.png",
+      "width": 607,
+      "height": 3130,
+      "group": "other-flows",
+      "sha256": "249b0cf3523bc15e2e57790445f48d645909705006ad81a36f42b9256f1c8f93"
+    },
+    {
+      "file": "50-D6-price-overlap-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "d40b1e472b143000bce5babf28b46bdfb98993365c04feb7b90b3ed8bf4b47ec"
+    },
+    {
+      "file": "50-chunk-failure-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "36b393aaa871edc5ea557b87911c0113210ac2c607613729ebf1f124d81582f5"
+    },
+    {
+      "file": "50-chunk-failure-375.png",
+      "width": 447,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "9d572eab4ac2df3dbcb28921878fffb1a4b313d6701b7404de400df9ef5ce208"
+    },
+    {
+      "file": "50-d10-inactividad-es-1280.png",
+      "width": 1280,
+      "height": 2535,
+      "group": "other-flows",
+      "sha256": "89996fdedce8aa3b938271ffa08105a475cb25ae0501ce64132a3f80f902f536"
+    },
+    {
+      "file": "50-d10-inactividad-es-375.png",
+      "width": 547,
+      "height": 5077,
+      "group": "other-flows",
+      "sha256": "c304fb5b6e1ae5e48babb30bde2f5ccd88da090fafddbfd2d7fb09b979b3253c"
+    },
+    {
+      "file": "50-d10-inactividad-modificar-es-1280.png",
+      "width": 1280,
+      "height": 2535,
+      "group": "other-flows",
+      "sha256": "ad809b7e9015117bb03cdea21339f262f2bcc0e2dc5f67c04310bbebbed3388e"
+    },
+    {
+      "file": "50-d10-inactividad-modificar-es-375.png",
+      "width": 547,
+      "height": 5077,
+      "group": "other-flows",
+      "sha256": "62f6ae82e285127053abbb8430f7aab611e3acf7b1427cd7478da8203151c2bf"
+    },
+    {
+      "file": "50-d12-abrir-recorrido-es-1280.png",
+      "width": 1280,
+      "height": 1020,
+      "group": "other-flows",
+      "sha256": "e38254b8e1f458dc7f74f097ce4723f979ce0fb846e47e1f9a92d1cefcc33078"
+    },
+    {
+      "file": "50-d12-abrir-recorrido-es-375.png",
+      "width": 812,
+      "height": 1141,
+      "group": "other-flows",
+      "sha256": "29c2f480ea8e36571685b4bb0854f5c52dc5c76f578f920127f028eaff75ff10"
+    },
+    {
+      "file": "50-espera-after-sign-in-375.png",
+      "width": 375,
+      "height": 812,
+      "group": "other-flows",
+      "sha256": "d78c4cc26b8d944ffc30e8c4c33362ba72c337afcb684766a9a21ee8b874ca67"
+    },
+    {
+      "file": "50-registrar-montado-biblioteca-es-1280.png",
+      "width": 1280,
+      "height": 1033,
+      "group": "other-flows",
+      "sha256": "42e8bc1bc64761d64ff05c0976f81141ddc81be2eccb27792a2892ee2c865763"
+    },
+    {
+      "file": "50-registrar-montado-biblioteca-es-375.png",
+      "width": 375,
+      "height": 1129,
+      "group": "other-flows",
+      "sha256": "16db768eb64a70a0094eb2da529f148f59b8c0cbf28786746e463840e71ccf4b"
+    },
+    {
+      "file": "50-registrar-montado-es-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "5362961719c709130e0b6be480a9de490a67089d1642a105f2b476e8937037c0"
+    },
+    {
+      "file": "50-registrar-montado-es-375.png",
+      "width": 375,
+      "height": 861,
+      "group": "other-flows",
+      "sha256": "7ff191e85c68e6e4d6b9124136b996df4ff3bab5ee27a819f3394365df72d520"
+    },
+    {
+      "file": "50-user-menu-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "d17df76f6a7d65c0ef546a567f711a51acc3e1cac1b57f0b975c5de126f14d5c"
+    },
+    {
+      "file": "50-visor-personal-es-1280.png",
+      "width": 1280,
+      "height": 1075,
+      "group": "other-flows",
+      "sha256": "b613707d7443adb534e458e57940c0020014136d22cfb9eac6863932ca96bb6d"
+    },
+    {
+      "file": "50-visor-personal-es-375.png",
+      "width": 375,
+      "height": 970,
+      "group": "other-flows",
+      "sha256": "32518e3d235786a980a05b6d6994a2c80062dccba66f137253cf6e9d139b102a"
+    },
+    {
+      "file": "60-D10-next-invoice-1280.png",
+      "width": 1280,
+      "height": 2518,
+      "group": "other-flows",
+      "sha256": "ac6e65b036932799113cc476d959bda6d7d01698eab93d432133d4bf88d30741"
+    },
+    {
+      "file": "60-D10-next-invoice-375.png",
+      "width": 558,
+      "height": 4762,
+      "group": "other-flows",
+      "sha256": "549fe877c87ca3a1321ee4cc0d4a604f4bf5c9f0794f5154cc4ec9cbc20eae7a"
+    },
+    {
+      "file": "61-D10-next-invoice-drawer-1280.png",
+      "width": 1280,
+      "height": 2518,
+      "group": "other-flows",
+      "sha256": "94630cc410a9496a85e567aa3a03045ef99935adea64183f8393fda380e7e227"
+    },
+    {
+      "file": "61-D10-next-invoice-drawer-375.png",
+      "width": 558,
+      "height": 4762,
+      "group": "other-flows",
+      "sha256": "99b6697e254bb49d68a294f7f775676fed61b36bcc131faa640a2dd3abbe7bc9"
+    },
+    {
+      "file": "62-D6-submission-due-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "group": "other-flows",
+      "sha256": "d4742d3aa86e8a14ba077705d12a80f1d417c77b38fd972e517fec3fbdaa71b2"
+    },
+    {
+      "file": "62-D6-submission-due-375.png",
+      "width": 632,
+      "height": 5263,
+      "group": "other-flows",
+      "sha256": "d34ffa2867e7e6f63192d18bd442f2530aee54ac8818da65e1867601a47c54f6"
+    },
+    {
+      "file": "63-D6-collection-date-passed-1280.png",
+      "width": 1280,
+      "height": 3254,
+      "group": "other-flows",
+      "sha256": "b058f4be34979ce42d336fb05e8abe63f448968640f87408587402db5505939f"
+    },
+    {
+      "file": "63-D6-collection-date-passed-375.png",
+      "width": 632,
+      "height": 5353,
+      "group": "other-flows",
+      "sha256": "8da6368036e34cdb104b04b241fdaaeb5eec9defd888bd0cb87cf5740c10236a"
+    },
+    {
+      "file": "D1-risc-1280.png",
+      "width": 472,
+      "height": 349,
+      "group": "other-flows",
+      "sha256": "1258f9f39e87e02774232709377a99a1c05c92b391fecd98819de7eb93ca4429"
+    },
+    {
+      "file": "D10-reserves-1280.png",
+      "width": 960,
+      "height": 598,
+      "group": "other-flows",
+      "sha256": "0eaaf1682717fe347fb6d23b225a2a9b662d5eb6aa036abf154b506a9240e064"
+    },
+    {
+      "file": "D11-processos-1280.png",
+      "width": 960,
+      "height": 583,
+      "group": "other-flows",
+      "sha256": "d321a8e1613c0aa7bb836fcf49283d1c5993e9928f48beacd724072611f0a4d3"
+    },
+    {
+      "file": "D11-simulacio-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "2ca3a6e38aeac69335087a78503583251883bbf736482bd8d10b0bea2cc541de"
+    },
+    {
+      "file": "D4-inscrits-1280.png",
+      "width": 472,
+      "height": 664,
+      "group": "other-flows",
+      "sha256": "e2c1e6a529ff1ede22e051d7a0bfd0f39e2e06ee71e9672e7bdf4937ea417bcc"
+    },
+    {
+      "file": "D6-facturacio-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "group": "other-flows",
+      "sha256": "4817a5241bf018ecff97e50a1d197aae47de24acddd839e1aacf823754c994d7"
+    },
+    {
+      "file": "D6-facturacio-calaix-rebut-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "e45b062383f1dffc779aaa335389782acadf46c3794ed106a65c513cf1624248"
+    },
+    {
+      "file": "D6-facturacio-confirmacio-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "4fed9d449e187aabdd36ab24758c4b7ec4b75e44cdad3e32f7b028e0fbcfe8d8"
+    },
+    {
+      "file": "D6-facturacio-manual-only-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "5957933af1b270da62880609d966faab12dcc81d8dc9605bf4c655bfe4a1e841"
+    },
+    {
+      "file": "D6-facturacio-retroces-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "d0d1bd40fc5a0b4e77306af2f8785dfc2b54cc3134f86e632fe578a81a3fb545"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-1280-dark.png",
+      "width": 1280,
+      "height": 1020,
+      "group": "admin-gallery",
+      "sha256": "55c273ecd342b7a11fd8bf5ce40cfcc9eb1ff04ec9aee1166b0c896098da94e6"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-1280-light.png",
+      "width": 1280,
+      "height": 1020,
+      "group": "admin-gallery",
+      "sha256": "18839a407535fa43d50fe291d5610c3505a714259ee2f20b94b8c55c34f9f28f"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-375-dark.png",
+      "width": 797,
+      "height": 1141,
+      "group": "admin-gallery",
+      "sha256": "5830097130789acb5c47e7706b4c0f0c4ba1aa67986d90c1e153c845bcb48c6a"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-375-light.png",
+      "width": 797,
+      "height": 1141,
+      "group": "admin-gallery",
+      "sha256": "3f377b503f841376adf02d60080de63fb75c098ac7d08bc5229c5fde0cc9f7a4"
+    },
+    {
+      "file": "admin-D16-geometria-1280-dark.png",
+      "width": 1280,
+      "height": 2896,
+      "group": "admin-gallery",
+      "sha256": "acf8f17386fbe463d722585f527dfb7b5a3969069057087be95c98c53027f896"
+    },
+    {
+      "file": "admin-D16-geometria-1280-light.png",
+      "width": 1280,
+      "height": 2896,
+      "group": "admin-gallery",
+      "sha256": "9b3aa63ceebbd224cfbe154510faac392db38db0d23440e6dd4c366ecb578b46"
+    },
+    {
+      "file": "admin-D16-geometria-375-dark.png",
+      "width": 609,
+      "height": 6962,
+      "group": "admin-gallery",
+      "sha256": "983f86766fd69578bf951bac035fb6fa9d8baee50a59c47e8aadc39470f6cbd6"
+    },
+    {
+      "file": "admin-D16-geometria-375-light.png",
+      "width": 609,
+      "height": 6962,
+      "group": "admin-gallery",
+      "sha256": "a76fad264df4ea896b6321eec63d83c0eeda2f016fe86a157f99e67d8dea6a50"
+    },
+    {
+      "file": "admin-D18-biblioteca-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "32d387a791f9f4e427cfcefd12265a764e9617e3603ce9b273168321dc01406c"
+    },
+    {
+      "file": "admin-D18-biblioteca-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "3c8131c3ad4f35c9ba0accc85cd0e4c154ceead41506c8f810eb04399b1d7cf2"
+    },
+    {
+      "file": "admin-D18-biblioteca-375-dark.png",
+      "width": 595,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "269c77ba8d0702daacc2ba2123d3e71107c9a5b8bb4eba0611d9848039c87045"
+    },
+    {
+      "file": "admin-D18-biblioteca-375-light.png",
+      "width": 595,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "8255115aded6ee30dec91cc5739872619eadc16f40bf366214a03fd81fd09aae"
+    },
+    {
+      "file": "admin-D18-col-locacio-1280-dark.png",
+      "width": 1280,
+      "height": 1324,
+      "group": "admin-gallery",
+      "sha256": "7ba5464925df009ba434d5fe633217db8ecb705209590da8c94333da59a58b92"
+    },
+    {
+      "file": "admin-D18-col-locacio-1280-light.png",
+      "width": 1280,
+      "height": 1324,
+      "group": "admin-gallery",
+      "sha256": "5665786bcabb98ec22998e4accacdf91fbfd8ee702863c999553209ba60608bd"
+    },
+    {
+      "file": "admin-D18-col-locacio-375-dark.png",
+      "width": 460,
+      "height": 2412,
+      "group": "admin-gallery",
+      "sha256": "60013b48b8ac02b180e4a5fc4c178662410b850216a498a2c1b14825d8c088c4"
+    },
+    {
+      "file": "admin-D18-col-locacio-375-light.png",
+      "width": 460,
+      "height": 2412,
+      "group": "admin-gallery",
+      "sha256": "9defd20999a69f3599bd5b9dedd59e9d83e2f49ec71fe7d959c43851785e0862"
+    },
+    {
+      "file": "admin-D18-importa-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "b34fcb09b34811ea6d60b1f70d806648b395ea881b9c0c531952f25a9b058f92"
+    },
+    {
+      "file": "admin-D18-importa-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "647158e6df82ffc0c5add0313abdd775de79ce98ad8d739f40b8b0fc6b2f757a"
+    },
+    {
+      "file": "admin-D18-importa-375-dark.png",
+      "width": 595,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "a170e4a0972743acdafe1209db0a833001428a64d5696cf35737e9bac26599fa"
+    },
+    {
+      "file": "admin-D18-importa-375-light.png",
+      "width": 595,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "7ddeaecddd3c2eecf31d3e4b89b95ae1b1ed5537e43b97338b6d436c41d267c1"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "8709172b68ccf670ec253f2d3cefd1a6a0a7190ce4c693d0d7e994d65bf8bedc"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "4f5ade20ccaa0f67f39bf3c452ce97c1575167e8430bedafca5b3b610e47e46f"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-375-dark.png",
+      "width": 459,
+      "height": 2290,
+      "group": "admin-gallery",
+      "sha256": "e5536931dbf25b9ed6e56e31c5bd15795253c0b659cc283b504481316adc1ef2"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-375-light.png",
+      "width": 459,
+      "height": 2290,
+      "group": "admin-gallery",
+      "sha256": "32d8b6ab53b8ee263ce3025277f8aa56ba02b56321914a705274027829e6a779"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "6b214972c39aa19f3288ccc36055549525c960541edf63ab726f2cd64e16bb58"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "admin-gallery",
+      "sha256": "70f81411ff3d8743b8835cdec7d57eb62c8af47f65095b5f5d7bdaa4c20eb2b1"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-375-dark.png",
+      "width": 459,
+      "height": 2535,
+      "group": "admin-gallery",
+      "sha256": "36e045744d8eb3a9dbc0394b58988661edb061c876b9a786a8a29ff8eecbcaf6"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-375-light.png",
+      "width": 459,
+      "height": 2535,
+      "group": "admin-gallery",
+      "sha256": "60d954836f3bcc135fe1ec45e6bffa7f121b11481cd0703a7af76fa7035415ce"
+    },
+    {
+      "file": "admin-D18-registra-1280-dark.png",
+      "width": 1280,
+      "height": 1324,
+      "group": "admin-gallery",
+      "sha256": "540fe60dc0ea5bd963788c59e996de0a4d65edec53d4665c629d92f1f31b2ea2"
+    },
+    {
+      "file": "admin-D18-registra-1280-light.png",
+      "width": 1280,
+      "height": 1324,
+      "group": "admin-gallery",
+      "sha256": "cbdae581c7501a0c21acccbdf38d48f88e15cc666e143fe6b5aa66a41e38d7e9"
+    },
+    {
+      "file": "admin-D18-registra-375-dark.png",
+      "width": 460,
+      "height": 2412,
+      "group": "admin-gallery",
+      "sha256": "682bb10fc17d39ccfa2c27b087a6627cda2cb6738d051a854216b0e30544da77"
+    },
+    {
+      "file": "admin-D18-registra-375-light.png",
+      "width": 460,
+      "height": 2412,
+      "group": "admin-gallery",
+      "sha256": "5936d3d1e339ec002e8b0e92fa3c46a9491512d80898a1642b9de56e3fe59060"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-1280-dark.png",
+      "width": 1280,
+      "height": 1481,
+      "group": "admin-gallery",
+      "sha256": "70d6e52d8ca27be242c0be85f6a9d81f24a8a2e5b9d13bc52dbbcb700d180d67"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-1280-light.png",
+      "width": 1280,
+      "height": 1481,
+      "group": "admin-gallery",
+      "sha256": "59d6149968aa6c4f63375f10213448c88f5a262151a20d925774c14a525ccede"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-375-dark.png",
+      "width": 669,
+      "height": 1869,
+      "group": "admin-gallery",
+      "sha256": "9c350e28d63384c6dee3ef0097969baf270e196cb5c459aaed9e116b4e4b21f9"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-375-light.png",
+      "width": 669,
+      "height": 1869,
+      "group": "admin-gallery",
+      "sha256": "3f3baeb448a91e22e9d2af104ae79ba125433b5313dd3fc4954e14f3048bec89"
+    },
+    {
+      "file": "admin-D7-col-locacions-1280-dark.png",
+      "width": 1280,
+      "height": 1528,
+      "group": "admin-gallery",
+      "sha256": "79fd1e31367d31529f1ace849b0ad5e87fae84fca313a15f4388b3b7536329af"
+    },
+    {
+      "file": "admin-D7-col-locacions-1280-light.png",
+      "width": 1280,
+      "height": 1528,
+      "group": "admin-gallery",
+      "sha256": "656b728c46faf5f840cc9f29fe45853cbf7db539f938aa766753b25963ff96c5"
+    },
+    {
+      "file": "admin-D7-col-locacions-375-dark.png",
+      "width": 595,
+      "height": 3141,
+      "group": "admin-gallery",
+      "sha256": "37092b2142aff3ad030842f91bc140d154c5109deb9ba5278abae6d1a7fc9338"
+    },
+    {
+      "file": "admin-D7-col-locacions-375-light.png",
+      "width": 595,
+      "height": 3141,
+      "group": "admin-gallery",
+      "sha256": "796023a6088a2a6dbcb5186dfa3e125bfb3b053adb62d663399f3aa72162f86d"
+    },
+    {
+      "file": "clubs-07-reserva-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "25a4f9774f8ecaca87f418523b83fafb34940436cfc058fba84a0beb40ad5617"
+    },
+    {
+      "file": "clubs-07-reserva-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "9692b4416141db5dfb261d80081b60cca0fa8dc34ba76c64d84a44dad966a0db"
+    },
+    {
+      "file": "clubs-07-reserva-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "27de1a1492aa50dbaa2d216295dbed7fc3a99bd655750ab508c0aa5aeb405e5c"
+    },
+    {
+      "file": "clubs-07-reserva-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "13a8dedb204c1c581661cf6ef00c794aaa37247f38d7f96bbe80f2132a5d6ac9"
+    },
+    {
+      "file": "clubs-07-reserva-personal-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "84acbc358f1df08c48573dc92da8ad0553d7725770500cd314a0c53c3879cdd8"
+    },
+    {
+      "file": "clubs-07-reserva-personal-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "874d7e9bd08430220628bef5f853d9aec3a3fee6d75653b12165da152954a2cc"
+    },
+    {
+      "file": "clubs-07-reserva-personal-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "fb91da4b989785e97aa321fbc338bf116147b33a18119715701155b91ff82134"
+    },
+    {
+      "file": "clubs-07-reserva-personal-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "2d050dab9e293368a9737ad702ad90ee3d2b76968b055cd4c590bd82c1b2374b"
+    },
+    {
+      "file": "clubs-08-entrenaments-1280-dark.png",
+      "width": 1280,
+      "height": 1029,
+      "group": "member-gallery",
+      "sha256": "9d7724cd3daffccb45f30c05b364c98397d5566cf0ad7d037a21db361d57827e"
+    },
+    {
+      "file": "clubs-08-entrenaments-1280-light.png",
+      "width": 1280,
+      "height": 1029,
+      "group": "member-gallery",
+      "sha256": "a68573890a030f5e284571e929fb04f4d83e14de22d86ad0119c930606dac648"
+    },
+    {
+      "file": "clubs-08-entrenaments-375-dark.png",
+      "width": 375,
+      "height": 1080,
+      "group": "member-gallery",
+      "sha256": "a8cb570e7c70fa7243c9a183a4a61d1305b7815d39cfa47ad5184e2d1da8c0f3"
+    },
+    {
+      "file": "clubs-08-entrenaments-375-light.png",
+      "width": 375,
+      "height": 1080,
+      "group": "member-gallery",
+      "sha256": "71421ed60d66b39f54702479cc14e8f2a7539365b46e6f37ca4edd54ddbca0cb"
+    },
+    {
+      "file": "clubs-10-avui-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "83a7152fc1204f48845f23a61e19d7b5b90aa788a2537e8449c523c34223e555"
+    },
+    {
+      "file": "clubs-10-avui-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "9d90ddf042e629dabefe06a718d5624a5b3a0ab18f1c2bd73af1ff376b867c18"
+    },
+    {
+      "file": "clubs-10-avui-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "fd791e6035aae4f3e83eeeb5c6bc77a9dcbb5d7609cd45e3332289c4588ac0b1"
+    },
+    {
+      "file": "clubs-10-avui-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "89367cb530f3ae50b7f39bfbe79ca483ddb935c984f81262a5efbd5a402f331d"
+    },
+    {
+      "file": "clubs-23-visio-global-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "f01df69ae677cdad51ac449d3686e08d5705a6cf4fd90e9659dddb7d53bab201"
+    },
+    {
+      "file": "clubs-23-visio-global-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "a104f05492e8a852afd9812df1ba82ee9a0f95bd1c75a109a73f221d61fac8fc"
+    },
+    {
+      "file": "clubs-23-visio-global-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "d1205a31e21bdb4a10310d451b55db710ecf302f6b40d3080cfdd6aeeeb4780c"
+    },
+    {
+      "file": "clubs-23-visio-global-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "b8ff1ffb42cd1ec77b77e8e9de7f0f2d3bb819221a3b16bc86b2db83e4515033"
+    },
+    {
+      "file": "clubs-registra-muntat-1280-dark.png",
+      "width": 1280,
+      "height": 965,
+      "group": "member-gallery",
+      "sha256": "613b37ead5f3f00f66312bc180d77960dbd8f4b116a5fb350b28ec1b9eb7f979"
+    },
+    {
+      "file": "clubs-registra-muntat-1280-light.png",
+      "width": 1280,
+      "height": 965,
+      "group": "member-gallery",
+      "sha256": "29789f4e8576ccb6ee1ab3041356fed30f46e413bb380ffd2a30c55cf7b74fe5"
+    },
+    {
+      "file": "clubs-registra-muntat-375-dark.png",
+      "width": 375,
+      "height": 1061,
+      "group": "member-gallery",
+      "sha256": "415274866d2be01af6cd8c9a721839f414d6e8f4e757276952272fd89f7cf219"
+    },
+    {
+      "file": "clubs-registra-muntat-375-light.png",
+      "width": 375,
+      "height": 1061,
+      "group": "member-gallery",
+      "sha256": "2e8d69fc3a3c4b636b978b00e10f86851ebe8e5be61d38bad7adb0a613b43c3f"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "f604218b687d64844a5bbf66d085cd816200e105bdcabaa525b5761534b3ae07"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "e50ecdda6683c848edb0514a266200c0417607d3d05a83ac99996b243351b2c0"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-375-dark.png",
+      "width": 375,
+      "height": 861,
+      "group": "member-gallery",
+      "sha256": "55ad9e59a4ba4b3e77ada0c925862be2e57f03221625ce3bd2d6123934b4191a"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-375-light.png",
+      "width": 375,
+      "height": 861,
+      "group": "member-gallery",
+      "sha256": "159e01d9c3f83f1ad31733a336d878bd7ce1b63d0eb64ea0921aceb57f0c49da"
+    },
+    {
+      "file": "clubs-sessio-muntatge-1280-dark.png",
+      "width": 1280,
+      "height": 1055,
+      "group": "member-gallery",
+      "sha256": "449641f5b3d2aff2d9c05c26a105e32b5b8d79280921d519233802016c1cc6de"
+    },
+    {
+      "file": "clubs-sessio-muntatge-1280-light.png",
+      "width": 1280,
+      "height": 1055,
+      "group": "member-gallery",
+      "sha256": "c9b346548b340b9caf7b5b6cf26fc36b2cc458fa95e44a24a72510a79ce7c338"
+    },
+    {
+      "file": "clubs-sessio-muntatge-375-dark.png",
+      "width": 375,
+      "height": 1261,
+      "group": "member-gallery",
+      "sha256": "3a73623553eafe3bd1dbed6b99804a57e8c3930a8f52f2168e7c93b021db7b93"
+    },
+    {
+      "file": "clubs-sessio-muntatge-375-light.png",
+      "width": 375,
+      "height": 1261,
+      "group": "member-gallery",
+      "sha256": "0dda12801777b02e167a6bb297e4ff258c816572c4dd89acd264f2c17e7cd21e"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-1280-dark.png",
+      "width": 1280,
+      "height": 1124,
+      "group": "member-gallery",
+      "sha256": "e0422db6f580db0dab3f7b344999f00593dbb7552c3954c42875c3e1e89d756f"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-1280-light.png",
+      "width": 1280,
+      "height": 1124,
+      "group": "member-gallery",
+      "sha256": "55043ed5a96b866f71709b74643957a98b9aa5963c22a306a9555b585b8166ed"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-375-dark.png",
+      "width": 375,
+      "height": 1019,
+      "group": "member-gallery",
+      "sha256": "92b52be1802bf3ae97da2e89c48661addee461a377a883eefbcc6096abdf12f5"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-375-light.png",
+      "width": 375,
+      "height": 1019,
+      "group": "member-gallery",
+      "sha256": "c5459d53e419b4c6f0a1d3b220db59cc8add71dbf472f6862d45fe92368065b3"
+    },
+    {
+      "file": "clubs-visor-alumne-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "0b92a2d46458c18fbd7c5ea4fdae902c5be6f952d537e41803add4c7cb313133"
+    },
+    {
+      "file": "clubs-visor-alumne-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "0cb1eab2ef75f19ff7bc4ad07761f0342fe9722fbf0f5ca03735bab8bd0ee7bd"
+    },
+    {
+      "file": "clubs-visor-alumne-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "ded0ff58e1652221f33e6f42ee009ea79de6b86eaee5e0d0ced4ebbffd5da9de"
+    },
+    {
+      "file": "clubs-visor-alumne-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "307da7fb9abc367789b651a3b234c3ecc41e8a3b79ccfb61ca2a2c292a2bfd62"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-1280-dark.png",
+      "width": 1280,
+      "height": 1075,
+      "group": "member-gallery",
+      "sha256": "f6e4724600d165901a0ddec231d6d63d2989b3ca32490c4c86d5e2df6061baca"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-1280-light.png",
+      "width": 1280,
+      "height": 1075,
+      "group": "member-gallery",
+      "sha256": "aae74fed78c30d1e8f97d727e23ec75dbebea4c642cfcbe2d50fe253677507bf"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-375-dark.png",
+      "width": 375,
+      "height": 970,
+      "group": "member-gallery",
+      "sha256": "de5875ba9fdc3a73826aa929d62f9714a85aa74e34bdc76026cd960f88278908"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-375-light.png",
+      "width": 375,
+      "height": 970,
+      "group": "member-gallery",
+      "sha256": "a1d33b66bc6377b0459dd5d7190009b057b330e7b112fe3d655acffaa603fd67"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "8eeaf4264eb67a2d2d3678d41b5557f065d3b0398d851f2bb0ee9c340fa0600e"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "74d295582babf5982d011ba8a136deb564674aee8b43903feb158025d7a7da20"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "4822493864a14b3c09f51d49475affff60c24207d5ae3d29019cce7a08010619"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "408aae23d015be21f53e00cd6b4959be91ca78fcca170c0384d5cc98689fa78b"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "a618a1e4afe4af9fbf9d8654d607cbc30ca72255780d4845696feecd84db7400"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "group": "member-gallery",
+      "sha256": "bca19d2e229df343fa706ec44cbf8ceb4085aa9c8d4fa5be5dce217dc50363fb"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "8049805baafdad022583cbe3a48c0eb9d300b85eb8158bc4de58c64e1af34b3b"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-375-light.png",
+      "width": 375,
+      "height": 812,
+      "group": "member-gallery",
+      "sha256": "a10d6119a85cff554eeee18f7eea472efb68e61f70880cb6f35ce94f1ed112a5"
+    },
+    {
+      "file": "entrenaments-bloquejos-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "8527debb543203f9656ebba8565c104835bf2e66447c032fac753c4482a1b40e"
+    },
+    {
+      "file": "entrenaments-registre-1280.png",
+      "width": 1280,
+      "height": 900,
+      "group": "other-flows",
+      "sha256": "570f1a813c0b65c2e47bf47c80a2b870f0a1d1525335362d9d15190f304ceb24"
+    },
+    {
+      "file": "r2-course-ui-harness-1280-after-nudge.png",
+      "width": 1280,
+      "height": 1602,
+      "group": "admin-gallery",
+      "sha256": "0b1c9bbb45dd7273b12f5e876fdd0d53d74d6f85c14927e2031c40278bfe84f4"
+    },
+    {
+      "file": "r2-course-ui-harness-1280-dark.png",
+      "width": 1280,
+      "height": 1602,
+      "group": "admin-gallery",
+      "sha256": "438d78eefdfc5b99b0de0f04067622df64b765d8121d36e75210d481c135d6d4"
+    },
+    {
+      "file": "r2-course-ui-harness-1280-light.png",
+      "width": 1280,
+      "height": 1602,
+      "group": "admin-gallery",
+      "sha256": "cc94b15c4ac10b2162d9427dd0fb508ff8cf8b9b75c31f32767fc86e33eeec6b"
+    },
+    {
+      "file": "remeses-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "group": "other-flows",
+      "sha256": "9c2ec4b06caaad02f725c43fba47ea9da935fa2a53f9c52d7c0ce9f566d58b07"
+    }
+  ]
+}

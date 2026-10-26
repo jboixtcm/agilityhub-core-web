@@ -1,0 +1,10 @@
+{
+  "fullGate": "40-final-ci",
+  "inputCount": 946,
+  "changedSinceFocusedGreen": [],
+  "commandExitCode": 0,
+  "vitestTotal": 3616,
+  "nodeTests": 10,
+  "turboTasksPassed": 38,
+  "turboTasksCached": 0
+}

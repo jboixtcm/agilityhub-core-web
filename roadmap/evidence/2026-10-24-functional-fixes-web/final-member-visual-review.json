@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-26",
+  "source": "2026-10-26-functional-fixes-final-r2",
+  "overview": {
+    "captureCount": 52,
+    "sheets": [
+      "../2026-10-24-functional-fixes-root/final-visual-index/member-gallery-01.jpg",
+      "../2026-10-24-functional-fixes-root/final-visual-index/member-gallery-02.jpg",
+      "../2026-10-24-functional-fixes-root/final-visual-index/member-gallery-03.jpg",
+      "../2026-10-24-functional-fixes-root/final-visual-index/member-gallery-04.jpg",
+      "../2026-10-24-functional-fixes-root/final-visual-index/member-gallery-05.jpg",
+      "../2026-10-24-functional-fixes-root/final-visual-index/member-gallery-06.jpg"
+    ],
+    "scope": "Overview of light/dark,375px/1280px member and instructor-member application gallery captures."
+  },
+  "originalSizeInspected": [
+    {
+      "file": "clubs-08-entrenaments-375-dark.png",
+      "sha256": "a8cb570e7c70fa7243c9a183a4a61d1305b7815d39cfa47ad5184e2d1da8c0f3"
+    },
+    {
+      "file": "clubs-23-visio-global-375-light.png",
+      "sha256": "b8ff1ffb42cd1ec77b77e8e9de7f0f2d3bb819221a3b16bc86b2db83e4515033"
+    },
+    {
+      "file": "clubs-registra-muntat-375-light.png",
+      "sha256": "2e8d69fc3a3c4b636b978b00e10f86851ebe8e5be61d38bad7adb0a613b43c3f"
+    },
+    {
+      "file": "clubs-07-reserva-personal-1280-light.png",
+      "sha256": "874d7e9bd08430220628bef5f853d9aec3a3fee6d75653b12165da152954a2cc"
+    },
+    {
+      "file": "clubs-sessio-muntatge-375-dark.png",
+      "sha256": "3a73623553eafe3bd1dbed6b99804a57e8c3930a8f52f2168e7c93b021db7b93"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-375-light.png",
+      "sha256": "408aae23d015be21f53e00cd6b4959be91ca78fcca170c0384d5cc98689fa78b"
+    }
+  ],
+  "findings": [],
+  "observations": [
+    "Training slots, selected/unavailable states and quota/confirmation remain contained above navigation.",
+    "Five-ring global agenda fits375px with compact cells and legend.",
+    "Mounted-course form controls wrap; floor/border image is the known ringPhoto fixture.",
+    "Desktop member shell remains intentionally centered with side margins.",
+    "Build-session list includes4/10sharedobstacle, wrappedcoordinates,statusesandfinalaction without overlap.",
+    "3D instructor viewer and build controls fit375px."
+  ],
+  "limit": "Overview is not pixel-level review of every original; these captures use mock data. RealCore stages separately verify permissions and persistence. No additional actionable visual defect found in inspected images."
+}

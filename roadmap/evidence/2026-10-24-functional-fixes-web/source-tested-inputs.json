@@ -1,0 +1,12 @@
+{
+  "apps/clubs-admin/src/App.test.tsx": "5b52a31963944f40b2188c2cb5bb0c3b325f636069ce6576f4af48356b4b5f9d",
+  "apps/clubs-admin/src/UserMenu.tsx": "552c63dab0224b302ff5e49bb9edd5efa25593020cb7f0dd44bbd66deddea532",
+  "apps/clubs/src/App.test.tsx": "0309e5e0ac69f3b2d07b142083d43ca1299e4d83da283915916e27756b311bfe",
+  "apps/clubs/src/App.tsx": "14f78ce19f663d8416f5abf81218a071d8a811127910757860ea0b652b85deae",
+  "apps/clubs/src/profile/NoticesCard.test.tsx": "39355e659e35e5c3abcd34172377ec36962c1ec853610fd1cccbb983c8ac9fdd",
+  "e2e/core/e2-core.spec.ts": "e80da423d7ea267bddf775d4b9f9e132035c521297c62eec08967765fb1a35c3",
+  "e2e/core/e3-signup.spec.ts": "743cde0a41ede2ac5103d907f8ff5cbae768ff8a66c35adc263ced32f85a1681",
+  "e2e/core/e8-core.spec.ts": "b8b09547a81590f119ff7c969b3bf131797c789cfd518d7df99d82c0305c2a3c",
+  "packages/auth/src/account-locale.test.tsx": "0298e1b4ef8d67f3af13ddfdc74fa76fcdcede0238be0c758afc30dea152c2a2",
+  "packages/auth/src/account-locale.ts": "af08ec68b86392dab0815e9703ae8e83229033b17104b8f8db30e40392939007"
+}

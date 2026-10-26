@@ -1,0 +1,71 @@
+{
+  "viewport": 375,
+  "documentWidth": 375,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "TABLE",
+      "className": "ah-data-table",
+      "text": "ClassesDia i horaClassePistaGosEstatOrigen",
+      "left": 34,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "Dia i horaClassePistaGosEstatOrigen",
+      "left": 34,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Dia i horaClassePistaGosEstatOrigen",
+      "left": 34,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Origen",
+      "left": 358.078125,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "",
+      "left": 34,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "",
+      "left": 34,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "",
+      "left": 34,
+      "right": 435.96875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-skeleton",
+      "text": "",
+      "left": 50,
+      "right": 419.96875,
+      "overflowX": "hidden"
+    }
+  ]
+}

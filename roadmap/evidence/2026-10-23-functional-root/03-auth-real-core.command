@@ -1,0 +1,1 @@
+HEAVY_WAIT_MIN=120 CORE_IMAGE=agilityhub-core-api:review-20261023 bash /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh bash scripts/e2e-core.sh 2026-10-23-functional-root/auth functional-auth.spec.ts

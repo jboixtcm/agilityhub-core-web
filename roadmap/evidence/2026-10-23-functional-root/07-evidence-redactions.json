@@ -1,0 +1,12 @@
+{
+  "trigger": "Two generic-api-key matches in the first final evidence scan.",
+  "classification": "UUID fileKey identifiers for fictional local vaccination-document attachments; not API credentials. Source writer: e3-signup.spec.ts:1843. Disposable local stack already removed.",
+  "file": "roadmap/evidence/2026-10-23-functional-web/core-e3/d2-readmission-add-file-core.json",
+  "redactedJsonPointers": [
+    "/sent/0/files/0/fileKey",
+    "/sent/0/files/1/fileKey"
+  ],
+  "changes": "Distinct placeholder identifiers only; names, document type, HTTP statuses and timings unchanged.",
+  "allowlistChanged": false,
+  "productOrTestSourceChanged": false
+}

@@ -1,0 +1,128 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run auth-client.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+Not implemented: navigation to another Document
+ ❯ src/auth-client.test.ts (36 tests | 4 failed) 1127ms
+   ❯ T-01-21 AuthClient session flow (21)
+     × T-01-04 a delayed refresh (200) cannot replace a newer sign-in 3ms
+     × T-01-04 a delayed refresh (401) cannot replace a newer sign-in 6ms
+     × T-01-04 a refresh response after logout cannot restore the token or schedule another refresh 2ms
+     × T-01-04 a restore /me response after logout cannot sign the account back in 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a delayed refresh (200) cannot replace a newer sign-in
+AssertionError: expected 'access-old-refresh' to be 'access-new-login' // Object.is equality
+
+Expected: "access-new-login"
+Received: "access-old-refresh"
+
+ ❯ src/auth-client.test.ts:634:39
+    632|       await recovery;
+    633|
+    634|       expect(client.getAccessToken()).toBe("access-new-login");
+       |                                       ^
+    635|       expect(client.getMe()).toEqual(memberMe);
+    636|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a delayed refresh (401) cannot replace a newer sign-in
+AssertionError: expected null to be 'access-new-login' // Object.is equality
+
+- Expected:
+"access-new-login"
+
++ Received:
+null
+
+ ❯ src/auth-client.test.ts:634:39
+    632|       await recovery;
+    633|
+    634|       expect(client.getAccessToken()).toBe("access-new-login");
+       |                                       ^
+    635|       expect(client.getMe()).toEqual(memberMe);
+    636|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a refresh response after logout cannot restore the token or schedule another refresh
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/auth-client.test.ts:663:28
+    661|     releaseRefresh();
+    662|
+    663|     expect(await recovery).toBe(false);
+       |                            ^
+    664|     expect(client.getAccessToken()).toBeNull();
+    665|     expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a restore /me response after logout cannot sign the account back in
+AssertionError: expected { account: { …(8) }, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "account": {
+    "email": "biel.roca@example.test",
+    "emailVerifiedAt": "2026-08-01T08:00:00Z",
+    "hasPassword": true,
+    "id": "10000000-0000-4000-8000-000000000002",
+    "locale": "ca",
+    "name": "Biel Roca",
+    "onboardingPending": false,
+    "platformRoles": [],
+  },
+  "features": [
+    "FREE_TRAINING",
+    "COURSES",
+  ],
+  "membership": {
+    "activeProfile": "MEMBER",
+    "clubId": "50000000-0000-4000-8000-000000000001",
+    "defaultProfile": "MEMBER",
+    "gender": "MALE",
+    "memberId": "20000000-0000-4000-8000-000000000002",
+    "profiles": [
+      "MEMBER",
+    ],
+    "rememberProfile": true,
+    "roles": [
+      "MEMBER",
+    ],
+  },
+}
+
+ ❯ src/auth-client.test.ts:690:26
+    688|     releaseMe();
+    689|
+    690|     await expect(restore).resolves.toBeNull();
+       |                          ^
+    691|     expect(signedIn).not.toHaveBeenCalled();
+    692|     expect(client.getAccessToken()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 32 passed (36)
+   Start at  21:17:21
+   Duration  1.75s (tests 68%, environment 19%, transform 8%, import 5%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run auth-client.test.ts`
+Exit status 1

@@ -1,0 +1,29 @@
+{
+  "baseline": "core-e7-tested-inputs.json",
+  "final": "core-e8-r3-tested-inputs.json",
+  "baselineInputs": 948,
+  "finalInputs": 948,
+  "changed": [
+    "e2e/core/e8-core.spec.ts"
+  ],
+  "added": [],
+  "removed": [],
+  "productFilesChanged": false,
+  "changes": [
+    "Use the selected passwordless family account real magic-link UI to prepare and restore the owner locale.",
+    "Ignore unpublished .pending- mailbox files before parsing atomically delivered JSON."
+  ],
+  "intermediateProof": "E8-r2 passed all six cases including family isolation and normal owner authentication; final E8-r3 repeats the complete stage with the pending-file exclusion.",
+  "preservedAssertions": "Unchanged financial, member-selection, family isolation, borrowed-language and 15-second mail-delivery assertions.",
+  "finalResult": {
+    "stage": "e8-r3",
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "inputCount": 948,
+    "inputsUnchanged": true,
+    "cleanupComplete": true,
+    "matchesRoot54": true,
+    "familyPartnerChecked": true
+  }
+}

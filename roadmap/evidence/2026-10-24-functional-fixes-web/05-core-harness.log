@@ -1,0 +1,11 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e10-core.spec.ts
+   677:6   error  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+   679:11  error  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+  1264:34  error  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e2-core.spec.ts
+  118:17  error  Type parameter T is used only once in the function signature  @typescript-eslint/no-unnecessary-type-parameters
+
+✖ 4 problems (4 errors, 0 warnings)
+

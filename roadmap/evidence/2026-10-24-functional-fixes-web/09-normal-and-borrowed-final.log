@@ -1,0 +1,45 @@
+heavy.sh: 10:18 waiting for the host lock, held by: 10:18 agilityhub-core-api: python3 roadmap/evidence/2026-10-24-functional-fixes-api/run-cli-exploration.py 1
+heavy.sh: 10:23 got the host lock after 4 min 45 s
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  10:23:30
+   Duration  476ms (environment 58%, transform 15%, tests 14%, import 13%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  2 passed (2)
+      Tests  114 passed (114)
+   Start at  10:23:30
+   Duration  23.21s (tests 93%, transform 4%, environment 2%, import 1%)
+
+
+> @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> tsc --noEmit
+
+
+> agilityhub-core-web@0.0.0 typecheck:e2e-core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> tsc -p e2e/core/tsconfig.json --noEmit
+

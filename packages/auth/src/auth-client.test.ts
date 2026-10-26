@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 
+import { createApiClient } from "@agilityhub/api-client";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -13,7 +14,7 @@ import {
   type TokenResponse,
 } from "./auth-client";
 import { MemoryRefreshTokenStore } from "./mock-refresh-token";
-import { createAuthenticatedApiClient } from "./refresh-interceptor";
+import { createAuthenticatedApiClient, createRefreshInterceptor } from "./refresh-interceptor";
 import { installWebLocks } from "./testing";
 
 const API_BASE_URL = "https://club.example.test/api/v1";
@@ -528,7 +529,7 @@ describe("T-01-21 AuthClient session flow", () => {
     }
   });
 
-  it("R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.refresh:<clientId>»", async () => {
+  it("R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.session-cookie:<identity origin>»", async () => {
     const family = sharedCookieFamily();
     const names: string[] = [];
     let queue = Promise.resolve();
@@ -558,9 +559,9 @@ describe("T-01-21 AuthClient session flow", () => {
       const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
       expect(restored).toEqual([memberMe, memberMe, memberMe]);
       expect(names).toEqual([
-        "agilityhub.refresh:clubs-admin",
-        "agilityhub.refresh:clubs-admin",
-        "agilityhub.refresh:clubs-admin",
+        "agilityhub.session-cookie:https://id.example.test",
+        "agilityhub.session-cookie:https://id.example.test",
+        "agilityhub.session-cookie:https://id.example.test",
       ]);
       expect(family.maxInFlight).toBe(1);
       expect(localStorage).toHaveLength(0);
@@ -586,22 +587,371 @@ describe("T-01-21 AuthClient session flow", () => {
       const otherTab = new Promise<void>((resolve) => {
         releaseOther = resolve;
       });
-      void navigator.locks.request("agilityhub.refresh:clubs-app", () => otherTab);
+      void navigator.locks.request(
+        "agilityhub.session-cookie:https://id.example.test",
+        () => otherTab,
+      );
       const client = new AuthClient({
         apiBaseUrl: API_BASE_URL,
         identityBaseUrl: IDENTITY_BASE_URL,
       });
-      const waiting = client.refresh();
-      await client.login("biel.roca@example.test", "secret-password");
+      const waiting = client.refresh().catch(() => "superseded");
+      const login = client.login("biel.roca@example.test", "secret-password");
       releaseOther();
+      await login;
 
-      await expect(waiting).resolves.toMatchObject({ access_token: "access-login" });
+      expect(await waiting).toBe("superseded");
       expect(refreshes).toBe(0);
       expect(client.getAccessToken()).toBe("access-login");
     } finally {
       removeWebLocks();
     }
   });
+
+  it.each([200, 401])(
+    "T-01-04 a delayed refresh (%i) cannot replace a newer sign-in",
+    async (status) => {
+      let releaseRefresh: () => void = () => undefined;
+      let notifyRefresh: () => void = () => undefined;
+      const refreshStarted = new Promise<void>((resolve) => {
+        notifyRefresh = resolve;
+      });
+      const refreshCanFinish = new Promise<void>((resolve) => {
+        releaseRefresh = resolve;
+      });
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) => {
+          if ((await request.formData()).get("grant_type") === "password") {
+            return HttpResponse.json(tokens("access-new-login"));
+          }
+          notifyRefresh();
+          await refreshCanFinish;
+          return status === 200
+            ? HttpResponse.json(tokens("access-old-refresh"))
+            : HttpResponse.json({ code: "REFRESH_EXPIRED", message: "Expired" }, { status });
+        }),
+        http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      const recovery = client.recoverFromUnauthorized();
+      await refreshStarted;
+      const login = client.login("biel.roca@example.test", "secret-password");
+      releaseRefresh();
+      await login;
+      await recovery;
+
+      expect(client.getAccessToken()).toBe("access-new-login");
+      expect(client.getMe()).toEqual(memberMe);
+    },
+  );
+
+  it("T-01-04 a refresh response after logout cannot restore the token or schedule another refresh", async () => {
+    let releaseRefresh: () => void = () => undefined;
+    let notifyRefresh: () => void = () => undefined;
+    const refreshStarted = new Promise<void>((resolve) => {
+      notifyRefresh = resolve;
+    });
+    const refreshCanFinish = new Promise<void>((resolve) => {
+      releaseRefresh = resolve;
+    });
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        if ((await request.formData()).get("grant_type") === "password") {
+          return HttpResponse.json(tokens("access-login"));
+        }
+        notifyRefresh();
+        await refreshCanFinish;
+        return HttpResponse.json(tokens("access-after-logout"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+      http.post(REVOKE_ENDPOINT, () => new HttpResponse(null, { status: 200 })),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await client.login("biel.roca@example.test", "secret-password");
+    const recovery = client.recoverFromUnauthorized();
+    await refreshStarted;
+    const logout = client.logout();
+    releaseRefresh();
+    await logout;
+
+    expect(await recovery).toBe(false);
+    expect(client.getAccessToken()).toBeNull();
+    expect(client.getMe()).toBeNull();
+  });
+
+  it("T-01-04 a restore /me response after logout cannot sign the account back in", async () => {
+    let releaseMe: () => void = () => undefined;
+    let notifyMe: () => void = () => undefined;
+    const meStarted = new Promise<void>((resolve) => {
+      notifyMe = resolve;
+    });
+    const meCanFinish = new Promise<void>((resolve) => {
+      releaseMe = resolve;
+    });
+    server.use(
+      http.post(TOKEN_ENDPOINT, () => HttpResponse.json(tokens("access-restored"))),
+      http.get(`${API_BASE_URL}/me`, async () => {
+        notifyMe();
+        await meCanFinish;
+        return HttpResponse.json(memberMe);
+      }),
+      http.post(REVOKE_ENDPOINT, () => new HttpResponse(null, { status: 200 })),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const signedIn = vi.fn();
+    client.addEventListener("signedIn", signedIn);
+    const restore = client.restoreSession();
+    await meStarted;
+    await client.logout();
+    releaseMe();
+
+    await expect(restore).resolves.toBeNull();
+    expect(signedIn).not.toHaveBeenCalled();
+    expect(client.getAccessToken()).toBeNull();
+    expect(client.getMe()).toBeNull();
+  });
+
+  describe.each([
+    ["password", (client: AuthClient) => client.login("old@example.test", "password")],
+    ["magic link", (client: AuthClient) => client.exchangeMagicLink("old-code")],
+    ["account handoff", (client: AuthClient) => client.exchangeHandoff("old-code")],
+  ] as const)("T-01-04 a superseded %s session", (_name, start) => {
+    it.each(["token", "me"] as const)("ignores a late %s answer after logout", async (phase) => {
+      let release: () => void = () => undefined;
+      let notify: () => void = () => undefined;
+      const started = new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+      const pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const wait = async (step: string) => {
+        if (step !== phase) return;
+        notify();
+        await pending;
+      };
+      server.use(
+        http.post(TOKEN_ENDPOINT, async () => {
+          await wait("token");
+          return HttpResponse.json(tokens("access-old"));
+        }),
+        http.get(`${API_BASE_URL}/me`, async () => {
+          await wait("me");
+          return HttpResponse.json(memberMe);
+        }),
+        http.post(REVOKE_ENDPOINT, () => new HttpResponse(null, { status: 200 })),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+        handoffSessions: "account",
+      });
+      const signedIn = vi.fn();
+      client.addEventListener("signedIn", signedIn);
+      const operation = start(client).then(
+        () => "accepted",
+        () => "superseded",
+      );
+      await started;
+      const restoration = client.restoreSession();
+      const logout = client.logout();
+      release();
+      await logout;
+      expect(await operation).toBe("superseded");
+      await expect(restoration).resolves.toBeNull();
+      expect(client.getAccessToken()).toBeNull();
+      expect(client.getMe()).toBeNull();
+      expect(signedIn).not.toHaveBeenCalled();
+    });
+  });
+
+  it.each([200, 401, 503])(
+    "T-01-04 a late password /me (%i) cannot replace or clear a newer account",
+    async (status) => {
+      let release: () => void = () => undefined;
+      let notify: () => void = () => undefined;
+      const started = new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+      const pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const newerMe: Me = {
+        ...memberMe,
+        account: { ...memberMe.account, id: "new-account", name: "New Account" },
+      };
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) =>
+          HttpResponse.json(
+            tokens(
+              (await request.formData()).get("username") === "new@example.test"
+                ? "access-new"
+                : "access-old",
+            ),
+          ),
+        ),
+        http.get(`${API_BASE_URL}/me`, async ({ request }) => {
+          if (request.headers.get("Authorization") === "Bearer access-new")
+            return HttpResponse.json(newerMe);
+          notify();
+          await pending;
+          return status === 200
+            ? HttpResponse.json(memberMe)
+            : HttpResponse.json({ code: "UNAUTHENTICATED", message: "Refused" }, { status });
+        }),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      const old = client.login("old@example.test", "password").then(
+        () => "accepted",
+        () => "superseded",
+      );
+      await started;
+      await client.login("new@example.test", "password");
+      release();
+      expect(await old).toBe("superseded");
+      expect(client.getAccessToken()).toBe("access-new");
+      expect(client.getMe()).toEqual(newerMe);
+    },
+  );
+
+  it("T-01-11 a late impersonation /me cannot restore the grant after logout", async () => {
+    let release: () => void = () => undefined;
+    let notify: () => void = () => undefined;
+    const started = new Promise<void>((resolve) => {
+      notify = resolve;
+    });
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.get(`${API_BASE_URL}/me`, async () => {
+        notify();
+        await pending;
+        return HttpResponse.json(memberMe);
+      }),
+      http.post(REVOKE_ENDPOINT, () => new HttpResponse(null, { status: 200 })),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const old = client.acceptImpersonation("old-grant").then(
+      () => "accepted",
+      () => "superseded",
+    );
+    await started;
+    await client.logout();
+    release();
+    expect(await old).toBe("superseded");
+    expect(client.getAccessToken()).toBeNull();
+    expect(client.getMe()).toBeNull();
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+
+  it.each([200, 401, 503])(
+    "T-01-11 an old handoff /me (%i) cannot cancel a newer login waiting for its token",
+    async (status) => {
+      let releaseMe: () => void = () => undefined;
+      let releaseLogin: () => void = () => undefined;
+      let notifyMe: () => void = () => undefined;
+      let notifyLogin: () => void = () => undefined;
+      const oldMeStarted = new Promise<void>((resolve) => {
+        notifyMe = resolve;
+      });
+      const loginStarted = new Promise<void>((resolve) => {
+        notifyLogin = resolve;
+      });
+      const pendingMe = new Promise<void>((resolve) => {
+        releaseMe = resolve;
+      });
+      const pendingLogin = new Promise<void>((resolve) => {
+        releaseLogin = resolve;
+      });
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) => {
+          const form = await request.formData();
+          if (form.get("grant_type") === "password") {
+            notifyLogin();
+            await pendingLogin;
+            return HttpResponse.json(tokens("access-new"));
+          }
+          return HttpResponse.json(tokens("access-handoff"));
+        }),
+        http.get(`${API_BASE_URL}/me`, async ({ request }) => {
+          if (request.headers.get("Authorization") === "Bearer access-new")
+            return HttpResponse.json(memberMe);
+          notifyMe();
+          await pendingMe;
+          return status === 200
+            ? HttpResponse.json(impersonatedMe)
+            : HttpResponse.json({ code: "UNAUTHENTICATED", message: "Refused" }, { status });
+        }),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      const old = client.exchangeHandoff("old-code").then(
+        () => "accepted",
+        () => "superseded",
+      );
+      await oldMeStarted;
+      const login = client.login("new@example.test", "password");
+      await loginStarted;
+      releaseMe();
+      expect(await old).toBe("superseded");
+      releaseLogin();
+      await expect(login).resolves.toEqual(memberMe);
+      expect(client.getAccessToken()).toBe("access-new");
+      expect(client.getMe()).toEqual(memberMe);
+      expect(client.isImpersonated()).toBe(false);
+    },
+  );
+
+  it.each([400, 503])(
+    "T-01-04 a rejected magic-link token (%i) after logout cannot trigger cookie restoration",
+    async (status) => {
+      let release: () => void = () => undefined;
+      let notify: () => void = () => undefined;
+      const started = new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+      const pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const grants: string[] = [];
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) => {
+          const grant = new URLSearchParams(await request.text()).get("grant_type") ?? "";
+          grants.push(grant);
+          if (grant === "refresh_token") return HttpResponse.json(tokens("cookie-access"));
+          notify();
+          await pending;
+          return HttpResponse.json({ code: "UNAUTHENTICATED", message: "Refused" }, { status });
+        }),
+        http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+        http.post(REVOKE_ENDPOINT, () => new HttpResponse(null, { status: 200 })),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      const exchange = client.exchangeMagicLink("old-code").catch(() => undefined);
+      await started;
+      const restoring = client.restoreSession();
+      const logout = client.logout();
+      release();
+      await logout;
+      await exchange;
+      await expect(restoring).resolves.toBeNull();
+      expect(grants).toEqual(["urn:agilityhub:grant:magic-link"]);
+      expect(client.getMe()).toBeNull();
+      expect(client.getAccessToken()).toBeNull();
+    },
+  );
 
   it.each([400, 401])(
     "T-01-04 treats a %i cookie refresh response as an anonymous session",
@@ -623,6 +973,55 @@ describe("T-01-21 AuthClient session flow", () => {
       expect(client.getAccessToken()).toBeNull();
     },
   );
+
+  it("T-01-11 a new handoff confirms independently of an older pending handoff", async () => {
+    let releaseOld: () => void = () => undefined;
+    let notifyOld: () => void = () => undefined;
+    const oldStarted = new Promise<void>((resolve) => {
+      notifyOld = resolve;
+    });
+    const pendingOld = new Promise<void>((resolve) => {
+      releaseOld = resolve;
+    });
+    let newMeReads = 0;
+    const newMe: Me = { ...memberMe, account: { ...memberMe.account, id: "new-handoff-account" } };
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) =>
+        HttpResponse.json(
+          tokens(
+            (await request.formData()).get("token") === "new-code" ? "new-handoff" : "old-handoff",
+          ),
+        ),
+      ),
+      http.get(`${API_BASE_URL}/me`, async ({ request }) => {
+        if (request.headers.get("Authorization") === "Bearer new-handoff") {
+          newMeReads += 1;
+          return HttpResponse.json(newMe);
+        }
+        notifyOld();
+        await pendingOld;
+        return HttpResponse.json(memberMe);
+      }),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const old = client.exchangeHandoff("old-code").catch(() => null);
+    await oldStarted;
+    const newer = client.exchangeHandoff("new-code").catch(() => null);
+    try {
+      await vi.waitFor(
+        () => {
+          expect(newMeReads).toBe(1);
+        },
+        { timeout: 500 },
+      );
+      await expect(newer).resolves.toEqual(newMe);
+    } finally {
+      releaseOld();
+      await Promise.all([old, newer]);
+    }
+    expect(client.getMe()).toEqual(newMe);
+    expect(client.getAccessToken()).toBe("new-handoff");
+  });
 
   it("rejects a mock refresh store unless the build-time mock flag is enabled", () => {
     expect(
@@ -1279,3 +1678,635 @@ describe("T-01-26 onboarding contract", () => {
     });
   });
 });
+
+describe("T-01-04 pending account operations belong to their original session", () => {
+  it.each(["locale", "token", "middleware"] as const)(
+    "never dispatches a mutation after identity changes during the %s await",
+    async (phase) => {
+      let release: () => void = () => undefined;
+      let notify: () => void = () => undefined;
+      const started = new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+      const pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const wait = async () => {
+        notify();
+        await pending;
+      };
+      const sentAs: (string | null)[] = [];
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) =>
+          HttpResponse.json(
+            tokens(
+              (await request.formData()).get("username") === "new@example.test"
+                ? "access-new"
+                : "access-old",
+            ),
+          ),
+        ),
+        http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+        http.put(`${API_BASE_URL}/me/profile`, ({ request }) => {
+          sentAs.push(request.headers.get("Authorization"));
+          return HttpResponse.json({ access_token: "profile-token" });
+        }),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      await client.login("old@example.test", "password");
+      const api =
+        phase === "token"
+          ? createApiClient({
+              baseUrl: API_BASE_URL,
+              captureRequestGuard: () => {
+                const generation = client.getSessionGeneration();
+                return () => {
+                  if (generation !== client.getSessionGeneration())
+                    throw new Error("Session changed");
+                };
+              },
+              getAccessToken: async () => {
+                const token = client.getAccessToken();
+                await wait();
+                return token;
+              },
+            })
+          : createAuthenticatedApiClient(client, {
+              baseUrl: API_BASE_URL,
+              getLocale: async () => {
+                if (phase === "locale") await wait();
+                return "ca";
+              },
+              middleware:
+                phase === "middleware"
+                  ? [
+                      {
+                        onRequest: async ({ request }) => {
+                          await wait();
+                          return request;
+                        },
+                      },
+                    ]
+                  : [],
+            });
+      const operation = api
+        .PUT("/me/profile", { body: { activeProfile: "INSTRUCTOR", remember: false } })
+        .then(
+          () => "accepted",
+          () => "superseded",
+        );
+      await started;
+      await client.login("new@example.test", "password");
+      release();
+      expect(await operation).toBe("superseded");
+      expect(sentAs).toEqual([]);
+      expect(client.getAccessToken()).toBe("access-new");
+    },
+  );
+
+  const pendingOnboarding: OnboardingState = {
+    fields: [],
+    pending: true,
+    postponeRemaining: 2,
+    requiredConsent: null,
+  };
+  const operations = [
+    {
+      name: "password",
+      method: "put",
+      path: `${API_BASE_URL}/me/password`,
+      start: (client: AuthClient) =>
+        client.updatePassword({ new: "updated-password", repeat: "updated-password" }),
+      reply: () => new HttpResponse(null, { status: 204 }),
+    },
+    {
+      name: "profile",
+      method: "put",
+      path: `${API_BASE_URL}/me/profile`,
+      start: (client: AuthClient) => client.updateProfile("INSTRUCTOR", true),
+      reply: () => HttpResponse.json({ access_token: "old-role-token" }),
+    },
+    {
+      name: "account",
+      method: "patch",
+      path: `${API_BASE_URL}/me`,
+      start: (client: AuthClient) => client.updateAccount({ name: "Old Edited Account" }),
+      reply: () => HttpResponse.json(memberMe),
+    },
+    {
+      name: "read onboarding",
+      method: "get",
+      path: `${API_BASE_URL}/me/onboarding`,
+      start: (client: AuthClient) => client.getOnboarding(),
+      reply: () => HttpResponse.json(pendingOnboarding),
+    },
+    {
+      name: "complete onboarding",
+      method: "put",
+      path: `${API_BASE_URL}/me/onboarding`,
+      start: (client: AuthClient) =>
+        client.completeOnboarding({
+          consentAccepted: true,
+          consentVersion: "2026-10-01",
+          fields: { name: "Old Edited Account" },
+        }),
+      reply: () => HttpResponse.json(pendingOnboarding),
+    },
+    {
+      name: "postpone onboarding",
+      method: "post",
+      path: `${API_BASE_URL}/me/onboarding/postpone`,
+      start: (client: AuthClient) => client.postponeOnboarding(),
+      reply: () => HttpResponse.json(pendingOnboarding),
+    },
+    {
+      name: "handoff redirect",
+      method: "post",
+      path: `${API_BASE_URL}/auth/handoff`,
+      start: (client: AuthClient) => client.createHandoff("clubs-admin"),
+      reply: () =>
+        HttpResponse.json({
+          code: "old-code",
+          url: "https://admin.example.test/entrar?handoff=old-code",
+        }),
+    },
+    {
+      name: "OIDC redirect",
+      method: "post",
+      path: `${IDENTITY_BASE_URL}/oauth2/session`,
+      start: (client: AuthClient) => client.resumeOidcFlow("old-flow"),
+      reply: () => HttpResponse.json({ redirectUrl: "https://app.example.test/old-account" }),
+    },
+    {
+      name: "session list",
+      method: "get",
+      path: `${API_BASE_URL}/me/sessions`,
+      start: (client: AuthClient) => client.listSessions(),
+      reply: () => HttpResponse.json([]),
+    },
+    {
+      name: "session revocation",
+      method: "delete",
+      path: `${API_BASE_URL}/me/sessions/old-session`,
+      start: (client: AuthClient) => client.revokeSession("old-session"),
+      reply: () => new HttpResponse(null, { status: 204 }),
+    },
+  ] as const;
+
+  describe.each(["logout", "replacement"] as const)("after %s", (transition) => {
+    it.each(operations)("rejects the old $name result", async (operation) => {
+      let release: () => void = () => undefined;
+      let notify: () => void = () => undefined;
+      const started = new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+      const pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const newMe: Me = {
+        ...memberMe,
+        account: {
+          ...memberMe.account,
+          id: "new-account",
+          name: "New Account",
+          hasPassword: false,
+        },
+      };
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) =>
+          HttpResponse.json(
+            tokens(
+              (await request.formData()).get("username") === "new@example.test"
+                ? "access-new"
+                : "access-old",
+            ),
+          ),
+        ),
+        http.get(`${API_BASE_URL}/me`, ({ request }) =>
+          HttpResponse.json(
+            request.headers.get("Authorization") === "Bearer access-new" ? newMe : memberMe,
+          ),
+        ),
+        http.post(REVOKE_ENDPOINT, () => new HttpResponse(null, { status: 200 })),
+        http[operation.method](operation.path, async () => {
+          notify();
+          await pending;
+          return operation.reply();
+        }),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      await client.login("old@example.test", "password");
+      const old = operation.start(client).then(
+        () => "accepted",
+        () => "superseded",
+      );
+      await started;
+      const signedIn = vi.fn();
+      client.addEventListener("signedIn", signedIn);
+      const changed =
+        transition === "logout" ? client.logout() : client.login("new@example.test", "password");
+      release();
+      await changed;
+      expect(await old).toBe("superseded");
+      expect(client.getMe()).toEqual(transition === "logout" ? null : newMe);
+      expect(client.getAccessToken()).toBe(transition === "logout" ? null : "access-new");
+      expect(signedIn).toHaveBeenCalledTimes(transition === "logout" ? 0 : 1);
+    });
+  });
+
+  it.each([
+    { phase: "response", replacement: "account" },
+    { phase: "refresh", replacement: "account" },
+    { phase: "response", replacement: "impersonation" },
+  ] as const)(
+    "never replays or expires the newer $replacement when the old PUT's $phase arrives late",
+    async ({ phase, replacement }) => {
+      let release: () => void = () => undefined;
+      let notify: () => void = () => undefined;
+      const started = new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+      const pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const sentAs: (string | null)[] = [];
+      const wait = async () => {
+        notify();
+        await pending;
+      };
+      server.use(
+        http.post(TOKEN_ENDPOINT, async ({ request }) => {
+          const form = await request.formData();
+          if (form.get("grant_type") === "refresh_token") {
+            if (phase === "refresh") await wait();
+            return HttpResponse.json(tokens("access-refreshed"));
+          }
+          return HttpResponse.json(
+            tokens(form.get("username") === "new@example.test" ? "access-new" : "access-old"),
+          );
+        }),
+        http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+        http.put(`${API_BASE_URL}/test-mutation`, async ({ request }) => {
+          sentAs.push(request.headers.get("Authorization"));
+          if (sentAs.length > 1) return new HttpResponse(null, { status: 204 });
+          if (phase === "response") await wait();
+          return unauthenticated();
+        }),
+      );
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+      });
+      await client.login("old@example.test", "password");
+      const fetch = createRefreshInterceptor(client);
+      const request = new Request(`${API_BASE_URL}/test-mutation`, {
+        method: "PUT",
+        body: "old-mutation",
+      });
+      request.headers.set("Authorization", "Bearer access-old");
+      const response = fetch(request);
+      await started;
+      const transition =
+        replacement === "account"
+          ? client.login("new@example.test", "password")
+          : client.acceptImpersonation("access-new");
+      release();
+      await transition;
+      expect((await response).status).toBe(401);
+      expect(sentAs).toEqual(["Bearer access-old"]);
+      expect(client.getAccessToken()).toBe("access-new");
+      expect(client.isImpersonationExpired()).toBe(false);
+    },
+  );
+});
+
+/** The jar changes when the HTTP response arrives, independently of accepted JS auth state. */
+function cookieJarServer(malformedGrant = false) {
+  let cookie: string | null = null;
+  let held: string | undefined;
+  let release: () => void = () => undefined;
+  let notify: () => void = () => undefined;
+  let pending = Promise.resolve();
+  const calls: string[] = [];
+  const json = (value: unknown, status = 200) =>
+    new Response(JSON.stringify(value), {
+      status,
+      headers: { "Content-Type": "application/json" },
+    });
+  const fetcher: typeof globalThis.fetch = async (input, init) => {
+    const request = new Request(input, init);
+    if (request.url.endsWith("/oauth2/token")) {
+      const form = new URLSearchParams(await request.text());
+      const grant = form.get("grant_type");
+      const account = grant === "refresh_token" ? cookie : (form.get("username") ?? "B");
+      const operation = grant === "refresh_token" ? "refresh" : "grant";
+      calls.push(`${operation}:${account ?? "anonymous"}`);
+      if (held === operation) {
+        held = undefined;
+        notify();
+        await pending;
+      }
+      if (account === null) return json({ code: "REFRESH_EXPIRED", message: "Expired" }, 401);
+      cookie = account;
+      if (malformedGrant && operation === "grant") return new Response("broken JSON");
+      return json(tokens(`access-${account}`));
+    }
+    if (request.url.endsWith("/oauth2/revoke") || request.method === "DELETE") {
+      const operation = request.method === "DELETE" ? "delete" : "revoke";
+      calls.push(`${operation}:${request.headers.get("Authorization") ?? ""}`);
+      if (held === operation) {
+        held = undefined;
+        notify();
+        await pending;
+      }
+      cookie = null;
+      return new Response(null, { status: 204 });
+    }
+    if (request.url.endsWith("/me")) return json(memberMe);
+    throw new Error(`Unexpected ${request.method} ${request.url}`);
+  };
+  return {
+    calls,
+    fetcher,
+    cookie: () => cookie,
+    hold(operation: string) {
+      held = operation;
+      pending = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      return new Promise<void>((resolve) => {
+        notify = resolve;
+      });
+    },
+    release: () => {
+      release();
+    },
+  };
+}
+
+describe.each(["Web Locks", "page queue"] as const)(
+  "T-01-04 cookie response ordering with %s",
+  (coordination) => {
+    let removeLocks: (() => void) | undefined;
+    afterEach(() => {
+      removeLocks?.();
+    });
+    function setup() {
+      if (coordination === "Web Locks") removeLocks = installWebLocks();
+      const jar = cookieJarServer();
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+        handoffSessions: "account",
+        fetch: jar.fetcher,
+      });
+      return { jar, client };
+    }
+
+    it.each(["password", "magic link", "handoff"] as const)(
+      "a late A refresh finishes before the newer %s sets cookie B",
+      async (grant) => {
+        const { jar, client } = setup();
+        await client.login("A", "password");
+        const started = jar.hold("refresh");
+        const old = client.refresh().catch(() => undefined);
+        await started;
+        const replacement =
+          grant === "password"
+            ? client.login("B", "password")
+            : grant === "magic link"
+              ? client.exchangeMagicLink("B")
+              : client.exchangeHandoff("B");
+        // Let all ready request microtasks run: the held HTTP response is the only barrier.
+        await delay(0);
+        jar.release();
+        await Promise.all([old, replacement]);
+        expect(jar.calls).toEqual(["grant:A", "refresh:A", "grant:B"]);
+        expect(jar.cookie()).toBe("B");
+        expect((await client.refresh()).access_token).toBe("access-B");
+        expect(client.getAccessToken()).toBe("access-B");
+      },
+    );
+
+    it.each(["revoke", "delete"] as const)(
+      "a late %s cookie-clear finishes before login B",
+      async (operation) => {
+        const { jar, client } = setup();
+        await client.login("A", "password");
+        const started = jar.hold(operation);
+        const old = (
+          operation === "revoke" ? client.logout() : client.revokeSession("current")
+        ).catch(() => undefined);
+        await started;
+        const replacement = client.login("B", "password");
+        // Let all ready request microtasks run: the held HTTP response is the only barrier.
+        await delay(0);
+        jar.release();
+        await Promise.all([old, replacement]);
+        expect(jar.cookie()).toBe("B");
+        expect((await client.refresh()).access_token).toBe("access-B");
+      },
+    );
+
+    it("logout waits for and revokes an already dispatched first grant", async () => {
+      const { jar, client } = setup();
+      const started = jar.hold("grant");
+      const old = client.login("A", "password").catch(() => "superseded");
+      await started;
+      const logout = client.logout();
+      await delay(0);
+      jar.release();
+      await logout;
+      expect(await old).toBe("superseded");
+      expect(jar.calls).toEqual(["grant:A", "revoke:Bearer access-A"]);
+      expect(jar.cookie()).toBeNull();
+      expect(client.getAccessToken()).toBeNull();
+      await expect(client.restoreSession()).resolves.toBeNull();
+    });
+
+    it.each([false, true])(
+      "logout revokes the actual first grant despite a cancelled second login (malformed body: %s)",
+      async (malformed) => {
+        if (coordination === "Web Locks") removeLocks = installWebLocks();
+        const jar = cookieJarServer(malformed);
+        const client = new AuthClient({
+          apiBaseUrl: API_BASE_URL,
+          identityBaseUrl: IDENTITY_BASE_URL,
+          fetch: jar.fetcher,
+        });
+        const started = jar.hold("grant");
+        const first = client.login("A", "password").catch(() => "superseded");
+        await started;
+        const second = client.login("B", "password").catch(() => "superseded");
+        const logout = client.logout();
+        jar.release();
+        await logout;
+        expect(await first).toBe("superseded");
+        expect(await second).toBe("superseded");
+        expect(jar.cookie()).toBeNull();
+        expect(jar.calls).toEqual(
+          malformed
+            ? ["grant:A", "refresh:A", "revoke:Bearer access-A"]
+            : ["grant:A", "revoke:Bearer access-A"],
+        );
+        expect(client.getAccessToken()).toBeNull();
+      },
+    );
+
+    it("cancels superseded queued grants and revokes before dispatch", async () => {
+      const { jar, client } = setup();
+      await client.login("A", "password");
+      const started = jar.hold("refresh");
+      const old = client.refresh().catch(() => undefined);
+      await started;
+      const cancelled = client.login("B", "password").catch(() => "superseded");
+      const logout = client.logout();
+      const newest = client.login("C", "password");
+      await delay(0);
+      jar.release();
+      await Promise.all([old, logout, newest]);
+      expect(await cancelled).toBe("superseded");
+      expect(jar.calls).toEqual(["grant:A", "refresh:A", "grant:C"]);
+      expect(jar.cookie()).toBe("C");
+    });
+
+    it("different client IDs at the same identity origin share the cookie writer lock", async () => {
+      const { jar, client } = setup();
+      await client.login("A", "password");
+      const other = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+        clientId: "clubs-admin",
+        fetch: jar.fetcher,
+      });
+      const started = jar.hold("refresh");
+      const old = client.refresh();
+      await started;
+      const replacement = other.login("B", "password");
+      await delay(0);
+      jar.release();
+      await Promise.all([old, replacement]);
+      expect(jar.calls).toEqual(["grant:A", "refresh:A", "grant:B"]);
+      expect(jar.cookie()).toBe("B");
+      expect((await other.refresh()).access_token).toBe("access-B");
+    });
+  },
+);
+
+it.each(["initial", "replay"] as const)(
+  "T-01-04 a late successful %s API response cannot deliver A data into B",
+  async (phase) => {
+    const jar = cookieJarServer();
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      fetch: jar.fetcher,
+    });
+    await client.login("A", "password");
+    let release: () => void = () => undefined;
+    let notify: () => void = () => undefined;
+    const started = new Promise<void>((resolve) => {
+      notify = resolve;
+    });
+    const pending = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let count = 0;
+    const responseFetch: typeof globalThis.fetch = async () => {
+      count += 1;
+      if (phase === "replay" && count === 1) return new Response(null, { status: 401 });
+      notify();
+      await pending;
+      return new Response(JSON.stringify({ privateData: "A" }), { status: 200 });
+    };
+    const fetch = createRefreshInterceptor(client, responseFetch);
+    const result = fetch(`${API_BASE_URL}/private-data`).then(
+      () => "delivered",
+      () => "superseded",
+    );
+    await started;
+    await client.login("B", "password");
+    release();
+    expect(await result).toBe("superseded");
+    expect(client.getAccessToken()).toBe("access-B");
+  },
+);
+
+it("T-01-04 a request newly started during a replacement grant cannot use the prior account", async () => {
+  const jar = cookieJarServer();
+  const client = new AuthClient({
+    apiBaseUrl: API_BASE_URL,
+    identityBaseUrl: IDENTITY_BASE_URL,
+    fetch: jar.fetcher,
+  });
+  await client.login("A", "password");
+  const started = jar.hold("grant");
+  const replacement = client.login("B", "password");
+  await started;
+  const dispatch = vi.fn<typeof globalThis.fetch>();
+  const api = createAuthenticatedApiClient(client, { baseUrl: API_BASE_URL, fetch: dispatch });
+  await expect(
+    api.PUT("/me/profile", { body: { activeProfile: "MEMBER", remember: false } }),
+  ).rejects.toThrow();
+  expect(dispatch).not.toHaveBeenCalled();
+  expect(client.getAccessToken()).toBeNull();
+  expect(client.getMe()).toBeNull();
+  jar.release();
+  await replacement;
+  expect(client.getAccessToken()).toBe("access-B");
+});
+
+it.each(["json", "text", "blob", "arrayBuffer"] as const)(
+  "T-01-04 a delayed %s body cannot deliver old data after response headers arrive",
+  async (parseAs) => {
+    const jar = cookieJarServer();
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      fetch: jar.fetcher,
+    });
+    await client.login("A", "password");
+    let release: () => void = () => undefined;
+    let notify: () => void = () => undefined;
+    const started = new Promise<void>((resolve) => {
+      notify = resolve;
+    });
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        release = () => {
+          controller.enqueue(new TextEncoder().encode(JSON.stringify(memberMe)));
+          controller.close();
+        };
+      },
+    });
+    const responseFetch: typeof globalThis.fetch = () =>
+      Promise.resolve(new Response(body, { headers: { "Content-Type": "application/json" } }));
+    const api = createAuthenticatedApiClient(client, {
+      baseUrl: API_BASE_URL,
+      fetch: responseFetch,
+      middleware: [
+        {
+          onResponse({ response }) {
+            notify();
+            return response;
+          },
+        },
+      ],
+    });
+    const operation = api.GET("/me", { parseAs }).then(
+      () => "delivered",
+      () => "superseded",
+    );
+    await started;
+    await client.login("B", "password");
+    release();
+    expect(await operation).toBe("superseded");
+    expect(client.getAccessToken()).toBe("access-B");
+  },
+);

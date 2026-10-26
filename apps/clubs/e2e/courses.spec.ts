@@ -5,6 +5,10 @@ import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
 const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E9-W04");
+const reviewEvidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence/2026-10-23-web-review",
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -22,6 +26,7 @@ test.use({ viewport: { height: 812, width: 375 } });
 
 test.beforeAll(() => {
   mkdirSync(evidenceDirectory, { recursive: true });
+  mkdirSync(reviewEvidenceDirectory, { recursive: true });
 });
 
 async function login(page: Page, scenario: string, landing: string) {
@@ -86,6 +91,10 @@ test.describe("E9-W04 S16 in the members' app (WP-16-F′) against MSW, 375 px",
     await expect(plan.getByText("1", { exact: true }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Marca com a desmuntat" })).toHaveCount(0);
     await shot(page, "visor-alumne-375.png");
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(reviewEvidenceDirectory, "member-standing-course-375.png"),
+    });
 
     await navigate(page, "/avui");
     const icon = page.getByRole("button", { name: "Recorregut muntat a Muntanya" });

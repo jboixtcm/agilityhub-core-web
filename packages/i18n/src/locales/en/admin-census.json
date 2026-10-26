@@ -398,7 +398,7 @@
       "erased": "erased",
       "export": "Download data (GDPR)",
       "exportPreparing": "The data package is being prepared.",
-      "exportQueued": "The package is being prepared. You will find it under Exports.",
+      "exportRequested": "Data package requested. Check its status in Exports.",
       "consents": {
         "title": "Consent history",
         "loading": "Loading consents…",

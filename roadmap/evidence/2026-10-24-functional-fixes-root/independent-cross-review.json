@@ -1,0 +1,28 @@
+{
+  "status": "ongoing",
+  "reviewed": [
+    "ConsentGrant canonical-field precedence and specific legacy privacy exception",
+    "Mongo consent projection strict boolean parity",
+    "Jobs mandatory-process guard and absence of unsupported controls",
+    "Export notice tied to requested job and terminal/error states",
+    "Demo ID public build configuration and isolated Learn-card control",
+    "Borrowed locale hook restored normal no-op guard",
+    "INC97 red probe geometry and role/keyboard coverage",
+    "INC98 rendered duplicate cards and stale member success feedback",
+    "INC97 final mobile dropdown and instructor agenda original images, keyboard/role DOM metrics",
+    "INC98 keyed inner record boundaries and distinct sibling keys",
+    "Full web CI38tasks successful,3,611Vitest plus10Node tests, zero duplicate React-key warnings",
+    "API2241input manifest unchanged on26Oct; OpenAPI and production seed equality"
+  ],
+  "findings": [
+    {
+      "id": "INC97",
+      "result": "Corrected; release17fivecases green with17documentwidth/scrollmetrics. Root independently inspected final375dropdown andinstructoragenda originals."
+    },
+    {
+      "id": "INC98",
+      "result": "Corrected; census07complete45testsgreen including3newnavigation/delayedresponse cases. Real E2r2fivecases green, profilelane originalcaptures confirm onecard andno stalebanner."
+    }
+  ],
+  "limits": "Read-only cross-review supplements, but does not replace, the final frozen-input automated and real-browser runs."
+}

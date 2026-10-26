@@ -7,7 +7,7 @@
 import type { CourseData } from '../schema/course-data.js';
 import type { ObstacleType } from '../schema/primitives.js';
 import { placedObstacleHeadingDegrees } from './heading.js';
-import { placeObstacleInRing, type CoursePlacement } from './placement.js';
+import { placeControlPointsInRing, placeObstacleInRing, type CoursePlacement } from './placement.js';
 
 export interface ResolvedObstacle {
   readonly obstacleId: string;
@@ -18,6 +18,8 @@ export interface ResolvedObstacle {
   readonly rotationDeg: number;
   /** The course numbers the obstacle carries (more than one when it is taken twice). */
   readonly numbers: readonly number[];
+  /** Frozen ring geometry; null/absent on legacy placements, empty when there is no curve. */
+  readonly controlPointsMeters?: readonly { readonly x: number; readonly y: number }[] | null;
 }
 
 /** course-core's placement of every positioned obstacle of `course` (R-16-05). */
@@ -38,6 +40,8 @@ export function resolvePlacedObstacles(
       ? []
       : [
           {
+            controlPointsMeters:
+              placeControlPointsInRing(obstacle.controlPointsMeters, placement, course) ?? [],
             numbers: numbers.get(obstacle.sourceId) ?? [],
             obstacleId: obstacle.sourceId,
             rotationDeg: placedObstacleHeadingDegrees(obstacle.rotationDegrees, placement),

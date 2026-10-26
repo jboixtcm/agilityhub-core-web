@@ -1,0 +1,432 @@
+{
+  "scope": "Independent retained-evidence accounting; no tests or external operations executed",
+  "status": "attention",
+  "issues": [
+    "Real-browser evidence mismatch: core-e3-r4"
+  ],
+  "baselineInputs": 946,
+  "currentMismatches": [],
+  "vitestSuites": {
+    "@agilityhub/course-core:test": 378,
+    "@agilityhub/ui:test": 195,
+    "@agilityhub/shared-types:test": 38,
+    "@agilityhub/i18n:test": 159,
+    "@agilityhub/course-ui:test": 56,
+    "@agilityhub/api-client:test": 801,
+    "@agilityhub/auth:test": 129,
+    "id:test": 19,
+    "clubs:test": 755,
+    "clubs-admin:test": 1086
+  },
+  "vitestPassed": 3616,
+  "nodeSuites": {
+    "@agilityhub/i18n:test": {
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "skipped": 0
+    },
+    "clubs:test": {
+      "tests": 10,
+      "pass": 10,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "nodePassed": 20,
+  "commandSections": [
+    {
+      "name": "40-final-ci",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "41-full-browser-final",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "43-final-bundle-size",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "44-final-literals",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "45-final-format",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "29-i18n-postfix",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "core-e1-r3",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "core-e4w16-r2",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "core-e9-r2",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "core-e10-r2",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    },
+    {
+      "name": "core-auth-r2",
+      "commandMatches": true,
+      "exitMatches": true,
+      "inputCountMatches": true,
+      "unchangedClaimMatches": true,
+      "tailMatches": true
+    }
+  ],
+  "expectedUniqueCases": 91,
+  "passedUniqueCases": 44,
+  "collectorAgrees": true,
+  "groups": [
+    {
+      "stage": "core-e2-r5",
+      "expected": 5,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e2-core.spec.ts:263:5 \u203a T-03-42 real census flow, booking block and member profile",
+        "e2e/core/e2-core.spec.ts:455:5 \u203a T-05-22/T-05-25 real catalog create, edit and deactivate round trips",
+        "e2e/core/e2-core.spec.ts:540:5 \u203a T-02-13/T-14-26 real parameter history, export and audit",
+        "e2e/core/e2-core.spec.ts:627:5 \u203a T-05-CP-07 real club page edit renders styled Markdown on screen 30",
+        "e2e/core/e2-core.spec.ts:680:5 \u203a T-03-40 E3-W12 step 4 \u00b7 screen 13 reads GET /me/dogs only: the seed's document types, \u00abNivell\u00bb per dog, no /parameters (S03 \u00a76)"
+      ]
+    },
+    {
+      "stage": "core-e3-r4",
+      "expected": 5,
+      "status": "attention",
+      "checks": {
+        "exitZero": false,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": false,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e3-signup.spec.ts:733:5 \u203a T-02-07 E3-W12 step 5 \u00b7 the signup's public footer shows /branding's identity and registered office (S02 R-02-02)",
+        "e2e/core/e3-signup.spec.ts:751:5 \u203a T-04-34 public signup is validated and enters through the N-02 welcome link @critical-alta",
+        "e2e/core/e3-signup.spec.ts:2102:5 \u203a T-04-34 rejected signup delivers N-03 @critical-alta",
+        "e2e/core/e3-signup.spec.ts:2109:5 \u203a T-04-34 active member adds a dog and the club validates it @critical-alta",
+        "e2e/core/e3-signup.spec.ts:2113:5 \u203a T-04-34 signup.enabled=false shows only the configured closed text"
+      ]
+    },
+    {
+      "stage": "core-e4",
+      "expected": 7,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e4-core.spec.ts:539:5 \u203a T-06-28 E2E (a) D3: the three seeded templates, \u00abSetmana B\u00bb blocked by its inconsistency, \u00abSetmana A\u00bb generates the proposed week, D3b per ring",
+        "e2e/core/e4-core.spec.ts:674:5 \u203a T-06-28 E2E (b) D4: \u00abEsborrany\u00bb opens the seeded draft week, [VALIDAR LA SETMANA], the D4c modal with the 4 registrants (200), \u00abAnul\u00b7lades\u00bb, ring blocks (409 then 201)",
+        "e2e/core/e4-core.spec.ts:858:5 \u203a T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n",
+        "e2e/core/e4-core.spec.ts:913:5 \u203a T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every ring on D4, a new seminar published over a class with the conflict dialog; D7 exports against the core",
+        "e2e/core/e4-core.spec.ts:1158:5 \u203a T-07-32 E2E (e) ca: 04 \u2192 detail \u2192 register \u2192 03 \u2192 cancel in time; the waitlist of the full \u00abSeminari de handling\u00bb and the FIFO promotion when the admin adds a place",
+        "e2e/core/e4-core.spec.ts:1330:5 \u203a T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads \u00abcancel\u00b7lada pel club\u00bb",
+        "e2e/core/e4-core.spec.ts:1520:5 \u203a E4-W05 step 7 \u00b7 the \u00abExcel \u00b7 PDF\u00bb menus of D5 and D7 with EXPORT_TOO_LARGE and while an export is pending"
+      ]
+    },
+    {
+      "stage": "core-e5",
+      "status": "pending",
+      "expected": 11
+    },
+    {
+      "stage": "core-e6",
+      "status": "pending",
+      "expected": 14
+    },
+    {
+      "stage": "core-e7",
+      "status": "pending",
+      "expected": 11
+    },
+    {
+      "stage": "core-e8",
+      "status": "pending",
+      "expected": 6
+    },
+    {
+      "stage": "core-e1-r3",
+      "expected": 8,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e1-core.spec.ts:157:5 \u203a T-01-18 password login reaches the seeded account",
+        "e2e/core/e1-core.spec.ts:194:5 \u203a T-11-11 E11-W06 W1 \u00b7 a member screen opened signed out is the one the password login opens",
+        "e2e/core/e1-core.spec.ts:219:5 \u203a T-01-21 seeded administrator opens the real backoffice",
+        "e2e/core/e1-core.spec.ts:239:5 \u203a T-01-20 club session is restored by the core",
+        "e2e/core/e1-core.spec.ts:262:5 \u203a T-01-19 magic link is delivered and exchanged end to end",
+        "e2e/core/e1-core.spec.ts:284:5 \u203a T-01-26 published seed enters without pending onboarding",
+        "e2e/core/e1-core.spec.ts:294:5 \u203a T-01-22 apps/id resumes a real authorize flow through oauth2/session",
+        "e2e/core/e1-core.spec.ts:401:5 \u203a T-02-07 E3-W12 step 5 \u00b7 the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)"
+      ]
+    },
+    {
+      "stage": "core-e4w16-r2",
+      "expected": 5,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e4w16-core.spec.ts:231:5 \u203a T-03-40 E4-W16 step 11 \u00b7 screen 13 lists the task rows, the done ones struck through",
+        "e2e/core/e4w16-core.spec.ts:352:5 \u203a T-01-19 E4-W16 step 10 \u00b7 a RESET link sets the new password once without `current`",
+        "e2e/core/e4w16-core.spec.ts:434:5 \u203a T-01-11 E4-W16 step 1 \u00b7 \u00abEntra com l'abonat\u00bb opens the club app through the one-time code, once; E5-W05 step 24 \u00b7 its banner names the member record, not the account",
+        "e2e/core/e4w16-core.spec.ts:639:5 \u203a T-14-26 E4-W16 step 5 \u00b7 a READY export downloads from the drawer through GET /exports/{id} and the bearer",
+        "e2e/core/e4w16-core.spec.ts:694:5 \u203a T-03-34 (front) E4-W16 step 7 \u00b7 D10 keeps the block, \u00abInactivitat\u00bb, \u00abBaixa\u00bb and the audit whatever BILLING says"
+      ]
+    },
+    {
+      "stage": "core-e9-r2",
+      "expected": 3,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e9-core.spec.ts:451:5 \u203a E9-W04 \u00b7 T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11) @critical-muntatge",
+        "e2e/core/e9-core.spec.ts:636:5 \u203a E9-W05 \u00b7 T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and \u00abRegistra-ho com a muntat\u00bb (R-16-02, R-16-05, R-16-10, R-16-07) @critical-muntatge",
+        "e2e/core/e9-core.spec.ts:1268:5 \u203a E9-W05 \u00b7 T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F\u2032) @critical-muntatge"
+      ]
+    },
+    {
+      "stage": "core-e10-r2",
+      "expected": 6,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e10-core.spec.ts:309:5 \u203a R-17-09 \u00b7 the platform account gives a club admin AGILITYHUB_ADMIN through the api (PUT /platform/accounts/{id}/platform-roles)",
+        "e2e/core/e10-core.spec.ts:329:5 \u203a E10-W02 \u00b7 the console's entry: the product host's branding and boot, the platform account signed in on the ID host, its card and its token on the product host (S17 \u00a72, R-01-17, T-17-12)",
+        "e2e/core/e10-core.spec.ts:453:5 \u203a E11-W08 \u00b7 the platform account signs in to the console on the product host (password and magic link) and lands on D19; an account without the platform role gets 403 PLATFORM_ONLY (S17 \u00a72 \u00abEntrada\u00bb, S01 R-01-02, ruling E157)",
+        "e2e/core/e10-core.spec.ts:577:5 \u203a E10-W01 \u00b7 D19 against the core: the list, the Identitat tab and the \u00abNou club\u00bb wizard (T-17-12)",
+        "e2e/core/e10-core.spec.ts:725:5 \u203a E10-W03 \u00b7 \u00abDominis\u00bb (positive and negative fake DNS, the primary choice, /branding before and after), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)",
+        "e2e/core/e10-core.spec.ts:1171:5 \u203a E10-W02 \u00b7 a second club in under an hour: the manual script, step by step against the core, with its times (T-17-12)"
+      ]
+    },
+    {
+      "stage": "core-auth-r2",
+      "expected": 3,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/functional-auth.spec.ts:54:5 \u203a T-01-04 R-01-06 functional: three real browser tabs restore and rotate twice without revoking the family",
+        "e2e/core/functional-auth.spec.ts:105:5 \u203a T-01-04 T-01-22 functional: logout invalidates the shared family and another tab cannot restore it",
+        "e2e/core/functional-auth.spec.ts:154:5 \u203a T-01-20 functional: one transient refresh503 preserves the route and recovers without another login"
+      ]
+    },
+    {
+      "stage": "01-core-d11-r3",
+      "expected": 1,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/d11-core.spec.ts:60:5 \u203a T-02-13 E4-W06 D11 on the published core names every block and parameter (no raw keys)"
+      ]
+    },
+    {
+      "stage": "02-core-e11-r3",
+      "expected": 2,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "e2e/core/e11-core.spec.ts:163:5 \u203a E11-W01 \u00b7 T-14-17: screen 12 follows and downloads the member's ZIP, N-50 opens it again from a fresh launch; impersonation is refused",
+        "e2e/core/e11-core.spec.ts:297:5 \u203a E11-W01 \u00b7 T-14-17/T-14-18/R-14-18: D10 queues the admin data package, schedules and cancels erasure and renders consent history"
+      ]
+    },
+    {
+      "stage": "03-core-production-r3",
+      "expected": 4,
+      "status": "passed",
+      "checks": {
+        "exitZero": true,
+        "sameImage": true,
+        "unchanged": true,
+        "inputCountMatches": true,
+        "baselineMatches": true,
+        "onlyExpectedExtras": true,
+        "extraHashesMatchCurrent": true,
+        "ownedCleanupEmpty": true,
+        "exactPassSummary": true,
+        "noSkippedSummary": true,
+        "caseNumbersComplete": true,
+        "caseIdentitiesUnique": true
+      },
+      "caseIdentities": [
+        "roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:32:5 \u203a compiled three-SPA HTTPS: independent host-only sessions, deep reloads and ID logout isolation",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:113:5 \u203a compiled member UI: delayed loading, offline stale copy, disabled writes and online recovery",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:143:5 \u203a compiled cold boot: readable server-failure state and retry recover from a transient branding outage",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts:159:5 \u203a D11 mandatory privacy processes have translated labels and no unusable disable action"
+      ]
+    }
+  ]
+}

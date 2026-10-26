@@ -1,0 +1,41 @@
+{
+  "02-web-gates": {
+    "outcome": "cancelled_before_lock_acquisition",
+    "reason": "Source and E10 harness were still being finalized; no verification command ran. Replaced by05-web-gates-final with snapshots taken inside the lock."
+  },
+  "06-full-browser-galleries": {
+    "outcome": "cancelled_before_lock_acquisition",
+    "reason": "Final test formatting completed while queued; no browser/container started. Replaced by06b-full-browser-galleries with snapshots taken inside the lock."
+  },
+  "05a-source-format": {
+    "outcome": "formatting_only_failure",
+    "reason": "Prettier identified two test files. Release lane11-harness-format applied and verified formatting; no runtime behavior changed."
+  },
+  "05-web-gates-final": {
+    "outcome": "five_member_locale_failures",
+    "reason": "Gate ran before INC97 changes; 943 source inputs unchanged. Five member application tests failed after the INC96 locale change; web agent investigating implementation versus outdated fixture expectations. New final gate required. Other package groups passed, but overall exit1."
+  },
+  "06b-full-browser-galleries": {
+    "outcome": "passed_then_visual_defect_discovered",
+    "testsPassed": 261,
+    "skipped": 0,
+    "screenshots": 169,
+    "reason": "Automated suite green with unchanged inputs. Visual review found INC97 uncontained mobile admin overflow. Preserve these screenshots as pre-fix evidence; repeat final full browser suite and capture in a separate dated final folder."
+  },
+  "17-changed-format": {
+    "outcome": "generated_contract_only_format_warning",
+    "reason": "Only copied API OpenAPI snapshot differs from Prettier formatting; AGENTS requires byte-identical API output and no manual editing. Preserve snapshot and verify equality separately;18 checks editable source files."
+  },
+  "12-full-browser-final": {
+    "outcome": "old_mobile_nav_fixture_and_remaining_INC97_visual_overflow",
+    "passed": 151,
+    "failed": 4,
+    "memberCasesNotRun": 111,
+    "inputsUnchanged": true,
+    "reason": "Course-ui4+ID1+admin146passed;4adminoldhelpers expected always-visible sidebar at375. Turbo stopped beforemember111. Captures additionallyrevealedactual residualD4calendar409px/dashboard491px overflow. Release lane owns narrowCSS+helper+expandedregressions; repeatfullsuite afterfreeze, preserve110captures."
+  },
+  "root-e1-queued-before-stage": {
+    "outcome": "cancelled_before_lock_no_stage_started",
+    "reason": "Hold final real-browser source stable while residual INC97 dashboard/calendar CSS is corrected. No core-e1 command or snapshot was written."
+  }
+}

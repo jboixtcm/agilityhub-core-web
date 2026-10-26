@@ -1,0 +1,28 @@
+{
+  "names": [
+    "Obertura de la setmana",
+    "Revisió de classes en risc",
+    "Avisos de no presentat",
+    "Recordatoris",
+    "Caducitats",
+    "Tancament de classes",
+    "Neteja tècnica",
+    "Recordatori de facturació",
+    "Supressió de dades",
+    "Retenció de dades"
+  ],
+  "mandatory": [
+    {
+      "id": "erasures",
+      "label": "Supressió de dades",
+      "switchVisible": false
+    },
+    {
+      "id": "retention-sweep",
+      "label": "Retenció de dades",
+      "switchVisible": false
+    }
+  ],
+  "unsupportedSwitchRequests": [],
+  "optionalRiskReviewSwitchVisible": true
+}

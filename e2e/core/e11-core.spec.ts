@@ -347,6 +347,7 @@ test("E11-W01 · T-14-17/T-14-18/R-14-18: D10 queues the admin data package, sch
   const exportsDrawer = admin.page.getByRole("dialog", { name: "Exportacions" });
   const readyDownload = exportsDrawer.getByRole("button", { name: /^Descarrega .+\.zip$/u });
   await expect(readyDownload).toBeVisible({ timeout: 150_000 });
+  await expect(exportsDrawer).not.toContainText("Preparant l'exportació…");
   const zip = admin.page.waitForResponse(
     isResponse("GET", /\/api\/v1\/exports\/[^/]+\/download$/u),
   );
@@ -356,6 +357,10 @@ test("E11-W01 · T-14-17/T-14-18/R-14-18: D10 queues the admin data package, sch
   expect(file.headers()["content-type"]).toContain("application/zip");
   await screenshot(admin.page, "D10-paquet-rgpd-core-1280.png");
   await exportsDrawer.getByRole("button", { name: "Tanca les exportacions" }).click();
+  await expect(admin.page.locator(".member-privacy__export")).toContainText(
+    "Paquet de dades sol·licitat. Consulta'n l'estat a Exportacions.",
+  );
+  await expect(admin.page.locator(".member-privacy__export")).not.toContainText("preparant");
 
   await admin.page.getByRole("button", { name: "Suprimeix les dades (RGPD)" }).click();
   const dialog = admin.page.getByRole("dialog", { name: "Suprimeix les dades (RGPD)" });

@@ -1,0 +1,12 @@
+{
+  "slug": "canic",
+  "name": "Demo Agility Cànic",
+  "city": "Demo",
+  "legalName": "Demo Agility Cànic — fictional demonstration",
+  "taxId": null,
+  "legalAddress": {
+    "street": "Demo Street",
+    "postalCode": "00000",
+    "city": "Demo"
+  }
+}

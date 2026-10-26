@@ -1,0 +1,50 @@
+{
+  "reviewedAt": "2026-10-26T09:40:30.794185+00:00",
+  "scope": "Final factual review snapshot; subsequent broad evidence-scan status update may add separate provenance",
+  "files": [
+    {
+      "path": "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/CORRECCIONS_I_REGRESSIO_LOCAL_2026-10-24.md",
+      "sha256": "e987e327b91a3b0ba1c65f314cb338a3f1bf0b23b503454b2f02501f16b43745"
+    },
+    {
+      "path": "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/INCIDENCIES_OBERTES.md",
+      "sha256": "01cf0b6c26655d62a1c13d66ac2d4471daed65ec34d7685218281477a89b1aa0"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/REPORT.md",
+      "sha256": "ea7f6d0bfe7368de3eee94cb4adb3983c533ba6450895d3133e2b4b896c9a5c7"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-release/ROLE_COVERAGE.md",
+      "sha256": "364a852aa281e68339a073b3daf78380c2136ffff991e980ac58d027eb40ca14"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/final-real-browser-summary.json",
+      "sha256": "4044817f30576afc2e3ab718e3f70b3b3793e7559bbd181a7a82d53c439fd28b"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/55-final-source-secrets.json",
+      "sha256": "9a9bd73904ba594194816cad686d55d4a13e3f4086c5b4e9c36df489df8a32f4"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/56-final-master-docs-secrets.json",
+      "sha256": "b8c976c9751acab2d526ddd537c1ee2d11678bf791e49605ad47eb22dd74c451"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/59-final-local-resource-check.json",
+      "sha256": "53077626c56308df28d7d5c64771ce4917f2034b031bde101043975ca1fda0a3"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/61-api-final-integrity.json",
+      "sha256": "31d58f25b059da27b101acbca47c8029994c831f6b5c00d384385386e4ffd0b4"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/independent-ledger-final.json",
+      "sha256": "099dff865a26f6bd46ebe969a6f950c79fbdb7a8f00d7049e8fd868d54e04019"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/final-document-factual-review.md",
+      "sha256": "bd6f6acc30fe4985e9f015ca13f66393556092e14c8ad84fbd3c443d2aeaf460"
+    }
+  ]
+}

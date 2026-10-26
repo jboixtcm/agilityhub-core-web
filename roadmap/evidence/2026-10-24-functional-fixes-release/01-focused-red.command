@@ -1,0 +1,1 @@
+env HEAVY_WAIT_MIN=120 /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh pnpm --filter clubs-admin exec vitest run src/catalogs/JobsCardRuntime.test.tsx src/audit/ExportsDrawer.test.tsx

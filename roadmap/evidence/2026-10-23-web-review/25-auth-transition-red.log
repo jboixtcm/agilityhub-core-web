@@ -1,0 +1,92 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (51 tests | 4 failed) 3111ms
+   ❯ T-01-21 AuthClient session flow (36)
+     × T-01-11 an old handoff /me (200) cannot cancel a newer login waiting for its token 3ms
+     × T-01-11 an old handoff /me (401) cannot cancel a newer login waiting for its token 1ms
+     × T-01-04 a rejected magic-link token (400) after logout cannot trigger cookie restoration 3ms
+     × T-01-04 a rejected magic-link token (503) after logout cannot trigger cookie restoration 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 an old handoff /me (200) cannot cancel a newer login waiting for its token
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-11 an old handoff /me (401) cannot cancel a newer login waiting for its token
+AssertionError: promise rejected "Error: The session changed while its requ…" instead of resolving
+ ❯ src/auth-client.test.ts:900:26
+    898|       expect(await old).toBe("superseded");
+    899|       releaseLogin();
+    900|       await expect(login).resolves.toEqual(memberMe);
+       |                          ^
+    901|       expect(client.getAccessToken()).toBe("access-new");
+    902|       expect(client.getMe()).toEqual(memberMe);
+
+Caused by: Error: The session changed while its request was pending
+ ❯ AuthClient.requireSessionGeneration src/auth-client.ts:1007:13
+ ❯ AuthClient.login src/auth-client.ts:375:12
+ ❯ src/auth-client.test.ts:900:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a rejected magic-link token (400) after logout cannot trigger cookie restoration
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > T-01-04 a rejected magic-link token (503) after logout cannot trigger cookie restoration
+AssertionError: expected { account: { …(8) }, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "account": {
+    "email": "biel.roca@example.test",
+    "emailVerifiedAt": "2026-08-01T08:00:00Z",
+    "hasPassword": true,
+    "id": "10000000-0000-4000-8000-000000000002",
+    "locale": "ca",
+    "name": "Biel Roca",
+    "onboardingPending": false,
+    "platformRoles": [],
+  },
+  "features": [
+    "FREE_TRAINING",
+    "COURSES",
+  ],
+  "membership": {
+    "activeProfile": "MEMBER",
+    "clubId": "50000000-0000-4000-8000-000000000001",
+    "defaultProfile": "MEMBER",
+    "gender": "MALE",
+    "memberId": "20000000-0000-4000-8000-000000000002",
+    "profiles": [
+      "MEMBER",
+    ],
+    "rememberProfile": true,
+    "roles": [
+      "MEMBER",
+    ],
+  },
+}
+
+ ❯ src/auth-client.test.ts:941:30
+    939|       release();
+    940|       await exchange;
+    941|       await expect(restoring).resolves.toBeNull();
+       |                              ^
+    942|       expect(grants).toEqual(["urn:agilityhub:grant:magic-link"]);
+    943|       expect(client.getMe()).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  4 failed | 60 passed (64)
+   Start at  21:30:25
+   Duration  3.69s (tests 70%, environment 19%, transform 7%, import 4%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run`
+Exit status 1

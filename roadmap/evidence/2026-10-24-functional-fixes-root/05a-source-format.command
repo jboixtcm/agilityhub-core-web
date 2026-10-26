@@ -1,0 +1,1 @@
+corepack pnpm exec prettier --check apps/id/src/App.tsx apps/id/src/App.test.tsx e2e/core/e10-core.spec.ts packages/auth/src/account-locale.ts apps/clubs-admin/src/audit/ExportsDrawer.tsx apps/clubs-admin/src/catalogs/JobsCardRuntime.test.tsx

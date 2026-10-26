@@ -81,6 +81,8 @@ type MaybePromise<T> = Promise<T> | T;
 
 export interface ApiClientOptions {
   baseUrl?: string;
+  /** Capture validity before middleware awaits; check at dispatch and after response parsing. */
+  captureRequestGuard?: () => () => void;
   credentials?: RequestCredentials;
   createIdempotencyKey?: () => string;
   fetch?: typeof globalThis.fetch;
@@ -114,18 +116,24 @@ function matchesRoute(method: string, schemaPath: string, matcher: IdempotentMat
   return method === matcher.method && matchesPath(schemaPath, matcher.path);
 }
 
-function requestMiddleware(options: ApiClientOptions): Middleware {
+function requestMiddleware(
+  options: ApiClientOptions,
+  guards: WeakMap<Request, () => void>,
+): Middleware {
   const matchers = options.idempotentPaths ?? DEFAULT_IDEMPOTENT_PATHS;
   const getLocale = options.getLocale ?? currentLocale;
   const createIdempotencyKey = options.createIdempotencyKey ?? (() => crypto.randomUUID());
 
   return {
     async onRequest({ request, schemaPath }) {
+      const guard = options.captureRequestGuard?.();
+      if (guard !== undefined) guards.set(request, guard);
       if (!request.headers.has("Accept-Language")) {
         request.headers.set("Accept-Language", await getLocale());
       }
 
       const accessToken = await options.getAccessToken?.();
+      guard?.();
       if (accessToken !== undefined && accessToken !== null && accessToken !== "") {
         request.headers.set("Authorization", `Bearer ${accessToken}`);
       }
@@ -155,14 +163,54 @@ const errorMiddleware: Middleware = {
 };
 
 export function createApiClient(options: ApiClientOptions = {}): ApiClient {
+  const guards = new WeakMap<Request, () => void>();
+  const fetch = options.fetch ?? globalThis.fetch;
   const client = createClient<paths>({
     baseUrl: options.baseUrl ?? viteApiUrl() ?? DEFAULT_API_URL,
     credentials: options.credentials ?? "include",
-    ...(options.fetch === undefined ? {} : { fetch: options.fetch }),
+    fetch:
+      options.captureRequestGuard === undefined
+        ? fetch
+        : (input: RequestInfo | URL, init?: RequestInit) => {
+            const guard = input instanceof Request ? guards.get(input) : undefined;
+            // A middleware that replaces the Request cannot silently discard its identity.
+            if (guard === undefined) throw new TypeError("The request lost its validity guard");
+            guard();
+            return fetch(input, init);
+          },
   });
 
-  client.use(requestMiddleware(options), ...(options.middleware ?? []), errorMiddleware);
-  return client;
+  client.use(requestMiddleware(options, guards), ...(options.middleware ?? []), errorMiddleware);
+  if (options.captureRequestGuard === undefined) return client;
+  const captureGuard = options.captureRequestGuard;
+  const operations = new Set([
+    "GET",
+    "PUT",
+    "POST",
+    "DELETE",
+    "OPTIONS",
+    "HEAD",
+    "PATCH",
+    "TRACE",
+    "request",
+  ]);
+  return new Proxy(client, {
+    get(target, property, receiver) {
+      const value: unknown = Reflect.get(target, property, receiver);
+      if (typeof property !== "string" || !operations.has(property) || typeof value !== "function")
+        return value;
+      return async (...args: unknown[]) => {
+        const guard = captureGuard();
+        guard();
+        const operation = value as (...parameters: unknown[]) => unknown;
+        const result: unknown = await operation.apply(target, args);
+        // openapi-fetch has now consumed JSON/text/blob; headers alone are not the boundary.
+        // Keep the original refusal when recovery deliberately ended the expired session.
+        guard();
+        return result;
+      };
+    },
+  });
 }
 
 export const apiClient = createApiClient();

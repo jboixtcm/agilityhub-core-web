@@ -1,0 +1,17 @@
+{
+  "course": {
+    "id": "275d8705-ba7f-4a16-a7ed-2b613c350fe3",
+    "name": "JP S SW"
+  },
+  "forced": true,
+  "placementId": "e5d72c1e-4a20-4df7-abab-7cca817e102c",
+  "ring": "Muntanya",
+  "uploads": [
+    "grant SMARTER_SOURCE → 201 (127.0.0.1:4174/api/v1/attachments/…)",
+    "PUT 127.0.0.1:4174/api/v1/attachments/… → 204",
+    "grant THUMBNAIL → 201 (127.0.0.1:4174/api/v1/attachments/…)",
+    "PUT 127.0.0.1:4174/api/v1/attachments/… → 204",
+    "grant BUILD_SHEET → 201 (127.0.0.1:4174/api/v1/attachments/…)",
+    "PUT 127.0.0.1:4174/api/v1/attachments/… → 204"
+  ]
+}

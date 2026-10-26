@@ -1,0 +1,100 @@
+{
+  "added": {
+    "status": "PENDING",
+    "verification": [
+      "cnameTarget",
+      "recordName",
+      "recordValue"
+    ]
+  },
+  "brandingBefore": {
+    "code": "UNKNOWN_HOST",
+    "status": 404
+  },
+  "verification": {
+    "status": 200,
+    "body": {
+      "status": "VERIFIED",
+      "checkedAt": "2026-10-26T08:57:29.961003378Z",
+      "method": "CNAME"
+    }
+  },
+  "primary": {
+    "afterChoice": [
+      "e10w03-49705.example.test"
+    ],
+    "afterRestore": [
+      "minim.example.test"
+    ]
+  },
+  "brandingAfter": {
+    "slug": "minim",
+    "status": 200
+  },
+  "allowed": {
+    "body": "",
+    "status": 200
+  },
+  "missingVerification": {
+    "body": {
+      "code": "HOST_NOT_VERIFIED",
+      "message": "El domini no està verificat.",
+      "details": {
+        "host": "e10w03-missing-50354.example.test",
+        "cnameTarget": "clubs.agilitydoghub.com",
+        "recordName": "_agilityhub-verify.e10w03-missing-50354.example.test",
+        "recordValue": "agh-verify-qECZpxJXGAAsyM4RoqrA-bxrtzWhakKj"
+      },
+      "traceId": "9def5198-c3ec-4b4e-bd0f-7b23fbfd3733"
+    },
+    "status": 422
+  },
+  "removedNegativeControl": true,
+  "supportMe": {
+    "roles": [
+      "ADMIN"
+    ],
+    "support": [
+      "actorName",
+      "expiresAt"
+    ]
+  },
+  "supportLocale": {
+    "account": "ca",
+    "devicePreference": "es",
+    "devicePreferencePreserved": true,
+    "selectorDisabled": true
+  },
+  "supportRestrictedRoutes": [
+    {
+      "method": "GET",
+      "path": "/api/v1/exports",
+      "status": 403,
+      "code": "SUPPORT_RESTRICTED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/members/{memberId}/data-export",
+      "status": 403,
+      "code": "SUPPORT_RESTRICTED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/members/{memberId}/erasure",
+      "status": 403,
+      "code": "SUPPORT_RESTRICTED"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/members/{memberId}/erasure",
+      "status": 403,
+      "code": "SUPPORT_RESTRICTED"
+    }
+  ],
+  "revoke": {
+    "meAfterExit": 401,
+    "meBeforeExit": 200,
+    "restoredDeviceLocale": "es",
+    "revoke": 200
+  }
+}

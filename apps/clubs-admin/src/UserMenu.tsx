@@ -13,23 +13,23 @@ function LanguageSelector({ authClient }: { authClient: AuthClient }) {
   const branding = useBranding();
   const { me } = useSession();
   const { i18n, t } = useTranslation("shell");
-  const locales = productLocales.filter((locale) => branding.locales.includes(locale));
+  const borrowed = me?.impersonation !== undefined || me?.support !== undefined;
+  const locales = productLocales.filter(
+    (locale) => branding.locales.includes(locale) || (borrowed && locale === me.account.locale),
+  );
 
   return (
     <label className="shell-language">
       <span className="ah-sr-only">{t("shell:header.language")}</span>
       <select
         aria-label={t("shell:header.language")}
+        disabled={borrowed}
         onChange={(event) => {
+          if (borrowed) return;
           const locale = event.currentTarget.value;
           localStorage.setItem(LOCALE_STORAGE_KEY, locale);
           void i18n.changeLanguage(locale);
-          if (
-            me !== null &&
-            me.impersonation === undefined &&
-            me.support === undefined &&
-            me.account.locale !== locale
-          ) {
+          if (me !== null && me.account.locale !== locale) {
             void authClient.updateLocale(locale).catch(() => undefined);
           }
         }}
@@ -52,7 +52,9 @@ function LanguageSelector({ authClient }: { authClient: AuthClient }) {
 function focusables(panel: HTMLElement | null): HTMLElement[] {
   return panel === null
     ? []
-    : Array.from(panel.querySelectorAll<HTMLElement>("select, button:not([disabled])"));
+    : Array.from(
+        panel.querySelectorAll<HTMLElement>("select:not([disabled]), button:not([disabled])"),
+      );
 }
 
 /**
@@ -155,7 +157,11 @@ export function UserMenu({ authClient }: { authClient: AuthClient }) {
             </p>
           )}
           <LanguageSelector authClient={authClient} />
-          <ul aria-label={t("shell:header.userMenu")} className="admin-user-menu__items" role="menu">
+          <ul
+            aria-label={t("shell:header.userMenu")}
+            className="admin-user-menu__items"
+            role="menu"
+          >
             <li role="none">
               <button
                 aria-busy={pending || undefined}

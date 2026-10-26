@@ -1,0 +1,36 @@
+$ pnpm --filter clubs exec vitest run src/courses/register-level-labels.test.tsx src/courses/courses.test.tsx
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+
+ Test Files  2 passed (2)
+      Tests  35 passed (35)
+   Start at  09:21:46
+   Duration  15.19s (tests 86%, transform 8%, environment 3%, import 3%, setup 1%)
+
+$ pnpm exec eslint apps/clubs/src/courses/RegisterSetupPage.tsx apps/clubs/src/courses/register-level-labels.test.tsx e2e/core/e3-signup.spec.ts --max-warnings 0
+$ pnpm --filter clubs typecheck
+
+> clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> tsc --noEmit
+
+$ pnpm typecheck:e2e-core
+
+> agilityhub-core-web@0.0.0 typecheck:e2e-core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> tsc -p e2e/core/tsconfig.json --noEmit
+
+$ pnpm exec prettier --check apps/clubs/src/courses/RegisterSetupPage.tsx apps/clubs/src/courses/register-level-labels.test.tsx e2e/core/e3-signup.spec.ts
+Checking formatting...
+All matched files use Prettier code style!

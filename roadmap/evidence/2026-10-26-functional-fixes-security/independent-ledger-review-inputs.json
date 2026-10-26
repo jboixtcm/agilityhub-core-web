@@ -1,0 +1,33 @@
+{
+  "scope": "Independent interim ledger review; real-API suite incomplete",
+  "files": [
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/FINAL_COMMANDS.md",
+      "sha256": "9c318031378d0c5f5acd9386c776fd6de792ba221b4cbca2da8cf6fa6cfef11a"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/collect-final-runs.py",
+      "sha256": "191334357c8c16e909a2ba9e2fb96f88a72bfd58749ab8ce60701fddb2b44c72"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/40-final-ci.log",
+      "sha256": "11f3cc93cc00add8a1aa4ca344c3c3d6ec5a03da6d1008cf297a7e3c5fd5f357"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+      "sha256": "9403421f7ee04c9112aac89b08412e2291ecf8d8e021ee7069d1f49ca6aaea2a"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/29-i18n-postfix-tested-inputs.json",
+      "sha256": "d4126fbdd1f1f6302e11f46768bb3d7d083fd12283b9557af119fe663ffb5aa8"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/review-final-ledger.py",
+      "sha256": "3d1c573928657d8662c78eec9539e0f394cade1b726995739c1895c6d2207b0e"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-security/independent-ledger-interim.json",
+      "sha256": "0fbacecb5f45189aa8bcd4bc2737bdd2fea9d45838a4aae26af5125d0c9b6915"
+    }
+  ]
+}

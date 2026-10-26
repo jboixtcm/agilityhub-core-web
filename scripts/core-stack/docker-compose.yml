@@ -50,7 +50,7 @@ services:
       retries: 12
 
   seed:
-    image: ghcr.io/jboixtcm/agilityhub-core-api:main
+    image: ${CORE_IMAGE:-ghcr.io/jboixtcm/agilityhub-core-api:main}
     environment:
       <<: *core-environment
       SEED_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
@@ -60,17 +60,16 @@ services:
     working_dir: /app
     command:
       - |
-        # E10-W02 round 2: since the image of 21-10 the club file seeds the club's production hosts
-        # (`app.<domain>`, `admin.<domain>`), which no local server answers. The stack applies a copy
-        # whose two domains are its own (`app.example.test`, `admin.example.test`, the hosts of the
-        # OIDC URIs above and of every stage); the folder goes along for the pages' `bodyFile`.
+        # INC-94: apply the separate demo configuration with non-operative payment instructions.
+        # Keep the folder with the pages' bodyFile and bind its domains to the local OIDC hosts.
+        # The approved production club definition is never applied to this functional stack.
         rm -rf /tmp/seeds && cp -r /app/seeds /tmp/seeds
         sed -i -e 's/host: "app\.[^"]*"/host: "app.example.test"/' \
-          -e 's/host: "admin\.[^"]*"/host: "admin.example.test"/' /tmp/seeds/club-canic.yaml
+          -e 's/host: "admin\.[^"]*"/host: "admin.example.test"/' /tmp/seeds/club-canic-demo.yaml
         # A rewrite that matched nothing stops the stack here, not at a stage's `404 UNKNOWN_HOST`.
-        grep -q 'host: "app.example.test"' /tmp/seeds/club-canic.yaml
-        grep -q 'host: "admin.example.test"' /tmp/seeds/club-canic.yaml
-        java -jar /app/app.jar --core.command=club:apply /tmp/seeds/club-canic.yaml
+        grep -q 'host: "app.example.test"' /tmp/seeds/club-canic-demo.yaml
+        grep -q 'host: "admin.example.test"' /tmp/seeds/club-canic-demo.yaml
+        java -jar /app/app.jar --core.command=club:apply /tmp/seeds/club-canic-demo.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-fifo.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
         if [ "$${SEED_TEMPLATE_CLUB}" = "1" ]; then
@@ -128,7 +127,7 @@ services:
         condition: service_completed_successfully
 
   core:
-    image: ghcr.io/jboixtcm/agilityhub-core-api:main
+    image: ${CORE_IMAGE:-ghcr.io/jboixtcm/agilityhub-core-api:main}
     environment:
       <<: *core-environment
       SERVER_PORT: 8080

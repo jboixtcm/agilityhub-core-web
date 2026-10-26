@@ -1,0 +1,101 @@
+{
+  "plan": "Abonat",
+  "today": "2026-10-26",
+  "planQuotes": [
+    {
+      "planId": "ae03ce52-a116-471d-a459-bf059327662d",
+      "lines": [
+        {
+          "concept": "ENTRY_FEE",
+          "amount": {
+            "amountMinor": 10000,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "totalDue": {
+        "amountMinor": 10000,
+        "currency": "EUR"
+      },
+      "options": [
+        {
+          "option": "TODAY",
+          "portion": "HALF",
+          "startDate": "2026-10-26",
+          "amountDue": {
+            "amountMinor": 3000,
+            "currency": "EUR"
+          },
+          "totalDue": {
+            "amountMinor": 13000,
+            "currency": "EUR"
+          }
+        },
+        {
+          "option": "ALTERNATIVE",
+          "portion": "FULL",
+          "startDate": "2026-11-01",
+          "amountDue": {
+            "amountMinor": 6000,
+            "currency": "EUR"
+          },
+          "totalDue": {
+            "amountMinor": 16000,
+            "currency": "EUR"
+          }
+        }
+      ]
+    },
+    {
+      "planId": "0a66e9a9-2cae-4eff-bf53-7075eb7fbd3e",
+      "lines": [
+        {
+          "concept": "PACK",
+          "amount": {
+            "amountMinor": 13500,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "totalDue": {
+        "amountMinor": 13500,
+        "currency": "EUR"
+      },
+      "options": []
+    },
+    {
+      "planId": "086225f0-dada-4a1a-9a8d-b6e4a27840fd",
+      "lines": [
+        {
+          "concept": "PACK",
+          "amount": {
+            "amountMinor": 18000,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "totalDue": {
+        "amountMinor": 18000,
+        "currency": "EUR"
+      },
+      "options": []
+    },
+    {
+      "planId": "7a016508-c0e7-4622-a6bb-7099ceb5940a",
+      "lines": [
+        {
+          "concept": "ENTRY_FEE",
+          "amount": {
+            "amountMinor": 5000,
+            "currency": "EUR"
+          }
+        }
+      ],
+      "totalDue": {
+        "amountMinor": 5000,
+        "currency": "EUR"
+      },
+      "options": []
+    }
+  ]
+}

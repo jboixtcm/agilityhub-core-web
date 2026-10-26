@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- 2026-10-24–26 local functional audit corrections (INC-91–100; deployment pending):
+  - Translate every published automatic job in ca/es/en and hide unsupported mandatory-job switches while preserving optional controls.
+  - Show export progress only for the requested job while it is queued/running; acknowledge member-data export requests without stale preparation text.
+  - Align impersonation and support UI temporarily with the session language, restore the actor language on exit, and prevent borrowed-session preference writes, including delayed loads and narrower club locale choices.
+  - Run local functional stacks with the separate safe demo definition; keep nonoperative payment instructions and production configuration separate.
+  - Configure ID's Clubs product destination with `VITE_CLUBS_URL` and hide its Learn card with `VITE_LEARN_ENABLED=false` for an isolated demo; retain existing production defaults.
+  - Allow dated evidence folders for complete browser galleries without overwriting historical task captures.
+  - Keep mobile administration within its viewport using an accessible navigation disclosure, contained table/calendar scrolling, wrapping content and a bounded course creation menu; retain desktop navigation and role filtering (INC-97).
+  - Give member and dog records independent component lifetimes so prior drafts, feedback and delayed saves cannot replace the next record; use distinct keys for notification and privacy cards (INC-98).
+  - Translate canonical course difficulty labels in the setup registration picker while preserving club-specific levels (INC-99).
+  - Keep open list menus and cash-payment rows inside the mobile viewport/card, with visible-control bounds checked at mobile, tablet and desktop widths (INC-100).
+  - Wait for the disposable demo seed's outbox to drain before real-API browser tests, with bounded readiness, failed-event diagnostics and unchanged delivery assertions.
+  - Add consent consistency, demo signup, actual Spanish-account lifecycle, support restrictions and compiled-SPA regressions. Final evidence: `roadmap/evidence/2026-10-24-functional-fixes-root/` and the companion web/release folders.
+
+### Fixed
+
+- Completion review (2026-10-23): asynchronous authentication, account edits and access redirects belong to their original session; logout or a newer sign-in invalidates stale responses. An old 401 cannot replay a mutation with the new account's bearer, in-flight responses are checked after body parsing, and requests cannot use the prior account during an identity transition. Cookie-writing grants, refresh and revokes share an origin-scoped Web Lock (a same-page queue without Web Locks), including logout after a pending or unreadable grant.
+- ID logout restores a cold cookie-backed session before revocation, returns to login after success, and offers the existing retry action on failure without calling RP logout with a missing ID-token hint.
+- D17 (INC-41): member choices include the club member number to distinguish homonyms; unselected names cannot grant roles. Existing team names load across all census pages, failed census reads retry, and instructor deactivation uses the approved future-class explanation.
+- Adopts the final API snapshot with the S18 production migration report operation and saved tunnel geometry.
+- INC-86: placements persist tunnel control points in ring coordinates; the member viewer retains their saved curve after source edits or deletion, while null/absent legacy geometry keeps its fallback.
+- INC-80 W16: production builds exclude the mock service worker; mock builds retain it.
+- INC-85: the E6 no-show check waits for the intended recipient's mail and distinguishes it from other first-run deliveries; E10 browser checks use generated API response types. E6's Spanish pass selects and restores the real account language instead of relying on anonymous localStorage. The Docker test wrapper's default arguments also work on macOS Bash 3; the real-core runner accepts a pinned local `CORE_IMAGE` without replacing the historical default.
+
 ### Added
 
 - E11-W08 (the api snapshot `131cf166`: E11-T15 round 2, E11-T13 round 2, E11-T19; rulings E138, E156, E157, E164):

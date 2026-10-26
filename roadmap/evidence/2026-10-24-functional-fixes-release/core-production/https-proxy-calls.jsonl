@@ -1,0 +1,103 @@
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:31:58 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/parameters","method":"GET","status":403,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/activities","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/home","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:31:59 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:31:59 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/followup/unread-count","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/dashboard/counters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/dashboard","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/risk-review","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/api/v1/me/sessions","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/dashboard/counters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/followup/unread-count","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/parameters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/faq-entries","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/club","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/levels","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/parameters/levels.enabled","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/club-pages","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/jobs","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/plans","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:01 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:01 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/notification-preferences","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/inactivity-periods","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/leave-requests","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:01 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:01 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/invoices","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/revoke","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:01 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:01 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/dashboard/counters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/followup/unread-count","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/club","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/faq-entries","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/parameters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/parameters/levels.enabled","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/levels","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/club-pages","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/jobs","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/plans","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:02 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:08 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Wed, 25 Nov 2026 07:32:08 GMT","Secure","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/followup/unread-count","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/dashboard/counters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/club","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/faq-entries","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/parameters/levels.enabled","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/parameters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/levels","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/plans","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/club-pages","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","forwardedProto":"https","path":"/api/v1/jobs","method":"GET","status":200,"cookies":[]}

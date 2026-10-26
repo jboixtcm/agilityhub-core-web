@@ -1,0 +1,84 @@
+{
+  "scope": "fictional local normal member, real GET with explicit language headers",
+  "image": "sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e",
+  "responses": [
+    {
+      "acceptLanguage": "ca",
+      "status": 200,
+      "reasons": [
+        {
+          "key": "LEARNED_ENOUGH",
+          "label": "Ja he apr\u00e8s tot el que volia"
+        },
+        {
+          "key": "NO_TIME",
+          "label": "No trobo temps per anar-hi"
+        },
+        {
+          "key": "NOT_EXPECTED",
+          "label": "No \u00e9s el que esperava"
+        },
+        {
+          "key": "EXTERNAL",
+          "label": "Condicionants meus aliens al club"
+        },
+        {
+          "key": "OTHER",
+          "label": "Altres"
+        }
+      ]
+    },
+    {
+      "acceptLanguage": "es",
+      "status": 200,
+      "reasons": [
+        {
+          "key": "LEARNED_ENOUGH",
+          "label": "Ja he apr\u00e8s tot el que volia"
+        },
+        {
+          "key": "NO_TIME",
+          "label": "No trobo temps per anar-hi"
+        },
+        {
+          "key": "NOT_EXPECTED",
+          "label": "No \u00e9s el que esperava"
+        },
+        {
+          "key": "EXTERNAL",
+          "label": "Condicionants meus aliens al club"
+        },
+        {
+          "key": "OTHER",
+          "label": "Altres"
+        }
+      ]
+    },
+    {
+      "acceptLanguage": "en",
+      "status": 200,
+      "reasons": [
+        {
+          "key": "LEARNED_ENOUGH",
+          "label": "Ja he apr\u00e8s tot el que volia"
+        },
+        {
+          "key": "NO_TIME",
+          "label": "No trobo temps per anar-hi"
+        },
+        {
+          "key": "NOT_EXPECTED",
+          "label": "No \u00e9s el que esperava"
+        },
+        {
+          "key": "EXTERNAL",
+          "label": "Condicionants meus aliens al club"
+        },
+        {
+          "key": "OTHER",
+          "label": "Altres"
+        }
+      ]
+    }
+  ]
+}

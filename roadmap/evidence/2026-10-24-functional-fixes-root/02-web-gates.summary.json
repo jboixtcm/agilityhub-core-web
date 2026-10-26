@@ -1,0 +1,13 @@
+{
+  "commandExitCode": -15,
+  "inputCount": 943,
+  "inputsUnchanged": false,
+  "changedInputs": [
+    "apps/id/src/App.test.tsx",
+    "apps/id/src/App.tsx",
+    "e2e/core/e10-core.spec.ts",
+    "scripts/e2e-docker.sh"
+  ],
+  "elapsedSeconds": 455.15,
+  "node": "v22.23.2"
+}

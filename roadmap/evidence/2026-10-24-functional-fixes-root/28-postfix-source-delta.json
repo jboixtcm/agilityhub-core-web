@@ -1,0 +1,14 @@
+{
+  "prior": "21-web-gates-final",
+  "current": "28-web-gates-postfix",
+  "changedOrAdded": [
+    "apps/clubs-admin/e2e/responsive-shell.spec.ts",
+    "apps/clubs-admin/src/billing/billing.css",
+    "apps/clubs/src/courses/RegisterSetupPage.tsx",
+    "apps/clubs/src/courses/register-level-labels.test.tsx",
+    "e2e/core/e1-core.spec.ts",
+    "e2e/core/e10-core.spec.ts",
+    "e2e/core/e3-signup.spec.ts",
+    "packages/ui/src/universal-list.css"
+  ]
+}

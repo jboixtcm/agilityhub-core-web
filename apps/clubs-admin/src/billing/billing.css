@@ -1,6 +1,7 @@
 /* D6 «Facturació» and the remittances page (mockup V7 at 1280 px). Theme tokens only. */
 .billing-page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-4);
 }
 
@@ -107,11 +108,13 @@
 
 .billing-simulation {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-2);
 }
 
 .billing-simulation__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--ah-space-2);
@@ -491,5 +494,11 @@
 @media (max-width: 1100px) {
   .billing-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .billing-members th {
+    white-space: normal;
   }
 }

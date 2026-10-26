@@ -1,0 +1,22 @@
+{
+  "files": {
+    "apiOpenAPI": {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/docs/openapi/openapi.json",
+      "sha256": "ba7a26b3aba270b51d04bf8ab3091142cf21a7be3b2ac050002900ef401e8a79"
+    },
+    "webOpenAPI": {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/openapi.json",
+      "sha256": "ba7a26b3aba270b51d04bf8ab3091142cf21a7be3b2ac050002900ef401e8a79"
+    },
+    "productionSeed": {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/seeds/club-canic.yaml",
+      "sha256": "956d7a01e69e7d3a23ad8170fa548fd6356e3854c0f3461d15cfff6027162915"
+    },
+    "demoSeed": {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-api/seeds/club-canic-demo.yaml",
+      "sha256": "3f9272c7fc7a2313d712835710616b1fe5e10856f730c2450fca022ed4fbd95b"
+    }
+  },
+  "apiWebSnapshotsIdentical": true,
+  "productionSeedUnchangedFromHEAD": true
+}

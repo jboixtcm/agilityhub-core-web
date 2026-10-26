@@ -1,0 +1,20 @@
+{
+  "exitCode": 0,
+  "trustedProxyPattern": "172\\.31\\.247\\.11",
+  "proxyNetwork": {
+    "default": {
+      "ipv4_address": "172.31.247.11"
+    }
+  },
+  "network": {
+    "ipam": {
+      "config": [
+        {
+          "subnet": "172.31.247.0/24"
+        }
+      ]
+    },
+    "name": "agilityhub-e1-w04_default"
+  },
+  "sourceMount": "/Users/jordib/dev/agilityhub/agilityhub-core-web"
+}

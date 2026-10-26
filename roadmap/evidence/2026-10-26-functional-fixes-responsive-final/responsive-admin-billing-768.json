@@ -1,0 +1,407 @@
+{
+  "viewport": 768,
+  "documentWidth": 768,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-panel",
+      "text": "↕Núm.↕Abonat↕Concepte↕Import↕Mètode↕Estat↕Data d'emissió↕Mes↕Tipus↕Data de cobra",
+      "left": -168.203125,
+      "right": 215.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "UL",
+      "className": "ah-universal-list__columns",
+      "text": "↕Núm.↕Abonat↕Concepte↕Import↕Mètode↕Estat↕Data d'emissió↕Mes↕Tipus↕Data de cobra",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "auto"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Núm.",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Núm.",
+      "left": -119.203125,
+      "right": -64.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Abonat",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Abonat",
+      "left": -119.203125,
+      "right": -53.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Concepte",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Concepte",
+      "left": -119.203125,
+      "right": -37.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Import",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Import",
+      "left": -119.203125,
+      "right": -55.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Mètode",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Mètode",
+      "left": -119.203125,
+      "right": -50.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Estat",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Estat",
+      "left": -119.203125,
+      "right": -67.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Data d'emissió",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Data d'emissió",
+      "left": -119.203125,
+      "right": -6.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -74.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Mes",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Mes",
+      "left": -119.203125,
+      "right": -73.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Tipus",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Tipus",
+      "left": -119.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Data de cobrament",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Data de cobrament",
+      "left": -119.203125,
+      "right": 21.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -55.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Remesa",
+      "left": -151.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -143.203125,
+      "right": -127.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Remesa",
+      "left": -119.203125,
+      "right": -47.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -119.203125,
+      "right": -106.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-panel ah-universal-list__views",
+      "text": "VistesCap vista desadaNom de la vistaVista compartidaVista per defecteDesa la vi",
+      "left": -82.203125,
+      "right": 301.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "VistesCap vista desada",
+      "left": -65.203125,
+      "right": 284.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Vistes",
+      "left": -65.203125,
+      "right": 284.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "Cap vista desada",
+      "left": -65.203125,
+      "right": 284.796875,
+      "overflowX": "clip"
+    }
+  ]
+}

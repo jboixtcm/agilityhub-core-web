@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-26",
+  "sourceRun": "41-full-browser-final",
+  "sourceInputs": 946,
+  "priorReview": "final-member-visual-review.json",
+  "priorScope": "Six overview sheets covering 52 member/gallery states and six selected original screenshots. Reuse applies only to byte-identical images and preserves the prior review depth.",
+  "byteIdenticalMemberGallery": {
+    "count": 46,
+    "files": [
+      "clubs-07-reserva-1280-dark.png",
+      "clubs-07-reserva-1280-light.png",
+      "clubs-07-reserva-375-dark.png",
+      "clubs-07-reserva-375-light.png",
+      "clubs-07-reserva-personal-1280-dark.png",
+      "clubs-07-reserva-personal-1280-light.png",
+      "clubs-07-reserva-personal-375-dark.png",
+      "clubs-07-reserva-personal-375-light.png",
+      "clubs-08-entrenaments-1280-dark.png",
+      "clubs-08-entrenaments-1280-light.png",
+      "clubs-08-entrenaments-375-dark.png",
+      "clubs-08-entrenaments-375-light.png",
+      "clubs-10-avui-1280-dark.png",
+      "clubs-10-avui-1280-light.png",
+      "clubs-10-avui-375-dark.png",
+      "clubs-10-avui-375-light.png",
+      "clubs-23-visio-global-1280-dark.png",
+      "clubs-23-visio-global-1280-light.png",
+      "clubs-23-visio-global-375-dark.png",
+      "clubs-23-visio-global-375-light.png",
+      "clubs-registra-muntat-1280-dark.png",
+      "clubs-registra-muntat-1280-light.png",
+      "clubs-registra-muntat-375-dark.png",
+      "clubs-registra-muntat-375-light.png",
+      "clubs-registra-muntat-buit-1280-dark.png",
+      "clubs-registra-muntat-buit-375-dark.png",
+      "clubs-registra-muntat-buit-375-light.png",
+      "clubs-sessio-muntatge-1280-dark.png",
+      "clubs-sessio-muntatge-1280-light.png",
+      "clubs-sessio-muntatge-375-dark.png",
+      "clubs-sessio-muntatge-375-light.png",
+      "clubs-sessio-muntatge-finalitzada-375-dark.png",
+      "clubs-visor-alumne-1280-dark.png",
+      "clubs-visor-alumne-1280-light.png",
+      "clubs-visor-instructor-2d-1280-dark.png",
+      "clubs-visor-instructor-2d-1280-light.png",
+      "clubs-visor-instructor-2d-375-dark.png",
+      "clubs-visor-instructor-2d-375-light.png",
+      "clubs-visor-instructor-3d-1280-dark.png",
+      "clubs-visor-instructor-3d-1280-light.png",
+      "clubs-visor-instructor-3d-375-dark.png",
+      "clubs-visor-instructor-3d-375-light.png",
+      "clubs-visor-sense-muntatge-personal-1280-dark.png",
+      "clubs-visor-sense-muntatge-personal-1280-light.png",
+      "clubs-visor-sense-muntatge-personal-375-dark.png",
+      "clubs-visor-sense-muntatge-personal-375-light.png"
+    ]
+  },
+  "freshOriginals": [
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/03-inici-375.png",
+      "sha256": "5945d10f2ff6c668fa1deae1fd05f1e735cbc4eff157243e734536d60d9f2fe7"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/04-reservar-375.png",
+      "sha256": "d6f810d76afed7bd7468bd2ff79e634d2c6ecd789db397bb829942660bc96612"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/50-registrar-montado-biblioteca-es-1280.png",
+      "sha256": "a85af1525c3e91a842cc04e5b0c096f169d506ce4373b4dca3d74eee0ef46c3e"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/50-registrar-montado-biblioteca-es-375.png",
+      "sha256": "b0c6ccfa6dc2b28e3f271f8db9fd2ca10c769e7d8f841acce34cfb0161783b94"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/clubs-registra-muntat-buit-1280-light.png",
+      "sha256": "d5cb153067a83b47c6ba49cd735702ed9077ef5669212aa06b9e441ea71abada"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/clubs-sessio-muntatge-finalitzada-1280-dark.png",
+      "sha256": "99f13b0f22436e89189fa07bcfb5a7482c7353b5993ce352b472215a55a7d980"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/clubs-sessio-muntatge-finalitzada-1280-light.png",
+      "sha256": "83bf6354d0a2b7df42b18969e8143bc40bb8e8226767daf47448442d49a3b707"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/clubs-sessio-muntatge-finalitzada-375-light.png",
+      "sha256": "2f6b1f025e40bae4e16fbbc979dab45af96042868c0d164649989e031189d51d"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/clubs-visor-alumne-375-dark.png",
+      "sha256": "262c84c7d00fde4ae2db6a3918f0cb78fb4633c3f3c84a2fe87cb1b331e7b248"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r3/clubs-visor-alumne-375-light.png",
+      "sha256": "d1edac215343bfacaf31083170b0c594ef5c865ca8e9522f96077709d31e1ec6"
+    }
+  ],
+  "observations": [
+    "Home/reserve cards and bottom navigation fit at 375px",
+    "Empty registration form remains contained at 1280px",
+    "Completed build views show successful registration, course, geometry warning and viewer controls; no layout overflow",
+    "Member mobile 2D viewers show their plan and rotate icon in both themes",
+    "Spanish library level translations match INC-99 expectations"
+  ],
+  "captureLimitation": "Three mock completed-build captures show a blank rotate-icon button. Settled mock member-viewer images and three final real-API E9 originals show the glyph. The async capture-readiness explanation is plausible from the helper ordering but not proven; the observation is bounded to those captures.",
+  "realApiViewerFollowup": {
+    "files": [
+      {
+        "path": "roadmap/evidence/2026-10-24-functional-fixes-root/core-e9-r2/core-visor-alumne-muntatge-375.png",
+        "sha256": "a3e8a5236e0693da56befd87cea0e8606d9d3af01792428b4d1a5ecbe2de8d15"
+      },
+      {
+        "path": "roadmap/evidence/2026-10-24-functional-fixes-root/core-e9-r2/core-visor-instructor-375.png",
+        "sha256": "9c486b8d06c4be9cd767461f361bada1ea1b31d2163b5bef6e9ded5a8ea98ec3"
+      },
+      {
+        "path": "roadmap/evidence/2026-10-24-functional-fixes-root/core-e9-r2/core-registrat-375.png",
+        "sha256": "786d56736c4ea8085ed07594d78695132d79954b86115f23caae417c9a915204"
+      }
+    ],
+    "observation": "The rotate glyph is visible in all three original screenshots, including the freshly registered setup. Controls are contained. No persistent product failure is demonstrated."
+  }
+}

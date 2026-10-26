@@ -1,0 +1,6 @@
+User requested additional local functional testing before deployment.
+Image: agilityhub-core-api:review-20261023
+Image ID: sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e
+Previous 27 tested source hashes unchanged.
+Fresh-seed stages: E2, E3, E4, E4w16, E5, E7, E8.
+No product edits, real provider activity or deployment.

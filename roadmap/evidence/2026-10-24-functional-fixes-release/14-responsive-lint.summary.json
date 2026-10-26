@@ -1,0 +1,10 @@
+{
+  "commandExitCode": 0,
+  "inputCount": 944,
+  "inputsUnchanged": false,
+  "changedInputs": [
+    "apps/clubs-admin/e2e/responsive-shell.spec.ts"
+  ],
+  "elapsedSeconds": 3.69,
+  "node": "v22.23.2"
+}

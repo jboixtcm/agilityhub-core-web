@@ -1,0 +1,66 @@
+{
+  "captureSet": "roadmap/evidence/2026-10-26-functional-fixes-final-r2",
+  "overviewImages": 74,
+  "contactSheets": [
+    {
+      "name": "other-flows-01.jpg",
+      "sha256": "0bb76a30d9b7a32e0ea3025fe09bd648316db1b3c0acdc34e07384b027eb8512"
+    },
+    {
+      "name": "other-flows-02.jpg",
+      "sha256": "4f542cfc0f71438b5d7339563e7241234fd93e141f665757b6c64c75f0724076"
+    },
+    {
+      "name": "other-flows-03.jpg",
+      "sha256": "85ae1861fa35687d7cd3d017a4ac771adcc5a3e9141eff0b7773066e4499c233"
+    },
+    {
+      "name": "other-flows-04.jpg",
+      "sha256": "49390a1b5c1dd06ae176af4356caeded515c57b5fa4b09abd04367366687e5e7"
+    },
+    {
+      "name": "other-flows-05.jpg",
+      "sha256": "b4f5a65a86c62f3204a279a3a95e0cc0066a0cea1758c3c0c6f709565152f747"
+    },
+    {
+      "name": "other-flows-06.jpg",
+      "sha256": "b3fff7c107a148ff13a36753b6a65a7a1787d971efb61ed8640f73f80ab08e5e"
+    },
+    {
+      "name": "other-flows-07.jpg",
+      "sha256": "ef44788723f42a861ae1cd7101040cb0801cffa6af9e1325189eaa4303d43f92"
+    },
+    {
+      "name": "other-flows-08.jpg",
+      "sha256": "b62eb8635ce4846199802266fa1bac474de8b3dd1f7ddc0e7724b7d74f842930"
+    },
+    {
+      "name": "other-flows-09.jpg",
+      "sha256": "0a3100d2a5f24dfc13bc408f61233552c79ad049dd480ef537bc6a073655d360"
+    }
+  ],
+  "selectedOriginals": [
+    {
+      "name": "22-D6-rollback-file-not-sent-375.png",
+      "sha256": "925f5760993eaba961ab4ae9447f5b11827577b69e0088c9e8f4dc3983c9a150"
+    },
+    {
+      "name": "50-D16-ring-bookings-375.png",
+      "sha256": "dffd098410fb608e49a3fb5a7a0fa1848ce238e88ea5afeb0d76237bb6dc694b"
+    },
+    {
+      "name": "50-d10-inactividad-es-375.png",
+      "sha256": "d1216d6215bb550dfe6970419977485b0b38eadec086fe71323ee17b3a5248bb"
+    }
+  ],
+  "findings": [
+    "INC-99: canonical course difficulty codes visible untranslated in registration picker; assigned minimal existing-helper correction.",
+    "Selected ring-booking destructive confirmation is readable within375px, contains affected bookings and separate cancel/confirm.",
+    "D6 rollback and D10 Spanish inactivity screenshots fit viewport width; long full-page images rendered scaled, not claimed as pixel-level full inspection."
+  ],
+  "limits": [
+    "Contact sheets show structural overview, not every pixel.",
+    "Closed-menu geometry and transient icon/3D captures are not proven product failures.",
+    "Separate reviewers covered52 member and70 admin gallery originals through contact sheets plus selected direct opens."
+  ]
+}

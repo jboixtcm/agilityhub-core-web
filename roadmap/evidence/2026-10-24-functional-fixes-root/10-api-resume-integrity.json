@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-26",
+  "sourceManifest": "/Users/jordib/dev/agilityhub/agilityhub-core-api/roadmap/evidence/2026-10-24-functional-fixes-api/05-expanded-clean-verify-tested-inputs.json",
+  "inputCount": 2241,
+  "changedInputs": [],
+  "note": "API code/config inputs compared to successful24Oct clean verification. Does not refresh vulnerability feed."
+}

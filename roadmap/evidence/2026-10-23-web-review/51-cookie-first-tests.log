@@ -1,0 +1,71 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (78 tests | 14 failed) 71204ms
+   ❯ T-01-04 pending account operations belong to their original session (26)
+     ❯ after logout (10)
+       × rejects the old session revocation result 5003ms
+     ❯ after replacement (10)
+       × rejects the old password result 5001ms
+       × rejects the old profile result 5001ms
+       × rejects the old account result 5001ms
+       × rejects the old read onboarding result 5001ms
+       × rejects the old complete onboarding result 5001ms
+       × rejects the old postpone onboarding result 5002ms
+       × rejects the old handoff redirect result 5001ms
+       × rejects the old OIDC redirect result 5002ms
+       × rejects the old session list result 5001ms
+       × rejects the old session revocation result 5002ms
+     × never replays or expires the newer account when the old PUT's response arrives late 5001ms
+     × never replays or expires the newer account when the old PUT's refresh arrives late 5002ms
+     × never replays or expires the newer impersonation when the old PUT's response arrives late 5001ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old session revocation result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old password result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old profile result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old account result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old read onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old complete onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old postpone onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old handoff redirect result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old OIDC redirect result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old session list result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old session revocation result
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/auth-client.test.ts:1860:24
+    1858|
+    1859|   describe.each(["logout", "replacement"] as const)("after %s", (trans…
+    1860|     it.each(operations)("rejects the old $name result", async (operati…
+       |                        ^
+    1861|       let release: () => void = () => undefined;
+    1862|       let notify: () => void = () => undefined;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays or expires the newer account when the old PUT's response arrives late
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays or expires the newer account when the old PUT's refresh arrives late
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays or expires the newer impersonation when the old PUT's response arrives late
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/auth-client.test.ts:1926:14
+    1924|     { phase: "refresh", replacement: "account" },
+    1925|     { phase: "response", replacement: "impersonation" },
+    1926|   ] as const)(
+       |              ^
+    1927|     "never replays or expires the newer $replacement when the old PUT'…
+    1928|     async ({ phase, replacement }) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed | 64 passed (78)
+   Start at  21:55:18
+   Duration  71.77s (tests 99%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/auth-client.test.ts

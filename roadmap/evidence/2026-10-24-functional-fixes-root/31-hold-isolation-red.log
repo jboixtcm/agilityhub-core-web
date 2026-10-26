@@ -1,0 +1,28 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/booking/test-utils.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/test-utils.test.tsx [ src/booking/test-utils.test.tsx ]
+TypeError: describe.sequential is not a function
+ ❯ src/booking/test-utils.test.tsx:18:10
+     16| }
+     17|
+     18| describe.sequential("booking world teardown keeps a slow hold release …
+       |          ^
+     19|   let previousReleaseStatus: number | undefined;
+     20|   let finishPreviousRelease: () => void;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  09:33:21
+   Duration  1.69s (environment 78%, setup 17%, transform 4%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/booking/test-utils.test.tsx

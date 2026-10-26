@@ -1,0 +1,12 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id/src/App.test.tsx
+  419:36  error  Async arrow function has no 'await' expression  @typescript-eslint/require-await
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id/src/App.tsx
+  881:11  error  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+✖ 2 problems (2 errors, 0 warnings)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: eslint src/App.tsx src/App.test.tsx --max-warnings 0 --config ../../eslint.config.mjs

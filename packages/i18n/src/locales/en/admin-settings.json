@@ -894,7 +894,9 @@
       "PAYMENT_TIMEOUTS": "Payment timeouts",
       "CLASS_FINISHING": "Class closing",
       "CLEANUP": "Technical cleanup",
-      "BILLING_REMINDER": "Billing reminder"
+      "BILLING_REMINDER": "Billing reminder",
+      "ERASURES": "Data erasure",
+      "RETENTION_SWEEP": "Data retention"
     },
     "cadence": {
       "DAILY": "every day at {time}",

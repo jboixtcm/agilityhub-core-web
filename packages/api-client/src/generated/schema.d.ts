@@ -4963,6 +4963,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/platform/clubs/{clubId}/migrations/{runId}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * getMigrationReport
+         * @description S18 R-18-15. Roles: AGILITYHUB_ADMIN or ADMIN of the explicit club. Production report.xlsx only; signed private URL valid for at most five minutes and never past the run's 30-day expiry. Missing/unpublished report is NOT_FOUND; expired report is EXPORT_EXPIRED. Support and impersonation are refused.
+         */
+        get: operations["getMigrationReport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/platform/clubs/{id}": {
         parameters: {
             query?: never;
@@ -14472,6 +14492,11 @@ export interface components {
             /** Format: date */
             expectedUntil?: string | null;
         };
+        ReportLink: {
+            downloadUrl: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
         /** @description Who asked: the member's account, or the admin's under impersonation (impersonatedMemberId set, origin BACKOFFICE) */
         Requester: {
             /** Format: uuid */
@@ -14513,6 +14538,8 @@ export interface components {
             type: "CLASS" | "CLASS_WAITLIST" | "TRAINING" | "ACTIVITY";
         };
         ResolvedObstacle: {
+            /** @description Frozen tunnel control points in the ring frame (metres, Y up), computed by course-core when the placement is saved. Absent or null on legacy placements; an empty array explicitly records no control points. */
+            controlPointsMeters?: components["schemas"]["PointM"][] | null;
             numbers: number[];
             obstacleId: string;
             /** Format: double */
@@ -53949,6 +53976,130 @@ export interface operations {
             };
             /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    getMigrationReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                clubId: string;
+                runId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description MigrationReportLink */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportLink"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, SUPPORT_RESTRICTED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description EXPORT_EXPIRED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Too Many Requests */
             429: {
                 headers: {

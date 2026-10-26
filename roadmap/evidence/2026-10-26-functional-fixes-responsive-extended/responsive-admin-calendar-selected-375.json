@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 409,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "TABLE",
+      "className": "ah-schedule-grid__table",
+      "text": "Calendari de classes · del 10 al 16 d’agostdl 10dt 11dc 12dj 13dv 14ds 158:30A+B",
+      "left": -193,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "dl 10dt 11dc 12dj 13dv 14ds 15",
+      "left": -193,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "dl 10dt 11dc 12dj 13dv 14ds 15",
+      "left": -193,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__corner",
+      "text": "",
+      "left": -193,
+      "right": -133,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dl 10",
+      "left": -133,
+      "right": -5,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-grid__column-button",
+      "text": "dl 10",
+      "left": -129,
+      "right": -9,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "dl 10",
+      "left": -95.703125,
+      "right": -59.09375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": -55.09375,
+      "right": -42.296875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": -50.294921875,
+      "right": -46.5625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dt 11",
+      "left": -5,
+      "right": 123,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dj 13",
+      "left": 251,
+      "right": 379,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dv 14",
+      "left": 379,
+      "right": 507,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-grid__column-button",
+      "text": "dv 14",
+      "left": 383,
+      "right": 503,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "dv 14",
+      "left": 415.296875,
+      "right": 453.90625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 457.90625,
+      "right": 470.703125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 462.705078125,
+      "right": 466.4375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "ds 15",
+      "left": 507,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-grid__column-button",
+      "text": "ds 15",
+      "left": 511,
+      "right": 631,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "ds 15",
+      "left": 544.296875,
+      "right": 580.90625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 584.90625,
+      "right": 597.703125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 589.705078125,
+      "right": 593.4375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "8:30A+B4/5Central · LauraC i sup.3/5Muntanya · MarcA+B5/5 +1Central · LauraC i s",
+      "left": -193,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "8:30A+B4/5Central · LauraC i sup.3/5Muntanya · MarcA+B5/5 +1Central · LauraC i s",
+      "left": -193,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__row-label",
+      "text": "8:30",
+      "left": -193,
+      "right": -133,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "A+B4/5Central · LauraC i sup.3/5Muntanya · Marc",
+      "left": -133,
+      "right": -5,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "A+B4/5Central · LauraC i sup.3/5Muntanya · Marc",
+      "left": -129,
+      "right": -9,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "A+B4/5Central · Laura",
+      "left": -129,
+      "right": -9,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "A+B4/5Central · Laura",
+      "left": -129,
+      "right": -9,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "A+B4/5",
+      "left": -120.8125,
+      "right": -17.1875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "4/5",
+      "left": -91.015625,
+      "right": -71.015625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Central · Laura",
+      "left": -120.8125,
+      "right": -17.1875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "C i sup.3/5Muntanya · Marc",
+      "left": -129,
+      "right": -9,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "C i sup.3/5Muntanya · Marc",
+      "left": -129,
+      "right": -9,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "C i sup.3/5",
+      "left": -120.8125,
+      "right": -17.1875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "3/5",
+      "left": -73.015625,
+      "right": -54.015625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Muntanya · Marc",
+      "left": -120.8125,
+      "right": -17.1875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": -5,
+      "right": 123,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 251,
+      "right": 379,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 379,
+      "right": 507,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 383,
+      "right": 503,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 383,
+      "right": 503,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 383,
+      "right": 503,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "Cadells3/5",
+      "left": 391.1875,
+      "right": 494.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "3/5",
+      "left": 438.984375,
+      "right": 457.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Cadells · Marc",
+      "left": 391.1875,
+      "right": 494.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "A3/5Muntanya · LauraB+C4/5Central · Marc",
+      "left": 507,
+      "right": 635,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "A3/5Muntanya · LauraB+C4/5Central · Marc",
+      "left": 511,
+      "right": 631,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "A3/5Muntanya · Laura",
+      "left": 511,
+      "right": 631,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "A3/5Muntanya · Laura",
+      "left": 511,
+      "right": 631,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "A3/5",
+      "left": 519.1875,
+      "right": 622.8125,
+      "overflowX": "hidden"
+    }
+  ]
+}

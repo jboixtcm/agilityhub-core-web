@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-26",
+  "contactSheets": [
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-01.jpg",
+      "sha256": "b862956077e5cacdd8028a1e154bda344e0786cba7172a9cc70cd45c4b11a9b1"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-02.jpg",
+      "sha256": "254422f3ed0f2adee3764db9f64ed1726170aa9c3716493a62b164e9881b7a0b"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-03.jpg",
+      "sha256": "070a38dce9498ac5a682974f85889ed34e84b238c8196174871cacb211a8a714"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-04.jpg",
+      "sha256": "7d323a9b55296c68a954aa9e8ef5d5d4d9917b4257f74dacf10eac7fb0a6fd7b"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-05.jpg",
+      "sha256": "9d8d04d71b01c9dc9114c231847a734f49104b2a8c2c2d1f5024e938db1eee2d"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-06.jpg",
+      "sha256": "ba741855b7c98bc411abd9e69e7727549d4de725c7932166df81e66a9f87b184"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-07.jpg",
+      "sha256": "41cbee1c2ffb3043ee35a4adbb8be2dfd7e6ed4a86063306cb6cbb9d04efd1e0"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-24-functional-fixes-root/final-visual-index/admin-gallery-08.jpg",
+      "sha256": "8bdb8a44f536434a8189427d01f24d59cf82c0386f3b2cd0dbf60271eb20fb80"
+    }
+  ],
+  "thumbnailCount": 70,
+  "originals": [
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/responsive-admin-dashboard-375.png",
+      "sha256": "11355e92f0e3d07c8abbada8802b63a6338270ca3ffe500038304ba08f2356e8"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/responsive-admin-calendar-selected-375.png",
+      "sha256": "0d0a7dfb4a68c563b8a9a98074f6396c46842d21069cf53b53900084243d32fd"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/responsive-admin-billing-375.png",
+      "sha256": "653d2fb2ac4ca480801e09b3598a9950a00487794859411e4caa1fa89e0e2560"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/admin-D18-recorregut-3d-375-light.png",
+      "sha256": "e32ee57ca33fd07c922931183e038091f7ba3eda4f7089f4a1a63973a5a81032"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/admin-D18-col-locacio-375-light.png",
+      "sha256": "29f84e2d7a56c288e4f8503edd263e6c8fc9bc1359d660464cbb6b0ef2177153"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/admin-D18-importa-375-dark.png",
+      "sha256": "7fd2387771a48fe4d145cb31cd56c4a6ca55d7f01fc7a8e142681ec3fffe77bd"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/admin-D18-registra-375-light.png",
+      "sha256": "7510cf3b1ef708fad44f509191ccccce035407e57d83ec2a20b62e04144afb2a"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/responsive-instructor-navigation-375.png",
+      "sha256": "10fac50eec568639f798e8bc3c82d685fd9dbfb9c8b597e62da36c7cdc18ba91"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/r2-course-ui-harness-1280-after-nudge.png",
+      "sha256": "b1593dd150ef2e7f01c4715d5b91c9b3d29e3b24c138da70834a3c6e3645930d"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/responsive-admin-calendar-selected-768.png",
+      "sha256": "538eaf1f87cca9d172e056e4424f06564c354edff055338c5fc5000ef8b6b5f7"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/responsive-admin-dashboard-768.png",
+      "sha256": "de74295b7ca531ab62a9f8b741436d706fe2149b504aa83d474db88c7c84b2ba"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/admin-D4-recorregut-previst-375-light.png",
+      "sha256": "d0fadb3e98e1bb2f04c5e04e052066c97f3d28aa009593bd00c1b65e4a947c19"
+    },
+    {
+      "path": "roadmap/evidence/2026-10-26-functional-fixes-final-r2/admin-D18-biblioteca-375-light.png",
+      "sha256": "4705ec5a082d50cfe243dc58c1b9dafff74ff075e46bdfa111ca7fbba190ed00"
+    }
+  ],
+  "limits": "Contact sheets are overview only. Exactly these 13 original PNGs were opened separately; this is not pixel review of every captured state."
+}

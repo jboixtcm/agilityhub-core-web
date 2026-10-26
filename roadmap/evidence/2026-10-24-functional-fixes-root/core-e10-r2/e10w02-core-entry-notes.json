@@ -1,0 +1,31 @@
+{
+  "productBranding": {
+    "club": {
+      "slug": null,
+      "name": "AgilityHub",
+      "city": null,
+      "legalName": null,
+      "taxId": null,
+      "legalAddress": null
+    },
+    "locales": [
+      "ca",
+      "es",
+      "en"
+    ],
+    "modules": [],
+    "primary": "#1d1d1f",
+    "status": "ACTIVE"
+  },
+  "unknownHost": {
+    "code": "UNKNOWN_HOST",
+    "status": 404
+  },
+  "platformTokenOnProductHost": {
+    "me": {
+      "membership": null,
+      "status": 200
+    },
+    "platformClubs": 200
+  }
+}

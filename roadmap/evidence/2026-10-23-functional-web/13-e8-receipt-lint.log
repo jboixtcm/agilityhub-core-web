@@ -1,0 +1,7 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e8-core.spec.ts
+  1639:35  error  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+  1661:36  error  Unnecessary conditional, expected left-hand side of `??` operator to be possibly null or undefined  @typescript-eslint/no-unnecessary-condition
+
+✖ 2 problems (2 errors, 0 warnings)
+

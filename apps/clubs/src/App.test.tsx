@@ -1,5 +1,6 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
+  currentMockScenario,
   handlers,
   mockScenario,
   resetActivityState,
@@ -556,6 +557,44 @@ describe("E11-W06 W5 and W6 (CONVENCIONS_I18N §1, AGENTS rule 6): the account's
       ),
     );
   }
+
+  it.each(["ca", "en"])(
+    "INC-96: impersonation uses target %s without changing the actor preference or allowing a locale PATCH",
+    async (targetLocale) => {
+      localStorage.setItem(LOCALE_STORAGE_KEY, "es");
+      mockScenario("impersonated");
+      const borrowed = currentMockScenario().me;
+      server.use(
+        http.get("*/api/v1/me", () =>
+          HttpResponse.json({
+            ...borrowed,
+            account: { ...borrowed.account, locale: targetLocale },
+          }),
+        ),
+      );
+      const client = authClient();
+      await client.acceptImpersonation("mock-impersonation-token");
+      const updateLocale = vi.spyOn(client, "updateLocale");
+      // This route retains the shared shell header; /inici has its own header and no selector.
+      window.history.pushState(null, "", "/estadistiques");
+      await renderApplication(client, canicBranding, "es");
+
+      const selector = await screen.findByRole("combobox", { name: /Idioma|Language/u });
+      await waitFor(() => {
+        expect(document.documentElement.lang).toBe(targetLocale);
+      });
+      expect(selector).toBeDisabled();
+      expect(selector).toHaveValue(targetLocale);
+      fireEvent.change(selector, { target: { value: "es" } });
+      expect(updateLocale).not.toHaveBeenCalled();
+      expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("es");
+      expect(document.documentElement.lang).toBe(targetLocale);
+      cleanup();
+      await waitFor(() => {
+        expect(document.documentElement.lang).toBe("es");
+      });
+    },
+  );
 
   it("CONVENCIONS_I18N §1: me.account.locale = es, stored ca → renders in es", async () => {
     // A second device, its browser in Catalan: the app starts and the cookie restores the session.

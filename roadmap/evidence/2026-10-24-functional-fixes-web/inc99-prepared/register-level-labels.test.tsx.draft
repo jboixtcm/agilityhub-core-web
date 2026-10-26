@@ -1,0 +1,40 @@
+import type { components } from "@agilityhub/api-client";
+import { server } from "@agilityhub/api-client/mocks/server";
+import { fireEvent, screen, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+
+import { renderApp } from "../booking/test-utils";
+import { setupTrainingWorld } from "../training/test-utils";
+
+setupTrainingWorld();
+beforeEach(() => localStorage.clear());
+afterEach(() => localStorage.clear());
+
+const rows: components["schemas"]["CourseListItem"][] = [
+  { id: "course-easy", name: "Course one", level: "EASY" },
+  { id: "course-medium", name: "Course two", level: "MEDIUM" },
+  { id: "course-hard", name: "Course three", level: "HARD" },
+  { id: "course-local", name: "Course four", level: "C–D" },
+  { id: "course-none", name: "Course five", level: null },
+];
+
+describe("INC-99 / R-16-07 library registration levels use the reader's language", () => {
+  it.each([
+    { locale: "ca", source: "Un recorregut de la biblioteca", prefix: "nivell", levels: ["Fàcil", "Mitjà", "Difícil"] },
+    { locale: "es", source: "Un recorrido de la biblioteca", prefix: "nivel", levels: ["Fácil", "Medio", "Difícil"] },
+    { locale: "en", source: "A course from the library", prefix: "level", levels: ["Easy", "Medium", "Hard"] },
+  ] as const)("$locale: translates the shared scale and preserves the club's level", async ({ locale, source, prefix, levels }) => {
+    localStorage.setItem("agilityhub.mockAccountLocale", locale);
+    server.use(http.get("*/api/v1/courses", () => HttpResponse.json<components["schemas"]["CoursePage"]>({
+      appliedFilters: [], items: rows, page: 0, size: 20, totalItems: rows.length, totalPages: 1,
+    })));
+    await renderApp("/instructor/pistes/ring-carretera/muntat", { locale, scenario: "instructor" });
+    fireEvent.click(await screen.findByRole("button", { name: source }));
+    const list = await screen.findByRole("radiogroup", { name: source });
+    for (const level of levels) expect(within(list).getByText(`${prefix} ${level}`, { exact: true })).toBeVisible();
+    expect(within(list).getByText(`${prefix} C–D`, { exact: true })).toBeVisible();
+    expect(within(list).getByRole("radio", { name: "Course five", exact: true })).toBeVisible();
+    expect(list).not.toHaveTextContent(/EASY|MEDIUM|HARD/u);
+  });
+});

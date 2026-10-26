@@ -1,0 +1,7 @@
+{
+  "added": [
+    "e2e/core/functional-auth.spec.ts"
+  ],
+  "removed": [],
+  "changed": []
+}

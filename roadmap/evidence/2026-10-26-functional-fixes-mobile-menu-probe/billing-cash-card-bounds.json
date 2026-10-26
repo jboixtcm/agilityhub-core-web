@@ -1,0 +1,43 @@
+{
+  "left": 16,
+  "right": 359,
+  "width": 343,
+  "paddingLeft": "16px",
+  "paddingRight": "16px",
+  "tables": [
+    {
+      "text": "Joan Vilasense compte bancari informatObre fitxaPau Rierasense tarifa assignadaObre fitxa",
+      "left": 33,
+      "right": 342,
+      "actions": [
+        {
+          "name": "Obre fitxa de Joan Vila",
+          "left": 247,
+          "right": 334
+        },
+        {
+          "name": "Obre fitxa de Pau Riera",
+          "left": 247,
+          "right": 334
+        }
+      ]
+    },
+    {
+      "text": "Joan Viladata de baixa prevista: 31/12/2026Obre fitxaRoser Campsdata de baixa prevista: 30/06/2027Obre fitxa",
+      "left": 33,
+      "right": 372,
+      "actions": [
+        {
+          "name": "Obre fitxa de Joan Vila",
+          "left": 277,
+          "right": 364
+        },
+        {
+          "name": "Obre fitxa de Roser Camps",
+          "left": 277,
+          "right": 364
+        }
+      ]
+    }
+  ]
+}

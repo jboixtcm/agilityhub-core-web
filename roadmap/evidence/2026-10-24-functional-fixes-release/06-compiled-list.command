@@ -1,0 +1,1 @@
+E1_CORE_PASSWORD=fixture-only-list CORE_EVIDENCE_DIRECTORY=/tmp/agilityhub-functional-list pnpm exec playwright test --config=roadmap/evidence/2026-10-24-functional-fixes-release/playwright.production.config.ts --list

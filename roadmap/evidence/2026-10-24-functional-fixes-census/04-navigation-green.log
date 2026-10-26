@@ -1,0 +1,390 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/CensusRecordPage.test.tsx (45 tests | 1 failed) 14520ms
+   ❯ T-03-39 INC-98 record navigation isolates member and dog state (3)
+     × shows one preferences card and no previous booking feedback after navigating to another member 10305ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 INC-98 record navigation isolates member and dog state > shows one preferences card and no previous booking feedback after navigating to another member
+TestingLibraryElementError: Unable to find a label with the text of: Recordatori de classe
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mEva Perez Prunell[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 90[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0minactiva[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mmembre del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-privacy__export"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mDescarrega les dades (RGPD)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_13_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_13_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_13_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_13_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_13_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_13_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_13_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_13_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mEva Perez Prunell[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 90[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0minactiva[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mmembre del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-privacy__export"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mDescarrega les dades (RGPD)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_13_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_13_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_13_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_13_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_13_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_13_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_13_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_13_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/CensusRecordPage.test.tsx:116:25
+    114|     view.navigate("member-eva");
+    115|     await screen.findByRole("heading", { name: "Eva Perez Prunell" });
+    116|     expect(await screen.findByLabelText("Recordatori de classe")).toHa…
+       |                         ^
+    117|     expect(document.querySelectorAll(".notification-preferences")).toH…
+    118|     expect(screen.queryByText("Les reserves s'han bloquejat.")).not.to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 44 passed (45)
+   Start at  08:17:49
+   Duration  16.10s (tests 91%, transform 5%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/CensusRecordPage.test.tsx

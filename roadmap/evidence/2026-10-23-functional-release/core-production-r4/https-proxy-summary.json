@@ -1,0 +1,11 @@
+{
+  "successfulTokenCalls": 16,
+  "hosts": [
+    "admin.example.test",
+    "app.example.test",
+    "id.example.test"
+  ],
+  "allForwardedHostMatches": true,
+  "allForwardedHttps": true,
+  "cookieAttributesOnly": true
+}

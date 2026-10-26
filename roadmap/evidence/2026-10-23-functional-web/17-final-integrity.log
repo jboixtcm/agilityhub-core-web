@@ -1,0 +1,13 @@
+34 final inputs match saved manifest; exactly 4 harness deltas:
+e2e/core/e4-core.spec.ts
+e2e/core/e5-core.spec.ts
+e2e/core/e7-core.spec.ts
+e2e/core/e8-core.spec.ts
+Other 30 baseline inputs unchanged, including every tracked product input.
+Pinned review image unchanged.
+Owned containers remaining: 0
+Owned networks remaining: 0
+Owned volumes remaining: 0
+Heavy lock absent.
+Retained trace/HAR/video archives: 0
+git diff --check: exit 0

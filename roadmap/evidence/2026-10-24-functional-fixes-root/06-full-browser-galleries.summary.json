@@ -1,0 +1,11 @@
+{
+  "commandExitCode": -15,
+  "inputCount": 943,
+  "inputsUnchanged": false,
+  "changedInputs": [
+    "apps/id/src/App.test.tsx",
+    "e2e/core/e10-core.spec.ts"
+  ],
+  "elapsedSeconds": 42.27,
+  "node": "v22.23.2"
+}

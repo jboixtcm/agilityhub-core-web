@@ -96,6 +96,21 @@
   background: var(--ah-color-surface-2);
 }
 
+@media (max-width: 40rem) {
+  .courses-menu {
+    flex-basis: 100%;
+    min-width: 0;
+  }
+
+  .courses-menu__list {
+    right: auto;
+    left: 0;
+    width: max-content;
+    min-width: min(18rem, 100%);
+    max-width: 100%;
+  }
+}
+
 /* The owner chips («Del club · AgilityHub · Meus»). */
 .courses-chips {
   display: flex;

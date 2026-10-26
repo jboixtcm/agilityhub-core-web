@@ -1,0 +1,15 @@
+{
+  "productLinks": [
+    {
+      "text": "OBRE CLUBS",
+      "href": "https://app.example.test/",
+      "target": ""
+    }
+  ],
+  "profileLink": {
+    "visible": false,
+    "demoModuleDisabled": true
+  },
+  "externallyNavigated": false,
+  "scope": "Read visible DOM hrefs only; no external product navigation or authentication"
+}

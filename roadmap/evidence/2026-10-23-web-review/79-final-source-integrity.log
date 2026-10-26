@@ -1,0 +1,5 @@
+Final manifest: 27 current source hashes match final-source-tested-inputs.json
+Delta from full product/mock gates: e2e/core/e6-core.spec.ts only (test harness account-locale setup/restoration)
+Final API image unchanged: sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e
+git diff --check: exit 0
+Heavy lock present: False

@@ -1,0 +1,1464 @@
+{
+  "source": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-final-r3",
+  "count": 208,
+  "mobileOverflowCandidates": [],
+  "captures": [
+    {
+      "file": "03-inici-375.png",
+      "width": 375,
+      "height": 819,
+      "namedViewport": 375,
+      "sha256": "5945d10f2ff6c668fa1deae1fd05f1e735cbc4eff157243e734536d60d9f2fe7"
+    },
+    {
+      "file": "04-reservar-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "d6f810d76afed7bd7468bd2ff79e634d2c6ecd789db397bb829942660bc96612"
+    },
+    {
+      "file": "06-confirmar-canvi-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "28b617d06510ddf45d54bd44416cc6d1da4f87b573fb1ae992911339c557905c"
+    },
+    {
+      "file": "07-anullada-tard-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "557af84f1404589ca8189d2085f2668d14447e874c5004962a77ba23510719d0"
+    },
+    {
+      "file": "07-detall-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "27de1a1492aa50dbaa2d216295dbed7fc3a99bd655750ab508c0aa5aeb405e5c"
+    },
+    {
+      "file": "07-espera-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "d78c4cc26b8d944ffc30e8c4c33362ba72c337afcb684766a9a21ee8b874ca67"
+    },
+    {
+      "file": "16-add-dog-price-overlap-refused-375.png",
+      "width": 375,
+      "height": 1569,
+      "namedViewport": 375,
+      "sha256": "5929ca446622980d80d8cfb8414fab482b76096a4f26140d63d508606548dbcc"
+    },
+    {
+      "file": "16-add-dog-price-twin-375.png",
+      "width": 375,
+      "height": 1539,
+      "namedViewport": 375,
+      "sha256": "985bf8dada8572c8ef0d3097cf7444e40c115eb068bb89acf8bf4b073301752a"
+    },
+    {
+      "file": "20-console-product-host-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "4a01a5cfb61f0ba238299399e88e6e6095e735c2376fd3e7cc4ec2d71504746e"
+    },
+    {
+      "file": "21-console-platform-only-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "56a3d569cfae53b9147735330ed92dbb8ccac23ccdef8e52009c3954abf58fe6"
+    },
+    {
+      "file": "22-D6-rollback-file-not-sent-1280.png",
+      "width": 1280,
+      "height": 3254,
+      "namedViewport": 1280,
+      "sha256": "ad19974a356273df47d372bfabe5e7697bdecc57aecae82c8377c155206ebc76"
+    },
+    {
+      "file": "22-D6-rollback-file-not-sent-375.png",
+      "width": 375,
+      "height": 4846,
+      "namedViewport": 375,
+      "sha256": "ca055d670ede5c0fa1b0b65d9c6cb9c8827efc0f3d0c64f26df8959c06e2dfd4"
+    },
+    {
+      "file": "23-D10-next-invoice-row-1280.png",
+      "width": 1280,
+      "height": 2518,
+      "namedViewport": 1280,
+      "sha256": "ac6e65b036932799113cc476d959bda6d7d01698eab93d432133d4bf88d30741"
+    },
+    {
+      "file": "23-D10-next-invoice-row-375.png",
+      "width": 375,
+      "height": 4152,
+      "namedViewport": 375,
+      "sha256": "d2ed3c7e151fc115a3ff6ba759eb356eceb55b8927b0845f09bcd1cbd5a9e01a"
+    },
+    {
+      "file": "23-classe-inscrits-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "5be6e7eceec8af1d42783330db768feca590e9efe264d64dbe4747965e074e12"
+    },
+    {
+      "file": "29-confirmar-normal-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "81e2c6e0685dbda5c9fbf6a581f6512212680a89865326a6f34d5b4a322d5d26"
+    },
+    {
+      "file": "29-limit-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "adc94b038da4e6193c3237ab878616eee1edbdcafe8572d1d7471a1b3ac84df8"
+    },
+    {
+      "file": "29-properament-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "d03b62a55a3d95092f1cd442efc644e20234bcda8024708b078095f0cefa83e4"
+    },
+    {
+      "file": "29-temps-esgotat-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "bd48cbb6bd01a995466938077350296f88cbcdddb319c90271970a9eb3145c93"
+    },
+    {
+      "file": "50-03b-admin-landing-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "f79140c85ea00e9aa1be913fe244f5ca21696cc5cdebb15529c8325890626655"
+    },
+    {
+      "file": "50-21-empty-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "1a032997b955453bd40695e4752d0378ebda624880b727a9d6136e2b4913220d"
+    },
+    {
+      "file": "50-21-empty-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "5c736ceecab8db08d75693db3de3f054bc7847f307176d3adbdad6fa9db06533"
+    },
+    {
+      "file": "50-28-id-document-ca-1280.png",
+      "width": 1280,
+      "height": 1219,
+      "namedViewport": 1280,
+      "sha256": "43f65e67abad4c499cb815f97f83d16551e0d9966d5703d24a37e222cb4e575f"
+    },
+    {
+      "file": "50-28-id-document-ca-375.png",
+      "width": 375,
+      "height": 1255,
+      "namedViewport": 375,
+      "sha256": "cee190b2dc8d6ee8fc7c1c0bb6a7d5708b7e1e60d20720dac7396a3952ca8145"
+    },
+    {
+      "file": "50-28-id-document-es-1280.png",
+      "width": 1280,
+      "height": 1219,
+      "namedViewport": 1280,
+      "sha256": "dec2691c8a3ed1adb1b0b96597ea81007708eba3ffd370fcaacca1648e09a996"
+    },
+    {
+      "file": "50-28-id-document-es-375.png",
+      "width": 375,
+      "height": 1273,
+      "namedViewport": 375,
+      "sha256": "83dd46e6d9f5536959fb1514b87e160aa3f7948d94ea28665c9266328f21277b"
+    },
+    {
+      "file": "50-30-info-retry-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "ab218e29b422dafca00c75457c6aea0cbe149a68dfa3c0632aff8a9a1623de9b"
+    },
+    {
+      "file": "50-D10-dog-dates-1280.png",
+      "width": 1280,
+      "height": 1326,
+      "namedViewport": 1280,
+      "sha256": "06314c1bc19e08e6a15a60483d1bc11e76a161f9363d23dd5ccefa2073339673"
+    },
+    {
+      "file": "50-D10-readmission-pending-1280.png",
+      "width": 1280,
+      "height": 2426,
+      "namedViewport": 1280,
+      "sha256": "d78336cfef4dc245115e1b75c71813aa2643fe14c003316d3194b3d8cc3b8960"
+    },
+    {
+      "file": "50-D16-ring-bookings-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "74757c205d00690ddd0184d1094b54d404ac87428aa2fd8758d202297c71dda6"
+    },
+    {
+      "file": "50-D16-ring-bookings-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "dffd098410fb608e49a3fb5a7a0fa1848ce238e88ea5afeb0d76237bb6dc694b"
+    },
+    {
+      "file": "50-D2-no-plan-proposal-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "e0019f76b75492771244cdf72bd4bc9ddc42a93ae3a9dc9c1166c6d90cda2f9a"
+    },
+    {
+      "file": "50-D4-review-0800-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "1e26a06ed3bb74c25afb1695379e608e403bf0401c172e8816d7ba408e3faaf5"
+    },
+    {
+      "file": "50-D4-review-0800-375.png",
+      "width": 375,
+      "height": 1594,
+      "namedViewport": 375,
+      "sha256": "a3c4be50ab24a63591a3b515d0be1844fd11efd9002add2fc8cfb507ffe2391a"
+    },
+    {
+      "file": "50-D5-unlabelled-channel-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "596bbb27254e3c56d8bfc8bc8f5719d2814550add4dde25d857f2e2528ab9d79"
+    },
+    {
+      "file": "50-D5-unlabelled-channel-375.png",
+      "width": 375,
+      "height": 3131,
+      "namedViewport": 375,
+      "sha256": "e67dd6bf1c6240b1c22864f866e73b6770322a879652e5a3b2564e21f3fe9efb"
+    },
+    {
+      "file": "50-D6-price-overlap-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "d40b1e472b143000bce5babf28b46bdfb98993365c04feb7b90b3ed8bf4b47ec"
+    },
+    {
+      "file": "50-chunk-failure-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "36b393aaa871edc5ea557b87911c0113210ac2c607613729ebf1f124d81582f5"
+    },
+    {
+      "file": "50-chunk-failure-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "aff57aa1581ea77097b3f9a96d668b70b84e89542caa1e950dfdf026023d5b3e"
+    },
+    {
+      "file": "50-d10-inactividad-es-1280.png",
+      "width": 1280,
+      "height": 2535,
+      "namedViewport": 1280,
+      "sha256": "0a1e4d2f606351d38873a471f4a36f67bd2435fa04afd2d96ba62ed0563cf9bd"
+    },
+    {
+      "file": "50-d10-inactividad-es-375.png",
+      "width": 375,
+      "height": 4220,
+      "namedViewport": 375,
+      "sha256": "d1216d6215bb550dfe6970419977485b0b38eadec086fe71323ee17b3a5248bb"
+    },
+    {
+      "file": "50-d10-inactividad-modificar-es-1280.png",
+      "width": 1280,
+      "height": 2535,
+      "namedViewport": 1280,
+      "sha256": "e0c98bb5f61dfc4f7c0db8382cc5eb2dece123cebc711716d8d16abe0ff1e57c"
+    },
+    {
+      "file": "50-d10-inactividad-modificar-es-375.png",
+      "width": 375,
+      "height": 4220,
+      "namedViewport": 375,
+      "sha256": "b5ac03fda92ceaf11f294fc691c1d7c94dcced8f6341329ed676602fc263d471"
+    },
+    {
+      "file": "50-d12-abrir-recorrido-es-1280.png",
+      "width": 1280,
+      "height": 1020,
+      "namedViewport": 1280,
+      "sha256": "e38254b8e1f458dc7f74f097ce4723f979ce0fb846e47e1f9a92d1cefcc33078"
+    },
+    {
+      "file": "50-d12-abrir-recorrido-es-375.png",
+      "width": 375,
+      "height": 1246,
+      "namedViewport": 375,
+      "sha256": "3628fa383939fc280ac289f2aad0c5310281fc86150dbfc233b4ef67df384c0a"
+    },
+    {
+      "file": "50-espera-after-sign-in-375.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "d78c4cc26b8d944ffc30e8c4c33362ba72c337afcb684766a9a21ee8b874ca67"
+    },
+    {
+      "file": "50-registrar-montado-biblioteca-es-1280.png",
+      "width": 1280,
+      "height": 1033,
+      "namedViewport": 1280,
+      "sha256": "a85af1525c3e91a842cc04e5b0c096f169d506ce4373b4dca3d74eee0ef46c3e"
+    },
+    {
+      "file": "50-registrar-montado-biblioteca-es-375.png",
+      "width": 375,
+      "height": 1129,
+      "namedViewport": 375,
+      "sha256": "b0c6ccfa6dc2b28e3f271f8db9fd2ca10c769e7d8f841acce34cfb0161783b94"
+    },
+    {
+      "file": "50-registrar-montado-es-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "5362961719c709130e0b6be480a9de490a67089d1642a105f2b476e8937037c0"
+    },
+    {
+      "file": "50-registrar-montado-es-375.png",
+      "width": 375,
+      "height": 861,
+      "namedViewport": 375,
+      "sha256": "7ff191e85c68e6e4d6b9124136b996df4ff3bab5ee27a819f3394365df72d520"
+    },
+    {
+      "file": "50-user-menu-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "d17df76f6a7d65c0ef546a567f711a51acc3e1cac1b57f0b975c5de126f14d5c"
+    },
+    {
+      "file": "50-visor-personal-es-1280.png",
+      "width": 1280,
+      "height": 1075,
+      "namedViewport": 1280,
+      "sha256": "b613707d7443adb534e458e57940c0020014136d22cfb9eac6863932ca96bb6d"
+    },
+    {
+      "file": "50-visor-personal-es-375.png",
+      "width": 375,
+      "height": 970,
+      "namedViewport": 375,
+      "sha256": "32518e3d235786a980a05b6d6994a2c80062dccba66f137253cf6e9d139b102a"
+    },
+    {
+      "file": "60-D10-next-invoice-1280.png",
+      "width": 1280,
+      "height": 2518,
+      "namedViewport": 1280,
+      "sha256": "ac6e65b036932799113cc476d959bda6d7d01698eab93d432133d4bf88d30741"
+    },
+    {
+      "file": "60-D10-next-invoice-375.png",
+      "width": 375,
+      "height": 4152,
+      "namedViewport": 375,
+      "sha256": "d2ed3c7e151fc115a3ff6ba759eb356eceb55b8927b0845f09bcd1cbd5a9e01a"
+    },
+    {
+      "file": "61-D10-next-invoice-drawer-1280.png",
+      "width": 1280,
+      "height": 2518,
+      "namedViewport": 1280,
+      "sha256": "94630cc410a9496a85e567aa3a03045ef99935adea64183f8393fda380e7e227"
+    },
+    {
+      "file": "61-D10-next-invoice-drawer-375.png",
+      "width": 375,
+      "height": 4152,
+      "namedViewport": 375,
+      "sha256": "ebddbd4a1366f6542622acab169b850cf9e6d66f88e121e41a14d11ae44cafc9"
+    },
+    {
+      "file": "62-D6-submission-due-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "d4742d3aa86e8a14ba077705d12a80f1d417c77b38fd972e517fec3fbdaa71b2"
+    },
+    {
+      "file": "62-D6-submission-due-375.png",
+      "width": 375,
+      "height": 4792,
+      "namedViewport": 375,
+      "sha256": "98dad54c54ede7b5c6482a74726730261559f04f3cf965b023ab38ba0a8336b5"
+    },
+    {
+      "file": "63-D6-collection-date-passed-1280.png",
+      "width": 1280,
+      "height": 3254,
+      "namedViewport": 1280,
+      "sha256": "b058f4be34979ce42d336fb05e8abe63f448968640f87408587402db5505939f"
+    },
+    {
+      "file": "63-D6-collection-date-passed-375.png",
+      "width": 375,
+      "height": 4846,
+      "namedViewport": 375,
+      "sha256": "76f5982cce37329d86c4a09890aee47d9247e3038ca8c7d53f2dceec0ffe46a7"
+    },
+    {
+      "file": "D1-risc-1280.png",
+      "width": 472,
+      "height": 349,
+      "namedViewport": 1280,
+      "sha256": "1258f9f39e87e02774232709377a99a1c05c92b391fecd98819de7eb93ca4429"
+    },
+    {
+      "file": "D10-reserves-1280.png",
+      "width": 960,
+      "height": 598,
+      "namedViewport": 1280,
+      "sha256": "0eaaf1682717fe347fb6d23b225a2a9b662d5eb6aa036abf154b506a9240e064"
+    },
+    {
+      "file": "D11-processos-1280.png",
+      "width": 960,
+      "height": 583,
+      "namedViewport": 1280,
+      "sha256": "d321a8e1613c0aa7bb836fcf49283d1c5993e9928f48beacd724072611f0a4d3"
+    },
+    {
+      "file": "D11-simulacio-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "2ca3a6e38aeac69335087a78503583251883bbf736482bd8d10b0bea2cc541de"
+    },
+    {
+      "file": "D4-inscrits-1280.png",
+      "width": 472,
+      "height": 664,
+      "namedViewport": 1280,
+      "sha256": "e2c1e6a529ff1ede22e051d7a0bfd0f39e2e06ee71e9672e7bdf4937ea417bcc"
+    },
+    {
+      "file": "D6-facturacio-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "4817a5241bf018ecff97e50a1d197aae47de24acddd839e1aacf823754c994d7"
+    },
+    {
+      "file": "D6-facturacio-calaix-rebut-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "e45b062383f1dffc779aaa335389782acadf46c3794ed106a65c513cf1624248"
+    },
+    {
+      "file": "D6-facturacio-confirmacio-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "4fed9d449e187aabdd36ab24758c4b7ec4b75e44cdad3e32f7b028e0fbcfe8d8"
+    },
+    {
+      "file": "D6-facturacio-manual-only-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "5957933af1b270da62880609d966faab12dcc81d8dc9605bf4c655bfe4a1e841"
+    },
+    {
+      "file": "D6-facturacio-retroces-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "262f696d36bb2c38723a1e491de46f60d0780302da0154cf47f8154f7d185279"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-1280-dark.png",
+      "width": 1280,
+      "height": 1020,
+      "namedViewport": 1280,
+      "sha256": "55c273ecd342b7a11fd8bf5ce40cfcc9eb1ff04ec9aee1166b0c896098da94e6"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-1280-light.png",
+      "width": 1280,
+      "height": 1020,
+      "namedViewport": 1280,
+      "sha256": "18839a407535fa43d50fe291d5610c3505a714259ee2f20b94b8c55c34f9f28f"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-375-dark.png",
+      "width": 375,
+      "height": 1246,
+      "namedViewport": 375,
+      "sha256": "8c200d620c4f1744c0a97782197374de95ba481f01ce4dfb76c07b1edc7f73d6"
+    },
+    {
+      "file": "admin-D12-agenda-muntatges-375-light.png",
+      "width": 375,
+      "height": 1246,
+      "namedViewport": 375,
+      "sha256": "757c330a6c251b451d3bdbee752d88c2f89675d05881a14d322364c11c350d7a"
+    },
+    {
+      "file": "admin-D16-geometria-1280-dark.png",
+      "width": 1280,
+      "height": 2896,
+      "namedViewport": 1280,
+      "sha256": "62ac935a9b2a34fa0d6af2e148f7e34ac9d426d5d53c71b1fce4b9ad87448b63"
+    },
+    {
+      "file": "admin-D16-geometria-1280-light.png",
+      "width": 1280,
+      "height": 2896,
+      "namedViewport": 1280,
+      "sha256": "9a89398ff68ce90c9c551b304e57813c5c9583dc41c342ad9905ead6cace2639"
+    },
+    {
+      "file": "admin-D16-geometria-375-dark.png",
+      "width": 375,
+      "height": 4432,
+      "namedViewport": 375,
+      "sha256": "e9c9fd83ff55420d8c06857e8c912dc682df181deb195871064abfa0be37480c"
+    },
+    {
+      "file": "admin-D16-geometria-375-light.png",
+      "width": 375,
+      "height": 4432,
+      "namedViewport": 375,
+      "sha256": "130473d0856d5cda523e63ae6354f8e35905c7159f2951615f6cffd06028e4bc"
+    },
+    {
+      "file": "admin-D18-biblioteca-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "32d387a791f9f4e427cfcefd12265a764e9617e3603ce9b273168321dc01406c"
+    },
+    {
+      "file": "admin-D18-biblioteca-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "3c8131c3ad4f35c9ba0accc85cd0e4c154ceead41506c8f810eb04399b1d7cf2"
+    },
+    {
+      "file": "admin-D18-biblioteca-375-dark.png",
+      "width": 375,
+      "height": 860,
+      "namedViewport": 375,
+      "sha256": "3f7ea175c063fdbf569e3b194091b8182526d3f063041a671ccc848fcb2b2461"
+    },
+    {
+      "file": "admin-D18-biblioteca-375-light.png",
+      "width": 375,
+      "height": 860,
+      "namedViewport": 375,
+      "sha256": "4705ec5a082d50cfe243dc58c1b9dafff74ff075e46bdfa111ca7fbba190ed00"
+    },
+    {
+      "file": "admin-D18-col-locacio-1280-dark.png",
+      "width": 1280,
+      "height": 1324,
+      "namedViewport": 1280,
+      "sha256": "7ba5464925df009ba434d5fe633217db8ecb705209590da8c94333da59a58b92"
+    },
+    {
+      "file": "admin-D18-col-locacio-1280-light.png",
+      "width": 1280,
+      "height": 1324,
+      "namedViewport": 1280,
+      "sha256": "5665786bcabb98ec22998e4accacdf91fbfd8ee702863c999553209ba60608bd"
+    },
+    {
+      "file": "admin-D18-col-locacio-375-dark.png",
+      "width": 375,
+      "height": 1814,
+      "namedViewport": 375,
+      "sha256": "0e5ade07803f6d4d192e1da364bb0e97786ff9e9a54e71c4f438a1a0b95ff10f"
+    },
+    {
+      "file": "admin-D18-col-locacio-375-light.png",
+      "width": 375,
+      "height": 1814,
+      "namedViewport": 375,
+      "sha256": "29f84e2d7a56c288e4f8503edd263e6c8fc9bc1359d660464cbb6b0ef2177153"
+    },
+    {
+      "file": "admin-D18-importa-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "b34fcb09b34811ea6d60b1f70d806648b395ea881b9c0c531952f25a9b058f92"
+    },
+    {
+      "file": "admin-D18-importa-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "647158e6df82ffc0c5add0313abdd775de79ce98ad8d739f40b8b0fc6b2f757a"
+    },
+    {
+      "file": "admin-D18-importa-375-dark.png",
+      "width": 375,
+      "height": 860,
+      "namedViewport": 375,
+      "sha256": "7fd2387771a48fe4d145cb31cd56c4a6ca55d7f01fc7a8e142681ec3fffe77bd"
+    },
+    {
+      "file": "admin-D18-importa-375-light.png",
+      "width": 375,
+      "height": 860,
+      "namedViewport": 375,
+      "sha256": "85c5c496e69f178cb3692d71755e51b3b878f2558e0c0a422ce83add4f1d6338"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "8709172b68ccf670ec253f2d3cefd1a6a0a7190ce4c693d0d7e994d65bf8bedc"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "4f5ade20ccaa0f67f39bf3c452ce97c1575167e8430bedafca5b3b610e47e46f"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-375-dark.png",
+      "width": 375,
+      "height": 1952,
+      "namedViewport": 375,
+      "sha256": "b8248e37d60cd8ad64d2654957bb2975664139310688ba384621d8ac7dda9d49"
+    },
+    {
+      "file": "admin-D18-recorregut-2d-375-light.png",
+      "width": 375,
+      "height": 1952,
+      "namedViewport": 375,
+      "sha256": "0b41a91201cd6f6dcfa3269814c91a56c0ed46cb999faeae3f591f0e147e2f5a"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-1280-dark.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "6b214972c39aa19f3288ccc36055549525c960541edf63ab726f2cd64e16bb58"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-1280-light.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "70f81411ff3d8743b8835cdec7d57eb62c8af47f65095b5f5d7bdaa4c20eb2b1"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-375-dark.png",
+      "width": 375,
+      "height": 2027,
+      "namedViewport": 375,
+      "sha256": "92e92dda1067857aadcd8cd9719b21f31306ce2ef2d7916c787ff5f63d9d4b16"
+    },
+    {
+      "file": "admin-D18-recorregut-3d-375-light.png",
+      "width": 375,
+      "height": 2027,
+      "namedViewport": 375,
+      "sha256": "e32ee57ca33fd07c922931183e038091f7ba3eda4f7089f4a1a63973a5a81032"
+    },
+    {
+      "file": "admin-D18-registra-1280-dark.png",
+      "width": 1280,
+      "height": 1324,
+      "namedViewport": 1280,
+      "sha256": "56f1428c7af4b93cf7b0fe915948d0e35ec2f50fabf3726f58b0e90cf42ed4b5"
+    },
+    {
+      "file": "admin-D18-registra-1280-light.png",
+      "width": 1280,
+      "height": 1324,
+      "namedViewport": 1280,
+      "sha256": "64b45ffb027ace476a512ed26dcf398949d027c78aaf10cc0e0b332f6b766608"
+    },
+    {
+      "file": "admin-D18-registra-375-dark.png",
+      "width": 375,
+      "height": 1814,
+      "namedViewport": 375,
+      "sha256": "486ae8fee52d1e314ee223b4daf0c4337a88881a6590ab8c34e831b91fd5037d"
+    },
+    {
+      "file": "admin-D18-registra-375-light.png",
+      "width": 375,
+      "height": 1814,
+      "namedViewport": 375,
+      "sha256": "7510cf3b1ef708fad44f509191ccccce035407e57d83ec2a20b62e04144afb2a"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-1280-dark.png",
+      "width": 1280,
+      "height": 1481,
+      "namedViewport": 1280,
+      "sha256": "70d6e52d8ca27be242c0be85f6a9d81f24a8a2e5b9d13bc52dbbcb700d180d67"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-1280-light.png",
+      "width": 1280,
+      "height": 1481,
+      "namedViewport": 1280,
+      "sha256": "59d6149968aa6c4f63375f10213448c88f5a262151a20d925774c14a525ccede"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-375-dark.png",
+      "width": 375,
+      "height": 1870,
+      "namedViewport": 375,
+      "sha256": "0d0a7dfb4a68c563b8a9a98074f6396c46842d21069cf53b53900084243d32fd"
+    },
+    {
+      "file": "admin-D4-recorregut-previst-375-light.png",
+      "width": 375,
+      "height": 1870,
+      "namedViewport": 375,
+      "sha256": "d0fadb3e98e1bb2f04c5e04e052066c97f3d28aa009593bd00c1b65e4a947c19"
+    },
+    {
+      "file": "admin-D7-col-locacions-1280-dark.png",
+      "width": 1280,
+      "height": 1528,
+      "namedViewport": 1280,
+      "sha256": "79fd1e31367d31529f1ace849b0ad5e87fae84fca313a15f4388b3b7536329af"
+    },
+    {
+      "file": "admin-D7-col-locacions-1280-light.png",
+      "width": 1280,
+      "height": 1528,
+      "namedViewport": 1280,
+      "sha256": "656b728c46faf5f840cc9f29fe45853cbf7db539f938aa766753b25963ff96c5"
+    },
+    {
+      "file": "admin-D7-col-locacions-375-dark.png",
+      "width": 375,
+      "height": 2925,
+      "namedViewport": 375,
+      "sha256": "c1d9bdd51a0b113a494d4b45ee743e227031c6c4e676e99a7f575e1b26323a70"
+    },
+    {
+      "file": "admin-D7-col-locacions-375-light.png",
+      "width": 375,
+      "height": 2925,
+      "namedViewport": 375,
+      "sha256": "a6fd45970a2370554d486028e580795d663b1fdc5ff211af04708d2738132111"
+    },
+    {
+      "file": "clubs-07-reserva-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "25a4f9774f8ecaca87f418523b83fafb34940436cfc058fba84a0beb40ad5617"
+    },
+    {
+      "file": "clubs-07-reserva-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "9692b4416141db5dfb261d80081b60cca0fa8dc34ba76c64d84a44dad966a0db"
+    },
+    {
+      "file": "clubs-07-reserva-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "27de1a1492aa50dbaa2d216295dbed7fc3a99bd655750ab508c0aa5aeb405e5c"
+    },
+    {
+      "file": "clubs-07-reserva-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "13a8dedb204c1c581661cf6ef00c794aaa37247f38d7f96bbe80f2132a5d6ac9"
+    },
+    {
+      "file": "clubs-07-reserva-personal-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "84acbc358f1df08c48573dc92da8ad0553d7725770500cd314a0c53c3879cdd8"
+    },
+    {
+      "file": "clubs-07-reserva-personal-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "874d7e9bd08430220628bef5f853d9aec3a3fee6d75653b12165da152954a2cc"
+    },
+    {
+      "file": "clubs-07-reserva-personal-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "fb91da4b989785e97aa321fbc338bf116147b33a18119715701155b91ff82134"
+    },
+    {
+      "file": "clubs-07-reserva-personal-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "2d050dab9e293368a9737ad702ad90ee3d2b76968b055cd4c590bd82c1b2374b"
+    },
+    {
+      "file": "clubs-08-entrenaments-1280-dark.png",
+      "width": 1280,
+      "height": 1029,
+      "namedViewport": 1280,
+      "sha256": "9d7724cd3daffccb45f30c05b364c98397d5566cf0ad7d037a21db361d57827e"
+    },
+    {
+      "file": "clubs-08-entrenaments-1280-light.png",
+      "width": 1280,
+      "height": 1029,
+      "namedViewport": 1280,
+      "sha256": "a68573890a030f5e284571e929fb04f4d83e14de22d86ad0119c930606dac648"
+    },
+    {
+      "file": "clubs-08-entrenaments-375-dark.png",
+      "width": 375,
+      "height": 1080,
+      "namedViewport": 375,
+      "sha256": "a8cb570e7c70fa7243c9a183a4a61d1305b7815d39cfa47ad5184e2d1da8c0f3"
+    },
+    {
+      "file": "clubs-08-entrenaments-375-light.png",
+      "width": 375,
+      "height": 1080,
+      "namedViewport": 375,
+      "sha256": "71421ed60d66b39f54702479cc14e8f2a7539365b46e6f37ca4edd54ddbca0cb"
+    },
+    {
+      "file": "clubs-10-avui-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "83a7152fc1204f48845f23a61e19d7b5b90aa788a2537e8449c523c34223e555"
+    },
+    {
+      "file": "clubs-10-avui-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "9d90ddf042e629dabefe06a718d5624a5b3a0ab18f1c2bd73af1ff376b867c18"
+    },
+    {
+      "file": "clubs-10-avui-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "fd791e6035aae4f3e83eeeb5c6bc77a9dcbb5d7609cd45e3332289c4588ac0b1"
+    },
+    {
+      "file": "clubs-10-avui-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "89367cb530f3ae50b7f39bfbe79ca483ddb935c984f81262a5efbd5a402f331d"
+    },
+    {
+      "file": "clubs-23-visio-global-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "f01df69ae677cdad51ac449d3686e08d5705a6cf4fd90e9659dddb7d53bab201"
+    },
+    {
+      "file": "clubs-23-visio-global-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "a104f05492e8a852afd9812df1ba82ee9a0f95bd1c75a109a73f221d61fac8fc"
+    },
+    {
+      "file": "clubs-23-visio-global-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "d1205a31e21bdb4a10310d451b55db710ecf302f6b40d3080cfdd6aeeeb4780c"
+    },
+    {
+      "file": "clubs-23-visio-global-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "b8ff1ffb42cd1ec77b77e8e9de7f0f2d3bb819221a3b16bc86b2db83e4515033"
+    },
+    {
+      "file": "clubs-registra-muntat-1280-dark.png",
+      "width": 1280,
+      "height": 965,
+      "namedViewport": 1280,
+      "sha256": "613b37ead5f3f00f66312bc180d77960dbd8f4b116a5fb350b28ec1b9eb7f979"
+    },
+    {
+      "file": "clubs-registra-muntat-1280-light.png",
+      "width": 1280,
+      "height": 965,
+      "namedViewport": 1280,
+      "sha256": "29789f4e8576ccb6ee1ab3041356fed30f46e413bb380ffd2a30c55cf7b74fe5"
+    },
+    {
+      "file": "clubs-registra-muntat-375-dark.png",
+      "width": 375,
+      "height": 1061,
+      "namedViewport": 375,
+      "sha256": "415274866d2be01af6cd8c9a721839f414d6e8f4e757276952272fd89f7cf219"
+    },
+    {
+      "file": "clubs-registra-muntat-375-light.png",
+      "width": 375,
+      "height": 1061,
+      "namedViewport": 375,
+      "sha256": "2e8d69fc3a3c4b636b978b00e10f86851ebe8e5be61d38bad7adb0a613b43c3f"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "3b4116ee298125069fc6ac67f7fc6fe3d26373d7e2e72f3bec4ef61a3e1d6f71"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "d5cb153067a83b47c6ba49cd735702ed9077ef5669212aa06b9e441ea71abada"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-375-dark.png",
+      "width": 375,
+      "height": 861,
+      "namedViewport": 375,
+      "sha256": "55ad9e59a4ba4b3e77ada0c925862be2e57f03221625ce3bd2d6123934b4191a"
+    },
+    {
+      "file": "clubs-registra-muntat-buit-375-light.png",
+      "width": 375,
+      "height": 861,
+      "namedViewport": 375,
+      "sha256": "159e01d9c3f83f1ad31733a336d878bd7ce1b63d0eb64ea0921aceb57f0c49da"
+    },
+    {
+      "file": "clubs-sessio-muntatge-1280-dark.png",
+      "width": 1280,
+      "height": 1055,
+      "namedViewport": 1280,
+      "sha256": "449641f5b3d2aff2d9c05c26a105e32b5b8d79280921d519233802016c1cc6de"
+    },
+    {
+      "file": "clubs-sessio-muntatge-1280-light.png",
+      "width": 1280,
+      "height": 1055,
+      "namedViewport": 1280,
+      "sha256": "c9b346548b340b9caf7b5b6cf26fc36b2cc458fa95e44a24a72510a79ce7c338"
+    },
+    {
+      "file": "clubs-sessio-muntatge-375-dark.png",
+      "width": 375,
+      "height": 1261,
+      "namedViewport": 375,
+      "sha256": "3a73623553eafe3bd1dbed6b99804a57e8c3930a8f52f2168e7c93b021db7b93"
+    },
+    {
+      "file": "clubs-sessio-muntatge-375-light.png",
+      "width": 375,
+      "height": 1261,
+      "namedViewport": 375,
+      "sha256": "0dda12801777b02e167a6bb297e4ff258c816572c4dd89acd264f2c17e7cd21e"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "99f13b0f22436e89189fa07bcfb5a7482c7353b5993ce352b472215a55a7d980"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "83bf6354d0a2b7df42b18969e8143bc40bb8e8226767daf47448442d49a3b707"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-375-dark.png",
+      "width": 375,
+      "height": 1019,
+      "namedViewport": 375,
+      "sha256": "92b52be1802bf3ae97da2e89c48661addee461a377a883eefbcc6096abdf12f5"
+    },
+    {
+      "file": "clubs-sessio-muntatge-finalitzada-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "2f6b1f025e40bae4e16fbbc979dab45af96042868c0d164649989e031189d51d"
+    },
+    {
+      "file": "clubs-visor-alumne-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "0b92a2d46458c18fbd7c5ea4fdae902c5be6f952d537e41803add4c7cb313133"
+    },
+    {
+      "file": "clubs-visor-alumne-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "0cb1eab2ef75f19ff7bc4ad07761f0342fe9722fbf0f5ca03735bab8bd0ee7bd"
+    },
+    {
+      "file": "clubs-visor-alumne-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "262c84c7d00fde4ae2db6a3918f0cb78fb4633c3f3c84a2fe87cb1b331e7b248"
+    },
+    {
+      "file": "clubs-visor-alumne-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "d1edac215343bfacaf31083170b0c594ef5c865ca8e9522f96077709d31e1ec6"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-1280-dark.png",
+      "width": 1280,
+      "height": 1075,
+      "namedViewport": 1280,
+      "sha256": "f6e4724600d165901a0ddec231d6d63d2989b3ca32490c4c86d5e2df6061baca"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-1280-light.png",
+      "width": 1280,
+      "height": 1075,
+      "namedViewport": 1280,
+      "sha256": "aae74fed78c30d1e8f97d727e23ec75dbebea4c642cfcbe2d50fe253677507bf"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-375-dark.png",
+      "width": 375,
+      "height": 970,
+      "namedViewport": 375,
+      "sha256": "de5875ba9fdc3a73826aa929d62f9714a85aa74e34bdc76026cd960f88278908"
+    },
+    {
+      "file": "clubs-visor-instructor-2d-375-light.png",
+      "width": 375,
+      "height": 970,
+      "namedViewport": 375,
+      "sha256": "a1d33b66bc6377b0459dd5d7190009b057b330e7b112fe3d655acffaa603fd67"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "8eeaf4264eb67a2d2d3678d41b5557f065d3b0398d851f2bb0ee9c340fa0600e"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "74d295582babf5982d011ba8a136deb564674aee8b43903feb158025d7a7da20"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "4822493864a14b3c09f51d49475affff60c24207d5ae3d29019cce7a08010619"
+    },
+    {
+      "file": "clubs-visor-instructor-3d-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "408aae23d015be21f53e00cd6b4959be91ca78fcca170c0384d5cc98689fa78b"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-1280-dark.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "ac0f2a2d425d6e6ab113e54b9d0f2d9f5807d7d9523020167b76951c3fc310f0"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-1280-light.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "143b9171c63acae17c05c56f0b4b885e758285ab466e3d14ba9a7d01ff086da5"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-375-dark.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "059d727cde1b2389ae6e2163cb30b1aaca7bff78f5ea1e28f8cf19d1cda99183"
+    },
+    {
+      "file": "clubs-visor-sense-muntatge-personal-375-light.png",
+      "width": 375,
+      "height": 812,
+      "namedViewport": 375,
+      "sha256": "a10d6119a85cff554eeee18f7eea472efb68e61f70880cb6f35ce94f1ed112a5"
+    },
+    {
+      "file": "entrenaments-bloquejos-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "8527debb543203f9656ebba8565c104835bf2e66447c032fac753c4482a1b40e"
+    },
+    {
+      "file": "entrenaments-registre-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "570f1a813c0b65c2e47bf47c80a2b870f0a1d1525335362d9d15190f304ceb24"
+    },
+    {
+      "file": "r2-course-ui-harness-1280-after-nudge.png",
+      "width": 1280,
+      "height": 1602,
+      "namedViewport": 1280,
+      "sha256": "785ded5958446a185736308ef4176e6257afd1bf28bc1d048de9b04e12002141"
+    },
+    {
+      "file": "r2-course-ui-harness-1280-dark.png",
+      "width": 1280,
+      "height": 1602,
+      "namedViewport": 1280,
+      "sha256": "438d78eefdfc5b99b0de0f04067622df64b765d8121d36e75210d481c135d6d4"
+    },
+    {
+      "file": "r2-course-ui-harness-1280-light.png",
+      "width": 1280,
+      "height": 1602,
+      "namedViewport": 1280,
+      "sha256": "cc94b15c4ac10b2162d9427dd0fb508ff8cf8b9b75c31f32767fc86e33eeec6b"
+    },
+    {
+      "file": "remeses-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "9c2ec4b06caaad02f725c43fba47ea9da935fa2a53f9c52d7c0ce9f566d58b07"
+    },
+    {
+      "file": "responsive-admin-billing-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "4817a5241bf018ecff97e50a1d197aae47de24acddd839e1aacf823754c994d7"
+    },
+    {
+      "file": "responsive-admin-billing-375.png",
+      "width": 375,
+      "height": 4774,
+      "namedViewport": 375,
+      "sha256": "e55a97b6cccec07f72e5607184c854f72b8db00e3b287eb56fef1e61ce224939"
+    },
+    {
+      "file": "responsive-admin-billing-768.png",
+      "width": 768,
+      "height": 4291,
+      "namedViewport": 768,
+      "sha256": "750a22ee8b4cbf250ccea0b345bc5128131944a9422ea05a8de1c9da7a04f290"
+    },
+    {
+      "file": "responsive-admin-billing-menu-0-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "bfd1382258662b412118d15e48559b4e3bd9f4982c56c70fd33bce0bb280858a"
+    },
+    {
+      "file": "responsive-admin-billing-menu-0-375.png",
+      "width": 375,
+      "height": 4774,
+      "namedViewport": 375,
+      "sha256": "c29e00537d28e44d30cd0fbaef69de40c90f0102ead114c5b54240b88468b2cf"
+    },
+    {
+      "file": "responsive-admin-billing-menu-0-768.png",
+      "width": 768,
+      "height": 4291,
+      "namedViewport": 768,
+      "sha256": "848bba7c5eeee30f9cbd9c411d3e8c439c4888f08dec92d9376fb3d59d361001"
+    },
+    {
+      "file": "responsive-admin-billing-menu-1-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "b7d6c84f17d5a9d610db1cca9957086632ec796d6f566c22f8fde04d5b5d8de9"
+    },
+    {
+      "file": "responsive-admin-billing-menu-1-375.png",
+      "width": 375,
+      "height": 4774,
+      "namedViewport": 375,
+      "sha256": "3cba749d447648054cf27557c2358ae08b5cd36560338a023339f1d5c3adb8a1"
+    },
+    {
+      "file": "responsive-admin-billing-menu-1-768.png",
+      "width": 768,
+      "height": 4291,
+      "namedViewport": 768,
+      "sha256": "1d4ac37ed459e8082c76df4d3b45ab384492a8d6425528ef3150fafab467ca0b"
+    },
+    {
+      "file": "responsive-admin-billing-menu-2-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "d68e5cfa0c3a9ebd7e001c8d4b070330d2606deafb48ebeba7d4fc68a0fb2339"
+    },
+    {
+      "file": "responsive-admin-billing-menu-2-375.png",
+      "width": 375,
+      "height": 4774,
+      "namedViewport": 375,
+      "sha256": "751e3885df32b0da4b6f23c397f45c69cd9ccee36681797482b6cf270e82173a"
+    },
+    {
+      "file": "responsive-admin-billing-menu-2-768.png",
+      "width": 768,
+      "height": 4291,
+      "namedViewport": 768,
+      "sha256": "cee4d90432ea32c6126faf5874cd10814246dde0cab81afbb5fef35e976d9c7d"
+    },
+    {
+      "file": "responsive-admin-billing-menu-3-1280.png",
+      "width": 1280,
+      "height": 3215,
+      "namedViewport": 1280,
+      "sha256": "9a6c10d5dbbf96e4f1b4537492a53c56087029607290999f632facd7bcede422"
+    },
+    {
+      "file": "responsive-admin-billing-menu-3-375.png",
+      "width": 375,
+      "height": 4774,
+      "namedViewport": 375,
+      "sha256": "b2b8da75452a17067326492aa0e7729ec0977127ac815ab9c681b5fda1b4701b"
+    },
+    {
+      "file": "responsive-admin-billing-menu-3-768.png",
+      "width": 768,
+      "height": 4291,
+      "namedViewport": 768,
+      "sha256": "f6616fb0a2aec136b4066eb8befabac5ec3ac72c723ddcbb149735803594c929"
+    },
+    {
+      "file": "responsive-admin-calendar-selected-1280.png",
+      "width": 1280,
+      "height": 1481,
+      "namedViewport": 1280,
+      "sha256": "70d6e52d8ca27be242c0be85f6a9d81f24a8a2e5b9d13bc52dbbcb700d180d67"
+    },
+    {
+      "file": "responsive-admin-calendar-selected-375.png",
+      "width": 375,
+      "height": 1870,
+      "namedViewport": 375,
+      "sha256": "0d0a7dfb4a68c563b8a9a98074f6396c46842d21069cf53b53900084243d32fd"
+    },
+    {
+      "file": "responsive-admin-calendar-selected-768.png",
+      "width": 768,
+      "height": 1480,
+      "namedViewport": 768,
+      "sha256": "538eaf1f87cca9d172e056e4424f06564c354edff055338c5fc5000ef8b6b5f7"
+    },
+    {
+      "file": "responsive-admin-create-menu-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "334f1cac9ba1f3a805749f52648bc6f7c9e8c91188918d94cc0f116b4a38d0da"
+    },
+    {
+      "file": "responsive-admin-create-menu-375.png",
+      "width": 375,
+      "height": 900,
+      "namedViewport": 375,
+      "sha256": "e8fed342f314fd74635709ce64801b15672202e7ef3b1bf184958f271e14749c"
+    },
+    {
+      "file": "responsive-admin-create-menu-768.png",
+      "width": 768,
+      "height": 900,
+      "namedViewport": 768,
+      "sha256": "704b5870c5b8c7bc49801fdca0a1d0eb515d068b6f112ef6b1267ee86dc5f2ae"
+    },
+    {
+      "file": "responsive-admin-dashboard-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "fef391ac104a75aab420f14b222d03677fcf6ebbd347371b18864f30d14eb69d"
+    },
+    {
+      "file": "responsive-admin-dashboard-375.png",
+      "width": 375,
+      "height": 1924,
+      "namedViewport": 375,
+      "sha256": "11355e92f0e3d07c8abbada8802b63a6338270ca3ffe500038304ba08f2356e8"
+    },
+    {
+      "file": "responsive-admin-dashboard-768.png",
+      "width": 768,
+      "height": 1654,
+      "namedViewport": 768,
+      "sha256": "de74295b7ca531ab62a9f8b741436d706fe2149b504aa83d474db88c7c84b2ba"
+    },
+    {
+      "file": "responsive-admin-import-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "05ddc2a6e89aeef3257aff973449aa801f60190de0a9aba331ec5ab4cdd8873f"
+    },
+    {
+      "file": "responsive-admin-import-375.png",
+      "width": 375,
+      "height": 900,
+      "namedViewport": 375,
+      "sha256": "35261060eb108a10bbdafde92aa791970240834bb2458770a8c86f28c6147a44"
+    },
+    {
+      "file": "responsive-admin-import-768.png",
+      "width": 768,
+      "height": 900,
+      "namedViewport": 768,
+      "sha256": "5bdac6d8747503c995ee39a8794488526d4fd68b1baa4bfc7ab20db50285b9c9"
+    },
+    {
+      "file": "responsive-admin-library-1280.png",
+      "width": 1280,
+      "height": 1315,
+      "namedViewport": 1280,
+      "sha256": "32d387a791f9f4e427cfcefd12265a764e9617e3603ce9b273168321dc01406c"
+    },
+    {
+      "file": "responsive-admin-library-375.png",
+      "width": 375,
+      "height": 900,
+      "namedViewport": 375,
+      "sha256": "30370afd80474b1ff93f41f6559eee8d004446230f69759ba6ce3492ed7f4841"
+    },
+    {
+      "file": "responsive-admin-library-768.png",
+      "width": 768,
+      "height": 900,
+      "namedViewport": 768,
+      "sha256": "f9d77c26bd75d639d5b29ce0c255613f7a399b404f9dcfea86d4d975a8a470dc"
+    },
+    {
+      "file": "responsive-admin-member-1280.png",
+      "width": 1280,
+      "height": 1945,
+      "namedViewport": 1280,
+      "sha256": "bd1976fc5a79df025c7241af4f3dfbf8f5430d21388afec41a70f685ba611358"
+    },
+    {
+      "file": "responsive-admin-member-375.png",
+      "width": 375,
+      "height": 2980,
+      "namedViewport": 375,
+      "sha256": "b0b1d96d147ce506c16b8e096eaae94b6126767e2133cae093d7f43c318338b8"
+    },
+    {
+      "file": "responsive-admin-member-768.png",
+      "width": 768,
+      "height": 2387,
+      "namedViewport": 768,
+      "sha256": "0e35ba4c5ef4a9c14f70a30283ca4c7e7b899e9085e3188699dc62df9c534b1b"
+    },
+    {
+      "file": "responsive-admin-navigation-375.png",
+      "width": 375,
+      "height": 900,
+      "namedViewport": 375,
+      "sha256": "04bb1776e05a62ff019a2ed113688d3444a0f31e08d4876bdadf476a71e97554"
+    },
+    {
+      "file": "responsive-admin-navigation-768.png",
+      "width": 768,
+      "height": 900,
+      "namedViewport": 768,
+      "sha256": "63d3cfbeb5143247f6b578b578db7f51d8a6eb9fa5223fd9013491f1d0df2c1b"
+    },
+    {
+      "file": "responsive-instructor-agenda-1280.png",
+      "width": 1280,
+      "height": 1020,
+      "namedViewport": 1280,
+      "sha256": "55c273ecd342b7a11fd8bf5ce40cfcc9eb1ff04ec9aee1166b0c896098da94e6"
+    },
+    {
+      "file": "responsive-instructor-agenda-375.png",
+      "width": 375,
+      "height": 1246,
+      "namedViewport": 375,
+      "sha256": "8c200d620c4f1744c0a97782197374de95ba481f01ce4dfb76c07b1edc7f73d6"
+    },
+    {
+      "file": "responsive-instructor-navigation-1280.png",
+      "width": 1280,
+      "height": 900,
+      "namedViewport": 1280,
+      "sha256": "5ae85e547064e9eb1063537f1c95a347ad0fd3f935bd8f9be570ab0f0bb40cd6"
+    },
+    {
+      "file": "responsive-instructor-navigation-375.png",
+      "width": 375,
+      "height": 900,
+      "namedViewport": 375,
+      "sha256": "10fac50eec568639f798e8bc3c82d685fd9dbfb9c8b597e62da36c7cdc18ba91"
+    }
+  ],
+  "limit": "Filename-based geometry check. Cropped-element images may differ from viewport. DOM measurements and original-image review decide actual defects; this does not establish accessibility or complete visual fidelity."
+}

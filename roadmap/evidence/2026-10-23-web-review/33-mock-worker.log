@@ -1,0 +1,39 @@
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 607 modules transformed.
+
+(!) outDir /tmp/agilityhub-msw-check.wagdsz is not inside project root and will not be emptied.
+Use --emptyOutDir to override.
+
+rendering chunks...
+computing gzip size...
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/index.html                                             0.39 kB │ gzip:   0.27 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/index-DTNn0ZBI.css                             54.81 kB │ gzip:   9.91 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/common-BVqv7tr0.js                              2.51 kB │ gzip:   1.18 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/common-B8Morhwr.js                              2.64 kB │ gzip:   1.30 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/common-DGbwj3wL.js                              2.70 kB │ gzip:   1.32 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/id-EtAaSn9n.js                                  3.10 kB │ gzip:   1.37 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/id-nHarCitd.js                                  3.27 kB │ gzip:   1.51 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/id-BjCFGXvc.js                                  3.35 kB │ gzip:   1.52 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/errors-DkLdTdjL.js                             23.25 kB │ gzip:   7.55 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/errors-BxXLPi5_.js                             23.29 kB │ gzip:   7.54 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/index-ScVLapzR.js                             333.50 kB │ gzip: 102.68 kB
+../../../../../../../tmp/agilityhub-msw-check.wagdsz/assets/browser-CG_pHQpn.js                         1,266.04 kB │ gzip: 487.15 kB
+
+✓ built in 166ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+id: mock production build retains mockServiceWorker.js

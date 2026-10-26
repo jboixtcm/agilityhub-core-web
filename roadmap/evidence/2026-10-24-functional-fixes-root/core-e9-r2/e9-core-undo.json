@@ -1,0 +1,12 @@
+{
+  "liveSessionsLeftForP9": [
+    "3715555e-435a-4b3a-ad17-ef9b8551ea01"
+  ],
+  "note": "No abandon operation: each LIVE session stays open until P9 closes it",
+  "problems": [],
+  "steps": [
+    "PUT /members/ce7ffe20-c550-36bb-be54-25acb733764d/roles MEMBER",
+    "PATCH /class-sessions/d9e46339-2124-407b-8864-5ab07d557a91 {placementId: null}"
+  ],
+  "testStatus": "passed"
+}

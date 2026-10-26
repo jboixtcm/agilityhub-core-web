@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 375,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "TABLE",
+      "className": "ah-schedule-grid__table",
+      "text": "Agenda de la setmana del 10 al 15 d’agostdl 10dt 11dc 12dj 13dv 14ds 158:008:00 ",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "dl 10dt 11dc 12dj 13dv 14ds 15",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "dl 10dt 11dc 12dj 13dv 14ds 15",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dc 12",
+      "left": 345,
+      "right": 473,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "dc 12",
+      "left": 390.1875,
+      "right": 427.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dj 13",
+      "left": 473,
+      "right": 601,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "dj 13",
+      "left": 519.6875,
+      "right": 554.296875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "dv 14",
+      "left": 601,
+      "right": 729,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "dv 14",
+      "left": 645.6875,
+      "right": 684.296875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "ds 15",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "ds 15",
+      "left": 774.6875,
+      "right": 811.296875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "8:008:00 ReservaMuntanya — Pau + Blat8:30A i B4/5Central · EstelC i sup.3/5passa",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "8:008:00 ReservaMuntanya — Pau + Blat",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 345,
+      "right": 473,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 473,
+      "right": 601,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 477,
+      "right": 597,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 477,
+      "right": 597,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 601,
+      "right": 729,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 605,
+      "right": 725,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 605,
+      "right": 725,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "8:30A i B4/5Central · EstelC i sup.3/5passar llista pendentMuntanya · MarcC i su",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "A i B5/5Central · Estel · 1 esperaC i sup.4/5Muntanya · Marc8:30 ReservaCarreter",
+      "left": 345,
+      "right": 473,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "A i B5/5Central · Estel · 1 esperaC i sup.4/5Muntanya · Marc8:30 ReservaCarreter",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "A i B5/5Central · Estel · 1 espera",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "A i B5/5Central · Estel · 1 espera",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "A i B5/5",
+      "left": 357.1875,
+      "right": 460.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "5/5",
+      "left": 388.984375,
+      "right": 407.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Central · Estel · 1 espera",
+      "left": 357.1875,
+      "right": 460.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "C i sup.4/5Muntanya · Marc",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "C i sup.4/5Muntanya · Marc",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "C i sup.4/5",
+      "left": 357.1875,
+      "right": 460.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "4/5",
+      "left": 404.984375,
+      "right": 424.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Muntanya · Marc",
+      "left": 357.1875,
+      "right": 460.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "8:30 ReservaCarretera — Júlia + Kira",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "week-agenda__half",
+      "text": "8:30 ReservaCarretera — Júlia + Kira",
+      "left": 349,
+      "right": 469,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell ah-schedule-cell--neutral ah-schedule-cell--dashed ah-schedule-cell--plain",
+      "text": "8:30 ReservaCarretera — Júlia + Kira",
+      "left": 349,
+      "right": 469,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "8:30 Reserva",
+      "left": 357.1875,
+      "right": 460.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Carretera — Júlia + Kira",
+      "left": 357.1875,
+      "right": 460.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 473,
+      "right": 601,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 477,
+      "right": 597,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 477,
+      "right": 597,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 601,
+      "right": 729,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 605,
+      "right": 725,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 605,
+      "right": 725,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 605,
+      "right": 725,
+      "overflowX": "visible"
+    }
+  ]
+}

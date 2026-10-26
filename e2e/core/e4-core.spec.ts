@@ -3,6 +3,8 @@ import { join, resolve } from "node:path";
 
 import type { Browser, BrowserContext, Locator, Page, Response, Route } from "@playwright/test";
 
+import type { components } from "../../packages/api-client/src/generated/schema";
+
 import { expect, expectNoRefreshDuring, test } from "./oauth-token-log";
 
 // E4-W05 · T-06-28 and T-07-32 end to end against the published core with the E4 demo seed
@@ -242,6 +244,55 @@ async function loginClubs(
     await page.waitForURL(`**${landing}`);
   });
   await expect(page.locator(".clubs-shell")).toBeVisible();
+}
+
+/** Persist the reader's locale through the real account control and restore it on failure too. */
+async function withAccountLocale<T>(
+  page: Page,
+  app: "member" | "admin",
+  locale: "ca" | "es",
+  action: () => Promise<T>,
+): Promise<T> {
+  const control = async (): Promise<Locator> => {
+    if (app === "member") {
+      await navigateClubRoute(page, "/perfil");
+      return page
+        .locator(".profile-language-card")
+        .getByRole("combobox", { name: "Idioma", exact: true });
+    }
+    await page.locator(".admin-user-menu > button").click();
+    return page
+      .locator(".admin-user-menu__panel")
+      .getByRole("combobox", { name: "Idioma", exact: true });
+  };
+  const language = await control();
+  await expect(language).toBeEnabled();
+  const previous = await language.inputValue();
+  const change = async (select: Locator, value: string): Promise<void> => {
+    const patching = page.waitForResponse(isCall("PATCH", /\/api\/v1\/me$/u));
+    await select.selectOption(value);
+    const patched = await patching;
+    expect(patched.status(), "PATCH /me locale").toBe(200);
+    expect(((await patched.json()) as components["schemas"]["Me"]).account.locale).toBe(value);
+    expect(patched.request().postDataJSON()).toMatchObject({ locale: value });
+    await expect(page.locator("html")).toHaveAttribute("lang", value);
+    await expect(select).toHaveValue(value);
+    await expect(select).toBeEnabled();
+  };
+  try {
+    if (previous !== locale) await change(language, locale);
+    if (app === "admin") await page.keyboard.press("Escape");
+    evidence[`locale-${app}-${locale}`] = { previous, selected: locale };
+    return await action();
+  } finally {
+    if (previous !== locale) {
+      const restoring = await control();
+      await expect(restoring).toBeEnabled();
+      await change(restoring, previous);
+      if (app === "admin") await page.keyboard.press("Escape");
+      evidence[`locale-${app}-${locale}`] = { previous, restored: previous, selected: locale };
+    }
+  }
 }
 
 function isRefresh(response: Response): boolean {
@@ -1286,164 +1337,184 @@ test("T-07-32 E2E (e) es: the same member flow with the es literals, a second FI
     email: "Correo electrónico",
     password: "Contraseña",
   });
-  await navigateClubRoute(member, "/reservar");
-  const block = member.getByRole("region", { name: "Actividades" });
-  const seminarRow = block.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
-  await expect(seminarRow).toContainText("5 plazas");
-  await seminarRow.click();
-  await member.waitForURL(`**/activitats/${seminarId}`);
-  await expect(member.getByText("5 plazas libres de 5")).toBeVisible();
-  let registration = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));
-  await member.getByRole("button", { name: "INSCRÍBEME" }).click();
-  expect((await registration).status()).toBe(201);
-  await expect(member.getByText("Te has inscrito")).toBeVisible();
+  try {
+    await withAccountLocale(member, "member", "es", async () => {
+      await navigateClubRoute(member, "/reservar");
+      const block = member.getByRole("region", { name: "Actividades" });
+      const seminarRow = block.getByRole("link", {
+        name: new RegExp(escapeRegExp(seminarTitle), "u"),
+      });
+      await expect(seminarRow).toContainText("5 plazas");
+      await seminarRow.click();
+      await member.waitForURL(`**/activitats/${seminarId}`);
+      await expect(member.getByText("5 plazas libres de 5")).toBeVisible();
+      let registration = member.waitForResponse(
+        isCall("POST", /\/api\/v1\/activity-registrations$/u),
+      );
+      await member.getByRole("button", { name: "INSCRÍBEME" }).click();
+      expect((await registration).status()).toBe(201);
+      await expect(member.getByText("Te has inscrito")).toBeVisible();
 
-  await navigateClubRoute(member, "/inici");
-  const row = member
-    .getByRole("region", { name: "Mis reservas" })
-    .getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
-  await expect(row).toContainText("inscrita");
-  await expect(row).toContainText(`${saturdayOn03(seminarSaturday, "es")}18:30–20:30 · Central`);
-  evidence.row03Es = (await row.textContent())?.replaceAll(/\s+/gu, " ").trim() ?? null;
-  await screenshot(member, "03-inscrita-core-es-375.png");
-  await row.click();
-  await member.waitForURL(`**/activitats/${seminarId}`);
-  await member.getByRole("button", { name: "ANULAR LA INSCRIPCIÓN" }).click();
-  const cancelled = member.waitForResponse(
-    isCall("POST", /\/api\/v1\/activity-registrations\/[^/]+\/cancellation$/u),
-  );
-  await member
-    .getByRole("dialog", { name: `¿Quieres anular la inscripción a ${seminarTitle}?` })
-    .getByRole("button", { name: "ANULAR LA INSCRIPCIÓN" })
-    .click();
-  expect((await cancelled).status()).toBe(200);
-  await expect(member.getByText("Inscripción anulada")).toBeVisible();
-  // E4-W14 (E4-W05 review #7): after her own cancellation the row leaves «Mis reservas»; the
-  // core's answer carries no live entry for it (round 2, review #3).
-  evidence.mine03AfterCancelEs = await expectGoneFrom03(member, seminarId, seminarTitle);
-  // Registered again, so that the club's cancellation below reaches a live registration.
-  await navigateClubRoute(member, `/activitats/${seminarId}`);
-  registration = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));
-  await member.getByRole("button", { name: "INSCRÍBEME" }).click();
-  const again = await registration;
-  expect(again.status()).toBe(201);
-  const seminarRegistration = ((await again.json()) as { id: string }).id;
+      await navigateClubRoute(member, "/inici");
+      const row = member
+        .getByRole("region", { name: "Mis reservas" })
+        .getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
+      await expect(row).toContainText("inscrita");
+      await expect(row).toContainText(
+        `${saturdayOn03(seminarSaturday, "es")}18:30–20:30 · Central`,
+      );
+      evidence.row03Es = (await row.textContent())?.replaceAll(/\s+/gu, " ").trim() ?? null;
+      await screenshot(member, "03-inscrita-core-es-375.png");
+      await row.click();
+      await member.waitForURL(`**/activitats/${seminarId}`);
+      await member.getByRole("button", { name: "ANULAR LA INSCRIPCIÓN" }).click();
+      const cancelled = member.waitForResponse(
+        isCall("POST", /\/api\/v1\/activity-registrations\/[^/]+\/cancellation$/u),
+      );
+      await member
+        .getByRole("dialog", { name: `¿Quieres anular la inscripción a ${seminarTitle}?` })
+        .getByRole("button", { name: "ANULAR LA INSCRIPCIÓN" })
+        .click();
+      expect((await cancelled).status()).toBe(200);
+      await expect(member.getByText("Inscripción anulada")).toBeVisible();
+      // E4-W14 (E4-W05 review #7): after her own cancellation the row leaves «Mis reservas»; the
+      // core's answer carries no live entry for it (round 2, review #3).
+      evidence.mine03AfterCancelEs = await expectGoneFrom03(member, seminarId, seminarTitle);
+      // Registered again, so that the club's cancellation below reaches a live registration.
+      await navigateClubRoute(member, `/activitats/${seminarId}`);
+      registration = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));
+      await member.getByRole("button", { name: "INSCRÍBEME" }).click();
+      const again = await registration;
+      expect(again.status()).toBe(201);
+      const seminarRegistration = ((await again.json()) as { id: string }).id;
 
-  await navigateClubRoute(member, `/activitats/${handlingId}`);
-  await member.getByRole("button", { name: "APÚNTAME A LA LISTA DE ESPERA" }).click();
-  const joined = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));
-  await member
-    .getByRole("dialog", { name: /^¿Quieres apuntarte a la lista de espera de / })
-    .getByRole("button", { name: "APÚNTAME A LA LISTA DE ESPERA" })
-    .click();
-  const joinedResponse = await joined;
-  expect(joinedResponse.status()).toBe(201);
-  const joinedRegistration = (await joinedResponse.json()) as {
-    id: string;
-    position: number;
-    waitlistRank: number;
-  };
-  // The live rank, not the stored position: the promotion above left a gap in the positions.
-  expect(joinedRegistration.waitlistRank).toBeLessThan(joinedRegistration.position);
-  await expect(member.getByText("Estás en la lista de espera")).toBeVisible();
-  await expect(
-    member.getByText(`en lista de espera (${String(joinedRegistration.waitlistRank)})`),
-  ).toBeVisible();
-  await screenshot(member, "activitat-llista-espera-core-es-375.png");
+      await navigateClubRoute(member, `/activitats/${handlingId}`);
+      await member.getByRole("button", { name: "APÚNTAME A LA LISTA DE ESPERA" }).click();
+      const joined = member.waitForResponse(isCall("POST", /\/api\/v1\/activity-registrations$/u));
+      await member
+        .getByRole("dialog", { name: /^¿Quieres apuntarte a la lista de espera de / })
+        .getByRole("button", { name: "APÚNTAME A LA LISTA DE ESPERA" })
+        .click();
+      const joinedResponse = await joined;
+      expect(joinedResponse.status()).toBe(201);
+      const joinedRegistration = (await joinedResponse.json()) as {
+        id: string;
+        position: number;
+        waitlistRank: number;
+      };
+      // The live rank, not the stored position: the promotion above left a gap in the positions.
+      expect(joinedRegistration.waitlistRank).toBeLessThan(joinedRegistration.position);
+      await expect(member.getByText("Estás en la lista de espera")).toBeVisible();
+      await expect(
+        member.getByText(`en lista de espera (${String(joinedRegistration.waitlistRank)})`),
+      ).toBeVisible();
+      await screenshot(member, "activitat-llista-espera-core-es-375.png");
 
-  // A second place: the head of the queue again (FIFO), never the members who joined last.
-  const page = admin();
-  // E4-W14 (E4-W05 review #7): the admin reads the list in es too: the member's chip «en lista de
-  // espera (n)», then back to ca for the rest of the flow.
-  const language = page.getByRole("combobox", { name: "Idioma" });
-  await language.selectOption("es");
-  const before = await registrantsOf(page, handlingId, async () => {
-    await openFresh(page, `/activitats/${handlingId}/inscrits`);
-  });
-  const joinedListed = before.find((item) => item.registrationId === joinedRegistration.id);
-  if (joinedListed === undefined) throw new Error("The es member is not on the waitlist");
-  await expect(
-    page.getByRole("table").getByRole("row").filter({ hasText: joinedListed.member.fullName }),
-  ).toContainText(`en lista de espera (${String(joinedListed.waitlistRank)})`);
-  expect(joinedListed.waitlistRank).toBe(joinedRegistration.waitlistRank);
-  await screenshot(page, "D7-inscrits-llista-espera-core-es-1280.png");
-  evidence.waitlistChipEs = `en lista de espera (${String(joinedListed.waitlistRank)})`;
-  await language.selectOption("ca");
-  await expect(language).toHaveValue("ca");
-  const head = before.find((item) => item.state === "WAITLISTED" && item.waitlistRank === 1);
-  if (head === undefined) throw new Error("The waitlist is empty");
-  expect(head.registrationId).not.toBe(joinedRegistration.id);
-  await openFresh(page, `/activitats/${handlingId}`);
-  const handling = page.getByRole("region", {
-    name: "Manteniment de l'activitat — Seminari de handling",
-  });
-  await expect(handling.getByLabel("Places")).toHaveValue("13");
-  await handling.getByLabel("Places").fill("14");
-  const raised = page.waitForResponse(
-    isCall("PATCH", new RegExp(`/api/v1/activities/${handlingId}$`, "u")),
-  );
-  await handling.getByRole("button", { exact: true, name: "DESA" }).click();
-  expect((await raised).status()).toBe(200);
-  const after = await registrantsOf(page, handlingId, async () => {
-    await handling.getByRole("link", { name: /^Inscrits \(\d+\) ›$/u }).click();
-  });
-  expect(after.find((item) => item.registrationId === head.registrationId)?.state).toBe("ACTIVE");
-  expect(after.find((item) => item.registrationId === joinedRegistration.id)?.state).toBe(
-    "WAITLISTED",
-  );
-  evidence.waitlistEs = {
-    joinedPosition: joinedRegistration.position,
-    joinedRank: joinedRegistration.waitlistRank,
-    promotedRank: head.waitlistRank ?? null,
-  };
+      // A second place: the head of the queue again (FIFO), never the members who joined last.
+      const page = admin();
+      // E4-W14 (E4-W05 review #7): the admin reads the list in es too: the member's chip «en lista de
+      // espera (n)», then back to ca for the rest of the flow.
+      const before = await withAccountLocale(page, "admin", "es", async () => {
+        const listed = await registrantsOf(page, handlingId, async () => {
+          await openFresh(page, `/activitats/${handlingId}/inscrits`);
+        });
+        const joinedListed = listed.find((item) => item.registrationId === joinedRegistration.id);
+        if (joinedListed === undefined) throw new Error("The es member is not on the waitlist");
+        await expect(
+          page
+            .getByRole("table")
+            .getByRole("row")
+            .filter({ hasText: joinedListed.member.fullName }),
+        ).toContainText(`en lista de espera (${String(joinedListed.waitlistRank)})`);
+        expect(joinedListed.waitlistRank).toBe(joinedRegistration.waitlistRank);
+        await screenshot(page, "D7-inscrits-llista-espera-core-es-1280.png");
+        evidence.waitlistChipEs = `en lista de espera (${String(joinedListed.waitlistRank)})`;
+        return listed;
+      });
+      const head = before.find((item) => item.state === "WAITLISTED" && item.waitlistRank === 1);
+      if (head === undefined) throw new Error("The waitlist is empty");
+      expect(head.registrationId).not.toBe(joinedRegistration.id);
+      await openFresh(page, `/activitats/${handlingId}`);
+      const handling = page.getByRole("region", {
+        name: "Manteniment de l'activitat — Seminari de handling",
+      });
+      await expect(handling.getByLabel("Places")).toHaveValue("13");
+      await handling.getByLabel("Places").fill("14");
+      const raised = page.waitForResponse(
+        isCall("PATCH", new RegExp(`/api/v1/activities/${handlingId}$`, "u")),
+      );
+      await handling.getByRole("button", { exact: true, name: "DESA" }).click();
+      expect((await raised).status()).toBe(200);
+      const after = await registrantsOf(page, handlingId, async () => {
+        await handling.getByRole("link", { name: /^Inscrits \(\d+\) ›$/u }).click();
+      });
+      expect(after.find((item) => item.registrationId === head.registrationId)?.state).toBe(
+        "ACTIVE",
+      );
+      expect(after.find((item) => item.registrationId === joinedRegistration.id)?.state).toBe(
+        "WAITLISTED",
+      );
+      evidence.waitlistEs = {
+        joinedPosition: joinedRegistration.position,
+        joinedRank: joinedRegistration.waitlistRank,
+        promotedRank: head.waitlistRank ?? null,
+      };
 
-  // The admin cancels the seminar through the modal: 200, and the registrant reads «cancel·lada
-  // pel club» (the N-32c feed row belongs to screen 11, E7).
-  await openFresh(page, `/activitats/${seminarId}`);
-  const card = page.getByRole("region", { name: `Manteniment de l'activitat — ${seminarTitle}` });
-  await card.getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" }).click();
-  const modal = page.getByRole("dialog", { name: `Cancel·lar l'activitat — ${seminarTitle}` });
-  const confirm = modal.getByRole("button", { name: /^CANCEL·LA I AVISA / });
-  await expect(confirm).toBeDisabled();
-  await modal.getByLabel("Text de l'avís").fill(`Integració E4 ${runId}: seminari cancel·lat.`);
-  const cancellation = page.waitForResponse(
-    isCall("POST", new RegExp(`/api/v1/activities/${seminarId}/cancellation$`, "u")),
-  );
-  await confirm.click();
-  const cancelledActivity = await cancellation;
-  expect(cancelledActivity.status()).toBe(200);
-  evidence.seminarCancellation = { status: cancelledActivity.status() };
-  await expect(page.getByText("Activitat cancel·lada")).toBeVisible();
-  const seminarRegistrants = await registrantsOf(page, seminarId, async () => {
-    await openFresh(page, `/activitats/${seminarId}/inscrits`);
-  });
-  const clubCancelled = seminarRegistrants.find(
-    (item) => item.registrationId === seminarRegistration,
-  );
-  if (clubCancelled === undefined) throw new Error("The es registration is not listed");
-  expect(clubCancelled).toMatchObject({ cancelReason: "ACTIVITY_CANCELLED", state: "CANCELLED" });
-  // Her two rows: the registration she cancelled herself, and the one the club cancelled.
-  const herRows = page
-    .getByRole("table")
-    .getByRole("row")
-    .filter({ hasText: clubCancelled.member.fullName });
-  await expect(herRows).toHaveCount(2);
-  await expect(herRows.filter({ hasText: "cancel·lada pel club" })).toHaveCount(1);
-  await expect(herRows.filter({ hasText: /^(?!.*cancel·lada pel club).*anul·lada/u })).toHaveCount(
-    1,
-  );
-  evidence.seminarRegistrants = seminarRegistrants.map((item) => ({
-    cancelReason: item.cancelReason,
-    state: item.state,
-  }));
-  await screenshot(page, "D7-inscrits-cancellada-core-1280.png");
+      // The admin cancels the seminar through the modal: 200, and the registrant reads «cancel·lada
+      // pel club» (the N-32c feed row belongs to screen 11, E7).
+      await openFresh(page, `/activitats/${seminarId}`);
+      const card = page.getByRole("region", {
+        name: `Manteniment de l'activitat — ${seminarTitle}`,
+      });
+      await card.getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" }).click();
+      const modal = page.getByRole("dialog", { name: `Cancel·lar l'activitat — ${seminarTitle}` });
+      const confirm = modal.getByRole("button", { name: /^CANCEL·LA I AVISA / });
+      await expect(confirm).toBeDisabled();
+      await modal.getByLabel("Text de l'avís").fill(`Integració E4 ${runId}: seminari cancel·lat.`);
+      const cancellation = page.waitForResponse(
+        isCall("POST", new RegExp(`/api/v1/activities/${seminarId}/cancellation$`, "u")),
+      );
+      await confirm.click();
+      const cancelledActivity = await cancellation;
+      expect(cancelledActivity.status()).toBe(200);
+      evidence.seminarCancellation = { status: cancelledActivity.status() };
+      await expect(page.getByText("Activitat cancel·lada")).toBeVisible();
+      const seminarRegistrants = await registrantsOf(page, seminarId, async () => {
+        await openFresh(page, `/activitats/${seminarId}/inscrits`);
+      });
+      const clubCancelled = seminarRegistrants.find(
+        (item) => item.registrationId === seminarRegistration,
+      );
+      if (clubCancelled === undefined) throw new Error("The es registration is not listed");
+      expect(clubCancelled).toMatchObject({
+        cancelReason: "ACTIVITY_CANCELLED",
+        state: "CANCELLED",
+      });
+      // Her two rows: the registration she cancelled herself, and the one the club cancelled.
+      const herRows = page
+        .getByRole("table")
+        .getByRole("row")
+        .filter({ hasText: clubCancelled.member.fullName });
+      await expect(herRows).toHaveCount(2);
+      await expect(herRows.filter({ hasText: "cancel·lada pel club" })).toHaveCount(1);
+      await expect(
+        herRows.filter({ hasText: /^(?!.*cancel·lada pel club).*anul·lada/u }),
+      ).toHaveCount(1);
+      evidence.seminarRegistrants = seminarRegistrants.map((item) => ({
+        cancelReason: item.cancelReason,
+        state: item.state,
+      }));
+      await screenshot(page, "D7-inscrits-cancellada-core-1280.png");
 
-  await navigateClubRoute(member, "/inici");
-  await expect(
-    member.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") }),
-  ).toHaveCount(0);
-  await context.close();
-  writeEvidence();
+      await navigateClubRoute(member, "/inici");
+      await expect(
+        member.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") }),
+      ).toHaveCount(0);
+    });
+  } finally {
+    await context.close();
+    writeEvidence();
+  }
 });
 
 test("E4-W05 step 7 · the «Excel · PDF» menus of D5 and D7 with EXPORT_TOO_LARGE and while an export is pending", async () => {

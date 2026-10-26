@@ -1,0 +1,45 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (69 tests | 2 failed) 1149ms
+   ❯ T-01-04 pending account operations belong to their original session (18)
+     × never replays an old PUT as a newer account when the response arrives late 3ms
+     × never replays an old PUT as a newer account when the refresh arrives late 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays an old PUT as a newer account when the response arrives late
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays an old PUT as a newer account when the refresh arrives late
+AssertionError: expected [ null ] to deeply equal [ 'Bearer access-old' ]
+
+- Expected
++ Received
+
+  [
+-   "Bearer access-old",
++   null,
+  ]
+
+ ❯ src/auth-client.test.ts:1809:22
+    1807|       release();
+    1808|       expect((await response).status).toBe(401);
+    1809|       expect(sentAs).toEqual(["Bearer access-old"]);
+       |                      ^
+    1810|       expect(client.getAccessToken()).toBe("access-new");
+    1811|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 80 passed (82)
+   Start at  21:37:01
+   Duration  1.78s (tests 48%, environment 33%, transform 12%, import 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run`
+Exit status 1

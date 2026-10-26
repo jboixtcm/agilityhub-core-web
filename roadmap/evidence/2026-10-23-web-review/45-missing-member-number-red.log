@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/TeamPage.test.tsx (5 tests | 1 failed) 327ms
+   ❯ T-05-23 D17 team identities and recovery (INC-41 W3-14) (5)
+     × shows a dash for missing member numbers and keeps indistinguishable choices unselected 140ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-23 D17 team identities and recovery (INC-41 W3-14) > shows a dash for missing member numbers and keeps indistinguishable choices unselected
+AssertionError: expected [ 'Alex Serra · null', …(1) ] to deeply equal [ 'Alex Serra · —', 'Alex Serra · —' ]
+
+- Expected
++ Received
+
+  [
+-   "Alex Serra · —",
+-   "Alex Serra · —",
++   "Alex Serra · null",
++   "Alex Serra · null",
+  ]
+
+ ❯ src/catalogs/TeamPage.test.tsx:89:20
+     87|       (option) => option.value,
+     88|     );
+     89|     expect(values).toEqual(["Alex Serra · —", "Alex Serra · —"]);
+       |                    ^
+     90|     fireEvent.change(within(dialog).getByLabelText("Abonat"), { target…
+     91|     expect(within(dialog).getByRole("button", { name: "DESA" })).toBeD…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  21:43:24
+   Duration  1.87s (transform 44%, environment 19%, tests 18%, import 15%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/TeamPage.test.tsx

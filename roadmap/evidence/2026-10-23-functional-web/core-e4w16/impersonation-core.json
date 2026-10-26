@@ -1,0 +1,47 @@
+{
+  "banner": "Estàs veient l'app com Laia Fictici006",
+  "clubsMe": [
+    {
+      "accountName": null,
+      "impersonation": null,
+      "memberId": null,
+      "memberName": null,
+      "page": "/entrar",
+      "status": 503
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName",
+        "memberName"
+      ],
+      "memberId": "9646fd92-cbc7-35fe-8d88-1211cff1ed1d",
+      "memberName": "Laia Fictici006",
+      "page": "/entrar",
+      "status": 200
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName",
+        "memberName"
+      ],
+      "memberId": "9646fd92-cbc7-35fe-8d88-1211cff1ed1d",
+      "memberName": "Laia Fictici006",
+      "page": "/gossos",
+      "status": 200
+    }
+  ],
+  "clubsRefreshGrants": 0,
+  "d5RecordName": "Laia Fictici006",
+  "d10MemberId": "9646fd92-cbc7-35fe-8d88-1211cff1ed1d",
+  "firstMeAnswered503": true,
+  "launchUrl": "https://app.example.test/entrar?handoff=<redacted>",
+  "memberAction": "PUT /me/dogs/{id}/instructor-note 200",
+  "opened": true,
+  "secondRedemption": {
+    "code": "HANDOFF_INVALID",
+    "status": 400
+  },
+  "status": 201
+}

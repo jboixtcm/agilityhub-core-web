@@ -1,0 +1,140 @@
+heavy.sh: 09:02 waiting for the host lock, held by: 09:01 agilityhub-core-web: pnpm --filter clubs-admin exec vitest run src/catalogs/JobsCardRuntime.test.tsx src/audit/ExportsDrawer.test.tsx
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/account-locale.test.tsx (7 tests | 5 failed) 5070ms
+   ❯ INC-96 session language (7)
+     × impersonation uses the session language temporarily and restores the device language on exit 1018ms
+     × support uses the session language temporarily and restores the device language on exit 1010ms
+     × restored borrowed sessions apply on mount and never create a device preference 1008ms
+     × changing borrowed targets preserves the original actor language for expiry 1009ms
+     × returning to a normal account uses its locale and retains normal persistence 1007ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/account-locale.test.tsx > INC-96 session language > impersonation uses the session language temporarily and restores the device language on exit
+ FAIL  src/account-locale.test.tsx > INC-96 session language > support uses the session language temporarily and restores the device language on exit
+AssertionError: expected 'es' to be 'ca' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mlang[39m=[32m"es"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "ca"
+Received: "es"
+
+ ❯ src/account-locale.test.tsx:76:64
+     74|       session = { me: account("ca", kind), status: "signedIn" };
+     75|       view.refresh();
+     76|       await waitFor(() => { expect(view.i18n.resolvedLanguage).toBe("c…
+       |                                                                ^
+     77|       expect(document.documentElement.lang).toBe("ca");
+     78|       expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("es");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/account-locale.test.tsx > INC-96 session language > restored borrowed sessions apply on mount and never create a device preference
+AssertionError: expected 'ca' to be 'es' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mlang[39m=[32m"ca"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "es"
+Received: "ca"
+
+ ❯ src/account-locale.test.tsx:89:62
+     87|     session = { me: account("es", "impersonation"), status: "signedIn"…
+     88|     const view = await mount();
+     89|     await waitFor(() => { expect(view.i18n.resolvedLanguage).toBe("es"…
+       |                                                              ^
+     90|     expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBeNull();
+     91|     view.unmount();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/account-locale.test.tsx > INC-96 session language > changing borrowed targets preserves the original actor language for expiry
+AssertionError: expected 'es' to be 'ca' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mlang[39m=[32m"es"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "ca"
+Received: "es"
+
+ ❯ src/account-locale.test.tsx:100:62
+     98|     session = { me: account("ca", "impersonation"), status: "signedIn"…
+     99|     view.refresh();
+    100|     await waitFor(() => { expect(view.i18n.resolvedLanguage).toBe("ca"…
+       |                                                              ^
+    101|     session = { me: account("es", "support"), status: "signedIn" };
+    102|     view.refresh();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/account-locale.test.tsx > INC-96 session language > returning to a normal account uses its locale and retains normal persistence
+AssertionError: expected 'es' to be 'ca' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mlang[39m=[32m"es"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "ca"
+Received: "es"
+
+ ❯ src/account-locale.test.tsx:114:62
+    112|     session = { me: account("ca", "impersonation"), status: "signedIn"…
+    113|     view.refresh();
+    114|     await waitFor(() => { expect(view.i18n.resolvedLanguage).toBe("ca"…
+       |                                                              ^
+    115|     session = { me: account("es"), status: "signedIn" };
+    116|     view.refresh();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 2 passed (7)
+   Start at  09:02:20
+   Duration  5.51s (tests 93%, environment 4%, transform 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/account-locale.test.tsx

@@ -1,0 +1,5 @@
+Parsed JSON equal: True (object order ignored, arrays preserved)
+actual SHA-256: b75c50d15260f2dc15217b81a490f4c043647f00e6174462bdc1fb573290c23c
+actual canonical SHA-256: c403ce6a9bf18be6b6f09c13c63bdcdbd0042b67465081738238a1ac9b6a5a29
+snapshot SHA-256: ba7a26b3aba270b51d04bf8ab3091142cf21a7be3b2ac050002900ef401e8a79
+snapshot canonical SHA-256: c403ce6a9bf18be6b6f09c13c63bdcdbd0042b67465081738238a1ac9b6a5a29

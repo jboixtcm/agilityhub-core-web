@@ -1,0 +1,54 @@
+{
+  "image": "sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e",
+  "scope": "fictional local seed, read-only consent comparison",
+  "members": [
+    {
+      "memberNumber": 6,
+      "storedImageRights": {
+        "at": "2026-08-31T22:00:00.000Z",
+        "accepted": true
+      },
+      "detailStatus": 200,
+      "currentImageRights": {
+        "at": "2026-08-31T22:00:00.000+00:00"
+      },
+      "currentUiGranted": false,
+      "historyStatus": 200,
+      "imageHistory": [
+        {
+          "type": "IMAGE_USE",
+          "granted": true,
+          "version": "",
+          "at": "2026-08-31T22:00:00Z",
+          "locale": "ca",
+          "ipHash": null,
+          "source": "LEGACY"
+        }
+      ]
+    },
+    {
+      "memberNumber": 7,
+      "storedImageRights": {
+        "at": "2026-08-31T22:00:00.000Z",
+        "accepted": false
+      },
+      "detailStatus": 200,
+      "currentImageRights": {
+        "at": "2026-08-31T22:00:00.000+00:00"
+      },
+      "currentUiGranted": false,
+      "historyStatus": 200,
+      "imageHistory": [
+        {
+          "type": "IMAGE_USE",
+          "granted": true,
+          "version": "",
+          "at": "2026-08-31T22:00:00Z",
+          "locale": "ca",
+          "ipHash": null,
+          "source": "LEGACY"
+        }
+      ]
+    }
+  ]
+}

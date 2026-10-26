@@ -1,0 +1,16 @@
+{
+  "action": {
+    "type": "OPEN_EXPORT",
+    "params": {
+      "jobId": "1a512d04-6f03-4f2b-acb5-afd179974a05"
+    },
+    "enabled": true
+  },
+  "code": "N-50",
+  "memberExportsList": {
+    "ids": "FORBIDDEN",
+    "status": 403
+  },
+  "queuedJobId": "1a512d04-6f03-4f2b-acb5-afd179974a05",
+  "title": "Les teves dades estan a punt"
+}

@@ -1,0 +1,1 @@
+/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh corepack pnpm e2e:docker 2026-10-24-functional-fixes-root --capture-task=2026-10-24-functional-fixes-root --trace=off

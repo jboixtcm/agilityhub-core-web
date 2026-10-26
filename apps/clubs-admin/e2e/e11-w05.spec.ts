@@ -49,7 +49,15 @@ async function signIn(page: Page, scenario: string, now: Date) {
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
   // The shell is drawn once this document has started the mock worker, which answers its fetches.
+  await expect(page.locator(".admin-shell")).toBeVisible();
+  const navigationToggle = page.getByRole("button", { name: "Navegació d’administració" });
+  const mobileNavigation = await navigationToggle.isVisible();
+  if (mobileNavigation) await navigationToggle.click();
   await expect(page.locator('a[href="/calendari"]').first()).toBeVisible();
+  if (mobileNavigation) {
+    await navigationToggle.click();
+    await expect(page.getByRole("navigation", { name: "Navegació d’administració" })).toBeHidden();
+  }
 }
 
 test.afterEach(async ({ page }, testInfo) => {

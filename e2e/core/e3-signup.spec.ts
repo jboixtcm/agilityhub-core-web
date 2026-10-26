@@ -192,7 +192,9 @@ async function expectQuoteCard(
       `No quote for ${planName ?? "the first plan"}: ${JSON.stringify(config.upfront)}`,
     );
   const card = page.locator(".signup-upfront");
-  await expect(card.getByRole("radio")).toHaveCount(quote.options.length);
+  const multipleOptions = quote.options.length > 1;
+  await expect(card.getByRole("radio")).toHaveCount(multipleOptions ? quote.options.length : 0);
+  await expect(card.locator("fieldset")).toHaveCount(multipleOptions ? 1 : 0);
   for (const [index, option] of quote.options.entries()) {
     const label = addDog
       ? option.option === "TODAY"
@@ -205,7 +207,12 @@ async function expectQuoteCard(
         : option.portion === "HALF"
           ? /^Alta el dia .+ \(mig mes\)/u
           : /^Alta l’1 .+ \(mes complet\)/u;
-    const text = (await card.locator("fieldset label").nth(index).textContent()) ?? "";
+    // INC-11: a single eligible option is a plain quote line, not a selectable choice.
+    const optionRow = multipleOptions
+      ? card.locator("fieldset label").nth(index)
+      : card.locator(".signup-upfront__line").filter({ hasText: label });
+    await expect(optionRow).toHaveCount(1);
+    const text = (await optionRow.textContent()) ?? "";
     expect(text).toMatch(label);
     expect(text).toContain(euros(option.amountDue));
   }
@@ -591,6 +598,11 @@ async function completePublicSignup({
     JSON.stringify(config.paymentMethods?.map((method) => method.type)),
   ).not.toBe("");
   expect(config.paymentMethods?.some((method) => method.type === "CARD")).toBe(false);
+  // INC-94: disposable demo instructions must never invite an operational payment.
+  expect(cashText).toContain("Demostració amb dades fictícies");
+  expect(cashText).toContain("No facis cap pagament real, transferència ni Bizum");
+  expect(cashText).not.toMatch(/\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]){10,30}\b/u);
+  expect(cashText).not.toMatch(/\b[679](?:[ .-]?\d){8}\b/u);
   await expect(page.locator(".signup-upfront__total + p")).toHaveText(cashText);
   if (screenshots) {
     writeFileSync(

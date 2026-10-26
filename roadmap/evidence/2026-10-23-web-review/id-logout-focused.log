@@ -1,0 +1,296 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+
+ ❯ src/App.test.tsx (14 tests | 1 failed) 2527ms
+   ❯ T-01-22 apps/id (12)
+     × T-01-13 restores a cold ID logout before revocation and never redirects on a failed attempt 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-22 apps/id > T-01-13 restores a cold ID logout before revocation and never redirects on a failed attempt
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Torna-ho a provar"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"id-header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "AgilityHub IDUn compte, tots els productes":
+  [36m<a[39m
+    [33mclass[39m=[32m"id-brand"[39m
+    [33mhref[39m=[32m"/products"[39m
+  [36m/>[39m
+
+  Name "Productes":
+  [36m<a[39m
+    [33mhref[39m=[32m"/products"[39m
+  [36m/>[39m
+
+  Name "Compte":
+  [36m<a[39m
+    [33mhref[39m=[32m"/account"[39m
+  [36m/>[39m
+
+  Name "Tanca la sessió":
+  [36m<a[39m
+    [33mhref[39m=[32m"/logout"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació del compte":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"Navegació del compte"[39m
+    [33mclass[39m=[32m"id-navigation"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Idioma":
+  [36m<select[39m
+    [33maria-label[39m=[32m"Idioma"[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Català":
+  [36m<option[39m
+    [33mvalue[39m=[32m"ca"[39m
+  [36m/>[39m
+
+  Name "Castellà":
+  [36m<option[39m
+    [33mvalue[39m=[32m"es"[39m
+  [36m/>[39m
+
+  Name "Anglès":
+  [36m<option[39m
+    [33mvalue[39m=[32m"en"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"id-page id-page--centered"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Tanquem la sessió":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<p[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "actions.retry":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  contentinfo:
+
+  Name "":
+  [36m<footer[39m
+    [33mclass[39m=[32m"id-footer"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"id-shell"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"id-header"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"id-brand"[39m
+          [33mhref[39m=[32m"/products"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"id-brand__mark"[39m
+          [36m>[39m
+            [0mAH[0m
+          [36m</span>[39m
+          [36m<span>[39m
+            [36m<strong>[39m
+              [0mAgilityHub ID[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mUn compte, tots els productes[0m
+            [36m</small>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"id-header__actions"[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"Navegació del compte"[39m
+            [33mclass[39m=[32m"id-navigation"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/products"[39m
+            [36m>[39m
+              [0mProductes[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/account"[39m
+            [36m>[39m
+              [0mCompte[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/logout"[39m
+            [36m>[39m
+              [0mTanca la sessió[0m
+            [36m</a>[39m
+          [36m</nav>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"id-language"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mIdioma[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Idioma"[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ca"[39m
+              [36m>[39m
+                [0mCatalà[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"es"[39m
+              [36m>[39m
+                [0mCastellà[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"en"[39m
+              [36m>[39m
+                [0mAnglès[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"id-page id-page--centered"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card id-status-card"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-unlock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"id-page__intro"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mTanquem la sessió[0m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0mEstem tancant la sessió del teu AgilityHub ID.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [0mNo s'ha pogut completar l'acció. Torna-ho a provar.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mactions.retry[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<footer[39m
+        [33mclass[39m=[32m"id-footer"[39m
+      [36m>[39m
+        [0mAccés segur amb AgilityHub ID[0m
+      [36m</footer>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:373:28
+    371|     expect(requests[0]).toMatchObject({ method: "POST", url: "http://i…
+    372|     expect(new URLSearchParams(requests[0]?.body).get("grant_type")).t…
+    373|     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a pro…
+       |                            ^
+    374|     await waitFor(() => expect(navigate).toHaveBeenCalledWith("/login"…
+    375|     expect(logout).toHaveBeenCalledTimes(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  22:00:24
+   Duration  3.45s (tests 75%, environment 12%, transform 8%, setup 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx

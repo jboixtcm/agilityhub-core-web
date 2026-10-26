@@ -1,0 +1,39 @@
+heavy.sh: 10:17 waiting for the host lock, held by: 10:17 agilityhub-core-web: /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-release/run-image-scan.py --locked
+heavy.sh: 10:18 got the host lock after 1 min 1 s
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/account-locale.test.tsx (11 tests | 1 failed | 10 skipped) 12ms
+   ❯ INC-96 session language (11)
+     × a normal sign-in already using its language does not create a device preference 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/account-locale.test.tsx > INC-96 session language > a normal sign-in already using its language does not create a device preference
+AssertionError: expected 'ca' to be null
+
+- Expected:
+null
+
++ Received:
+"ca"
+
+ ❯ src/account-locale.test.tsx:72:54
+     70|     view.refresh();
+     71|     expect(view.i18n.resolvedLanguage).toBe("ca");
+     72|     expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBeNull();
+       |                                                      ^
+     73|   });
+     74|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  10:18:21
+   Duration  436ms (environment 65%, transform 17%, import 15%, tests 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/account-locale.test.tsx -t a normal sign-in already

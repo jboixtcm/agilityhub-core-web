@@ -1,0 +1,200 @@
++ messageTemplates.N-22
++ messageTemplates.N-23
++ messageTemplates.N-24
++ messageTemplates.N-28
++ messageTemplates.N-29
++ messageTemplates.N-30
++ messageTemplates.N-31
++ messageTemplates.N-32a
++ messageTemplates.N-32b
++ messageTemplates.N-32c
++ messageTemplates.N-33
++ messageTemplates.N-34
++ messageTemplates.N-35
++ messageTemplates.N-36
++ messageTemplates.N-37
++ messageTemplates.N-38
++ messageTemplates.N-18d
++ messageTemplates.N-32d
++ messageTemplates.N-40
++ messageTemplates.N-41
++ messageTemplates.N-42
++ messageTemplates.N-46
++ messageTemplates.N-47
++ messageTemplates.N-49
++ messageTemplates.N-50
++ messageTemplates.N-51
++ messageTemplates.N-54
++ messageTemplates: 51 templates to seed
++ pages: 3 page changes
+16 changes (applied)
++ club added
+  null -> {"slug":"fifo","name":"Club Fictici Cua","contactEmail":"fifo@example.test","locales":["ca","es"],"defaultLocale":"ca","timeZone":"Europe/Madrid","currency":"EUR","countryProfile":"ES","status":"ONBOARDING","template":false}
++ domains added
+  null -> [{"host":"fifo.example.test","app":"clubs","primary":true}]
++ theme added
+  null -> {"colors":{"primary":"#2563EB","onPrimary":"#FFFFFF","background":"#F8FAFC","surface":"#FFFFFF","surfaceAlt":"#F1F5F9","text":"#0F172A","textMuted":"#475569","border":"#CBD5E1","success":"#15803D","warning":"#A16207","danger":"#B91C1C","info":"#0369A1"},"fontFamily":"system-ui","radius":"8px","ringPalette":[],"mode":"light"}
++ modules added
+  null -> ["BILLING","FAQ","PUSH","SINGLE_CLASS","WAITLIST"]
++ paymentProviders added
+  null -> {"STRIPE":{"enabled":true},"MANUAL":{"enabled":true}}
++ legal added
+  null -> {"privacyPolicyUrl":"https://fifo.example.test/privacy","imageConsentText":{"ca":"Autoritzo la publicació de fotos meves i del meu gos en activitats del club.","es":"Autorizo la publicación de fotos mías y de mi perro en actividades del club."},"legalTextsVersion":"2026-09"}
++ pwa added
+  null -> {"name":"Club Fictici Cua","shortName":"Club Fictici Cua","icons":[]}
++ parameters.messaging.email.fromName added
+  null -> "Club Fictici Cua"
++ parameters.levels.enabled added
+  null -> false
++ parameters.waitlist.mode added
+  null -> "FIFO"
++ admins: 0 to provision
++ accounts: 6 to provision
++ catalogs.levels.GEN
++ catalogs.rings.PIS
++ catalogs.plans.MENSUAL
++ catalogs.plans.UNICA
++ catalogs.prices.MENSUAL:MONTHLY_FEE:2026-01-01
++ catalogs.prices.UNICA:SINGLE_CLASS:2026-01-01
++ catalogs: 6 catalog changes
+= messageTemplates: 0 templates to seed
+= pages: 0 page changes
+12 changes (applied)
++ club added
+  null -> {"slug":"minim","name":"Club Mínim","contactEmail":"minim@example.test","locales":["en"],"defaultLocale":"en","timeZone":"UTC","currency":"EUR","countryProfile":"GENERIC","status":"ONBOARDING","template":false}
++ domains added
+  null -> [{"host":"minim.example.test","app":"clubs","primary":true}]
++ theme added
+  null -> {"colors":{"primary":"#2563EB","onPrimary":"#FFFFFF","background":"#F8FAFC","surface":"#FFFFFF","surfaceAlt":"#F1F5F9","text":"#0F172A","textMuted":"#475569","border":"#CBD5E1","success":"#15803D","warning":"#A16207","danger":"#B91C1C","info":"#0369A1"},"fontFamily":"system-ui","radius":"8px","ringPalette":[],"mode":"light"}
++ modules added
+  null -> ["FAQ","PUSH","WAITLIST"]
++ paymentProviders added
+  null -> {"STRIPE":{"enabled":true},"MANUAL":{"enabled":true}}
++ legal added
+  null -> {"privacyPolicyUrl":"https://minim.example.test/privacy","imageConsentText":{"en":"I authorize publication of photos of me and my dog within club activities."},"legalTextsVersion":"2026-09"}
++ pwa added
+  null -> {"name":"Club Mínim","shortName":"Club Mínim","icons":[]}
++ parameters.signup.enabled added
+  null -> true
++ parameters.signup.requireDogDocumentAtSignup added
+  null -> false
++ parameters.signup.allowFamilyGroupPending added
+  null -> false
++ parameters.levels.enabled added
+  null -> false
++ admins: 0 to provision
++ accounts: 3 to provision
+= catalogs: 0 catalog changes
+= messageTemplates: 0 templates to seed
+= pages: 0 page changes
+12 changes (applied)
++ club added
+  null -> {"slug":"club-template-default","name":"AgilityHub template","contactEmail":"template@example.test","locales":["ca","es","en"],"defaultLocale":"en","timeZone":"UTC","currency":"EUR","countryProfile":"GENERIC","status":"ONBOARDING","template":true}
++ domains added
+  null -> []
++ theme added
+  null -> {"colors":{"primary":"#1d1d1f","onPrimary":"#ffffff","background":"#ffffff","surface":"#ffffff","surfaceAlt":"#f1f1f2","text":"#1d1d1f","textMuted":"#656567","border":"#d6d6d7","success":"#4caf7d","warning":"#e5b93c","danger":"#e05b5b","info":"#85b8e8"},"fontFamily":"Montserrat","radius":"8px","ringPalette":[],"mode":"light"}
++ modules added
+  null -> ["BILLING","FAQ","FREE_TRAINING","PACKS","PUSH","SINGLE_CLASS","WAITLIST"]
++ paymentProviders added
+  null -> {}
++ legal added
+  null -> {"privacyPolicyUrl":"","imageConsentText":{},"legalTextsVersion":""}
++ pwa added
+  null -> {"name":"AgilityHub template","shortName":"AgilityHub template","icons":[]}
++ parameters: no declared overrides
++ admins: 0 to provision
+= accounts: 0 to provision
++ catalogs.levels.CAD
++ catalogs.levels.INI
++ catalogs.levels.INT
++ catalogs.levels.AVA
++ catalogs.levels.TER
++ catalogs.levels.PENDENT
++ catalogs.rings.P1
++ catalogs.rings.P2
++ catalogs.plans.MONTHLY
++ catalogs.plans.MONTHLY_FAMILY
++ catalogs.plans.PACK10
++ catalogs.plans.SINGLE_CLASS
++ catalogs.plans.THERAPY
++ catalogs.prices.MONTHLY:MONTHLY_FEE:2026-01-01
++ catalogs.prices.MONTHLY_FAMILY:MONTHLY_FEE:2026-01-01
++ catalogs.prices.PACK10:PACK:2026-01-01
++ catalogs.prices.SINGLE_CLASS:SINGLE_CLASS:2026-01-01
++ catalogs.prices.THERAPY:MAINTENANCE_FEE:2026-01-01
++ catalogs.faq.FAQ_CLUB_LIFE
++ catalogs.faq.FAQ_BOOKINGS
++ catalogs.faq.FAQ_COMPETITIONS
++ catalogs: 21 catalog changes
++ messageTemplates.N-01
++ messageTemplates.N-02
++ messageTemplates.N-03
++ messageTemplates.N-04
++ messageTemplates.N-05
++ messageTemplates.N-06
++ messageTemplates.N-07
++ messageTemplates.N-08a
++ messageTemplates.N-08b
++ messageTemplates.N-09
++ messageTemplates.N-10
++ messageTemplates.N-11a
++ messageTemplates.N-11b
++ messageTemplates.N-13
++ messageTemplates.N-14
++ messageTemplates.N-15
++ messageTemplates.N-16
++ messageTemplates.N-17
++ messageTemplates.N-18a
++ messageTemplates.N-18b
++ messageTemplates.N-18c
++ messageTemplates.N-19
++ messageTemplates.N-20
++ messageTemplates.N-21
++ messageTemplates.N-22
++ messageTemplates.N-23
++ messageTemplates.N-24
++ messageTemplates.N-28
++ messageTemplates.N-29
++ messageTemplates.N-30
++ messageTemplates.N-31
++ messageTemplates.N-32a
++ messageTemplates.N-32b
++ messageTemplates.N-32c
++ messageTemplates.N-33
++ messageTemplates.N-34
++ messageTemplates.N-35
++ messageTemplates.N-36
++ messageTemplates.N-37
++ messageTemplates.N-38
++ messageTemplates.N-18d
++ messageTemplates.N-32d
++ messageTemplates.N-40
++ messageTemplates.N-41
++ messageTemplates.N-42
++ messageTemplates.N-46
++ messageTemplates.N-47
++ messageTemplates.N-49
++ messageTemplates.N-50
++ messageTemplates.N-51
++ messageTemplates.N-54
++ messageTemplates.N-55
++ messageTemplates: 52 templates to seed
+= pages: 0 page changes
+9 changes (applied)
+2026-10-23T21:22:30.965Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+2026-10-23T21:22:31.059Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+2026-10-23T21:22:31.071Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+2026-10-23T21:22:31.084Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+2026-10-23T21:22:31.098Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+2026-10-23T21:22:31.120Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+2026-10-23T21:22:31.140Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+{activeMembers=184, pendingMembers=3, inactiveMembers=4, leftMembers=3, members=194, dogs=246, familyGroups=12, activeDogs=242, pendingDogs=3, inactiveDogs=1, instructors=3, administrators=2, receivedDocuments=7, pendingDocuments=239}
+452 changes (demo seed)
+2026-10-23T21:22:33.384Z WARN  [main] o.apache.pdfbox.pdmodel.font.PDType1Font traceId= clubId= accountId= : Using fallback font LiberationSans for base font Helvetica
+{platformAccounts=1, templateClasses=39, templates=3, weeks=3, generatedClasses=87, validatedWeeks=2, looseClasses=1, ringBlocks=1, scenarioRingBlocks=0, attendanceHistoryClasses=0, riskCancellations=1, classBookings=23, classWaitlist=3, activities=4, publishedActivities=3, activityRegistrations=44, activityWaitlist=2, activityFiles=2, scenarioActivityRegistrations=0, scenarioClassBookings=0, scenarioCancellations=0, scenarioWaitlist=0, scenarioOffers=0, scenarioRiskExempt=0, scenarioBookingBlocks=0, attendanceRenamed=0, attendanceLevelChanges=0, followupNotes=0, attendanceBookings=0, attendanceWaitlist=0, attendanceMarks=0, attendanceCancellations=0, attendanceNoShowBatches=0, followupTasks=0, followupTaskAttachments=0, followupObservations=0, scenarioTrainingOverrides=0, scenarioTrainingBookings=0, trainingHistoryOverrides=0, trainingHistoryBookings=0, messagingContacts=2, messagingProfiles=3, messagingBounces=1, pushSubscriptions=1, customTemplates=1, obstacleInventories=1, ringGeometries=2, courses=3, placements=2, ringSetups=3, buildSessions=1, billingProviders=1, pendingInactivity=1, activeInactivity=1, plannedLeave=1, expiredPacks=1}
+244 changes (demo planning, week start 2026-10-19)
+{activeMembers=8, pendingMembers=0, inactiveMembers=0, leftMembers=0, members=8, dogs=8, familyGroups=0, activeDogs=8, pendingDogs=0, inactiveDogs=0, instructors=1, administrators=1, receivedDocuments=0, pendingDocuments=8}
+16 changes (demo seed)
+{templateClasses=5, templates=1, weeks=1, generatedClasses=1, validatedWeeks=1, scenarioRingBlocks=0, attendanceHistoryClasses=0, classBookings=0, classWaitlist=0, activities=0, publishedActivities=0, activityRegistrations=0, activityWaitlist=0, activityFiles=0, scenarioActivityRegistrations=0, scenarioClassBookings=0, scenarioCancellations=0, scenarioWaitlist=0, scenarioOffers=0, scenarioRiskExempt=0, scenarioBookingBlocks=0, attendanceRenamed=0, attendanceLevelChanges=0, followupNotes=0, attendanceBookings=0, attendanceWaitlist=0, attendanceMarks=0, attendanceCancellations=0, attendanceNoShowBatches=0, followupTasks=0, followupTaskAttachments=0, followupObservations=0, scenarioTrainingOverrides=0, scenarioTrainingBookings=0, trainingHistoryOverrides=0, trainingHistoryBookings=0, messagingContacts=0, messagingProfiles=0, messagingBounces=0, pushSubscriptions=0, customTemplates=0, cardMembers=1, pendingCharges=2}
+12 changes (demo planning, week start 2026-10-19)

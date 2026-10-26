@@ -36,6 +36,8 @@ mkdir -p "$evidence_directory"
 # it a host `E2E_CAPTURE_TASK` is forwarded the same way. (`turbo.json` passes the variable to the
 # `e2e` tasks: turbo's strict env mode drops any undeclared one.)
 #   pnpm e2e:docker E5-W05 --capture-task=E5-W05
+# A dated review folder is also accepted. A single directory name keeps captures inside
+# roadmap/evidence and lets a complete visual regression preserve historical task evidence.
 capture_task="${E2E_CAPTURE_TASK:-}"
 default_playwright_workers=4
 has_workers=false
@@ -55,12 +57,13 @@ if [[ $# -gt 1 ]]; then
   done
 fi
 if [[ "$has_workers" == false ]]; then
-  playwright_args=("--workers=$default_playwright_workers" "${playwright_args[@]}")
+  # Bash 3 (macOS) treats an empty array as unset under `set -u`.
+  playwright_args=("--workers=$default_playwright_workers" ${playwright_args[@]+"${playwright_args[@]}"})
 fi
 capture_env=()
 if [[ -n "$capture_task" ]]; then
-  if [[ ! "$capture_task" =~ ^E[0-9]+-W[0-9]+$ ]]; then
-    echo "--capture-task takes a task id (E5-W05), not: $capture_task" >&2
+  if [[ ! "$capture_task" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]]; then
+    echo "--capture-task takes a single evidence folder name (E5-W05 or a dated review), not: $capture_task" >&2
     exit 2
   fi
   capture_env=(--env "E2E_CAPTURE_TASK=$capture_task")

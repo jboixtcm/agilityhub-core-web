@@ -1,0 +1,17 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "../../../apps/clubs/vite.config" without a file extension (../../roadmap/evidence/2026-10-26-functional-fixes-hold-isolation/vitest.config.mts:3:25). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ ✓ ../../roadmap/evidence/2026-10-26-functional-fixes-hold-isolation/boundary-probe.test.tsx > test A leaves an active hold; its cleanup DELETE is held before MSW 1209ms
+Not implemented: Window's scrollTo() method
+ ✓ ../../roadmap/evidence/2026-10-26-functional-fixes-hold-isolation/boundary-probe.test.tsx > test B observes A's pending cleanup and its own one-click cancellation as two DELETEs 266ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  09:32:22
+   Duration  4.26s (tests 36%, transform 33%, environment 16%, import 12%, setup 4%)
+

@@ -1,0 +1,808 @@
+heavy.sh: 09:03 waiting for the host lock, held by: 09:02 agilityhub-core-api: ./mvnw -q -Dit.test=CensusIT#T_03_08_INC91_* test-compile failsafe:integration-test failsafe:verify
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (30 tests | 1 failed) 2017ms
+   ❯ T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en (4)
+     × has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden 6ms
+ ❯ src/audit/AuditPage.test.tsx (12 tests | 2 failed) 22408ms
+   ❯ T-14-26 member audit and exports (8)
+     × routes a queued members list export into the global drawer 10069ms
+     × routes a queued dogs list export into the global drawer 10077ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued members list export into the global drawer
+TestingLibraryElementError: Unable to find an element with the text: Preparant l'exportació…. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+      [33minert[39m=[32m""[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAbonats[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m184 d'alta[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-send"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mEnviar comunicat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'abonats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per nom, document, gos…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per nom, document, gos…"[39m
+              [33mplaceholder[39m=[32m"Cerca per nom, document, gos…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels abonats"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mAlta[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEFT"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberNumber"[39m
+                  [36m>[39m
+                    [0mNúmero[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"lastName"[39m
+                  [36m>[39m
+                    [0mCognoms[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fullName"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"displayStatus"[39m
+                  [36m>[39m
+                    [0mEstat visible[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"planId"[39m
+                  [36m>[39m
+                    [0mModalitat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"priceId"[39m
+                  [36m>[39m
+                    [0mTarifa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode de pagament[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+                  [36m>[39m
+                    [0mProper rebut[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"joinedAt"[39m
+                  [36m>[39m
+                    [0mAlta des de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveDate"[39m
+                  [36m>[39m
+                    [0mData de baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveSource"[39m
+                  [36m>[39m
+                    [0mOrigen de la baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"inactivityUntil"[39m
+                  [36m>[39m
+    ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+      [33minert[39m=[32m""[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAbonats[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m184 d'alta[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-send"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mEnviar comunicat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'abonats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per nom, document, gos…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per nom, document, gos…"[39m
+              [33mplaceholder[39m=[32m"Cerca per nom, document, gos…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels abonats"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mAlta[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEFT"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberNumber"[39m
+                  [36m>[39m
+                    [0mNúmero[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"lastName"[39m
+                  [36m>[39m
+                    [0mCognoms[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fullName"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"displayStatus"[39m
+                  [36m>[39m
+                    [0mEstat visible[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"planId"[39m
+                  [36m>[39m
+                    [0mModalitat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"priceId"[39m
+                  [36m>[39m
+                    [0mTarifa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode de pagament[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+                  [36m>[39m
+                    [0mProper rebut[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"joinedAt"[39m
+                  [36m>[39m
+                    [0mAlta des de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveDate"[39m
+                  [36m>[39m
+                    [0mData de baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveSource"[39m
+                  [36m>[39m
+                    [0mOrigen de la baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"inactivityUntil"[39m
+                  [36m>[39m
+    ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/audit/AuditPage.test.tsx:274:27
+    272|       fireEvent.click(screen.getByRole("button", { name: "Excel" }));
+    273|
+    274|       expect(await screen.findByText("Preparant l'exportació…")).toBeV…
+       |                           ^
+    275|     },
+    276|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued dogs list export into the global drawer
+TestingLibraryElementError: Unable to find an element with the text: Preparant l'exportació…. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+      [33minert[39m=[32m""[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mGossos[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m242 actius[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat de gossos"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per gos, abonat, xip…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per gos, abonat, xip…"[39m
+              [33mplaceholder[39m=[32m"Cerca per gos, abonat, xip…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels gossos"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mActius[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"INACTIVE"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"name"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"breed"[39m
+                  [36m>[39m
+                    [0mRaça[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ownerName"[39m
+                  [36m>[39m
+                    [0mNom de l'abonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"handlerName"[39m
+                  [36m>[39m
+                    [0mGuia[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"freeTrainingAllowed"[39m
+                  [36m>[39m
+                    [0mEntrenament lliure[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"hasLicense"[39m
+                  [36m>[39m
+                    [0mLlicència[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"licenseOrganisation"[39m
+                  [36m>[39m
+                    [0mOrganisme de llicència[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"hasPendingDocuments"[39m
+                  [36m>[39m
+                    [0mDocuments pendents[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"sex"[39m
+                  [36m>[39m
+                    [0mSexe[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"birthDate"[39m
+                  [36m>[39m
+                    [0mData de naixement[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"chip"[39m
+                  [36m>[39m
+                    [0mXip[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registeredAt"[39m
+                  [36m>[39m
+                    [0mData d'alta[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelAssignedAt"[39m
+                  [36m>[39m
+                    [0mAl nivell des de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [3...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+      [33minert[39m=[32m""[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mGossos[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m242 actius[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat de gossos"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per gos, abonat, xip…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per gos, abonat, xip…"[39m
+              [33mplaceholder[39m=[32m"Cerca per gos, abonat, xip…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels gossos"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mActius[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"INACTIVE"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"name"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"breed"[39m
+                  [36m>[39m
+                    [0mRaça[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelId"[39m
+                  [36m>[39m
+                    [0mNivell[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ownerName"[39m
+                  [36m>[39m
+                    [0mNom de l'abonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"handlerName"[39m
+                  [36m>[39m
+                    [0mGuia[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"freeTrainingAllowed"[39m
+                  [36m>[39m
+                    [0mEntrenament lliure[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"hasLicense"[39m
+                  [36m>[39m
+                    [0mLlicència[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"licenseOrganisation"[39m
+                  [36m>[39m
+                    [0mOrganisme de llicència[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"hasPendingDocuments"[39m
+                  [36m>[39m
+                    [0mDocuments pendents[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"sex"[39m
+                  [36m>[39m
+                    [0mSexe[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"birthDate"[39m
+                  [36m>[39m
+                    [0mData de naixement[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"chip"[39m
+                  [36m>[39m
+                    [0mXip[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"registeredAt"[39m
+                  [36m>[39m
+                    [0mData d'alta[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"levelAssignedAt"[39m
+                  [36m>[39m
+                    [0mAl nivell des de[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [3...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/audit/AuditPage.test.tsx:274:27
+    272|       fireEvent.click(screen.getByRole("button", { name: "Excel" }));
+    273|
+    274|       expect(await screen.findByText("Preparant l'exportació…")).toBeV…
+       |                           ^
+    275|     },
+    276|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden
+AssertionError: expected [ 'BILLING_REMINDER', …(11) ] to deeply equal [ 'BILLING_REMINDER', …(9) ]
+
+- Expected
++ Received
+
+  [
+    "BILLING_REMINDER",
+    "CLASS_FINISHING",
+    "CLEANUP",
++   "ERASURES",
+    "EXPIRATIONS",
+    "NO_SHOW_NOTICES",
+    "PAYMENT_TIMEOUTS",
+    "REMINDERS",
++   "RETENTION_SWEEP",
+    "RISK_REVIEW",
+    "WAITLIST_FIFO",
+    "WEEK_OPENING",
+  ]
+
+ ❯ src/catalogs/JobsCard.test.tsx:515:54
+    513|     }
+    514|     // One name per R-15-01 process.
+    515|     expect(Object.keys(settingsCa.jobs.name).sort()).toEqual([
+       |                                                      ^
+    516|       "BILLING_REMINDER",
+    517|       "CLASS_FINISHING",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 7 passed (9)
+      Tests  3 failed | 214 passed (217)
+   Start at  09:03:17
+   Duration  32.20s (tests 82%, transform 8%, environment 5%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCardRuntime.test.tsx src/catalogs/JobsCard.test.tsx src/catalogs/JobsCardCounters.test.tsx src/audit/ExportsDrawer.test.tsx src/audit/AuditPage.test.tsx src/audit/list-exports.test.tsx src/census/MemberPrivacyCard.test.tsx src/census/CensusRecordPage.test.tsx src/billing/BillingPage.test.tsx

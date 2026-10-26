@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -18,6 +18,7 @@ const adminUrl = "http://127.0.0.1:4174";
 const fifoClubsUrl = "http://127.0.0.1:4176";
 const fifoAdminUrl = "http://127.0.0.1:4177";
 const corePassword = requiredEnvironment("E1_CORE_PASSWORD");
+const mailboxDirectory = requiredEnvironment("E1_MAILBOX_DIRECTORY");
 const weekStart = requiredEnvironment("E8_WEEK_START");
 const evidenceDirectory =
   process.env.CORE_EVIDENCE_DIRECTORY ?? resolve(process.cwd(), "roadmap/evidence/E8-W04");
@@ -67,6 +68,13 @@ interface CoreAnswer<Body> {
 interface GateRecord {
   clock?: { instant: string; status: number }[];
   rateLimitWaits?: number[];
+  ownerLocaleAuthentication?: {
+    exchangeStatus: number;
+    host: string;
+    method: "magic-link";
+    normalAccount: boolean;
+    requestStatus: number;
+  };
   billing?: {
     cashDisplayNumber: string;
     cashLineCount: number;
@@ -160,6 +168,7 @@ interface Lifecycle {
   invoiceId?: string;
   leaveRequestId?: string;
   member?: MemberListItem;
+  memberEmail?: string;
   periodId?: string;
 }
 
@@ -351,6 +360,121 @@ async function call<Body = ApiProblem>(
     },
     { auth: authorization, callBody: body, callMethod: method, callPath: path, keyed: withKey },
   ) as Promise<CoreAnswer<Body>>;
+}
+
+/** The selected family member can be a passwordless demo account; authenticate as its owner. */
+async function loginMemberByLink(browser: Browser, email: string): Promise<Session> {
+  const context = await contextFor(browser, mobile);
+  const page = await context.newPage();
+  page.setDefaultTimeout(15_000);
+  page.setDefaultNavigationTimeout(45_000);
+  const bearer = bearerOf(page);
+  try {
+    const previous = new Set(readdirSync(mailboxDirectory));
+    await page.goto(`${clubsUrl}/entrar`);
+    await page.getByLabel("Correu electrònic").fill(email);
+    const requested = page.waitForResponse(responseIs("POST", /\/auth\/magic-link$/u));
+    await page
+      .getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" })
+      .click();
+    const request = await requested;
+    expect(request.ok()).toBe(true);
+    await expect(page.getByRole("status")).toContainText("hi rebràs l'enllaç");
+    let delivered: URL | undefined;
+    await expect
+      .poll(
+        () => {
+          for (const filename of readdirSync(mailboxDirectory)) {
+            if (filename.startsWith(".pending-")) continue;
+            if (!filename.endsWith(".json") || previous.has(filename)) continue;
+            const message = JSON.parse(readFileSync(join(mailboxDirectory, filename), "utf8")) as {
+              html?: string;
+              text?: string;
+              to?: string;
+            };
+            if (message.to?.toLowerCase() !== email.toLowerCase()) continue;
+            const source = message.html ?? message.text ?? "";
+            delivered = Array.from(
+              source.matchAll(/https:\/\/[^\s"'<>]+/gu),
+              (match) => new URL(match[0].replaceAll("&amp;", "&")),
+            ).find((link) => link.pathname === "/activacio");
+            if (delivered !== undefined) return true;
+          }
+          return false;
+        },
+        { timeout: 15_000 },
+      )
+      .toBe(true);
+    if (delivered === undefined) throw new Error("The local owner login link was not delivered");
+    expect(delivered.hostname).toBe("app.example.test");
+    const exchanged = page.waitForResponse(
+      (response) =>
+        response.url().endsWith("/oauth2/token") &&
+        response.request().method() === "POST" &&
+        new URLSearchParams(response.request().postData() ?? "").get("grant_type") ===
+          "urn:agilityhub:grant:magic-link",
+    );
+    await page.goto(`${clubsUrl}${delivered.pathname}${delivered.search}`);
+    const exchange = await exchanged;
+    expect(exchange.status()).toBe(200);
+    await page.getByRole("button", { name: "CONTINUAR", exact: true }).click();
+    await page.waitForURL(`${clubsUrl}/inici`);
+    await expect.poll(bearer).toBeDefined();
+    const session = { bearer, context, page };
+    const me = await call<Schemas["Me"]>(session, "/me");
+    expect(me.status).toBe(200);
+    expect(me.body.account.email).toBe(email);
+    expect(me.body.impersonation).toBeUndefined();
+    record.ownerLocaleAuthentication = {
+      exchangeStatus: exchange.status(),
+      host: delivered.hostname,
+      method: "magic-link",
+      normalAccount: true,
+      requestStatus: request.status(),
+    };
+    return session;
+  } catch (error) {
+    await context.close();
+    throw error;
+  }
+}
+
+/** Set the actual account language before a new borrowed grant, then restore it. */
+async function withMemberAccountLocale(
+  browser: Browser,
+  email: string,
+  locale: string,
+  action: () => Promise<void>,
+): Promise<void> {
+  const owner = await loginMemberByLink(browser, email);
+  const language = owner.page.locator(".profile-language-card").getByRole("combobox");
+  await owner.page.goto(`${clubsUrl}/perfil`);
+  await expect(language).toBeEnabled();
+  const previous = await language.inputValue();
+  const change = async (value: string) => {
+    const patching = owner.page.waitForResponse(responseIs("PATCH", /\/api\/v1\/me$/u));
+    await language.selectOption(value);
+    const patched = await patching;
+    expect(patched.status()).toBe(200);
+    expect(patched.request().postDataJSON()).toMatchObject({ locale: value });
+    expect(((await patched.json()) as Schemas["Me"]).account.locale).toBe(value);
+    await expect(owner.page.locator("html")).toHaveAttribute("lang", value);
+    await expect(language).toBeEnabled();
+  };
+  try {
+    if (previous !== locale) await change(locale);
+    await action();
+  } finally {
+    try {
+      if (previous !== locale) {
+        await owner.page.goto(`${clubsUrl}/perfil`);
+        await expect(language).toBeEnabled();
+        await change(previous);
+      }
+    } finally {
+      await owner.context.close();
+    }
+  }
 }
 
 /** D10's [Impersona] handoff, landing on the member's 03 (`/inici`) at 375 px. */
@@ -866,6 +990,7 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
 
   // Laura's request on 14, in ca: the first month the core still accepts (R-13-01).
   let laura = await impersonate(browser, admin, member.id);
+  lifecycle.memberEmail = (await call<Schemas["Me"]>(laura, "/me")).body.account.email;
   const contextRead = laura.page.waitForResponse(
     responseIs("GET", /\/api\/v1\/me\/inactivity-periods$/u),
   );
@@ -1078,97 +1203,141 @@ test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15
     record.inactivity.simulatedLineBeforeLeave = feeLine?.description;
   }
 
-  let leaveReasonLabel = "";
-  const member = await impersonate(browser, admin, laura.id, clubsUrl, "es");
-  // The tab reads es from its start (`contextFor`'s stored locale). E11-W02 round 2 (INC-41 #16)
-  // took the shell header's selector off 12, and an impersonation has no «Idioma» card there
-  // (INC-73: the language is the person's own), so nothing is chosen here.
-  await member.page.goto(`${clubsUrl}/perfil`);
-  await expect(member.page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
-  await navigateSpa(member.page, "/baixa");
-  await expect(member.page.getByRole("heading", { name: "Solicitar la baja" })).toBeVisible();
-  const leaveContext = await call<Schemas["MeLeaveContext"]>(member, "/me/leave-requests");
-  expect(leaveContext.status).toBe(200);
-  const reason = leaveContext.body.reasons[0];
-  if (reason === undefined) throw new Error("The leave reason catalog is empty");
-  // Evidence: the label the core sends this es reader (S13 §6: «in the reader's locale»).
-  leaveReasonLabel = reason.label;
-  await member.page.getByLabel("Fecha en la que quieres la baja").fill(leaveDate);
-  await member.page.getByLabel("Motivo").selectOption(reason.key);
-  if (leaveContext.body.npsEnabled) {
-    await member.page.locator(".leave-nps").getByRole("button", { exact: true, name: "8" }).click();
-  }
-  await member.page
-    .getByLabel("¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?")
-    .fill("Canvi fictici de disponibilitat E8-W04");
-  await shot(member.page, "15-baixa-core-375.png");
-  const leaveRequestResponse = member.page.waitForResponse(
-    responseIs("POST", /\/api\/v1\/me\/leave-requests$/u),
-  );
-  await member.page.getByRole("button", { name: "ENVIAR LA SOLICITUD" }).click();
-  const leaveRequestHttp = await leaveRequestResponse;
-  expect(leaveRequestHttp.status()).toBe(201);
-  const requestedLeave = (await leaveRequestHttp.json()) as LeaveRequest;
-  expect(requestedLeave.requestedDate).toBe(leaveDate);
-  lifecycle.leaveRequestId = requestedLeave.id;
-  await noSecretsRendered(member.page);
+  const memberEmail = lifecycle.memberEmail;
+  if (memberEmail === undefined) throw new Error("The inactivity leg did not record its account");
+  await withMemberAccountLocale(browser, memberEmail, "es", async () => {
+    let leaveReasonLabel = "";
+    // The operator device stays Catalan; the real target account and its fresh borrowed JWT are es.
+    const member = await impersonate(browser, admin, laura.id, clubsUrl, "ca");
+    let borrowedLocalePatches = 0;
+    member.page.on("request", (request) => {
+      if (request.method() === "PATCH" && new URL(request.url()).pathname === "/api/v1/me") {
+        borrowedLocalePatches += 1;
+      }
+    });
+    const borrowedMe = await call<Schemas["Me"]>(member, "/me");
+    expect(borrowedMe.status).toBe(200);
+    expect(borrowedMe.body.account.locale).toBe("es");
+    expect(borrowedMe.body.impersonation).toBeDefined();
+    await expect(member.page.locator("html")).toHaveAttribute("lang", "es");
+    expect(await member.page.evaluate(() => localStorage.getItem("agilityhub.locale"))).toBe("ca");
+    await member.page.goto(`${clubsUrl}/perfil`);
+    await expect(member.page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
+    await navigateSpa(member.page, "/baixa");
+    await expect(member.page.getByRole("heading", { name: "Solicitar la baja" })).toBeVisible();
+    const leaveContext = await call<Schemas["MeLeaveContext"]>(member, "/me/leave-requests");
+    expect(leaveContext.status).toBe(200);
+    const reason = leaveContext.body.reasons[0];
+    if (reason === undefined) throw new Error("The leave reason catalog is empty");
+    expect(reason.key).toBe("LEARNED_ENOUGH");
+    expect(reason.label).toBe("Ya he aprendido todo lo que quería");
+    leaveReasonLabel = reason.label;
+    await expect(member.page.getByRole("option", { exact: true, name: reason.label })).toHaveCount(
+      1,
+    );
+    await member.page.getByLabel("Fecha en la que quieres la baja").fill(leaveDate);
+    await member.page.getByLabel("Motivo").selectOption(reason.key);
+    if (leaveContext.body.npsEnabled) {
+      await member.page
+        .locator(".leave-nps")
+        .getByRole("button", { exact: true, name: "8" })
+        .click();
+    }
+    await member.page
+      .getByLabel("¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?")
+      .fill("Canvi fictici de disponibilitat E8-W04");
+    await shot(member.page, "15-baixa-core-375.png");
+    const leaveRequestResponse = member.page.waitForResponse(
+      responseIs("POST", /\/api\/v1\/me\/leave-requests$/u),
+    );
+    await member.page.getByRole("button", { name: "ENVIAR LA SOLICITUD" }).click();
+    const leaveRequestHttp = await leaveRequestResponse;
+    expect(leaveRequestHttp.status()).toBe(201);
+    const requestedLeave = (await leaveRequestHttp.json()) as LeaveRequest;
+    expect(requestedLeave.requestedDate).toBe(leaveDate);
+    lifecycle.leaveRequestId = requestedLeave.id;
+    await noSecretsRendered(member.page);
 
-  await visit(page, `${adminUrl}/inactivitats`);
-  await page.getByRole("tab", { name: "Baixes" }).click();
-  await page
-    .getByRole("link", { name: `Obre la fitxa de ${laura.fullName ?? ""}` })
-    .last()
-    .click();
-  const leaveDrawer = page.getByRole("dialog", { name: "Baixa (amb data)" });
-  await expect(leaveDrawer.getByLabel("Data d'efecte")).toHaveValue(leaveDate);
-  await shot(page, "D10-calaix-baixa-core-1280.png");
-  const leaveDecisionResponse = page.waitForResponse(
-    responseIs("POST", new RegExp(`/api/v1/leave-requests/${requestedLeave.id}/decision$`, "u")),
-  );
-  await leaveDrawer.getByRole("button", { name: "Aprova" }).click();
-  const leaveDecisionHttp = await leaveDecisionResponse;
-  expect(leaveDecisionHttp.status()).toBe(200);
-  expect(((await leaveDecisionHttp.json()) as LeaveRequest).state).toBe("APPROVED");
+    await visit(page, `${adminUrl}/inactivitats`);
+    await page.getByRole("tab", { name: "Baixes" }).click();
+    await page
+      .getByRole("link", { name: `Obre la fitxa de ${laura.fullName ?? ""}` })
+      .last()
+      .click();
+    const leaveDrawer = page.getByRole("dialog", { name: "Baixa (amb data)" });
+    await expect(leaveDrawer.getByLabel("Data d'efecte")).toHaveValue(leaveDate);
+    await shot(page, "D10-calaix-baixa-core-1280.png");
+    const leaveDecisionResponse = page.waitForResponse(
+      responseIs("POST", new RegExp(`/api/v1/leave-requests/${requestedLeave.id}/decision$`, "u")),
+    );
+    await leaveDrawer.getByRole("button", { name: "Aprova" }).click();
+    const leaveDecisionHttp = await leaveDecisionResponse;
+    expect(leaveDecisionHttp.status()).toBe(200);
+    expect(((await leaveDecisionHttp.json()) as LeaveRequest).state).toBe("APPROVED");
 
-  await visit(page, `${adminUrl}/abonats`);
-  await page
-    .getByRole("searchbox", { name: "Cerca per nom, document, gos…" })
-    .fill(laura.fullName ?? "");
-  const defaultRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
-  await expect(defaultRow).toContainText(`baixa ${dayMonth(leaveDate)}`);
-  await page.locator("summary").filter({ hasText: "Vistes" }).click();
-  await page.getByRole("combobox", { name: "Vistes" }).selectOption({ label: "Baixes previstes" });
-  const plannedRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
-  await expect(
-    plannedRow.getByRole("link", { exact: true, name: laura.fullName ?? "" }),
-  ).toBeVisible();
-  await expect(plannedRow).toContainText(dayMonth(leaveDate));
-  await expect(plannedRow).toContainText("sol·licitud de l'abonat");
-  await page.locator("summary").filter({ hasText: "Vistes" }).click();
-  await shot(page, "D5-baixes-previstes-core-1280.png");
+    await visit(page, `${adminUrl}/abonats`);
+    await page
+      .getByRole("searchbox", { name: "Cerca per nom, document, gos…" })
+      .fill(laura.fullName ?? "");
+    const defaultRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
+    await expect(defaultRow).toContainText(`baixa ${dayMonth(leaveDate)}`);
+    await page.locator("summary").filter({ hasText: "Vistes" }).click();
+    await page
+      .getByRole("combobox", { name: "Vistes" })
+      .selectOption({ label: "Baixes previstes" });
+    const plannedRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
+    await expect(
+      plannedRow.getByRole("link", { exact: true, name: laura.fullName ?? "" }),
+    ).toBeVisible();
+    await expect(plannedRow).toContainText(dayMonth(leaveDate));
+    await expect(plannedRow).toContainText("sol·licitud de l'abonat");
+    await page.locator("summary").filter({ hasText: "Vistes" }).click();
+    await shot(page, "D5-baixes-previstes-core-1280.png");
 
-  // R-13-11: a leave on the month's last day → that month is the last one billed. The month
-  // after (still ungenerated) no longer bills her; the leave's month still does.
-  const after = await simulateOnD6(page, adminUrl, period);
-  const nextMonthBilledAfter = after.invoicesPreview.some(
-    (preview) => preview.memberId === laura.id,
-  );
-  expect(nextMonthBilledAfter).toBe(false);
-  const leaveMonthAfter = await simulateOnD6(page, adminUrl, weekMonth);
-  const leaveMonthBilledAfter = leaveMonthAfter.invoicesPreview.some(
-    (preview) => preview.memberId === laura.id,
-  );
-  expect(leaveMonthBilledAfter).toBe(true);
-  record.leave = {
-    effectiveDate: leaveDate,
-    leaveMonthBilledAfter,
-    leaveMonthBilledBefore,
-    memberId: laura.id,
-    nextMonthBilledAfter,
-    nextMonthBilledBefore: lauraBefore !== undefined,
-    reasonLabelForEs: leaveReasonLabel,
-  };
-  await Promise.all([admin.context.close(), member.context.close()]);
+    // R-13-11: a leave on the month's last day → that month is the last one billed. The month
+    // after (still ungenerated) no longer bills her; the leave's month still does.
+    const after = await simulateOnD6(page, adminUrl, period);
+    const nextMonthBilledAfter = after.invoicesPreview.some(
+      (preview) => preview.memberId === laura.id,
+    );
+    expect(nextMonthBilledAfter).toBe(false);
+    const leaveMonthAfter = await simulateOnD6(page, adminUrl, weekMonth);
+    const leaveMonthBilledAfter = leaveMonthAfter.invoicesPreview.some(
+      (preview) => preview.memberId === laura.id,
+    );
+    expect(leaveMonthBilledAfter).toBe(true);
+    record.leave = {
+      effectiveDate: leaveDate,
+      leaveMonthBilledAfter,
+      leaveMonthBilledBefore,
+      memberId: laura.id,
+      nextMonthBilledAfter,
+      nextMonthBilledBefore: lauraBefore !== undefined,
+      reasonLabelForEs: leaveReasonLabel,
+    };
+    await member.page.locator(".impersonation-banner button").click();
+    await member.page.waitForURL((url) => url.pathname === "/entrar");
+    await expect(member.page.locator("html")).toHaveAttribute("lang", "ca");
+    expect(await member.page.evaluate(() => localStorage.getItem("agilityhub.locale"))).toBe("ca");
+    expect(borrowedLocalePatches).toBe(0);
+    writeFileSync(
+      join(evidenceDirectory, "borrowed-locale.json"),
+      JSON.stringify(
+        {
+          accountLocale: borrowedMe.body.account.locale,
+          catalogLabel: leaveReasonLabel,
+          uiLocaleWhileBorrowed: "es",
+          restoredUiLocale: "ca",
+          unchangedDeviceLocale: "ca",
+          borrowedLocalePatches,
+        },
+        null,
+        2,
+      ),
+    );
+    await shot(member.page, "impersonation-exit-ca-core-375.png");
+    await Promise.all([admin.context.close(), member.context.close()]);
+  });
 });
 
 test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable", async ({
@@ -1588,14 +1757,13 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   if (feeInvoice === undefined) throw new Error("The inactivity-fee receipt was not generated");
   lifecycle.invoiceId = feeInvoice.id;
   const feeSession = await impersonate(browser, admin, feeMemberId);
-  const own = await call<MeInvoicePage>(
-    feeSession,
-    `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
-  );
+  const own = await call<MeInvoicePage>(feeSession, "/me/invoices?page=0&size=50");
   expect(own.status).toBe(200);
-  const ownLine = own.body.items
-    .find((item) => item.id === feeInvoice.id)
-    ?.lines.find((line) => line.origin === "INACTIVITY_FEE");
+  const ownInvoice = own.body.items.find((item) => item.id === feeInvoice.id);
+  if (ownInvoice === undefined)
+    throw new Error("The generated fee receipt is missing from its owner's list");
+  expect(ownInvoice.period).toBe(period);
+  const ownLine = ownInvoice.lines.find((line) => line.origin === "INACTIVITY_FEE");
   expect(ownLine?.description).toMatch(/^Quota inactivitat — /u);
   expect(ownLine?.total).toEqual({
     amountMinor: expectedFee.amountMinor,
@@ -1603,12 +1771,78 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   });
   if (record.inactivity !== undefined)
     record.inactivity.feeMemberInvoiceLine = ownLine?.description;
-  await navigateSpa(feeSession.page, "/rebuts");
-  await expect(feeSession.page.locator(".receipt-list")).toBeVisible();
-  await expect(feeSession.page.locator(".receipt-list")).toContainText(
-    ownLine?.description ?? "Quota inactivitat",
+  // S12 §2: the list summarizes its first line; the detail renders all frozen lines. A prior
+  // unbilled month can precede this month's inactivity fee (R-12-02), so bind both views to id.
+  const presentationPath = join(evidenceDirectory, "receipt-presentation.json");
+  const safeInvoice = (invoice: Schemas["MeInvoice"]) => ({
+    displayNumber: invoice.displayNumber,
+    lines: invoice.lines.map(({ description, origin, total }) => ({ description, origin, total })),
+    period: invoice.period,
+    total: invoice.total,
+  });
+  const initialEvidence = {
+    generatedAndOwnedIdMatch: ownInvoice.id === feeInvoice.id,
+    owned: safeInvoice(ownInvoice),
+  };
+  writeFileSync(presentationPath, `${JSON.stringify(initialEvidence, null, 2)}\n`);
+  expect(ownInvoice.lines.reduce((sum, line) => sum + line.total.amountMinor, 0)).toBe(
+    ownInvoice.total.amountMinor,
   );
+  for (const line of ownInvoice.lines) expect(line.total.currency).toBe(ownInvoice.total.currency);
+  const listRead = feeSession.page.waitForResponse(responseIs("GET", /\/api\/v1\/me\/invoices$/u));
+  await navigateSpa(feeSession.page, "/rebuts");
+  const listed = await listRead;
+  expect(listed.status()).toBe(200);
+  const displayed = ((await listed.json()) as MeInvoicePage).items.find(
+    (item) => item.id === feeInvoice.id,
+  );
+  if (displayed === undefined)
+    throw new Error("The receipt UI did not receive the generated fee invoice");
+  const receiptHref = `/rebuts/${feeInvoice.id}`;
+  const row = feeSession.page.locator(`.receipt-list a[href="${receiptHref}"]`);
+  await expect(row).toBeVisible();
+  const listEvidence = {
+    ...initialEvidence,
+    list: safeInvoice(displayed),
+    listIdMatchesGenerated: displayed.id === feeInvoice.id,
+    rowHrefMatchesGenerated: (await row.getAttribute("href")) === receiptHref,
+  };
+  writeFileSync(presentationPath, `${JSON.stringify(listEvidence, null, 2)}\n`);
+  expect(safeInvoice(displayed)).toEqual(safeInvoice(ownInvoice));
+  await expect(row).toContainText(ownInvoice.displayNumber);
+  const firstLine = ownInvoice.lines[0];
+  if (firstLine === undefined) throw new Error("The generated receipt has no lines");
+  await expect(row).toContainText(firstLine.description);
+  const money = (value: Invoice["total"]): string =>
+    new Intl.NumberFormat("ca", { currency: value.currency, style: "currency" }).format(
+      value.amountMinor / 100,
+    );
+  await expect(row.locator(".receipt-row__meta b")).toHaveText(money(ownInvoice.total));
   await shot(feeSession.page, "rebuts-core-375.png");
+  const detailRead = feeSession.page.waitForResponse(
+    responseIs("GET", new RegExp(`/api/v1/me/invoices/${feeInvoice.id}$`, "u")),
+  );
+  await row.click();
+  const readDetail = await detailRead;
+  expect(readDetail.status()).toBe(200);
+  const detail = (await readDetail.json()) as Schemas["MeInvoice"];
+  writeFileSync(
+    presentationPath,
+    `${JSON.stringify({ ...listEvidence, detail: safeInvoice(detail), detailIdMatchesGenerated: detail.id === feeInvoice.id }, null, 2)}\n`,
+  );
+  expect(detail.id).toBe(feeInvoice.id);
+  expect(safeInvoice(detail)).toEqual(safeInvoice(ownInvoice));
+  const card = feeSession.page.locator(".receipt-detail");
+  await expect(card).toContainText(ownInvoice.displayNumber);
+  const lineRows = card.locator("tbody tr");
+  await expect(lineRows).toHaveCount(ownInvoice.lines.length);
+  for (const [index, line] of ownInvoice.lines.entries()) {
+    await expect(lineRows.nth(index).locator("td").nth(0)).toHaveText(line.description);
+    await expect(lineRows.nth(index).locator("td").nth(1)).toHaveText(money(line.total));
+  }
+  await expect(card.locator("tfoot td")).toHaveText(money(ownInvoice.total));
+  await expect(card).toContainText(ownLine?.description ?? "Quota inactivitat");
+  await shot(feeSession.page, "rebut-detall-core-375.png");
   await noSecretsRendered(feeSession.page);
 
   // D10's billing block of the same member, with the real receipts.

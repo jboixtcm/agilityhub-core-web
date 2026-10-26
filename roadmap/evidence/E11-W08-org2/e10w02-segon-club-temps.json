@@ -1,0 +1,155 @@
+{
+  "notes": {
+    "templates": [
+      "Cap: catàlegs buits",
+      "AgilityHub template · ca, es, en · EUR"
+    ],
+    "created": {
+      "checklist": {
+        "dns": false,
+        "sepa": false,
+        "branding": false,
+        "templates": false,
+        "faq": false,
+        "legal": false,
+        "firstAdmin": false
+      },
+      "keys": [
+        "club",
+        "checklist"
+      ]
+    },
+    "catalogClone": {
+      "body": {
+        "copied": {
+          "LEVELS": 6,
+          "RINGS": 2,
+          "PLANS": 5,
+          "FAQ": 3,
+          "MESSAGE_TEMPLATES": 52
+        },
+        "warnings": [
+          {
+            "code": "LOCALE_OMITTED",
+            "part": "FAQ",
+            "from": "en"
+          },
+          {
+            "code": "LOCALE_OMITTED",
+            "part": "LEVELS",
+            "from": "en"
+          },
+          {
+            "code": "LOCALE_OMITTED",
+            "part": "PLANS",
+            "from": "en"
+          },
+          {
+            "code": "LOCALE_OMITTED",
+            "part": "MESSAGE_TEMPLATES",
+            "from": "en"
+          }
+        ]
+      },
+      "request": {
+        "fromClubId": "84753a89-bdba-4cdf-a51d-0dbea8ad9ec7",
+        "parts": [
+          "LEVELS",
+          "RINGS",
+          "PLANS",
+          "FAQ",
+          "MESSAGE_TEMPLATES"
+        ]
+      },
+      "status": 200
+    },
+    "secondClone": {
+      "body": {
+        "code": "CATALOG_NOT_EMPTY",
+        "message": "El catàleg encara conté elements.",
+        "details": {
+          "part": "FAQ"
+        },
+        "traceId": "e869b5f6-3760-419d-88d5-a5c5bf3550d0"
+      },
+      "status": 409
+    },
+    "invitation": {
+      "link": "id.example.test/magic-link?t",
+      "subject": "Invitació per administrar Club Agility Riu Blau"
+    },
+    "firstAdminSignIn": {
+      "code": null,
+      "status": 200
+    },
+    "failedPlatformCalls": [],
+    "checklistBeforeActivation": {
+      "dns": true,
+      "sepa": true,
+      "branding": true,
+      "templates": true,
+      "faq": true,
+      "legal": true,
+      "firstAdmin": true
+    },
+    "totalMinutes": 0.16
+  },
+  "steps": [
+    {
+      "seconds": 1.7,
+      "startedAt": "2026-10-22T08:46:22.772Z",
+      "step": "1 · Entra a la consola"
+    },
+    {
+      "seconds": 0.9,
+      "startedAt": "2026-10-22T08:46:24.507Z",
+      "step": "2 · Assistent «Nou club»"
+    },
+    {
+      "seconds": 0.6,
+      "startedAt": "2026-10-22T08:46:25.389Z",
+      "step": "3 · Dominis: afegeix i verifica"
+    },
+    {
+      "seconds": 0.3,
+      "startedAt": "2026-10-22T08:46:25.940Z",
+      "step": "4 · Tema: logo"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-22T08:46:26.271Z",
+      "step": "5 · Pagaments: SEPA"
+    },
+    {
+      "seconds": 0.2,
+      "startedAt": "2026-10-22T08:46:26.496Z",
+      "step": "6 · Legal: privacitat i consentiment d'imatge"
+    },
+    {
+      "seconds": 0.5,
+      "startedAt": "2026-10-22T08:46:26.689Z",
+      "step": "7 · Catàlegs base: clona de la plantilla"
+    },
+    {
+      "seconds": 2.8,
+      "startedAt": "2026-10-22T08:46:27.145Z",
+      "step": "8 · Primer administrador: invitació i primer accés"
+    },
+    {
+      "seconds": 1.3,
+      "startedAt": "2026-10-22T08:46:29.927Z",
+      "step": "9 · Revisió de la fitxa"
+    },
+    {
+      "seconds": 0.9,
+      "startedAt": "2026-10-22T08:46:31.233Z",
+      "step": "10 · Checklist i activació"
+    },
+    {
+      "seconds": 0.3,
+      "startedAt": "2026-10-22T08:46:32.100Z",
+      "step": "11 · L'app dels abonats al domini del club"
+    }
+  ],
+  "totalSeconds": 10
+}

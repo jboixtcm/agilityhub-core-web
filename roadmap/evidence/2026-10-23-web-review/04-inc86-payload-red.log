@@ -1,0 +1,54 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run core-api-store.payloads.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/core-api-store.payloads.test.ts (25 tests | 1 failed) 23ms
+   ❯ E9-W02 round 2: CoreApiStore payloads against the S16 contract (17)
+     × T-16-16 INC-86 freezes tunnel control points in ring coordinates in the placement payload 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > T-16-16 INC-86 freezes tunnel control points in ring coordinates in the placement payload
+AssertionError: expected undefined to deeply equal [ { x: 21, y: 15 }, …(2) ]
+
+- Expected:
+[
+  {
+    "x": 21,
+    "y": 15,
+  },
+  {
+    "x": 19,
+    "y": 13,
+  },
+  {
+    "x": 21,
+    "y": 11,
+  },
+]
+
++ Received:
+undefined
+
+ ❯ src/core-api-store.payloads.test.ts:96:60
+     94|     const body = api.requests.at(-1)?.body as components["schemas"]["P…
+     95|     // Independent oracle: subtract (10,5), flip x, rotate 90°, then t…
+     96|     expect(body.resolvedObstacles[0]?.controlPointsMeters).toEqual([
+       |                                                            ^
+     97|       { x: 21, y: 15 }, { x: 19, y: 13 }, { x: 21, y: 11 },
+     98|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 24 passed (25)
+   Start at  21:19:43
+   Duration  258ms (transform 62%, import 24%, tests 13%, worker 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 test: `vitest run core-api-store.payloads.test.ts`
+Exit status 1

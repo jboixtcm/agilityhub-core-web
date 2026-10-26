@@ -1,0 +1,15 @@
+# Final documentary cross-review — 26 October 2026
+
+Reviewed the finalized master `CORRECCIONS_I_REGRESSIO_LOCAL_2026-10-24.md`, root `REPORT.md`, current `ROLE_COVERAGE.md` introduction/table and the closing INC-96 row against retained evidence. **No material factual or accounting issue remains in the reviewed wording.** The stale support-test “pending” sentence was corrected by its owner to reference the six passing E10-r2 cases.
+
+- API **7,256 = 4,948 +2,308**; web CI **3,636 = 3,616 Vitest +20 Node**; mock-browser **266**; selected real-browser **91**. The six new outbox-helper checks are supplemental, not included twice.
+- The final real-browser ledger is **59 profile +25 root +7 release =91**, accepted at explicitly recorded **55 original +30 readiness-helper +6 E8-fixture** baseline groups. The independent final checker passed with exact manifests, unique case identities, no skips and empty per-stage cleanup.
+- E7 clock coverage and E8 same-family inactivity-edit/leave-cancellation denials are proven. The wording does not incorrectly generalize the family assertions to same-family invoice denial. E8's normal-owner authentication is the real local magic-link flow (202/200), with the account checked before temporary locale editing and restoration.
+- The API image is correctly described as a local arm64 ID, not a registry publication. OpenAPI and the production seed retain the compared hashes; final API integrity readback61 reports **2,241 unchanged inputs**.
+- The visual wording distinguishes individually viewed originals, contact-sheet overview and reused byte-identical captures; it does not claim pixel inspection of all images. The blank immediate 3D capture is correctly separated from the settled WebGL evidence.
+- Failures, cancellations, fixture corrections and retries remain documented, with no failed attempt added to the passing total. Ten application/demo incidents are closed on local evidence; older accepted maintenance and the unverified Safari popup policy remain explicit.
+- Hosted prerequisites and provider limitations remain explicit. No statement claims deployment, a new server, public DNS/TLS, real provider delivery/charging or Learn integration.
+
+Read-only closing evidence reviewed: source-secret scan55 has **0 findings in108 API +83 web changed-source files**, unchanged; scan56 has **0 findings in the two edited master documents**, unchanged; owned-resource readback59 has **no review-owned containers/networks/volumes** and no heavy lock, preserving unrelated services. The final broad evidence scan is still pending in the reviewed root report and is not prematurely claimed here.
+
+No product code, test, shared report, provider or deployment was changed by this review. Its exact reviewed file hashes are recorded in [final-document-factual-review-inputs.json](final-document-factual-review-inputs.json). These hashes identify the reviewed snapshot; a later update solely recording the final broad evidence-scan result is separate provenance.

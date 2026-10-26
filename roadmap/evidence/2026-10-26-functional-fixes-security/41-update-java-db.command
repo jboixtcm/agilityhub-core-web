@@ -1,0 +1,1 @@
+env TRIVY_CACHE_DIR=/Users/jordib/dev/agilityhub/agilityhub-core-api/.local/security-tools/db /Users/jordib/dev/agilityhub/agilityhub-core-api/.local/security-tools/trivy-0.74.0 image --skip-version-check --no-progress --timeout 10m --download-java-db-only

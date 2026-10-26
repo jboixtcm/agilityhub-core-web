@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 375,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-panel",
+      "text": "↕Recorregut↕Disciplina↕Nivell↕Autor↕Font↕Muntat a↕Obstacles↕Últim canvi",
+      "left": -127.203125,
+      "right": 215.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "UL",
+      "className": "ah-universal-list__columns",
+      "text": "↕Recorregut↕Disciplina↕Nivell↕Autor↕Font↕Muntat a↕Obstacles↕Últim canvi",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "auto"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Recorregut",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Recorregut",
+      "left": -78.203125,
+      "right": 13.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Disciplina",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Disciplina",
+      "left": -78.203125,
+      "right": 4.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Nivell",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Nivell",
+      "left": -78.203125,
+      "right": -20.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Autor",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Autor",
+      "left": -78.203125,
+      "right": -22.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Font",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Font",
+      "left": -78.203125,
+      "right": -28.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Muntat a",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Muntat a",
+      "left": -78.203125,
+      "right": -3.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -55.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Obstacles",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Obstacles",
+      "left": -78.203125,
+      "right": 3.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -65.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Últim canvi",
+      "left": -110.203125,
+      "right": 198.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↕",
+      "left": -102.203125,
+      "right": -86.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Últim canvi",
+      "left": -78.203125,
+      "right": 13.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "ah-checkbox",
+      "text": "",
+      "left": -78.203125,
+      "right": -30.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TABLE",
+      "className": "",
+      "text": "Llistat de recorregutsRecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim ",
+      "left": 17,
+      "right": 1005.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "RecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim canvi↓",
+      "left": 17,
+      "right": 1005.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "RecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim canvi↓",
+      "left": 17,
+      "right": 1005.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Nivell",
+      "left": 347.71875,
+      "right": 418.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Autor",
+      "left": 418.953125,
+      "right": 509.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Font",
+      "left": 509.953125,
+      "right": 610.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Muntat a",
+      "left": 610.953125,
+      "right": 703.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Obstacles",
+      "left": 703.921875,
+      "right": 844.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Últim canvi↓",
+      "left": 844.921875,
+      "right": 967.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "",
+      "text": "Últim canvi↓",
+      "left": 856.921875,
+      "right": 955.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↓",
+      "left": 947.5,
+      "right": 955.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 967.375,
+      "right": 1005.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "Jumping del dijousDel clubJumpingMitjàMarta VidalSmarterMuntanya11 obstacles · 7",
+      "left": 17,
+      "right": 1005.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Jumping del dijousDel clubJumpingMitjàMarta VidalSmarterMuntanya11 obstacles · 7",
+      "left": 17,
+      "right": 1005.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Mitjà",
+      "left": 347.71875,
+      "right": 418.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Mitjà",
+      "left": 359.71875,
+      "right": 406.953125,
+      "overflowX": "visible"
+    }
+  ]
+}

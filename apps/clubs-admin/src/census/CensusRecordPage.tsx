@@ -874,7 +874,7 @@ function MemberSummary({
           <NotificationPreferencesBlock
             client={client}
             // One block per member: its saves on their way never mix with another member's.
-            key={member.id}
+            key={`preferences:${member.id}`}
             memberId={member.id}
             onFeedback={onFeedback}
           />
@@ -988,7 +988,7 @@ function MemberSummary({
         <MemberPrivacyCard
           client={client}
           erased={erased}
-          key={member.id}
+          key={`privacy:${member.id}`}
           memberId={member.id}
           onErased={onErased}
           status={member.status}
@@ -1231,11 +1231,7 @@ function MemberSummary({
   );
 }
 
-export function MemberRecordPage({
-  client,
-  id = pathId(),
-  supportAccess = false,
-}: {
+interface MemberRecordPageProps {
   client: ApiClient;
   id?: string;
   /**
@@ -1243,7 +1239,19 @@ export function MemberRecordPage({
    * to it (`403 SUPPORT_RESTRICTED`), so the record does not offer «Descarrega les dades (RGPD)».
    */
   supportAccess?: boolean;
-}) {
+}
+
+export function MemberRecordPage({ id = pathId(), ...props }: MemberRecordPageProps) {
+  // A different record gets fresh drafts, feedback and child state. Pending mutations keep
+  // only the old record's setters, so their late replies cannot replace the next member.
+  return <MemberRecordContent {...props} id={id} key={id} />;
+}
+
+function MemberRecordContent({
+  client,
+  id,
+  supportAccess = false,
+}: MemberRecordPageProps & { id: string }) {
   const branding = useBranding();
   const refreshCounters = useRefreshCounters();
   const { t } = useTranslation(["admin-census", "errors"]);
@@ -1929,6 +1937,11 @@ function DocumentList({
 }
 
 export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id?: string }) {
+  // The dog's edit drawer and pending saves share the record's lifetime, as for members.
+  return <DogRecordContent client={client} id={id} key={id} />;
+}
+
+function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
   const branding = useBranding();
   const { t } = useTranslation(["admin-census", "errors"]);
   const formats = useClubFormats();

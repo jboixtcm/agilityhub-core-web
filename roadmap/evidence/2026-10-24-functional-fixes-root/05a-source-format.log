@@ -1,0 +1,4 @@
+Checking formatting...
+[warn] apps/id/src/App.test.tsx
+[warn] e2e/core/e10-core.spec.ts
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.

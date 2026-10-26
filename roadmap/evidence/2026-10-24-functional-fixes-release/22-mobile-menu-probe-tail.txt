@@ -1,0 +1,40 @@
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:79:69
+
+    Error: Vistes
+    ▾ starts inside viewport
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -41.203125
+
+      77 |     await page.screenshot({ path: join(evidence, `billing-menu-${index}-375.png`), fullPage: true });
+      78 |     writeFileSync(join(evidence, 'billing-open-menu-bounds.json'), JSON.stringify(observations, null, 2)+'\n');
+    > 79 |     expect.soft(observation.left, `${name} starts inside viewport`).toBeGreaterThanOrEqual(0);
+         |                                                                     ^
+      80 |     expect.soft(observation.right, `${name} ends inside viewport`).toBeLessThanOrEqual(375);
+      81 |     expect.soft(observation.documentWidth, `${name} page width`).toBe(375);
+      82 |     await summary.click();
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:79:69
+
+    Error: Excel · PDF starts inside viewport
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -13.203125
+
+      77 |     await page.screenshot({ path: join(evidence, `billing-menu-${index}-375.png`), fullPage: true });
+      78 |     writeFileSync(join(evidence, 'billing-open-menu-bounds.json'), JSON.stringify(observations, null, 2)+'\n');
+    > 79 |     expect.soft(observation.left, `${name} starts inside viewport`).toBeGreaterThanOrEqual(0);
+         |                                                                     ^
+      80 |     expect.soft(observation.right, `${name} ends inside viewport`).toBeLessThanOrEqual(375);
+      81 |     expect.soft(observation.documentWidth, `${name} page width`).toBe(375);
+      82 |     await summary.click();
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:79:69
+
+    Error Context: ../evidence/2026-10-26-functional-fixes-mobile-menu-probe/test-results/mobile-menu-evidence-only--3bd16-billing-toolbar-menus-at375/error-context.md
+
+  1 failed
+    roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:22:5 › evidence-only: visible billing toolbar menus at375 
+  1 passed (5.4s)

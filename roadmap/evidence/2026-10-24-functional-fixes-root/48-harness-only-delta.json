@@ -1,0 +1,14 @@
+{
+  "baseline": "40-final-ci-tested-inputs.json",
+  "finalManifest": "48-harness-final-inputs.json",
+  "baselineCount": 946,
+  "finalCount": 948,
+  "changedInputs": [
+    "scripts/core-stack/wait-for-outbox.mjs",
+    "scripts/core-stack/wait-for-outbox.test.mjs",
+    "scripts/e2e-core.sh"
+  ],
+  "productAndBrowserSpecsUnchanged": true,
+  "rationale": "Only the disposable real-API test runner waits for seeded outbox events before starting browser assertions; same API image and all application/browser-spec sources. Earlier passing groups remain evidence for identical application behavior; E3 and remaining groups exercise the new preparation.",
+  "checks": "../2026-10-24-functional-fixes-web/12-outbox-readiness-checks.log"
+}

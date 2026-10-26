@@ -2,7 +2,15 @@ import { isApiError } from "@agilityhub/api-client";
 import { type AccountSession, type AuthClient, useSession } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales, type Locale } from "@agilityhub/i18n";
 import { Badge, Button, Card, Icon, Input, Select } from "@agilityhub/ui";
-import { type ReactNode, type SyntheticEvent, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  type SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 type Navigate = (destination: string) => void;
@@ -809,6 +817,18 @@ function consoleUrl(): string {
     : configured;
 }
 
+/** Public build configuration keeps an isolated demo within its own Clubs deployment. */
+function clubsUrl(): string {
+  const configured = (import.meta.env as Record<string, string | undefined>).VITE_CLUBS_URL;
+  return configured === undefined || configured === ""
+    ? "https://clubs.agilitydoghub.com"
+    : configured;
+}
+
+function learnEnabled(): boolean {
+  return (import.meta.env as Record<string, string | undefined>).VITE_LEARN_ENABLED !== "false";
+}
+
 function ProductsPage({ navigate }: PageProps) {
   const { t } = useTranslation("id");
   const { platformRoles } = useSession();
@@ -818,16 +838,18 @@ function ProductsPage({ navigate }: PageProps) {
         <div className="id-page__wide">
           <PageIntro description={t("id:products.description")} title={t("id:products.title")} />
           <div className="id-products">
-            <ProductCard
-              description={t("id:products.learnDescription")}
-              href="https://learn.agilitydoghub.com"
-              icon="grid"
-              link={t("id:products.openLearn")}
-              title={t("id:products.learnTitle")}
-            />
+            {learnEnabled() ? (
+              <ProductCard
+                description={t("id:products.learnDescription")}
+                href="https://learn.agilitydoghub.com"
+                icon="grid"
+                link={t("id:products.openLearn")}
+                title={t("id:products.learnTitle")}
+              />
+            ) : null}
             <ProductCard
               description={t("id:products.clubsDescription")}
-              href="https://clubs.agilitydoghub.com"
+              href={clubsUrl()}
               icon="paw"
               link={t("id:products.openClubs")}
               title={t("id:products.clubsTitle")}
@@ -850,25 +872,64 @@ function ProductsPage({ navigate }: PageProps) {
 }
 
 function LogoutPage({ authClient, navigate }: PageProps) {
-  const { t } = useTranslation("id");
+  const { t } = useTranslation(["id", "common"]);
   const started = useRef(false);
+  const mounted = useRef(false);
+  const [failed, setFailed] = useState(false);
+
+  const signOut = useCallback(async () => {
+    const pageActive = () => mounted.current;
+    setFailed(false);
+    try {
+      const generation = authClient.getSessionGeneration();
+      // A direct visit has only the HttpOnly cookie. Restore before revoking its family.
+      await authClient.restoreSession();
+      if (!pageActive()) return;
+      if (authClient.getSessionGeneration() === generation) {
+        await authClient.logout();
+      } else {
+        // Restore also changes generation when an old cookie is already expired. That
+        // anonymous result may leave this page, but a replacement account must survive.
+        if (authClient.getMe() !== null || authClient.getAccessToken() !== null) return;
+        authClient.captureSessionGuard()();
+      }
+      if (mounted.current) {
+        clearOidcRequest();
+        // ID's own family revocation invalidates its SSO browser session. RP-initiated
+        // /connect/logout is for clients holding an ID token hint, not this password flow.
+        navigate("/login");
+      }
+    } catch {
+      if (mounted.current) setFailed(true);
+    }
+  }, [authClient, navigate]);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (started.current) {
       return;
     }
     started.current = true;
-    void authClient.logout().finally(() => {
-      const returnTo = new URL("/login", window.location.origin).href;
-      navigate(`/connect/logout?post_logout_redirect_uri=${encodeURIComponent(returnTo)}`);
-    });
-  }, [authClient, navigate]);
+    void signOut();
+  }, [signOut]);
 
   return (
     <main className="id-page id-page--centered">
       <Card className="id-status-card">
         <Icon aria-hidden="true" name="unlock" />
         <PageIntro description={t("id:logout.description")} title={t("id:logout.title")} />
+        {failed ? (
+          <>
+            <p role="alert">{t("id:errors.generic")}</p>
+            <Button onClick={() => void signOut()}>{t("common:boot.retry")}</Button>
+          </>
+        ) : null}
       </Card>
     </main>
   );

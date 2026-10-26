@@ -1,0 +1,111 @@
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: 2026-10-26-functional-fixes-inc100-responsive
+Capture folder of the permanent mock specs: 2026-10-26-functional-fixes-inc100-responsive
+Playwright arguments: --grep=INC-97|E11-W05: the back office --pass-with-no-tests --workers=1 --trace=off
+Checkout copied into the container: 716M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 188, added 187
+Progress: resolved 858, reused 0, downloaded 511, added 511
+Progress: resolved 858, reused 0, downloaded 598, added 597
+Progress: resolved 858, reused 0, downloaded 799, added 797
+Progress: resolved 858, reused 0, downloaded 855, added 855
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 6.5s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 7b656e3babaa14c0
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing aa92acb9c7fb08b7
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing a38de7defe0d0c9a
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 37f8061bf45b8f8e
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test '--grep=INC-97|E11-W05: the back office' --pass-with-no-tests --workers\=1 --trace\=off
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+clubs:build: cache miss, executing 6df9a949d0ca8535
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: src/courses/register-level-labels.test.tsx(67,69): error TS2769: No overload matches this call.
+clubs:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs:build:  ELIFECYCLE  Command failed with exit code 2.
+clubs-admin:build: cache miss, executing 2f71f56ee8d2d066
+id:build: cache miss, executing 2ce127286affcfe3
+clubs#build:  ERROR  command (/work/apps/clubs) /usr/bin/pnpm run build exited (2)
+
+ Tasks:    4 successful, 7 total
+Cached:    0 cached, 7 total
+  Time:    8.691s 
+Failed:    clubs#build
+
+ ERROR  run failed: command  exited (2)

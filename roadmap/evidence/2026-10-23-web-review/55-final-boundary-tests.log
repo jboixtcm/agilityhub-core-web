@@ -1,0 +1,13 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+
+ Test Files  3 passed (3)
+      Tests  118 passed (118)
+   Start at  21:58:52
+   Duration  1.74s (tests 53%, environment 30%, transform 10%, import 6%)
+

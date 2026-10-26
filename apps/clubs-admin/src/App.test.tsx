@@ -533,6 +533,43 @@ describe("E11-W06 W5 and W6 (CONVENCIONS_I18N §1, AGENTS rule 6): the account's
     return authClient();
   }
 
+  it("INC-96: support language is temporary and the disabled selector leaves focus on the available action", async () => {
+    localStorage.setItem(LOCALE_STORAGE_KEY, "ca");
+    const admin = currentMockScenario().me;
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({
+          ...admin,
+          account: { ...admin.account, locale: "es" },
+          support: { actorName: "Fictional support", expiresAt: "2099-01-01T00:00:00Z" },
+        }),
+      ),
+    );
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    const updateLocale = vi.spyOn(client, "updateLocale");
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(document.documentElement.lang).toBe("es");
+    });
+    const toggle = document.querySelector(".admin-user-menu > button");
+    if (!(toggle instanceof HTMLButtonElement)) throw new Error("Missing user menu");
+    fireEvent.click(toggle);
+    const selector = screen.getByRole("combobox", { name: "Idioma" });
+    expect(selector).toBeDisabled();
+    expect(selector).toHaveValue("es");
+    expect(screen.getByRole("menuitem")).toHaveFocus();
+    fireEvent.change(selector, { target: { value: "ca" } });
+    expect(updateLocale).not.toHaveBeenCalled();
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("ca");
+    expect(document.documentElement.lang).toBe("es");
+    cleanup();
+    await waitFor(() => {
+      expect(document.documentElement.lang).toBe("ca");
+    });
+  });
+
   it("CONVENCIONS_I18N §1: me.account.locale = es, stored ca → renders in es", async () => {
     localStorage.setItem(LOCALE_STORAGE_KEY, "ca");
     await renderApplication(adminWithLocale("es"));

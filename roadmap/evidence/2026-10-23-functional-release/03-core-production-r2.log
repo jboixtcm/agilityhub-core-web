@@ -1,0 +1,132 @@
+E4_WEEK_START=2026-10-19 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-26 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: agilityhub-core-api:review-20261023 arm64 revision= created=2026-10-23T21:12:16.526540801Z digests=[agilityhub-core-api@sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e ghcr.io/jboixtcm/agilityhub-core-api@sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-release/core-production-r2/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-release/core-production-r2/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-release/core-production-r2/club-template-default.yaml (302 lines)
+canic club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-release/core-production-r2/club-canic.yaml (782 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-functional-release-production-r2_default Creating 
+ Volume agilityhub-functional-release-production-r2_mongo-data Creating 
+ Volume agilityhub-functional-release-production-r2_mongo-data Creating 
+ Volume agilityhub-functional-release-production-r2_mailbox Creating 
+ Volume agilityhub-functional-release-production-r2_mailbox Creating 
+ Network agilityhub-functional-release-production-r2_default Creating 
+ Volume agilityhub-functional-release-production-r2_attachment-files Creating 
+ Volume agilityhub-functional-release-production-r2_attachment-files Creating 
+ Volume agilityhub-functional-release-production-r2_export-files Creating 
+ Volume agilityhub-functional-release-production-r2_export-files Creating 
+ Volume agilityhub-functional-release-production-r2_mongo-data Created 
+ Volume agilityhub-functional-release-production-r2_mongo-data Created 
+ Volume agilityhub-functional-release-production-r2_export-files Created 
+ Volume agilityhub-functional-release-production-r2_export-files Created 
+ Volume agilityhub-functional-release-production-r2_mailbox Created 
+ Volume agilityhub-functional-release-production-r2_mailbox Created 
+ Volume agilityhub-functional-release-production-r2_attachment-files Created 
+ Volume agilityhub-functional-release-production-r2_attachment-files Created 
+ Network agilityhub-functional-release-production-r2_default Created 
+ Network agilityhub-functional-release-production-r2_default Created 
+ Container agilityhub-functional-release-production-r2-mongo-1 Creating 
+ Container agilityhub-functional-release-production-r2-mongo-1 Created 
+ Container agilityhub-functional-release-production-r2-seed-1 Creating 
+ Container agilityhub-functional-release-production-r2-seed-1 Created 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Creating 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Created 
+ Container agilityhub-functional-release-production-r2-core-1 Creating 
+ Container agilityhub-functional-release-production-r2-core-1 Created 
+ Container agilityhub-functional-release-production-r2-mongo-1 Starting 
+ Container agilityhub-functional-release-production-r2-mongo-1 Started 
+ Container agilityhub-functional-release-production-r2-mongo-1 Waiting 
+ Container agilityhub-functional-release-production-r2-mongo-1 Healthy 
+ Container agilityhub-functional-release-production-r2-seed-1 Starting 
+ Container agilityhub-functional-release-production-r2-seed-1 Started 
+ Container agilityhub-functional-release-production-r2-seed-1 Waiting 
+ Container agilityhub-functional-release-production-r2-seed-1 Exited 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Starting 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Started 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Waiting 
+ Container agilityhub-functional-release-production-r2-mongo-1 Waiting 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Exited 
+ Container agilityhub-functional-release-production-r2-mongo-1 Healthy 
+ Container agilityhub-functional-release-production-r2-core-1 Starting 
+ Container agilityhub-functional-release-production-r2-core-1 Started 
+ Container agilityhub-functional-release-production-r2-mongo-1 Waiting 
+ Container agilityhub-functional-release-production-r2-seed-1 Waiting 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Waiting 
+ Container agilityhub-functional-release-production-r2-core-1 Waiting 
+ Container agilityhub-functional-release-production-r2-activate-demo-club-1 Exited 
+ Container agilityhub-functional-release-production-r2-seed-1 Exited 
+ Container agilityhub-functional-release-production-r2-mongo-1 Healthy 
+ Container agilityhub-functional-release-production-r2-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-23-functional-release/core-production-r2/seed-files.log (191 lines)
+ Container agilityhub-functional-release-production-r2-playwright-run-2e05050abcc1 Creating 
+ Container agilityhub-functional-release-production-r2-playwright-run-2e05050abcc1 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 53
+Progress: resolved 858, reused 858, downloaded 0, added 353
+Progress: resolved 858, reused 858, downloaded 0, added 564
+Progress: resolved 858, reused 858, downloaded 0, added 792
+Progress: resolved 858, reused 858, downloaded 0, added 852
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 6.3s using pnpm v9.15.9
+(node:98) Warning: Failed to load the ES module: /work/roadmap/evidence/2026-10-23-functional-release/playwright.production.config.ts. Make sure to set "type": "module" in the nearest package.json file or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+/work/roadmap/evidence/2026-10-23-functional-release/playwright.production.config.ts:33
+    cwd: (0, _nodePath.resolve)(import.meta.dirname, '../../..'),
+                                       ^^^^
+
+SyntaxError: Cannot use 'import.meta' outside a module
+    at wrapSafe (node:internal/modules/cjs/loader:1861:18)
+    at Module._compile (node:internal/modules/cjs/loader:1903:20)
+    at Object.<anonymous> (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.require (node:internal/modules/cjs/loader:1674:12)
+    at require (node:internal/modules/helpers:157:16)
+    at requireOrImport (/work/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1083:18)
+    at loadUserConfig (/work/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1268:52)
+    at loadConfig (/work/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1275:28)
+    at Object.loadConfigFromFile (/work/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1490:10)
+    at runTests (/work/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/cli/testActions.js:46:18)
+    at _Command.<anonymous> (/work/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/program.js:55:7)
+

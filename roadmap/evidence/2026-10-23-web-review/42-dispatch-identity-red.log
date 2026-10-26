@@ -1,0 +1,42 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (78 tests | 3 failed) 1198ms
+   ❯ T-01-04 pending account operations belong to their original session (26)
+     × never dispatches a mutation after identity changes during the locale await 3ms
+     × never dispatches a mutation after identity changes during the token await 1ms
+     × never dispatches a mutation after identity changes during the middleware await 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never dispatches a mutation after identity changes during the locale await
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never dispatches a mutation after identity changes during the token await
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never dispatches a mutation after identity changes during the middleware await
+AssertionError: expected 'accepted' to be 'superseded' // Object.is equality
+
+Expected: "superseded"
+Received: "accepted"
+
+ ❯ src/auth-client.test.ts:1757:31
+    1755|       await client.login("new@example.test", "password");
+    1756|       release();
+    1757|       expect(await operation).toBe("superseded");
+       |                               ^
+    1758|       expect(sentAs).toEqual([]);
+    1759|       expect(client.getAccessToken()).toBe("access-new");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  3 failed | 88 passed (91)
+   Start at  21:41:55
+   Duration  1.78s (tests 51%, environment 32%, transform 10%, import 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run`
+Exit status 1

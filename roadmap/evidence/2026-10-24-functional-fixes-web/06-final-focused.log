@@ -1,0 +1,42 @@
+heavy.sh: 09:40 waiting for the host lock, held by: 09:39 agilityhub-core-api: ./mvnw -q -Dtest=ConsentGrantTest,ConsentLedgersTest,DemoClubDefinitionTest -Dit.test=CensusIT#T_03_08_INC91_*+T_14_18_INC91_*,DemoSeedsIT#T_17_01_INC94_* test failsafe:integration-test failsafe:verify
+heavy.sh: 09:40 got the host lock after 0 min 30 s
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+
+ Test Files  1 passed (1)
+      Tests  10 passed (10)
+   Start at  09:40:42
+   Duration  490ms (environment 59%, transform 15%, import 13%, tests 13%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+
+ Test Files  1 passed (1)
+      Tests  6 passed | 81 skipped (87)
+   Start at  09:40:43
+   Duration  1.55s (transform 46%, tests 20%, environment 16%, import 15%, setup 3%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 39 skipped (43)
+   Start at  09:40:45
+   Duration  1.80s (transform 56%, import 15%, environment 14%, tests 12%, setup 3%)
+
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/UserMenu.tsx
+  18:80  error  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/App.tsx
+  407:80  error  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e2-core.spec.ts
+  118:17  error  Type parameter T is used only once in the function signature  @typescript-eslint/no-unnecessary-type-parameters
+
+✖ 3 problems (3 errors, 0 warnings)
+

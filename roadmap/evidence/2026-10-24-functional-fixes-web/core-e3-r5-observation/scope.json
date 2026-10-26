@@ -1,0 +1,6 @@
+{
+  "stage": "e3-r5",
+  "scope": "Local fictional demo only; observer reads mailbox metadata and selected database fields. Raw email bodies, addresses, activation query values and credentials are never written to evidence.",
+  "specUnchanged": true,
+  "timeoutUnchanged": true
+}

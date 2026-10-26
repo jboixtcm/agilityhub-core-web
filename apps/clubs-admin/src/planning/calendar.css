@@ -1,3 +1,9 @@
+.calendar-page,
+.calendar-grid {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
 .calendar-header {
   gap: var(--ah-space-3);
 }
@@ -133,13 +139,15 @@
 }
 
 .calendar-cards {
-  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
 }
 
 .calendar-selected-card,
 .calendar-validation-card,
 .calendar-warnings-card {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: var(--ah-space-3);
   align-content: start;
 }
@@ -184,6 +192,8 @@
   align-items: center;
   gap: var(--ah-space-1);
   min-height: 1.9rem;
+  min-width: 0;
+  max-width: 100%;
   padding: 0 var(--ah-space-3);
   color: var(--ah-color-text);
   font-size: 0.8rem;
@@ -203,6 +213,8 @@
 
 .calendar-chip .ah-input {
   width: auto;
+  min-width: 0;
+  max-width: 100%;
   min-height: 1.7rem;
   padding: 0 var(--ah-space-1);
   color: inherit;

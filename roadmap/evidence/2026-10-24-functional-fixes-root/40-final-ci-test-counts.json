@@ -1,0 +1,62 @@
+{
+  "vitest": [
+    {
+      "package": "@agilityhub/course-core",
+      "passed": 378
+    },
+    {
+      "package": "@agilityhub/ui",
+      "passed": 195
+    },
+    {
+      "package": "@agilityhub/shared-types",
+      "passed": 38
+    },
+    {
+      "package": "@agilityhub/i18n",
+      "passed": 159
+    },
+    {
+      "package": "@agilityhub/course-ui",
+      "passed": 56
+    },
+    {
+      "package": "@agilityhub/api-client",
+      "passed": 801
+    },
+    {
+      "package": "@agilityhub/auth",
+      "passed": 129
+    },
+    {
+      "package": "id",
+      "passed": 19
+    },
+    {
+      "package": "clubs",
+      "passed": 755
+    },
+    {
+      "package": "clubs-admin",
+      "passed": 1086
+    }
+  ],
+  "vitestTotal": 3616,
+  "nodeTests": 20,
+  "total": 3636,
+  "tasks": 38,
+  "cachedTasks": 0,
+  "exitCode": 0,
+  "inputCount": 946,
+  "nodeSuites": [
+    {
+      "package": "@agilityhub/i18n",
+      "passed": 10
+    },
+    {
+      "package": "clubs",
+      "passed": 10
+    }
+  ],
+  "countCorrection": "Count both distinct TAP suites: i18n script checks and clubs bundle checks."
+}

@@ -1,0 +1,19 @@
+{
+  "baseline": "/Users/jordib/dev/agilityhub/agilityhub-core-api/roadmap/evidence/2026-10-23-release-review/final-image-scan-summary.json",
+  "baselineImageId": "sha256:1e8060615d372dc826ea431e1cd9ef3733c440d7ce4ecc02199f708e9c6d752e",
+  "currentImageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "scope": "Package/advisory/severity comparison across two local images and the recorded database versions; absence is not a security guarantee.",
+  "addedOrSeverityChanged": [
+    {
+      "target": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9 (ubuntu 26.04)",
+      "type": "ubuntu",
+      "id": "CVE-2026-88648",
+      "package": "libgnutls30t64",
+      "installed": "3.8.12-2ubuntu1.1",
+      "fixed": null,
+      "severity": "MEDIUM",
+      "packagePath": null
+    }
+  ],
+  "removedOrSeverityChanged": []
+}

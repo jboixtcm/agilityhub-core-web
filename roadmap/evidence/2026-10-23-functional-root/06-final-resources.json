@@ -1,0 +1,13 @@
+{
+  "scope": "Read-only check of this audit's named Docker resources and web evidence sensitive-artifact filenames; API lane cleanup is separately recorded in its 07-final-summary.json.",
+  "remainingOwnedNamedResources": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "retainedSensitiveArtifactPaths": [],
+  "heavyLockPresent": false,
+  "finalWebManifestCheckedFiles": 34,
+  "changedAfterFinalWebManifest": [],
+  "passed": true
+}

@@ -5,6 +5,10 @@ import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
 const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E2-W04");
+const reviewEvidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence/2026-10-23-web-review",
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -50,6 +54,7 @@ async function prepareAdmin(page: Page, scenario: Scenario, branding: unknown) {
 
 test.beforeAll(() => {
   mkdirSync(evidenceDirectory, { recursive: true });
+  mkdirSync(reviewEvidenceDirectory, { recursive: true });
 });
 
 test.describe("E2-W04 club catalogs", () => {
@@ -118,7 +123,21 @@ test.describe("E2-W04 club catalogs", () => {
     });
     await page.getByRole("button", { name: "Nou instructor" }).click();
     await memberRequest;
-    await page.getByRole("dialog", { name: "Nou instructor" }).getByLabel("Tanca").click();
+    const newInstructor = page.getByRole("dialog", { name: "Nou instructor" });
+    const choice = newInstructor.locator("datalist option").first();
+    await expect(choice).toHaveAttribute("value", / · \d+$/u);
+    const memberChoice = await choice.getAttribute("value");
+    if (memberChoice === null) throw new Error("Missing member choice");
+    await newInstructor.getByLabel("Abonat").fill(memberChoice);
+    await expect(newInstructor.getByRole("button", { name: "DESA" })).toBeEnabled();
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(reviewEvidenceDirectory, "D17-member-identity-1280.png"),
+    });
+    // Editing the identity back to a bare name must clear the chosen member id.
+    await newInstructor.getByLabel("Abonat").fill("Laura Serra Vidal");
+    await expect(newInstructor.getByRole("button", { name: "DESA" })).toBeDisabled();
+    await newInstructor.getByLabel("Tanca").click();
 
     const administratorTable = page.getByRole("table", { name: "Administradors del club" });
     await administratorTable

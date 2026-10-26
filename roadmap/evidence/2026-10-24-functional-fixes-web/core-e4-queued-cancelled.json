@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-10-26T07:59:34.234860+00:00",
+  "reason": "Coordinator requested an early patch window for prepared E1/E3/E10 harness corrections and INC-99 before remaining E4\u2013E8; E4 had not acquired the shared lock.",
+  "phase": "waiting before lock",
+  "pid": 14585,
+  "lockHolderAtCheck": "15256",
+  "stageCommandExisted": false,
+  "sourceManifestCreated": false,
+  "browserStarted": false,
+  "classification": "pre-lock cancellation, not a test result"
+}

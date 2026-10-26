@@ -1,0 +1,134 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh 2026-10-24-functional-fixes-root/core-e9 'e9-core.spec.ts --trace=off'
+
+E4_WEEK_START=2026-10-26 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-11-02 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: agilityhub-core-api:review-fixes-20261024 arm64 revision= created=2026-10-24T08:13:53.586905258Z digests=[agilityhub-core-api@sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9 ghcr.io/jboixtcm/agilityhub-core-api@sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9]
+core image seeds (/app/seeds): club-canic-consumer.yaml club-canic-demo.yaml club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e9/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e9/demo-fifo.yaml (62 lines)
+template club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e9/club-template-default.yaml (302 lines)
+demo club: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e9/club-canic-demo.yaml (785 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-functional-fixes-root-e9_default Creating 
+ Volume agilityhub-functional-fixes-root-e9_attachment-files Creating 
+ Network agilityhub-functional-fixes-root-e9_default Creating 
+ Volume agilityhub-functional-fixes-root-e9_mailbox Creating 
+ Volume agilityhub-functional-fixes-root-e9_mailbox Creating 
+ Volume agilityhub-functional-fixes-root-e9_mongo-data Creating 
+ Volume agilityhub-functional-fixes-root-e9_mongo-data Creating 
+ Volume agilityhub-functional-fixes-root-e9_attachment-files Creating 
+ Volume agilityhub-functional-fixes-root-e9_export-files Creating 
+ Volume agilityhub-functional-fixes-root-e9_export-files Creating 
+ Volume agilityhub-functional-fixes-root-e9_mailbox Created 
+ Volume agilityhub-functional-fixes-root-e9_mailbox Created 
+ Volume agilityhub-functional-fixes-root-e9_mongo-data Created 
+ Volume agilityhub-functional-fixes-root-e9_mongo-data Created 
+ Volume agilityhub-functional-fixes-root-e9_attachment-files Created 
+ Volume agilityhub-functional-fixes-root-e9_attachment-files Created 
+ Volume agilityhub-functional-fixes-root-e9_export-files Created 
+ Volume agilityhub-functional-fixes-root-e9_export-files Created 
+ Network agilityhub-functional-fixes-root-e9_default Created 
+ Network agilityhub-functional-fixes-root-e9_default Created 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Creating 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Created 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Creating 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Created 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Creating 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Created 
+ Container agilityhub-functional-fixes-root-e9-core-1 Creating 
+ Container agilityhub-functional-fixes-root-e9-core-1 Created 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Starting 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Started 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Healthy 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Starting 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Started 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Exited 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Starting 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Started 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Exited 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Healthy 
+ Container agilityhub-functional-fixes-root-e9-core-1 Starting 
+ Container agilityhub-functional-fixes-root-e9-core-1 Started 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-core-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Waiting 
+ Container agilityhub-functional-fixes-root-e9-activate-demo-club-1 Exited 
+ Container agilityhub-functional-fixes-root-e9-seed-1 Exited 
+ Container agilityhub-functional-fixes-root-e9-mongo-1 Healthy 
+ Container agilityhub-functional-fixes-root-e9-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e9/seed-files.log (191 lines)
+ Container agilityhub-functional-fixes-root-e9-playwright-run-39ee5b3b5f55 Creating 
+ Container agilityhub-functional-fixes-root-e9-playwright-run-39ee5b3b5f55 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:32) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 858, downloaded 0, added 133
+Progress: resolved 858, reused 858, downloaded 0, added 604
+Progress: resolved 858, reused 858, downloaded 0, added 856
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.2s using pnpm v9.15.9
+[WebServer] (node:115) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:194) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:293) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:391) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:486) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+[1/3] e2e/core/e9-core.spec.ts:451:5 › E9-W04 · T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11) @critical-muntatge
+[2/3] e2e/core/e9-core.spec.ts:636:5 › E9-W05 · T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and «Registra-ho com a muntat» (R-16-02, R-16-05, R-16-10, R-16-07) @critical-muntatge
+[3/3] e2e/core/e9-core.spec.ts:1268:5 › E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′) @critical-muntatge
+  3 passed (20.4s)

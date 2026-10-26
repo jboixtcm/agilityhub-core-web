@@ -1,0 +1,312 @@
+{
+  "provenance": "All stages use the same final product/API source. E2/E4/E5 retain the 946-input baseline; E3/E6/E7 add only the local outbox readiness helper/test and its e2e-core.sh call (948 inputs). Final E8 uses those same readiness files plus its test-only passwordless-owner magic-link helper and atomic mailbox-file filter (948 inputs). Exact stage manifests are retained; earlier successes are not relabelled as later-source reruns.",
+  "allProductInputsMatchBaseline": true,
+  "totalUniquePassed": 59,
+  "failed": 0,
+  "skipped": 0,
+  "notRun": 0,
+  "sameManifestAcrossStages": false,
+  "e7Clock": {
+    "instant": "2026-11-02T06:00:00.000Z",
+    "status": 200
+  },
+  "e7ClockRestored": {
+    "moved": true,
+    "status": 200
+  },
+  "e8Permissions": {
+    "familyPartnerChecked": true,
+    "foreignInvoice": 404,
+    "foreignLeave": 404,
+    "foreignPeriod": 404
+  },
+  "e8OwnerAuthentication": {
+    "exchangeStatus": 200,
+    "host": "app.example.test",
+    "method": "magic-link",
+    "normalAccount": true,
+    "requestStatus": 202
+  },
+  "stages": [
+    {
+      "stage": "e2-r5",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "original-product-freeze",
+        "changed": [],
+        "added": [],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 946,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 121.2,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "9403421f7ee04c9112aac89b08412e2291ecf8d8e021ee7069d1f49ca6aaea2a",
+      "logSha256": "a280fa794a05ebb346a1e734a647b8d46fb0f2372eda209b74da887bf0e36a28",
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e2-r5 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    },
+    {
+      "stage": "e3-r5",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "same-product-with-local-outbox-readiness",
+        "changed": [
+          "scripts/e2e-core.sh"
+        ],
+        "added": [
+          "scripts/core-stack/wait-for-outbox.mjs",
+          "scripts/core-stack/wait-for-outbox.test.mjs"
+        ],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 948,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 172.06,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "5f4bf9eccdd6af5439533ad4d69e2607a25af218d3692597c68524ded52170c9",
+      "logSha256": "4af74f2262726c246a5cabea8e34f1ed0e5516cad0d6ce68ddbc69be58a7c7f0",
+      "outboxReadiness": {
+        "initialPending": 1126,
+        "elapsedMs": 46773,
+        "quietSpanMs": 2504,
+        "samples": 37,
+        "path": "core-e3-r5/outbox-ready-files.jsonl"
+      },
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-e3-observed-r5.py sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    },
+    {
+      "stage": "e4",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "original-product-freeze",
+        "changed": [],
+        "added": [],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 946,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 115.79,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "9403421f7ee04c9112aac89b08412e2291ecf8d8e021ee7069d1f49ca6aaea2a",
+      "logSha256": "9dc4d4f700d477f6bb7bb8ce6761544ac91d091c3f84fa6e3e025550772fff2c",
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e4 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    },
+    {
+      "stage": "e5",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "original-product-freeze",
+        "changed": [],
+        "added": [],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 946,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 138.78,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "9403421f7ee04c9112aac89b08412e2291ecf8d8e021ee7069d1f49ca6aaea2a",
+      "logSha256": "e71d322db664b29354565228b497ca71208991f5616403badf0d7c44c0597690",
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e5 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    },
+    {
+      "stage": "e6",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "same-product-with-local-outbox-readiness",
+        "changed": [
+          "scripts/e2e-core.sh"
+        ],
+        "added": [
+          "scripts/core-stack/wait-for-outbox.mjs",
+          "scripts/core-stack/wait-for-outbox.test.mjs"
+        ],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 948,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 158.04,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "5f4bf9eccdd6af5439533ad4d69e2607a25af218d3692597c68524ded52170c9",
+      "logSha256": "d551dbe39986cc397cba0d998224e12727e7c04bb94e0527e56097ade8d9e7ed",
+      "outboxReadiness": {
+        "initialPending": 1059,
+        "elapsedMs": 36109,
+        "quietSpanMs": 2632,
+        "samples": 29,
+        "path": "core-e6/outbox-ready-files.jsonl"
+      },
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e6 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    },
+    {
+      "stage": "e7",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "same-product-with-local-outbox-readiness",
+        "changed": [
+          "scripts/e2e-core.sh"
+        ],
+        "added": [
+          "scripts/core-stack/wait-for-outbox.mjs",
+          "scripts/core-stack/wait-for-outbox.test.mjs"
+        ],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 948,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 150.91,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "5f4bf9eccdd6af5439533ad4d69e2607a25af218d3692597c68524ded52170c9",
+      "logSha256": "b1293faa6e5ee336c77bfdd248ff018e3bab235a3ed4742cf7f790bb308f359d",
+      "outboxReadiness": {
+        "initialPending": 1078,
+        "elapsedMs": 35628,
+        "quietSpanMs": 2526,
+        "samples": 29,
+        "path": "core-e7/outbox-ready-files.jsonl"
+      },
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e7 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    },
+    {
+      "stage": "e8-r3",
+      "provenance": {
+        "baseline": "../2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+        "kind": "same-product-with-local-outbox-readiness-and-passwordless-owner-fixture",
+        "changed": [
+          "e2e/core/e8-core.spec.ts",
+          "scripts/e2e-core.sh"
+        ],
+        "added": [
+          "scripts/core-stack/wait-for-outbox.mjs",
+          "scripts/core-stack/wait-for-outbox.test.mjs"
+        ],
+        "removed": [],
+        "productInputsMatchBaseline": true
+      },
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "notRun": 0,
+      "image": "agilityhub-core-api:review-fixes-20261024",
+      "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+      "architecture": "arm64",
+      "commandExitCode": 0,
+      "inputCount": 948,
+      "inputsUnchanged": true,
+      "changedInputs": [],
+      "cleanup": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "cleanupComplete": true,
+      "elapsedSeconds": 270.44,
+      "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations",
+      "manifestSha256": "6c74fd3841e8dbc6d38e1aac3bc3aef60b44fd95d5cc9d8977ee1c1172a80681",
+      "logSha256": "432502c91bf72270536d401ebf30cc395785de7a425351a7c3910103e26fef3b",
+      "outboxReadiness": {
+        "initialPending": 1045,
+        "elapsedMs": 47110,
+        "quietSpanMs": 2567,
+        "samples": 37,
+        "path": "core-e8-r3/outbox-ready-files.jsonl"
+      },
+      "outerCommand": "env PATH=/opt/homebrew/opt/node@22/bin:$PATH HEAVY_WAIT_MIN=120 bash '/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh' python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e8-r3 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+    }
+  ]
+}

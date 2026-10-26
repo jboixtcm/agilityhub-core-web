@@ -1,0 +1,72 @@
+{
+  "environment": "Playwright 1.63.0 WebKit, official Linux noble Docker image, headless",
+  "browserVersion": "26.6",
+  "scope": "Automation popup policy calibration only; no app flow, macOS Safari, provider or deployment tested",
+  "cases": [
+    {
+      "name": "unactivated",
+      "auto": true,
+      "delay": 0,
+      "opened": 1,
+      "observation": {
+        "beforeOpen": {
+          "active": false,
+          "hasBeenActive": false
+        },
+        "finished": true
+      },
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15"
+    },
+    {
+      "name": "immediate-click",
+      "delay": 0,
+      "opened": 1,
+      "observation": {
+        "atClick": {
+          "active": true,
+          "hasBeenActive": true
+        },
+        "beforeOpen": {
+          "active": true,
+          "hasBeenActive": true
+        },
+        "finished": true
+      },
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15"
+    },
+    {
+      "name": "delayed-1500ms",
+      "delay": 1500,
+      "opened": 1,
+      "observation": {
+        "atClick": {
+          "active": true,
+          "hasBeenActive": true
+        },
+        "beforeOpen": {
+          "active": true,
+          "hasBeenActive": true
+        },
+        "finished": true
+      },
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15"
+    },
+    {
+      "name": "delayed-6000ms",
+      "delay": 6000,
+      "opened": 1,
+      "observation": {
+        "atClick": {
+          "active": true,
+          "hasBeenActive": true
+        },
+        "beforeOpen": {
+          "active": false,
+          "hasBeenActive": true
+        },
+        "finished": true
+      },
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15"
+    }
+  ]
+}

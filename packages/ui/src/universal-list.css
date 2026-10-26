@@ -392,3 +392,15 @@
     flex-basis: 100%;
   }
 }
+
+@media (max-width: 60rem) {
+  .ah-universal-list__menu {
+    position: static;
+  }
+
+  .ah-universal-list__menu .ah-universal-list__menu-panel {
+    left: 0;
+    right: auto;
+    max-width: 100%;
+  }
+}

@@ -182,7 +182,11 @@ test("T-01-18 password login reaches the seeded account", async ({ browser }) =>
   await submitPasswordLogin(page);
   await page.waitForURL(`${adminUrl}/tauler`);
   expect(handoffs).toEqual(["admin.example.test"]);
-  await expect(page.getByRole("heading", { name: "Tauler" })).toBeVisible();
+  // INC-97: the mobile sidebar is collapsed; prove the loaded dashboard itself.
+  await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toHaveText(
+    /^(Bon dia!|Bona tarda!|Bon vespre!)/u,
+  );
+  await expect(page.getByRole("main").getByText("Abonats d'alta", { exact: true })).toBeVisible();
 
   await context.close();
 });
@@ -223,7 +227,11 @@ test("T-01-21 seeded administrator opens the real backoffice", async ({ browser 
   await page.getByLabel("Contrasenya").fill(corePassword);
   await submitPasswordLogin(page);
   await expect(page).toHaveURL(/\/tauler$/u);
-  await expect(page.getByRole("heading", { name: "Tauler" })).toBeVisible();
+  // INC-97: the mobile sidebar is collapsed; prove the loaded dashboard itself.
+  await expect(page.getByRole("main").getByRole("heading", { level: 1 })).toHaveText(
+    /^(Bon dia!|Bona tarda!|Bon vespre!)/u,
+  );
+  await expect(page.getByRole("main").getByText("Abonats d'alta", { exact: true })).toBeVisible();
   await screenshot(page, "admin-password-core-1280.png");
   await context.close();
 });
@@ -301,6 +309,23 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   await accountPage.goto(`${idUrl}/products`);
   await expect(accountPage.getByRole("heading", { name: "Els teus productes" })).toBeVisible();
   await screenshot(accountPage, "id-products-core-1280.png");
+  const revoke = accountPage.waitForResponse(
+    (response) =>
+      response.url().endsWith("/oauth2/revoke") && response.request().method() === "POST",
+  );
+  // A cold /logout restores the HttpOnly session and revokes it without an invalid RP hint.
+  const rpLogoutRequests: string[] = [];
+  accountPage.on("request", (request) => {
+    if (new URL(request.url()).pathname === "/connect/logout") rpLogoutRequests.push(request.url());
+  });
+  await accountPage.goto(`${idUrl}/logout`);
+  expect((await revoke).status()).toBe(200);
+  await accountPage.waitForURL("**/login");
+  await expect(accountPage.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+  expect(rpLogoutRequests).toEqual([]);
+  await accountPage.goto(`${idUrl}/account`);
+  await expect(accountPage.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+  await screenshot(accountPage, "id-logout-core-1280.png");
   await accountContext.close();
 
   const context = await desktopContext(browser);

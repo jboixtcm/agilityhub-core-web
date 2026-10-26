@@ -1,0 +1,30 @@
+{
+  "status": "pre_INC97_fix_visual_review",
+  "source": "06b-full-browser-galleries",
+  "reviewMethod": "Contact-sheet overview of all169 captures shared across root/member/admin lanes, plus selected original-size images. Automated passing assertions alone did not establish layout correctness.",
+  "root": {
+    "overviewSheets": [
+      "other-flows-01.jpg",
+      "other-flows-02.jpg",
+      "other-flows-03.jpg",
+      "other-flows-04.jpg",
+      "other-flows-05.jpg",
+      "other-flows-06.jpg",
+      "other-flows-07.jpg",
+      "other-flows-08.jpg",
+      "other-flows-09.jpg"
+    ],
+    "originals": [
+      "04-reservar-375.png",
+      "16-add-dog-price-overlap-refused-375.png",
+      "D6-facturacio-calaix-rebut-1280.png"
+    ],
+    "findings": [
+      "INC97 common mobile admin overflow, independently confirmed by release lane.",
+      "No additional actionable defect in reviewed booking, waitlist, expiry, signup validation, desktop billing and export layouts."
+    ]
+  },
+  "memberLane": "All6 member overview sheets and6 selected originals reviewed, no additional layout blocker reported.",
+  "adminLane": "All5 admin overview sheets and4 selected originals reviewed; INC97 confirmed and correction owned by release agent.",
+  "limit": "Overview is not a pixel-level inspection of every full-height image. Final captures and targeted mobile browser measurements are required after INC97 fix."
+}

@@ -1,0 +1,7 @@
+{
+  "command": [
+    "python3",
+    "roadmap/evidence/2026-10-23-functional-root/verify-functional-close.py"
+  ],
+  "exitCode": 0
+}

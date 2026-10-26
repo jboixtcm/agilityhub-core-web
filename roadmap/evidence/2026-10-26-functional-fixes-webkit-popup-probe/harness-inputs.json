@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-webkit-popup-probe/popup-policy.cjs",
+      "sha256": "cc8b9d6daf311b1ddad5a730a9b8f73094e09f4eff944fdb7bd43cb7e818375f"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-webkit-popup-probe/run-calibration.sh",
+      "sha256": "792e10fba0564a454988ee4e06b6f1aec871ef543c707f98adb91dfa94278fb5"
+    },
+    {
+      "path": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-26-functional-fixes-webkit-popup-probe/popup-policy-result.json",
+      "sha256": "fa29605b8e0066149c5921d70cf4854d34be580a231041ad8536b45c85503ca3"
+    }
+  ],
+  "note": "Script last saved 08:59:46 UTC; wrapper acquired and snapshotted 08:59:49 UTC, so this exact saved script preceded execution."
+}

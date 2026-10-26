@@ -186,6 +186,7 @@ function placedGeometry(
     placementMode: placementMode(placement.placementMode),
     resolvedObstacles: resolvePlacedObstacles(course, placement).map((obstacle) => ({
       ...obstacle,
+      controlPointsMeters: obstacle.controlPointsMeters?.map((point) => ({ ...point })) ?? [],
       numbers: [...obstacle.numbers],
     })),
     transform: {

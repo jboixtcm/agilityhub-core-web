@@ -1,0 +1,27 @@
+{
+  "documentTypes": [
+    {
+      "key": "VACCINATION_CARD",
+      "label": "Cartilla de vacunes",
+      "required": true
+    },
+    {
+      "key": "INSURANCE",
+      "label": "Assegurança",
+      "required": false
+    },
+    {
+      "key": "OTHER",
+      "label": "Altres",
+      "required": false
+    }
+  ],
+  "levels": [
+    "CAD",
+    "E"
+  ],
+  "memberParameter": {
+    "code": "FORBIDDEN",
+    "status": 403
+  }
+}

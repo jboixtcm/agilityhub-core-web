@@ -61,6 +61,8 @@ export default defineConfig(({ mode }) => {
         };
 
   return {
+    // The public directory contains only MSW's worker; ship it only with mock builds.
+    build: { copyPublicDir: mockEnabled },
     plugins: [react(), tailwindcss(), obstacleModels()],
     server: mockEnabled
       ? {}

@@ -1,0 +1,41 @@
+{
+  "checks": {
+    "apiUnchangedFromFullVerify": {
+      "baseline": "roadmap/evidence/2026-10-23-api-review/13-expanded-clean-verify-tested-inputs.json",
+      "checkedFiles": 2235,
+      "changed": [],
+      "passed": true
+    },
+    "webProductUnchangedFromFunctionalStart": {
+      "baseline": "roadmap/evidence/2026-10-23-functional-release/03-core-production-tested-inputs.json",
+      "checkedFiles": 846,
+      "changed": [],
+      "passed": true
+    },
+    "newAuthTestAndDependenciesUnchanged": {
+      "baseline": "roadmap/evidence/2026-10-23-functional-root/auth-tested-inputs.json",
+      "checkedFiles": 6,
+      "changed": [],
+      "passed": true
+    },
+    "adoptedApiContract": {
+      "passed": true
+    },
+    "agilityhub-core-apiWhitespace": {
+      "exitCode": 0,
+      "output": "",
+      "passed": true
+    },
+    "agilityhub-core-webWhitespace": {
+      "exitCode": 0,
+      "output": "",
+      "passed": true
+    },
+    "sameApiImage": {
+      "architecture": "arm64",
+      "passed": true
+    }
+  },
+  "passed": true,
+  "scope": "Integrity and whitespace only; functional results and known defects remain in the reports."
+}

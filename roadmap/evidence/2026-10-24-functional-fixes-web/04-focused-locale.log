@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  09:37:12
+   Duration  691ms (environment 65%, import 15%, transform 12%, tests 7%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+
+ Test Files  1 passed (1)
+      Tests  5 passed | 81 skipped (86)
+   Start at  09:37:14
+   Duration  1.63s (transform 46%, tests 18%, import 17%, environment 15%, setup 4%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 39 skipped (43)
+   Start at  09:37:16
+   Duration  1.86s (transform 57%, import 15%, environment 14%, tests 11%, setup 3%)
+
+
+> @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> tsc --noEmit
+

@@ -1,0 +1,92 @@
+
+> @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (69 tests | 18 failed) 1148ms
+   ❯ T-01-04 pending account operations belong to their original session (18)
+     ❯ after logout (8)
+       × rejects the old password result 2ms
+       × rejects the old profile result 2ms
+       × rejects the old account result 2ms
+       × rejects the old read onboarding result 1ms
+       × rejects the old complete onboarding result 1ms
+       × rejects the old postpone onboarding result 2ms
+       × rejects the old handoff redirect result 1ms
+       × rejects the old OIDC redirect result 3ms
+     ❯ after replacement (8)
+       × rejects the old password result 2ms
+       × rejects the old profile result 1ms
+       × rejects the old account result 2ms
+       × rejects the old read onboarding result 1ms
+       × rejects the old complete onboarding result 1ms
+       × rejects the old postpone onboarding result 1ms
+       × rejects the old handoff redirect result 1ms
+       × rejects the old OIDC redirect result 1ms
+     × never replays an old PUT as a newer account when the response arrives late 2ms
+     × never replays an old PUT as a newer account when the refresh arrives late 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old password result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old profile result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old account result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old read onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old complete onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old postpone onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old handoff redirect result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after logout > rejects the old OIDC redirect result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old password result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old profile result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old account result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old read onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old complete onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old postpone onboarding result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old handoff redirect result
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > after replacement > rejects the old OIDC redirect result
+AssertionError: expected 'accepted' to be 'superseded' // Object.is equality
+
+Expected: "superseded"
+Received: "accepted"
+
+ ❯ src/auth-client.test.ts:1752:25
+    1750|       client.addEventListener("signedIn", signedIn);
+    1751|       release();
+    1752|       expect(await old).toBe("superseded");
+       |                         ^
+    1753|       expect(client.getMe()).toEqual(transition === "logout" ? null : …
+    1754|       expect(client.getAccessToken()).toBe(transition === "logout" ? n…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays an old PUT as a newer account when the response arrives late
+ FAIL  src/auth-client.test.ts > T-01-04 pending account operations belong to their original session > never replays an old PUT as a newer account when the refresh arrives late
+AssertionError: expected 204 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 204
+
+ ❯ src/auth-client.test.ts:1808:39
+    1806|       await client.login("new@example.test", "password");
+    1807|       release();
+    1808|       expect((await response).status).toBe(401);
+       |                                       ^
+    1809|       expect(sentAs).toEqual(["Bearer access-old"]);
+    1810|       expect(client.getAccessToken()).toBe("access-new");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  18 failed | 64 passed (82)
+   Start at  21:36:37
+   Duration  1.79s (tests 48%, environment 34%, transform 11%, import 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 test: `vitest run`
+Exit status 1

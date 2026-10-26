@@ -1,0 +1,6 @@
+{
+  "revokeStatus": 200,
+  "oldBearerStatus": 200,
+  "acceptedAccessTokenWindow": "S01 R-01-10: up to 15 minutes",
+  "peerSignedOut": true
+}

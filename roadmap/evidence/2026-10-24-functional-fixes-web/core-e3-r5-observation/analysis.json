@@ -1,0 +1,56 @@
+{
+  "stage": "e3-r5",
+  "passed": 5,
+  "failed": 0,
+  "skipped": 0,
+  "unchangedInputs": 948,
+  "readiness": {
+    "samples": 37,
+    "initialPending": 1126,
+    "finalPending": 0,
+    "failed": 0,
+    "elapsedMs": 46773,
+    "lastThreeSamples": [
+      {
+        "elapsedMs": 44269,
+        "pending": 0,
+        "failed": 0
+      },
+      {
+        "elapsedMs": 45524,
+        "pending": 0,
+        "failed": 0
+      },
+      {
+        "elapsedMs": 46773,
+        "pending": 0,
+        "failed": 0
+      }
+    ]
+  },
+  "welcomeDelivery": {
+    "eventOccurredAt": "2026-10-26T09:13:01.540Z",
+    "eventPublishedAt": "2026-10-26T09:13:02.519Z",
+    "eventAttempts": 1,
+    "notificationCode": "N-02",
+    "notificationStatus": "SENT",
+    "notificationSentAt": "2026-10-26T09:13:02.501Z",
+    "eventToSentMs": 961,
+    "firstMailboxObservedAt": "2026-10-26T09:13:03.457859+00:00",
+    "eventToMailboxObservationUpperBoundMs": 1918,
+    "activationPath": "/activacio",
+    "recipientMatchesAcceptedFictionalApplicant": true
+  },
+  "causalConclusion": "The failed observed r4 left MemberValidated unclaimed behind the initial seed backlog. With the local outbox readiness barrier the same browser suite and unchanged 15-second welcome assertion passed; N-02 was SENT 961 ms after validation. This isolates startup backlog in the observed failure; the unobserved r3 does not independently prove the same cause.",
+  "limitations": [
+    "Local fake email sink, not real provider delivery or recipient inbox.",
+    "Observer mailbox timestamps provide an upper bound, not exact file creation time.",
+    "Readiness waits for the seed outbox to drain; it does not benchmark large live event backlog latency."
+  ],
+  "evidenceSha256": {
+    "core-e3-r5-observation/delivery-timeline.jsonl": "6892986afc6b3a13d3e06c8f03656d5e200633f810120d9124bd533a5f9460c2",
+    "core-e3-r5/outbox-ready-files.jsonl": "55e369c6ec5f77509a2dd0d4a54f10a040704223f9285368c4732aa7a61f47be",
+    "core-e3-r5.log": "4af74f2262726c246a5cabea8e34f1ed0e5516cad0d6ce68ddbc69be58a7c7f0",
+    "core-e3-r5-tested-inputs.json": "5f4bf9eccdd6af5439533ad4d69e2607a25af218d3692597c68524ded52170c9"
+  }
+}

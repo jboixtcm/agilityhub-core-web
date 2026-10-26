@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 375,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "TABLE",
+      "className": "",
+      "text": "Rebuts · Setembre 2026Núm.↑AbonatConcepteImportMètodeEstat2026-0912Laura SerraQu",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "Núm.↑AbonatConcepteImportMètodeEstat",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Núm.↑AbonatConcepteImportMètodeEstat",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Concepte",
+      "left": 278,
+      "right": 494,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Import",
+      "left": 494,
+      "right": 570.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "",
+      "text": "Import",
+      "left": 506,
+      "right": 558.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Mètode",
+      "left": 570.234375,
+      "right": 669.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Estat",
+      "left": 669.234375,
+      "right": 856.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 856.234375,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "2026-0912Laura SerraQuota Abonat 2 gossos — Setembre 202690,00 €Domiciliacióreme",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "2026-0912Laura SerraQuota Abonat 2 gossos — Setembre 202690,00 €Domiciliacióreme",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Quota Abonat 2 gossos — Setembre 2026",
+      "left": 278,
+      "right": 494,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "billing-list__concept",
+      "text": "Quota Abonat 2 gossos — Setembre 2026",
+      "left": 290,
+      "right": 482,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "90,00 €",
+      "left": 494,
+      "right": 570.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "90,00 €",
+      "left": 506,
+      "right": 554,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Domiciliació",
+      "left": 570.234375,
+      "right": 669.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "remesat",
+      "left": 669.234375,
+      "right": 856.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--neutral",
+      "text": "remesat",
+      "left": 681.234375,
+      "right": 751.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 856.234375,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "2026-0913Marc PratsQuota Abonat — Setembre 202660,00 €Domiciliacióremesat",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Quota Abonat — Setembre 2026",
+      "left": 278,
+      "right": 494,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "billing-list__concept",
+      "text": "Quota Abonat — Setembre 2026",
+      "left": 290,
+      "right": 482,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "60,00 €",
+      "left": 494,
+      "right": 570.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "60,00 €",
+      "left": 506,
+      "right": 554,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Domiciliació",
+      "left": 570.234375,
+      "right": 669.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "remesat",
+      "left": 669.234375,
+      "right": 856.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--neutral",
+      "text": "remesat",
+      "left": 681.234375,
+      "right": 751.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 856.234375,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "2026-0914Eva PerezQuota inactivitat — Setembre 202610,00 €Domiciliacióremesat",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Quota inactivitat — Setembre 2026",
+      "left": 278,
+      "right": 494,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "billing-list__concept",
+      "text": "Quota inactivitat — Setembre 2026",
+      "left": 290,
+      "right": 482,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "10,00 €",
+      "left": 494,
+      "right": 570.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "10,00 €",
+      "left": 506,
+      "right": 551,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Domiciliació",
+      "left": 570.234375,
+      "right": 669.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "remesat",
+      "left": 669.234375,
+      "right": 856.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--neutral",
+      "text": "remesat",
+      "left": 681.234375,
+      "right": 751.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 856.234375,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "2026-0915Joan VilaQuota Abonat — Setembre 202660,00 €Efectiupendent · marca cobr",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Quota Abonat — Setembre 2026",
+      "left": 278,
+      "right": 494,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "billing-list__concept",
+      "text": "Quota Abonat — Setembre 2026",
+      "left": 290,
+      "right": 482,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "60,00 €",
+      "left": 494,
+      "right": 570.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "60,00 €",
+      "left": 506,
+      "right": 554,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Efectiu",
+      "left": 570.234375,
+      "right": 669.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "pendent · marca cobrat",
+      "left": 669.234375,
+      "right": 856.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--warning",
+      "text": "pendent · marca cobrat",
+      "left": 681.234375,
+      "right": 844.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 856.234375,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "2026-0916Roser CampsQuota Abonat — Setembre 202660,00 €Efectiupendent · marca co",
+      "left": 17,
+      "right": 880.234375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Quota Abonat — Setembre 2026",
+      "left": 278,
+      "right": 494,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "billing-list__concept",
+      "text": "Quota Abonat — Setembre 2026",
+      "left": 290,
+      "right": 482,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "60,00 €",
+      "left": 494,
+      "right": 570.234375,
+      "overflowX": "visible"
+    }
+  ]
+}

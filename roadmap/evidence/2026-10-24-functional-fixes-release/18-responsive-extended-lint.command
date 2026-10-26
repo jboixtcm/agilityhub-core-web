@@ -1,0 +1,1 @@
+corepack pnpm exec eslint apps/clubs-admin/src/styles.css apps/clubs-admin/src/planning/calendar.css apps/clubs-admin/e2e/e11-w05.spec.ts apps/clubs-admin/e2e/responsive-shell.spec.ts --max-warnings 0

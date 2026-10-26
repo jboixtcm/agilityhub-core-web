@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+ ❯ src/booking/test-utils.test.tsx (2 tests | 1 failed) 1331ms
+   ❯ booking world teardown keeps a slow hold release in its own test (2)
+     × starts after the previous release finishes and records only its own cancellation 315ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/test-utils.test.tsx > booking world teardown keeps a slow hold release in its own test > starts after the previous release finishes and records only its own cancellation
+AssertionError: expected undefined to be 204 // Object.is equality
+
+- Expected:
+204
+
++ Received:
+undefined
+
+ ❯ src/booking/test-utils.test.tsx:51:37
+     49|   it("starts after the previous release finishes and records only its …
+     50|     try {
+     51|       expect(previousReleaseStatus).toBe(204);
+       |                                     ^
+     52|       const deletes: string[] = [];
+     53|       server.use(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  09:33:41
+   Duration  3.40s (tests 40%, transform 34%, environment 13%, import 11%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/booking/test-utils.test.tsx

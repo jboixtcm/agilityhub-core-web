@@ -1,0 +1,91 @@
+{
+  "reviewDate": "2026-10-26",
+  "sourceRun": "26-inc100-responsive-final",
+  "sourceInputCount": 946,
+  "sourceUnchanged": true,
+  "result": "13/13 browser cases passed",
+  "visibleBoundsEvidence": "Passing permanent assertions separately require every visible panel, button, input, select and label to fit viewport at375/768/1280; the JSON page inventory does not store positive per-control coordinates.",
+  "visualReview": "All eight original files reviewed: four toolbar menus inside page margins at375/768, cash row actions inside card. Display tool downsamples tall full-page originals; exact geometry is provided by browser assertions.",
+  "images": [
+    {
+      "file": "responsive-admin-billing-menu-0-375.png",
+      "menu": "Filter",
+      "sha256": "c29e00537d28e44d30cd0fbaef69de40c90f0102ead114c5b54240b88468b2cf",
+      "pngWidth": 375,
+      "pngHeight": 4774,
+      "viewport": 375,
+      "documentWidth": 375,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-1-375.png",
+      "menu": "Columns",
+      "sha256": "3cba749d447648054cf27557c2358ae08b5cd36560338a023339f1d5c3adb8a1",
+      "pngWidth": 375,
+      "pngHeight": 4774,
+      "viewport": 375,
+      "documentWidth": 375,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-2-375.png",
+      "menu": "Views",
+      "sha256": "751e3885df32b0da4b6f23c397f45c69cd9ccee36681797482b6cf270e82173a",
+      "pngWidth": 375,
+      "pngHeight": 4774,
+      "viewport": 375,
+      "documentWidth": 375,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-3-375.png",
+      "menu": "Excel/PDF",
+      "sha256": "b2b8da75452a17067326492aa0e7729ec0977127ac815ab9c681b5fda1b4701b",
+      "pngWidth": 375,
+      "pngHeight": 4774,
+      "viewport": 375,
+      "documentWidth": 375,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-0-768.png",
+      "menu": "Filter",
+      "sha256": "848bba7c5eeee30f9cbd9c411d3e8c439c4888f08dec92d9376fb3d59d361001",
+      "pngWidth": 768,
+      "pngHeight": 4291,
+      "viewport": 768,
+      "documentWidth": 768,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-1-768.png",
+      "menu": "Columns",
+      "sha256": "1d4ac37ed459e8082c76df4d3b45ab384492a8d6425528ef3150fafab467ca0b",
+      "pngWidth": 768,
+      "pngHeight": 4291,
+      "viewport": 768,
+      "documentWidth": 768,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-2-768.png",
+      "menu": "Views",
+      "sha256": "cee4d90432ea32c6126faf5874cd10814246dde0cab81afbb5fef35e976d9c7d",
+      "pngWidth": 768,
+      "pngHeight": 4291,
+      "viewport": 768,
+      "documentWidth": 768,
+      "scrollX": 0
+    },
+    {
+      "file": "responsive-admin-billing-menu-3-768.png",
+      "menu": "Excel/PDF",
+      "sha256": "f6616fb0a2aec136b4066eb8befabac5ec3ac72c723ddcbb149735803594c929",
+      "pngWidth": 768,
+      "pngHeight": 4291,
+      "viewport": 768,
+      "documentWidth": 768,
+      "scrollX": 0
+    }
+  ]
+}

@@ -269,7 +269,7 @@ describe.each(BUTTONS)("T-14-26 R-14-12 E4-W07 $name", (button) => {
     await button.click();
 
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
-    expect(drawer).toHaveTextContent("Preparant l'exportació…");
+    expect(await within(drawer).findByText("Preparant l'exportació…")).toBeVisible();
     expect(clickedLinks).toHaveLength(0);
     expect(savedBlobs).toHaveLength(0);
   });

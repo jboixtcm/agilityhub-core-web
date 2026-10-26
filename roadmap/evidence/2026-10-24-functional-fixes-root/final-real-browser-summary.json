@@ -1,0 +1,272 @@
+{
+  "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "expectedUniqueCases": 91,
+  "passedUniqueCases": 91,
+  "allPassed": true,
+  "currentSourceMismatches": [],
+  "harnessOnlyDelta": [
+    "scripts/core-stack/wait-for-outbox.mjs",
+    "scripts/core-stack/wait-for-outbox.test.mjs",
+    "scripts/e2e-core.sh"
+  ],
+  "e8FixtureOnlyDelta": [
+    "e2e/core/e8-core.spec.ts"
+  ],
+  "groups": [
+    {
+      "stage": "core-e2-r5",
+      "status": "passed",
+      "expected": 5,
+      "passed": [
+        5
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e2-r5.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e3-r5",
+      "status": "passed",
+      "expected": 5,
+      "passed": [
+        5
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 948,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e3-r5.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e4",
+      "status": "passed",
+      "expected": 7,
+      "passed": [
+        7
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e4.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e5",
+      "status": "passed",
+      "expected": 11,
+      "passed": [
+        11
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e5.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e6",
+      "status": "passed",
+      "expected": 14,
+      "passed": [
+        14
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 948,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e6.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e7",
+      "status": "passed",
+      "expected": 11,
+      "passed": [
+        11
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 948,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {
+        "testClockAvailable": true
+      },
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e7.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e8-r3",
+      "status": "passed",
+      "expected": 6,
+      "passed": [
+        6
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 948,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {
+        "familyPartnerChecked": true,
+        "normalOwnerMagicLink": true
+      },
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-web/core-e8-r3.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e1-r3",
+      "status": "passed",
+      "expected": 8,
+      "passed": [
+        8
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e1-r3.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e4w16-r2",
+      "status": "passed",
+      "expected": 5,
+      "passed": [
+        5
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e4w16-r2.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e9-r2",
+      "status": "passed",
+      "expected": 3,
+      "passed": [
+        3
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e9-r2.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-e10-r2",
+      "status": "passed",
+      "expected": 6,
+      "passed": [
+        6
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-e10-r2.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "core-auth-r2",
+      "status": "passed",
+      "expected": 3,
+      "passed": [
+        3
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-root/core-auth-r2.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "01-core-d11-r3",
+      "status": "passed",
+      "expected": 1,
+      "passed": [
+        1
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-release/01-core-d11-r3.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "02-core-e11-r3",
+      "status": "passed",
+      "expected": 2,
+      "passed": [
+        2
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-release/02-core-e11-r3.summary.json",
+      "cleanupComplete": true
+    },
+    {
+      "stage": "03-core-production-r3",
+      "status": "passed",
+      "expected": 4,
+      "passed": [
+        4
+      ],
+      "skipped": 0,
+      "sourceMismatches": [],
+      "baselineInputCount": 946,
+      "extraHarnessInputs": [
+        "roadmap/evidence/2026-10-24-functional-fixes-release/check-https-config.py",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/https-compose.override.yml",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/https-server.mjs",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/playwright.production.config.ts",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/run-check.py",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/run-core.py",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/run-image-scan.py",
+        "roadmap/evidence/2026-10-24-functional-fixes-release/with-https-compose.py"
+      ],
+      "expectedExtraInputs": true,
+      "conditionalCoverage": {},
+      "summary": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-release/03-core-production-r3.summary.json",
+      "cleanupComplete": true
+    }
+  ]
+}

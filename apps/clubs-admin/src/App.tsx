@@ -680,6 +680,23 @@ function AdminShell({
   const { t } = useTranslation(["shell", "admin-audit"]);
   const { openExports } = useExportsDrawer();
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
+  const navigationToggle = useRef<HTMLButtonElement>(null);
+  const [navigation, setNavigation] = useState({ pathname, expanded: false });
+  // A route change closes the disclosure before the new page paints, including browser history.
+  if (navigation.pathname !== pathname) setNavigation({ pathname, expanded: false });
+  const navigationOpen = navigation.pathname === pathname && navigation.expanded;
+  useEffect(() => {
+    if (!navigationOpen) return undefined;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setNavigation({ pathname, expanded: false });
+      navigationToggle.current?.focus();
+    };
+    window.addEventListener("keydown", escape);
+    return () => {
+      window.removeEventListener("keydown", escape);
+    };
+  }, [navigationOpen, pathname]);
   const [counters, setCounters] = useState<components["schemas"]["DashboardCounters"]>();
   const [countersRequest, setCountersRequest] = useState(0);
   const refreshCounters = useCallback(() => {
@@ -720,6 +737,19 @@ function AdminShell({
     <div className="admin-shell">
       <header className="admin-shell__header">
         <div className="admin-shell__brand">
+          <button
+            aria-controls="admin-navigation"
+            aria-expanded={navigationOpen}
+            aria-label={t("shell:nav.admin")}
+            className="admin-shell__navigation-toggle"
+            onClick={() => {
+              setNavigation({ pathname, expanded: !navigationOpen });
+            }}
+            ref={navigationToggle}
+            type="button"
+          >
+            <Icon aria-hidden="true" name={navigationOpen ? "x" : "list"} />
+          </button>
           {logo.kind === "initial" ? (
             <span aria-hidden="true" className="admin-shell__mark">
               {branding.club.name.charAt(0)}
@@ -746,15 +776,20 @@ function AdminShell({
           <UserMenu authClient={authClient} />
         </div>
       </header>
-      <AdminNavigation
-        {...(counters === undefined ? {} : { counters })}
-        followUpUnread={unreadFollowUp.count}
-        instructorEntriesDenied={unreadFollowUp.denied}
-        modules={branding.modules}
-        pathname={pathname}
-        platformRoles={session.platformRoles}
-        roles={session.roles}
-      />
+      <div
+        className={`admin-shell__navigation${navigationOpen ? " admin-shell__navigation--open" : ""}`}
+        id="admin-navigation"
+      >
+        <AdminNavigation
+          {...(counters === undefined ? {} : { counters })}
+          followUpUnread={unreadFollowUp.count}
+          instructorEntriesDenied={unreadFollowUp.denied}
+          modules={branding.modules}
+          pathname={pathname}
+          platformRoles={session.platformRoles}
+          roles={session.roles}
+        />
+      </div>
       <main className="admin-shell__content">
         <SupportBanner onNavigate={onNavigate} />
         {/* A D14 row read that failed (R-10-13): said here, on whatever page the user went to. */}

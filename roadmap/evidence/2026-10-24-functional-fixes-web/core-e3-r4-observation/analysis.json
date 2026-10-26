@@ -1,0 +1,190 @@
+{
+  "result": "Reproduced 15-second local N-02 wait failure with unchanged spec/source",
+  "points": [
+    {
+      "observedAt": "2026-10-26T09:05:40.434971+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 941,
+      "pendingNotificationQueued": 715,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:41.746187+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 941,
+      "pendingNotificationQueued": 735,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:43.072300+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 882,
+      "pendingNotificationQueued": 759,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:44.384120+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 849,
+      "pendingNotificationQueued": 759,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:45.703154+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 774,
+      "pendingNotificationQueued": 737,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:46.988048+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 674,
+      "pendingNotificationQueued": 642,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:48.287888+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 574,
+      "pendingNotificationQueued": 542,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:49.589471+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 474,
+      "pendingNotificationQueued": 442,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:50.909398+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 374,
+      "pendingNotificationQueued": 342,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:52.203493+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 305,
+      "pendingNotificationQueued": 273,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:53.539781+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 246,
+      "pendingNotificationQueued": 214,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:54.896898+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 174,
+      "pendingNotificationQueued": 142,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    },
+    {
+      "observedAt": "2026-10-26T09:05:56.228688+00:00",
+      "validatedAt": "2026-10-26T09:05:39.572Z",
+      "validationStatus": "PENDING",
+      "attempts": 0,
+      "processedConsumerCount": 0,
+      "pendingTotal": 82,
+      "pendingNotificationQueued": 63,
+      "welcomeTokenCount": 0,
+      "n02Count": 0,
+      "activationMailForApplicant": 0
+    }
+  ],
+  "accountAndMembership": {
+    "locale": "ca",
+    "status": "ACTIVE"
+  },
+  "memberships": [
+    {
+      "roles": [
+        "MEMBER"
+      ],
+      "status": "ACTIVE"
+    }
+  ],
+  "appClub": {
+    "domains": [
+      {
+        "host": "app.example.test",
+        "primary": true,
+        "status": "VERIFIED"
+      },
+      {
+        "host": "admin.example.test",
+        "primary": false,
+        "status": "VERIFIED"
+      }
+    ],
+    "status": "ACTIVE"
+  },
+  "interpretation": "The accepted MemberValidated event remained unclaimed (attempts 0, no processed consumers) while older seeded-event work drained. No WELCOME token, N-02 record or activation mailbox file was produced before teardown. This locates the delay upstream of the email renderer, local sink and browser predicate. Eventual delivery after drain was not observed in this attempt.",
+  "limits": "The first failing E3-r3 did not preserve queue evidence. E3-r4 observer adds read-only sampling overhead, so it proves this run's cause and supports, but does not conclusively establish, the same cause for E3-r3."
+}

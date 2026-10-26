@@ -1,0 +1,654 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/TeamPage.test.tsx (4 tests | 4 failed) 20231ms
+   ❯ T-05-23 D17 team identities and recovery (INC-41 W3-14) (4)
+     × cannot silently grant the role to the first of two homonyms 137ms
+     × reads every page including LEFT members to name the existing team 10012ms
+     × retries the members request after its first failure 10016ms
+     × shows the approved future-class count when deactivation is refused 64ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-23 D17 team identities and recovery (INC-41 W3-14) > cannot silently grant the role to the first of two homonyms
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  class="ah-button ah-button--primary"
+  type="submit"
+/>
+ ❯ src/catalogs/TeamPage.test.tsx:84:66
+     82|     fireEvent.change(input, { target: { value: "Alex Serra" } });
+     83|     fireEvent.change(within(dialog).getByLabelText("Nom curt"), { targ…
+     84|     expect(within(dialog).getByRole("button", { name: "DESA" })).toBeD…
+       |                                                                  ^
+     85|     const options = [...dialog.querySelectorAll<HTMLOptionElement>("da…
+     86|     expect(new Set(options.map((option) => option.value)).size).toBe(2…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-23 D17 team identities and recovery (INC-41 W3-14) > reads every page including LEFT members to name the existing team
+TestingLibraryElementError: Unable to find role="button" and name "Edita Former Member"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"catalog-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mInstructors i administradors[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"catalog-section"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-section__header"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mInstructors[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNou instructor[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card catalog-table-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"catalog-table-scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"catalog-table"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mInstructors del club[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mNom curt[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mColor[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mActiu[0m
+                  [36m</th>[39m
+                  [36m<td[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"catalog-table__actions"[39m
+                  [36m/>[39m
+                [36m</tr>[39m
+              [36m</thead>[39m
+              [36m<tbody>[39m
+                [36m<tr[39m
+                  [33mdraggable[39m=[32m"false"[39m
+                [36m>[39m
+                  [36m<td>[39m
+                    [36m<strong>[39m
+                      [0mAlex[0m
+                    [36m</strong>[39m
+                  [36m</td>[39m
+                  [36m<td>[39m
+                    [0mAlex[0m
+                  [36m</td>[39m
+                  [36m<td>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"catalog-color-value"[39m
+                      [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"catalog-color-value__dot"[39m
+                      [36m/>[39m
+                    [36m</span>[39m
+                  [36m</td>[39m
+                  [36m<td>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                    [36m>[39m
+                      [0msí[0m
+                    [36m</span>[39m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"catalog-table__actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Edita Alex"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina Alex"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</td>[39m
+                [36m</tr>[39m
+              [36m</tbody>[39m
+            [36m</table>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"catalog-section"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-section__header"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mAdministradors[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNou administrador[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card catalog-table-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"catalog-table-scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"catalog-table"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mAdministradors del club[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mNom curt[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mDes de[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mActiu[0m
+                  [36m</th>[39m
+                  [36m<td[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"catalog-table__actions"[39m
+                  [36m/>[39m
+                [36m</tr>[39m
+              [36m</thead>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"catalog-table__empty"[39m
+                    [33mcolspan[39m=[32m"5"[39m
+                  [36m>[39m
+                    [36m<section[39m
+                      [33mclass[39m=[32m"ah-empty-state"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                      [36m<h2>[39m
+                        [0mEncara no hi ha cap administrador[0m
+                      [36m</h2>[39m
+                    [36m</section>[39m
+                  [36m</td>[39m
+                [36m</tr>[39m
+              [36m</tbody>[39m
+            [36m</table>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"catalog-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mInstructors i administradors[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"catalog-section"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-section__header"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mInstructors[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNou instructor[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card catalog-table-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"catalog-table-scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"catalog-table"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mInstructors del club[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mNom curt[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mColor[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mActiu[0m
+                  [36m</th>[39m
+                  [36m<td[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"catalog-table__actions"[39m
+                  [36m/>[39m
+                [36m</tr>[39m
+              [36m</thead>[39m
+              [36m<tbody>[39m
+                [36m<tr[39m
+                  [33mdraggable[39m=[32m"false"[39m
+                [36m>[39m
+                  [36m<td>[39m
+                    [36m<strong>[39m
+                      [0mAlex[0m
+                    [36m</strong>[39m
+                  [36m</td>[39m
+                  [36m<td>[39m
+                    [0mAlex[0m
+                  [36m</td>[39m
+                  [36m<td>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"catalog-color-value"[39m
+                      [33mstyle[39m=[32m"--catalog-color: #F2B58C;"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"catalog-color-value__dot"[39m
+                      [36m/>[39m
+                    [36m</span>[39m
+                  [36m</td>[39m
+                  [36m<td>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                    [36m>[39m
+                      [0msí[0m
+                    [36m</span>[39m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"catalog-table__actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Edita Alex"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina Alex"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</td>[39m
+                [36m</tr>[39m
+              [36m</tbody>[39m
+            [36m</table>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"catalog-section"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"catalog-section__header"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mAdministradors[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mNou administrador[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card catalog-table-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"catalog-table-scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"catalog-table"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mAdministradors del club[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mNom curt[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mDes de[0m
+                  [36m</th>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [0mActiu[0m
+                  [36m</th>[39m
+                  [36m<td[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"catalog-table__actions"[39m
+                  [36m/>[39m
+                [36m</tr>[39m
+              [36m</thead>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"catalog-table__empty"[39m
+                    [33mcolspan[39m=[32m"5"[39m
+                  [36m>[39m
+                    [36m<section[39m
+                      [33mclass[39m=[32m"ah-empty-state"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                      [36m<h2>[39m
+                        [0mEncara no hi ha cap administrador[0m
+                      [36m</h2>[39m
+                    [36m</section>[39m
+                  [36m</td>[39m
+                [36m</tr>[39m
+              [36m</tbody>[39m
+            [36m</table>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</section>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/TeamPage.test.tsx:113:25
+    111|     );
+    112|     await renderTeam();
+    113|     expect(await screen.findByRole("button", { name: "Edita Former Mem…
+       |                         ^
+    114|     expect(queries.some((query) => query.get("page") === "1")).toBe(tr…
+    115|     expect(queries.flatMap((query) => query.getAll("filter"))).not.toC…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-23 D17 team identities and recovery (INC-41 W3-14) > retries the members request after its first failure
+TestingLibraryElementError: Unable to find role="button" and name "Edita Recovered Member"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card catalog-load-error"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mNo s'han pogut carregar les dades.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna-ho a provar[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card catalog-load-error"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mNo s'han pogut carregar les dades.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna-ho a provar[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/TeamPage.test.tsx:129:25
+    127|     await renderTeam();
+    128|     fireEvent.click(await screen.findByRole("button", { name: "Torna-h…
+    129|     expect(await screen.findByRole("button", { name: "Edita Recovered …
+       |                         ^
+    130|   });
+    131|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/catalogs/TeamPage.test.tsx > T-05-23 D17 team identities and recovery (INC-41 W3-14) > shows the approved future-class count when deactivation is refused
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Té 3 classes futures assignades
+Received:
+  Aquest instructor està en ús.
+ ❯ src/catalogs/TeamPage.test.tsx:146:54
+    144|     fireEvent.click(within(dialog).getByRole("switch", { name: "Activa…
+    145|     fireEvent.click(within(dialog).getByRole("button", { name: "DESA" …
+    146|     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+       |                                                      ^
+    147|       "Té 3 classes futures assignades",
+    148|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  21:26:34
+   Duration  21.69s (tests 94%, transform 4%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/TeamPage.test.tsx

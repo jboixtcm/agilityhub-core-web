@@ -39,7 +39,9 @@ beforeEach(() => {
   resetNotificationMockState();
   mockScenario("member");
   window.history.replaceState(null, "", "/");
-  localStorage.removeItem(PUSH_SUBSCRIPTION_STORAGE_KEY);
+  // A fresh device/account per case, including the mock server's persisted account locale.
+  // Otherwise the preceding language PATCH makes a later borrowed session legitimately Spanish.
+  localStorage.clear();
   requests = [];
   server.events.on("request:start", ({ request }) => {
     const url = new URL(request.url);

@@ -1,0 +1,18 @@
+{
+  "stage": "e3-r3",
+  "image": "agilityhub-core-api:review-fixes-20261024",
+  "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "architecture": "arm64",
+  "commandExitCode": 1,
+  "inputCount": 946,
+  "inputsUnchanged": true,
+  "changedInputs": [],
+  "cleanup": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "cleanupComplete": true,
+  "elapsedSeconds": 107.92,
+  "scope": "Fresh fictional demo seed; local-profile API; local fake payment/mail; no external provider or production operations"
+}

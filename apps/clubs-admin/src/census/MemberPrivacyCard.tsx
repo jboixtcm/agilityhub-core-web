@@ -107,7 +107,12 @@ export function MemberDataExportButton({
             })
             .then(({ data }) => {
               if (data === undefined) throw new TypeError("Data export response had no job");
-              setMessage({ text: t("admin-census:member.privacy.exportQueued"), tone: "status" });
+              // The drawer owns live progress. This acknowledgement stays accurate after
+              // READY, FAILED or EXPIRED and when the drawer is closed.
+              setMessage({
+                text: t("admin-census:member.privacy.exportRequested"),
+                tone: "status",
+              });
               exportsDrawer?.openExports({ jobId: data.jobId, kind: "MEMBER_DATA" });
             })
             .catch((cause: unknown) => {

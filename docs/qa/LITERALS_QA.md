@@ -9,7 +9,7 @@
 
 **Com es fa la comparació**: un text compta com a «del mockup» quan tots els seus trossos fixos (fora de les variables) apareixen al text visible d'un mateix mockup, sense distingir majúscules. Un text que el mockup diu amb una paraula diferent surt aquí.
 
-**Recompte**: 2958 literals per revisar (984 B24 · 1974 B25); 1998 textos surten d'un mockup; 218 són només variables o signes; 4 dels de la taula no tenen pantalla localitzada (claus que el codi calcula).
+**Recompte**: 2966 literals per revisar (984 B24 · 1982 B25); 1998 textos surten d'un mockup; 218 són només variables o signes; 4 dels de la taula no tenen pantalla localitzada (claus que el codi calcula).
 
 ## Índex
 
@@ -23,9 +23,9 @@
 - 12 · 13 — rebuts i pack (17)
 - 14 — inactivitat (15)
 - 15 — baixa (16)
-- 16–19 — alta pública (46)
+- 16–19 — alta pública (47)
 - 19 — pagament amb targeta (4)
-- 20 · 21 · 22 · 26 — instructor (35)
+- 20 · 21 · 22 · 26 — instructor (37)
 - 25 — historial (9)
 - 30 — info i preguntes freqüents (6)
 - Recorreguts a l'app (visor, registre, sessió de muntatge) (91)
@@ -38,12 +38,12 @@
 - Inactivitats i baixes (pàgina nova) (45)
 - D5 · D15 — llistats d'abonats i de gossos (25)
 - D10 — fitxa d'abonat (190)
-- D6 — facturació i remeses (196)
+- D6 — facturació i remeses (199)
 - D7 — activitats (100)
 - D8 — modalitats i tarifes (27)
 - D16 — pistes (12)
 - D17 — instructors i administradors (9)
-- D11 — paràmetres del club (430)
+- D11 — paràmetres del club (432)
 - D9 — comunicats i plantilles d'avís (96)
 - D12 · D13 — agenda i fitxa d'alumne (17)
 - D14 — seguiment d'alumnes (13)
@@ -342,6 +342,7 @@
 | `signup:dog.documentRequired` | Cal adjuntar la cartilla de vacunes per continuar: toca «Cartilla de vacunes» i puja'n una foto o un PDF. | B25 | — |  |
 | `signup:dog.invalidChip` | El número de xip no és vàlid. | B25 | — |  |
 | `signup:dog.notesToInstructors` | Notes als instructors (opcional) | B25 | — |  |
+| `signup:dog.priceOverlap` | El club ha de revisar els preus d'aquesta modalitat. | B25 | — |  |
 | `signup:dog.singleClassPrice` | {price}/classe | B25 | — |  |
 | `signup:dog.tooManyFiles` | Es poden adjuntar com a màxim 10 fitxers. | B25 | — |  |
 | `signup:dog.uploading` | Pujant el document | B25 | — |  |
@@ -401,6 +402,8 @@
 | `instructor:card.loadError` | No s'ha pogut carregar la fitxa. | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:card.loading` | Carregant la fitxa | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
 | `instructor:card.noClasses` | Encara no hi ha classes | B25 | — | D12 · D13 — agenda i fitxa d'alumne |
+| `instructor:card.noNotes` | Encara no hi ha cap nota | B25 | — |  |
+| `instructor:card.noObservations` | Encara no hi ha cap observació | B25 | — |  |
 | `instructor:card.search` | Cerca un alumne | B25 | — |  |
 | `instructor:day.blockCreatedBy` | Creat per {name} | B25 | — |  |
 | `instructor:day.empty` | Cap classe aquest dia | B25 | — |  |
@@ -567,12 +570,12 @@
 | `auth:access.invalidCredentials` | Correu o contrasenya incorrectes | B25 | — |  |
 | `auth:access.neutralSuccess` | Si el correu és al club, hi rebràs l'enllaç | B25 | — | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
 | `auth:access.noMembership` | Aquest correu no pertany a {club} | B25 | — |  |
-| `auth:activation.invalidDescription` | Demana un altre enllaç per tornar a entrar. | B25 | — |  |
-| `auth:activation.invalidTitle` | Aquest enllaç ja no és vàlid | B25 | — |  |
-| `auth:activation.loading` | Validant l'enllaç… | B25 | — |  |
+| `auth:activation.invalidDescription` | Demana un altre enllaç per tornar a entrar. | B25 | — | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
+| `auth:activation.invalidTitle` | Aquest enllaç ja no és vàlid | B25 | — | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
+| `auth:activation.loading` | Validant l'enllaç… | B25 | — | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
 | `auth:activation.optionalPassword` | La contrasenya és opcional: sempre pots entrar amb l'enllaç del correu. La sessió queda oberta en aquest dispositiu. | B25 | — |  |
 | `auth:activation.passwordSaved` | Contrasenya desada | B25 | — |  |
-| `auth:activation.resend` | Envia-me'n un de nou | B25 | — |  |
+| `auth:activation.resend` | Envia-me'n un de nou | B25 | — | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
 | `auth:activation.resetLinkUsed` | L'enllaç ja s'ha fet servir: demana'n un altre | B25 | — |  |
 | `auth:activation.savingPassword` | DESANT… | B25 | — |  |
 | `auth:activation.welcome` | {gender, select, FEMALE {Benvinguda, {name}!} OTHER {Hola, {name}!} other {Benvingut, {name}!}} | B25 | — |  |
@@ -1015,7 +1018,7 @@
 | `admin-census:member.privacy.erasure.title` | Supressió de dades | B25 | aprovat (A39.172) |  |
 | `admin-census:member.privacy.export` | Descarrega les dades (RGPD) | B25 | aprovat (A39.165) |  |
 | `admin-census:member.privacy.exportPreparing` | S'està preparant el paquet de dades. | B25 | aprovat (A39.220) |  |
-| `admin-census:member.privacy.exportQueued` | El paquet s'està preparant. El trobaràs a Exportacions. | B25 | aprovat (A39.166) |  |
+| `admin-census:member.privacy.exportRequested` | Paquet de dades sol·licitat. Consulta'n l'estat a Exportacions. | B25 | — |  |
 | `admin-census:member.privacy.title` | Privacitat i dades | B25 | aprovat (A39.163) |  |
 | `admin-census:member.resend.description` | S'enviarà un enllaç nou al correu d'accés del compte. | B25 | — |  |
 | `admin-census:member.resend.title` | Reenvia l'accés | B25 | — |  |
@@ -1052,7 +1055,6 @@
 | `admin-billing:actions.generateOnly` | 2 · GENERA ELS REBUTS | B25 | — |  |
 | `admin-billing:actions.generateRunExists` | Els rebuts d'aquest mes ja s'han generat. | B25 | — |  |
 | `admin-billing:actions.manualInvoice` | Rebut manual | B25 | — |  |
-| `admin-billing:actions.rollbackDatePassed` | Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc | B25 | — |  |
 | `admin-billing:actions.simulating` | Simulant el mes… | B25 | — |  |
 | `admin-billing:confirm.chargeBody` | Es cobraran {count} rebuts amb targeta per un total de {total}. | B25 | — |  |
 | `admin-billing:confirm.chargeTitle` | Cobra les targetes | B25 | — |  |
@@ -1065,6 +1067,7 @@
 | `admin-billing:confirm.markPaidBody` | {count, plural, one {Es marcarà # rebut com a cobrat.} other {Es marcaran # rebuts com a cobrats.}} | B25 | — |  |
 | `admin-billing:confirm.reference` | Referència (opcional) | B25 | — |  |
 | `admin-billing:confirm.rollbackDates` | la data del proper rebut dels abonats tornarà a ser l'anterior; | B25 | — |  |
+| `admin-billing:confirm.rollbackFileNotSent` | Només si el fitxer no s'ha enviat mai al banc | B25 | — |  |
 | `admin-billing:confirm.rollbackIntro` | Es desfarà la generació del mes: | B25 | — |  |
 | `admin-billing:confirm.rollbackInvoices` | {count, plural, one {s'anul·larà # rebut;} other {s'anul·laran # rebuts;}} | B25 | — |  |
 | `admin-billing:confirm.rollbackKeywordLabel` | Escriu {keyword} per confirmar-ho | B25 | — |  |
@@ -1144,6 +1147,7 @@
 | `admin-billing:header.months` | Canvi de mes | B25 | — |  |
 | `admin-billing:header.remittances` | Remeses › | B25 | — |  |
 | `admin-billing:kpi.card` | Amb targeta | B25 | — |  |
+| `admin-billing:kpi.collectionDatePassed` | Ja ha passat la data de cobrament: marca la remesa com a enviada o espera la resposta del banc | B25 | — |  |
 | `admin-billing:kpi.submitBefore` | Presenta-la al banc abans del {date} | B25 | — |  |
 | `admin-billing:list.chips` | Estat dels rebuts | B25 | — |  |
 | `admin-billing:list.columns.issueDate` | Data d'emissió | B25 | — |  |
@@ -1216,8 +1220,10 @@
 | `admin-billing:toasts.rolledBack` | {count, plural, one {# rebut anul·lat} other {# rebuts anul·lats}} | B25 | — |  |
 | `enums:billingIncident.CARD_INVALID` | targeta no vàlida | B25 | — |  |
 | `enums:billingIncident.CURRENCY_MISMATCH` | moneda diferent de la del club | B25 | — |  |
+| `enums:billingIncident.MANDATE_PENDING` | mandat SEPA pendent | B25 | — |  |
 | `enums:billingIncident.MEMBER_NOT_ACTIVE` | abonat no actiu | B25 | — |  |
 | `enums:billingIncident.NO_NEXT_INVOICE_DATE` | sense data del proper rebut | B25 | — |  |
+| `enums:billingIncident.NO_PAYMENT_METHOD` | sense mètode de pagament | B25 | — |  |
 | `enums:billingIncident.NO_PLAN` | sense modalitat assignada | B25 | — |  |
 | `enums:billingIncident.PAYMENT_METHOD_CHANGED` | mètode de pagament canviat | B25 | — |  |
 | `enums:billingIncident.PROVIDER_DISABLED` | proveïdor de pagament desactivat | B25 | — |  |
@@ -1528,9 +1534,11 @@
 | `admin-settings:jobs.name.BILLING_REMINDER` | Recordatori de facturació | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.CLASS_FINISHING` | Tancament de classes | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.CLEANUP` | Neteja tècnica | B25 | — | D19 — consola de clubs |
+| `admin-settings:jobs.name.ERASURES` | Supressió de dades | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.EXPIRATIONS` | Caducitats | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.NO_SHOW_NOTICES` | Avisos de no presentat | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.PAYMENT_TIMEOUTS` | Temps de pagament exhaurit | B25 | — | D19 — consola de clubs |
+| `admin-settings:jobs.name.RETENTION_SWEEP` | Retenció de dades | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.WAITLIST_FIFO` | Llista d'espera (FIFO) | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.name.WEEK_OPENING` | Obertura de la setmana | B25 | — | D19 — consola de clubs |
 | `admin-settings:jobs.noItems` | No hi ha res a fer. | B25 | — |  |
@@ -2367,7 +2375,7 @@
 | `admin-audit:actions.WEEK_VALIDATED` | Setmana validada | B24 | — | Auditoria |
 | `admin-audit:columns.actor` | Actor | B24 | — | Auditoria |
 | `admin-audit:columns.origin` | Origen | B24 | — | Auditoria |
-| `console:access.description` | Aquest accés és només per a l'equip AgilityHub. | B24 | — |  |
+| `console:access.description` | Aquest accés és només per a l'equip AgilityHub. | B24 | — | Marc del backoffice (accés, menú, estats de càrrega i d'error) |
 | `console:access.title` | Consola de clubs | B24 | — |  |
 | `console:audit.description` | Accions de configuració del club fetes des de la plataforma o pel mateix club. No inclou les accions sobre abonats. | B24 | — |  |
 | `console:audit.empty` | Encara no hi ha cap acció de configuració. | B24 | — |  |

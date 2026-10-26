@@ -19,13 +19,12 @@ const FOCUS_REFRESH_SLACK_MS = 30_000;
 const RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000, 60_000] as const;
 /** `/me` after a handoff: the first try and two retries (2 s, 5 s) before the page offers a retry. */
 const HANDOFF_ME_ATTEMPTS = 3;
-/**
- * S01 R-01-06 (E11-W06 W3): one refresh at a time across the tabs of a client, which share the
- * refresh cookie — three restored together would otherwise send one rotated token three times,
- * and the third is a reuse that revokes the family. Web Locks only (ruling E163): every supported
- * browser has them; without them a tab refreshes on its own, and the grace sibling covers a race.
- */
-const REFRESH_LOCK_PREFIX = "agilityhub.refresh:";
+/** Cookie writers share one queue per identity origin, including different client IDs. */
+const COOKIE_LOCK_PREFIX = "agilityhub.session-cookie:";
+const cookieQueues = new Map<string, Promise<void>>();
+
+/** An answer belongs to a session that signed out or was replaced while it was in flight. */
+class SessionChangedError extends Error {}
 /**
  * S01 D10 and R-01-09 (E47): the impersonated session lives in this tab's session storage only
  * (never `localStorage`), so it survives the app's full-page navigations and dies with the tab.
@@ -175,12 +174,8 @@ function waitForRetry(delayMs: number): Promise<void> {
   });
 }
 
-/**
- * The refresh inside the Web Lock `name`; without Web Locks (no supported browser lacks them) the
- * task runs at once, as before E11-W06 — a `localStorage` lease cannot be made mutually exclusive
- * (E163).
- */
-async function withRefreshLock<T>(name: string, task: () => Promise<T>): Promise<T> {
+/** Web Locks coordinate tabs; the fallback still orders all clients within this page. */
+async function withCookieLock<T>(name: string, task: () => Promise<T>): Promise<T> {
   const locks =
     typeof navigator === "undefined"
       ? undefined
@@ -188,7 +183,16 @@ async function withRefreshLock<T>(name: string, task: () => Promise<T>): Promise
   if (locks !== undefined && typeof locks.request === "function") {
     return locks.request(name, task);
   }
-  return task();
+  const operation = (cookieQueues.get(name) ?? Promise.resolve()).then(task);
+  const settled = operation.then(
+    () => undefined,
+    () => undefined,
+  );
+  cookieQueues.set(name, settled);
+  void settled.then(() => {
+    if (cookieQueues.get(name) === settled) cookieQueues.delete(name);
+  });
+  return operation;
 }
 
 function isAccountLocale(locale: string): locale is AccountLocale {
@@ -218,6 +222,11 @@ export class AuthClient extends EventTarget {
   /** The tokens last accepted, and how many were (a refresh that waited compares, E11-W06 W3). */
   private currentTokens: TokenResponse | null = null;
   private tokenGeneration = 0;
+  /** A superseded grant may already have set its cookie; logout must revoke it after it settles. */
+  private lastCookieGrant: { token: string | null } | null = null;
+  /** Session identity changes, unlike a routine refresh of the same account. */
+  private sessionGeneration = 0;
+  private sessionTransition = false;
   private exchangeInFlight: Promise<Me> | null = null;
   private readonly fetcher: typeof globalThis.fetch;
   /** `account` mode: the tokens of a redeemed code whose `/me` has not answered yet (kept in memory). */
@@ -260,6 +269,7 @@ export class AuthClient extends EventTarget {
     this.signInPath = options.signInPath ?? DEFAULT_SIGN_IN_PATH;
     this.apiClient = createApiClient({
       baseUrl: this.apiBaseUrl,
+      captureRequestGuard: () => this.captureSessionGuard(),
       credentials: "include",
       fetch: this.fetcher,
       getAccessToken: () => this.accessToken,
@@ -272,6 +282,19 @@ export class AuthClient extends EventTarget {
 
   getMe(): Me | null {
     return this.currentMe;
+  }
+
+  /** Captures identity for an in-flight API request; routine refresh leaves it unchanged. */
+  getSessionGeneration(): number {
+    return this.sessionGeneration;
+  }
+
+  captureSessionGuard(): () => void {
+    const generation = this.sessionGeneration;
+    return () => {
+      this.requireSessionGeneration(generation);
+      if (this.sessionTransition) throw new SessionChangedError("The session is changing");
+    };
   }
 
   /** An impersonated session (R-01-09): it is never refreshed and ends when its token expires. */
@@ -358,23 +381,25 @@ export class AuthClient extends EventTarget {
   }
 
   async login(email: string, password: string): Promise<Me> {
+    const generation = this.beginSessionChange();
     const form = new URLSearchParams({
       client_id: this.clientId,
       grant_type: "password",
       password,
       username: email,
     });
-    const tokens = await this.issueToken(form);
-    this.leaveImpersonation();
-    this.acceptTokens(tokens);
-
     try {
+      const tokens = await this.issueToken(form);
+      this.requireSessionGeneration(generation);
+      this.leaveImpersonation();
+      this.acceptTokens(tokens);
       const me = await this.loadMe();
+      this.requireSessionGeneration(generation);
       this.currentMe = me;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      this.clearLocalSession();
+      if (this.sessionGeneration === generation) this.clearLocalSession();
       throw error;
     }
   }
@@ -427,15 +452,19 @@ export class AuthClient extends EventTarget {
     this.clearLocalSession();
     const expiry = expiresAt === undefined ? Number.NaN : Date.parse(expiresAt);
     this.enterImpersonation(token, Number.isNaN(expiry) ? undefined : expiry);
+    const generation = this.sessionGeneration;
     try {
       const me = await this.loadMe();
+      this.requireSessionGeneration(generation);
       this.currentMe = me;
       this.signedOutNotified = false;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      this.leaveImpersonation();
-      this.clearLocalSession();
+      if (this.sessionGeneration === generation) {
+        this.leaveImpersonation();
+        this.clearLocalSession();
+      }
       throw error;
     }
   }
@@ -458,7 +487,8 @@ export class AuthClient extends EventTarget {
    * The interceptor's `401` path: an impersonated session ends; any other refreshes once. Returns
    * whether a fresh access token is there to retry the request with.
    */
-  async recoverFromUnauthorized(): Promise<boolean> {
+  async recoverFromUnauthorized(generation = this.sessionGeneration): Promise<boolean> {
+    if (this.sessionGeneration !== generation) return false;
     if (this.impersonation !== null) {
       this.handleImpersonationExpired();
       return false;
@@ -468,8 +498,10 @@ export class AuthClient extends EventTarget {
     }
     try {
       await this.refresh();
-      return true;
+      return this.sessionGeneration === generation;
     } catch (error) {
+      if (error instanceof SessionChangedError || this.sessionGeneration !== generation)
+        return false;
       if (endsSession(error)) {
         this.handleRefreshFailure();
       } else {
@@ -482,7 +514,9 @@ export class AuthClient extends EventTarget {
   }
 
   async updatePassword(request: UpdatePasswordRequest): Promise<void> {
+    const generation = this.sessionGeneration;
     await this.apiClient.PUT("/me/password", { body: request });
+    this.requireSessionGeneration(generation);
     if (this.currentMe !== null) {
       this.currentMe = {
         ...this.currentMe,
@@ -493,13 +527,19 @@ export class AuthClient extends EventTarget {
   }
 
   async updateProfile(activeProfile: Role, remember: boolean): Promise<void> {
+    const generation = this.sessionGeneration;
     const result = await this.apiClient.PUT("/me/profile", {
       body: { activeProfile, remember },
     });
+    this.requireSessionGeneration(generation);
     if (result.data === undefined) {
       throw new TypeError("The profile response did not contain data", { cause: result.error });
     }
     this.accessToken = result.data.access_token;
+    this.tokenGeneration += 1;
+    if (this.currentTokens !== null) {
+      this.currentTokens = { ...this.currentTokens, access_token: result.data.access_token };
+    }
     if (this.currentMe?.membership !== undefined) {
       this.currentMe = {
         ...this.currentMe,
@@ -515,7 +555,9 @@ export class AuthClient extends EventTarget {
   }
 
   async updateAccount(request: UpdateMeRequest): Promise<Me> {
+    const generation = this.sessionGeneration;
     const result = await this.apiClient.PATCH("/me", { body: request });
+    this.requireSessionGeneration(generation);
     if (result.data === undefined) {
       throw new TypeError("The account response did not contain data", { cause: result.error });
     }
@@ -532,7 +574,9 @@ export class AuthClient extends EventTarget {
   }
 
   async getOnboarding(): Promise<OnboardingState> {
+    const generation = this.sessionGeneration;
     const result = await this.apiClient.GET("/me/onboarding");
+    this.requireSessionGeneration(generation);
     if (result.data === undefined) {
       throw new TypeError("The onboarding response did not contain data", {
         cause: result.error,
@@ -543,7 +587,9 @@ export class AuthClient extends EventTarget {
   }
 
   async completeOnboarding(request: OnboardingRequest): Promise<OnboardingState> {
+    const generation = this.sessionGeneration;
     const result = await this.apiClient.PUT("/me/onboarding", { body: request });
+    this.requireSessionGeneration(generation);
     if (result.data === undefined) {
       throw new TypeError("The onboarding response did not contain data", {
         cause: result.error,
@@ -554,7 +600,9 @@ export class AuthClient extends EventTarget {
   }
 
   async postponeOnboarding(): Promise<OnboardingState> {
+    const generation = this.sessionGeneration;
     const result = await this.apiClient.POST("/me/onboarding/postpone");
+    this.requireSessionGeneration(generation);
     if (result.data === undefined) {
       throw new TypeError("The onboarding response did not contain data", {
         cause: result.error,
@@ -565,7 +613,9 @@ export class AuthClient extends EventTarget {
   }
 
   async listSessions(): Promise<AccountSession[]> {
+    const generation = this.sessionGeneration;
     const result = await this.apiClient.GET("/me/sessions");
+    this.requireSessionGeneration(generation);
     if (result.data === undefined) {
       throw new TypeError("The sessions response did not contain data", { cause: result.error });
     }
@@ -573,10 +623,16 @@ export class AuthClient extends EventTarget {
   }
 
   async revokeSession(id: string): Promise<void> {
-    await this.apiClient.DELETE("/me/sessions/{id}", { params: { path: { id } } });
+    const generation = this.sessionGeneration;
+    await withCookieLock(this.cookieLockName(), async () => {
+      this.requireSessionGeneration(generation);
+      await this.apiClient.DELETE("/me/sessions/{id}", { params: { path: { id } } });
+      this.requireSessionGeneration(generation);
+    });
   }
 
   async createHandoff(targetClientId: string): Promise<HandoffResponse> {
+    const generation = this.sessionGeneration;
     const response = await this.routedRequest("/auth/handoff", {
       body: JSON.stringify({ targetClientId }),
       headers: {
@@ -585,10 +641,13 @@ export class AuthClient extends EventTarget {
       },
       method: "POST",
     });
-    return (await response.json()) as HandoffResponse;
+    const payload = (await response.json()) as HandoffResponse;
+    this.requireSessionGeneration(generation);
+    return payload;
   }
 
   async resumeOidcFlow(flow: string): Promise<OidcSessionResponse> {
+    const generation = this.sessionGeneration;
     const response = await this.routedRequest("/oauth2/session", {
       body: JSON.stringify({ flow } satisfies components["schemas"]["OidcSessionRequest"]),
       headers: {
@@ -598,6 +657,7 @@ export class AuthClient extends EventTarget {
       method: "POST",
     });
     const payload: unknown = await response.json();
+    this.requireSessionGeneration(generation);
     if (
       typeof payload !== "object" ||
       payload === null ||
@@ -640,6 +700,7 @@ export class AuthClient extends EventTarget {
       try {
         return await this.exchangeInFlight;
       } catch (error) {
+        if (error instanceof SessionChangedError) return this.currentMe;
         // A redeemed handoff whose `/me` keeps failing is still this tab's session (unknown yet):
         // the provider stays `loading` while it is asked again later.
         if (this.pendingHandoff !== null) {
@@ -697,14 +758,20 @@ export class AuthClient extends EventTarget {
     if (stored !== undefined) {
       return this.restoreImpersonation(stored);
     }
+    const generation = this.sessionGeneration;
     try {
       await this.refresh();
+      if (this.sessionGeneration !== generation) return this.currentMe;
       const me = await this.loadMe();
+      if (this.sessionGeneration !== generation) return this.currentMe;
       this.currentMe = me;
       this.retryAttempt = 0;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
+      if (error instanceof SessionChangedError || this.sessionGeneration !== generation) {
+        return this.currentMe;
+      }
       if (endsSession(error)) {
         this.clearLocalSession();
         return null;
@@ -730,13 +797,16 @@ export class AuthClient extends EventTarget {
       return null;
     }
     this.enterImpersonation(stored.token, stored.expiresAt);
+    const generation = this.sessionGeneration;
     try {
       const me = await this.loadMe();
+      if (this.sessionGeneration !== generation) return this.currentMe;
       this.currentMe = me;
       this.signedOutNotified = false;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
+      if (this.sessionGeneration !== generation) return this.currentMe;
       if (isApiError(error) && error.status === 401) {
         this.handleImpersonationExpired();
         return null;
@@ -751,9 +821,12 @@ export class AuthClient extends EventTarget {
 
   /** The tab's redeemed handoff after a page load, or again after `/me` failed: never the cookie. */
   private async restorePendingHandoff(): Promise<Me | null> {
+    const generation = this.sessionGeneration;
     try {
       return await this.confirmHandoff();
     } catch (error) {
+      if (error instanceof SessionChangedError || this.sessionGeneration !== generation)
+        return this.currentMe;
       if (this.pendingHandoff === null) {
         // Refused (the tab ends anonymous), or another sign-in replaced it meanwhile.
         return this.currentMe;
@@ -784,36 +857,55 @@ export class AuthClient extends EventTarget {
    * with its own token and never refreshed.
    */
   async logout(): Promise<void> {
-    let failure: Error | undefined;
+    const bearer = this.accessToken;
     const impersonated = this.impersonation !== null || this.holdsHandoffSession();
+    const impersonationToken = this.impersonation === "active" ? bearer : null;
+    const generation = this.beginSessionChange();
+    let failure: Error | undefined;
 
     try {
-      if (this.accessToken !== null) {
-        // S01 R-01-10 (E11-W06 step 14, ruling E151): «Surt» of «Entra com l'abonat» ends the
-        // grant itself (`RevokeRequest.token` = the impersonation JWT); `{}` only revokes the
-        // bearer's session, and the grant stayed valid until `auth.impersonationMinutes`.
-        let response = await this.revoke(
-          this.impersonation === "active" ? this.accessToken : undefined,
-        );
+      await withCookieLock(this.cookieLockName(), async () => {
+        this.requireSessionGeneration(generation);
+        // A token request already sent when logout began can set the cookie while we wait.
+        // Revoke that issued session, even when it was the first login and had no bearer yet.
+        const issued = this.lastCookieGrant;
+        let token = !impersonated && issued !== null ? issued.token : bearer;
+        if (token === null && !impersonated && issued !== null) {
+          // Headers can set a cookie even if parsing the token body failed. Ask for its bearer
+          // once under the same lock, so logout can still revoke that session.
+          try {
+            token = (await this.requestToken(this.refreshForm())).access_token;
+          } catch (error) {
+            if (!endsSession(error)) throw error;
+          }
+          this.requireSessionGeneration(generation);
+        }
+        if (token === null) return;
+        let response = await this.requestRevoke(token, impersonationToken ?? undefined);
+        this.requireSessionGeneration(generation);
         if (response.status === 401 && !impersonated) {
-          await this.refresh();
-          response = await this.revoke();
+          const refreshed = await this.requestToken(this.refreshForm());
+          this.requireSessionGeneration(generation);
+          response = await this.requestRevoke(refreshed.access_token);
+          this.requireSessionGeneration(generation);
         }
         if (!response.ok && !(impersonated && response.status === 401)) {
           failure = await ApiError.fromResponse(response);
         }
-      }
+      });
     } catch (error) {
-      failure = isApiError(error) ? error : ApiError.network(error);
+      if (!(error instanceof SessionChangedError)) {
+        failure = isApiError(error) ? error : ApiError.network(error);
+      }
     } finally {
-      this.leaveImpersonation();
-      this.clearLocalSession();
-      this.emitSignedOut();
+      if (this.sessionGeneration === generation) {
+        this.leaveImpersonation();
+        this.clearLocalSession();
+        this.emitSignedOut();
+      }
     }
 
-    if (failure !== undefined) {
-      throw failure;
-    }
+    if (failure !== undefined) throw failure;
   }
 
   /**
@@ -833,7 +925,9 @@ export class AuthClient extends EventTarget {
     }
     // `RevokeRequest.token` = the impersonation or support JWT, which ends its grant. `{}` revokes
     // only the bearer's session (`sid`), and the core then kept a support grant alive.
+    const generation = this.sessionGeneration;
     const response = await this.revoke(this.accessToken);
+    if (this.sessionGeneration !== generation) return;
     // A 401 means that this one-time grant has already expired or been ended by the club.
     if (!response.ok && response.status !== 401) {
       throw await ApiError.fromResponse(response);
@@ -872,25 +966,39 @@ export class AuthClient extends EventTarget {
 
   /** `token`: the JWT to revoke in the body (`RevokeRequest.token`); without it, the bearer's `sid`. */
   private async revoke(token?: string): Promise<Response> {
+    const generation = this.sessionGeneration;
+    const bearer = this.accessToken ?? "";
+    return withCookieLock(this.cookieLockName(), async () => {
+      this.requireSessionGeneration(generation);
+      return this.requestRevoke(bearer, token);
+    });
+  }
+
+  /** Only called while holding the cookie lock (including the logout refresh/revoke retry). */
+  private async requestRevoke(bearer: string, token?: string): Promise<Response> {
     const headers = new Headers({ "Content-Type": "application/json" });
-    headers.set("Authorization", `Bearer ${this.accessToken ?? ""}`);
+    headers.set("Authorization", `Bearer ${bearer}`);
     try {
-      return await this.fetcher(this.endpointFor("/oauth2/revoke"), {
+      const response = await this.fetcher(this.endpointFor("/oauth2/revoke"), {
         body: JSON.stringify(token === undefined ? {} : { token }),
         credentials: "include",
         headers,
         method: "POST",
       });
+      if (response.ok) this.lastCookieGrant = null;
+      return response;
     } catch (error) {
       throw ApiError.network(error);
     }
   }
 
   private enterImpersonation(token: string, expiresAt: number | undefined): void {
+    this.beginSessionChange();
     this.cancelScheduledRefresh();
     this.cancelRetry();
     this.mockRefreshTokenStore?.clear();
     this.accessToken = token;
+    this.sessionTransition = false;
     this.refreshAt = null;
     this.impersonation = "active";
     this.pendingHandoff = null;
@@ -925,6 +1033,7 @@ export class AuthClient extends EventTarget {
   }
 
   private acceptTokens(tokens: TokenResponse): void {
+    this.sessionTransition = false;
     this.tokenGeneration += 1;
     this.currentTokens = tokens;
     this.accessToken = tokens.access_token;
@@ -955,13 +1064,34 @@ export class AuthClient extends EventTarget {
   }
 
   private clearLocalSession(): void {
+    this.beginSessionChange();
+    this.sessionTransition = false;
+    this.mockRefreshTokenStore?.clear();
+  }
+
+  private beginSessionChange(): number {
+    this.sessionTransition = true;
     this.accessToken = null;
     this.currentTokens = null;
     this.currentMe = null;
     this.refreshAt = null;
     this.cancelScheduledRefresh();
     this.cancelRetry();
-    this.mockRefreshTokenStore?.clear();
+    this.sessionGeneration += 1;
+    this.tokenGeneration += 1;
+    // Single-flight handles belong to one identity. Their old settle callbacks compare their
+    // own promise before clearing a handle, so they cannot clear newer work.
+    this.exchangeInFlight = null;
+    this.handoffConfirmation = null;
+    this.refreshInFlight = null;
+    this.restoreInFlight = null;
+    return this.sessionGeneration;
+  }
+
+  private requireSessionGeneration(generation: number): void {
+    if (this.sessionGeneration !== generation) {
+      throw new SessionChangedError("The session changed while its request was pending");
+    }
   }
 
   /** One retry at a time: after the next backoff delay, or as soon as the device is online. */
@@ -1005,7 +1135,30 @@ export class AuthClient extends EventTarget {
     }
   }
 
+  private cookieLockName(): string {
+    const origin = new URL(
+      this.endpointFor("/oauth2/token"),
+      typeof location === "undefined" ? "http://localhost" : location.href,
+    ).origin;
+    return `${COOKIE_LOCK_PREFIX}${origin}`;
+  }
+
+  private refreshForm(): URLSearchParams {
+    return new URLSearchParams({ client_id: this.clientId, grant_type: "refresh_token" });
+  }
+
   private async issueToken(form: URLSearchParams): Promise<TokenResponse> {
+    const generation = this.sessionGeneration;
+    return withCookieLock(this.cookieLockName(), async () => {
+      this.requireSessionGeneration(generation);
+      return this.requestToken(form);
+    });
+  }
+
+  /** The response/cookie finishes before another grant or revoke enters the shared lock. */
+  private async requestToken(form: URLSearchParams): Promise<TokenResponse> {
+    const previousGrant = this.lastCookieGrant;
+    this.lastCookieGrant = { token: null };
     let response: Response;
     try {
       response = await this.fetcher(this.endpointFor("/oauth2/token"), {
@@ -1019,6 +1172,9 @@ export class AuthClient extends EventTarget {
     }
 
     if (!response.ok) {
+      // The token endpoint sets its cookie only on success. A refused grant leaves the prior
+      // cookie intact; an unreadable successful body remains unknown and needs logout recovery.
+      this.lastCookieGrant = previousGrant;
       throw await ApiError.fromResponse(response);
     }
     const payload: unknown = await response.json();
@@ -1026,6 +1182,7 @@ export class AuthClient extends EventTarget {
       throw new TypeError("The token response did not match the OpenAPI contract");
     }
     const tokens = payload as Omit<TokenResponse, "scope"> & { scope?: string };
+    this.lastCookieGrant = { token: tokens.access_token };
     // The core currently omits the OpenAPI-required field when the granted scope set is empty.
     return { ...tokens, scope: tokens.scope ?? "" };
   }
@@ -1039,35 +1196,41 @@ export class AuthClient extends EventTarget {
   }
 
   /**
-   * R-01-06 (E11-W06 W3): the refresh runs alone across the tabs of this client; each one that
-   * waited sends the cookie the previous one rotated. A tab that got a live token of its own while
-   * it waited (a sign-in) does not refresh again.
+   * R-01-06: a refresh waits for all previous cookie writers. A superseded refresh never sends
+   * the newer account's cookie. The lock also covers accepting its token before the next writer.
    */
   private async performRefresh(): Promise<TokenResponse> {
     const generation = this.tokenGeneration;
-    return withRefreshLock(
-      `${REFRESH_LOCK_PREFIX}${this.clientId}`,
-      async () => {
-        const current = this.currentTokens;
-        if (
-          this.tokenGeneration !== generation &&
-          current !== null &&
-          this.accessToken === current.access_token &&
-          this.refreshAt !== null &&
-          Date.now() < this.refreshAt
-        ) {
-          return current;
-        }
-        const tokens = await this.issueToken(
-          new URLSearchParams({
-            client_id: this.clientId,
-            grant_type: "refresh_token",
-          }),
-        );
-        this.acceptTokens(tokens);
-        return tokens;
-      },
-    );
+    const supersedingTokens = (): TokenResponse | undefined => {
+      if (this.tokenGeneration === generation) return undefined;
+      const current = this.currentTokens;
+      if (
+        current !== null &&
+        this.accessToken === current.access_token &&
+        this.refreshAt !== null &&
+        Date.now() < this.refreshAt
+      ) {
+        return current;
+      }
+      throw new SessionChangedError("The session changed while its refresh was pending");
+    };
+    return withCookieLock(this.cookieLockName(), async () => {
+      const current = supersedingTokens();
+      if (current !== undefined) return current;
+      let tokens: TokenResponse;
+      try {
+        tokens = await this.requestToken(this.refreshForm());
+      } catch (error) {
+        // A late refusal belongs to the old session, never the newer sign-in.
+        const replacement = supersedingTokens();
+        if (replacement !== undefined) return replacement;
+        throw error;
+      }
+      const replacement = supersedingTokens();
+      if (replacement !== undefined) return replacement;
+      this.acceptTokens(tokens);
+      return tokens;
+    });
   }
 
   private refreshInBackground(): void {
@@ -1079,6 +1242,7 @@ export class AuthClient extends EventTarget {
         this.retryAttempt = 0;
       },
       (error: unknown) => {
+        if (error instanceof SessionChangedError) return;
         if (endsSession(error)) {
           this.handleRefreshFailure();
         } else if (this.accessToken !== null) {
@@ -1147,6 +1311,7 @@ export class AuthClient extends EventTarget {
    * code holds its session until `/me` says whose it is (`confirmHandoff`).
    */
   private async performExchange(form: URLSearchParams, handoff: boolean): Promise<Me> {
+    const generation = this.beginSessionChange();
     const impersonationHandoff = handoff && this.handoffSessions === "impersonation";
     // E47 (E4-W18 round 2): the tab gives up the cookie before the code is sent, so a reload while
     // the token endpoint has not answered never restores the admin's own session.
@@ -1154,11 +1319,13 @@ export class AuthClient extends EventTarget {
     let tokens: TokenResponse;
     try {
       tokens = await this.issueToken(form);
+      this.requireSessionGeneration(generation);
     } catch (error) {
+      this.requireSessionGeneration(generation);
       // E47 (E4-W18 step 1): an «Entra com l'abonat» code tried in this tab and refused, or left
       // unanswered (5xx, offline), leaves the tab anonymous until someone signs in on 01 — never
       // the refresh cookie, which may be the admin's own session.
-      if (impersonationHandoff) this.endHandoff();
+      if (impersonationHandoff && this.sessionGeneration === generation) this.endHandoff();
       throw error;
     }
     this.leaveImpersonation();
@@ -1178,11 +1345,12 @@ export class AuthClient extends EventTarget {
     }
     try {
       const me = await this.loadMe();
+      this.requireSessionGeneration(generation);
       this.currentMe = me;
       this.dispatchEvent(new Event("signedIn"));
       return me;
     } catch (error) {
-      this.clearLocalSession();
+      if (this.sessionGeneration === generation) this.clearLocalSession();
       throw error;
     }
   }
@@ -1194,9 +1362,12 @@ export class AuthClient extends EventTarget {
    * and `retryHandoff()` asks again. A refusal (any 4xx) drops them.
    */
   private async confirmAccountHandoff(): Promise<Me> {
+    const generation = this.sessionGeneration;
     for (let attempt = 1; ; attempt += 1) {
+      this.requireSessionGeneration(generation);
       try {
         const me = await this.loadMe();
+        this.requireSessionGeneration(generation);
         this.accountHandoffUnconfirmed = false;
         this.currentMe = me;
         this.retryAttempt = 0;
@@ -1204,6 +1375,7 @@ export class AuthClient extends EventTarget {
         this.dispatchEvent(new Event("signedIn"));
         return me;
       } catch (error) {
+        this.requireSessionGeneration(generation);
         if (!isTransient(error)) {
           this.accountHandoffUnconfirmed = false;
           this.clearLocalSession();
@@ -1221,6 +1393,7 @@ export class AuthClient extends EventTarget {
   private holdHandoff(pending: PendingHandoff): void {
     this.pendingHandoff = pending;
     this.accessToken = pending.token;
+    this.sessionTransition = false;
     writeStoredImpersonation({
       expiresAt: pending.expiresAt,
       state: "pending",
@@ -1251,7 +1424,9 @@ export class AuthClient extends EventTarget {
   }
 
   private async performConfirmHandoff(): Promise<Me> {
+    const generation = this.sessionGeneration;
     for (let attempt = 1; ; attempt += 1) {
+      this.requireSessionGeneration(generation);
       const pending = this.pendingHandoff;
       if (pending === null) {
         throw new TypeError("No handoff session to confirm");
@@ -1259,6 +1434,7 @@ export class AuthClient extends EventTarget {
       this.accessToken = pending.token;
       try {
         const me = await this.loadMe();
+        this.requireSessionGeneration(generation);
         if (this.pendingHandoff !== pending) {
           throw new TypeError("The handoff session changed while /me was answering");
         }
@@ -1282,6 +1458,7 @@ export class AuthClient extends EventTarget {
         this.dispatchEvent(new Event("signedIn"));
         return me;
       } catch (error) {
+        this.requireSessionGeneration(generation);
         if (this.pendingHandoff !== pending) {
           throw error;
         }

@@ -1280,7 +1280,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     // No file yet: the 202 opens the drawer on the ACCOUNTING jobs, which the api lists apart.
     expect(saved).toEqual([]);
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
-    expect(drawer).toHaveTextContent("Preparant l'exportació…");
+    expect(await within(drawer).findByText("Preparant l'exportació…")).toBeVisible();
     fireEvent.click(within(drawer).getByRole("button", { name: "Tanca les exportacions" }));
     expect(screen.queryByRole("dialog", { name: "Exportacions" })).toBeNull();
 
@@ -1307,9 +1307,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     cleanup();
     await renderPage({ scenario: "adminExportsQueued" });
     fireEvent.click(screen.getByRole("button", { name: "Exportacions" }));
-    expect(
-      await screen.findByRole("button", { name: /accounting.*\.xlsx/u }),
-    ).toBeEnabled();
+    expect(await screen.findByRole("button", { name: /accounting.*\.xlsx/u })).toBeEnabled();
   });
 
   it("T-12-25 / T-14-26 / R-12-26 / E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer", async () => {
@@ -1330,9 +1328,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
     expect(drawer).toHaveTextContent("S'ha assolit el límit d'exportacions simultànies");
     await waitFor(() => {
-      expect(requests("GET", "/exports").at(-1)?.url.searchParams.get("kind")).toBe(
-        "ACCOUNTING",
-      );
+      expect(requests("GET", "/exports").at(-1)?.url.searchParams.get("kind")).toBe("ACCOUNTING");
     });
   });
 
@@ -1516,11 +1512,9 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
           };
           return id as unknown as ReturnType<typeof setTimeout>;
         }
-        return nativeSetTimeout(
-          handler,
-          timeout,
-          ...arguments_,
-        ) as unknown as ReturnType<typeof setTimeout>;
+        return nativeSetTimeout(handler, timeout, ...arguments_) as unknown as ReturnType<
+          typeof setTimeout
+        >;
       },
     );
     vi.spyOn(window, "clearTimeout").mockImplementation((id) => {
@@ -2125,7 +2119,10 @@ describe("E11-W06 W9 (S12 §6, INC-68, E138): 409 PRICE_OVERLAP on the simulatio
   const TEXT = "La modalitat Abonat té dos preus vigents per a Quota mensual.";
 
   it("S12 §6 409 PRICE_OVERLAP names the plan and links D8", async () => {
-    const { onNavigate } = await renderPage({ scenario: "billingPriceOverlap", search: "?mes=2026-10" });
+    const { onNavigate } = await renderPage({
+      scenario: "billingPriceOverlap",
+      search: "?mes=2026-10",
+    });
     const [simulate] = screen.getAllByRole("button", { name: "1 · SIMULA EL MES" });
     if (simulate === undefined) throw new TypeError("No simulate button");
     fireEvent.click(simulate);
@@ -2320,9 +2317,7 @@ describe("E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past 
       name: "Retrocedeix la remesa · Setembre 2026",
     });
     expect(within(dialog).getByText(DATE_PASSED)).toBeVisible();
-    expect(
-      within(dialog).getByText("Només si el fitxer no s'ha enviat mai al banc"),
-    ).toBeVisible();
+    expect(within(dialog).getByText("Només si el fitxer no s'ha enviat mai al banc")).toBeVisible();
     const confirm = within(dialog).getByRole("button", { name: "Retrocedeix" });
     const keyword = within(dialog).getByLabelText("Escriu FITXER_NO_ENVIAT per confirmar-ho");
     expect(within(dialog).queryByLabelText("Escriu RETROCEDIR per confirmar-ho")).toBeNull();

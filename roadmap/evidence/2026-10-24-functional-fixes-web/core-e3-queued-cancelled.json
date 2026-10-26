@@ -1,0 +1,6 @@
+{
+  "status": "cancelled_before_lock",
+  "date": "2026-10-26",
+  "reason": "Root fullmock visual review found remaining INC97 common admin overflow. Waiting E3 stopped before command, snapshot or container for CSS/harness fixes and new source freeze.",
+  "waitingCommand": "bash /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh python3 roadmap/evidence/2026-10-24-functional-fixes-web/run-core.py e3 sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9"
+}

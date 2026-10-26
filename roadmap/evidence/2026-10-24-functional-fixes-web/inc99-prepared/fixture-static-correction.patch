@@ -1,0 +1,26 @@
+--- a/apps/clubs/src/courses/register-level-labels.test.tsx
++++ b/apps/clubs/src/courses/register-level-labels.test.tsx
+@@ -8,8 +8,12 @@
+ import { setupTrainingWorld } from "../training/test-utils";
+ 
+ setupTrainingWorld();
+-beforeEach(() => localStorage.clear());
+-afterEach(() => localStorage.clear());
++beforeEach(() => {
++  localStorage.clear();
++});
++afterEach(() => {
++  localStorage.clear();
++});
+ 
+ const rows: components["schemas"]["CourseListItem"][] = [
+   { id: "course-easy", name: "Course one", level: "EASY" },
+@@ -64,7 +68,7 @@
+       for (const level of levels)
+         expect(within(list).getByText(`${prefix} ${level}`, { exact: true })).toBeVisible();
+       expect(within(list).getByText(`${prefix} C–D`, { exact: true })).toBeVisible();
+-      expect(within(list).getByRole("radio", { name: "Course five", exact: true })).toBeVisible();
++      expect(within(list).getByRole("radio", { name: "Course five" })).toBeVisible();
+       expect(list).not.toHaveTextContent(/EASY|MEDIUM|HARD/u);
+     },
+   );

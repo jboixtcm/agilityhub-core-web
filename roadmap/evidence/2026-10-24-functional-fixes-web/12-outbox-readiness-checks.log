@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: waits for the seed backlog and three empty observations over two seconds
+ok 1 - waits for the seed backlog and three empty observations over two seconds
+  ---
+  duration_ms: 1.00775
+  type: 'test'
+  ...
+# Subtest: a child event appearing after an empty observation resets the stability window
+ok 2 - a child event appearing after an empty observation resets the stability window
+  ---
+  duration_ms: 0.141625
+  type: 'test'
+  ...
+# Subtest: a failed consumer stops readiness immediately instead of hiding it
+ok 3 - a failed consumer stops readiness immediately instead of hiding it
+  ---
+  duration_ms: 0.167292
+  type: 'test'
+  ...
+# Subtest: a leased or retrying event cannot make readiness pass and the wait is bounded
+ok 4 - a leased or retrying event cannot make readiness pass and the wait is bounded
+  ---
+  duration_ms: 0.1065
+  type: 'test'
+  ...
+# Subtest: a slow read cannot declare success after the overall deadline
+ok 5 - a slow read cannot declare success after the overall deadline
+  ---
+  duration_ms: 0.070916
+  type: 'test'
+  ...
+# Subtest: malformed or unavailable counts fail rather than becoming an empty queue
+ok 6 - malformed or unavailable counts fail rather than becoming an empty queue
+  ---
+  duration_ms: 0.820333
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 62.905833
+Checking formatting...
+All matched files use Prettier code style!

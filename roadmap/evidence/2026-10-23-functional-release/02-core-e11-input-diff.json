@@ -1,0 +1,11 @@
+{
+  "added": [],
+  "removed": [],
+  "changed": [
+    "e2e/core/e4-core.spec.ts",
+    "e2e/core/e5-core.spec.ts"
+  ],
+  "unchanged": 938,
+  "stageExit": 0,
+  "wrapperExit": 99
+}

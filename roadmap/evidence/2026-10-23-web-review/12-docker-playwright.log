@@ -1,0 +1,592 @@
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh 2026-10-23-web-review
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: 2026-10-23-web-review
+Capture folder of the permanent mock specs: <the task of each spec>
+Playwright arguments: --workers=4
+Checkout copied into the container: 549M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:22) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 4, added 0
+Progress: resolved 858, reused 0, downloaded 16, added 16
+Progress: resolved 858, reused 0, downloaded 22, added 22
+Progress: resolved 858, reused 0, downloaded 43, added 42
+Progress: resolved 858, reused 0, downloaded 54, added 54
+Progress: resolved 858, reused 0, downloaded 69, added 69
+Progress: resolved 858, reused 0, downloaded 79, added 79
+Progress: resolved 858, reused 0, downloaded 83, added 83
+Progress: resolved 858, reused 0, downloaded 88, added 88
+Progress: resolved 858, reused 0, downloaded 99, added 99
+Progress: resolved 858, reused 0, downloaded 103, added 103
+Progress: resolved 858, reused 0, downloaded 107, added 107
+Progress: resolved 858, reused 0, downloaded 118, added 118
+Progress: resolved 858, reused 0, downloaded 128, added 128
+Progress: resolved 858, reused 0, downloaded 132, added 132
+Progress: resolved 858, reused 0, downloaded 141, added 141
+Progress: resolved 858, reused 0, downloaded 145, added 144
+Progress: resolved 858, reused 0, downloaded 145, added 145
+Progress: resolved 858, reused 0, downloaded 146, added 145
+Progress: resolved 858, reused 0, downloaded 148, added 148
+Progress: resolved 858, reused 0, downloaded 151, added 151
+Progress: resolved 858, reused 0, downloaded 160, added 160
+Progress: resolved 858, reused 0, downloaded 171, added 171
+Progress: resolved 858, reused 0, downloaded 181, added 181
+Progress: resolved 858, reused 0, downloaded 186, added 186
+Progress: resolved 858, reused 0, downloaded 192, added 192
+Progress: resolved 858, reused 0, downloaded 207, added 207
+Progress: resolved 858, reused 0, downloaded 226, added 226
+Progress: resolved 858, reused 0, downloaded 260, added 260
+Progress: resolved 858, reused 0, downloaded 273, added 273
+Progress: resolved 858, reused 0, downloaded 290, added 290
+Progress: resolved 858, reused 0, downloaded 293, added 292
+Progress: resolved 858, reused 0, downloaded 298, added 298
+Progress: resolved 858, reused 0, downloaded 304, added 304
+Progress: resolved 858, reused 0, downloaded 307, added 307
+Progress: resolved 858, reused 0, downloaded 310, added 310
+Progress: resolved 858, reused 0, downloaded 316, added 316
+Progress: resolved 858, reused 0, downloaded 325, added 325
+Progress: resolved 858, reused 0, downloaded 331, added 331
+Progress: resolved 858, reused 0, downloaded 333, added 333
+Progress: resolved 858, reused 0, downloaded 335, added 335
+Progress: resolved 858, reused 0, downloaded 338, added 338
+Progress: resolved 858, reused 0, downloaded 341, added 341
+Progress: resolved 858, reused 0, downloaded 342, added 342
+Progress: resolved 858, reused 0, downloaded 348, added 348
+Progress: resolved 858, reused 0, downloaded 358, added 358
+Progress: resolved 858, reused 0, downloaded 367, added 367
+Progress: resolved 858, reused 0, downloaded 377, added 377
+Progress: resolved 858, reused 0, downloaded 392, added 392
+Progress: resolved 858, reused 0, downloaded 399, added 399
+Progress: resolved 858, reused 0, downloaded 403, added 403
+Progress: resolved 858, reused 0, downloaded 412, added 412
+Progress: resolved 858, reused 0, downloaded 416, added 416
+Progress: resolved 858, reused 0, downloaded 428, added 428
+Progress: resolved 858, reused 0, downloaded 439, added 439
+Progress: resolved 858, reused 0, downloaded 450, added 450
+Progress: resolved 858, reused 0, downloaded 464, added 464
+Progress: resolved 858, reused 0, downloaded 479, added 479
+Progress: resolved 858, reused 0, downloaded 481, added 481
+Progress: resolved 858, reused 0, downloaded 488, added 488
+Progress: resolved 858, reused 0, downloaded 502, added 502
+Progress: resolved 858, reused 0, downloaded 511, added 511
+Progress: resolved 858, reused 0, downloaded 517, added 517
+Progress: resolved 858, reused 0, downloaded 518, added 518
+Progress: resolved 858, reused 0, downloaded 520, added 520
+Progress: resolved 858, reused 0, downloaded 523, added 523
+Progress: resolved 858, reused 0, downloaded 526, added 526
+Progress: resolved 858, reused 0, downloaded 528, added 528
+Progress: resolved 858, reused 0, downloaded 530, added 530
+Progress: resolved 858, reused 0, downloaded 531, added 530
+Progress: resolved 858, reused 0, downloaded 531, added 531
+Progress: resolved 858, reused 0, downloaded 532, added 531
+Progress: resolved 858, reused 0, downloaded 534, added 534
+Progress: resolved 858, reused 0, downloaded 535, added 535
+Progress: resolved 858, reused 0, downloaded 536, added 536
+Progress: resolved 858, reused 0, downloaded 537, added 537
+Progress: resolved 858, reused 0, downloaded 538, added 537
+Progress: resolved 858, reused 0, downloaded 541, added 541
+Progress: resolved 858, reused 0, downloaded 542, added 541
+Progress: resolved 858, reused 0, downloaded 544, added 544
+Progress: resolved 858, reused 0, downloaded 546, added 545
+Progress: resolved 858, reused 0, downloaded 548, added 548
+Progress: resolved 858, reused 0, downloaded 551, added 551
+Progress: resolved 858, reused 0, downloaded 552, added 551
+Progress: resolved 858, reused 0, downloaded 553, added 553
+Progress: resolved 858, reused 0, downloaded 554, added 554
+Progress: resolved 858, reused 0, downloaded 557, added 557
+Progress: resolved 858, reused 0, downloaded 564, added 564
+Progress: resolved 858, reused 0, downloaded 565, added 564
+Progress: resolved 858, reused 0, downloaded 570, added 570
+Progress: resolved 858, reused 0, downloaded 578, added 578
+Progress: resolved 858, reused 0, downloaded 582, added 582
+Progress: resolved 858, reused 0, downloaded 583, added 583
+Progress: resolved 858, reused 0, downloaded 584, added 583
+Progress: resolved 858, reused 0, downloaded 584, added 584
+Progress: resolved 858, reused 0, downloaded 585, added 584
+Progress: resolved 858, reused 0, downloaded 586, added 586
+Progress: resolved 858, reused 0, downloaded 589, added 589
+Progress: resolved 858, reused 0, downloaded 592, added 592
+Progress: resolved 858, reused 0, downloaded 593, added 593
+Progress: resolved 858, reused 0, downloaded 595, added 595
+Progress: resolved 858, reused 0, downloaded 596, added 595
+Progress: resolved 858, reused 0, downloaded 598, added 598
+Progress: resolved 858, reused 0, downloaded 601, added 601
+Progress: resolved 858, reused 0, downloaded 602, added 601
+Progress: resolved 858, reused 0, downloaded 605, added 605
+Progress: resolved 858, reused 0, downloaded 606, added 606
+Progress: resolved 858, reused 0, downloaded 609, added 609
+Progress: resolved 858, reused 0, downloaded 615, added 615
+Progress: resolved 858, reused 0, downloaded 617, added 617
+Progress: resolved 858, reused 0, downloaded 619, added 619
+Progress: resolved 858, reused 0, downloaded 620, added 619
+Progress: resolved 858, reused 0, downloaded 624, added 624
+Progress: resolved 858, reused 0, downloaded 628, added 628
+Progress: resolved 858, reused 0, downloaded 634, added 634
+Progress: resolved 858, reused 0, downloaded 638, added 638
+Progress: resolved 858, reused 0, downloaded 645, added 645
+Progress: resolved 858, reused 0, downloaded 658, added 658
+Progress: resolved 858, reused 0, downloaded 667, added 667
+Progress: resolved 858, reused 0, downloaded 677, added 677
+Progress: resolved 858, reused 0, downloaded 694, added 694
+Progress: resolved 858, reused 0, downloaded 709, added 709
+Progress: resolved 858, reused 0, downloaded 717, added 717
+Progress: resolved 858, reused 0, downloaded 724, added 724
+Progress: resolved 858, reused 0, downloaded 730, added 730
+Progress: resolved 858, reused 0, downloaded 731, added 730
+Progress: resolved 858, reused 0, downloaded 734, added 734
+Progress: resolved 858, reused 0, downloaded 735, added 735
+Progress: resolved 858, reused 0, downloaded 739, added 739
+Progress: resolved 858, reused 0, downloaded 743, added 743
+Progress: resolved 858, reused 0, downloaded 748, added 748
+Progress: resolved 858, reused 0, downloaded 751, added 751
+Progress: resolved 858, reused 0, downloaded 753, added 753
+Progress: resolved 858, reused 0, downloaded 754, added 753
+Progress: resolved 858, reused 0, downloaded 758, added 758
+Progress: resolved 858, reused 0, downloaded 766, added 766
+Progress: resolved 858, reused 0, downloaded 767, added 767
+Progress: resolved 858, reused 0, downloaded 768, added 768
+Progress: resolved 858, reused 0, downloaded 771, added 771
+Progress: resolved 858, reused 0, downloaded 773, added 773
+Progress: resolved 858, reused 0, downloaded 778, added 778
+Progress: resolved 858, reused 0, downloaded 779, added 779
+Progress: resolved 858, reused 0, downloaded 781, added 781
+Progress: resolved 858, reused 0, downloaded 782, added 782
+Progress: resolved 858, reused 0, downloaded 783, added 782
+Progress: resolved 858, reused 0, downloaded 783, added 783
+Progress: resolved 858, reused 0, downloaded 784, added 783
+Progress: resolved 858, reused 0, downloaded 785, added 785
+Progress: resolved 858, reused 0, downloaded 788, added 788
+Progress: resolved 858, reused 0, downloaded 789, added 789
+Progress: resolved 858, reused 0, downloaded 793, added 793
+Progress: resolved 858, reused 0, downloaded 794, added 793
+Progress: resolved 858, reused 0, downloaded 797, added 797
+Progress: resolved 858, reused 0, downloaded 802, added 802
+Progress: resolved 858, reused 0, downloaded 809, added 809
+Progress: resolved 858, reused 0, downloaded 814, added 814
+Progress: resolved 858, reused 0, downloaded 818, added 818
+Progress: resolved 858, reused 0, downloaded 821, added 821
+Progress: resolved 858, reused 0, downloaded 824, added 824
+Progress: resolved 858, reused 0, downloaded 828, added 828
+Progress: resolved 858, reused 0, downloaded 831, added 831
+Progress: resolved 858, reused 0, downloaded 836, added 836
+Progress: resolved 858, reused 0, downloaded 837, added 836
+Progress: resolved 858, reused 0, downloaded 842, added 842
+Progress: resolved 858, reused 0, downloaded 843, added 843
+Progress: resolved 858, reused 0, downloaded 846, added 846
+Progress: resolved 858, reused 0, downloaded 849, added 849
+Progress: resolved 858, reused 0, downloaded 850, added 849
+Progress: resolved 858, reused 0, downloaded 851, added 851
+Progress: resolved 858, reused 0, downloaded 852, added 851
+Progress: resolved 858, reused 0, downloaded 853, added 853
+Progress: resolved 858, reused 0, downloaded 855, added 855
+Progress: resolved 858, reused 0, downloaded 856, added 856
+Progress: resolved 858, reused 0, downloaded 857, added 856
+Progress: resolved 858, reused 0, downloaded 857, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 3m 39.3s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 08dd9f71c413545d
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 221ed442bf2918a4
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing 49099c330b356bbf
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 7c910c64f2f0e383
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=4
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+@agilityhub/course-ui:e2e: ····
+@agilityhub/course-ui:e2e:   4 passed (7.1s)
+clubs:build: cache miss, executing f2f6a14011262503
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: transforming...
+clubs:build: ✓ 423 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/index.html                                             2.94 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-i5g5RRJN.css                          12.70 kB │ gzip:   2.55 kB
+clubs:build: dist/assets/screens-B1WyLGC1.css                           21.13 kB │ gzip:   3.50 kB
+clubs:build: dist/assets/shared-CAr9ewt8.css                            39.95 kB │ gzip:   6.68 kB
+clubs:build: dist/assets/index-BNqECwbr.css                             64.87 kB │ gzip:  11.69 kB
+clubs:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-B8ESDqpt.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs:build: dist/assets/training-CLd1ihpP.js                            1.62 kB │ gzip:   0.85 kB
+clubs:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs:build: dist/assets/home-CNw600-7.js                                1.65 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-DTHNRC_R.js                          1.96 kB │ gzip:   0.95 kB
+clubs:build: dist/assets/inactivity-Cd3ruGr3.js                          2.07 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/inactivity-2pMMdTz_.js                          2.08 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-CF0sMGsk.js                            2.91 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/courses-FSYPulgA.js                             3.82 kB │ gzip:   1.71 kB
+clubs:build: dist/assets/courses-D0ohAZtv.js                             4.10 kB │ gzip:   1.87 kB
+clubs:build: dist/assets/courses-J7srljeo.js                             4.12 kB │ gzip:   1.89 kB
+clubs:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs:build: dist/assets/booking-DTKV9qOl.js                             5.18 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/auth-Cdqg_K8k.js                                5.67 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/signup-BmSJtF8d.js                              5.69 kB │ gzip:   2.57 kB
+clubs:build: dist/assets/signup-BEXtMoHG.js                              5.96 kB │ gzip:   2.83 kB
+clubs:build: dist/assets/signup-YXsCeWqq.js                              6.07 kB │ gzip:   2.84 kB
+clubs:build: dist/assets/auth-BnxNEQi_.js                                6.44 kB │ gzip:   2.62 kB
+clubs:build: dist/assets/auth-ZSOjxLFy.js                                6.53 kB │ gzip:   2.64 kB
+clubs:build: dist/assets/census-DUSBlok6.js                              6.80 kB │ gzip:   2.67 kB
+clubs:build: dist/assets/census-CfBq3Wbi.js                              7.19 kB │ gzip:   2.94 kB
+clubs:build: dist/assets/census-CHkmucyT.js                              7.39 kB │ gzip:   2.99 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/instructor-f8D9i4Zx.js                          9.28 kB │ gzip:   3.33 kB
+clubs:build: dist/assets/instructor-CpdiqaXy.js                          9.72 kB │ gzip:   3.55 kB
+clubs:build: dist/assets/instructor-8JG2zFvJ.js                          9.85 kB │ gzip:   3.57 kB
+clubs:build: dist/assets/enums-BZurIQ7V.js                              10.51 kB │ gzip:   4.35 kB
+clubs:build: dist/assets/enums-C2F2AjvW.js                              10.87 kB │ gzip:   4.57 kB
+clubs:build: dist/assets/enums-BQt-sAiD.js                              10.93 kB │ gzip:   4.57 kB
+clubs:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs:build: dist/assets/errors-DkLdTdjL.js                             23.25 kB │ gzip:   7.55 kB
+clubs:build: dist/assets/errors-BxXLPi5_.js                             23.29 kB │ gzip:   7.54 kB
+clubs:build: dist/assets/CoursesRoute-DkRyuyNn.js                      134.46 kB │ gzip:  37.42 kB
+clubs:build: dist/assets/screens-BnHTrCDs.js                           220.14 kB │ gzip:  56.39 kB
+clubs:build: dist/assets/shared-aVJLcDTJ.js                            235.63 kB │ gzip:  72.51 kB
+clubs:build: dist/assets/index-D1hbO4R6.js                             254.53 kB │ gzip:  77.28 kB
+clubs:build: dist/assets/CourseViewer3D-0Kr_mqqU.js                    582.82 kB │ gzip: 151.70 kB
+clubs:build: 
+clubs:build: [33m[plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs:build: [32m✓ built in 326ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+clubs:build: 
+clubs:build: [32m✓ built in 26ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  62 entries (1230.19 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: check-clubs-bundle: 57 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+clubs-admin:build: cache miss, executing 07e6a2ddceb9d09b
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 478 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                             2.90 kB │ gzip:   0.97 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-BR2xPRm0.css                       5.67 kB │ gzip:   1.22 kB
+clubs-admin:build: dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+clubs-admin:build: dist/assets/list-helpers-CqBPortv.css                      38.44 kB │ gzip:   6.41 kB
+clubs-admin:build: dist/assets/index-Cc0UMCRa.css                            115.95 kB │ gzip:  18.20 kB
+clubs-admin:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs-admin:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs-admin:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs-admin:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-BeJlwKIP.js                      1.44 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs-admin:build: dist/assets/training-CLd1ihpP.js                            1.62 kB │ gzip:   0.85 kB
+clubs-admin:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs-admin:build: dist/assets/home-CNw600-7.js                                1.65 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-DTHNRC_R.js                          1.96 kB │ gzip:   0.95 kB
+clubs-admin:build: dist/assets/inactivity-Cd3ruGr3.js                          2.07 kB │ gzip:   1.03 kB
+clubs-admin:build: dist/assets/inactivity-2pMMdTz_.js                          2.08 kB │ gzip:   1.03 kB
+clubs-admin:build: dist/assets/admin-dashboard-CaRQFr39.js                     2.09 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/admin-dashboard-BQL-FPZU.js                     2.15 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/admin-dashboard-Dp6ttMdC.js                     2.20 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/id-EtAaSn9n.js                                  3.10 kB │ gzip:   1.37 kB
+clubs-admin:build: dist/assets/id-nHarCitd.js                                  3.27 kB │ gzip:   1.51 kB
+clubs-admin:build: dist/assets/id-BjCFGXvc.js                                  3.35 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/courses-FSYPulgA.js                             3.82 kB │ gzip:   1.71 kB
+clubs-admin:build: dist/assets/courses-D0ohAZtv.js                             4.10 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/courses-J7srljeo.js                             4.12 kB │ gzip:   1.89 kB
+clubs-admin:build: dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/admin-messaging-BoZ0pzIg.js                     4.81 kB │ gzip:   2.04 kB
+clubs-admin:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs-admin:build: dist/assets/booking-DTKV9qOl.js                             5.18 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/auth-Cdqg_K8k.js                                5.67 kB │ gzip:   2.35 kB
+clubs-admin:build: dist/assets/signup-BmSJtF8d.js                              5.69 kB │ gzip:   2.57 kB
+clubs-admin:build: dist/assets/admin-catalogs-AKjEDNr_.js                      5.73 kB │ gzip:   2.15 kB
+clubs-admin:build: dist/assets/signup-BEXtMoHG.js                              5.96 kB │ gzip:   2.83 kB
+clubs-admin:build: dist/assets/admin-catalogs-7QkeG0Op.js                      6.01 kB │ gzip:   2.38 kB
+clubs-admin:build: dist/assets/signup-YXsCeWqq.js                              6.07 kB │ gzip:   2.84 kB
+clubs-admin:build: dist/assets/admin-catalogs-Di08FnYi.js                      6.21 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/auth-BnxNEQi_.js                                6.44 kB │ gzip:   2.62 kB
+clubs-admin:build: dist/assets/auth-ZSOjxLFy.js                                6.53 kB │ gzip:   2.64 kB
+clubs-admin:build: dist/assets/admin-activities-Cq_gSQfl.js                    6.61 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-audit-CXfB8Bhp.js                         6.69 kB │ gzip:   2.76 kB
+clubs-admin:build: dist/assets/census-DUSBlok6.js                              6.80 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-activities-BniXEHx4.js                    6.86 kB │ gzip:   2.84 kB
+clubs-admin:build: dist/assets/admin-activities-CgUWXhLO.js                    7.06 kB │ gzip:   2.90 kB
+clubs-admin:build: dist/assets/census-CfBq3Wbi.js                              7.19 kB │ gzip:   2.94 kB
+clubs-admin:build: dist/assets/admin-audit-T6uqCqLx.js                         7.34 kB │ gzip:   3.06 kB
+clubs-admin:build: dist/assets/census-CHkmucyT.js                              7.39 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-audit-ChX1P-IZ.js                         7.48 kB │ gzip:   3.08 kB
+clubs-admin:build: dist/assets/admin-scheduling-CpPjTWnK.js                    8.48 kB │ gzip:   3.13 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/admin-scheduling-CnVHhAuA.js                    8.91 kB │ gzip:   3.39 kB
+clubs-admin:build: dist/assets/admin-scheduling-B-fpqKnW.js                    8.92 kB │ gzip:   3.40 kB
+clubs-admin:build: dist/assets/instructor-f8D9i4Zx.js                          9.28 kB │ gzip:   3.33 kB
+clubs-admin:build: dist/assets/instructor-CpdiqaXy.js                          9.72 kB │ gzip:   3.55 kB
+clubs-admin:build: dist/assets/instructor-8JG2zFvJ.js                          9.85 kB │ gzip:   3.57 kB
+clubs-admin:build: dist/assets/admin-billing-CZFSME4s.js                      10.24 kB │ gzip:   3.63 kB
+clubs-admin:build: dist/assets/admin-billing-DCRzb_Gs.js                      10.45 kB │ gzip:   3.96 kB
+clubs-admin:build: dist/assets/enums-BZurIQ7V.js                              10.51 kB │ gzip:   4.35 kB
+clubs-admin:build: dist/assets/admin-billing-BYH6Z6c6.js                      10.66 kB │ gzip:   4.00 kB
+clubs-admin:build: dist/assets/enums-C2F2AjvW.js                              10.87 kB │ gzip:   4.57 kB
+clubs-admin:build: dist/assets/enums-BQt-sAiD.js                              10.93 kB │ gzip:   4.57 kB
+clubs-admin:build: dist/assets/admin-courses-5_CYUaBP.js                      12.87 kB │ gzip:   4.89 kB
+clubs-admin:build: dist/assets/admin-courses-DPAqiOVq.js                      13.72 kB │ gzip:   5.24 kB
+clubs-admin:build: dist/assets/admin-courses-n3Oh8PG4.js                      14.03 kB │ gzip:   5.28 kB
+clubs-admin:build: dist/assets/admin-census-uqXXpNcQ.js                       19.91 kB │ gzip:   7.29 kB
+clubs-admin:build: dist/assets/console-CFxOET8L.js                            20.26 kB │ gzip:   7.95 kB
+clubs-admin:build: dist/assets/admin-census-BJkj5Enf.js                       21.09 kB │ gzip:   7.86 kB
+clubs-admin:build: dist/assets/console-BBhiAsNg.js                            21.47 kB │ gzip:   8.64 kB
+clubs-admin:build: dist/assets/admin-census-B2ONh3EE.js                       21.62 kB │ gzip:   7.94 kB
+clubs-admin:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs-admin:build: dist/assets/console-D-HzZUrn.js                            22.14 kB │ gzip:   8.74 kB
+clubs-admin:build: dist/assets/errors-DkLdTdjL.js                             23.25 kB │ gzip:   7.55 kB
+clubs-admin:build: dist/assets/errors-BxXLPi5_.js                             23.29 kB │ gzip:   7.54 kB
+clubs-admin:build: dist/assets/admin-settings-C2S0yznb.js                     27.24 kB │ gzip:   9.15 kB
+clubs-admin:build: dist/assets/admin-settings-KoQZaOjh.js                     29.41 kB │ gzip:   9.91 kB
+clubs-admin:build: dist/assets/admin-settings-CaIltuWg.js                     29.99 kB │ gzip:   9.96 kB
+clubs-admin:build: dist/assets/ConsolePage-qCeWqKNY.js                       116.96 kB │ gzip:  27.86 kB
+clubs-admin:build: dist/assets/list-helpers-qu_zan3-.js                      224.27 kB │ gzip:  69.70 kB
+clubs-admin:build: dist/assets/CoursesRoute-Dk5TiXlw.js                      231.53 kB │ gzip:  64.11 kB
+clubs-admin:build: dist/assets/CourseViewer3D-aenXBa1Y.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-BdUaV4_L.js                           1,093.35 kB │ gzip: 371.61 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs-admin:build: [32m✓ built in 398ms[39m
+id:build: cache miss, executing 6a24740079194c95
+id:build: 
+id:build: > id@0.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+id:build: transforming...
+id:build: ✓ 260 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-DTNn0ZBI.css                           54.81 kB │ gzip:   9.91 kB
+id:build: dist/assets/common-BVqv7tr0.js                            2.51 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-B8Morhwr.js                            2.64 kB │ gzip:   1.30 kB
+id:build: dist/assets/common-DGbwj3wL.js                            2.70 kB │ gzip:   1.32 kB
+id:build: dist/assets/id-EtAaSn9n.js                                3.10 kB │ gzip:   1.37 kB
+id:build: dist/assets/id-nHarCitd.js                                3.27 kB │ gzip:   1.51 kB
+id:build: dist/assets/id-BjCFGXvc.js                                3.35 kB │ gzip:   1.52 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/errors-DkLdTdjL.js                           23.25 kB │ gzip:   7.55 kB
+id:build: dist/assets/errors-BxXLPi5_.js                           23.29 kB │ gzip:   7.54 kB
+id:build: dist/assets/index-vIXI3MN0.js                           331.98 kB │ gzip: 102.35 kB
+id:build: 
+id:build: [32m✓ built in 212ms[39m
+clubs:e2e: cache bypass, force executing 21f91179533ea202
+clubs:e2e: 
+clubs:e2e: > clubs@0.0.0 e2e /work/apps/clubs
+clubs:e2e: > playwright test --workers\=4
+clubs:e2e: 
+clubs:e2e: [WebServer] (node:1004) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs:e2e: 
+clubs:e2e: Running 111 tests using 4 workers
+clubs:e2e: ·······················°°°°°°°°·································°°··············
+clubs:e2e: ·······························
+clubs:e2e:   10 skipped
+clubs:e2e:   101 passed (1.2m)
+clubs-admin:e2e: cache bypass, force executing 9fbbd62047b9c898
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test --workers\=4
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:4006) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 145 tests using 4 workers
+clubs-admin:e2e: ···································°°°°°°°°°°°°·································
+clubs-admin:e2e: ··········°°°°···················································
+clubs-admin:e2e:   16 skipped
+clubs-admin:e2e:   129 passed (2.0m)
+id:e2e: cache bypass, force executing eb964fd25fa89162
+id:e2e: 
+id:e2e: > id@0.0.0 e2e /work/apps/id
+id:e2e: > playwright test --workers\=4
+id:e2e: 
+id:e2e: 
+id:e2e: Running 1 test using 1 worker
+id:e2e: ·
+id:e2e:   1 passed (4.7s)
+
+ Tasks:    10 successful, 10 total
+Cached:    0 cached, 10 total
+  Time:    3m52.505s 
+

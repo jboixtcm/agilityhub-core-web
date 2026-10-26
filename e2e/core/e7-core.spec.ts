@@ -478,6 +478,41 @@ async function clubsSession(
   return session;
 }
 
+async function withAccountLocale(
+  session: Session,
+  locale: Locale,
+  action: () => Promise<void>,
+): Promise<void> {
+  const { page } = session;
+  await page.goto(`${clubsUrl}/perfil`);
+  const language = page
+    .locator(".profile-language-card")
+    .getByRole("combobox", { exact: true, name: "Idioma" });
+  await expect(language).toBeEnabled();
+  const previous = await language.inputValue();
+  const change = async (value: string): Promise<void> => {
+    const patching = page.waitForResponse(isCall("PATCH", /\/api\/v1\/me$/u));
+    await language.selectOption(value);
+    const patched = await patching;
+    expect(patched.status(), "PATCH /me locale").toBe(200);
+    expect(((await patched.json()) as Schemas["Me"]).account.locale).toBe(value);
+    expect(patched.request().postDataJSON()).toMatchObject({ locale: value });
+    await expect(page.locator("html")).toHaveAttribute("lang", value);
+    await expect(language).toHaveValue(value);
+    await expect(language).toBeEnabled();
+  };
+  try {
+    if (previous !== locale) await change(locale);
+    await action();
+  } finally {
+    if (previous !== locale) {
+      await page.goto(`${clubsUrl}/perfil`);
+      await expect(language).toBeEnabled();
+      await change(previous);
+    }
+  }
+}
+
 async function adminSession(browser: Browser, email: string = ADMIN): Promise<Session> {
   const key = `admin|${email}`;
   const known = sessions.get(key);
@@ -494,7 +529,11 @@ async function adminSession(browser: Browser, email: string = ADMIN): Promise<Se
 
 /** Moving the core's clock expires every session issued before: they are all closed first. */
 async function closeSessions(): Promise<void> {
-  for (const session of sessions.values()) await session.context.close();
+  for (const session of sessions.values()) {
+    // Drain the optional branding-key route before disposing its request context.
+    await session.context.unrouteAll({ behavior: "wait" });
+    await session.context.close();
+  }
   sessions.clear();
 }
 
@@ -2309,6 +2348,8 @@ test("T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Env
     await push.page.getByRole("button", { exact: true, name: ui.ca.logout }).click();
     deleted = (await deleting).status();
     await push.page.waitForURL((url) => url.pathname !== "/perfil");
+    // Logout boots the anonymous page, whose branding read can still be in the injected route.
+    await push.context.unrouteAll({ behavior: "wait" });
     await push.context.close();
     sessions.delete(`clubs|${MEMBER_PUSH}|push`);
     remember("pushDeleted", String(deleted));
@@ -2513,34 +2554,36 @@ test("T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-2
   // The es pass of (a) and (d) on the same account: the UI's literals in Spanish, the bodies as
   // they were rendered (in Catalan, R-11-15).
   const esView = await clubsSession(browser, MEMBER_CA, "es");
-  await open11(esView.page);
-  await expect(esView.page.getByRole("heading", { level: 1, name: ui.es.title })).toBeVisible();
-  // (d)'s card exists only when the clock let (d) run (step 2).
-  const keys = cards.dCa === undefined ? (["aCa"] as const) : (["aCa", "dCa"] as const);
-  for (const key of keys) {
-    const view = await cardView(feedCard(esView.page, theCard(key).id));
-    expect(view.meta.endsWith(ui.es.viaSms)).toBe(true);
-    expect(view.button).toBe(ui.es.changeClass);
-    expect(view.title).toBe(theCard(key).title);
-  }
-  await open12(esView.page);
-  await expect(esView.page.locator(".profile-notices__header")).toContainText(ui.es.notices);
-  await expect(esView.page.locator(".profile-notices__header small")).toHaveText([
-    ui.es.appColumn,
-    ui.es.emailColumn,
-  ]);
-  await expect(esView.page.locator(".profile-notices__row > span:first-child")).toHaveText([
-    ...ui.es.rows,
-  ]);
-  await expect(
-    esView.page.getByRole("switch", { exact: true, name: ui.es.emailFor(ui.es.rows[2]) }),
-  ).toHaveAttribute("aria-checked", "true");
-  await expect(esView.page.getByLabel(ui.es.reminder, { exact: true })).toBeVisible();
-  await expect(esView.page.getByRole("switch", { exact: true, name: ui.es.push })).toBeVisible();
-  note("i-info-es", {
-    faqGroups: faqCategories(active),
-    faqItems: active.length,
-    rulesTitle: await rulesTitle.textContent(),
+  await withAccountLocale(esView, "es", async () => {
+    await open11(esView.page);
+    await expect(esView.page.getByRole("heading", { level: 1, name: ui.es.title })).toBeVisible();
+    // (d)'s card exists only when the clock let (d) run (step 2).
+    const keys = cards.dCa === undefined ? (["aCa"] as const) : (["aCa", "dCa"] as const);
+    for (const key of keys) {
+      const view = await cardView(feedCard(esView.page, theCard(key).id));
+      expect(view.meta.endsWith(ui.es.viaSms)).toBe(true);
+      expect(view.button).toBe(ui.es.changeClass);
+      expect(view.title).toBe(theCard(key).title);
+    }
+    await open12(esView.page);
+    await expect(esView.page.locator(".profile-notices__header")).toContainText(ui.es.notices);
+    await expect(esView.page.locator(".profile-notices__header small")).toHaveText([
+      ui.es.appColumn,
+      ui.es.emailColumn,
+    ]);
+    await expect(esView.page.locator(".profile-notices__row > span:first-child")).toHaveText([
+      ...ui.es.rows,
+    ]);
+    await expect(
+      esView.page.getByRole("switch", { exact: true, name: ui.es.emailFor(ui.es.rows[2]) }),
+    ).toHaveAttribute("aria-checked", "true");
+    await expect(esView.page.getByLabel(ui.es.reminder, { exact: true })).toBeVisible();
+    await expect(esView.page.getByRole("switch", { exact: true, name: ui.es.push })).toBeVisible();
+    note("i-info-es", {
+      faqGroups: faqCategories(active),
+      faqItems: active.length,
+      rulesTitle: await rulesTitle.textContent(),
+    });
   });
 });
 

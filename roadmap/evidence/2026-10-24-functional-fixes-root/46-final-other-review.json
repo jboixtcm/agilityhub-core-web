@@ -1,0 +1,125 @@
+{
+  "source": "roadmap/evidence/2026-10-26-functional-fixes-final-r3",
+  "priorReview": "26-final-other-visual-review.json",
+  "sameImagesReused": [
+    "06-confirmar-canvi-375.png",
+    "07-anullada-tard-375.png",
+    "07-detall-375.png",
+    "07-espera-375.png",
+    "16-add-dog-price-overlap-refused-375.png",
+    "16-add-dog-price-twin-375.png",
+    "21-console-platform-only-1280.png",
+    "22-D6-rollback-file-not-sent-1280.png",
+    "23-D10-next-invoice-row-1280.png",
+    "23-D10-next-invoice-row-375.png",
+    "23-classe-inscrits-375.png",
+    "29-confirmar-normal-375.png",
+    "29-limit-375.png",
+    "29-properament-375.png",
+    "29-temps-esgotat-375.png",
+    "50-03b-admin-landing-375.png",
+    "50-21-empty-1280.png",
+    "50-21-empty-375.png",
+    "50-28-id-document-ca-1280.png",
+    "50-28-id-document-ca-375.png",
+    "50-28-id-document-es-1280.png",
+    "50-28-id-document-es-375.png",
+    "50-30-info-retry-375.png",
+    "50-D10-dog-dates-1280.png",
+    "50-D10-readmission-pending-1280.png",
+    "50-D16-ring-bookings-1280.png",
+    "50-D16-ring-bookings-375.png",
+    "50-D2-no-plan-proposal-1280.png",
+    "50-D4-review-0800-1280.png",
+    "50-D4-review-0800-375.png",
+    "50-D5-unlabelled-channel-1280.png",
+    "50-D5-unlabelled-channel-375.png",
+    "50-D6-price-overlap-1280.png",
+    "50-chunk-failure-1280.png",
+    "50-chunk-failure-375.png",
+    "50-d10-inactividad-es-1280.png",
+    "50-d10-inactividad-es-375.png",
+    "50-d10-inactividad-modificar-es-1280.png",
+    "50-d10-inactividad-modificar-es-375.png",
+    "50-d12-abrir-recorrido-es-1280.png",
+    "50-d12-abrir-recorrido-es-375.png",
+    "50-espera-after-sign-in-375.png",
+    "50-registrar-montado-es-1280.png",
+    "50-registrar-montado-es-375.png",
+    "50-user-menu-1280.png",
+    "50-visor-personal-es-1280.png",
+    "50-visor-personal-es-375.png",
+    "60-D10-next-invoice-1280.png",
+    "60-D10-next-invoice-375.png",
+    "61-D10-next-invoice-drawer-1280.png",
+    "61-D10-next-invoice-drawer-375.png",
+    "62-D6-submission-due-1280.png",
+    "63-D6-collection-date-passed-1280.png",
+    "D1-risc-1280.png",
+    "D10-reserves-1280.png",
+    "D11-processos-1280.png",
+    "D4-inscrits-1280.png",
+    "D6-facturacio-1280.png",
+    "D6-facturacio-calaix-rebut-1280.png",
+    "D6-facturacio-confirmacio-1280.png",
+    "D6-facturacio-manual-only-1280.png",
+    "entrenaments-registre-1280.png",
+    "remeses-1280.png"
+  ],
+  "changedOverview": [
+    {
+      "file": "03-inici-375.png",
+      "sha256": "5945d10f2ff6c668fa1deae1fd05f1e735cbc4eff157243e734536d60d9f2fe7"
+    },
+    {
+      "file": "04-reservar-375.png",
+      "sha256": "d6f810d76afed7bd7468bd2ff79e634d2c6ecd789db397bb829942660bc96612"
+    },
+    {
+      "file": "20-console-product-host-1280.png",
+      "sha256": "4a01a5cfb61f0ba238299399e88e6e6095e735c2376fd3e7cc4ec2d71504746e"
+    },
+    {
+      "file": "22-D6-rollback-file-not-sent-375.png",
+      "sha256": "ca055d670ede5c0fa1b0b65d9c6cb9c8827efc0f3d0c64f26df8959c06e2dfd4"
+    },
+    {
+      "file": "50-registrar-montado-biblioteca-es-1280.png",
+      "sha256": "a85af1525c3e91a842cc04e5b0c096f169d506ce4373b4dca3d74eee0ef46c3e"
+    },
+    {
+      "file": "50-registrar-montado-biblioteca-es-375.png",
+      "sha256": "b0c6ccfa6dc2b28e3f271f8db9fd2ca10c769e7d8f841acce34cfb0161783b94"
+    },
+    {
+      "file": "62-D6-submission-due-375.png",
+      "sha256": "98dad54c54ede7b5c6482a74726730261559f04f3cf965b023ab38ba0a8336b5"
+    },
+    {
+      "file": "63-D6-collection-date-passed-375.png",
+      "sha256": "76f5982cce37329d86c4a09890aee47d9247e3038ca8c7d53f2dceec0ffe46a7"
+    },
+    {
+      "file": "D11-simulacio-1280.png",
+      "sha256": "2ca3a6e38aeac69335087a78503583251883bbf736482bd8d10b0bea2cc541de"
+    },
+    {
+      "file": "D6-facturacio-retroces-1280.png",
+      "sha256": "262f696d36bb2c38723a1e491de46f60d0780302da0154cf47f8154f7d185279"
+    },
+    {
+      "file": "entrenaments-bloquejos-1280.png",
+      "sha256": "8527debb543203f9656ebba8565c104835bf2e66447c032fac753c4482a1b40e"
+    }
+  ],
+  "directlyOpened": [
+    "D11-simulacio-1280.png",
+    "20-console-product-host-1280.png"
+  ],
+  "delegatedDirectReview": [
+    "50-registrar-montado-biblioteca-es-1280.png",
+    "50-registrar-montado-biblioteca-es-375.png"
+  ],
+  "findings": "No new actionable visual defect. Translated course levels confirmed; billing rows now fit. D11 diagnostic entity/action codes follow the existing documented diagnostic format and assertions.",
+  "limit": "Contact-sheet structural review plus named original opens; tall originals are not claimed as full pixel-level inspection."
+}

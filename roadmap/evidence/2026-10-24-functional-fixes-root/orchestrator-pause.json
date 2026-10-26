@@ -1,0 +1,7 @@
+{
+  "pids": [
+    17958
+  ],
+  "reason": "Yield next heavy slot to focused mobile regression; active core child continues.",
+  "resumedAfter": "INC100 focused run25 acquired09:27; E1-r2passed8/8"
+}

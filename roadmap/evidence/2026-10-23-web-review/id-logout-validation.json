@@ -1,0 +1,50 @@
+[
+  {
+    "command": "corepack pnpm --filter id exec vitest run src/App.test.tsx",
+    "log": "id-logout-focused.log",
+    "exit_code": 1,
+    "result": "13 passed,1 failed: retry translation key corrected"
+  },
+  {
+    "command": "corepack pnpm --filter id exec vitest run src/App.test.tsx",
+    "log": "id-logout-focused-final.log",
+    "exit_code": 0,
+    "result": "14 passed"
+  },
+  {
+    "command": "corepack pnpm --filter id exec eslint src/App.tsx src/App.test.tsx --max-warnings 0 --config ../../eslint.config.mjs",
+    "log": "id-logout-lint.log",
+    "exit_code": 1,
+    "result": "One void callback shorthand corrected"
+  },
+  {
+    "command": "corepack pnpm --filter id exec eslint src/App.tsx src/App.test.tsx --max-warnings 0 --config ../../eslint.config.mjs",
+    "log": "id-logout-lint-final.log",
+    "exit_code": 0,
+    "result": "No findings"
+  },
+  {
+    "command": "corepack pnpm typecheck:e2e-core",
+    "log": "id-logout-core-typecheck.log",
+    "exit_code": 0,
+    "result": "E1 cold ID logout added; real-core execution pending final image"
+  },
+  {
+    "command": "corepack pnpm --filter id exec vitest run src/App.test.tsx",
+    "log": "id-logout-reviewed-tests.log",
+    "exit_code": 0,
+    "result": "17 passed; cold cookie restore, retry, expired cookie, unmounted page and replacement-session guards"
+  },
+  {
+    "command": "corepack pnpm --filter id exec eslint src/App.tsx src/App.test.tsx --max-warnings 0 --config ../../eslint.config.mjs",
+    "log": "id-logout-reviewed-lint.log",
+    "exit_code": 1,
+    "result": "Async mock without await and ref narrowing across await corrected"
+  },
+  {
+    "command": "corepack pnpm --filter id exec eslint src/App.tsx src/App.test.tsx --max-warnings 0 --config ../../eslint.config.mjs",
+    "log": "id-logout-reviewed-lint-final.log",
+    "exit_code": 0,
+    "result": "No findings"
+  }
+]

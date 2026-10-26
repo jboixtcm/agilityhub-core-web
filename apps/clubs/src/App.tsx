@@ -402,20 +402,25 @@ function LanguageSelector({ authClient }: { authClient: AuthClient }) {
   const branding = useBranding();
   const { me } = useSession();
   const { i18n, t } = useTranslation("shell");
-  const locales = productLocales.filter((locale) => branding.locales.includes(locale));
+  const borrowed = me?.impersonation !== undefined || me?.support !== undefined;
+  const locales = productLocales.filter(
+    (locale) => branding.locales.includes(locale) || (borrowed && locale === me.account.locale),
+  );
 
   return (
     <label className="shell-language">
       <span className="ah-sr-only">{t("shell:header.language")}</span>
       <select
         aria-label={t("shell:header.language")}
+        disabled={borrowed}
         onChange={(event) => {
+          if (borrowed) return;
           const locale = event.currentTarget.value;
           localStorage.setItem(LOCALE_STORAGE_KEY, locale);
           void i18n.changeLanguage(locale);
           // CONVENCIONS_I18N §1 (E11-W06 W5): the choice is the account's (`PATCH /me`), so the
           // next sign-in keeps it; an impersonated session cannot write it (403).
-          if (me !== null && me.impersonation === undefined && me.account.locale !== locale) {
+          if (me !== null && me.account.locale !== locale) {
             void authClient.updateLocale(locale).catch(() => undefined);
           }
         }}

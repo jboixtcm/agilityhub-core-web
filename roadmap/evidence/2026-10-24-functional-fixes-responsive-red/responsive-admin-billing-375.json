@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 632,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "DIV",
+      "className": "billing-page",
+      "text": "Setembre 2026‹ mes·mes ›1 · SIMULA EL MES2 · GENERA REMESA SEPA (XML)Els rebuts ",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "HEADER",
+      "className": "billing-header",
+      "text": "Setembre 2026‹ mes·mes ›1 · SIMULA EL MES2 · GENERA REMESA SEPA (XML)Els rebuts ",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "H1",
+      "className": "",
+      "text": "Setembre 2026",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "billing-stepper",
+      "text": "‹ mes·mes ›",
+      "left": 276,
+      "right": 396,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "",
+      "text": "mes ›",
+      "left": 342,
+      "right": 387,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "billing-header__spacer",
+      "text": "",
+      "left": 404,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--secondary billing-action",
+      "text": "1 · SIMULA EL MES",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "1 · SIMULA EL MES",
+      "left": 289,
+      "right": 397.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "2 · GENERA REMESA SEPA (XML)Els rebuts d'aquest mes ja s'han generat.",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--primary billing-action",
+      "text": "2 · GENERA REMESA SEPA (XML)",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "2 · GENERA REMESA SEPA (XML)",
+      "left": 289,
+      "right": 397.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-sr-only",
+      "text": "Els rebuts d'aquest mes ja s'han generat.",
+      "left": 409.203125,
+      "right": 410.203125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost billing-action",
+      "text": "Retrocedeix la remesa",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Retrocedeix la remesa",
+      "left": 289,
+      "right": 397.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "billing-grid",
+      "text": "Pas 1 — Simulació: incidències primer22 incidènciesJoan Vilasense compte bancari",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-card billing-simulation",
+      "text": "Pas 1 — Simulació: incidències primer22 incidènciesJoan Vilasense compte bancari",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "billing-simulation__head",
+      "text": "Pas 1 — Simulació: incidències primer22 incidències",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "H2",
+      "className": "",
+      "text": "Pas 1 — Simulació: incidències primer",
+      "left": 293,
+      "right": 599.21875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-badge ah-tone--danger",
+      "text": "22 incidències",
+      "left": 607.21875,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "2",
+      "left": 616.109375,
+      "right": 623.109375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-sr-only",
+      "text": "2 incidències",
+      "left": 619.109375,
+      "right": 620.109375,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TABLE",
+      "className": "billing-members",
+      "text": "Joan Vilasense compte bancari informatObre fitxaPau Rierasense tarifa assignadaO",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "Joan Vilasense compte bancari informatObre fitxaPau Rierasense tarifa assignadaO",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Joan Vilasense compte bancari informatObre fitxa",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Joan Vila",
+      "left": 293,
+      "right": 390,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "sense compte bancari informat",
+      "left": 390,
+      "right": 529,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "billing-members__action",
+      "text": "Obre fitxa",
+      "left": 529,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "ah-button ah-button--ghost billing-open",
+      "text": "Obre fitxa",
+      "left": 537,
+      "right": 624,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Pau Rierasense tarifa assignadaObre fitxa",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Pau Riera",
+      "left": 293,
+      "right": 390,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "sense tarifa assignada",
+      "left": 390,
+      "right": 529,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "billing-members__action",
+      "text": "Obre fitxa",
+      "left": 529,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "ah-button ah-button--ghost billing-open",
+      "text": "Obre fitxa",
+      "left": 537,
+      "right": 624,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "P",
+      "className": "billing-simulation__footnote",
+      "text": "Els abonats amb incidència s'ometen de la generació.",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "H3",
+      "className": "billing-simulation__subtitle",
+      "text": "Actius amb pagament en efectiu",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TABLE",
+      "className": "billing-members",
+      "text": "Joan Viladata de baixa prevista: 31/12/2026Obre fitxaRoser Campsdata de baixa pr",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "Joan Viladata de baixa prevista: 31/12/2026Obre fitxaRoser Campsdata de baixa pr",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Joan Viladata de baixa prevista: 31/12/2026Obre fitxa",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Joan Vila",
+      "left": 293,
+      "right": 421,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "data de baixa prevista: 31/12/2026",
+      "left": 421,
+      "right": 529,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "31/12/2026",
+      "left": 429,
+      "right": 510,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "billing-members__action",
+      "text": "Obre fitxa",
+      "left": 529,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "ah-button ah-button--ghost billing-open",
+      "text": "Obre fitxa",
+      "left": 537,
+      "right": 624,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Roser Campsdata de baixa prevista: 30/06/2027Obre fitxa",
+      "left": 293,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Roser Camps",
+      "left": 293,
+      "right": 421,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "data de baixa prevista: 30/06/2027",
+      "left": 421,
+      "right": 529,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "30/06/2027",
+      "left": 429,
+      "right": 521,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "billing-members__action",
+      "text": "Obre fitxa",
+      "left": 529,
+      "right": 632,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "ah-button ah-button--ghost billing-open",
+      "text": "Obre fitxa",
+      "left": 537,
+      "right": 624,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "billing-kpis",
+      "text": "168Rebuts del messimulats el 25/086.480 €Import de la remesadata de cobrament: 0",
+      "left": 276,
+      "right": 410.203125,
+      "overflowX": "visible"
+    }
+  ]
+}

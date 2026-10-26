@@ -100,13 +100,28 @@ test("T-02-13 E4-W06 D11 on the published core names every block and parameter (
   // `textContent`, not `innerText`: the card titles are upper-cased by CSS, the check reads the
   // strings themselves (a raw block title is «admin-settings:block.x.title»).
   const texts = await page
-    .locator(".settings-grid h2, .settings-grid .settings-parameter__main span")
+    .locator(
+      ".settings-grid h2, .settings-grid .settings-parameter__main span, .jobs-card__main strong",
+    )
     .allTextContents();
   const raw = texts
     .map((line) => line.trim())
-    .filter((line) => /admin-settings:|^param\.|\bparam\.[a-z]+\.[a-z.]+/iu.test(line));
+    .filter((line) =>
+      /admin-settings:|jobs\.name\.|^param\.|\bparam\.[a-z]+\.[a-z.]+/iu.test(line),
+    );
   // The card titles and the rows were read (not an empty page).
   expect(texts.length).toBeGreaterThan(50);
+  for (const [id, label] of [
+    ["erasures", "Supressió de dades"],
+    ["retention-sweep", "Retenció de dades"],
+  ] as const) {
+    const row = page.locator(`[data-job="${id}"]`);
+    await expect(row).toContainText(label);
+    await expect(row.getByRole("switch")).toHaveCount(0);
+    await expect(row.getByRole("button", { name: `Simula ${label}` })).toBeEnabled();
+    await expect(row.getByRole("button", { name: `Executa ara ${label}` })).toBeEnabled();
+  }
+  await expect(page.locator('[data-job="risk-review"]').getByRole("switch")).toBeEnabled();
   await page.evaluate(async () => document.fonts.ready);
   await page.screenshot({
     fullPage: true,

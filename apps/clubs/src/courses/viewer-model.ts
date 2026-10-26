@@ -68,7 +68,8 @@ export function frameScene(course: CourseData): ViewerScene {
  * the transform and the placement's `resolvedObstacles`: what stands on the ring, stored when the
  * placement was saved. The viewer draws those (E11-W03, INC-72): a course edited after the
  * placement must not move on the member's screen. Each obstacle the course still has lends its
- * shape (a tunnel's curve) and its number labels, carried rigidly to the stored point and heading;
+ * number labels, carried rigidly to the stored point and heading. New placements freeze tunnel
+ * curves too; only legacy rows borrow the live course's curve.
  * an obstacle the course no longer has is drawn from the stored row alone. A legacy projection
  * without obstacles draws the course through the transform, and one without the ring's
  * dimensions falls back to the course's own frame in the caller.
@@ -176,15 +177,15 @@ function standingCourse(
       const turned = rotateAbout(point, anchor, turn);
       return { x: turned.x - anchor.x + target.x, y: turned.y - anchor.y + target.y };
     };
-    // Accepted fallback (ruling E163, INC-86): a stored row carries no tunnel geometry, so a
-    // tunnel's bend comes from the live course, carried to where the row stands. A bend edited
-    // after the placement shows on the member's plan until the placement carries its own
-    // geometry (api, after the launch).
+    // INC-86: saved points are already in the ring's frame. Null/absent is a legacy placement;
+    // an explicitly empty curve must stay empty, even if the live course gained one later.
     const controlPoints =
-      source === undefined || anchor === null
-        ? null
-        : (placeControlPointsInRing(source.controlPointsMeters, placement, course)?.map(carry) ??
-          null);
+      row.controlPointsMeters != null
+        ? row.controlPointsMeters.map((point) => ({ ...point }))
+        : source === undefined || anchor === null
+          ? null
+          : (placeControlPointsInRing(source.controlPointsMeters, placement, course)?.map(carry) ??
+            null);
     obstacles.push({
       colorKey: source?.colorKey ?? null,
       controlPointsMeters: controlPoints,

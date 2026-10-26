@@ -1,0 +1,20 @@
+{
+  "courseName": "Jumping E9-W05 9973",
+  "obstacles": 21,
+  "placementId": "ecd03a9b-62e3-4521-8e8c-35c3a946e65c",
+  "ringId": "0eaae745-ffe2-4aab-acee-ab2910d1e0d9",
+  "setupId": "",
+  "warnings": [
+    "course-larger-than-ring",
+    "outside-ring",
+    "outside-ring",
+    "outside-ring",
+    "outside-ring",
+    "outside-ring",
+    "outside-ring",
+    "outside-ring",
+    "border-clearance",
+    "border-clearance",
+    "obstacle-inventory"
+  ]
+}

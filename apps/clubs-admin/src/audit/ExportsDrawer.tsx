@@ -67,7 +67,8 @@ export function ExportJobsProvider({
   const [jobs, setJobs] = useState<ExportJob[]>([]);
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [notice, setNotice] = useState<"EXPORT_LIMIT" | "queued">();
+  const [notice, setNotice] = useState<"EXPORT_LIMIT">();
+  const [requestedJobId, setRequestedJobId] = useState<string>();
   const [refreshKey, setRefreshKey] = useState(0);
   const [downloading, setDownloading] = useState<string>();
   const [downloadError, setDownloadError] = useState<string>();
@@ -100,13 +101,9 @@ export function ExportJobsProvider({
   };
 
   const openExports = useCallback((options?: OpenExportsOptions) => {
-    setNotice(
-      options?.errorCode === "EXPORT_LIMIT"
-        ? "EXPORT_LIMIT"
-        : options?.jobId
-          ? "queued"
-          : undefined,
-    );
+    setNotice(options?.errorCode);
+    setRequestedJobId(options?.jobId);
+    setJobs([]);
     // The normal header entry has no kind: it lists every caller-owned job, including queued
     // accounting exports recovered after a drawer close or a full reload. A flow that has just
     // queued a job can still narrow the first view to that job's kind.
@@ -148,6 +145,11 @@ export function ExportJobsProvider({
   }, [client, kind, open, refreshKey]);
 
   const context = useMemo(() => ({ openExports }), [openExports]);
+  // Other queued exports do not describe the requested package. Only its last successful
+  // status read can claim it is preparing; terminal, absent or unreadable jobs cannot.
+  const requestedJob = jobs.find((job) => job.id === requestedJobId);
+  const preparing =
+    !failed && (requestedJob?.status === "QUEUED" || requestedJob?.status === "RUNNING");
 
   return (
     <ExportsContext.Provider value={context}>
@@ -162,7 +164,7 @@ export function ExportJobsProvider({
       >
         <div className="exports-drawer">
           <p>{t("admin-audit:exports.description")}</p>
-          {notice === "queued" ? (
+          {preparing ? (
             <p className="exports-drawer__notice" role="status">
               {t("admin-audit:exports.queuedNotice")}
             </p>

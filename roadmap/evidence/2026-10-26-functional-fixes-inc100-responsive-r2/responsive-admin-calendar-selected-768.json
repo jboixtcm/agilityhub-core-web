@@ -1,0 +1,383 @@
+{
+  "viewport": 768,
+  "documentWidth": 768,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "TABLE",
+      "className": "ah-schedule-grid__table",
+      "text": "Calendari de classes · del 10 al 16 d’agostdl 10dt 11dc 12dj 13dv 14ds 158:30A+B",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "dl 10dt 11dc 12dj 13dv 14ds 15",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "dl 10dt 11dc 12dj 13dv 14ds 15",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "ah-schedule-grid__column",
+      "text": "ds 15",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-grid__column-button",
+      "text": "ds 15",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-grid__column-label",
+      "text": "ds 15",
+      "left": 766.296875,
+      "right": 802.90625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 806.90625,
+      "right": 819.703125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 811.705078125,
+      "right": 815.4375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "8:30A+B4/5Central · LauraC i sup.3/5Muntanya · MarcA+B5/5 +1Central · LauraC i s",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "8:30A+B4/5Central · LauraC i sup.3/5Muntanya · MarcA+B5/5 +1Central · LauraC i s",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "A3/5Muntanya · LauraB+C4/5Central · Marc",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "A3/5Muntanya · LauraB+C4/5Central · Marc",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "A3/5Muntanya · Laura",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "A3/5Muntanya · Laura",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "A3/5",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "3/5",
+      "left": 754.984375,
+      "right": 773.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Muntanya · Laura",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "B+C4/5Central · Marc",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "B+C4/5Central · Marc",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "B+C4/5",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "4/5",
+      "left": 770.984375,
+      "right": 790.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Central · Marc",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "9:30Cadells0/5anul·lada · revisió de les 7:30B+C2/5Central · LauraCadells3/5Cade",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "B+C2/5Central · LauraCadells3/5Cadells · Marc",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "B+C2/5Central · LauraCadells3/5Cadells · Marc",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "B+C2/5Central · Laura",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "B+C2/5Central · Laura",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "B+C2/5",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "2/5",
+      "left": 770.984375,
+      "right": 789.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Central · Laura",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__item",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-schedule-cell",
+      "text": "Cadells3/5Cadells · Marc",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__title",
+      "text": "Cadells3/5",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "STRONG",
+      "className": "ah-schedule-cell__meta",
+      "text": "3/5",
+      "left": 788.984375,
+      "right": 807.984375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell__subtitle",
+      "text": "Cadells · Marc",
+      "left": 741.1875,
+      "right": 844.8125,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "16:00Carretera bloquejadamanteniment 16:00–18:00",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "17:40Teràpia1/1Petita · LauraD+E4/5Carretera · MarcD+E2/5Carretera · MarcParticu",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "ah-schedule-grid__row",
+      "text": "18:50B+C5/5 +2Central · MarcCadells2/5Cadells · AnnaA+B3/5Central · LauraB+C4/5 ",
+      "left": 29,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-schedule-grid__slot",
+      "text": "",
+      "left": 729,
+      "right": 857,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-schedule-grid__stack",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-schedule-cell ah-schedule-cell--empty",
+      "text": "",
+      "left": 733,
+      "right": 853,
+      "overflowX": "visible"
+    }
+  ]
+}

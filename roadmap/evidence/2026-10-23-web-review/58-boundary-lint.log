@@ -1,0 +1,11 @@
+Scope: 2 of 12 workspace projects
+packages/api-client lint$ eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+packages/api-client lint: Done
+packages/auth lint$ eslint src --max-warnings 0 --config ../../eslint.config.mjs
+packages/auth lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth/src/auth-client.test.ts
+packages/auth lint:   2281:61  error  Async arrow function 'responseFetch' has no 'await' expression  @typescript-eslint/require-await
+packages/auth lint: ✖ 1 problem (1 error, 0 warnings)
+packages/auth lint: Failed
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/auth@0.0.0 lint: `eslint src --max-warnings 0 --config ../../eslint.config.mjs`
+Exit status 1

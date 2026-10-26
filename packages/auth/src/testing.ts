@@ -1,9 +1,6 @@
 /**
- * R-01-06's refresh lock in tests (E11-W05). Every browser the apps support has Web Locks and the
- * refresh relies on them alone (ruling E163); jsdom has none, so without this each `AuthClient`
- * would refresh on its own. This is a FIFO lock per name, as the browser's, so the apps' tests run
- * the refresh as production does. `auth-client.test.ts` installs it per test, and keeps one case
- * without it. Returns the function that removes it.
+ * A FIFO Web Lock per name for jsdom. Production uses it to order cookie writes across tabs;
+ * without Web Locks the auth client retains a same-page queue only. Returns its cleanup.
  */
 export function installWebLocks(): () => void {
   if ("locks" in navigator) {

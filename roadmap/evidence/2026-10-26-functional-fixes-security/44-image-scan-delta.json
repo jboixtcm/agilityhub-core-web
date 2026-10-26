@@ -1,0 +1,8 @@
+{
+  "baseline": "/Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/2026-10-24-functional-fixes-release/40-image-scan-summary.json",
+  "baselineImageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "currentImageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "scope": "Package/advisory/severity comparison across two local images and the recorded database versions; absence is not a security guarantee.",
+  "addedOrSeverityChanged": [],
+  "removedOrSeverityChanged": []
+}

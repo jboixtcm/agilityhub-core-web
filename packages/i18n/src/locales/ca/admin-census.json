@@ -406,7 +406,7 @@
       "erased": "suprimit",
       "export": "Descarrega les dades (RGPD)",
       "exportPreparing": "S'està preparant el paquet de dades.",
-      "exportQueued": "El paquet s'està preparant. El trobaràs a Exportacions.",
+      "exportRequested": "Paquet de dades sol·licitat. Consulta'n l'estat a Exportacions.",
       "consents": {
         "title": "Historial de consentiments",
         "loading": "Carregant els consentiments…",

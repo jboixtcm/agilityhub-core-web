@@ -1,0 +1,40 @@
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing aa92acb9c7fb08b7
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing a38de7defe0d0c9a
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 37f8061bf45b8f8e
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test '--grep=INC-97|E11-W05: the back office' --pass-with-no-tests --workers\=1 --trace\=off
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+clubs:build: cache miss, executing 6df9a949d0ca8535
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: src/courses/register-level-labels.test.tsx(67,69): error TS2769: No overload matches this call.
+clubs:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs:build:  ELIFECYCLE  Command failed with exit code 2.
+clubs-admin:build: cache miss, executing 2f71f56ee8d2d066
+id:build: cache miss, executing 2ce127286affcfe3
+clubs#build:  ERROR  command (/work/apps/clubs) /usr/bin/pnpm run build exited (2)
+
+ Tasks:    4 successful, 7 total
+Cached:    0 cached, 7 total
+  Time:    8.691s 
+Failed:    clubs#build
+
+ ERROR  run failed: command  exited (2)

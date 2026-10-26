@@ -2,7 +2,10 @@ import { createApiClient, type ApiClient, type ApiClientOptions } from "@agility
 
 import type { AuthClient } from "./auth-client";
 
-export type AuthenticatedApiClientOptions = Omit<ApiClientOptions, "fetch" | "getAccessToken"> & {
+export type AuthenticatedApiClientOptions = Omit<
+  ApiClientOptions,
+  "fetch" | "getAccessToken" | "captureRequestGuard"
+> & {
   fetch?: typeof globalThis.fetch;
 };
 
@@ -16,6 +19,8 @@ export function createRefreshInterceptor(
   requestFetch: typeof globalThis.fetch = globalThis.fetch,
 ): typeof globalThis.fetch {
   return async (input, init) => {
+    const generation = authClient.getSessionGeneration();
+    const guard = authClient.captureSessionGuard();
     const request = new Request(input, init);
     const body =
       request.method === "GET" || request.method === "HEAD"
@@ -28,13 +33,19 @@ export function createRefreshInterceptor(
       method: request.method,
       signal: request.signal,
     };
+    guard();
     const response = await requestFetch(request.url, requestInit);
 
     if (response.status !== 401) {
+      guard();
       return response;
     }
 
-    if (!(await authClient.recoverFromUnauthorized())) {
+    if (
+      authClient.getSessionGeneration() !== generation ||
+      !(await authClient.recoverFromUnauthorized(generation)) ||
+      authClient.getSessionGeneration() !== generation
+    ) {
       return response;
     }
 
@@ -43,7 +54,9 @@ export function createRefreshInterceptor(
     if (accessToken !== null) {
       headers.set("Authorization", `Bearer ${accessToken}`);
     }
-    return requestFetch(request.url, { ...requestInit, headers });
+    const retried = await requestFetch(request.url, { ...requestInit, headers });
+    guard();
+    return retried;
   };
 }
 
@@ -54,6 +67,7 @@ export function createAuthenticatedApiClient(
   const requestFetch = options.fetch ?? globalThis.fetch;
   return createApiClient({
     ...options,
+    captureRequestGuard: () => authClient.captureSessionGuard(),
     credentials: "include",
     fetch: createRefreshInterceptor(authClient, requestFetch),
     getAccessToken: () => authClient.getAccessToken(),

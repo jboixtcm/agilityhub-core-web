@@ -1,0 +1,18 @@
+{
+  "cleanup": {
+    "containers": [],
+    "networks": [],
+    "volumes": []
+  },
+  "cleanupComplete": true,
+  "elapsedSeconds": 99.68,
+  "stage": "e11-r3",
+  "image": "agilityhub-core-api:review-fixes-20261024",
+  "imageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "architecture": "arm64",
+  "exitCode": 0,
+  "inputCount": 946,
+  "inputsUnchanged": true,
+  "changedInputs": [],
+  "scope": "Fresh fictional members and transactions; isolated safe demo club configuration; local-profile API; no provider operations"
+}

@@ -1,0 +1,10 @@
+heavy.sh: 09:02 waiting for the host lock, held by: 09:02 agilityhub-core-api: ./mvnw -q -Dit.test=CensusIT#T_03_08_INC91_* test-compile failsafe:integration-test failsafe:verify
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  09:03:07
+   Duration  656ms (environment 65%, import 15%, transform 13%, tests 7%)
+

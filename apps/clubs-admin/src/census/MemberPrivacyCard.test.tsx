@@ -94,10 +94,10 @@ async function renderPrivacy(
   );
 }
 
-async function renderExportButton(onErased: () => void = () => undefined) {
+async function renderExportButton(onErased: () => void = () => undefined, language = "ca") {
   const i18n = await createI18n({
-    branding,
-    browserLanguages: ["ca"],
+    branding: { ...branding, locales: ["ca", "es", "en"] },
+    browserLanguages: [language],
     initialNamespaces: ["admin-census", "errors"],
     storage: undefined,
   });
@@ -330,6 +330,36 @@ describe("T-14-18 · D10 requests and cancels a member erasure (R-14-14)", () =>
 });
 
 describe("T-14-17 and R-14-18 · D10 data access and consent history", () => {
+  it.each([
+    [
+      "ca",
+      "Descarrega les dades (RGPD)",
+      "Paquet de dades sol·licitat. Consulta'n l'estat a Exportacions.",
+    ],
+    [
+      "es",
+      "Descargar los datos (RGPD)",
+      "Paquete de datos solicitado. Consulta su estado en Exportaciones.",
+    ],
+    ["en", "Download data (GDPR)", "Data package requested. Check its status in Exports."],
+  ])(
+    "INC-95: %s acknowledges the request without claiming ongoing preparation",
+    async (locale, action, acknowledgement) => {
+      server.use(
+        http.post("*/api/v1/members/:id/data-export", () =>
+          HttpResponse.json(
+            { jobId: "71000000-0000-4000-8000-000000000001", statusUrl: "/api/v1/exports/job" },
+            { status: 202 },
+          ),
+        ),
+      );
+      await renderExportButton(undefined, locale);
+      fireEvent.click(screen.getByRole("button", { name: action }));
+      expect(await screen.findByText(acknowledgement)).toHaveAttribute("role", "status");
+      expect(screen.getByRole("status")).not.toHaveTextContent(/prepar/u);
+    },
+  );
+
   it("queues an admin data package once, disables the action while pending and reports it", async () => {
     let resolveRequest: (() => void) | undefined;
     let requestBody: unknown;
@@ -366,9 +396,9 @@ describe("T-14-17 and R-14-18 · D10 data access and consent history", () => {
     await renderExportButton();
     const button = screen.getByRole("button", { name: "Descarrega les dades (RGPD)" });
     fireEvent.click(button);
-    expect(await screen.findByText("El paquet s'està preparant. El trobaràs a Exportacions.")).toBe(
-      screen.getByRole("status"),
-    );
+    expect(
+      await screen.findByText("Paquet de dades sol·licitat. Consulta'n l'estat a Exportacions."),
+    ).toBe(screen.getByRole("status"));
     // The mock keeps the api's 24 h window: the second package of the day is refused.
     fireEvent.click(button);
     expect(await screen.findByRole("alert")).toHaveTextContent(

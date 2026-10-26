@@ -1,0 +1,88 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/viewer-model.test.ts (4 tests | 2 failed) 9ms
+   ❯ T-16-16 INC-86 the member reads the tunnel that was placed (4)
+     × keeps the saved curve after the source tunnel is edited or removed 6ms
+     × preserves an explicitly empty saved curve instead of copying the live tunnel 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/viewer-model.test.ts > T-16-16 INC-86 the member reads the tunnel that was placed > keeps the saved curve after the source tunnel is edited or removed
+AssertionError: expected [ …(3) ] to deeply equal [ Array(3) ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "x": 5,
+-     "y": 4,
++     "x": 1.9100000000000001,
++     "y": -7.941666666666663,
+    },
+    {
+-     "x": 7,
+-     "y": 6,
++     "x": 3.91,
++     "y": -1.9416666666666629,
+    },
+    {
+-     "x": 9,
+-     "y": 4,
++     "x": 6.91,
++     "y": -5.941666666666663,
+    },
+  ]
+
+ ❯ src/courses/viewer-model.test.ts:42:8
+     40|     tunnel.controlPointsMeters = [{ x: 12, y: 12 }, { x: 14, y: 18 }, …
+     41|     expect(memberPlacementScene(course, placement)?.course.obstacles[0…
+     42|       .toEqual(expected);
+       |        ^
+     43|     course.obstacles = [];
+     44|     expect(memberPlacementScene(course, placement)?.course.obstacles[0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/courses/viewer-model.test.ts > T-16-16 INC-86 the member reads the tunnel that was placed > preserves an explicitly empty saved curve instead of copying the live tunnel
+AssertionError: expected [ Array(3) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "x": 8.440000000000001,
++     "y": 5.1633333333333375,
++   },
++   {
++     "x": 7,
++     "y": 5.003333333333337,
++   },
++   {
++     "x": 5.559999999999999,
++     "y": 4.833333333333336,
++   },
++ ]
+
+ ❯ src/courses/viewer-model.test.ts:54:8
+     52|     row.controlPointsMeters = [];
+     53|     expect(memberPlacementScene(course, placement)?.course.obstacles[0…
+     54|       .toEqual([]);
+       |        ^
+     55|   });
+     56|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  21:19:43
+   Duration  587ms (environment 48%, transform 31%, setup 10%, import 8%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/viewer-model.test.ts

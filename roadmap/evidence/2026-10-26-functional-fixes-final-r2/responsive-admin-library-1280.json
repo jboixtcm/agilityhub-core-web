@@ -1,0 +1,95 @@
+{
+  "viewport": 1280,
+  "documentWidth": 1280,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-panel",
+      "text": "ColumnaDisciplinaNivell AgilityHubNivell del clubFontEtiquetaAutorNombre d'obsta",
+      "left": 1048.203125,
+      "right": 1432.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "ColumnaDisciplinaNivell AgilityHubNivell del clubFontEtiquetaAutorNombre d'obsta",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Columna",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "DisciplinaNivell AgilityHubNivell del clubFontEtiquetaAutorNombre d'obstacles",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Operadorés igual ano és igual aés un deno és cap de",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Operador",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "és igual ano és igual aés un deno és cap de",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "ValorAgilityJumpingAltres",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Valor",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "AgilityJumpingAltres",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-actions",
+      "text": "Afegeix el filtreNeteja",
+      "left": 1065.203125,
+      "right": 1415.203125,
+      "overflowX": "visible"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "initialPythonUrllib": "Failed before download because this host Python could not validate its local issuer chain. No TLS verification was disabled.",
+  "completedAttempt": "Used curl with its normal system trust, HTTPS certificate verification, official GitHub release checksum comparison, and local version execution."
+}

@@ -1,0 +1,38 @@
+{
+  "commonInputCount": 946,
+  "allCommonInputsMatch": true,
+  "inputCounts": {
+    "forcedCI40": 946,
+    "fullBrowser41": 946,
+    "D11r3": 946,
+    "E11r3": 946,
+    "compiledR3": 955
+  },
+  "manifests": {
+    "forcedCI40": "2026-10-24-functional-fixes-root/40-final-ci-tested-inputs.json",
+    "fullBrowser41": "2026-10-24-functional-fixes-root/41-full-browser-final-tested-inputs.json",
+    "D11r3": "2026-10-24-functional-fixes-release/01-core-d11-r3-tested-inputs.json",
+    "E11r3": "2026-10-24-functional-fixes-release/02-core-e11-r3-tested-inputs.json",
+    "compiledR3": "2026-10-24-functional-fixes-release/03-core-production-r3-tested-inputs.json"
+  },
+  "extraCompiledInputs": [
+    "roadmap/evidence/2026-10-24-functional-fixes-release/check-https-config.py",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/https-compose.override.yml",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/https-server.mjs",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/playwright.production.config.ts",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/production-functional.spec.ts",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/run-check.py",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/run-core.py",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/run-image-scan.py",
+    "roadmap/evidence/2026-10-24-functional-fixes-release/with-https-compose.py"
+  ],
+  "uniqueRealCases": {
+    "D11": 1,
+    "E11": 2,
+    "compiledHTTPS": 4,
+    "total": 7
+  },
+  "exactApiImageId": "sha256:9f8a73041597a46df54ec22789dba793e9d6d20b7454fae61a9238d1824753a9",
+  "architecture": "arm64",
+  "sourceBoundary": "All7 final cases follow INC97,INC98,INC99,INC100 and coordinated test-isolation fixes; earlier attempts are retained and not added to final totals."
+}

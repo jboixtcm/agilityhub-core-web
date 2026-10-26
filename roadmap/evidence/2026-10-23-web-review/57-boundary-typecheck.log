@@ -1,0 +1,5 @@
+Scope: 2 of 12 workspace projects
+packages/api-client typecheck$ tsc --noEmit
+packages/api-client typecheck: Done
+packages/auth typecheck$ tsc --noEmit
+packages/auth typecheck: Done

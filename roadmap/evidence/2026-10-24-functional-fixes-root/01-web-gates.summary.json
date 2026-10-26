@@ -1,0 +1,11 @@
+{
+  "commandExitCode": 2,
+  "inputCount": 943,
+  "inputsUnchanged": false,
+  "changedInputs": [
+    "e2e/core/e2-core.spec.ts",
+    "e2e/core/e3-signup.spec.ts"
+  ],
+  "elapsedSeconds": 37.91,
+  "node": "v22.23.2"
+}

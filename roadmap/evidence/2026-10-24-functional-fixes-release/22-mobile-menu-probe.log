@@ -1,0 +1,162 @@
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:20) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 217, added 216
+Progress: resolved 858, reused 0, downloaded 542, added 542
+Progress: resolved 858, reused 0, downloaded 643, added 643
+Progress: resolved 858, reused 0, downloaded 808, added 807
+Progress: resolved 858, reused 0, downloaded 857, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 6.5s using pnpm v9.15.9
+[WebServer] (node:134) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+F·
+
+  1) roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:22:5 › evidence-only: visible billing toolbar menus at375 
+
+    Error: Joan Viladata de baixa prevista: 31/12/2026Obre fitxaRoser Campsdata de baixa prevista: 30/06/2027Obre fitxa table ends inside card
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 359
+    Received:    372
+
+      48 |   await page.screenshot({ path: join(evidence, 'billing-cash-card-375.png'), fullPage: true });
+      49 |   for (const table of cardBounds.tables) {
+    > 50 |     expect.soft(table.right, `${table.text} table ends inside card`).toBeLessThanOrEqual(cardBounds.right);
+         |                                                                      ^
+      51 |     for (const action of table.actions) {
+      52 |       expect.soft(action.right, `${action.name} ends inside card`).toBeLessThanOrEqual(cardBounds.right);
+      53 |     }
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:50:70
+
+    Error: Obre fitxa de Joan Vila ends inside card
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 359
+    Received:    364
+
+      50 |     expect.soft(table.right, `${table.text} table ends inside card`).toBeLessThanOrEqual(cardBounds.right);
+      51 |     for (const action of table.actions) {
+    > 52 |       expect.soft(action.right, `${action.name} ends inside card`).toBeLessThanOrEqual(cardBounds.right);
+         |                                                                    ^
+      53 |     }
+      54 |   }
+      55 |   const observations = [];
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:52:68
+
+    Error: Obre fitxa de Roser Camps ends inside card
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 359
+    Received:    364
+
+      50 |     expect.soft(table.right, `${table.text} table ends inside card`).toBeLessThanOrEqual(cardBounds.right);
+      51 |     for (const action of table.actions) {
+    > 52 |       expect.soft(action.right, `${action.name} ends inside card`).toBeLessThanOrEqual(cardBounds.right);
+         |                                                                    ^
+      53 |     }
+      54 |   }
+      55 |   const observations = [];
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:52:68
+
+    Error: Columnes
+    ▾ starts inside viewport
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -127.203125
+
+      77 |     await page.screenshot({ path: join(evidence, `billing-menu-${index}-375.png`), fullPage: true });
+      78 |     writeFileSync(join(evidence, 'billing-open-menu-bounds.json'), JSON.stringify(observations, null, 2)+'\n');
+    > 79 |     expect.soft(observation.left, `${name} starts inside viewport`).toBeGreaterThanOrEqual(0);
+         |                                                                     ^
+      80 |     expect.soft(observation.right, `${name} ends inside viewport`).toBeLessThanOrEqual(375);
+      81 |     expect.soft(observation.documentWidth, `${name} page width`).toBe(375);
+      82 |     await summary.click();
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:79:69
+
+    Error: Vistes
+    ▾ starts inside viewport
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -41.203125
+
+      77 |     await page.screenshot({ path: join(evidence, `billing-menu-${index}-375.png`), fullPage: true });
+      78 |     writeFileSync(join(evidence, 'billing-open-menu-bounds.json'), JSON.stringify(observations, null, 2)+'\n');
+    > 79 |     expect.soft(observation.left, `${name} starts inside viewport`).toBeGreaterThanOrEqual(0);
+         |                                                                     ^
+      80 |     expect.soft(observation.right, `${name} ends inside viewport`).toBeLessThanOrEqual(375);
+      81 |     expect.soft(observation.documentWidth, `${name} page width`).toBe(375);
+      82 |     await summary.click();
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:79:69
+
+    Error: Excel · PDF starts inside viewport
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 0
+    Received:    -13.203125
+
+      77 |     await page.screenshot({ path: join(evidence, `billing-menu-${index}-375.png`), fullPage: true });
+      78 |     writeFileSync(join(evidence, 'billing-open-menu-bounds.json'), JSON.stringify(observations, null, 2)+'\n');
+    > 79 |     expect.soft(observation.left, `${name} starts inside viewport`).toBeGreaterThanOrEqual(0);
+         |                                                                     ^
+      80 |     expect.soft(observation.right, `${name} ends inside viewport`).toBeLessThanOrEqual(375);
+      81 |     expect.soft(observation.documentWidth, `${name} page width`).toBe(375);
+      82 |     await summary.click();
+        at /work/roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:79:69
+
+    Error Context: ../evidence/2026-10-26-functional-fixes-mobile-menu-probe/test-results/mobile-menu-evidence-only--3bd16-billing-toolbar-menus-at375/error-context.md
+
+  1 failed
+    roadmap/evidence/2026-10-26-functional-fixes-mobile-menu-probe/mobile-menu.spec.ts:22:5 › evidence-only: visible billing toolbar menus at375 
+  1 passed (5.4s)

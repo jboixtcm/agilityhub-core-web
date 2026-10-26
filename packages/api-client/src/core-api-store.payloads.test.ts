@@ -72,6 +72,42 @@ function placementInput(overrides: Partial<SavePlacementInput> = {}): SavePlacem
 }
 
 describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () => {
+  it("T-16-16 INC-86 freezes tunnel control points in ring coordinates in the placement payload", async () => {
+    const api = createFakeCoreApi();
+    const tunnel = course.obstacles.find((obstacle) => obstacle.obstacleType.startsWith("Tunnel"));
+    if (tunnel === undefined) throw new Error("FIXTURE_WITHOUT_A_TUNNEL");
+    const curved: CourseData = {
+      ...course,
+      designLengthMeters: 20,
+      designWidthMeters: 10,
+      obstacles: [
+        {
+          ...tunnel,
+          xMeters: 7,
+          yMeters: 5,
+          controlPointsMeters: [
+            { x: 5, y: 4 },
+            { x: 7, y: 6 },
+            { x: 9, y: 4 },
+          ],
+        },
+      ],
+    };
+    await storeOn(api).savePlacement(
+      placementInput({
+        course: curved,
+        placement: { ...centred, flipX: true, rotationDegrees: 90 },
+      }),
+    );
+    const body = api.requests.at(-1)?.body as components["schemas"]["PlacementRequest"];
+    // Independent oracle: subtract (10,5), flip x, rotate 90°, then translate to (20,10).
+    expect(body.resolvedObstacles[0]?.controlPointsMeters).toEqual([
+      { x: 21, y: 15 },
+      { x: 19, y: 13 },
+      { x: 21, y: 11 },
+    ]);
+  });
+
   it("T-16-15 R-16-03 a lost POST /courses answer is retried with the same key and the same body (one upload) (E9-W02 round 2 #1)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
@@ -326,6 +362,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     });
     expect(body.resolvedObstacles).toHaveLength(course.obstacles.length);
     expect(body.resolvedObstacles[0]).toEqual({
+      controlPointsMeters: expect.any(Array) as unknown,
       numbers: expect.any(Array) as unknown,
       obstacleId: course.obstacles[0]?.sourceId,
       rotationDeg: expect.any(Number) as unknown,
@@ -373,7 +410,12 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     const joined = await store.joinBuildSession({ code: "qx7k2m" });
 
     expect(api.requests).toEqual([
-      { body: { code: "qx7k2m" }, idempotencyKey: null, method: "POST", path: "/build-sessions/join" },
+      {
+        body: { code: "qx7k2m" },
+        idempotencyKey: null,
+        method: "POST",
+        path: "/build-sessions/join",
+      },
     ]);
     expect(joined).toMatchObject({ id: "session-1", setupId: null, status: "IN_PROGRESS" });
     expect(joined.participants).toContainEqual(

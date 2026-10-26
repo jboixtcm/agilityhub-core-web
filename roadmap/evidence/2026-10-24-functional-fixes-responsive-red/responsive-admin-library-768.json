@@ -1,0 +1,407 @@
+{
+  "viewport": 768,
+  "documentWidth": 768,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "TABLE",
+      "className": "",
+      "text": "Llistat de recorregutsRecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim ",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "RecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim canvi↓",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "RecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim canvi↓",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Autor",
+      "left": 678.953125,
+      "right": 769.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Font",
+      "left": 769.953125,
+      "right": 870.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Muntat a",
+      "left": 870.953125,
+      "right": 963.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Obstacles",
+      "left": 963.921875,
+      "right": 1104.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Últim canvi↓",
+      "left": 1104.921875,
+      "right": 1227.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "",
+      "text": "Últim canvi↓",
+      "left": 1116.921875,
+      "right": 1215.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "↓",
+      "left": 1207.5,
+      "right": 1215.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "",
+      "left": 1227.375,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "Jumping del dijousDel clubJumpingMitjàMarta VidalSmarterMuntanya11 obstacles · 7",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Jumping del dijousDel clubJumpingMitjàMarta VidalSmarterMuntanya11 obstacles · 7",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Marta Vidal",
+      "left": 678.953125,
+      "right": 769.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Smarter",
+      "left": 769.953125,
+      "right": 870.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Smarter",
+      "left": 781.953125,
+      "right": 858.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Muntanya",
+      "left": 870.953125,
+      "right": 963.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Muntanya",
+      "left": 882.953125,
+      "right": 951.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "11 obstacles · 71,7 m",
+      "left": 963.921875,
+      "right": 1104.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "11 obstacles · 71,7 m",
+      "left": 975.921875,
+      "right": 1092.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "12/10/2026",
+      "left": 1104.921875,
+      "right": 1227.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "12/10/2026",
+      "left": 1116.921875,
+      "right": 1215.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "Obre Jumping del dijous",
+      "left": 1227.375,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Obre Jumping del dijous",
+      "left": 1239.375,
+      "right": 1253.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 1239.375,
+      "right": 1253.71875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 1244.75390625,
+      "right": 1248.9375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-sr-only",
+      "text": "Obre Jumping del dijous",
+      "left": 1238.375,
+      "right": 1239.375,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Agility C–DDel clubAgilityC–DPere SolerSmarter—12 obstacles · 74,1 m08/10/2026Ob",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Pere Soler",
+      "left": 678.953125,
+      "right": 769.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Smarter",
+      "left": 769.953125,
+      "right": 870.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Smarter",
+      "left": 781.953125,
+      "right": 858.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "—",
+      "left": 870.953125,
+      "right": 963.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "—",
+      "left": 882.953125,
+      "right": 951.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "12 obstacles · 74,1 m",
+      "left": 963.921875,
+      "right": 1104.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "12 obstacles · 74,1 m",
+      "left": 975.921875,
+      "right": 1092.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "08/10/2026",
+      "left": 1104.921875,
+      "right": 1227.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "08/10/2026",
+      "left": 1116.921875,
+      "right": 1215.375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "ah-universal-list__chevron",
+      "text": "Obre Agility C–D",
+      "left": 1227.375,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Obre Agility C–D",
+      "left": 1239.375,
+      "right": 1253.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "svg",
+      "className": {},
+      "text": "",
+      "left": 1239.375,
+      "right": 1253.71875,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "use",
+      "className": {},
+      "text": "",
+      "left": 1244.75390625,
+      "right": 1248.9375,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-sr-only",
+      "text": "Obre Agility C–D",
+      "left": 1238.375,
+      "right": 1239.375,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Plànol de la gimcanaDel clubAltres—Pere SolerPlànol o foto—0 obstacles20/09/2026",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Pere Soler",
+      "left": 678.953125,
+      "right": 769.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "Plànol o foto",
+      "left": 769.953125,
+      "right": 870.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "Plànol o foto",
+      "left": 781.953125,
+      "right": 858.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "—",
+      "left": 870.953125,
+      "right": 963.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "—",
+      "left": 882.953125,
+      "right": 951.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "0 obstacles",
+      "left": 963.921875,
+      "right": 1104.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "A",
+      "className": "",
+      "text": "0 obstacles",
+      "left": 975.921875,
+      "right": 1092.921875,
+      "overflowX": "visible"
+    }
+  ]
+}

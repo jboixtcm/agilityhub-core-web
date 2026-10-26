@@ -1,0 +1,25 @@
+{
+  "theme": "light",
+  "modelResponses": [
+    {
+      "path": "/obstacle-models/tire.fbx",
+      "status": 200
+    },
+    {
+      "path": "/obstacle-models/wall.fbx",
+      "status": 200
+    }
+  ],
+  "failures": [],
+  "errors": [],
+  "before": {
+    "draws": 332,
+    "contextsLost": 0
+  },
+  "after": {
+    "draws": 688,
+    "contextsLost": 0
+  },
+  "settle": "actual FBX HTTP responses, networkidle, document.fonts.ready, two animation frames; observed real WebGL draws after edit",
+  "limit": "Draw calls establish a completed render, not model correctness; original PNGs need manual visual review."
+}

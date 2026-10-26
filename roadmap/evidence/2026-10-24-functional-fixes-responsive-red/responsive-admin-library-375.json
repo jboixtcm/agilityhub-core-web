@@ -1,0 +1,407 @@
+{
+  "viewport": 375,
+  "documentWidth": 595,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "DIV",
+      "className": "",
+      "text": "Biblioteca de recorregutsEls recorreguts del club, la biblioteca d'AgilityHub i ",
+      "left": 276,
+      "right": 419,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "H1",
+      "className": "",
+      "text": "Biblioteca de recorreguts",
+      "left": 276,
+      "right": 419,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "P",
+      "className": "courses-muted",
+      "text": "Els recorreguts del club, la biblioteca d'AgilityHub i els teus.",
+      "left": 276,
+      "right": 419,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "courses-menu",
+      "text": "Nou recorregut",
+      "left": 276,
+      "right": 421.390625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--primary",
+      "text": "Nou recorregut",
+      "left": 276,
+      "right": 421.390625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Nou recorregut",
+      "left": 293,
+      "right": 404.390625,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "courses-chip",
+      "text": "AgilityHub",
+      "left": 276,
+      "right": 386,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__toolbar",
+      "text": "Cerca un recorregutFiltre▾ColumnaDisciplinaNivell AgilityHubNivell del clubFontE",
+      "left": 276,
+      "right": 595,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "ah-universal-list__search",
+      "text": "Cerca un recorregut",
+      "left": 276,
+      "right": 595,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "INPUT",
+      "className": "",
+      "text": "",
+      "left": 276,
+      "right": 595,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-panel",
+      "text": "ColumnaDisciplinaNivell AgilityHubNivell del clubFontEtiquetaAutorNombre d'obsta",
+      "left": 276,
+      "right": 619,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "ColumnaDisciplinaNivell AgilityHubNivell del clubFontEtiquetaAutorNombre d'obsta",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Columna",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "DisciplinaNivell AgilityHubNivell del clubFontEtiquetaAutorNombre d'obstacles",
+      "left": 293,
+      "right": 602,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "Operadorés igual ano és igual aés un deno és cap de",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Operador",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "és igual ano és igual aés un deno és cap de",
+      "left": 293,
+      "right": 602,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "LABEL",
+      "className": "",
+      "text": "ValorAgilityJumpingAltres",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "Valor",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SELECT",
+      "className": "",
+      "text": "AgilityJumpingAltres",
+      "left": 293,
+      "right": 602,
+      "overflowX": "clip"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-actions",
+      "text": "Afegeix el filtreNeteja",
+      "left": 293,
+      "right": 602,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--primary",
+      "text": "Afegeix el filtre",
+      "left": 293,
+      "right": 416,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Afegeix el filtre",
+      "left": 306,
+      "right": 403,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "ah-button ah-button--ghost",
+      "text": "Neteja",
+      "left": 424,
+      "right": 492,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-button__content",
+      "text": "Neteja",
+      "left": 437,
+      "right": 479,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DETAILS",
+      "className": "ah-universal-list__menu",
+      "text": "Columnes ▾↕Recorregut↕Disciplina↕Nivell↕Autor↕Font↕Muntat a↕Obstacles↕Últim canv",
+      "left": 375.796875,
+      "right": 475.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SUMMARY",
+      "className": "",
+      "text": "Columnes ▾",
+      "left": 375.796875,
+      "right": 475.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "",
+      "text": "▾",
+      "left": 456.796875,
+      "right": 462.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__menu-panel",
+      "text": "↕Recorregut↕Disciplina↕Nivell↕Autor↕Font↕Muntat a↕Obstacles↕Últim canvi",
+      "left": 132.796875,
+      "right": 475.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "UL",
+      "className": "ah-universal-list__columns",
+      "text": "↕Recorregut↕Disciplina↕Nivell↕Autor↕Font↕Muntat a↕Obstacles↕Últim canvi",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "auto"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Recorregut",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Disciplina",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Nivell",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Autor",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Font",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Muntat a",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Obstacles",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "LI",
+      "className": "",
+      "text": "↕Últim canvi",
+      "left": 149.796875,
+      "right": 458.796875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-universal-list__table-wrap",
+      "text": "Llistat de recorregutsRecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim ",
+      "left": 276,
+      "right": 595,
+      "overflowX": "auto"
+    },
+    {
+      "tag": "TABLE",
+      "className": "",
+      "text": "Llistat de recorregutsRecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim ",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "RecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim canvi↓",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "RecorregutDisciplinaNivellAutorFontMuntat aObstaclesÚltim canvi↓",
+      "left": 277,
+      "right": 1265.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Recorregut",
+      "left": 277,
+      "right": 507,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "BUTTON",
+      "className": "",
+      "text": "Recorregut",
+      "left": 289,
+      "right": 376.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Disciplina",
+      "left": 507,
+      "right": 607.71875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Nivell",
+      "left": 607.71875,
+      "right": 678.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Autor",
+      "left": 678.953125,
+      "right": 769.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Font",
+      "left": 769.953125,
+      "right": 870.953125,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Muntat a",
+      "left": 870.953125,
+      "right": 963.921875,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Obstacles",
+      "left": 963.921875,
+      "right": 1104.921875,
+      "overflowX": "visible"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+env HEAVY_WAIT_MIN=120 CORE_IMAGE=agilityhub-core-api:review-20261023 CORE_PROJECT_NAME=agilityhub-functional-release-e11 /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh bash scripts/e2e-core.sh 2026-10-23-functional-release/core-e11 'e11-core.spec.ts --trace=off'

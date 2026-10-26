@@ -894,7 +894,9 @@
       "PAYMENT_TIMEOUTS": "Tiempo de pago agotado",
       "CLASS_FINISHING": "Cierre de clases",
       "CLEANUP": "Limpieza técnica",
-      "BILLING_REMINDER": "Recordatorio de facturación"
+      "BILLING_REMINDER": "Recordatorio de facturación",
+      "ERASURES": "Supresión de datos",
+      "RETENTION_SWEEP": "Retención de datos"
     },
     "cadence": {
       "DAILY": "cada día a las {time}",

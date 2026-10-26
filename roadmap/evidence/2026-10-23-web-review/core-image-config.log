@@ -1,0 +1,3 @@
+docker compose config: seed and core image = ghcr.io/jboixtcm/agilityhub-core-api:main; exit 0
+docker compose config: seed and core image = agilityhub-core-api:review-20261023; exit 0
+bash -n scripts/e2e-core.sh: exit 0

@@ -1,0 +1,19 @@
+{
+  "vitestPackages": {
+    "@agilityhub/ui": 195,
+    "@agilityhub/course-core": 378,
+    "@agilityhub/i18n": 159,
+    "@agilityhub/shared-types": 38,
+    "@agilityhub/course-ui": 56,
+    "@agilityhub/api-client": 801,
+    "@agilityhub/auth": 129,
+    "id": 19,
+    "clubs": 750,
+    "clubs-admin": 1086
+  },
+  "vitestPassed": 3611,
+  "nodeTestAdditional": [
+    "10"
+  ],
+  "note": "Counts represent cases in final full gate; cache hits reuse identical Turbo input results and are reported by gate. Focused reruns not added."
+}

@@ -1,0 +1,14 @@
+# Evidence-only trusted TLS proxy. Dedicated disposable network; one trusted peer.
+services:
+  core:
+    environment:
+      TRUSTED_PROXY_PATTERN: '172\.31\.247\.11'
+  playwright:
+    networks:
+      default:
+        ipv4_address: 172.31.247.11
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.31.247.0/24

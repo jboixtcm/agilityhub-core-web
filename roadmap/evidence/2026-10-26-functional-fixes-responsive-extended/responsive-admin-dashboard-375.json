@@ -1,0 +1,351 @@
+{
+  "viewport": 375,
+  "documentWidth": 491,
+  "scrollX": 0,
+  "overflow": [
+    {
+      "tag": "DIV",
+      "className": "ah-bar-chart__column",
+      "text": "F16 · 10 res.",
+      "left": 369,
+      "right": 409,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-bar-chart__bars",
+      "text": "",
+      "left": 369,
+      "right": 409,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-bar-chart__bar ah-bar-chart__bar--total",
+      "text": "",
+      "left": 373,
+      "right": 387,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-bar-chart__bar ah-bar-chart__bar--highlighted",
+      "text": "",
+      "left": 391,
+      "right": 405,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "F",
+      "left": 369,
+      "right": 409,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SMALL",
+      "className": "",
+      "text": "16 · 10 res.",
+      "left": 369,
+      "right": 409,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-bar-chart__column",
+      "text": "G12 · 7 res.",
+      "left": 425,
+      "right": 465,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "DIV",
+      "className": "ah-bar-chart__bars",
+      "text": "",
+      "left": 425,
+      "right": 465,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-bar-chart__bar ah-bar-chart__bar--total",
+      "text": "",
+      "left": 429,
+      "right": 443,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SPAN",
+      "className": "ah-bar-chart__bar ah-bar-chart__bar--highlighted",
+      "text": "",
+      "left": 447,
+      "right": 461,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "STRONG",
+      "className": "",
+      "text": "G",
+      "left": 425,
+      "right": 465,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "SMALL",
+      "className": "",
+      "text": "12 · 7 res.",
+      "left": 425,
+      "right": 465,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TABLE",
+      "className": "ah-sr-only",
+      "text": "Gossos per nivell — 242 actiusGossos per nivell — 242 actiusTotal actiusAmb rese",
+      "left": 32,
+      "right": 491,
+      "overflowX": "hidden"
+    },
+    {
+      "tag": "CAPTION",
+      "className": "",
+      "text": "Gossos per nivell — 242 actius",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "THEAD",
+      "className": "",
+      "text": "Gossos per nivell — 242 actiusTotal actiusAmb reserva",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "Gossos per nivell — 242 actiusTotal actiusAmb reserva",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Total actius",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TH",
+      "className": "",
+      "text": "Amb reserva",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TBODY",
+      "className": "",
+      "text": "CAD2419A4331B3928C4235D3527E3122F1610G127",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "CAD2419",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "24",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "19",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "A4331",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "43",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "31",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "B3928",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "39",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "28",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "C4235",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "42",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "35",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "D3527",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "35",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "27",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "E3122",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "31",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "22",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "F1610",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "16",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "10",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TR",
+      "className": "",
+      "text": "G127",
+      "left": 32,
+      "right": 491,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "12",
+      "left": 286,
+      "right": 383,
+      "overflowX": "visible"
+    },
+    {
+      "tag": "TD",
+      "className": "",
+      "text": "7",
+      "left": 383,
+      "right": 491,
+      "overflowX": "visible"
+    }
+  ]
+}

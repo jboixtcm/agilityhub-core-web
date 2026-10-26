@@ -1,0 +1,54 @@
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:19 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/parameters","method":"GET","status":403,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/activities","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/home","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:20 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:20 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/followup/unread-count","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/dashboard/counters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/dashboard","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/risk-review","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:20 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:20 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"id.example.test","forwardedHost":"id.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"id.example.test","forwardedHost":"id.example.test","path":"/api/v1/me/sessions","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:21 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/me/training-summary","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/training-slots","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"app.example.test","forwardedHost":"app.example.test","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/branding","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/oauth2/token","method":"POST","status":400,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=0","Expires=Thu, 01 Jan 1970 00:00:00 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:27 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/oauth2/token","method":"POST","status":200,"cookies":[{"name":"ah_refresh","attributes":["Path=/oauth2/token","Max-Age=2592000","Expires=Mon, 23 Nov 2026 05:49:27 GMT","HttpOnly","SameSite=Strict"]}]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/me","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/dashboard/counters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/followup/unread-count","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/parameters","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/faq-entries","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/parameters/levels.enabled","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/club","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/levels","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/club-pages","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/jobs","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/plans","method":"GET","status":200,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/jobs/erasures/switch","method":"PUT","status":404,"cookies":[]}
+{"host":"admin.example.test","forwardedHost":"admin.example.test","path":"/api/v1/jobs","method":"GET","status":200,"cookies":[]}

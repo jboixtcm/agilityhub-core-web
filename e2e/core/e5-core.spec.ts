@@ -443,6 +443,41 @@ async function clubsSession(
   return session;
 }
 
+async function withAccountLocale(
+  session: Session,
+  locale: Locale,
+  action: () => Promise<void>,
+): Promise<void> {
+  const { page } = session;
+  await page.goto(`${clubsUrl}/perfil`);
+  const language = page
+    .locator(".profile-language-card")
+    .getByRole("combobox", { exact: true, name: "Idioma" });
+  await expect(language).toBeEnabled();
+  const previous = await language.inputValue();
+  const change = async (value: string): Promise<void> => {
+    const patching = page.waitForResponse(isCall("PATCH", /\/api\/v1\/me$/u));
+    await language.selectOption(value);
+    const patched = await patching;
+    expect(patched.status(), "PATCH /me locale").toBe(200);
+    expect(((await patched.json()) as Schemas["Me"]).account.locale).toBe(value);
+    expect(patched.request().postDataJSON()).toMatchObject({ locale: value });
+    await expect(page.locator("html")).toHaveAttribute("lang", value);
+    await expect(language).toHaveValue(value);
+    await expect(language).toBeEnabled();
+  };
+  try {
+    if (previous !== locale) await change(locale);
+    await action();
+  } finally {
+    if (previous !== locale) {
+      await page.goto(`${clubsUrl}/perfil`);
+      await expect(language).toBeEnabled();
+      await change(previous);
+    }
+  }
+}
+
 async function adminSession(browser: Browser): Promise<Session> {
   const known = sessions.get("admin");
   if (known !== undefined) {
@@ -1336,92 +1371,101 @@ test.describe("week 0 at demoNow", () => {
     test.setTimeout(420_000);
     const member = await clubsSession(browser, ES_MEMBER, "/inici", "es");
     const { page } = member;
-    const bookable = await open04(member, "es");
-    const target = bookable.classes.find(
-      (row) =>
-        row.state === "BOOKABLE" &&
-        row.startsAtLocal.slice(0, 10) >= addDays(weekStart, 3) &&
-        row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
-    );
-    if (target === undefined) throw new Error("The es member has no BOOKABLE row from Thursday on");
-    const { booking } = await bookInsideHold(page, target.id, "es");
-    remember("esBooking", booking.id);
-    // E5-W05 step 19 (E5-W04 round-2 review #3): (a) in es, the new booking is on 03.
-    const homeAfterBooking = await open03(page);
-    expect(homeAfterBooking.reservations.map((row) => row.id)).toContain(booking.id);
-    await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
+    await withAccountLocale(member, "es", async () => {
+      const bookable = await open04(member, "es");
+      const target = bookable.classes.find(
+        (row) =>
+          row.state === "BOOKABLE" &&
+          row.startsAtLocal.slice(0, 10) >= addDays(weekStart, 3) &&
+          row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
+      );
+      if (target === undefined)
+        throw new Error("The es member has no BOOKABLE row from Thursday on");
+      const { booking } = await bookInsideHold(page, target.id, "es");
+      remember("esBooking", booking.id);
+      // E5-W05 step 19 (E5-W04 round-2 review #3): (a) in es, the new booking is on 03.
+      const homeAfterBooking = await open03(page);
+      expect(homeAfterBooking.reservations.map((row) => row.id)).toContain(booking.id);
+      await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
 
-    // A full class with room on its waiting list, and a login member booked in it who frees a seat.
-    const open = await dogWithState(member, "WAITLIST_OPEN");
-    await open04(member, "es");
-    await chooseDog(page, open.dog.name);
-    await classRow(page, open.row.id).getByRole("button").click();
-    const joining = page.waitForResponse(isCall("POST", /\/api\/v1\/waitlist-entries$/u));
-    await page
-      .getByRole("dialog", { name: text.es.joinDialog })
-      .getByRole("button", { name: text.es.join })
-      .click();
-    const joined = await joining;
-    expect(joined.status()).toBe(201);
-    const entry = (await joined.json()) as WaitlistEntry;
-    remember("esEntry", entry.id);
-    await expect(page.getByText(text.es.joined)).toBeVisible();
-    // (d) in es: the class leaves 04 once joined, and 03 lists the waiting entry.
-    await expect(classRow(page, open.row.id)).toHaveCount(0);
-    const homeAfterJoin = await open03(page);
-    expect(homeAfterJoin.reservations).toContainEqual(
-      expect.objectContaining({ id: entry.id, type: "CLASS_WAITLIST" }),
-    );
-    await expect(page.locator(`a[href="/espera/${entry.id}"]`)).toContainText(text.es.waitlisted);
-    await shot(page, "03-espera-core-es-375.png");
+      // A full class with room on its waiting list, and a login member booked in it who frees a seat.
+      const open = await dogWithState(member, "WAITLIST_OPEN");
+      await open04(member, "es");
+      await chooseDog(page, open.dog.name);
+      await classRow(page, open.row.id).getByRole("button").click();
+      const joining = page.waitForResponse(isCall("POST", /\/api\/v1\/waitlist-entries$/u));
+      await page
+        .getByRole("dialog", { name: text.es.joinDialog })
+        .getByRole("button", { name: text.es.join })
+        .click();
+      const joined = await joining;
+      expect(joined.status()).toBe(201);
+      const entry = (await joined.json()) as WaitlistEntry;
+      remember("esEntry", entry.id);
+      await expect(page.getByText(text.es.joined)).toBeVisible();
+      // (d) in es: the class leaves 04 once joined, and 03 lists the waiting entry.
+      await expect(classRow(page, open.row.id)).toHaveCount(0);
+      const homeAfterJoin = await open03(page);
+      expect(homeAfterJoin.reservations).toContainEqual(
+        expect.objectContaining({ id: entry.id, type: "CLASS_WAITLIST" }),
+      );
+      await expect(page.locator(`a[href="/espera/${entry.id}"]`)).toContainText(text.es.waitlisted);
+      await shot(page, "03-espera-core-es-375.png");
 
-    const freeing = await clubsSession(browser, WAITER);
-    const seat = (await meHome(freeing)).reservations.find(
-      (row) => row.type === "CLASS" && row.startsAtLocal === open.row.startsAtLocal,
-    );
-    if (seat === undefined) throw new Error("No login member of the waiter's family holds a seat");
-    const released = await call<Booking>(freeing, `/bookings/${seat.id}/cancellation`, "POST", {});
-    expect(released.status).toBe(200);
-    await expect.poll(() => entryState(member, entry.id), { timeout: 30_000 }).toBe("NOTIFIED");
+      const freeing = await clubsSession(browser, WAITER);
+      const seat = (await meHome(freeing)).reservations.find(
+        (row) => row.type === "CLASS" && row.startsAtLocal === open.row.startsAtLocal,
+      );
+      if (seat === undefined)
+        throw new Error("No login member of the waiter's family holds a seat");
+      const released = await call<Booking>(
+        freeing,
+        `/bookings/${seat.id}/cancellation`,
+        "POST",
+        {},
+      );
+      expect(released.status).toBe(200);
+      await expect.poll(() => entryState(member, entry.id), { timeout: 30_000 }).toBe("NOTIFIED");
 
-    await navigateClubRoute(page, `/espera/${entry.id}`);
-    const holding = page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
-    await page.getByRole("button", { name: text.es.claim }).click();
-    expect((await holding).status()).toBe(201);
-    await expect(page.getByText(text.es.hold)).toBeVisible();
-    const claiming = page.waitForResponse(
-      isCall("POST", new RegExp(`/api/v1/waitlist-entries/${entry.id}/claim$`, "u")),
-    );
-    await page.getByRole("button", { name: text.es.submit }).click();
-    const claimed = await claiming;
-    expect(claimed.status()).toBe(201);
-    const claimedBooking = (await claimed.json()) as Booking;
-    remember("esClaim", claimedBooking.id);
-    await expect(page.getByText(text.es.done)).toBeVisible();
-    expect(claimedBooking.state).toBe("ACTIVE");
-    const esEntryState = await entryState(member, entry.id);
-    expect(esEntryState).toBe("CONSOLIDATED");
-    // Both new bookings of the es pass are on 03.
-    const homeAfterClaim = await open03(page);
-    expect(homeAfterClaim.reservations.map((row) => row.id)).toEqual(
-      expect.arrayContaining([booking.id, claimedBooking.id]),
-    );
-    await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
-    await expect(page.locator(`a[href="/reserves/${claimedBooking.id}"]`)).toBeVisible();
-    await shot(page, "03-inici-core-es-375.png");
-    note("g-es", {
-      booking: 201,
-      claim: claimed.status(),
-      entryState: esEntryState,
-      home: {
-        afterBooking: homeAfterBooking.reservations.some((row) => row.id === booking.id),
-        afterClaim: [booking.id, claimedBooking.id].map((id) =>
-          homeAfterClaim.reservations.some((row) => row.id === id),
-        ),
-        afterJoin: homeAfterJoin.reservations.find((row) => row.id === entry.id)?.type ?? null,
-      },
-      join: joined.status(),
-      release: released.body.state,
+      await navigateClubRoute(page, `/espera/${entry.id}`);
+      const holding = page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
+      await page.getByRole("button", { name: text.es.claim }).click();
+      expect((await holding).status()).toBe(201);
+      await expect(page.getByText(text.es.hold)).toBeVisible();
+      const claiming = page.waitForResponse(
+        isCall("POST", new RegExp(`/api/v1/waitlist-entries/${entry.id}/claim$`, "u")),
+      );
+      await page.getByRole("button", { name: text.es.submit }).click();
+      const claimed = await claiming;
+      expect(claimed.status()).toBe(201);
+      const claimedBooking = (await claimed.json()) as Booking;
+      remember("esClaim", claimedBooking.id);
+      await expect(page.getByText(text.es.done)).toBeVisible();
+      expect(claimedBooking.state).toBe("ACTIVE");
+      const esEntryState = await entryState(member, entry.id);
+      expect(esEntryState).toBe("CONSOLIDATED");
+      // Both new bookings of the es pass are on 03.
+      const homeAfterClaim = await open03(page);
+      expect(homeAfterClaim.reservations.map((row) => row.id)).toEqual(
+        expect.arrayContaining([booking.id, claimedBooking.id]),
+      );
+      await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
+      await expect(page.locator(`a[href="/reserves/${claimedBooking.id}"]`)).toBeVisible();
+      await shot(page, "03-inici-core-es-375.png");
+      note("g-es", {
+        booking: 201,
+        claim: claimed.status(),
+        entryState: esEntryState,
+        home: {
+          afterBooking: homeAfterBooking.reservations.some((row) => row.id === booking.id),
+          afterClaim: [booking.id, claimedBooking.id].map((id) =>
+            homeAfterClaim.reservations.some((row) => row.id === id),
+          ),
+          afterJoin: homeAfterJoin.reservations.find((row) => row.id === entry.id)?.type ?? null,
+        },
+        join: joined.status(),
+        release: released.body.state,
+      });
     });
   });
 

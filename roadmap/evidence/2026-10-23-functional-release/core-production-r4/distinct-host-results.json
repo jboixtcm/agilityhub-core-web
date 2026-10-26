@@ -1,0 +1,65 @@
+{
+  "cookieAttributes": [
+    {
+      "name": "ah_refresh",
+      "domain": "app.example.test",
+      "path": "/oauth2/token",
+      "expires": 1795413287.567558,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "ah_refresh",
+      "domain": "admin.example.test",
+      "path": "/oauth2/token",
+      "expires": 1795413288.191001,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "ah_refresh",
+      "domain": "id.example.test",
+      "path": "/oauth2/token",
+      "expires": 1795413288.585479,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    }
+  ],
+  "remainingCookieHosts": [
+    "app.example.test",
+    "admin.example.test"
+  ],
+  "deniedAdminParameters": {
+    "status": 403,
+    "code": "FORBIDDEN",
+    "hasParameterBlocks": false
+  },
+  "loadedBundles": [
+    {
+      "host": "app.example.test",
+      "path": "/entrenaments",
+      "scripts": [
+        "https://app.example.test/assets/index-DijeecoI.js"
+      ]
+    },
+    {
+      "host": "admin.example.test",
+      "path": "/parametres",
+      "scripts": [
+        "https://admin.example.test/assets/index-BlaKr3W2.js"
+      ]
+    },
+    {
+      "host": "id.example.test",
+      "path": "/products",
+      "scripts": [
+        "https://id.example.test/assets/index-Dypocvwc.js"
+      ]
+    }
+  ],
+  "uncaught": [],
+  "tlsScope": "Self-signed local certificate; only its SPKI trusted in test browser; no public CA or Caddy claim"
+}
