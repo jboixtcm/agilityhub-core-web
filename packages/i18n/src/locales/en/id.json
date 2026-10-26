@@ -1,8 +1,7 @@
 {
   "brand": {
-    "mark": "AH",
-    "name": "AgilityHub ID",
-    "subtitle": "One account, every product"
+    "name": "Your account",
+    "subtitle": "Access your space"
   },
   "navigation": {
     "label": "Account navigation",
@@ -17,14 +16,14 @@
     "en": "English"
   },
   "footer": {
-    "security": "Secure access with AgilityHub ID"
+    "security": "Secure access to your account"
   },
   "status": {
     "loadingAccount": "Loading your account…"
   },
   "login": {
-    "title": "Sign in to AgilityHub",
-    "description": "Access your account and continue to your chosen product.",
+    "title": "Sign in to your account",
+    "description": "Access your space with your email and password.",
     "email": "Email address",
     "emailPlaceholder": "email@example.com",
     "password": "Password",
@@ -46,7 +45,7 @@
   },
   "password": {
     "title": "Password",
-    "description": "You can set or change your AgilityHub ID password.",
+    "description": "You can set or change your account password.",
     "current": "Current password",
     "next": "New password",
     "repeat": "Repeat the new password",
@@ -61,7 +60,7 @@
   },
   "account": {
     "title": "Your account",
-    "description": "Manage your AgilityHub ID details and active sessions.",
+    "description": "Manage your account details and active sessions.",
     "personalTitle": "Account details",
     "name": "Name",
     "email": "Email address",
@@ -81,24 +80,24 @@
   },
   "products": {
     "title": "Your products",
-    "description": "Open the AgilityHub products linked to your account.",
-    "learnTitle": "AgilityHub Learn",
+    "description": "Open the spaces linked to your account.",
+    "learnTitle": "Learning",
     "learnDescription": "Learn, practise and progress with agility content.",
     "openLearn": "OPEN LEARN",
-    "clubsTitle": "AgilityHub Clubs",
+    "clubsTitle": "Clubs",
     "clubsDescription": "Access the clubs where you have an active membership.",
     "openClubs": "OPEN CLUBS",
     "consoleTitle": "Club console",
-    "consoleDescription": "Create and govern the platform's clubs. For the AgilityHub team only.",
+    "consoleDescription": "Create and manage the platform’s clubs. For the platform team only.",
     "openConsole": "OPEN THE CONSOLE"
   },
   "logout": {
     "title": "Signing you out",
-    "description": "We are closing your AgilityHub ID session."
+    "description": "We are signing you out of your account."
   },
   "notFound": {
     "title": "Page not found",
-    "description": "The address you opened does not match an AgilityHub ID page.",
+    "description": "The address you opened does not match any page.",
     "back": "BACK TO SIGN IN"
   },
   "errors": {

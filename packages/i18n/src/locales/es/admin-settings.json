@@ -238,7 +238,7 @@
         "label": "Frecuencia de comprobación de los dominios"
       },
       "supportAccessMinutes": {
-        "help": "Minutos de vigencia de un acceso de soporte del equipo AgilityHub.",
+        "help": "Minutos de vigencia de un acceso del equipo de soporte.",
         "label": "Duración del acceso de soporte"
       }
     },

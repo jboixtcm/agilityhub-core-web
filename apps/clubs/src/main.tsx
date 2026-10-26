@@ -13,7 +13,7 @@ import {
   SessionProvider,
 } from "@agilityhub/auth";
 import { type ClubsNamespace, createClubsI18n, preloadClubsI18n } from "@agilityhub/i18n/clubs";
-import { applyBrandingTheme, BrandingProvider } from "@agilityhub/ui";
+import { applyBrandingTheme, BrandingProvider, withProductBrandName } from "@agilityhub/ui";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
@@ -82,7 +82,7 @@ async function bootstrap(root: HTMLElement) {
     localStorage,
     { cachedTimeoutMs: BRANDING_BOOT_TIMEOUT_MS },
   );
-  const branding = normalizeBranding(source);
+  const branding = withProductBrandName(normalizeBranding(source), env.VITE_PLATFORM_BRAND_NAME);
   applyBrandingTheme(branding.theme);
   document.title = branding.club.name;
   const i18n = await createClubsI18n({ branding, initialNamespaces: BOOT_NAMESPACES });

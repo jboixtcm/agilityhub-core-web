@@ -69,7 +69,7 @@
     "courseRequired": "Choose a course from the list.",
     "level": "Guide level",
     "clubLevels": "Club levels",
-    "agilityhubLevel": "AgilityHub scale",
+    "agilityhubLevel": "Indicative scale",
     "noLevel": "No level",
     "until": "Until when?",
     "untilHelp": "Left blank, it is removed automatically after the days the club has configured.",

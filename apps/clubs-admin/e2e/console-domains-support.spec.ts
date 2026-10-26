@@ -151,9 +151,7 @@ test("T-17-09 «Entra com a administrador del club»: a new tab on the club's ba
   ).toBeVisible();
   await support.waitForURL("**/tauler");
   const banner = support.getByRole("region", { name: "Accés de suport" });
-  await expect(banner).toContainText(
-    "Accés de suport de l'equip AgilityHub · Pol Ferrer · fins al",
-  );
+  await expect(banner).toContainText("Accés de l'equip de suport · Pol Ferrer · fins al");
   // No console entry and no exports in a support access (R-17-10).
   await expect(support.getByRole("link", { name: "Consola" })).toHaveCount(0);
   await expect(support.getByRole("button", { name: "Exportacions" })).toHaveCount(0);

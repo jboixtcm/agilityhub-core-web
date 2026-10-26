@@ -220,12 +220,12 @@ describe("T-16-15 D18 «Biblioteca de recorreguts» (S16 §2)", () => {
     const agility = screen.getByText("Agility C–D").closest("tr");
     expect(agility === null ? "" : within(agility).getByText("C–D").textContent).toBe("C–D");
 
-    fireEvent.click(screen.getByRole("button", { name: "AgilityHub" }));
+    fireEvent.click(screen.getByRole("button", { name: "Biblioteca compartida" }));
     await waitFor(() => {
       expect(screen.queryByText("Jumping del dijous")).toBeNull();
     });
     expect(screen.getByText("AH · Foundations 07")).toBeVisible();
-    expect(screen.getByRole("button", { name: "AgilityHub" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Biblioteca compartida" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );

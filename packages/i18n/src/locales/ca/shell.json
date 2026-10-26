@@ -1,6 +1,6 @@
 {
   "app": {
-    "clubsAdmin": "AgilityHub Clubs Admin"
+    "clubsAdmin": "Administració del club"
   },
   "header": {
     "language": "Idioma",
@@ -18,7 +18,7 @@
   },
   "loading": "Carregant",
   "support": {
-    "banner": "Accés de suport de l'equip AgilityHub · {name} · fins al {until}",
+    "banner": "Accés de l'equip de suport · {name} · fins al {until}",
     "bannerLabel": "Accés de suport",
     "ended": "L'accés de suport ha acabat: ha caducat o l'administrador del club l'ha acabat. Ja pots tancar aquesta pestanya.",
     "entering": "Obrint el backoffice del club…",

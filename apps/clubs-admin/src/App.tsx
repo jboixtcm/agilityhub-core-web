@@ -26,6 +26,7 @@ import {
   type SidebarEntry,
   type SidebarGroup,
   useBranding,
+  useBrandingLogo,
 } from "@agilityhub/ui";
 import {
   lazy,
@@ -932,6 +933,9 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
 }
 
 function AccessPage({ authClient }: { authClient: AuthClient }) {
+  const branding = useBranding();
+  const logo = useBrandingLogo("full");
+  const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
   const { t } = useTranslation("auth");
   const platformOnlyMessage = usePlatformOnlyMessage();
   // R-01-13: the one-time code of 03b («Obre el backoffice»), read once.
@@ -939,7 +943,7 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   const handoffStarted = useRef(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(() => !emailLoginEnabled);
   const [pending, setPending] = useState<"handoff" | "login" | "magic" | null>(
     handoff === null || handoff === "" ? null : "handoff",
   );
@@ -1064,6 +1068,16 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   return (
     <main className="access-page">
       <Card className="access-card">
+        <div className="access-brand">
+          {logo.kind === "initial" ? (
+            <span aria-hidden="true" className="access-brand__initial">
+              {branding.club.name.charAt(0)}
+            </span>
+          ) : (
+            <img alt={logo.kind === "full" ? branding.club.name : ""} src={logo.src} />
+          )}
+          {logo.showName ? <strong>{branding.club.name}</strong> : null}
+        </div>
         <h1>{t("auth:admin.title")}</h1>
         {pending === "handoff" ? <p role="status">{t("auth:admin.handoffLoading")}</p> : null}
         <form onSubmit={(event) => void submit(event)}>
@@ -1078,10 +1092,16 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
               value={email}
             />
           </FormField>
-          <Button disabled={pending !== null} onClick={() => void requestMagicLink()} type="button">
-            <Icon aria-hidden="true" name="mail" />
-            {t("auth:access.magicLink")}
-          </Button>
+          {emailLoginEnabled ? (
+            <Button
+              disabled={pending !== null}
+              onClick={() => void requestMagicLink()}
+              type="button"
+            >
+              <Icon aria-hidden="true" name="mail" />
+              {t("auth:access.magicLink")}
+            </Button>
+          ) : null}
           {passwordVisible ? (
             <>
               <FormField id="access-password" label={t("auth:access.passwordLabel")}>

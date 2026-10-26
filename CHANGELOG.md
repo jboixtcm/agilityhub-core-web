@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- Internal club access (Jordi, 2026-10-26): keep team sign-in at each club application's `/entrar`, with its existing same-origin session and club identity. `VITE_EMAIL_LOGIN_ENABLED=false` hides email-dependent login/recovery actions and opens the administration password form immediately. Visible platform names, initial page titles and exported document labels use neutral language in ca/es/en; technical client identifiers and role checks are unchanged.
+
 - 2026-10-24–26 local functional audit corrections (INC-91–100; deployment pending):
   - Translate every published automatic job in ca/es/en and hide unsupported mandatory-job switches while preserving optional controls.
   - Show export progress only for the requested job while it is queued/running; acknowledge member-data export requests without stale preparation text.

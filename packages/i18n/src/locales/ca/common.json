@@ -113,7 +113,7 @@
     "tableCaption": "Llistat d'abonats",
     "tableEmpty": "Sense resultats",
     "theme": {
-      "agilityhub": "Tema AgilityHub",
+      "agilityhub": "Tema predeterminat",
       "club": "Tema del club"
     },
     "title": "Galeria de components",

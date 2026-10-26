@@ -767,6 +767,7 @@ export function AccessPage({
   // The code was redeemed but `/me` keeps failing: the tab holds that session (never another
   // one) and offers a retry (E47).
   const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
+  const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
   const countdown = useCountdown();
 
   // E11-W06 W1: 01 opened with `?next=` keeps it for the steps that leave this address (the magic
@@ -959,26 +960,30 @@ export function AccessPage({
           >
             {t("auth:access.enter")}
           </Button>
-          <Button
-            disabled={pending !== null || countdown.seconds > 0}
-            loading={pending === "magic"}
-            onClick={() => void requestLink("LOGIN")}
-            type="button"
-            variant="secondary"
-          >
-            <Icon aria-hidden="true" name="mail" />
-            {t("auth:access.passwordlessLink")}
-          </Button>
-          <button
-            className="auth-text-action"
-            disabled={pending !== null || countdown.seconds > 0}
-            onClick={() => void requestLink("RESET")}
-            type="button"
-          >
-            {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
-            {t("auth:access.forgot.question")}{" "}
-            <span className="auth-link">{t("auth:access.forgot.action")}</span>
-          </button>
+          {emailLoginEnabled ? (
+            <>
+              <Button
+                disabled={pending !== null || countdown.seconds > 0}
+                loading={pending === "magic"}
+                onClick={() => void requestLink("LOGIN")}
+                type="button"
+                variant="secondary"
+              >
+                <Icon aria-hidden="true" name="mail" />
+                {t("auth:access.passwordlessLink")}
+              </Button>
+              <button
+                className="auth-text-action"
+                disabled={pending !== null || countdown.seconds > 0}
+                onClick={() => void requestLink("RESET")}
+                type="button"
+              >
+                {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
+                {t("auth:access.forgot.question")}{" "}
+                <span className="auth-link">{t("auth:access.forgot.action")}</span>
+              </button>
+            </>
+          ) : null}
           {countdown.seconds > 0 ? (
             <p className="auth-message auth-message--error" role="alert">
               {t("auth:access.countdown", { seconds: countdown.seconds })}

@@ -166,17 +166,17 @@
     "ended": "Se ha terminado el acceso de soporte de {name}.",
     "endFailed": "No se ha podido terminar el acceso. Vuelve a intentarlo.",
     "ending": "Terminando",
-    "item": "{name}, del equipo AgilityHub · desde el {from} hasta el {until}",
+    "item": "{name}, del equipo de soporte · desde el {from} hasta el {until}",
     "loadFailed": "No se han podido leer los accesos de soporte en curso.",
     "reason": "Motivo: {reason}",
     "retry": "Volver a intentarlo",
     "title": "Accesos de soporte en curso",
-    "unknownActor": "Equipo AgilityHub"
+    "unknownActor": "Equipo de soporte"
   },
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",
-    "PLATFORM_SUPPORT": "Soporte de AgilityHub",
+    "PLATFORM_SUPPORT": "Soporte de plataforma",
     "PUBLIC": "Formulario público",
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"

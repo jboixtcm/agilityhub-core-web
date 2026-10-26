@@ -356,21 +356,88 @@
     "expired_card": "expired card",
     "insufficient_funds": "insufficient funds"
   },
-  "leaveSource": {"MEMBER": "member request", "ADMIN": "club decision", "PACK_EXPIRED": "pack expiry", "MIGRATED": "migration"},
-  "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "system"},
-  "memberDisplayStatus": {"INACTIVE_PERIOD": "inactive", "INACTIVE_PERIOD_DATED": "inactive until {date}", "LEAVE_SCHEDULED": "leave scheduled {date}"},
-  "finishReason": {"SCHEDULED": "scheduled end", "ADMIN": "club decision", "LEAVE": "leave"},
-  "cancelReason": {"WITHDRAWN": "withdrawn", "EXPIRED": "expired", "LEAVE": "leave", "MEMBER": "by member", "ADMIN": "by club", "SYSTEM": "by system"},
-  "courseDiscipline": {"AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Other"},
-  "courseSource": {"SMARTER": "Smarter", "EDITOR": "Editor", "IMAGE": "Plan or photo", "AGILITYHUB_COPY": "AgilityHub copy"},
-  "agilityhubLevel": {"EASY": "Easy", "MEDIUM": "Medium", "HARD": "Hard"},
-  "setupKind": {"AGILITY": "Agility", "JUMPING": "Jumping", "FUN": "Fun", "OBSTACLE_DRILL": "Obstacle drill", "EMPTY": "Empty"},
-  "setupStatus": {"ACTIVE": "Set up", "EXPIRED": "Expired", "DISMANTLED": "Taken down"},
-  "obstacleType": {"Jump": "Jump", "DoubleJump": "Double jump", "Tunnel3m": "3 m tunnel", "Tunnel4m": "4 m tunnel", "Tunnel5m": "5 m tunnel", "Tunnel6m": "6 m tunnel", "DogWalk": "Dog walk", "AFrame": "A-frame", "Seesaw": "Seesaw", "Weave": "Weave poles", "LongJump": "Long jump", "Wall": "Wall", "Tire": "Tyre", "Unknown": "Unknown"},
-  "ringSurface": {"GRASS": "Grass", "SAND": "Sand", "ARTIFICIAL": "Artificial turf", "INDOOR": "Indoor", "OTHER": "Other"},
-  "doorFlow": {"IN": "entry", "OUT": "exit", "BOTH": "entry and exit"},
-  "doorSide": {"NORTH": "North", "SOUTH": "South", "EAST": "East", "WEST": "West"},
-  "courseWarningRule": {"outside-ring": "Outside the ring", "border-clearance": "Perimeter clearance", "course-no-go": "Course no-go zone", "ring-no-go": "Ring no-go zone", "door-clearance": "Door clearance", "course-larger-than-ring": "Course larger than the ring", "obstacle-inventory": "Obstacle inventory"},
-  "buildObstacleStatus": {"NOT_PLACED": "pending", "CURRENT": "now", "PLACED": "placed", "SKIPPED": "skipped", "NEEDS_CHECK": "to check"},
-  "buildSessionStatus": {"NOT_STARTED": "not started", "IN_PROGRESS": "in progress", "COMPLETED": "finished", "ABANDONED": "abandoned"}
+  "leaveSource": {
+    "MEMBER": "member request",
+    "ADMIN": "club decision",
+    "PACK_EXPIRED": "pack expiry",
+    "MIGRATED": "migration"
+  },
+  "origin": { "APP": "app", "BACKOFFICE": "club", "SYSTEM": "system" },
+  "memberDisplayStatus": {
+    "INACTIVE_PERIOD": "inactive",
+    "INACTIVE_PERIOD_DATED": "inactive until {date}",
+    "LEAVE_SCHEDULED": "leave scheduled {date}"
+  },
+  "finishReason": { "SCHEDULED": "scheduled end", "ADMIN": "club decision", "LEAVE": "leave" },
+  "cancelReason": {
+    "WITHDRAWN": "withdrawn",
+    "EXPIRED": "expired",
+    "LEAVE": "leave",
+    "MEMBER": "by member",
+    "ADMIN": "by club",
+    "SYSTEM": "by system"
+  },
+  "courseDiscipline": { "AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Other" },
+  "courseSource": {
+    "SMARTER": "Smarter",
+    "EDITOR": "Editor",
+    "IMAGE": "Plan or photo",
+    "AGILITYHUB_COPY": "Library copy"
+  },
+  "agilityhubLevel": { "EASY": "Easy", "MEDIUM": "Medium", "HARD": "Hard" },
+  "setupKind": {
+    "AGILITY": "Agility",
+    "JUMPING": "Jumping",
+    "FUN": "Fun",
+    "OBSTACLE_DRILL": "Obstacle drill",
+    "EMPTY": "Empty"
+  },
+  "setupStatus": { "ACTIVE": "Set up", "EXPIRED": "Expired", "DISMANTLED": "Taken down" },
+  "obstacleType": {
+    "Jump": "Jump",
+    "DoubleJump": "Double jump",
+    "Tunnel3m": "3 m tunnel",
+    "Tunnel4m": "4 m tunnel",
+    "Tunnel5m": "5 m tunnel",
+    "Tunnel6m": "6 m tunnel",
+    "DogWalk": "Dog walk",
+    "AFrame": "A-frame",
+    "Seesaw": "Seesaw",
+    "Weave": "Weave poles",
+    "LongJump": "Long jump",
+    "Wall": "Wall",
+    "Tire": "Tyre",
+    "Unknown": "Unknown"
+  },
+  "ringSurface": {
+    "GRASS": "Grass",
+    "SAND": "Sand",
+    "ARTIFICIAL": "Artificial turf",
+    "INDOOR": "Indoor",
+    "OTHER": "Other"
+  },
+  "doorFlow": { "IN": "entry", "OUT": "exit", "BOTH": "entry and exit" },
+  "doorSide": { "NORTH": "North", "SOUTH": "South", "EAST": "East", "WEST": "West" },
+  "courseWarningRule": {
+    "outside-ring": "Outside the ring",
+    "border-clearance": "Perimeter clearance",
+    "course-no-go": "Course no-go zone",
+    "ring-no-go": "Ring no-go zone",
+    "door-clearance": "Door clearance",
+    "course-larger-than-ring": "Course larger than the ring",
+    "obstacle-inventory": "Obstacle inventory"
+  },
+  "buildObstacleStatus": {
+    "NOT_PLACED": "pending",
+    "CURRENT": "now",
+    "PLACED": "placed",
+    "SKIPPED": "skipped",
+    "NEEDS_CHECK": "to check"
+  },
+  "buildSessionStatus": {
+    "NOT_STARTED": "not started",
+    "IN_PROGRESS": "in progress",
+    "COMPLETED": "finished",
+    "ABANDONED": "abandoned"
+  }
 }

@@ -213,7 +213,7 @@ export function useMetres() {
 
 /** The build sheet's and the marker sheet's texts (R-16-10, A8b), in the reader's language. */
 export function useSheetLabels() {
-  const { t } = useTranslation(["admin-courses", "enums"]);
+  const { t } = useTranslation(["admin-courses", "enums", "shell"]);
   const labels = useCourseLabels();
   const metres = useMetres();
   const { locale } = useClubFormats();
@@ -256,7 +256,7 @@ export function useSheetLabels() {
         obstaclesTitle: t("admin-courses:sheet.obstacles"),
         page,
         plan: t("admin-courses:sheet.plan"),
-        producer: "AgilityHub",
+        producer: t("shell:app.clubsAdmin"),
         subheading,
         unnumbered: t("admin-courses:sheet.unnumbered"),
       }),
@@ -268,7 +268,7 @@ export function useSheetLabels() {
         page,
         position: (marker) =>
           t("admin-courses:markerSheet.position", { x: metres(marker.x_m), y: metres(marker.y_m) }),
-        producer: "AgilityHub",
+        producer: t("shell:app.clubsAdmin"),
         size: (mm) => t("admin-courses:markerSheet.size", { mm }),
       }),
     };

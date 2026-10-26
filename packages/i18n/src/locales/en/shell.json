@@ -1,6 +1,6 @@
 {
   "app": {
-    "clubsAdmin": "AgilityHub Clubs Admin"
+    "clubsAdmin": "Club administration"
   },
   "header": {
     "language": "Language",
@@ -18,7 +18,7 @@
   },
   "loading": "Loading",
   "support": {
-    "banner": "AgilityHub team support access · {name} · until {until}",
+    "banner": "Support team access · {name} · until {until}",
     "bannerLabel": "Support access",
     "ended": "The support access has ended: it expired or the club's administrator ended it. You can close this tab.",
     "entering": "Opening the club's back office…",

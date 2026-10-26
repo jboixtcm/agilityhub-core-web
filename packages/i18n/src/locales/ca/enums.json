@@ -356,21 +356,92 @@
     "expired_card": "targeta caducada",
     "insufficient_funds": "fons insuficients"
   },
-  "leaveSource": {"MEMBER": "sol·licitud de l'abonat", "ADMIN": "decisió del club", "PACK_EXPIRED": "caducitat del pack", "MIGRATED": "migració"},
-  "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema"},
-  "memberDisplayStatus": {"INACTIVE_PERIOD": "inactiva", "INACTIVE_PERIOD_DATED": "inactiva fins {date}", "LEAVE_SCHEDULED": "baixa prevista {date}"},
-  "finishReason": {"SCHEDULED": "finalització prevista", "ADMIN": "decisió del club", "LEAVE": "baixa"},
-  "cancelReason": {"WITHDRAWN": "retirada", "EXPIRED": "caducada", "LEAVE": "baixa", "MEMBER": "per l'abonat", "ADMIN": "pel club", "SYSTEM": "pel sistema"},
-  "courseDiscipline": {"AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Altres"},
-  "courseSource": {"SMARTER": "Smarter", "EDITOR": "Editor", "IMAGE": "Plànol o foto", "AGILITYHUB_COPY": "Còpia d'AgilityHub"},
-  "agilityhubLevel": {"EASY": "Fàcil", "MEDIUM": "Mitjà", "HARD": "Difícil"},
-  "setupKind": {"AGILITY": "Agility", "JUMPING": "Jumping", "FUN": "Fun", "OBSTACLE_DRILL": "Treball d'obstacle", "EMPTY": "Buida"},
-  "setupStatus": {"ACTIVE": "Muntat", "EXPIRED": "Caducat", "DISMANTLED": "Desmuntat"},
-  "obstacleType": {"Jump": "Salt", "DoubleJump": "Salt doble", "Tunnel3m": "Túnel de 3 m", "Tunnel4m": "Túnel de 4 m", "Tunnel5m": "Túnel de 5 m", "Tunnel6m": "Túnel de 6 m", "DogWalk": "Passarel·la", "AFrame": "Empalissada", "Seesaw": "Balancí", "Weave": "Eslàlom", "LongJump": "Salt de llargada", "Wall": "Mur", "Tire": "Roda", "Unknown": "Desconegut"},
-  "ringSurface": {"GRASS": "Gespa", "SAND": "Sorra", "ARTIFICIAL": "Gespa artificial", "INDOOR": "Interior", "OTHER": "Altra"},
-  "doorFlow": {"IN": "entrada", "OUT": "sortida", "BOTH": "entrada i sortida"},
-  "doorSide": {"NORTH": "Nord", "SOUTH": "Sud", "EAST": "Est", "WEST": "Oest"},
-  "courseWarningRule": {"outside-ring": "Fora de la pista", "border-clearance": "Marge al perímetre", "course-no-go": "Zona no-go del recorregut", "ring-no-go": "Zona no-go de la pista", "door-clearance": "Distància a la porta", "course-larger-than-ring": "Recorregut més gran que la pista", "obstacle-inventory": "Inventari d'obstacles"},
-  "buildObstacleStatus": {"NOT_PLACED": "pendent", "CURRENT": "ara", "PLACED": "col·locat", "SKIPPED": "saltat", "NEEDS_CHECK": "per revisar"},
-  "buildSessionStatus": {"NOT_STARTED": "sense començar", "IN_PROGRESS": "en curs", "COMPLETED": "acabada", "ABANDONED": "abandonada"}
+  "leaveSource": {
+    "MEMBER": "sol·licitud de l'abonat",
+    "ADMIN": "decisió del club",
+    "PACK_EXPIRED": "caducitat del pack",
+    "MIGRATED": "migració"
+  },
+  "origin": { "APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema" },
+  "memberDisplayStatus": {
+    "INACTIVE_PERIOD": "inactiva",
+    "INACTIVE_PERIOD_DATED": "inactiva fins {date}",
+    "LEAVE_SCHEDULED": "baixa prevista {date}"
+  },
+  "finishReason": {
+    "SCHEDULED": "finalització prevista",
+    "ADMIN": "decisió del club",
+    "LEAVE": "baixa"
+  },
+  "cancelReason": {
+    "WITHDRAWN": "retirada",
+    "EXPIRED": "caducada",
+    "LEAVE": "baixa",
+    "MEMBER": "per l'abonat",
+    "ADMIN": "pel club",
+    "SYSTEM": "pel sistema"
+  },
+  "courseDiscipline": { "AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Altres" },
+  "courseSource": {
+    "SMARTER": "Smarter",
+    "EDITOR": "Editor",
+    "IMAGE": "Plànol o foto",
+    "AGILITYHUB_COPY": "Còpia de la biblioteca"
+  },
+  "agilityhubLevel": { "EASY": "Fàcil", "MEDIUM": "Mitjà", "HARD": "Difícil" },
+  "setupKind": {
+    "AGILITY": "Agility",
+    "JUMPING": "Jumping",
+    "FUN": "Fun",
+    "OBSTACLE_DRILL": "Treball d'obstacle",
+    "EMPTY": "Buida"
+  },
+  "setupStatus": { "ACTIVE": "Muntat", "EXPIRED": "Caducat", "DISMANTLED": "Desmuntat" },
+  "obstacleType": {
+    "Jump": "Salt",
+    "DoubleJump": "Salt doble",
+    "Tunnel3m": "Túnel de 3 m",
+    "Tunnel4m": "Túnel de 4 m",
+    "Tunnel5m": "Túnel de 5 m",
+    "Tunnel6m": "Túnel de 6 m",
+    "DogWalk": "Passarel·la",
+    "AFrame": "Empalissada",
+    "Seesaw": "Balancí",
+    "Weave": "Eslàlom",
+    "LongJump": "Salt de llargada",
+    "Wall": "Mur",
+    "Tire": "Roda",
+    "Unknown": "Desconegut"
+  },
+  "ringSurface": {
+    "GRASS": "Gespa",
+    "SAND": "Sorra",
+    "ARTIFICIAL": "Gespa artificial",
+    "INDOOR": "Interior",
+    "OTHER": "Altra"
+  },
+  "doorFlow": { "IN": "entrada", "OUT": "sortida", "BOTH": "entrada i sortida" },
+  "doorSide": { "NORTH": "Nord", "SOUTH": "Sud", "EAST": "Est", "WEST": "Oest" },
+  "courseWarningRule": {
+    "outside-ring": "Fora de la pista",
+    "border-clearance": "Marge al perímetre",
+    "course-no-go": "Zona no-go del recorregut",
+    "ring-no-go": "Zona no-go de la pista",
+    "door-clearance": "Distància a la porta",
+    "course-larger-than-ring": "Recorregut més gran que la pista",
+    "obstacle-inventory": "Inventari d'obstacles"
+  },
+  "buildObstacleStatus": {
+    "NOT_PLACED": "pendent",
+    "CURRENT": "ara",
+    "PLACED": "col·locat",
+    "SKIPPED": "saltat",
+    "NEEDS_CHECK": "per revisar"
+  },
+  "buildSessionStatus": {
+    "NOT_STARTED": "sense començar",
+    "IN_PROGRESS": "en curs",
+    "COMPLETED": "acabada",
+    "ABANDONED": "abandonada"
+  }
 }

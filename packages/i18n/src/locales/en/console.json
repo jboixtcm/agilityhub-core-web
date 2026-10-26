@@ -1,6 +1,6 @@
 {
   "access": {
-    "description": "This access is for the AgilityHub team only.",
+    "description": "This access is for the platform team only.",
     "title": "Club console"
   },
   "audit": {
@@ -105,7 +105,7 @@
       "template": "Template club",
       "websiteUrl": "Website"
     },
-    "notesHelp": "Only the AgilityHub team sees them.",
+    "notesHelp": "Only the platform team sees them.",
     "platformTitle": "Platform",
     "slugHelp": "It cannot change once the club is created.",
     "templateHelp": "A template club does not operate: it is a source to clone catalogs from.",
@@ -280,7 +280,8 @@
     "removeConfirm": "Its configuration will be deleted. If members use it, it cannot be removed.",
     "removeTitle": "Remove {name}",
     "sepa": {
-      "creditorId": "Creditor identifier",      "creditorName": "Creditor name",
+      "creditorId": "Creditor identifier",
+      "creditorName": "Creditor name",
       "iban": "IBAN",
       "ibanHelpNew": "Write-only: once saved it is never shown again.",
       "ibanHelpStored": "Stored IBAN: {masked}. Leave it blank to keep it.",
@@ -645,7 +646,7 @@
     },
     "stepsLabel": "Wizard steps",
     "themeCustom": "Club colours",
-    "themeProduct": "AgilityHub theme",
+    "themeProduct": "Default theme",
     "themeSource": "Theme",
     "title": "New club",
     "unnamed": "New club"

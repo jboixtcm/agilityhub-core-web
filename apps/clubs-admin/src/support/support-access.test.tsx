@@ -370,7 +370,7 @@ describe("E10-W03 step 2 · the support access's banner, its end and its expiry 
     const banner = within(await screen.findByRole("region", { name: "Accés de suport" }));
     // 15:30 UTC is 17:30 in Madrid (the club's zone), whatever the device's.
     expect(
-      banner.getByText(/Accés de suport de l'equip AgilityHub · Pol Ferrer · fins al .*17:30/u),
+      banner.getByText(/Accés de l'equip de suport · Pol Ferrer · fins al .*17:30/u),
     ).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Consola" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Exportacions" })).toBeNull();
@@ -625,7 +625,7 @@ describe("E10-W03 step 2 · the club's ADMIN ends a live support access from «A
     const card = await openAudit("adminSupportAccess");
     const items = card.getAllByRole("listitem");
     expect(items).toHaveLength(1);
-    expect(items[0]).toHaveTextContent("Pol Ferrer, de l'equip AgilityHub");
+    expect(items[0]).toHaveTextContent("Pol Ferrer, de l'equip de suport");
     expect(items[0]).toHaveTextContent("Motiu: Revisar la configuració de la remesa");
     fireEvent.click(card.getByRole("button", { name: "Acaba l'accés" }));
     expect(
@@ -808,9 +808,7 @@ describe("E10-W03 step 2 · the club's ADMIN ends a live support access from «A
     expect(card.queryByRole("listitem")).toBeNull();
     failStarted = false;
     fireEvent.click(card.getByRole("button", { name: "Torna-ho a provar" }));
-    expect(await card.findByRole("listitem")).toHaveTextContent(
-      "Pol Ferrer, de l'equip AgilityHub",
-    );
+    expect(await card.findByRole("listitem")).toHaveTextContent("Pol Ferrer, de l'equip de suport");
     expect(card.queryByRole("alert")).toBeNull();
 
     // [Acaba l'accés] succeeds, then its reread fails: the ended grant is never offered again.

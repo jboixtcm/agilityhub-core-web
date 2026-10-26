@@ -166,17 +166,17 @@
     "ended": "{name}'s support access was ended.",
     "endFailed": "The access could not be ended. Try again.",
     "ending": "Ending",
-    "item": "{name}, AgilityHub team · from {from} until {until}",
+    "item": "{name}, support team · from {from} until {until}",
     "loadFailed": "The live support accesses could not be read.",
     "reason": "Reason: {reason}",
     "retry": "Try again",
     "title": "Live support accesses",
-    "unknownActor": "AgilityHub team"
+    "unknownActor": "Support team"
   },
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Back office",
-    "PLATFORM_SUPPORT": "AgilityHub support",
+    "PLATFORM_SUPPORT": "Platform support",
     "PUBLIC": "Public form",
     "SYSTEM": "System",
     "WEBHOOK": "Webhook"

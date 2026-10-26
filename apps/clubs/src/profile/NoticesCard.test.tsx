@@ -827,7 +827,7 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
 
   it("«Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK", async () => {
     await openProfile();
-    const learn = screen.getByRole("link", { name: "Aprèn amb AgilityHub" });
+    const learn = screen.getByRole("link", { name: "Formació" });
     expect(learn).toHaveAttribute("href", "https://learn.agilitydoghub.com");
     expect(learn).toHaveAttribute("target", "_blank");
     expect(
@@ -838,7 +838,7 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
       branding: { ...canic, modules: without("LEARN_LINK") },
       scenario: "learnLinkOff",
     });
-    expect(screen.queryByRole("link", { name: "Aprèn amb AgilityHub" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Formació" })).toBeNull();
   });
 
   it("the language select writes Account.locale, switches the UI at once and says only new notices change", async () => {

@@ -224,7 +224,7 @@ describe("T-17-12 · «Nou club» wizard (S17 §2 «D19 Assistent»)", () => {
     await step("Pagaments", 4);
     next();
     await step("Tema", 5);
-    expect(screen.getByRole("radio", { name: "Tema AgilityHub" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Tema predeterminat" })).toBeChecked();
     next();
     await toAdmin();
     fireEvent.click(screen.getByRole("button", { name: "CREA EL CLUB" }));

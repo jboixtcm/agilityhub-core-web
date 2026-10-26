@@ -12,6 +12,7 @@ import {
   resolveBrandingLogo,
   useBranding,
   useBrandingLogo,
+  withProductBrandName,
 } from "./branding";
 
 function canicBranding(): Branding {
@@ -366,5 +367,24 @@ describe("E11-W02 (INC-41): theme mode `auto` follows the reader's prefers-color
     const light = colorScheme(false);
     expect(resolveBrandingLogo(theme, { placement: "full" }).src).toBe(theme.logoUrl);
     light.restore();
+  });
+});
+
+describe("Internal club presentation", () => {
+  it("applies an explicit product name and removes product logos without changing tenant identity or permissions", () => {
+    const tenant = canicBranding();
+    expect(withProductBrandName(tenant, "Instance club")).toBe(tenant);
+    const product = { ...tenant, club: { ...tenant.club, slug: null, name: "Platform" } };
+    const renamed = withProductBrandName(product, "  Instance club  ");
+    expect(renamed.club.name).toBe("Instance club");
+    expect(renamed.club.slug).toBeNull();
+    expect(renamed.theme.logoUrl).toBeNull();
+    expect(renamed.theme.logoDarkUrl).toBeNull();
+    expect(renamed.theme.markUrl).toBeNull();
+    expect(renamed.modules).toBe(product.modules);
+    expect(renamed.signup).toBe(product.signup);
+    expect(product.club.name).toBe("Platform");
+    expect(withProductBrandName(product, " ")).toBe(product);
+    expect(withProductBrandName(product, undefined)).toBe(product);
   });
 });

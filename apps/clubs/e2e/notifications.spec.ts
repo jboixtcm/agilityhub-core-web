@@ -273,7 +273,7 @@ test.describe("E7-W02 T-11-35 screen 12 «Avisos», push and «Idioma» (S11 R-1
     await login(page);
     await page.goto(`${baseUrl}/perfil`);
     await expect(page.getByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Aprèn amb AgilityHub" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Formació" })).toBeVisible();
     const refused = page.getByText("Activa les notificacions al navegador per rebre-les al mòbil");
     await expect(refused).toHaveCount(0);
     await shot(page, "12-avisos-375.png");

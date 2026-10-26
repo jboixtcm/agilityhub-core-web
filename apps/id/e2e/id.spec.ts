@@ -18,7 +18,7 @@ test.describe("T-01-22 AgilityHub ID", () => {
       `${baseUrl}/login?flow=mock-flow&login_hint=biel.roca%40example.test&ui_locales=ca`,
     );
 
-    await expect(page.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
     await expect(page.getByLabel("Correu electrònic")).toHaveValue("biel.roca@example.test");
     await page.screenshot({
       fullPage: true,

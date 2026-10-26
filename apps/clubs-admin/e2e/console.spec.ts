@@ -244,7 +244,7 @@ test("D19 refuses a club account without the platform role (S17 §2 «Entrada»)
   await signIn(page, "admin");
   await page.waitForURL("**/tauler");
   await page.goto(`${baseUrl}/consola/clubs`);
-  await expect(page.getByText("Aquest accés és només per a l'equip AgilityHub.")).toBeVisible();
+  await expect(page.getByText("Aquest accés és només per a l'equip de plataforma.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Consola" })).toHaveCount(0);
   await context.close();
 });

@@ -60,7 +60,7 @@ test.describe("E9-W03 D18 «Biblioteca de recorreguts» and D16 «Geometria» (S
       fullPage: true,
       path: resolve(evidenceDirectory, "D18-biblioteca-1280.png"),
     });
-    await page.getByRole("button", { name: "AgilityHub" }).click();
+    await page.getByRole("button", { name: "Biblioteca compartida" }).click();
     await expect(page.getByRole("row").filter({ hasText: "AH · Foundations 07" })).toBeVisible();
     await expect(page.getByRole("row").filter({ hasText: "Jumping del dijous" })).toHaveCount(0);
   });

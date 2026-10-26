@@ -147,6 +147,7 @@ async function renderApp(
 }
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   cleanup();
   localStorage.clear();
   window.history.replaceState(null, "", "/login");
@@ -167,7 +168,7 @@ describe("T-01-22 apps/id", () => {
     await waitFor(() => {
       expect(i18n.resolvedLanguage).toBe("es");
     });
-    expect(screen.getByRole("heading", { name: "Entra en AgilityHub" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Entra en tu cuenta" })).toBeInTheDocument();
     expect(screen.getByLabelText("Correo electrónico")).toHaveValue("biel.roca@example.test");
     fireEvent.change(screen.getByLabelText("Contraseña"), {
       target: { value: "secret-password" },
@@ -257,9 +258,9 @@ describe("T-01-22 apps/id", () => {
 
   it("serves the login page in Catalan, Spanish and English", async () => {
     const headings = {
-      ca: "Entra a AgilityHub",
-      en: "Sign in to AgilityHub",
-      es: "Entra en AgilityHub",
+      ca: "Entra al teu compte",
+      en: "Sign in to your account",
+      es: "Entra en tu cuenta",
     } as const;
 
     for (const locale of ["ca", "es", "en"] as const) {
@@ -276,7 +277,7 @@ describe("T-01-22 apps/id", () => {
     await renderApp(createClient(fetcher), "ca");
 
     expect(
-      await screen.findByRole("heading", { name: "Sign in to AgilityHub" }),
+      await screen.findByRole("heading", { name: "Sign in to your account" }),
     ).toBeInTheDocument();
   });
 
@@ -402,7 +403,7 @@ describe("T-01-22 apps/id", () => {
         "https://clubs.agilitydoghub.com",
       );
       expect(screen.queryByRole("link", { name: /OBRE LEARN/u })).toBeNull();
-      expect(screen.queryByRole("heading", { name: "AgilityHub Learn" })).toBeNull();
+      expect(screen.queryByRole("heading", { name: "Learning" })).toBeNull();
       expect(document.querySelector('a[href="https://learn.agilitydoghub.com"]')).toBeNull();
     } finally {
       vi.unstubAllEnvs();
@@ -578,4 +579,17 @@ describe("T-01-18 (E11-W02 round 2, INC-41): apps/id's login after a 429, and th
       expect(navigate).toHaveBeenCalled();
     });
   });
+});
+
+it("Internal access: the identity fallback is neutral and email actions can be disabled", async () => {
+  vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
+  const { fetcher } = testFetcher();
+  await renderApp(createClient(fetcher));
+  expect(await screen.findByLabelText("Contrasenya")).toBeVisible();
+  expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
+  expect(
+    screen.queryByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
+  ).toBeNull();
+  expect(document.body.textContent).not.toMatch(/AgilityHub/u);
+  expect(document.title).not.toMatch(/AgilityHub/u);
 });

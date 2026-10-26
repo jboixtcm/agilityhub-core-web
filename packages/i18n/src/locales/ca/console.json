@@ -1,6 +1,6 @@
 {
   "access": {
-    "description": "Aquest accés és només per a l'equip AgilityHub.",
+    "description": "Aquest accés és només per a l'equip de plataforma.",
     "title": "Consola de clubs"
   },
   "audit": {
@@ -105,7 +105,7 @@
       "template": "Club plantilla",
       "websiteUrl": "Web"
     },
-    "notesHelp": "Només les veu l'equip AgilityHub.",
+    "notesHelp": "Només les veu l'equip de plataforma.",
     "platformTitle": "Plataforma",
     "slugHelp": "No es pot canviar un cop creat el club.",
     "templateHelp": "Un club plantilla no opera: serveix d'origen per clonar catàlegs.",
@@ -280,7 +280,8 @@
     "removeConfirm": "Se n'esborrarà la configuració. Si hi ha abonats que l'utilitzen, no es podrà retirar.",
     "removeTitle": "Retira {name}",
     "sepa": {
-      "creditorId": "Identificador de creditor",      "creditorName": "Nom del creditor",
+      "creditorId": "Identificador de creditor",
+      "creditorName": "Nom del creditor",
       "iban": "IBAN",
       "ibanHelpNew": "Només d'escriptura: un cop desat no es torna a mostrar.",
       "ibanHelpStored": "IBAN desat: {masked}. Deixa-ho en blanc per mantenir-lo.",
@@ -645,7 +646,7 @@
     },
     "stepsLabel": "Passos de l'assistent",
     "themeCustom": "Colors del club",
-    "themeProduct": "Tema AgilityHub",
+    "themeProduct": "Tema predeterminat",
     "themeSource": "Tema",
     "title": "Nou club",
     "unnamed": "Club nou"

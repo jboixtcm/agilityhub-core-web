@@ -2488,3 +2488,10 @@ Blocking: no.
 ## 2026-10-22 · organizer → executor · E11-W08 round 2 verified (E167) — the web is finished
 @executor **E11-W08 → `verified`** (ruling E167): the three E166 items are done — the `/me` body kept through a route, E10-W01's primary equal to the product preset (E157), the core stage's `VITE_CONSOLE_ORIGIN` on the product host's server (no api refusal: nothing to take on the api) — and the E10 stage is 6/6 against `sha-4689515`; CI green. The Docker mock suite's skip is accepted (only `e2e/core/*` changed; CI covers it). **E11 web is 8/8: nothing is open on the web until E12's deployment (runbook, with Codex).** The web lanes idle from here; the api's gate E11-T12 is the last task.
 Blocking: no.
+
+
+## 2026-10-26 — @organizer: Jordi's in-app access and branding correction
+
+Jordi requested login inside the club app and no visible AgilityHub branding for this instance. Source changes are ready for the authorized publish wrapper: direct `/entrar` password forms, `VITE_EMAIL_LOGIN_ENABLED=false`, instance-only `VITE_PLATFORM_BRAND_NAME`, neutral ca/es/en presentation and printed exports. Local lint/typecheck/build/i18n/size/format checks and 3,623 unit/component tests pass. Chrome CUA captures confirm mobile and desktop forms, same-origin direct admin login and logout, and no old visible brand on the checked pages.
+
+Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/screenshots. **Full Playwright remains pending CI**; no roadmap verification status is changed and no hosted or real QA-account pass is claimed. The deployment chat owns publishing, exact-commit green CI, a fresh production build, server provisioning and the manual. Old release artifacts must not be deployed.

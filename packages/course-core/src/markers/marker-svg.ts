@@ -11,7 +11,7 @@
  *     No branding, text, logo, or overlay enters this zone; venues' AR
  *     cameras need a clean black/white pattern with adequate quiet space.
  *   - Bottom **chrome footer** (deep charcoal, 210 x 87 mm on A4). Carries
- *     the AgilityHub wordmark, venue + ring identity, the big A/B/C/D/E/F
+ *     venue + ring identity, the big A/B/C/D/E/F
  *     letter, the role description, placement instruction, a mini ring
  *     diagram with this marker highlighted, a real-size marker check line,
  *     and the "DO NOT RESIZE" warning band.
@@ -502,8 +502,6 @@ function renderChromeFooter(args: ChromeFooterArgs): string {
   return `<g font-family="${FONT_STACK}">
     ${scale}
 
-    <!-- AgilityHub wordmark -->
-    <text x="${padX}" y="${y0 + 28}" font-size="6.5" font-weight="700" fill="${BRAND_YELLOW}">AgilityHub</text>
     <text x="${padX}" y="${y0 + 33}" font-size="2.7" fill="${BRAND_TEXT_MUTED}">Course Builder · venue marker pack</text>
 
     ${orientation}

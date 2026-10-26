@@ -54,6 +54,7 @@ beforeEach(() => {
   resetOnboardingMockState();
 });
 afterEach(() => {
+  vi.unstubAllEnvs();
   cleanup();
   server.resetHandlers();
   mockScenario("member");
@@ -2840,4 +2841,16 @@ describe("T-03-41 mobile own data", () => {
     expect(isCountryFieldValid(es, "POSTAL_CODE", "0834")).toBe(false);
     expect(isCountryFieldValid({ code: "GENERIC", phonePrefix: "+1" }, "DNI", "A-42")).toBe(true);
   });
+});
+
+it("Internal access: the club app keeps password entry on its own page without email actions", async () => {
+  vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
+  window.history.pushState(null, "", "/entrar");
+  await renderApplication(authClient());
+  expect(screen.getByLabelText("Contrasenya")).toBeVisible();
+  expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+  expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
+  expect(screen.queryByRole("button", { name: /Has oblidat la contrasenya/u })).toBeNull();
+  expect(document.body.textContent).not.toMatch(/AgilityHub/u);
+  expect(window.location.pathname).toBe("/entrar");
 });

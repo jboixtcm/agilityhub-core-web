@@ -238,7 +238,7 @@
         "label": "Domain-check frequency"
       },
       "supportAccessMinutes": {
-        "help": "Number of minutes for which an AgilityHub team support access remains valid.",
+        "help": "Number of minutes for which a support team access remains valid.",
         "label": "Support-access duration"
       }
     },

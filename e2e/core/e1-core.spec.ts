@@ -297,8 +297,8 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   const accountContext = await desktopContext(browser);
   const accountPage = await accountContext.newPage();
   await accountPage.goto(`${idUrl}/login`);
-  await expect(accountPage.locator("body")).toContainText("Entra a AgilityHub");
-  await expect(accountPage.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+  await expect(accountPage.locator("body")).toContainText("Entra al teu compte");
+  await expect(accountPage.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
   await screenshot(accountPage, "id-login-core-1280.png");
   await accountPage.getByLabel("Correu electrònic").fill("admin@example.test");
   await accountPage.getByLabel("Contrasenya").fill(corePassword);
@@ -321,10 +321,10 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   await accountPage.goto(`${idUrl}/logout`);
   expect((await revoke).status()).toBe(200);
   await accountPage.waitForURL("**/login");
-  await expect(accountPage.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+  await expect(accountPage.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
   expect(rpLogoutRequests).toEqual([]);
   await accountPage.goto(`${idUrl}/account`);
-  await expect(accountPage.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+  await expect(accountPage.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
   await screenshot(accountPage, "id-logout-core-1280.png");
   await accountContext.close();
 
@@ -385,7 +385,7 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   await page.goto(
     `${idUrl}/login?flow=${encodeURIComponent(flow ?? "")}&login_hint=admin%40example.test&ui_locales=ca`,
   );
-  await expect(page.getByRole("heading", { name: "Entra a AgilityHub" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
   await screenshot(page, "id-oidc-login-core-1280.png");
   await page.getByLabel("Contrasenya").fill(corePassword);
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();

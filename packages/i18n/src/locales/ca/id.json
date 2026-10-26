@@ -1,8 +1,7 @@
 {
   "brand": {
-    "mark": "AH",
-    "name": "AgilityHub ID",
-    "subtitle": "Un compte, tots els productes"
+    "name": "El teu compte",
+    "subtitle": "Accés al teu espai"
   },
   "navigation": {
     "label": "Navegació del compte",
@@ -17,14 +16,14 @@
     "en": "Anglès"
   },
   "footer": {
-    "security": "Accés segur amb AgilityHub ID"
+    "security": "Accés segur al teu compte"
   },
   "status": {
     "loadingAccount": "Carregant el compte…"
   },
   "login": {
-    "title": "Entra a AgilityHub",
-    "description": "Accedeix al teu compte i continua al producte que has triat.",
+    "title": "Entra al teu compte",
+    "description": "Accedeix al teu espai amb el correu i la contrasenya.",
     "email": "Correu electrònic",
     "emailPlaceholder": "correu@exemple.cat",
     "password": "Contrasenya",
@@ -46,7 +45,7 @@
   },
   "password": {
     "title": "Contrasenya",
-    "description": "Pots establir o canviar la contrasenya del teu AgilityHub ID.",
+    "description": "Pots establir o canviar la contrasenya del teu compte.",
     "current": "Contrasenya actual",
     "next": "Contrasenya nova",
     "repeat": "Repeteix la contrasenya nova",
@@ -61,7 +60,7 @@
   },
   "account": {
     "title": "El teu compte",
-    "description": "Gestiona les dades del teu AgilityHub ID i les sessions obertes.",
+    "description": "Gestiona les dades del teu compte i les sessions obertes.",
     "personalTitle": "Dades del compte",
     "name": "Nom",
     "email": "Correu electrònic",
@@ -81,24 +80,24 @@
   },
   "products": {
     "title": "Els teus productes",
-    "description": "Entra als productes AgilityHub vinculats al teu compte.",
-    "learnTitle": "AgilityHub Learn",
+    "description": "Entra als espais vinculats al teu compte.",
+    "learnTitle": "Formació",
     "learnDescription": "Aprèn, practica i avança amb continguts d'agility.",
     "openLearn": "OBRE LEARN",
-    "clubsTitle": "AgilityHub Clubs",
+    "clubsTitle": "Clubs",
     "clubsDescription": "Accedeix als clubs on tens una pertinença activa.",
     "openClubs": "OBRE CLUBS",
     "consoleTitle": "Consola de clubs",
-    "consoleDescription": "Crea i governa els clubs de la plataforma. Només per a l'equip AgilityHub.",
+    "consoleDescription": "Crea i gestiona els clubs de la plataforma. Només per a l'equip de plataforma.",
     "openConsole": "OBRE LA CONSOLA"
   },
   "logout": {
     "title": "Tanquem la sessió",
-    "description": "Estem tancant la sessió del teu AgilityHub ID."
+    "description": "Estem tancant la sessió del teu compte."
   },
   "notFound": {
     "title": "Pàgina no trobada",
-    "description": "L'adreça que has obert no correspon a cap pàgina de l'AgilityHub ID.",
+    "description": "L'adreça que has obert no correspon a cap pàgina.",
     "back": "TORNA A L'INICI"
   },
   "errors": {

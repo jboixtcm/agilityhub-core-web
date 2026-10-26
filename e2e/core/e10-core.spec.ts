@@ -567,7 +567,7 @@ test("E11-W08 · the platform account signs in to the console on the product hos
   expect(refused.status()).toBe(403);
   expect(errorCodeOf(await refused.text())).toBe("PLATFORM_ONLY");
   await expect(refusedPage.getByRole("alert")).toHaveText(
-    "Aquest accés és només per a l'equip AgilityHub.",
+    "Aquest accés és només per a l'equip de plataforma.",
   );
   await expect(refusedPage).toHaveURL(`${productUrl}/entrar`);
   await screenshot(refusedPage, "core-E11W08-platform-only-1280.png");
@@ -900,7 +900,7 @@ test("E10-W03 · «Dominis» (positive and negative fake DNS, the primary choice
   });
   await support.waitForURL("**/tauler", { timeout: 60_000 });
   const banner = support.getByRole("region", { name: "Accés de suport" });
-  await expect(banner).toContainText("Accés de suport de l'equip AgilityHub ·");
+  await expect(banner).toContainText("Accés de l'equip de suport ·");
   const withSupport = supportMes.find(
     (body) => typeof body === "object" && body !== null && "support" in body,
   ) as components["schemas"]["Me"] | undefined;

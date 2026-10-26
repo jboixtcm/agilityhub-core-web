@@ -113,7 +113,7 @@
     "tableCaption": "Listado de abonados",
     "tableEmpty": "Sin resultados",
     "theme": {
-      "agilityhub": "Tema AgilityHub",
+      "agilityhub": "Tema predeterminado",
       "club": "Tema del club"
     },
     "title": "Galería de componentes",

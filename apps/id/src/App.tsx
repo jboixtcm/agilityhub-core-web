@@ -150,15 +150,22 @@ function passwordError(error: unknown, t: Translate): string {
   return t("id:errors.generic");
 }
 
+function instanceDisplayName(fallback: string): string {
+  const name = (
+    import.meta.env as Record<string, string | undefined>
+  ).VITE_PLATFORM_BRAND_NAME?.trim();
+  return name === undefined || name === "" ? fallback : name;
+}
+
 function Brand() {
   const { t } = useTranslation("id");
   return (
     <a className="id-brand" href="/products">
       <span aria-hidden="true" className="id-brand__mark">
-        {t("id:brand.mark")}
+        <Icon aria-hidden="true" name="lock" />
       </span>
       <span>
-        <strong>{t("id:brand.name")}</strong>
+        <strong>{instanceDisplayName(t("id:brand.name"))}</strong>
         <small>{t("id:brand.subtitle")}</small>
       </span>
     </a>
@@ -274,6 +281,7 @@ function useCountdown() {
 
 function LoginPage({ authClient, navigate }: PageProps) {
   const { t } = useTranslation(["id", "errors"]);
+  const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
   const countdown = useCountdown();
   const [email, setEmail] = useState(initialLoginEmail);
   const [password, setPassword] = useState("");
@@ -370,24 +378,28 @@ function LoginPage({ authClient, navigate }: PageProps) {
           >
             {t("id:login.submit")}
           </Button>
-          <Button
-            disabled={countdown.seconds > 0}
-            loading={pending === "magic"}
-            onClick={() => void requestLink("LOGIN")}
-            type="button"
-            variant="secondary"
-          >
-            <Icon aria-hidden="true" name="mail" />
-            {t("id:login.magic")}
-          </Button>
-          <button
-            className="id-text-button"
-            disabled={pending !== null || countdown.seconds > 0}
-            onClick={() => void requestLink("RESET")}
-            type="button"
-          >
-            {t("id:login.forgot")}
-          </button>
+          {emailLoginEnabled ? (
+            <>
+              <Button
+                disabled={countdown.seconds > 0}
+                loading={pending === "magic"}
+                onClick={() => void requestLink("LOGIN")}
+                type="button"
+                variant="secondary"
+              >
+                <Icon aria-hidden="true" name="mail" />
+                {t("id:login.magic")}
+              </Button>
+              <button
+                className="id-text-button"
+                disabled={pending !== null || countdown.seconds > 0}
+                onClick={() => void requestLink("RESET")}
+                type="button"
+              >
+                {t("id:login.forgot")}
+              </button>
+            </>
+          ) : null}
           {countdown.seconds > 0 ? (
             <p role="alert">{t("id:login.countdown", { seconds: countdown.seconds })}</p>
           ) : null}
@@ -964,7 +976,7 @@ export function App({
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = i18n.t("id:brand.name");
+    document.title = instanceDisplayName(i18n.t("id:brand.name"));
   }, [i18n, language]);
 
   useEffect(() => {

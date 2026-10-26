@@ -34,6 +34,7 @@ beforeEach(() => {
   resetOnboardingMockState();
 });
 afterEach(() => {
+  vi.unstubAllEnvs();
   cleanup();
   server.resetHandlers();
   mockScenario("admin");
@@ -669,7 +670,7 @@ describe("E11-W06 W1 (S11 R-11-11): N-01's D2 link survives the back office's si
 });
 
 describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the console signs in on the product host", () => {
-  const REFUSAL = "Aquest accés és només per a l'equip AgilityHub.";
+  const REFUSAL = "Aquest accés és només per a l'equip de plataforma.";
 
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -1012,7 +1013,7 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     window.history.pushState(null, "", "/consola/clubs");
     await renderApplication(client);
     expect(
-      await screen.findByText("Aquest accés és només per a l'equip AgilityHub."),
+      await screen.findByText("Aquest accés és només per a l'equip de plataforma."),
     ).toBeVisible();
     expect(screen.queryByRole("link", { name: "Consola" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "Plataforma" })).toBeNull();
@@ -1059,7 +1060,7 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     expect(
       await screen.findByRole("heading", { level: 1, name: "Consola de clubs" }),
     ).toBeVisible();
-    expect(screen.queryByText("Aquest accés és només per a l'equip AgilityHub.")).toBeNull();
+    expect(screen.queryByText("Aquest accés és només per a l'equip de plataforma.")).toBeNull();
   });
 
   it("E10-W01 round 2 #6: an unknown path is replaced by /consola/clubs for a platform-only account", async () => {
@@ -1090,4 +1091,17 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     });
     expect(screen.queryByRole("link", { name: "Consola" })).toBeNull();
   });
+});
+
+it("Internal access: the club back office opens its own password form without email actions", async () => {
+  vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
+  window.history.pushState(null, "", "/entrar");
+  await renderApplication(authClient());
+  expect(screen.getByLabelText("Contrasenya")).toBeVisible();
+  expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+  expect(screen.queryByRole("button", { name: "Tinc contrasenya" })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Envia'm l'enllaç" })).toBeNull();
+  expect(document.querySelector(".access-brand img")).toHaveAttribute("alt", branding.club.name);
+  expect(document.body.textContent).not.toMatch(/AgilityHub/u);
+  expect(window.location.pathname).toBe("/entrar");
 });

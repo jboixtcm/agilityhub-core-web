@@ -190,7 +190,7 @@ describe('renderMarkerSvg (A4 portrait design system)', () => {
     const { svg } = renderMarkerSvg(template);
     expect(svg).toContain('<rect x="0" y="0" width="210" height="210" fill="#ffffff"/>');
     expect(svg).toContain('<g transform="translate(0, 210) scale(1)">');
-    expect(footerGroup(svg)).toMatch(/<text x="10" y="28"[^>]*>AgilityHub</);
+    expect(footerGroup(svg)).not.toMatch(/AgilityHub/);
     expect(footerGroup(svg)).toMatch(/<text x="10" y="73"[^>]*>A</);
     // No text element at all is emitted before the footer group starts —
     // the marker zone holds the white background and the fiducial only.

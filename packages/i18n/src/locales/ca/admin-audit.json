@@ -166,17 +166,17 @@
     "ended": "S'ha acabat l'accés de suport de {name}.",
     "endFailed": "No s'ha pogut acabar l'accés. Torna-ho a provar.",
     "ending": "Acabant",
-    "item": "{name}, de l'equip AgilityHub · des del {from} fins al {until}",
+    "item": "{name}, de l'equip de suport · des del {from} fins al {until}",
     "loadFailed": "No s'han pogut llegir els accessos de suport en curs.",
     "reason": "Motiu: {reason}",
     "retry": "Torna-ho a provar",
     "title": "Accessos de suport en curs",
-    "unknownActor": "Equip AgilityHub"
+    "unknownActor": "Equip de suport"
   },
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",
-    "PLATFORM_SUPPORT": "Suport d'AgilityHub",
+    "PLATFORM_SUPPORT": "Suport de plataforma",
     "PUBLIC": "Formulari públic",
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"

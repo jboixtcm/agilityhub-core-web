@@ -1,6 +1,6 @@
 {
   "access": {
-    "description": "Este acceso es solo para el equipo AgilityHub.",
+    "description": "Este acceso es solo para el equipo de plataforma.",
     "title": "Consola de clubes"
   },
   "audit": {
@@ -105,7 +105,7 @@
       "template": "Club plantilla",
       "websiteUrl": "Web"
     },
-    "notesHelp": "Solo las ve el equipo AgilityHub.",
+    "notesHelp": "Solo las ve el equipo de plataforma.",
     "platformTitle": "Plataforma",
     "slugHelp": "No se puede cambiar una vez creado el club.",
     "templateHelp": "Un club plantilla no opera: sirve de origen para clonar catálogos.",
@@ -280,7 +280,8 @@
     "removeConfirm": "Se borrará su configuración. Si hay abonados que lo usan, no se podrá retirar.",
     "removeTitle": "Retirar {name}",
     "sepa": {
-      "creditorId": "Identificador de acreedor",      "creditorName": "Nombre del acreedor",
+      "creditorId": "Identificador de acreedor",
+      "creditorName": "Nombre del acreedor",
       "iban": "IBAN",
       "ibanHelpNew": "Solo de escritura: una vez guardado no se vuelve a mostrar.",
       "ibanHelpStored": "IBAN guardado: {masked}. Déjalo en blanco para mantenerlo.",
@@ -645,7 +646,7 @@
     },
     "stepsLabel": "Pasos del asistente",
     "themeCustom": "Colores del club",
-    "themeProduct": "Tema AgilityHub",
+    "themeProduct": "Tema predeterminado",
     "themeSource": "Tema",
     "title": "Nuevo club",
     "unnamed": "Club nuevo"

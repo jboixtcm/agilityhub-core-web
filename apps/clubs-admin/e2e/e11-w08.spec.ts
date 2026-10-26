@@ -23,7 +23,7 @@ const brandingProduct = fixture("branding-product.json");
 const collectionDateNow = new Date("2026-09-01T10:00:00+02:00");
 // D10's month (club-local 05/10/2026).
 const recordNow = new Date("2026-10-05T10:00:00+02:00");
-const REFUSAL = "Aquest accés és només per a l'equip AgilityHub.";
+const REFUSAL = "Aquest accés és només per a l'equip de plataforma.";
 
 test.beforeAll(() => {
   mkdirSync(evidenceDirectory, { recursive: true });

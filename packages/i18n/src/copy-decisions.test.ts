@@ -296,3 +296,16 @@ describe("E11-W05 step 4 (A40.2, E142/E153): «DNI» names only the ES profile's
     },
   );
 });
+
+describe("Internal club branding", () => {
+  it.each(["ca", "es", "en"] as const)(
+    "%s: visible translations do not expose the platform brand",
+    (locale) => {
+      const branded = readdirSync(resolve(localesDir, locale))
+        .filter((file) => file.endsWith(".json"))
+        .flatMap((file) => flatten(readNamespace(locale, file.replace(/\.json$/u, ""))))
+        .filter(([, value]) => /AgilityHub/iu.test(value) || value === "AH");
+      expect(branded).toEqual([]);
+    },
+  );
+});

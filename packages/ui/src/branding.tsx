@@ -74,6 +74,17 @@ export interface Branding {
   timeZone: string;
 }
 
+/** An explicit instance name replaces only platform-host presentation, never a club's identity. */
+export function withProductBrandName(branding: Branding, name: string | undefined): Branding {
+  const trimmed = name?.trim();
+  if (branding.club.slug !== null || trimmed === undefined || trimmed === "") return branding;
+  return {
+    ...branding,
+    club: { ...branding.club, name: trimmed },
+    theme: { ...branding.theme, logoUrl: null, logoDarkUrl: null, markUrl: null },
+  };
+}
+
 const DARK_SCHEME = "(prefers-color-scheme: dark)";
 
 /** The reader's `matchMedia` for the dark scheme; none without a window (or in jsdom). */

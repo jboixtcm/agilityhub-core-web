@@ -238,7 +238,7 @@
         "label": "Freqüència de comprovació dels dominis"
       },
       "supportAccessMinutes": {
-        "help": "Minuts de vigència d'un accés de suport de l'equip AgilityHub.",
+        "help": "Minuts de vigència d'un accés de l'equip de suport.",
         "label": "Durada de l'accés de suport"
       }
     },
