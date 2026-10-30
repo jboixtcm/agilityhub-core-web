@@ -39,8 +39,8 @@ describe("T-13-29 member inactivity", () => {
 
     await renderE8(<InactivityPage client={e8Client()} />);
     const submit = await readyAction("MODIFICA");
-    const end = screen.getByLabelText("Mes de finalització (si el saps)");
-    fireEvent.change(end, { target: { value: "2026-11" } });
+    const end = screen.getByLabelText("Mes de tornada (opcional)");
+    fireEvent.change(end, { target: { value: "2026-12" } });
     await waitFor(() => {
       expect(previewCalls).toBe(2);
     });
@@ -141,7 +141,7 @@ describe("T-13-29 member inactivity", () => {
     await renderE8(<InactivityPage client={e8Client()} />);
     const start = await screen.findByLabelText("Mes d'inici (obligatori)");
     expect(start).toHaveValue("2026-10");
-    expect(screen.getByLabelText("Mes de finalització (si el saps)")).toHaveValue("");
+    expect(screen.getByLabelText("Mes de tornada (opcional)")).toHaveValue("");
     expect(screen.getByRole("checkbox", { name: "— encara no ho sé" })).toBeChecked();
     expect(screen.getByText(/Quota del 1r mes/u).closest(".lifecycle-fee")).toHaveTextContent(
       "20,00 €",
@@ -209,10 +209,10 @@ describe("T-13-29 member inactivity", () => {
       }),
     );
     await renderE8(<InactivityPage client={e8Client()} />);
-    const end = await screen.findByLabelText("Mes de finalització (si el saps)");
-    fireEvent.change(end, { target: { value: "2026-11" } });
-    expect(await screen.findByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
+    const end = await screen.findByLabelText("Mes de tornada (opcional)");
     fireEvent.change(end, { target: { value: "2026-12" } });
+    expect(await screen.findByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
+    fireEvent.change(end, { target: { value: "2027-01" } });
     expect(await screen.findByText(/Ara tens 2 reserves dins del període/u)).toBeVisible();
     fireEvent.change(end, { target: { value: "" } });
     await waitFor(() => {
@@ -258,9 +258,9 @@ describe("T-13-29 member inactivity", () => {
       }),
     );
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
-    const openEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
-    fireEvent.change(openEnd, { target: { value: "2035-01" } });
-    expect(openEnd).toHaveValue("2035-01");
+    const openEnd = await screen.findByLabelText("Mes de tornada (opcional)");
+    fireEvent.change(openEnd, { target: { value: "2035-02" } });
+    expect(openEnd).toHaveValue("2035-02");
     fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(patchBody).toEqual({ toMonth: "2035-01", version: 7 });
@@ -320,10 +320,7 @@ describe("T-13-29 member inactivity", () => {
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
     fireEvent.click(await readyAction("ENVIA LA SOL·LICITUD"));
     const overlap = await screen.findByRole("link", { name: /Ja tens un període demanat/u });
-    expect(overlap).toHaveAttribute(
-      "href",
-      "/inactivitat?periodId=period-conflict",
-    );
+    expect(overlap).toHaveAttribute("href", "/inactivitat?periodId=period-conflict");
     expect(await screen.findByRole("button", { name: "MODIFICA" })).toBeVisible();
     expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
     fireEvent.click(await readyAction("MODIFICA"));
@@ -363,8 +360,8 @@ describe("T-13-29 member inactivity", () => {
     );
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
     const start = await screen.findByLabelText("Mes d'inici (obligatori)");
-    const end = screen.getByLabelText("Mes de finalització (si el saps)");
-    fireEvent.change(end, { target: { value: "2026-11" } });
+    const end = screen.getByLabelText("Mes de tornada (opcional)");
+    fireEvent.change(end, { target: { value: "2026-12" } });
     fireEvent.change(start, { target: { value: "2026-12" } });
     expect(end).toHaveValue("");
     fireEvent.click(await readyAction("ENVIA LA SOL·LICITUD"));
@@ -399,9 +396,9 @@ describe("T-13-29 member inactivity", () => {
       }),
     );
     await renderE8(<InactivityPage client={e8Client()} />);
-    const end = await screen.findByLabelText("Mes de finalització (si el saps)");
+    const end = await screen.findByLabelText("Mes de tornada (opcional)");
     expect(await screen.findByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
-    fireEvent.change(end, { target: { value: "2026-12" } });
+    fireEvent.change(end, { target: { value: "2027-01" } });
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "No s'ha pogut carregar el període d'inactivitat.",
     );
@@ -449,10 +446,10 @@ describe("T-13-29 member inactivity", () => {
     );
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
     expect(await screen.findByLabelText("Mes d'inici (obligatori)")).toHaveValue("2025-08");
-    const end = screen.getByLabelText("Mes de finalització (si el saps)");
-    expect(end).toHaveValue("2027-12");
+    const end = screen.getByLabelText("Mes de tornada (opcional)");
+    expect(end).toHaveValue("2028-01");
     expect(screen.getByLabelText("Comentaris")).toBeDisabled();
-    fireEvent.change(end, { target: { value: "2027-11" } });
+    fireEvent.change(end, { target: { value: "2027-12" } });
     fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(patchBody).toEqual({ toMonth: "2027-11", version: 7 });
@@ -499,8 +496,8 @@ describe("T-13-29 member inactivity", () => {
       }),
     );
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
-    const end = await screen.findByLabelText("Mes de finalització (si el saps)");
-    fireEvent.change(end, { target: { value: "2027-01" } });
+    const end = await screen.findByLabelText("Mes de tornada (opcional)");
+    fireEvent.change(end, { target: { value: "2027-02" } });
     // Meanwhile the club changed the start and the comments: version 2.
     current = period(2, "2026-11", "Canvi del club");
     fireEvent.click(await readyAction("MODIFICA"));
@@ -509,7 +506,7 @@ describe("T-13-29 member inactivity", () => {
       expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
     });
     expect(screen.getByLabelText("Comentaris")).toHaveValue("Canvi del club");
-    expect(screen.getByLabelText("Mes de finalització (si el saps)")).toHaveValue("2027-01");
+    expect(screen.getByLabelText("Mes de tornada (opcional)")).toHaveValue("2027-02");
     fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(bodies).toHaveLength(2);
@@ -537,9 +534,7 @@ describe("T-13-29 member inactivity", () => {
         onLogout={() => undefined}
       />,
     );
-    expect(
-      await screen.findByRole("link", { name: /pendent d'aprovació/u }),
-    ).toBeVisible();
+    expect(await screen.findByRole("link", { name: /pendent d'aprovació/u })).toBeVisible();
   });
 
   it("keeps the 14 literals complete in ca, es and en", async () => {

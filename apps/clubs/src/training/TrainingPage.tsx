@@ -6,6 +6,7 @@ import {
   Card,
   EmptyState,
   Icon,
+  IconButton,
   Skeleton,
   SlotGrid,
   type SlotGridLabels,
@@ -13,7 +14,14 @@ import {
   Toast,
   useBranding,
 } from "@agilityhub/ui";
-import { type CSSProperties, type MouseEvent, useCallback, useEffect, useState } from "react";
+import {
+  type CSSProperties,
+  type MouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import "../booking/booking.css";
@@ -78,6 +86,7 @@ function slotGridLabels(t: Translate, grid: string): SlotGridLabels {
     reason: (reason) => t(`enums:slotReason.${reason}`),
     taken: t("training:grid.taken"),
     time: t("training:grid.time"),
+    unavailable: t("training:grid.unavailable"),
   };
 }
 
@@ -144,6 +153,30 @@ export function TrainingPage({ client }: { client: ApiClient }) {
     setChooser(undefined);
     if (failure?.kind === "message" && failure.slotTaken === true) setFailure(undefined);
   }
+  const hasChoice = choice !== undefined;
+  const actionPanel = useRef<HTMLDivElement>(null);
+  const [actionHeight, setActionHeight] = useState(0);
+  // Reserve the real dock height so the last time slot remains reachable on a phone.
+  useEffect(() => {
+    const panel = actionPanel.current;
+    if (panel === null || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      setActionHeight(panel.getBoundingClientRect().height);
+    });
+    observer.observe(panel);
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasChoice, eligibility.status, slots.status]);
+  const selectedStart = choice?.startsAt;
+  useEffect(() => {
+    if (selectedStart !== undefined) {
+      actionPanel.current?.focus({ preventScroll: true });
+      if (typeof actionPanel.current?.scrollIntoView === "function") {
+        actionPanel.current.scrollIntoView({ block: "nearest" });
+      }
+    }
+  }, [selectedStart]);
   const [pending, setPending] = useState(false);
   const [booked, setBooked] = useState(false);
   /**
@@ -383,7 +416,10 @@ export function TrainingPage({ client }: { client: ApiClient }) {
         });
 
   return (
-    <section className="booking-screen training-screen">
+    <section
+      className={`booking-screen training-screen${choice === undefined ? "" : " training-screen--selected"}`}
+      style={{ "--training-action-height": `${String(actionHeight)}px` } as CSSProperties}
+    >
       <TrainingBar />
       {booked ? (
         <Toast
@@ -496,69 +532,6 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           </Button>
         </div>
       ) : null}
-      {current === undefined || current.closed ? (
-        <Card className="training-closed">
-          <EmptyState icon="cal" title={t("training:day.closed")} />
-        </Card>
-      ) : (
-        (["morning", "afternoon"] as const).map((band) => {
-          const bandRows = rows(band);
-          if (bandRows.length === 0) return null;
-          const title =
-            band === "morning" ? t("training:grid.morning") : t("training:grid.afternoon");
-          return (
-            <div className="booking-section" key={band}>
-              <h2 className="booking-section__title">{title}</h2>
-              {/* Inert while the booking is sent: the answer belongs to the slot shown. */}
-              <fieldset className="training-fieldset" disabled={pending}>
-                <SlotGrid
-                  columns={[{ id: filter, label: title }]}
-                  labels={slotGridLabels(t, title)}
-                  mode="single"
-                  onCellPress={(cell) => {
-                    // The cell id is `{column}_{startsAt}` (the api's `slotId` for a ring).
-                    press(cell.id.slice(cell.columnId.length + 1));
-                  }}
-                  rows={bandRows}
-                  selection={{ cellIds: selectedCell }}
-                />
-              </fieldset>
-            </div>
-          );
-        })
-      )}
-      {chooser === undefined || chosenSlot === undefined ? null : (
-        <div className="training-chooser">
-          <p>{t("training:anyRing.choose", { time: shortTime(chosenSlot.startsAtLocal) })}</p>
-          <div aria-label={t("training:rings.label")} className="training-chips" role="group">
-            {chooser.ringIds.map((id) => {
-              const ring = ringById(id);
-              // Only the rings still free in the grid shown are offered (R-09-03).
-              const free = slotStillFree(grid, selectedDay, {
-                ringId: id,
-                startsAt: chooser.startsAt,
-              });
-              if (ring === undefined || !free) return null;
-              const pressed = choice?.ringId === id;
-              return (
-                <button
-                  aria-pressed={pressed}
-                  className={`ah-chip training-chip${pressed ? " training-chip--selected" : ""}`}
-                  disabled={pending}
-                  key={id}
-                  onClick={() => {
-                    setChoice({ ringId: id, startsAt: chooser.startsAt });
-                  }}
-                  type="button"
-                >
-                  <RingDot color={ring.color} />
-                  {ring.name}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
       {/* A week with no day (E11-W02 round 2): no counter to wait for. */}
       {selectedDay === null ? null : counter.status === "error" ? (
         // The selected day's counter failed: its own error and retry, and no [Confirma] until
@@ -595,39 +568,145 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           />
         </Card>
       )}
-      {failure?.kind === "message" ? (
-        <p className="booking-note booking-note--danger" role="alert">
-          {failure.message}
-        </p>
-      ) : null}
-      {failure?.kind === "limit" ? (
-        limitMessage(failure.limit, failure.cancellable)
-      ) : atLimit ? (
-        limitMessage(summary.counter.limit, summary.cancellableBookings)
-      ) : (
-        <Button
-          className="training-confirm"
-          disabled={
-            choice === undefined ||
-            chosenSlot === undefined ||
-            chosenRing === undefined ||
-            summary === undefined ||
-            stale
-          }
-          loading={pending}
-          loadingLabel={t("training:confirm.sending")}
-          onClick={() => void confirm()}
+      <div className="training-layout">
+        <div className="training-times">
+          {current === undefined || current.closed ? (
+            <Card className="training-closed">
+              <EmptyState icon="cal" title={t("training:day.closed")} />
+            </Card>
+          ) : (
+            (["morning", "afternoon"] as const).map((band) => {
+              const bandRows = rows(band);
+              if (bandRows.length === 0) return null;
+              const title =
+                band === "morning" ? t("training:grid.morning") : t("training:grid.afternoon");
+              return (
+                <div className="booking-section" key={band}>
+                  <h2 className="booking-section__title">{title}</h2>
+                  {/* Inert while the booking is sent: the answer belongs to the slot shown. */}
+                  <fieldset className="training-fieldset" disabled={pending}>
+                    <SlotGrid
+                      columns={[{ id: filter, label: title }]}
+                      labels={slotGridLabels(t, title)}
+                      mode="single"
+                      onCellPress={(cell) => {
+                        // The cell id is `{column}_{startsAt}` (the api's `slotId` for a ring).
+                        press(cell.id.slice(cell.columnId.length + 1));
+                      }}
+                      rows={bandRows}
+                      selection={{ cellIds: selectedCell }}
+                    />
+                  </fieldset>
+                </div>
+              );
+            })
+          )}
+        </div>
+        <div
+          className="training-actions"
+          data-selected={choice === undefined ? undefined : ""}
+          ref={actionPanel}
+          tabIndex={-1}
+          role="region"
+          aria-label={t("training:confirm.title")}
         >
-          {chosenSlot === undefined || chosenRing === undefined || current === undefined
-            ? t("training:confirm.idle")
-            : t("training:confirm.button", {
-                day: formats.formatActivityDate(current.date, null, null, "day", current.date),
-                from: shortTime(chosenSlot.startsAtLocal),
-                ring: chosenRing.name,
-                to: shortTime(chosenSlot.endsAtLocal),
-              })}
-        </Button>
-      )}
+          <div className="training-actions__heading">
+            <h2>{t("training:confirm.title")}</h2>
+            {choice === undefined ? null : (
+              <IconButton
+                disabled={pending}
+                icon="x"
+                label={t("booking:confirm.close")}
+                onClick={() => {
+                  document
+                    .querySelector<HTMLButtonElement>(".training-times .ah-slot--selected")
+                    ?.focus();
+                  clear();
+                }}
+              />
+            )}
+          </div>
+          {choice === undefined ? null : (
+            <p className="training-actions__dog">
+              <Icon aria-hidden="true" name="paw" />
+              {dogs.find((dog) => dog.id === selectedDog)?.name}
+            </p>
+          )}
+          {choice === undefined ? (
+            <p className="training-actions__hint">{t("training:confirm.chooseTime")}</p>
+          ) : null}
+          {chooser === undefined || chosenSlot === undefined ? null : (
+            <div className="training-chooser">
+              <p>{t("training:anyRing.choose", { time: shortTime(chosenSlot.startsAtLocal) })}</p>
+              <div aria-label={t("training:rings.label")} className="training-chips" role="group">
+                {chooser.ringIds.map((id) => {
+                  const ring = ringById(id);
+                  // Only the rings still free in the grid shown are offered (R-09-03).
+                  const free = slotStillFree(grid, selectedDay, {
+                    ringId: id,
+                    startsAt: chooser.startsAt,
+                  });
+                  if (ring === undefined || !free) return null;
+                  const pressed = choice?.ringId === id;
+                  return (
+                    <button
+                      aria-pressed={pressed}
+                      className={`ah-chip training-chip${pressed ? " training-chip--selected" : ""}`}
+                      disabled={pending}
+                      key={id}
+                      onClick={() => {
+                        setChoice({ ringId: id, startsAt: chooser.startsAt });
+                      }}
+                      type="button"
+                    >
+                      <RingDot color={ring.color} />
+                      {ring.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {failure?.kind === "message" ? (
+            <div>
+              <p className="booking-note booking-note--danger" role="alert">
+                {failure.message}
+              </p>
+              <Button onClick={clear} variant="secondary" disabled={pending}>
+                {t("training:confirm.dismissError")}
+              </Button>
+            </div>
+          ) : null}
+          {failure?.kind === "limit" ? (
+            limitMessage(failure.limit, failure.cancellable)
+          ) : atLimit ? (
+            limitMessage(summary.counter.limit, summary.cancellableBookings)
+          ) : (
+            <Button
+              className="training-confirm"
+              disabled={
+                choice === undefined ||
+                chosenSlot === undefined ||
+                chosenRing === undefined ||
+                summary === undefined ||
+                stale
+              }
+              loading={pending}
+              loadingLabel={t("training:confirm.sending")}
+              onClick={() => void confirm()}
+            >
+              {chosenSlot === undefined || chosenRing === undefined || current === undefined
+                ? t("training:confirm.idle")
+                : t("training:confirm.button", {
+                    day: formats.formatActivityDate(current.date, null, null, "day", current.date),
+                    from: shortTime(chosenSlot.startsAtLocal),
+                    ring: chosenRing.name,
+                    to: shortTime(chosenSlot.endsAtLocal),
+                  })}
+            </Button>
+          )}
+        </div>
+      </div>
     </section>
   );
 }

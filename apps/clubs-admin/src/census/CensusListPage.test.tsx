@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { createApiClient, type components } from "@agilityhub/api-client";
 import { handlers, mockScenario } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -52,6 +52,29 @@ async function renderPage(kind: "dogs" | "members") {
 }
 
 describe("T-03-38 D5 universal member list", () => {
+  it("requests and shows the photo beside a dog in the census list", async () => {
+    const photoUrl = "/api/v1/attachments/files/example?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/dogs", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected dogs response");
+        const page = (await original.json()) as components["schemas"]["ListPageDogListItem"];
+        const fields = new URL(request.url).searchParams.get("fields")?.split(",") ?? [];
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) => ({
+            ...item,
+            ...(fields.includes("photoUrl") ? { photoUrl } : {}),
+          })),
+        });
+      }),
+    );
+    window.history.pushState(null, "", "/gossos");
+    await renderPage("dogs");
+    const name = await screen.findByText("Duna");
+    expect(name.closest("tr")?.querySelector("img")).toHaveAttribute("src", photoUrl);
+  });
+
   it("renders applied filters and preserves selection when page size changes", async () => {
     window.history.pushState(
       null,

@@ -146,6 +146,8 @@ for (const viewport of viewports) {
       const cell = page.getByRole("button", {
         name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u,
       });
+      await expect(cell).toHaveCount(0);
+      await page.getByRole("button", { name: "Anul·lades", exact: true }).click();
       await expect(cell).toBeVisible();
       await expect(page.getByText(/revisió de les 7:30/u)).toHaveCount(0);
       await cell.click();

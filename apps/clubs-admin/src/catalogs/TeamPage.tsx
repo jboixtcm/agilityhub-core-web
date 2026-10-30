@@ -319,28 +319,35 @@ export function TeamPage({ client }: { client: ApiClient }) {
     }
     return result.data.items;
   }, [client]);
+  const instructors = useCatalogData(loadInstructors, client);
+  const administrators = useCatalogData(loadAdministrators, client);
+  const teamMemberIds = useMemo(
+    () =>
+      [
+        ...new Set([...instructors.items, ...administrators.items].map((item) => item.memberId)),
+      ].sort(),
+    [instructors.items, administrators.items],
+  );
   const loadMembers = useCallback(async () => {
     const members: Member[] = [];
-    // Existing team rows can refer to LEFT members, and to any page of the census.
-    for (let page = 0; ; page += 1) {
+    // Resolve only the team, including LEFT members. A full census scan delays every row
+    // and can time out after a real census import. Bound each URL and result page.
+    for (let offset = 0; offset < teamMemberIds.length; offset += 50) {
       const result = await client.GET("/members", {
         params: {
           query: {
             fields: listFields(MEMBER_REQUEST_FIELDS),
-            page,
-            size: 200,
+            filter: [`id:in:${teamMemberIds.slice(offset, offset + 50).join(",")}`],
+            size: 50,
             sort: ["memberNumber,asc"],
           },
         },
       });
       if (result.data === undefined) throw new TypeError("Member response did not contain data");
       members.push(...itemsWith(result.data.items, MEMBER_FIELDS));
-      if (result.data.items.length === 0 || members.length >= result.data.totalItems)
-        return members;
     }
-  }, [client]);
-  const instructors = useCatalogData(loadInstructors, client);
-  const administrators = useCatalogData(loadAdministrators, client);
+    return members;
+  }, [client, teamMemberIds]);
   const members = useCatalogData(loadMembers, client);
   const memberById = useMemo(
     () => new Map(members.items.map((member) => [member.id, member])),

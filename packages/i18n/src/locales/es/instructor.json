@@ -46,7 +46,7 @@
     "save": "Guardar",
     "saving": "Guardando la lista",
     "saved": "Lista guardada",
-    "legend": "Leyenda",
+    "legend": "Leyenda de asistencia",
     "staleToast": "Alguien ha guardado la lista hace un momento: revísala",
     "waitlistTitle": "Lista de espera ({count})",
     "joinedAt": "{kind, select, minutes {desde hace {count} min} hours {desde hace {count} h} today {desde hoy {time}} yesterday {desde ayer {time}} other {desde el {date} {time}}}",
@@ -55,7 +55,8 @@
     "dismiss": "Cerrar",
     "loading": "Cargando la lista",
     "loadError": "No se ha podido cargar la lista.",
-    "retry": "Volver a intentarlo"
+    "retry": "Volver a intentarlo",
+    "unsaved": "Cambios pendientes de guardar"
   },
   "card": {
     "title": "Ficha de alumno",
@@ -296,6 +297,8 @@
     "noticeShort": "ha avisado{released, select, yes { — plaza liberada} other {}}{waitlist, select, yes { · espera avisada} other {}}",
     "noShowNotice": "aviso mañana a las {time}",
     "waitingList": "En espera: {names}",
-    "saveSheet": "Guardar la lista"
+    "saveSheet": "Guardar la lista",
+    "overflowHint": "Desplazar la cuadrícula horizontalmente para ver todos los días.",
+    "selectClass": "Seleccionar una clase de la agenda para ver los inscritos y pasar lista."
   }
 }

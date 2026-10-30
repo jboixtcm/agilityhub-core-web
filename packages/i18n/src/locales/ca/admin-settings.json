@@ -823,7 +823,7 @@
       },
       "capacityPerRingSlot": {
         "help": "Nombre de gossos que poden entrenar alhora a cada pista.",
-        "label": "Gossos alhora per pista"
+        "label": "Reserves simultànies per pista i franja"
       },
       "freeTrainingRequiresLicense": {
         "help": "Indica informativament si cal llicència esportiva.",
@@ -984,5 +984,13 @@
       "previousPage": "Pàgina anterior",
       "nextPage": "Pàgina següent"
     }
+  },
+  "ringCapacity": {
+    "title": "Excepcions per pista",
+    "inherit": "Deixa-ho buit per aplicar el límit general.",
+    "save": "Desa {ring}",
+    "saved": "Capacitat desada.",
+    "loadError": "No s’han pogut carregar les pistes.",
+    "saveError": "No s’ha pogut desar la capacitat. Torna-ho a provar."
   }
 }

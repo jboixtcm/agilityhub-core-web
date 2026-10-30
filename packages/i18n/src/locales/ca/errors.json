@@ -93,7 +93,7 @@
   "INPUT_SCHEMA_MISMATCH": "Les dades no segueixen l'esquema esperat.",
   "INSTRUCTOR_IN_USE": "Aquest instructor està en ús.",
   "INSTRUCTOR_NOTICE_DISABLED": "El club no permet marcar «ha avisat» des de la llista.",
-  "INTERNAL_ERROR": "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+  "INTERNAL_ERROR": "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
   "INVALID_API_KEY": "La clau de l'API no és vàlida.",
   "INVALID_CREDENTIALS": "El correu electrònic o la contrasenya són incorrectes.",
   "INVALID_FILTER": "El filtre no és vàlid.",

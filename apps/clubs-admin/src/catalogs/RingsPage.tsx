@@ -200,7 +200,7 @@ function RingForm({
   const [color, setColor] = useState(item?.color ?? branding.theme.ringPalette?.[0] ?? "");
   const [allowsFreeTraining, setAllowsFreeTraining] = useState(item?.allowsFreeTraining ?? false);
   const [trainingCapacity, setTrainingCapacity] = useState(
-    item?.trainingCapacity === undefined ? "" : String(item.trainingCapacity),
+    item?.trainingCapacity == null ? "" : String(item.trainingCapacity),
   );
   const [active, setActive] = useState(item?.active ?? true);
   const [pending, setPending] = useState(false);
@@ -223,7 +223,7 @@ function RingForm({
           color,
           name,
           shortName: shortName.toLocaleUpperCase(),
-          ...(capacity === undefined ? {} : { trainingCapacity: capacity }),
+          trainingCapacity: capacity ?? null,
           version: item.version,
         };
   /** What the fields show now: an answer that arrives late is checked against it (R-06-11). */

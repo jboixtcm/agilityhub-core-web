@@ -199,8 +199,12 @@ export interface PlanningCatalogs {
   rings: Ring[];
 }
 
-export async function loadPlanningCatalogs(client: ApiClient): Promise<PlanningCatalogs> {
-  const query = { params: { query: { includeInactive: true } } };
+export async function loadPlanningCatalogs(
+  client: ApiClient,
+  includeInactive = false,
+): Promise<PlanningCatalogs> {
+  // Inactive catalogs are ADMIN-only; instructor read views use the public catalog.
+  const query = { params: { query: includeInactive ? { includeInactive: true } : {} } };
   const [rings, levels, instructors] = await Promise.all([
     client.GET("/rings", query),
     client.GET("/levels", query),

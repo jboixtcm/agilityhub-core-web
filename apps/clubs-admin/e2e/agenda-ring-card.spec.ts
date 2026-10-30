@@ -48,6 +48,7 @@ test.describe("E5-W02 D12 card «Reservar o bloquejar pista (sense alumne)»", (
   }) => {
     await signIn(page, "instructor");
     await page.goto(`${baseUrl}/agenda`);
+    await page.locator(".week-agenda__ring-action summary").click();
     const card = page.locator(".ring-block-card");
     await expect(
       card.getByRole("heading", { name: "Reservar o bloquejar pista (sense alumne)" }),

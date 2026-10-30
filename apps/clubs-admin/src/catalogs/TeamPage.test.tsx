@@ -50,9 +50,9 @@ afterAll(() => {
   server.close();
 });
 
-async function renderTeam() {
+async function renderTeam(team = [instructor]) {
   server.use(
-    http.get(`${base}/instructors`, () => HttpResponse.json({ items: [instructor] })),
+    http.get(`${base}/instructors`, () => HttpResponse.json({ items: team })),
     http.get(`${base}/administrators`, () => HttpResponse.json({ items: [] })),
   );
   const i18n = await createI18n({
@@ -127,27 +127,66 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
     });
   });
 
-  it("reads every page including LEFT members to name the existing team", async () => {
+  it("loads only existing team members, including LEFT members, without scanning the census", async () => {
     const queries: URLSearchParams[] = [];
     server.use(
       http.get(`${base}/members`, ({ request }) => {
         const query = new URL(request.url).searchParams;
         queries.push(query);
-        return HttpResponse.json(
-          query.get("page") === "1"
-            ? page([member("member-second-page", 201, "Former Member")], 1, 201)
-            : page(
-                Array.from({ length: 200 }, (_, i) => member(`first-${String(i)}`, i + 1)),
-                0,
-                201,
-              ),
-        );
+        if (!query.getAll("filter").includes("id:in:member-second-page")) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", message: "Census timed out" },
+            { status: 500 },
+          );
+        }
+        return HttpResponse.json(page([member("member-second-page", 201, "Former Member")]));
       }),
     );
     await renderTeam();
     expect(await screen.findByRole("button", { name: "Edita Former Member" })).toBeVisible();
-    expect(queries.some((query) => query.get("page") === "1")).toBe(true);
+    expect(queries).toHaveLength(1);
     expect(queries.flatMap((query) => query.getAll("filter"))).not.toContain("status:eq:ACTIVE");
+  });
+
+  it("does not request the census when the team is empty", async () => {
+    let reads = 0;
+    server.use(
+      http.get(`${base}/members`, () => {
+        reads += 1;
+        return HttpResponse.json(page([]));
+      }),
+    );
+    await renderTeam([]);
+    expect(await screen.findByText("Encara no hi ha cap instructor")).toBeVisible();
+    expect(reads).toBe(0);
+  });
+
+  it("batches and deduplicates team references without dropping the last members", async () => {
+    const selected: string[][] = [];
+    const team = Array.from({ length: 51 }, (_, i) => ({
+      ...instructor,
+      id: `instructor-${String(i)}`,
+      memberId: `member-${String(i)}`,
+    }));
+    team.push({ ...instructor, id: "duplicate-reference", memberId: "member-0" });
+    server.use(
+      http.get(`${base}/members`, ({ request }) => {
+        const query = new URL(request.url).searchParams;
+        const ids =
+          query
+            .getAll("filter")
+            .find((filter) => filter.startsWith("id:in:"))
+            ?.slice(6)
+            .split(",") ?? [];
+        selected.push(ids);
+        expect(query.get("size")).toBe("50");
+        return HttpResponse.json(page(ids.map((id) => member(id, 1, `Person ${id}`))));
+      }),
+    );
+    await renderTeam(team);
+    expect(await screen.findByRole("button", { name: "Edita Person member-50" })).toBeVisible();
+    expect(selected.map((ids) => ids.length)).toEqual([50, 1]);
+    expect(new Set(selected.flat()).size).toBe(51);
   });
 
   it("retries the members request after its first failure", async () => {
@@ -162,6 +201,42 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
     await renderTeam();
     fireEvent.click(await screen.findByRole("button", { name: "Torna-ho a provar" }));
     expect(await screen.findByRole("button", { name: "Edita Recovered Member" })).toBeVisible();
+  });
+
+  it("shows a newly saved instructor after reloading the team references", async () => {
+    const team = [instructor];
+    const existing = member(instructor.memberId, 1, "Existing Person");
+    const added = member("new-member", 2, "New Person");
+    server.use(
+      http.get(`${base}/members`, ({ request }) => {
+        const filters = new URL(request.url).searchParams.getAll("filter");
+        const selection = filters.find((filter) => filter.startsWith("id:in:"));
+        const candidates =
+          selection === undefined
+            ? [added]
+            : [existing, added].filter((item) => selection.slice(6).split(",").includes(item.id));
+        return HttpResponse.json(page(candidates));
+      }),
+      http.post(`${base}/instructors`, async ({ request }) => {
+        const body = (await request.json()) as { memberId: string; shortName: string };
+        const created = { ...instructor, ...body, id: "new-instructor" };
+        team.push(created);
+        return HttpResponse.json(created, { status: 201 });
+      }),
+    );
+    await renderTeam(team);
+    expect(await screen.findByRole("button", { name: "Edita Existing Person" })).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Nou instructor" }));
+    const dialog = await screen.findByRole("dialog", { name: "Nou instructor" });
+    await waitFor(() => {
+      expect(dialog.querySelectorAll("datalist option")).toHaveLength(1);
+    });
+    fireEvent.change(within(dialog).getByLabelText("Abonat"), {
+      target: { value: "New Person · 2" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Nom curt"), { target: { value: "New" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "DESA" }));
+    expect(await screen.findByRole("button", { name: "Edita New Person" })).toBeVisible();
   });
 
   it("shows the approved future-class count when deactivation is refused", async () => {

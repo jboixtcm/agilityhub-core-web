@@ -66,6 +66,58 @@ afterAll(() => {
 });
 
 describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
+  it("shows the member name when the selected member has no notifications", async () => {
+    server.use(
+      http.get("*/api/v1/members/member-empty", () =>
+        HttpResponse.json({ id: "member-empty", fullName: "Alex Example" }),
+      ),
+      http.get("*/api/v1/notifications", () =>
+        HttpResponse.json({
+          items: [],
+          page: 0,
+          size: 50,
+          totalPages: 0,
+          totalItems: 0,
+          appliedFilters: [{ field: "memberId", op: "eq", value: "member-empty" }],
+        }),
+      ),
+    );
+    await renderLog("/notificacions?filter=memberId:eq:member-empty");
+    await screen.findByText("Cap avís");
+    await waitFor(() =>
+      expect(document.querySelector(".ah-universal-list__filter-menu > summary")).toHaveTextContent(
+        "Alex Example",
+      ),
+    );
+    expect(
+      document.querySelector(".ah-universal-list__filter-menu > summary"),
+    ).not.toHaveTextContent("member-empty");
+  });
+
+  it("MR-02 ignores unsupported legacy q and keeps the supported code filter", async () => {
+    const lines = requestLines();
+    server.use(
+      http.get("*/api/v1/notifications", ({ request }) => {
+        if (new URL(request.url).searchParams.has("q")) {
+          return HttpResponse.json({ code: "INVALID_FILTER" }, { status: 400 });
+        }
+        return undefined;
+      }),
+    );
+    await renderLog("/notificacions?q=N-21&filter=code:eq:N-08a");
+    await waitFor(() => {
+      expect(rows()).toHaveLength(1);
+      expect(rows()[0]).toHaveTextContent("N-08a");
+    });
+    expect(screen.queryByRole("searchbox")).toBeNull();
+    expect(rows().every((row) => row.textContent.includes("N-08a"))).toBe(true);
+    expect(
+      lines
+        .filter((line) => line.startsWith("GET /notifications?"))
+        .every((line) => !line.includes("q=")),
+    ).toBe(true);
+  });
+
   it("lists the club's notifications newest first: date, code, category, recipient, one chip per delivery with its status, read", async () => {
     await renderLog();
     await waitFor(() => {

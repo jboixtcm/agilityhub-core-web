@@ -26,6 +26,8 @@ describe("E11-W06 W1 (S11 R-11-11, S01 §2 01/02): the return path of the sign-i
       "https://evil.example/espera/e1",
       "espera/e1",
       "/",
+      "/login",
+      "/login?next=%2Fespera%2Fe1",
       "/entrar",
       "/entrar?next=%2Fespera%2Fe1",
       "/activacio?token=t",

@@ -11,7 +11,6 @@ import {
   Checkbox,
   ErrorState,
   FormField,
-  Input,
   isModuleEnabled,
   Select,
   Skeleton,
@@ -33,6 +32,14 @@ function monthRange(start: string, count = 13): string[] {
     const date = new Date(Date.UTC(year ?? 0, (month ?? 1) - 1 + index, 1));
     return `${String(date.getUTCFullYear()).padStart(4, "0")}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
   });
+}
+
+/** The API's inclusive last inactive month is one month before the return month. */
+export function shiftMonth(month: string, offset: number): string {
+  if (month === "") return "";
+  const [year, value] = month.split("-").map(Number);
+  const date = new Date(Date.UTC(year ?? 0, (value ?? 1) - 1 + offset, 1));
+  return date.toISOString().slice(0, 7);
 }
 
 function includeMonths(months: string[], ...required: (null | string | undefined)[]): string[] {
@@ -236,7 +243,10 @@ export function InactivityPage({
           params: { path: { id: live.id } },
         });
       }
-      toast.push(t("inactivity:form.saved"), "success");
+      toast.push(
+        live === undefined ? t("inactivity:form.sent") : t("inactivity:form.saved"),
+        "success",
+      );
       navigate("/perfil");
     } catch (cause) {
       setFailure(cause);
@@ -322,17 +332,27 @@ export function InactivityPage({
             </Select>
           </FormField>
           <FormField id="inactivity-to" label={t("inactivity:form.toMonth")}>
-            <Input
+            <Select
               disabled={live !== undefined && !live.editable.toMonth}
               id="inactivity-to"
-              min={fromMonth}
               onChange={(event) => {
                 invalidatePreview();
-                setToMonth(event.currentTarget.value);
+                setToMonth(shiftMonth(event.currentTarget.value, -1));
               }}
-              type="month"
-              value={toMonth}
-            />
+              value={shiftMonth(toMonth, 1)}
+            >
+              <option value="">{t("inactivity:form.openEnd")}</option>
+              {includeMonths(
+                monthRange(shiftMonth(fromMonth || context.earliestFromMonth, 1), 120),
+                shiftMonth(toMonth, 1),
+              )
+                .filter((month) => month !== "")
+                .map((month) => (
+                  <option key={month} value={month}>
+                    {formats.formatMonthTitle(month)}
+                  </option>
+                ))}
+            </Select>
           </FormField>
           <label className="lifecycle-open-end" htmlFor="inactivity-open-end">
             <Checkbox

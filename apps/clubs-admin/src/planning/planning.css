@@ -1,5 +1,6 @@
 .planning-page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   width: 100%;
   min-width: 0;
   gap: var(--ah-space-4);
@@ -177,7 +178,7 @@
 
 .planning-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
   align-items: start;
   gap: var(--ah-space-4);
 }
@@ -193,13 +194,15 @@
 
 .planning-class-form {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-2);
 }
 
 .planning-class-form .ah-form-field,
 .planning-class-form__row {
   display: grid;
-  grid-template-columns: 5.5rem 1fr;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  min-width: 0;
   align-items: center;
   gap: var(--ah-space-1) var(--ah-space-3);
   margin: 0;
@@ -305,7 +308,18 @@
 .planning-generation-card,
 .planning-coverage-card {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-3);
+}
+
+/* WebKit's native week selector can paint beyond its grid track at phone widths.
+   Keep that paint inside the padded card without changing the native picker. */
+.planning-generation-card {
+  overflow-x: clip;
+}
+
+.planning-generation-card > .ah-select {
+  min-width: 0;
 }
 
 .planning-generation-card .planning-card-title,
@@ -411,4 +425,23 @@
 
 .planning-back {
   justify-self: start;
+}
+
+@media (max-width: 40rem) {
+  .planning-class-form .ah-form-field,
+  .planning-class-form__row,
+  .planning-class-form__pair,
+  .planning-class-form__pair .ah-form-field:last-child {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .planning-class-form .ah-input {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .planning-class-form .ah-form-field__error,
+  .planning-class-form__row > .ah-form-field__error {
+    grid-column: 1;
+  }
 }

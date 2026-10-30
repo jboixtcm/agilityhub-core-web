@@ -67,6 +67,134 @@ function classCard() {
 }
 
 describe("T-06-26 D3 weekly templates", () => {
+  it("renames the selected template with its version and preserves its classes", async () => {
+    await renderTemplates();
+    const before = structuredClone(planningState.templates[0]);
+    const patches: unknown[] = [];
+    server.use(
+      http.patch("*/api/v1/week-templates/:id", async ({ request }) => {
+        patches.push(await request.clone().json());
+        return undefined;
+      }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Canvia el nom" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia el nom" });
+    const name = within(dialog).getByLabelText("Nom");
+    expect(name).toHaveValue("Setmana A");
+    expect(within(dialog).getByRole("button", { name: "Desa" })).toBeDisabled();
+    fireEvent.change(name, { target: { value: "   " } });
+    expect(within(dialog).getByRole("button", { name: "Desa" })).toBeDisabled();
+    fireEvent.change(name, { target: { value: "  Setmana de tardor  " } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(
+      await screen.findByRole("table", {
+        name: "Quadre setmanal de la plantilla «Setmana de tardor»",
+      }),
+    ).toBeVisible();
+    await screen.findByRole("button", { name: "dl–dv: «Setmana de tardor»" });
+    expect(patches).toEqual([{ name: "Setmana de tardor", version: before?.version }]);
+    expect(planningState.templates[0]?.classes).toEqual(before?.classes);
+    expect(planningState.templates[0]?.bands).toEqual(before?.bands);
+    expect(window.location.search).toBe("?template=template-setmana-a");
+  });
+
+  it("keeps a rejected duplicate name open for correction", async () => {
+    await renderTemplates();
+    fireEvent.click(screen.getByRole("button", { name: "Canvia el nom" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia el nom" });
+    fireEvent.change(within(dialog).getByLabelText("Nom"), { target: { value: "Setmana B" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent("Aquest nom ja està en ús.");
+    expect(planningState.templates[0]?.name).toBe("Setmana A");
+    fireEvent.change(within(dialog).getByLabelText("Nom"), { target: { value: "Setmana nova" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    await screen.findByRole("table", { name: "Quadre setmanal de la plantilla «Setmana nova»" });
+  });
+
+  it("requires confirmation to retire a populated template and preserves generated sessions", async () => {
+    await renderTemplates();
+    const before = structuredClone(planningState.templates[0]);
+    const sessions = structuredClone(planningState.sessions);
+    const weeks = structuredClone(planningState.weeks);
+    fireEvent.click(screen.getByRole("button", { name: "Esborra plantilla" }));
+    let dialog = screen.getByRole("dialog", { name: "Esborra plantilla" });
+    expect(dialog).toHaveTextContent("Les classes ja generades es conservaran.");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(planningState.templates[0]?.active).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Esborra plantilla" }));
+    dialog = screen.getByRole("dialog", { name: "Esborra plantilla" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Esborra plantilla" }));
+    await screen.findByRole("table", { name: "Quadre setmanal de la plantilla «Setmana B»" });
+    expect(planningState.templates[0]?.active).toBe(false);
+    expect(planningState.templates[0]?.classes).toEqual(before?.classes);
+    expect(planningState.sessions).toEqual(sessions);
+    expect(planningState.weeks).toEqual(weeks);
+    expect(window.location.search).toBe("?template=template-setmana-b");
+    expect(JSON.parse(localStorage.getItem(TEMPLATE_STORAGE_KEY) ?? "{}")).toMatchObject({
+      WEEKDAYS: "template-setmana-b",
+    });
+    fireEvent.click(screen.getByRole("button", { name: "dl–dv: «Setmana B»" }));
+    expect(screen.queryByRole("menuitemradio", { name: "Setmana A" })).not.toBeInTheDocument();
+  });
+
+  it("retires the last template, clears its saved selection and permits creating another", async () => {
+    planningState.templates = planningState.templates.filter(
+      (item) => item.id === "template-setmana-a",
+    );
+    await renderTemplates();
+    fireEvent.click(screen.getByRole("button", { name: "Esborra plantilla" }));
+    const dialog = screen.getByRole("dialog", { name: "Esborra plantilla" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Esborra plantilla" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(screen.queryByRole("table", { name: /Quadre setmanal/u })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Esborra plantilla" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Canvia el nom" })).toBeDisabled();
+    await waitFor(() => {
+      expect(window.location.search).toBe("");
+    });
+    expect(JSON.parse(localStorage.getItem(TEMPLATE_STORAGE_KEY) ?? "null")).toEqual({});
+    const createButton = screen.getAllByRole("button", { name: "Nova" })[0];
+    if (createButton === undefined) throw new Error("Missing create template button");
+    fireEvent.click(createButton);
+    const create = screen.getByRole("dialog", { name: "Nova plantilla" });
+    fireEvent.change(within(create).getByLabelText("Nom"), { target: { value: "Reinici" } });
+    fireEvent.click(within(create).getByRole("button", { name: "Desa" }));
+    await screen.findByRole("table", { name: "Quadre setmanal de la plantilla «Reinici»" });
+  });
+
+  it("shows a failed removal without removing or navigating away from the template", async () => {
+    await renderTemplates();
+    server.use(http.patch("*/api/v1/week-templates/:id", () => HttpResponse.error()));
+    fireEvent.click(screen.getByRole("button", { name: "Esborra plantilla" }));
+    const dialog = screen.getByRole("dialog", { name: "Esborra plantilla" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Esborra plantilla" }));
+    expect(await within(dialog).findByRole("alert")).toBeVisible();
+    expect(planningState.templates[0]?.active).toBe(true);
+    expect(window.location.search).toBe("?template=template-setmana-a");
+  });
+
+  it("reports a concurrent change and reloads the version before an explicit retry", async () => {
+    await renderTemplates();
+    fireEvent.click(screen.getByRole("button", { name: "Canvia el nom" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia el nom" });
+    const current = planningState.templates[0];
+    if (current === undefined) throw new Error("Missing template fixture");
+    planningState.templates[0] = {
+      ...current,
+      notes: "Another administrator's note",
+      version: current.version + 1,
+    };
+    fireEvent.change(within(dialog).getByLabelText("Nom"), { target: { value: "Setmana nova" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Aquest element s'ha modificat des d'un altre lloc.",
+    );
+    expect(planningState.templates[0].name).toBe("Setmana A");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    await screen.findByRole("table", { name: "Quadre setmanal de la plantilla «Setmana nova»" });
+    expect(planningState.templates[0].notes).toBe("Another administrator's note");
+  });
+
   it("prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band", async () => {
     await renderTemplates();
 
@@ -384,9 +512,27 @@ describe("T-06-26 D3 weekly templates", () => {
   });
 
   it("hides every action from INSTRUCTOR and keeps the cells inert (A22 c)", async () => {
+    server.use(
+      ...["rings", "levels", "instructors"].map((catalog) =>
+        http.get(`*/api/v1/${catalog}`, ({ request }) => {
+          if (new URL(request.url).searchParams.get("includeInactive") === "true") {
+            return HttpResponse.json({ code: "FORBIDDEN", message: "Forbidden" }, { status: 403 });
+          }
+          return undefined;
+        }),
+      ),
+    );
     const { onNavigate } = await renderTemplates({ readOnly: true });
 
-    for (const name of ["Nova", "Duplica", "Franja", "Crear classe", "GENERAR CLASSES"]) {
+    for (const name of [
+      "Nova",
+      "Duplica",
+      "Canvia el nom",
+      "Esborra plantilla",
+      "Franja",
+      "Crear classe",
+      "GENERAR CLASSES",
+    ]) {
       expect(screen.queryByRole("button", { name })).not.toBeInTheDocument();
     }
     expect(screen.queryByRole("region", { name: "Crear classe" })).not.toBeInTheDocument();
@@ -636,7 +782,7 @@ function holdFirstClassPatch(answer?: () => Response) {
 }
 
 const UNEXPECTED_ERROR =
-  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
+  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.";
 
 /** An empty band 21:00–22:00 on «Setmana A» (the mock refuses to remove a band with classes). */
 async function addEmptyBand() {
@@ -997,7 +1143,7 @@ describe("T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09)", () => {
     const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
     expect(
       screen.getByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     failOpeningHours = false;
@@ -1199,7 +1345,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): D3's week generation follows
     const dialog = await confirm();
     expect(
       await within(dialog).findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     // Not the generation's answer: the modal stays, and its button sends the same submission.

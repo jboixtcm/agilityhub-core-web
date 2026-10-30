@@ -72,7 +72,9 @@
     "calendarGoogle": "Google",
     "calendarOutlook": "Outlook",
     "calendarIcs": ".ics",
-    "seeBooking": "VER LA RESERVA"
+    "seeBooking": "VER LA RESERVA",
+    "ring": "Pista {name}",
+    "backHome": "Volver al inicio"
   },
   "detail": {
     "title": "Detalle de la reserva",
@@ -94,6 +96,7 @@
     "loading": "Cargando la reserva",
     "error": "No se ha podido cargar la reserva.",
     "retry": "Volver a intentarlo",
-    "notFound": "Esta reserva no existe o ya no es accesible."
+    "notFound": "Esta reserva no existe o ya no es accesible.",
+    "inTimeNotice": "Si cancelas ahora, la clase no contará como realizada: recuperarás la disponibilidad del límite semanal o el saldo del bono, según tu modalidad."
   }
 }

@@ -66,11 +66,13 @@ export const MEMBER_LIST_FIELDS = [
 export const DOG_LIST_FIELDS = [
   "id",
   "name",
+  "photoUrl",
   "breed",
   "level",
   "owner",
   "handler",
   "handlerName",
+  "handlerIsMember",
   "freeTraining",
   "licenses",
   "displayStatus",

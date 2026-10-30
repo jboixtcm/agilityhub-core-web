@@ -12,6 +12,7 @@ import {
   Card,
   Chip,
   DataTable,
+  DogPhoto,
   DogFollowupEditor,
   Drawer,
   FollowupHistoryPanel,
@@ -87,7 +88,8 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
   }
 
   const { dog, level, member, metrics } = card.data;
-  const guide = dog.handlerName ?? member.firstName;
+  const handler = dog.handlerName?.trim() ?? "";
+  const guide = handler === "" ? member.firstName : handler;
   const age = dog.ageYears == null ? undefined : t("instructor:card.age", { count: dog.ageYears });
   const breed = dog.breed ?? undefined;
   const dogLine =
@@ -149,6 +151,12 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
   return (
     <section className="student-record">
       <header className="student-record__header">
+        <DogPhoto
+          alt={t("instructor:card.photo", { dog: dog.name })}
+          name={dog.name}
+          size="large"
+          src={dog.photoUrl}
+        />
         <div className="student-record__identity">
           <h1>{t("instructor:student.name", { dog: dog.name, handler: guide })}</h1>
           {level == null ? null : (
@@ -170,7 +178,7 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
           </Chip>
           {dogLine === undefined ? null : <Chip className="student-record__dog">{dogLine}</Chip>}
           {dog.status === "ACTIVE" ? null : <Chip tone="danger">{t("instructor:card.left")}</Chip>}
-          {dog.handlerName == null || dog.handlerName === member.firstName ? null : (
+          {handler === "" || handler === member.firstName ? null : (
             <span className="student-record__owner">
               {t("instructor:student.owner", { name: member.fullName })}
             </span>

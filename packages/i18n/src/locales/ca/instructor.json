@@ -46,7 +46,7 @@
     "save": "Desa",
     "saving": "Desant la llista",
     "saved": "Llista desada",
-    "legend": "Llegenda",
+    "legend": "Llegenda d’assistència",
     "staleToast": "Algú ha desat la llista fa un moment: revisa-la",
     "waitlistTitle": "Llista d'espera ({count})",
     "joinedAt": "{kind, select, minutes {des de fa {count} min} hours {des de fa {count} h} today {des d'avui {time}} yesterday {des d'ahir {time}} other {des del {date} {time}}}",
@@ -55,7 +55,8 @@
     "dismiss": "Tanca",
     "loading": "Carregant la llista",
     "loadError": "No s'ha pogut carregar la llista.",
-    "retry": "Torna-ho a provar"
+    "retry": "Torna-ho a provar",
+    "unsaved": "Canvis pendents de desar"
   },
   "card": {
     "title": "Fitxa d'alumne",
@@ -296,6 +297,8 @@
     "noticeShort": "ha avisat{released, select, yes { — plaça alliberada} other {}}{waitlist, select, yes { · espera avisada} other {}}",
     "noShowNotice": "avís demà a les {time}",
     "waitingList": "En espera: {names}",
-    "saveSheet": "Desa la llista"
+    "saveSheet": "Desa la llista",
+    "overflowHint": "Desplaça la graella horitzontalment per veure tots els dies.",
+    "selectClass": "Selecciona una classe de l’agenda per veure els inscrits i passar llista."
   }
 }

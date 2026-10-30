@@ -161,7 +161,7 @@
     "statuses": {
       "active": "Active",
       "all": "All",
-      "inactive": "Inactive"
+      "inactive": "Left"
     },
     "title": "Dogs",
     "bulk": {
@@ -216,7 +216,9 @@
     "tasksSummary": "{open, plural, one {# pending} other {# pending}} · {completed, plural, one {# completed} other {# completed}}",
     "tasksTitle": "Tasks",
     "title": "My dogs",
-    "uploadDocument": "UPLOAD DOCUMENT"
+    "uploadDocument": "UPLOAD DOCUMENT",
+    "choosingFile": "Choose a file in the window that has opened.",
+    "selectedFile": "Selected file: {name}"
   },
   "myData": {
     "address": "Address",

@@ -90,9 +90,21 @@ export const dayGridHandlers = [
     if (currentMockScenarioName() === "dayGridEmpty") {
       return HttpResponse.json({ ...dayGridFixture(date, view, options), rows: [] });
     }
-    return isDayGridFixtureDate(date)
-      ? HttpResponse.json(dayGridFixture(date, view, options))
-      : undefined;
+    if (!isDayGridFixtureDate(date)) return undefined;
+    const state = url.searchParams.get("state");
+    if (state !== null && view !== "instructor") return denied(scenario);
+    const grid = dayGridFixture(date, view, options);
+    return HttpResponse.json(
+      state === null
+        ? grid
+        : {
+            ...grid,
+            rows: grid.rows.map((row) => ({
+              ...row,
+              cells: row.cells.filter((cell) => cell.kind !== "CLASS" || cell.state === state),
+            })),
+          },
+    );
   }),
   http.get("*/api/v1/class-sessions/:id", ({ params, request }) => {
     const id = String(params.id);

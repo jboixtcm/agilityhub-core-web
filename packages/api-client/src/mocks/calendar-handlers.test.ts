@@ -108,7 +108,8 @@ describe("E4-W02 calendar MSW handlers follow the S06 contract (forms B and D)",
       "dj 18:50 — Marc assignat a dues pistes alhora (Cadells i Petita)",
     ]);
     expect(data.ringBlocks).toHaveLength(1);
-    expect(data.classes.filter((item) => item.state === "CANCELLED")).toHaveLength(1);
+    expect(data.classes.filter((item) => item.state === "CANCELLED")).toHaveLength(0);
+    expect((await calendar("week-2026-08-10", "CANCELLED")).classes).toHaveLength(1);
     expect(data.canValidate).toBe(false);
   });
 

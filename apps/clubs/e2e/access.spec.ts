@@ -37,7 +37,7 @@ async function prepareScenario(page: Page, scenario: string, branding: unknown =
 
 async function passwordLogin(page: Page) {
   await prepareScenario(page, "multiProfile");
-  await page.goto(`${baseUrl}/entrar`);
+  await page.goto(`${baseUrl}/login`);
   await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
   await page.getByLabel("Contrasenya").fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
@@ -281,15 +281,29 @@ test.describe("T-01-21 profile rows and impersonation", () => {
     await expect(page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
   });
 
-  test("keeps the impersonation banner and revokes on exit", async ({ page }) => {
-    await prepareScenario(page, "impersonated");
-    // E4-W16 step 1 (E47): the one-time code of the launchUrl, redeemed at /entrar?handoff=.
-    await page.goto(`${baseUrl}/entrar?handoff=mock-impersonation-handoff-e2e`);
-    await page.waitForURL((url) => url.pathname === "/inici");
-    // The app's full-page navigation keeps the impersonated session of the tab.
-    await page.goto(`${baseUrl}/perfil`);
-    await expect(page.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
-    await page.getByRole("button", { name: "Surt" }).click();
-    await page.waitForURL("**/entrar");
+  test("closes the impersonation tab and revokes only its temporary grant", async ({
+    page,
+    context,
+  }) => {
+    await passwordLogin(page);
+    await page.waitForURL("**/perfil-acces");
+    const originalUrl = page.url();
+    const opened = context.waitForEvent("page");
+    await page.evaluate(() => window.open("about:blank", "_blank", "noopener,noreferrer"));
+    const borrowed = await opened;
+    await prepareScenario(borrowed, "impersonated");
+    await borrowed.goto(`${baseUrl}/entrar?handoff=mock-impersonation-handoff-e2e`);
+    await borrowed.waitForURL((url) => url.pathname === "/inici");
+    await borrowed.goto(`${baseUrl}/perfil`);
+    await expect(borrowed.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    const revoked = borrowed.waitForRequest((request) => request.url().endsWith("/oauth2/revoke"));
+    const closed = borrowed.waitForEvent("close");
+    await borrowed.getByRole("button", { name: "Surt" }).click();
+    const request = await revoked;
+    expect(request.headers().authorization).toBe("Bearer mock-impersonation-token");
+    expect(request.postDataJSON()).toEqual({ token: "mock-impersonation-token" });
+    await closed;
+    expect(page.isClosed()).toBe(false);
+    await expect(page).toHaveURL(originalUrl);
   });
 });

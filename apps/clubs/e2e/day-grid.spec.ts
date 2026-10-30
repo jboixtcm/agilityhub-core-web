@@ -112,7 +112,7 @@ test.describe("T-06-29 screen 10 «Classes del dia» (/avui)", () => {
     await expect(grid).toBeVisible();
     await expect(page.getByRole("heading", { name: "Classes del dia" })).toBeVisible();
     await expect(page.getByText("dt 4 d’agost")).toBeVisible();
-    await expect(page.getByRole("button", { name: "dt 4" })).toHaveAttribute(
+    await expect(page.getByRole("button", { name: "dimarts 4" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );

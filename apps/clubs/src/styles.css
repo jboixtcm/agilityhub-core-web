@@ -33,29 +33,45 @@ select {
 }
 
 .clubs-shell {
+  --clubs-navigation-height: 4rem;
   display: grid;
-  width: min(100%, 30rem);
+  width: 100%;
   min-height: 100dvh;
   grid-template-rows: auto 1fr auto;
   margin: 0 auto;
-  overflow: hidden;
+  overflow: clip;
   background: var(--ah-color-background);
   border-inline: 1px solid var(--ah-color-border);
 }
 
-.clubs-shell__header {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  border-bottom: 0;
+/* Branding and navigation share a single desktop row. Preferences live in Profile. */
+.clubs-shell__brand {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--ah-space-3);
+  color: var(--ah-color-text);
+  font-weight: 700;
+  text-decoration: none;
 }
 
-.clubs-shell__top {
-  min-width: 0;
+.clubs-shell__brand > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clubs-shell__brand:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 4px;
+  border-radius: var(--ah-radius-sm);
 }
 
 .clubs-shell__logo,
 .clubs-shell__mark {
   width: 2rem;
   height: 2rem;
+  flex: none;
 }
 
 .clubs-shell__logo {
@@ -68,35 +84,6 @@ select {
   font-weight: 800;
   background: var(--ah-color-primary);
   border-radius: var(--ah-radius-md);
-  place-items: center;
-}
-
-.clubs-shell__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--ah-space-1);
-}
-
-.shell-language select,
-.clubs-shell__user {
-  min-height: 2rem;
-  color: var(--ah-color-text-muted);
-  background: transparent;
-  border: 1px solid var(--ah-color-border);
-  border-radius: var(--ah-radius-sm);
-}
-
-.shell-language select {
-  max-width: 4.5rem;
-  padding-inline: var(--ah-space-1);
-  font-size: 0.6875rem;
-}
-
-.clubs-shell__user {
-  display: grid;
-  width: 2rem;
-  padding: 0;
-  text-decoration: none;
   place-items: center;
 }
 
@@ -2279,9 +2266,276 @@ div.lifecycle-error p {
   margin-top: var(--ah-space-5);
 }
 
-@media (min-width: 30rem) {
-  .clubs-shell,
-  .auth-page {
-    box-shadow: var(--ah-shadow-lg);
+/* Phone content keeps its own heading and the familiar bottom navigation. */
+.clubs-shell__banner {
+  grid-row: 1;
+  min-width: 0;
+}
+.clubs-shell__banner:empty,
+.clubs-shell__top {
+  display: none;
+}
+.clubs-shell__content {
+  grid-row: 2;
+  min-width: 0;
+}
+.clubs-shell__navigation {
+  grid-row: 3;
+  min-width: 0;
+}
+
+@media (max-width: 47.999rem) {
+  .clubs-shell__content {
+    padding-bottom: calc(var(--clubs-navigation-height) + env(safe-area-inset-bottom));
+  }
+  .clubs-shell__navigation {
+    position: fixed;
+    z-index: 30;
+    inset-inline: 0;
+    bottom: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--ah-color-surface);
+  }
+  .clubs-shell__navigation .ah-tab-bar {
+    min-height: var(--clubs-navigation-height);
+  }
+}
+
+.profile-preferences {
+  padding-block: 0;
+}
+.profile-appearance {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+.profile-appearance .ah-appearance select {
+  max-width: 12rem;
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+}
+.profile-preferences .profile-language {
+  border-top: 1px solid var(--ah-color-border);
+  border-bottom: 0;
+}
+.profile-preferences .profile-language__help {
+  margin-top: 0;
+}
+.home-layout {
+  display: grid;
+  gap: var(--ah-space-2);
+  min-width: 0;
+}
+
+/* Tablet: a compact brand row above the navigation; desktop joins both rows below. */
+@media (min-width: 48rem) {
+  .clubs-shell {
+    --clubs-gutter: max(1.5rem, calc((100vw - 80rem) / 2));
+    grid-template-rows: auto auto auto 1fr;
+    border: 0;
+    box-shadow: none;
+  }
+  .clubs-shell__top {
+    display: flex;
+    grid-row: 2;
+    min-width: 0;
+    align-items: center;
+    padding: var(--ah-space-3) var(--clubs-gutter);
+    background: var(--ah-color-surface);
+  }
+  .clubs-shell__navigation {
+    grid-row: 3;
+    background: var(--ah-color-surface);
+    border-bottom: 1px solid var(--ah-color-border);
+  }
+  .clubs-shell__navigation .ah-tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    padding-inline: var(--clubs-gutter);
+    gap: var(--ah-space-1);
+    background: transparent;
+    border: 0;
+  }
+  .clubs-shell__navigation .ah-tab-bar__item {
+    display: flex;
+    min-height: 3.5rem;
+    align-items: center;
+    gap: var(--ah-space-2);
+    padding: var(--ah-space-3);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+  }
+  .clubs-shell__navigation .ah-tab-bar__item[aria-current="page"] {
+    border-bottom-color: var(--ah-color-primary);
+    background: color-mix(in srgb, var(--ah-color-primary) 8%, transparent);
+  }
+  .clubs-shell__content {
+    grid-row: 4;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    align-items: start;
+    width: min(100%, 84rem);
+    margin-inline: auto;
+    padding: var(--ah-space-6) clamp(1.5rem, 3vw, 2rem) var(--ah-space-8);
+    overflow: visible;
+  }
+  .clubs-shell__content > * {
+    min-width: 0;
+    width: 100%;
+  }
+  .clubs-shell__content .booking-screen,
+  .clubs-shell__content .profile-page,
+  .clubs-shell__content .day-screen,
+  .clubs-shell__content .history-screen,
+  .clubs-shell__content .activities-screen {
+    padding-inline: 0;
+  }
+  .clubs-shell__content .booking-screen {
+    max-width: 64rem;
+    gap: var(--ah-space-4);
+  }
+  .clubs-shell__content .booking-screen--confirm {
+    max-width: 44rem;
+  }
+  .clubs-shell__content .booking-screen > .ah-button,
+  .clubs-shell__content .my-data-form > .ah-button,
+  .clubs-shell__content .lifecycle-form > .ah-button,
+  .clubs-shell__content .activities-screen > .ah-button,
+  .clubs-shell__content .activity-detail__action .ah-button {
+    width: fit-content;
+    max-width: 100%;
+    min-width: 12rem;
+    min-height: 2.75rem;
+    justify-self: start;
+  }
+  .clubs-shell__content .booking-screen--confirm > .ah-button {
+    justify-self: end;
+  }
+  .booking-screen--confirm .confirm-hold {
+    justify-content: flex-start;
+  }
+  .clubs-shell__content .profile-page {
+    max-width: 68rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ah-space-5);
+    align-items: start;
+  }
+  .profile-page > h1 {
+    grid-column: 1 / -1;
+  }
+  .clubs-shell__content .my-data-form {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+  .clubs-shell__content .info-page,
+  .clubs-shell__content .activities-screen {
+    max-width: 56rem;
+  }
+  .clubs-shell__content .home-page {
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ah-space-5);
+  }
+  .home-page > .home-header,
+  .home-page > .dog-chips,
+  .home-page > [role="status"],
+  .home-page > [role="alert"] {
+    grid-column: 1 / -1;
+  }
+  .home-layout {
+    grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr);
+    grid-template-rows: min-content 1fr;
+    gap: var(--ah-space-5);
+  }
+  .home-layout > .home-limits {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+  }
+  .home-layout > .booking-section {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-content: start;
+  }
+  .home-layout > .home-history {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+  }
+  .home-page .home-header h1 {
+    font-size: 1.6rem;
+  }
+  .home-page .booking-section__title {
+    font-size: 0.875rem;
+  }
+  .home-page .home-empty {
+    padding-block: var(--ah-space-8);
+  }
+  .home-page .home-header__logo,
+  .home-page .home-header__mark {
+    display: none;
+  }
+}
+
+@media (min-width: 64rem) {
+  .clubs-shell {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+  }
+  .clubs-shell__banner,
+  .clubs-shell__content {
+    grid-column: 1 / -1;
+  }
+  .clubs-shell__top {
+    grid-column: 1;
+    padding-right: var(--ah-space-5);
+    border-bottom: 1px solid var(--ah-color-border);
+  }
+  .clubs-shell__brand {
+    max-width: 19rem;
+  }
+  .clubs-shell__navigation {
+    display: flex;
+    grid-row: 2;
+    grid-column: 2;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+  .clubs-shell__navigation .ah-tab-bar {
+    padding-left: 0;
+  }
+  .clubs-shell__content {
+    grid-row: 3;
+  }
+}
+
+.auth-support {
+  margin: var(--ah-space-3) 0 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.lifecycle-intro {
+  white-space: pre-line;
+}
+.dog-card__training {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+.day-screen__full-label {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .day-screen__short-label {
+    display: none;
+  }
+  .day-screen__full-label {
+    display: inline;
   }
 }

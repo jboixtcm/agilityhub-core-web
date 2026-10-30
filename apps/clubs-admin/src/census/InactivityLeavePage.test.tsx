@@ -43,6 +43,22 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 describe("T-13-31 inactivity and leave queues", () => {
+  it("MR-06 clearing filters and loading facets explicitly includes completed states", async () => {
+    const reads: URL[] = [];
+    server.use(http.get("*/api/v1/inactivity-periods", ({ request }) => {
+      reads.push(new URL(request.url));
+      return undefined;
+    }));
+    render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />));
+    await screen.findByRole("tab", { name: "Inactivitats" });
+    fireEvent.click(screen.getByRole("button", { name: "Neteja els filtres" }));
+    await waitFor(() => {
+      const allStates = reads.filter((url) => url.searchParams.getAll("filter").some((filter) => filter.includes("FINISHED,DENIED,CANCELLED")));
+      expect(allStates.some((url) => url.searchParams.get("size") === "50")).toBe(true);
+      expect(allStates.some((url) => url.searchParams.get("size") === "1000")).toBe(true);
+    });
+  });
+
   it("uses both tabs and the contract default filters and sorts", async () => {
     const requests: { path: string; filters: string[]; sort: string[] }[] = [];
     const empty = { appliedFilters: [], items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 };
@@ -198,7 +214,7 @@ describe("T-13-31 inactivity and leave queues", () => {
     if (first === undefined || last === undefined) throw new TypeError("Missing inactivity queue fixtures");
     server.use(http.get("*/api/v1/inactivity-periods", ({ request }) => {
       const url = new URL(request.url);
-      const filtered = url.searchParams.has("filter");
+      const filtered = url.searchParams.getAll("filter").includes("state:in:REQUESTED,APPROVED,ACTIVE");
       const page = Number(url.searchParams.get("page") ?? 0);
       const items = filtered ? [first] : page === 0 ? [first] : [last];
       return HttpResponse.json({

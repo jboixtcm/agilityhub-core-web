@@ -81,7 +81,7 @@ describe("E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21)", () => {
     expect(onChange).toHaveBeenLastCalledWith("PENDING");
   });
 
-  it("a final (saved NOTIFIED) row is inert: no circle can be chosen or focused", () => {
+  it("a final row is inert: no circle can be chosen or focused", () => {
     const onChange = vi.fn();
     render(
       <Circles initial="NOTIFIED" onChange={onChange} permissions={{ ...open, final: true }} />,
@@ -127,6 +127,30 @@ describe("E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21)", () => {
       "warning",
       "danger",
     ]);
+  });
+
+  it("can undo a saved notice before the presence window without enabling presence or no-show", () => {
+    const onChange = vi.fn();
+    render(
+      <Circles
+        initial="NOTIFIED"
+        onChange={onChange}
+        permissions={{ ...open, canMarkPresence: false }}
+      />,
+    );
+    expect(screen.getByRole("radio", { name: "pendent" })).toBeEnabled();
+    expect(screen.getByRole("radio", { name: "present" })).toBeDisabled();
+    expect(screen.getByRole("radio", { name: "no presentat" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("radio", { name: "pendent" }));
+    expect(onChange).toHaveBeenLastCalledWith("PENDING");
+    expect(nextAttendanceState("NOTIFIED", { ...open, canMarkPresence: false })).toBe("PENDING");
+    const rows = [{ bookingId: "notice", state: "NOTIFIED" as const }];
+    expect(
+      mergeSheet(rows, { notice: "PENDING" }, new Set(["notice"]), rows, {
+        canMarkNotice: true,
+        canMarkPresence: false,
+      }),
+    ).toEqual({ notice: "PENDING" });
   });
 });
 

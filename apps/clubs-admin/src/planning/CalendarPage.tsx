@@ -349,7 +349,9 @@ export function CalendarPage({
     ),
   );
   const current = calendar.data?.key === calendarKey ? calendar.data?.data : undefined;
-  const catalogs = useResource(useCallback(() => loadPlanningCatalogs(client), [client]));
+  const catalogs = useResource(
+    useCallback(() => loadPlanningCatalogs(client, !readOnly), [client, readOnly]),
+  );
   const settings = useResource(
     useCallback(
       async (): Promise<CalendarSettings> =>
@@ -900,7 +902,7 @@ export function CalendarPage({
             waitlistEnabled={waitlistEnabled}
           />
         )}
-        {filter === "esborrany" && current !== undefined ? (
+        {filter === "esborrany" && current !== undefined && failure === undefined ? (
           <Card
             aria-labelledby="calendar-validation-title"
             className="calendar-validation-card"
@@ -952,7 +954,7 @@ export function CalendarPage({
             )}
           </Card>
         ) : null}
-        {current === undefined ? null : (
+        {current === undefined || failure !== undefined ? null : (
           <Card
             aria-labelledby="calendar-warnings-title"
             className="calendar-warnings-card"

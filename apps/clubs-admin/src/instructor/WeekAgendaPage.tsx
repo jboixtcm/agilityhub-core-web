@@ -16,6 +16,7 @@ import {
   Button,
   Card,
   Chip,
+  DogPhoto,
   EmptyState,
   Icon,
   IconButton,
@@ -373,7 +374,7 @@ function AttendancePanel({
             >
               <span className="week-agenda__who">
                 <a
-                  className="week-agenda__student"
+                  className="week-agenda__student ah-dog-identity"
                   href={href}
                   onClick={(event: MouseEvent<HTMLAnchorElement>) => {
                     if (
@@ -389,6 +390,7 @@ function AttendancePanel({
                     onNavigate(href);
                   }}
                 >
+                  <DogPhoto name={row.dogName} src={row.dogPhotoUrl} />
                   {name}
                 </a>
                 {row.memberFullName === undefined ? null : (
@@ -425,6 +427,20 @@ function AttendancePanel({
           );
         })}
       </ul>
+      <div className="week-agenda__legend" aria-label={t("instructor:attendance.legend")}>
+        {STATES.map((state) => (
+          <span
+            className={`ah-badge ah-attendance-badge ah-attendance-badge--${state.toLowerCase().replace("_", "-")}`}
+            key={state}
+            title={t(`enums:attendanceState.${state}`)}
+          >
+            {badgeLabels[state]}
+          </span>
+        ))}
+        <span role="status">
+          {sheet.changes.length > 0 ? t("instructor:attendance.unsaved") : null}
+        </span>
+      </div>
       <div className="week-agenda__panel-footer">
         <span>
           {waitlist === undefined || waitlist.entries.length === 0
@@ -812,6 +828,7 @@ export function WeekAgendaPage({
               </p>
             }
             label={t("instructor:agenda.gridLabel", { range })}
+            overflowHint={t("instructor:agenda.overflowHint")}
             renderCell={(cell, isSelected) => (
               <WeekCellView
                 cell={cell}
@@ -827,9 +844,7 @@ export function WeekAgendaPage({
         </Card>
       )}
       <div className="week-agenda__below">
-        {selectedId === undefined ? (
-          <span />
-        ) : (
+        {selectedId === undefined ? null : (
           <AttendancePanel
             classId={selectedId}
             client={client}
@@ -838,8 +853,14 @@ export function WeekAgendaPage({
             onNavigate={onNavigate}
           />
         )}
-        {/* A block made here shows in the grid at once (a read right after the write). */}
-        <RingBlockCard client={client} onCreated={week.retry} />
+        {selectedId === undefined && data !== undefined && data.cells.length > 0 ? (
+          <p className="week-agenda__selection-hint">{t("instructor:agenda.selectClass")}</p>
+        ) : null}
+        {/* Keep this secondary action out of the attendance workspace until it is needed. */}
+        <details className="week-agenda__ring-action">
+          <summary>{t("instructor:ringBlock.card.title")}</summary>
+          <RingBlockCard client={client} onCreated={week.retry} />
+        </details>
       </div>
     </section>
   );

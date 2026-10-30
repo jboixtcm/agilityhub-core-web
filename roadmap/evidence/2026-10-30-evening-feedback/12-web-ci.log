@@ -1,0 +1,586 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 11 packages
+   • Remote caching disabled
+
+clubs:lint: cache miss, executing c52805b53bc3552b
+@agilityhub/i18n:lint: cache hit, replaying logs 2daab22bdb0e3bdf
+@agilityhub/api-client:lint: cache miss, executing 56ba208d76cab172
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+clubs-admin:lint: cache miss, executing 392fae2728b28ecd
+@agilityhub/course-core:test: cache hit, replaying logs 62b23b101212018c
+@agilityhub/course-ui:lint: cache hit, replaying logs 4e4c1789234af33d
+@agilityhub/ui:lint: cache hit, replaying logs 26020bd5db407554
+@agilityhub/config:typecheck: cache hit, replaying logs 3b91b65bf26db588
+@agilityhub/ui:test: cache hit, replaying logs 8ab9fd96f5a989d0
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/course-ui:lint: 
+id:lint: cache hit, replaying logs 3fea6ad32ecedb1e
+@agilityhub/course-core:test:  ✓ tests/units.test.ts (6 tests) 16ms
+@agilityhub/course-core:test:  ✓ tests/apriltag-36h11.test.ts (31 tests) 34ms
+@agilityhub/course-core:test:  ✓ tests/heading.test.ts (11 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/geometry-primitives.test.ts (15 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/marker-id.test.ts (11 tests) 5ms
+@agilityhub/course-core:test:  ✓ tests/calibration.test.ts (9 tests) 7ms
+@agilityhub/course-core:test:  ✓ tests/marker-svg.test.ts (29 tests) 11ms
+@agilityhub/course-core:test:  ✓ tests/ring.test.ts (7 tests) 5ms
+@agilityhub/course-core:test:  ✓ tests/placement.test.ts (20 tests) 6ms
+@agilityhub/course-ui:lint: > @agilityhub/course-ui@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/course-core:test:  ✓ tests/summarize-course.test.ts (8 tests) 11ms
+@agilityhub/course-core:test:  ✓ tests/path.test.ts (2 tests) 10ms
+@agilityhub/course-core:test:  ✓ tests/geometry-transform.test.ts (6 tests) 3ms
+id:lint: 
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/course-core:test:  ✓ tests/smarter-writer.test.ts (8 tests) 13ms
+@agilityhub/course-core:test:  ✓ tests/coords.test.ts (5 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/parse-smarter-colors-txt.test.ts (6 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/parse-smarter-txt.test.ts (113 tests) 26ms
+@agilityhub/course-core:test:  ✓ tests/wrapper.test.ts (5 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/warnings-engine.test.ts (13 tests) 6ms
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+@agilityhub/course-ui:lint: > eslint src tests harness e2e playwright.config.ts vite.harness.config.ts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-ui:lint: 
+@agilityhub/course-core:test:  ✓ tests/warnings-rules.test.ts (26 tests) 15ms
+@agilityhub/course-core:test:  ✓ tests/smarter-fixtures.test.ts (25 tests) 8ms
+@agilityhub/course-core:test:  ✓ tests/course-data-json-schema.test.ts (22 tests) 67ms
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  Test Files  21 passed (21)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/course-core:test:       Tests  378 passed (378)
+@agilityhub/course-core:build: cache hit, replaying logs 6d284ecafdbbe7e9
+@agilityhub/ui:test:  ✓ src/on-primary.test.ts (3 tests) 64ms
+@agilityhub/ui:test:  ✓ src/attendance-contrast.test.ts (34 tests) 7ms
+@agilityhub/ui:test:  ✓ src/appearance.test.tsx (2 tests) 101ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 141ms
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/config:lint: cache hit, replaying logs 72c1d9c821df515c
+@agilityhub/course-core:test:    Start at  20:23:33
+@agilityhub/course-core:test:    Duration  814ms (transform 80%, import 13%, tests 5%, worker 2%)
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:   Transform  transforming modules took 4.24s · 80% of tracked time, re-done on every run
+@agilityhub/course-core:test:              persist transforms across runs with fsModuleCache: true
+@agilityhub/course-core:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+@agilityhub/course-core:test: 
+@agilityhub/ui:test:  ✓ src/limited-markdown.test.tsx (1 test) 192ms
+@agilityhub/ui:test:  ✓ src/dog-photo.test.tsx (2 tests) 207ms
+@agilityhub/ui:test:  ✓ src/lazy-boundary.test.tsx (4 tests) 213ms
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/ui:test:  ✓ src/attendance-sheet.test.tsx (4 tests) 239ms
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/auth:lint: cache miss, executing 02c9161f4ad312a4
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (14 tests) 247ms
+@agilityhub/ui:test: stderr | src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > renders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/schedule-grid.test.tsx (3 tests) 330ms
+@agilityhub/ui:test:  ✓ src/day-grid.test.tsx (11 tests) 400ms
+@agilityhub/ui:test:  ✓ src/slot-grid.test.tsx (10 tests) 409ms
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/ui:test:  ✓ src/rich-text.test.tsx (13 tests) 413ms
+@agilityhub/ui:test:  ✓ src/attendance.test.tsx (17 tests) 372ms
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/ui:test:  ✓ src/components.test.tsx (37 tests) 604ms
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (15 tests) 904ms
+@agilityhub/ui:test:    ✓ E5-W05 round 2 #2 · a range filter with no suggested values (ruling E80) (1)
+@agilityhub/course-core:lint: cache hit, replaying logs 299d0898433f221c
+@agilityhub/ui:test:      ✓ offers two dates instead of the value list, never asks for the field's values, and adds the range's own value 367ms
+@agilityhub/ui:test:  ✓ src/tasks-panel.test.tsx (14 tests) 840ms
+@agilityhub/ui:test:  ✓ src/chunk-reload.test.ts (7 tests) 7ms
+@agilityhub/ui:test:  ✓ src/modules.test.ts (3 tests) 4ms
+@agilityhub/ui:test:  ✓ src/polish-styles.test.ts (2 tests) 4ms
+@agilityhub/ui:test:  ✓ src/universal-list-layout.test.ts (1 test) 2ms
+@agilityhub/ui:test:  ✓ src/schedule-contrast.test.ts (3 tests) 3ms
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 5ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  23 passed (23)
+@agilityhub/ui:test:       Tests  203 passed (203)
+@agilityhub/ui:test:    Start at  19:30:19
+@agilityhub/ui:test:    Duration  3.83s (environment 65%, setup 14%, tests 12%, transform 8%, import 1%)
+@agilityhub/ui:test: 
+@agilityhub/ui:test: Environment  jsdom was created 23 times · 32.46s total, 65% of tracked time
+@agilityhub/ui:test:              create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+@agilityhub/ui:test:              learn more: https://vitest.dev/guide/improving-performance#test-environments
+@agilityhub/ui:test: 
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+@agilityhub/course-core:typecheck: cache hit, replaying logs e352df8cc6deda45
+@agilityhub/ui:typecheck: cache hit, replaying logs 3010f4d3c648c72c
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/shared-types:build: cache hit, replaying logs 02872439fa0d66da
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/i18n:test: cache hit, replaying logs 8231ee8a556429eb
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run && node --test ../../scripts/check-es-actions.test.mjs ../../scripts/qa-literals.test.mjs
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  ✓ src/masking.test.ts (9 tests) 5ms
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 3ms
+@agilityhub/i18n:test:  ✓ src/activities.test.ts (5 tests) 31ms
+@agilityhub/i18n:test:  ✓ src/clubs-preload.test.ts (6 tests) 5ms
+@agilityhub/i18n:test:  ✓ src/course-texts.test.ts (3 tests) 85ms
+@agilityhub/i18n:test:  ✓ src/clubs-resources.test.ts (4 tests) 82ms
+@agilityhub/i18n:test:  ✓ src/copy-decisions.test.ts (16 tests) 121ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (10 tests) 69ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (106 tests) 71ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  9 passed (9)
+@agilityhub/i18n:test:       Tests  162 passed (162)
+@agilityhub/i18n:test:    Start at  20:11:15
+@agilityhub/i18n:test:    Duration  748ms (transform 70%, tests 16%, import 13%, worker 1%)
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:   Transform  transforming modules took 2.12s · 70% of tracked time, re-done on every run
+@agilityhub/i18n:test:              persist transforms across runs with fsModuleCache: true
+@agilityhub/i18n:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: TAP version 13
+@agilityhub/i18n:test: # Subtest: an imperative action label is flagged, whatever its case, its «＋» or its placeholders
+@agilityhub/i18n:test: ok 1 - an imperative action label is flagged, whatever its case, its «＋» or its placeholders
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 3.519625
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/shared-types:typecheck: cache hit, replaying logs 99bd179f098ead1d
+@agilityhub/i18n:typecheck: cache hit, replaying logs 233e0ae421ee6c56
+@agilityhub/shared-types:test: cache hit, replaying logs 714fc95dbf258910
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:test: # Subtest: infinitives, nouns, sentences, placeholders, the reader's own voice and enum values are not
+@agilityhub/i18n:test: ok 2 - infinitives, nouns, sentences, placeholders, the reader's own voice and enum values are not
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.251917
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: a key in KEEP is not flagged and is reported as kept, with its reason
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/i18n:test: ok 3 - a key in KEEP is not flagged and is reported as kept, with its reason
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.207709
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: the same label is flagged once its key leaves KEEP
+@agilityhub/i18n:test: ok 4 - the same label is flagged once its key leaves KEEP
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.253458
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: every KEEP entry carries a one-line reason
+@agilityhub/i18n:test: ok 5 - every KEEP entry carries a one-line reason
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.335708
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: a select's alternative branch is a fragment, not only its other branch
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/i18n:test: ok 6 - a select's alternative branch is a fragment, not only its other branch
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 1.852458
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: a nested select inside a plural gives every branch of both
+@agilityhub/i18n:test: ok 7 - a nested select inside a plural gives every branch of both
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.411458
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: an empty other branch never makes a message «variables only»
+@agilityhub/i18n:test: ok 8 - an empty other branch never makes a message «variables only»
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.66925
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: a message stays a literal when one branch is in no mockup
+@agilityhub/i18n:test: ok 9 - a message stays a literal when one branch is in no mockup
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.317625
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: # Subtest: a message of variables and signs only is still «variables only»
+@agilityhub/i18n:test: ok 10 - a message of variables and signs only is still «variables only»
+@agilityhub/i18n:test:   ---
+@agilityhub/i18n:test:   duration_ms: 0.079458
+@agilityhub/i18n:test:   type: 'test'
+@agilityhub/i18n:test:   ...
+@agilityhub/i18n:test: 1..10
+@agilityhub/i18n:test: # tests 10
+@agilityhub/i18n:test: # suites 0
+@agilityhub/i18n:test: # pass 10
+@agilityhub/i18n:test: # fail 0
+@agilityhub/i18n:test: # cancelled 0
+@agilityhub/course-ui:typecheck: cache hit, replaying logs 0a4c1583a7b7b80c
+@agilityhub/i18n:test: # skipped 0
+@agilityhub/i18n:test: # todo 0
+@agilityhub/i18n:test: # duration_ms 100.229083
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/course-ui:typecheck: 
+@agilityhub/course-ui:typecheck: > @agilityhub/course-ui@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+@agilityhub/course-ui:typecheck: > tsc --noEmit
+@agilityhub/course-ui:typecheck: 
+@agilityhub/course-ui:test: cache hit, replaying logs 9434c9c823f6e938
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  ✓ tests/build-session-export.test.ts (21 tests) 18ms
+@agilityhub/shared-types:test:  ✓ tests/json-schemas.test.ts (17 tests) 41ms
+@agilityhub/shared-types:test: 
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test: > @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+@agilityhub/course-ui:test: > vitest run
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test: 
+@agilityhub/shared-types:test:  Test Files  2 passed (2)
+@agilityhub/shared-types:test:       Tests  38 passed (38)
+@agilityhub/shared-types:test:    Start at  20:23:36
+@agilityhub/shared-types:test:    Duration  482ms (transform 64%, import 25%, tests 10%, worker 1%)
+@agilityhub/api-client:typecheck: cache miss, executing 6fd047350c7bf497
+@agilityhub/shared-types:test: 
+@agilityhub/course-ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test:  ✓ tests/tokens.test.ts (5 tests) 14ms
+@agilityhub/course-ui:test:  ✓ tests/planner-behaviour.test.ts (2 tests) 3ms
+@agilityhub/course-ui:test:  ✓ tests/port.test.tsx (5 tests) 338ms
+@agilityhub/course-ui:test:  ✓ tests/warning-rules.test.ts (4 tests) 68ms
+@agilityhub/course-ui:test:  ✓ tests/sheets.test.tsx (17 tests) 349ms
+@agilityhub/course-ui:test:  ✓ tests/panels.test.tsx (8 tests) 182ms
+@agilityhub/course-ui:test:  ✓ tests/viewers.test.tsx (15 tests) 1011ms
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test:  Test Files  7 passed (7)
+@agilityhub/course-ui:test:       Tests  56 passed (56)
+@agilityhub/course-ui:test:    Start at  20:11:18
+@agilityhub/course-ui:test:    Duration  3.25s (environment 43%, transform 37%, tests 12%, import 8%, worker 1%)
+@agilityhub/course-ui:test: 
+@agilityhub/course-ui:test:   Transform  transforming modules took 6.13s · 37% of tracked time, re-done on every run
+@agilityhub/course-ui:test:              persist transforms across runs with fsModuleCache: true
+@agilityhub/course-ui:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+@agilityhub/course-ui:test: 
+@agilityhub/api-client:test: cache miss, executing 5b0bf9fecae9fa95
+@agilityhub/course-ui:build: cache hit, replaying logs 6bfc031e02f453d4
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+clubs:build: cache miss, executing d975d28497472486
+id:build: cache miss, executing b59bf95c550830fb
+clubs-admin:build: cache miss, executing 83cd08362ef75241
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ✓ src/mocks/auth-handoff.test.ts (2 tests) 2534ms
+@agilityhub/api-client:test:    ✓ T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads (2)
+@agilityhub/api-client:test:      ✓ redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent) 2085ms
+@agilityhub/api-client:test:      ✓ the back office never issues again a code it issued before its own reload 448ms
+@agilityhub/api-client:test:  ✓ src/mocks/signup-handlers.test.ts (32 tests) 847ms
+@agilityhub/api-client:test:  ✓ src/index.test.ts (21 tests) 698ms
+@agilityhub/api-client:test:  ✓ src/mocks/agenda-handlers.test.ts (16 tests) 864ms
+@agilityhub/api-client:test:  ✓ src/mocks/messaging-handlers.test.ts (19 tests) 822ms
+@agilityhub/api-client:test:  ✓ src/mocks/followup-handlers.test.ts (21 tests) 927ms
+@agilityhub/api-client:test:  ✓ src/mocks/census-handlers.test.ts (112 tests) 1017ms
+@agilityhub/api-client:test:  ✓ src/mocks/attendance-handlers.test.ts (19 tests) 1141ms
+@agilityhub/api-client:test:  ✓ src/mocks/training-handlers.test.ts (11 tests) 1216ms
+@agilityhub/api-client:test:  ✓ src/branding-cache.test.ts (5 tests) 414ms
+@agilityhub/api-client:test:  ❯ src/mocks/calendar-handlers.test.ts (16 tests | 1 failed) 1547ms
+@agilityhub/api-client:test:    ✓ E11-W05 snapshot a7c85d50 (E11-T13): ClassCancellation carries reviewTime and a nullable byAccountId, both always sent (1)
+@agilityhub/api-client:test:      ✓ R-06-13: the review's cancellation is read with byAccountId null and the club's classes.riskReviewTime at read time; a club's cancellation with reviewTime null 304ms
+@agilityhub/api-client:test:    ❯ E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) (7)
+@agilityhub/api-client:test:      × serves the D4 week (form B) with the Thursday warning and the Carretera block 54ms
+@agilityhub/api-client:test:      ✓ R-06-08 validates the draft week and refuses the inconsistent one 121ms
+@agilityhub/api-client:test:      ✓ E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not 95ms
+@agilityhub/api-client:test:      ✓ R-06-10 cancels with the notice text and R-06-09 checks the version 129ms
+@agilityhub/api-client:test:      ✓ R-06-11 refuses a block over a class with the conflict list 34ms
+@agilityhub/api-client:test:      ✓ R-06-05 answers RING_HAS_BOOKINGS when a class or a block moves onto a training booking 82ms
+@agilityhub/api-client:test:      ✓ serves the instructor day grid (form D) of the Wednesday 32ms
+@agilityhub/api-client:test:    ✓ E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) (2)
+@agilityhub/api-client:test:      ✓ R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS 40ms
+@agilityhub/api-client:test:      ✓ S06 §3 with an opening at 07:05 and 10-minute slots: 07:10 is the first valid start 74ms
+@agilityhub/api-client:test:    ✓ E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules) (1)
+@agilityhub/api-client:test:      ✓ R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them 71ms
+@agilityhub/api-client:test:    ✓ E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) (5)
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #11.e: an ADMIN of another club lists no week and no class, and this world's week, calendar and class are 404 NOT_FOUND for it 136ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks, classes or ring blocks either: validation, generation, PATCH, the cancellation preview, the cancellation, the risk exemption and the block's read, PATCH and cancellation are 404 NOT_FOUND, and nothing changes 178ms
+@agilityhub/api-client:test:      ✓ E7-W07 step 8 (E5-W05 round 3 review #7, R3-A2): POST /weeks by an ADMIN of another club is answered from its own club, never from this club's week: 201 with a new PENDING week of its own where this club's 2026-08-10 is VALIDATED, 200 with that same week on a repeat, and this club's weeks do not change 62ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #11.e: GET /class-sessions is the staff's (a MEMBER is 403) and filters by the snapshot's x-filterable fields 55ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #11.e: a non-blank `q` on GET /weeks and GET /class-sessions is 400 INVALID_FILTER (neither declares it); a blank one reads as absent 75ms
+@agilityhub/api-client:test:  ✓ src/preferences-saver.test.ts (25 tests) 244ms
+@agilityhub/api-client:test:  ✓ src/core-api-store.test.ts (21 tests) 431ms
+@agilityhub/api-client:test:  ✓ src/core-api-store.payloads.test.ts (25 tests) 74ms
+@agilityhub/api-client:test:  ✓ src/build-events.test.ts (8 tests) 139ms
+@agilityhub/api-client:test:  ✓ src/mocks/activity-handlers.test.ts (27 tests) 2380ms
+@agilityhub/api-client:test:  ✓ src/mocks/list-exports.test.ts (19 tests) 636ms
+@agilityhub/api-client:test:  ✓ src/mocks/day-grid-handlers.test.ts (16 tests) 654ms
+@agilityhub/api-client:test:  ✓ src/mocks/privacy-handlers.test.ts (6 tests) 332ms
+@agilityhub/api-client:test:  ✓ src/mocks/mock-statuses.contract.test.ts (2 tests) 55ms
+@agilityhub/api-client:test:  ✓ src/attendance-sheet.test.ts (5 tests) 28ms
+@agilityhub/api-client:test:  ✓ src/mocks/console-handlers.test.ts (12 tests) 620ms
+@agilityhub/api-client:test:    ✓ E10-W01 · the console's mock world follows the E10-T01 contract (11)
+@agilityhub/api-client:test:      ✓ validates every club, list row, template, catalog entry, job cell and audit row 372ms
+@agilityhub/api-client:test:  ✓ src/submission-key.test.ts (15 tests) 35ms
+@agilityhub/api-client:test:  ✓ src/mocks/notification-handlers.test.ts (11 tests) 937ms
+@agilityhub/api-client:test:  ✓ src/uploads.test.ts (4 tests) 173ms
+@agilityhub/api-client:test:  ✓ src/mocks/e11-w06-scenarios.test.ts (4 tests) 196ms
+@agilityhub/api-client:test:  ✓ src/api-error.test.ts (5 tests) 3ms
+@agilityhub/api-client:test:  ✓ src/mocks/booking-handlers.test.ts (31 tests) 3253ms
+@agilityhub/api-client:test:  ✓ src/ring-setups.test.ts (2 tests) 2ms
+@agilityhub/api-client:test:  ✓ src/mocks/theme-mode.test.ts (2 tests) 3ms
+@agilityhub/api-client:test:  ✓ src/pending-contract.test.ts (2 tests) 2ms
+@agilityhub/api-client:test:  ✓ src/mocks/list-fields.test.ts (8 tests) 16ms
+@agilityhub/api-client:test:  ✓ src/exports.test.ts (16 tests) 62ms
+@agilityhub/api-client:test:  ✓ src/club-pages.test.ts (1 test) 30ms
+@agilityhub/api-client:test:  ✓ src/mocks/billing-handlers.test.ts (57 tests) 3846ms
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (86 tests) 3613ms
+@agilityhub/api-client:test:  ✓ src/mocks/club-settings-handlers.test.ts (1 test) 66ms
+@agilityhub/api-client:test:  ✓ src/mocks/course-handlers.test.ts (34 tests) 3967ms
+@agilityhub/api-client:test:    ✓ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (23)
+@agilityhub/api-client:test:      ✓ R-16-15 / R-16-16: COURSES off → 404 MODULE_DISABLED on every course route; a MEMBER → 403 on every staff route 645ms
+@agilityhub/api-client:test:      ✓ R-16-09 / R-16-16 a MEMBER (impersonation included) reads a PUBLIC course, a course an ACTIVE setup shows and an ACTIVE setup (view MEMBER), only while courses.showSetupToMembers 366ms
+@agilityhub/api-client:test:  ✓ src/core-api-store.ui.test.tsx (4 tests) 566ms
+@agilityhub/api-client:test:  ✓ src/mocks/mock-worlds.budget.test.ts (26 tests) 5345ms
+@agilityhub/api-client:test:    ✓ E3-W10 build-time budget of the MSW mock worlds (26)
+@agilityhub/api-client:test:      ✓ imports the mock modules afresh within the start-up budget 2206ms
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 263 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/favicon.svg                                          0.43 kB │ gzip:   0.27 kB
+id:build: dist/index.html                                           0.45 kB │ gzip:   0.29 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CNmx21PK.css                           56.64 kB │ gzip:  10.20 kB
+id:build: dist/assets/common-BLOgpJZf.js                            2.51 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-CH3g49TU.js                            2.64 kB │ gzip:   1.31 kB
+id:build: dist/assets/common-DDszVK_x.js                            2.71 kB │ gzip:   1.32 kB
+id:build: dist/assets/id-B7fN0oKw.js                                3.01 kB │ gzip:   1.33 kB
+id:build: dist/assets/id-DUR_B-8l.js                                3.17 kB │ gzip:   1.47 kB
+id:build: dist/assets/id-C-7TeTu2.js                                3.25 kB │ gzip:   1.48 kB
+id:build: dist/assets/errors-BK9wXSkI.js                           21.98 kB │ gzip:   7.17 kB
+id:build: dist/assets/errors-hleDn1V_.js                           23.24 kB │ gzip:   7.54 kB
+id:build: dist/assets/errors-B_xAcX5p.js                           23.27 kB │ gzip:   7.53 kB
+id:build: dist/assets/index-pATATo4m.js                           337.13 kB │ gzip: 103.46 kB
+id:build: 
+id:build: ✓ built in 451ms
+@agilityhub/api-client:test:  ❯ src/mocks/backoffice-handlers.test.ts (52 tests | 2 failed) 11774ms
+@agilityhub/api-client:test:    ✓ E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16) (3)
+@agilityhub/api-client:test:      ✓ E7-W03 round 2 #6 · T-15-32: under waitlist.mode = ALL_AT_ONCE the default fixture lists exactly the core's seven processes in catalog order — no mock-only waitlist-fifo or billing-reminder 234ms
+@agilityhub/api-client:test:      ✓ E7-W03 round 2 #6 · R-15-09: under ALL_AT_ONCE waitlist-fifo's routes answer like a process whose module is off — 404 MODULE_DISABLED (CATALEG_ERRORS §1) — and nothing runs or switches 164ms
+@agilityhub/api-client:test:      ✓ E7-W03 round 2 #6 · T-15-24: with waitlist.mode = FIFO waitlist-fifo is listed at its catalog place and runs — its history is a FIFO club's, never SKIPPED{MODULE_OFF} 96ms
+@agilityhub/api-client:test:    ✓ E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api (6)
+@agilityhub/api-client:test:      ✓ T-15-32 with waitlist.mode = FIFO lists the published processes whose module is on: 9 in the full club and 8 in the default and minimum clubs 138ms
+@agilityhub/api-client:test:      ✓ R-15-08 [Simula] answers the plan (WOULD_*), [Executa ara] the run; both are a JobRun and the history shows them 97ms
+@agilityhub/api-client:test:      ✓ R-15-09 refuses an INSTRUCTOR and an impersonation token; JOB_UNKNOWN and MODULE_DISABLED are 404; a running process is 409 52ms
+@agilityhub/api-client:test:      ✓ R-15-09 the switch answers {name, enabled} and GET /jobs reflects it; a disabled process still runs by hand 32ms
+@agilityhub/api-client:test:      ✓ E7-W03 step 0e · R-15-14 [Simula] on reminders plans WOULD_REMIND {bookingId, memberId, startsAt, lead} for a booking due now, and [Executa ara] the same item as REMIND 46ms
+@agilityhub/api-client:test:      ✓ E7-W03 round 2 #5 (D11) · R-15-14: [Simula] on reminders counts WOULD_REMIND and [Executa ara] classReminders, as the core does 14ms
+@agilityhub/api-client:test:    ✓ E5-W03 step 8 · S15 §6 form A (GET /risk-review) (2)
+@agilityhub/api-client:test:      ✓ T-15-33 sends the four statuses of the spec's example on the club's today; riskReviewEmpty sends none; MEMBER → 403 110ms
+@agilityhub/api-client:test:      ✓ E5-W03 round 2 · review #5: on the example day each item is a calendar class of its day, and its registrants are the notified ones 134ms
+@agilityhub/api-client:test:    ❯ E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day (5)
+@agilityhub/api-client:test:      × E5-W05 step 15: on S15's example day (dl 10 at 8:12) each row is a class of its week in the state its status implies, and the WILL_CANCEL class is still active 72ms
+@agilityhub/api-client:test:      ✓ E5-W05 step 15: on dt 11-08 at 9:00, the day after the example each row is a class of its week in the state its status implies 70ms
+@agilityhub/api-client:test:      × E5-W05 step 15: on dc 23-09 at 10:00, after that day's review each row is a class of its week in the state its status implies 135ms
+@agilityhub/api-client:test:      ✓ E5-W05 step 15: on dl 21-09 at 12:00, a Monday after its review (Wednesday's «Cadells» ahead) each row is a class of its week in the state its status implies 65ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #12: on dg 27-09 at 12:00, the review's probe day, the form has no row because no active class falls in its window: the week ahead is still a draft 63ms
+@agilityhub/api-client:test:    ✓ E5-W05 step 16 · the back-office mock finds classes and waiting entries in the caller's club only (1)
+@agilityhub/api-client:test:      ✓ E5-W05 step 16: an ADMIN of another club cannot cancel the entry (404), nor read the class's registrants and waiting list, nor see its classes in the risk review 142ms
+@agilityhub/api-client:test:    ✓ E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /bookings) (3)
+@agilityhub/api-client:test:      ✓ answers the D4 class's 4 bookings (+ 1 late cancellation) and its 2 waiting entries; R-08-16 removal, then WAITLIST_ENTRY_NOT_LIVE 130ms
+@agilityhub/api-client:test:      ✓ E5-W03 round 2 · review #7: a removal checks WAITLIST, the role and the entry's owner; an impersonation never reaches another member's entry 61ms
+@agilityhub/api-client:test:      ✓ T-08-47 GET /bookings filters by member, refuses an undeclared filter (400 INVALID_FILTER) and a MEMBER (403) 170ms
+@agilityhub/api-client:test:    ✓ E5-W03 step 8 · S09 ring-usage register (GET /training-bookings, GET /ring-blocks) (2)
+@agilityhub/api-client:test:      ✓ T-09-27 lists the week's training bookings for the staff (MEMBER 403, FREE_TRAINING off 404) and exports only for ADMIN 18ms
+@agilityhub/api-client:test:      ✓ T-09-30 redacts the blocks for a MEMBER, refuses him `note`, and keeps the activity's block and a cancelled one from being cancelled 103ms
+@agilityhub/api-client:test:    ✓ E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the opening's hour) (1)
+@agilityhub/api-client:test:      ✓ E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does 90ms
+@agilityhub/api-client:test:    ✓ E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) (7)
+@agilityhub/api-client:test:      ✓ E5-W05 step 5: registerMany has more than 1000 training bookings; «Nil Fictici Soler» is not in the first 1000, and GET /training-bookings/filter-values counts him over the whole set 177ms
+@agilityhub/api-client:test:      ✓ E5-W05 step 5: GET /ring-blocks/filter-values counts every block, «Cadells» (only after row 1000) included, labelled with the ring's name 28ms
+@agilityhub/api-client:test:      ✓ E5-W05 step 5: GET /bookings/filter-values counts the member's classes by state; GET /bookings has no search (a non-blank q is INVALID_FILTER, E75) 255ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #11.a: GET /bookings/filter-values labels a class «{club-local start YYYY-MM-DDTHH:mm} · {description}», as the core does 83ms
+@agilityhub/api-client:test:      ✓ E5-W05 step 5: a ring block's search reads its ring's name and, for staff, its note (S09 §2, E75) 14ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #4: an ADMIN of another club (adminOtherClub) finds no booking, training booking or ring block of this club, and no filter value: the tenant comes from the JWT 180ms
+@agilityhub/api-client:test:      ✓ E7-W07 step 8 (E5-W05 round 3 review #1, R-09-13): an ADMIN of another club cannot cancel a block of this club's register (404 NOT_FOUND, the activity's block too), and the block is still ACTIVE for this club's own ADMIN, who cancels it 49ms
+@agilityhub/api-client:test:    ✓ E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) (2)
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (D4's «B+C»: Duna «C», Mixa «C», Kai «B», Coco «C», Rumba «B»), and null in a club with levels.enabled = false 102ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters 804ms
+@agilityhub/api-client:test:    ✓ E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-15-12) (4)
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #11.d: no-show-notices runs at messaging.noShowNoticeTime (08:00): its schedule, its runs and its next run; a saved change moves the schedule and the next run 18ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #14: nextScheduledForLocal follows jobs.dailyTime, classes.riskReviewTime and bookings.weekOpensAt, as schedule.localTime does 9ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #14: the risk review reads classes.minDogs, as D4's risk mark does: with minDogs = 1 the class with one dog is at risk in neither D1 nor D4 68ms
+@agilityhub/api-client:test:      ✓ E5-W05 round 2 #14: with the risk review switched off, no active class names notified members (no review ran); a class it cancelled keeps the ones it notified 56ms
+@agilityhub/api-client:test:    ✓ E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) (12)
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 10 at 8:12 (D1 and D10, S15's example day) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 667ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dc 12 at 10:00 (D4) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 491ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 7:10 (the ring-usage register) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 490ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 21:00 (screen 23's drawer) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 466ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dg 2 at 20:30 (the member world) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 492ms
+@agilityhub/api-client:test:      ✓ T-08-03 / R-08-02, R-08-03, R-08-19 (E11-W02 round 2, INC-55 #3): at dl 10 at 8:12 (D1 and D10, S15's example day) one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds 599ms
+@agilityhub/api-client:test:      ✓ T-08-03 / R-08-02, R-08-03, R-08-19 (E11-W02 round 2, INC-55 #3): at dc 12 at 10:00 (D4) one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds 390ms
+@agilityhub/api-client:test:      ✓ T-08-03 / R-08-02, R-08-03, R-08-19 (E11-W02 round 2, INC-55 #3): at dl 3 at 7:10 (the ring-usage register) one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds 487ms
+@agilityhub/api-client:test:      ✓ T-08-03 / R-08-02, R-08-03, R-08-19 (E11-W02 round 2, INC-55 #3): at dl 3 at 21:00 (screen 23's drawer) one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds 411ms
+@agilityhub/api-client:test:      ✓ T-08-03 / R-08-02, R-08-03, R-08-19 (E11-W02 round 2, INC-55 #3): at dg 2 at 20:30 (the member world) one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds 519ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-19): at dl 10 at 8:12, cancelling Tuesday's 18:50 class leaves Wednesday's registrants as they were (ids, dogs, states, bookedAt), in D4 and in D10's list; Tuesday's are the same dogs under the same ids, now CANCELLED_BY_CLUB, and its late cancellation stays CANCELLED_LATE 69ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants 1138ms
+@agilityhub/api-client:test:    ✓ E7-W07 round 2 #5b · the staff rows were booked, and the waiting entries joined, before now (S08 R-08-01) (4)
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 10 at 8:12 (D1 and D10, S15's example day) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened 410ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #5b (R-08-01): at dc 12 at 10:00 (D4) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened 337ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 3 at 7:10 (the ring-usage register) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened 331ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #5b (R-08-01): at dg 2 at 20:30 (the member world) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened 385ms
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day > E5-W05 step 15: on S15's example day (dl 10 at 8:12) each row is a class of its week in the state its status implies, and the WILL_CANCEL class is still active
+@agilityhub/api-client:test: AssertionError: AUTO_CANCELLED cls-2026-08-10-0930-7 is a class of its week: expected undefined to be defined
+@agilityhub/api-client:test:  ❯ riskRowsInTheirWeeks src/mocks/backoffice-handlers.test.ts:401:78
+@agilityhub/api-client:test:     399|     );
+@agilityhub/api-client:test:     400|     const session = week.body.classes.find((candidate) => candidate.id…
+@agilityhub/api-client:test:     401|     expect(session, `${item.status} ${item.classId} is a class of its …
+@agilityhub/api-client:test:        |                                                                              ^
+@agilityhub/api-client:test:     402|     if (session === undefined) continue;
+@agilityhub/api-client:test:     403|     expect([session.date, session.startTime, session.displayDescriptio…
+@agilityhub/api-client:test:  ❯ src/mocks/backoffice-handlers.test.ts:440:12
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day > E5-W05 step 15: on dc 23-09 at 10:00, after that day's review each row is a class of its week in the state its status implies
+@agilityhub/api-client:test: AssertionError: AUTO_CANCELLED cls-2026-09-23-0930-0 is a class of its week: expected undefined to be defined
+@agilityhub/api-client:test:  ❯ riskRowsInTheirWeeks src/mocks/backoffice-handlers.test.ts:401:78
+@agilityhub/api-client:test:     399|     );
+@agilityhub/api-client:test:     400|     const session = week.body.classes.find((candidate) => candidate.id…
+@agilityhub/api-client:test:     401|     expect(session, `${item.status} ${item.classId} is a class of its …
+@agilityhub/api-client:test:        |                                                                              ^
+@agilityhub/api-client:test:     402|     if (session === undefined) continue;
+@agilityhub/api-client:test:     403|     expect([session.date, session.startTime, session.displayDescriptio…
+@agilityhub/api-client:test:  ❯ src/mocks/backoffice-handlers.test.ts:470:14
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  FAIL  src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the D4 week (form B) with the Thursday warning and the Carretera block
+@agilityhub/api-client:test: AssertionError: expected [] to have a length of 1 but got +0
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: - Expected
+@agilityhub/api-client:test: + Received
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: - 1
+@agilityhub/api-client:test: + 0
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ❯ src/mocks/calendar-handlers.test.ts:111:71
+@agilityhub/api-client:test:     109|     ]);
+@agilityhub/api-client:test:     110|     expect(data.ringBlocks).toHaveLength(1);
+@agilityhub/api-client:test:     111|     expect(data.classes.filter((item) => item.state === "CANCELLED")).…
+@agilityhub/api-client:test:        |                                                                       ^
+@agilityhub/api-client:test:     112|     expect(data.canValidate).toBe(false);
+@agilityhub/api-client:test:     113|   });
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  2 failed | 39 passed (41)
+@agilityhub/api-client:test:       Tests  3 failed | 798 passed (801)
+@agilityhub/api-client:test:    Start at  20:11:57
+@agilityhub/api-client:test:    Duration  14.91s (tests 46%, import 30%, transform 23%, environment 1%)
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/api-client#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /opt/homebrew/bin/pnpm run test exited (1)
+
+ Tasks:    23 successful, 30 total
+Cached:    21 cached, 30 total
+  Time:    15.98s 
+Failed:    @agilityhub/api-client#test
+
+ ERROR  run failed: command  exited (1)

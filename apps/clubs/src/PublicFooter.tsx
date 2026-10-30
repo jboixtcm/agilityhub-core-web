@@ -1,6 +1,23 @@
 import { useBranding } from "@agilityhub/ui";
 import { useTranslation } from "react-i18next";
 
+/** Public display copy is scoped to the exact tenant; it never rewrites registered-office data. */
+export function configuredFooter(raw: unknown, slug: string | null): string[] | undefined {
+  if (typeof raw !== "string" || slug === null || raw === "") return undefined;
+  try {
+    const config: unknown = JSON.parse(raw);
+    if (config === null || typeof config !== "object" || Array.isArray(config)) return undefined;
+    const value: unknown = (config as Record<string, unknown>)[slug];
+    return Array.isArray(value) &&
+      value.length > 0 &&
+      value.every((line) => typeof line === "string" && line.trim() !== "")
+      ? (value as string[])
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * The public footer of the access screen (01) and the signup (16–19), S02 R-02-02 (Jordi 25-09):
  * «{legalName} · {taxId} · {city}» from `/branding` (the entity's public identifiers, LSSI art. 10),
@@ -24,6 +41,19 @@ export function PublicFooter({ className }: { className: string }) {
         : t("common:publicFooter.withTaxIdAndCity", { city, club: entity, taxId });
   const office = branding.club.legalAddress;
   const officeCity = office?.city?.trim() ?? "";
+  const display = configuredFooter(import.meta.env.VITE_CLUB_PUBLIC_FOOTERS, branding.club.slug);
+
+  if (display !== undefined) {
+    return (
+      <footer className={className}>
+        {display.map((line, index) => (
+          <span className="public-footer__line" key={index}>
+            {line}
+          </span>
+        ))}
+      </footer>
+    );
+  }
 
   return (
     <footer className={className}>
@@ -31,7 +61,10 @@ export function PublicFooter({ className }: { className: string }) {
       {office == null ? null : (
         <span className="public-footer__line">
           {officeCity === ""
-            ? t("common:publicFooter.office", { postalCode: office.postalCode, street: office.street })
+            ? t("common:publicFooter.office", {
+                postalCode: office.postalCode,
+                street: office.street,
+              })
             : t("common:publicFooter.officeWithCity", {
                 city: officeCity,
                 postalCode: office.postalCode,

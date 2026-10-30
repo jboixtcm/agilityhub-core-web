@@ -13,6 +13,7 @@ import {
 } from "@agilityhub/auth";
 import type { PlatformRole, Role } from "@agilityhub/auth";
 import {
+  AppearanceSelector,
   Button,
   Card,
   EmptyState,
@@ -518,6 +519,11 @@ function ActivitiesRoute({
   );
 }
 
+function TemplateDayRoute(props: React.ComponentProps<typeof TemplateDayPage>) {
+  const session = useSession();
+  return <TemplateDayPage {...props} readOnly={!session.roles.includes("ADMIN")} />;
+}
+
 function routeContent(
   route: AdminRouteDefinition,
   client: ReturnType<typeof createAuthenticatedApiClient>,
@@ -545,7 +551,7 @@ function routeContent(
   if (route.path === "/plantilles/:templateId/dia/:dayOfWeek") {
     const [, , templateId = "", , day] = pathname.split("/");
     return (
-      <TemplateDayPage
+      <TemplateDayRoute
         client={client}
         dayOfWeek={parseDay(day)}
         key={pathname}
@@ -761,6 +767,15 @@ function AdminShell({
           <strong>{branding.club.name}</strong>
         </div>
         <div className="admin-shell__actions">
+          <AppearanceSelector
+            labels={{
+              label: t("shell:appearance.label"),
+              club: t("shell:appearance.club"),
+              light: t("shell:appearance.light"),
+              dark: t("shell:appearance.dark"),
+              auto: t("shell:appearance.auto"),
+            }}
+          />
           {/* The exports are a club's (S14): a platform account without a club role has none, and
               a support access never reaches them (R-17-10: `403 SUPPORT_RESTRICTED`). */}
           {session.roles.includes("ADMIN") && session.me?.support === undefined ? (
@@ -1132,6 +1147,9 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
               {t("auth:access.passwordReveal")}
             </Button>
           )}
+          {!emailLoginEnabled ? (
+            <p className="auth-support">{t("auth:access.manualSupport")}</p>
+          ) : null}
           {error === undefined ? null : <p role="alert">{error}</p>}
           {message === undefined ? null : <p role="status">{message}</p>}
         </form>
@@ -1176,7 +1194,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
     session.roles.length === 0 && session.platformRoles.includes("AGILITYHUB_ADMIN");
   // A platform-only account on an unknown path is shown D19's list and the address is replaced
   // by it, so the address, the lit «Consola» entry and a reload agree (E10-W01 round 2 #6).
-  const ownPath = ["/_gallery", "/acces", "/activacio", "/entrar", SUPPORT_PATH].includes(
+  const ownPath = ["/_gallery", "/acces", "/activacio", "/login", "/entrar", SUPPORT_PATH].includes(
     requested.pathname,
   );
   const strayPlatformPath =
@@ -1210,7 +1228,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
     window.location.replace("/entrar");
     return null;
   }
-  if (pathname === "/entrar") {
+  if (pathname === "/login" || pathname === "/entrar") {
     return <AccessPage authClient={authClient} />;
   }
   if (pathname === "/activacio") {

@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { createApiClient, type components } from "@agilityhub/api-client";
 import {
   AGENDA_MOCK_NOW,
   AGENDA_SELECTED_CLASS_ID,
@@ -252,6 +252,11 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
       "Reserva = pista reservada per a entrenament (mitja alçada: 30 min) · Bloqueig = pista tancada, amb el motiu · clic en una classe: inscrits i passar llista",
     );
     expect(
+      screen.getByText("Selecciona una classe de l’agenda per veure els inscrits i passar llista."),
+    ).toBeVisible();
+    expect(document.querySelector(".week-agenda__ring-action")).not.toHaveAttribute("open");
+    fireEvent.click(document.querySelector(".week-agenda__ring-action summary") ?? document.body);
+    expect(
       screen.getByRole("heading", { name: "Reservar o bloquejar pista (sense alumne)" }),
     ).toBeVisible();
   });
@@ -344,6 +349,25 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
     expect(screen.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
   });
 
+  it("shows each dog photo in the administration attendance list without changing the student link", async () => {
+    const photoUrl = "/api/v1/attachments/files/example?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/attendance", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        const sheet = (await original?.json()) as components["schemas"]["AttendanceSheet"];
+        return HttpResponse.json({
+          ...sheet,
+          rows: sheet.rows.map((row) => ({ ...row, dogPhotoUrl: photoUrl })),
+        });
+      }),
+    );
+    await renderAgenda();
+    await openSelectedClass();
+    const link = screen.getByRole("link", { name: "Laura + Duna" });
+    expect(link).toHaveAttribute("href", "/alumnes/dog-duna");
+    expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
+  });
+
   it("the badge cycles «— → present → avisat → no presentat → —» and stops on a final row; [DESA LA LLISTA] sends only the changed rows with the current version and a new key", async () => {
     const requests = recordRequests();
     await renderAgenda();
@@ -360,7 +384,7 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
     const anna = within(await panelRow("Anna + Nass")).getByRole("button", {
       name: /^Assistència de Anna/u,
     });
-    expect(anna).toBeDisabled();
+    expect(anna).toBeEnabled();
     expect(anna).toHaveTextContent("avisat");
     expect(screen.getByRole("button", { name: "Desa la llista" })).toBeDisabled();
 
@@ -490,7 +514,7 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
     fireEvent.click(screen.getByRole("button", { name: "PDF" }));
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     expect(screen.getByRole("table")).toBeVisible();
@@ -593,6 +617,7 @@ describe("E6-W03 D12 after a write: what the grid shows and what the panel keeps
   it("a reservation made with the ring card reads the week again and shows in the grid", async () => {
     await renderAgenda();
     await grid();
+    fireEvent.click(document.querySelector(".week-agenda__ring-action summary") ?? document.body);
     const card = within(
       screen
         .getByRole("heading", { name: "Reservar o bloquejar pista (sense alumne)" })

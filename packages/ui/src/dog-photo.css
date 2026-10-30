@@ -1,0 +1,29 @@
+.ah-dog-photo {
+  display: inline-grid;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  overflow: hidden;
+  vertical-align: middle;
+  border-radius: var(--ah-radius-md);
+  place-items: center;
+}
+
+.ah-dog-photo--large {
+  width: 5rem;
+  height: 5rem;
+}
+
+.ah-dog-photo img,
+.ah-dog-photo .ah-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ah-dog-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  min-width: 0;
+}

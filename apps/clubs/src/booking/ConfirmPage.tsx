@@ -91,16 +91,18 @@ function NewBookingCard({
               {t("booking:confirm.levels", { levels: formats.formatList(levels) })}
             </Chip>
           )}
-          <Chip>
+          {session.ringName === null || session.ringName === undefined ? null : (
+            <span className="confirm-card__ring">
+              {t("booking:confirm.ring", { name: session.ringName })}
+            </span>
+          )}
+          <Chip className="confirm-card__dog">
             <Icon aria-hidden="true" name="paw" />
             {t("booking:confirm.withDog", {
               dogArticle: dogArticle(dog.name, dog.sex, formats.locale),
               dogName: dog.name,
             })}
           </Chip>
-          {session.ringName === null || session.ringName === undefined ? null : (
-            <span className="confirm-card__ring">{session.ringName}</span>
-          )}
         </p>
       </Card>
     </>
@@ -213,12 +215,17 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
             </a>
           </p>
         </div>
-        <a
-          className="ah-button ah-button--primary"
-          href={`/reserves/${encodeURIComponent(booked.id)}`}
-        >
-          {t("booking:confirm.seeBooking")}
-        </a>
+        <div className="confirm-actions">
+          <a
+            className="ah-button ah-button--secondary"
+            href={`/reserves/${encodeURIComponent(booked.id)}`}
+          >
+            {t("booking:confirm.seeBooking")}
+          </a>
+          <a className="ah-button ah-button--primary" href="/inici">
+            {t("booking:confirm.backHome")}
+          </a>
+        </div>
       </>
     );
   }
@@ -496,7 +503,7 @@ export function ConfirmPage({ client }: { client: ApiClient }) {
   }, [state]);
   if (state === undefined) return null;
   return (
-    <section className="booking-screen">
+    <section className="booking-screen booking-screen--confirm">
       <AppBar
         className="booking-screen__bar"
         end={

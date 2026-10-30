@@ -81,6 +81,9 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
       name: "Vols anul·lar la reserva de la classe B+C?",
     });
     expect(within(dialog).queryByText(/Falten menys de/u)).toBeNull();
+    expect(
+      within(dialog).getByText(/Si anul·les ara, la classe no comptarà com a feta/u),
+    ).toBeVisible();
     fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
     // The note also follows a next-week booking's cancellation, and `Booking` names no week: it
     // says no «aquesta setmana» (E5-W01 round-2 review #3).

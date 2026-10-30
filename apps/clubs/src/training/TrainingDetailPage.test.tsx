@@ -47,7 +47,7 @@ describe("S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-1
     expect(screen.getByText("Reservada pel club el diumenge 02/08 a les 20:05")).toBeVisible();
     expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).not.toBeInTheDocument();
     expect(
-      screen.getByText("Ja no es pot anul·lar des de l'app: posa't en contacte amb el club."),
+      screen.getByText(/El termini per anul·lar era el/u),
     ).toBeVisible();
   });
 
@@ -180,7 +180,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): the training cance
     await press();
     expect(
       await within(dialog).findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     await press();

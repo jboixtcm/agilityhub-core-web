@@ -142,7 +142,7 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
     fireEvent.click(await screen.findByRole("button", { name: "Continua" }));
     // A lost answer is a network failure: the generic catalog text, beside the upload.
     expect((await screen.findByRole("alert")).textContent).toBe(
-      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Continua" }));

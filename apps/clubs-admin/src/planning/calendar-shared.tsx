@@ -180,13 +180,21 @@ export function placementKey(
   return [ringId ?? "", date ?? "", start, end].join("|");
 }
 
-/** «12/08/2026» → «2026-08-12»; `undefined` when it is not a real date. */
-export function parseMaskedDate(value: string): string | undefined {
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/u.exec(value.trim());
+/** Accept day/month, two-digit years (the current century), and full years. */
+export function parseMaskedDate(
+  value: string,
+  currentYear = new Date().getFullYear(),
+): string | undefined {
+  const match = /^(\d{1,2})\/(\d{1,2})(?:\/(\d{2}|\d{4}))?$/u.exec(value.trim());
   if (match === null) return undefined;
-  const [, day, month, year] = match;
-  const iso = `${year ?? ""}-${month ?? ""}-${day ?? ""}`;
-  // `isIsoDate` (→ `isPlainDate`) already rejects 31/02 and 2026-13-01.
+  const [, day, month, suppliedYear] = match;
+  const year =
+    suppliedYear === undefined
+      ? currentYear
+      : suppliedYear.length === 2
+        ? Math.floor(currentYear / 100) * 100 + Number(suppliedYear)
+        : Number(suppliedYear);
+  const iso = `${String(year).padStart(4, "0")}-${month?.padStart(2, "0") ?? ""}-${day?.padStart(2, "0") ?? ""}`;
   return isIsoDate(iso) ? iso : undefined;
 }
 

@@ -297,6 +297,7 @@
   z-index: 50;
   inset: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   padding: var(--ah-space-4);
   background: var(--ah-color-overlay);
@@ -692,10 +693,37 @@
 }
 
 .ah-bar-chart__bar--total {
-  background: var(--ah-color-surface-2);
+  background: var(--ah-color-text-muted);
   border: 1px solid var(--ah-color-border);
 }
 
 .ah-bar-chart__bar--highlighted {
   background: var(--ah-color-primary);
+}
+
+.ah-appearance select {
+  max-width: 8.5rem;
+  min-height: 2.25rem;
+  padding: var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+.ah-appearance select:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+@media (max-width: 30rem) {
+  .ah-appearance select {
+    max-width: 5.5rem;
+    font-size: 0.6875rem;
+  }
+}
+
+.ah-select option {
+  font-family: inherit;
+  font-size: inherit;
 }

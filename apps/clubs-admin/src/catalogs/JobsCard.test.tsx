@@ -395,7 +395,7 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
     const sheet = await within(drawer).findByRole("region", { name: "Fitxa de l'execució" });
     expect(
       await within(sheet).findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
   });

@@ -30,6 +30,34 @@ function BrandingName() {
 }
 
 describe("T-02-05 BrandingProvider", () => {
+  it("uses the club mark as favicon, falls back without a mark, and restores the page icon", () => {
+    const icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.setAttribute("href", "/favicon.svg");
+    icon.type = "image/svg+xml";
+    document.head.append(icon);
+    const branding = canicBranding();
+    const { rerender, unmount } = render(
+      <BrandingProvider branding={branding}>
+        <BrandingName />
+      </BrandingProvider>,
+    );
+    expect(icon.getAttribute("href")).toBe(branding.theme.markUrl);
+    expect(icon.hasAttribute("type")).toBe(false);
+    const withoutMark = { ...branding, theme: { ...branding.theme, markUrl: null } };
+    rerender(
+      <BrandingProvider branding={withoutMark}>
+        <BrandingName />
+      </BrandingProvider>,
+    );
+    expect(icon.getAttribute("href")).toBe("/favicon.svg");
+    expect(document.head.querySelectorAll('link[rel="icon"]')).toHaveLength(1);
+    unmount();
+    expect(icon.getAttribute("href")).toBe("/favicon.svg");
+    expect(icon.type).toBe("image/svg+xml");
+    icon.remove();
+  });
+
   it("uses only the mark in compact placements and falls back to an initial", () => {
     const branding = canicBranding();
 

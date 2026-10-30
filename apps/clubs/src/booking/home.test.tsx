@@ -78,7 +78,7 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
       "Entrenament · amb Rock | confirmada / Dimarts 4 · 8:00–8:30 · Muntanya",
       "Classe C i sup. · amb Duna | en llista d'espera / Dijous 6 · 20:00 · Carretera · t'avisarem si s'allibera plaça",
       "Torneig d'Estiu 2026 | inscrita / Divendres 7 · 18:30–20:30 · totes les pistes",
-      "Classe D i sup. · amb Rock | confirmada / Dilluns 10 · 19:00–20:00 · Muntanya · instructor: es mostra el dia abans",
+      "Classe D i sup. · amb Rock | confirmada / Dilluns 10 · 19:00–20:00 · Muntanya · instructor: es mostra 24 h abans",
     ]);
     const links = [...document.querySelectorAll(".reservation-row, .activity-row")].map(
       (row) => row.querySelector("a")?.getAttribute("href") ?? null,
@@ -263,7 +263,7 @@ describe("E5-W01 i18n: the three locales, and the club's zone for a viewer elsew
       "Entrenamiento · con Rock | confirmada / Lunes 3 · 7:00–7:30 · Muntanya",
     );
     expect(reservationRows()[5]).toBe(
-      "Clase D i sup. · con Rock | confirmada / Lunes 10 · 19:00–20:00 · Muntanya · instructor: se muestra el día antes",
+      "Clase D i sup. · con Rock | confirmada / Lunes 10 · 19:00–20:00 · Muntanya · instructor: se muestra 24 h antes",
     );
   });
 

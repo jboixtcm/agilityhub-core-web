@@ -823,7 +823,7 @@
       },
       "capacityPerRingSlot": {
         "help": "Número de perros que pueden entrenar a la vez en cada pista.",
-        "label": "Perros a la vez por pista"
+        "label": "Reservas simultáneas por pista y franja"
       },
       "freeTrainingRequiresLicense": {
         "help": "Indica de forma informativa si se necesita licencia deportiva.",
@@ -984,5 +984,13 @@
       "previousPage": "Página anterior",
       "nextPage": "Página siguiente"
     }
+  },
+  "ringCapacity": {
+    "title": "Excepciones por pista",
+    "inherit": "Déjalo vacío para aplicar el límite general.",
+    "save": "Guardar {ring}",
+    "saved": "Capacidad guardada.",
+    "loadError": "No se han podido cargar las pistas.",
+    "saveError": "No se ha podido guardar la capacidad. Vuelve a intentarlo."
   }
 }

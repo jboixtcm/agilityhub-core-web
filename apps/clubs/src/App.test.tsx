@@ -97,6 +97,7 @@ async function renderApplication(
       "leave",
       "shell",
       "signup",
+      "training",
     ],
     storage: undefined,
   });
@@ -576,17 +577,14 @@ describe("E11-W06 W5 and W6 (CONVENCIONS_I18N §1, AGENTS rule 6): the account's
       const client = authClient();
       await client.acceptImpersonation("mock-impersonation-token");
       const updateLocale = vi.spyOn(client, "updateLocale");
-      // This route retains the shared shell header; /inici has its own header and no selector.
+      // Preferences are only on Profile; an impersonated session cannot change the locale.
       window.history.pushState(null, "", "/estadistiques");
       await renderApplication(client, canicBranding, "es");
 
-      const selector = await screen.findByRole("combobox", { name: /Idioma|Language/u });
       await waitFor(() => {
         expect(document.documentElement.lang).toBe(targetLocale);
       });
-      expect(selector).toBeDisabled();
-      expect(selector).toHaveValue(targetLocale);
-      fireEvent.change(selector, { target: { value: "es" } });
+      expect(screen.queryByRole("combobox", { name: /Idioma|Language/u })).toBeNull();
       expect(updateLocale).not.toHaveBeenCalled();
       expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("es");
       expect(document.documentElement.lang).toBe(targetLocale);
@@ -1151,8 +1149,8 @@ describe("T-01-21 profile access rows and impersonation", () => {
       dogs,
       password,
       profile,
-      notices,
       language,
+      notices,
       receipts,
       inactivity,
       leave,
@@ -1236,6 +1234,32 @@ describe("T-01-21 profile access rows and impersonation", () => {
 
     expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     expect(screen.getByRole("button", { name: "Surt" })).toBeVisible();
+  });
+
+  it("does not ask an administrator acting as a member to accept personal consents and closes only that tab on exit", async () => {
+    mockScenario("impersonated");
+    const client = authClient();
+    await client.acceptImpersonation("mock-impersonation-token");
+    const me = client.getMe();
+    if (me === null) throw new Error("Missing test session");
+    vi.spyOn(client, "getMe").mockReturnValue({
+      ...me,
+      account: { ...me.account, onboardingPending: true },
+    });
+    const onboarding = vi.spyOn(client, "getOnboarding");
+    const revoke = vi.spyOn(client, "revokeImpersonation").mockResolvedValue();
+    const logout = vi.spyOn(client, "logout");
+    const close = vi.spyOn(window, "close").mockImplementation(() => undefined);
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    fireEvent.click(screen.getByRole("button", { name: "Surt" }));
+    await waitFor(() => {
+      expect(close).toHaveBeenCalledOnce();
+    });
+    expect(revoke).toHaveBeenCalledOnce();
+    expect(logout).not.toHaveBeenCalled();
+    expect(onboarding).not.toHaveBeenCalled();
+    close.mockRestore();
   });
 
   it("E5-W05 step 24: the banner names the member the admin opened (/me impersonation.memberName), not the account, whose name differs in a family group", async () => {
@@ -1876,6 +1900,81 @@ describe("T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated 
 });
 
 describe("T-01-26 imported-account onboarding and policy re-consent", () => {
+  it("highlights missing privacy acceptance while keeping image permission optional", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    const privacy = await screen.findByRole("checkbox", {
+      name: "He llegit i accepto la política de privacitat",
+    });
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    expect(privacy).toHaveAttribute("aria-invalid", "true");
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "L’autorització d’imatge és opcional",
+    );
+    expect(complete).not.toHaveBeenCalled();
+    fireEvent.click(privacy);
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    expect(complete.mock.calls[0]?.[0]).not.toHaveProperty("imageConsent");
+  });
+
+  it("shows existing image permission and does not overwrite it when completing privacy", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const state = await client.getOnboarding();
+    vi.spyOn(client, "getOnboarding").mockResolvedValue({ ...state, imageConsent: true });
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    expect(
+      await screen.findByRole("checkbox", { name: "Autoritzo l’ús de la meva imatge (opcional)" }),
+    ).toBeChecked();
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    expect(complete.mock.calls[0]?.[0]).not.toHaveProperty("imageConsent");
+  });
+
+  it("completes pending profile data without requesting an already accepted policy", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const state = await client.getOnboarding();
+    vi.spyOn(client, "getOnboarding").mockResolvedValue({ ...state, requiredConsent: null });
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    await screen.findByRole("heading", { name: "Completa el teu perfil" });
+    expect(
+      screen.queryByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    expect(complete.mock.calls[0]?.[0]).toMatchObject({
+      consentAccepted: false,
+      consentVersion: "",
+    });
+  });
+
   it("renders configured fields and sends consent, profile data and image choice", async () => {
     mockScenario("onboarding");
     const client = authClient();
@@ -1906,7 +2005,9 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
     });
     fireEvent.change(locale, { target: { value: "es" } });
     fireEvent.change(screen.getByLabelText("Telèfon"), { target: { value: "+34600111222" } });
-    fireEvent.click(screen.getByRole("checkbox", { name: "Autoritzo l'ús de la meva imatge" }));
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Autoritzo l’ús de la meva imatge (opcional)" }),
+    );
     fireEvent.click(
       screen.getByRole("checkbox", {
         name: "He llegit i accepto la política de privacitat",
@@ -2093,7 +2194,7 @@ describe("T-03-40 mobile own dogs", () => {
     expect(screen.getByText(/RSCE · llicència 13298 · M · 2 · 2D/u)).toBeVisible();
     expect(
       screen.getByText(
-        "El nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club",
+        "El nivell l'assigna el club · Per donar de baixa un gos, comunica-ho al club",
       ),
     ).toBeVisible();
 
@@ -2301,7 +2402,7 @@ describe("T-03-40 mobile own dogs", () => {
 
     async function upload(dog: "Duna" | "Rock", index: number, name: string) {
       fireEvent.click(
-        screen.getAllByRole("button", { name: "＋ DOC." })[index] as HTMLButtonElement,
+        (await screen.findAllByRole("button", { name: "＋ DOC." }))[index] as HTMLButtonElement,
       );
       const dialog = screen.getByRole("dialog", { name: `Afegeix un document de ${dog}` });
       expect(within(dialog).getByLabelText("Nom del document")).toHaveValue("");
@@ -2323,6 +2424,7 @@ describe("T-03-40 mobile own dogs", () => {
 
     await upload("Duna", 0, "Cartilla Duna");
     expect(await screen.findByText("Document desat")).toBeVisible();
+    expect(await screen.findByText("Cartilla Duna", { exact: true })).toBeVisible();
     await upload("Rock", 1, "Assegurança Rock");
     await waitFor(() => {
       expect(uploads).toEqual([
@@ -2843,14 +2945,35 @@ describe("T-03-41 mobile own data", () => {
   });
 });
 
-it("Internal access: the club app keeps password entry on its own page without email actions", async () => {
+it.each(["/login", "/entrar"])(
+  "Internal access %s: the club app keeps password entry on its own page without email actions",
+  async (path) => {
+    vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
+    window.history.pushState(null, "", path);
+    await renderApplication(authClient());
+    expect(screen.getByLabelText("Contrasenya")).toBeVisible();
+    expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Has oblidat la contrasenya/u })).toBeNull();
+    expect(document.body.textContent).not.toMatch(/AgilityHub/u);
+    expect(window.location.pathname).toBe(path);
+  },
+);
+
+it("T-01-08 recovery-only login sends RESET without exposing passwordless login", async () => {
   vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
+  vi.stubEnv("VITE_EMAIL_RECOVERY_ENABLED", "true");
   window.history.pushState(null, "", "/entrar");
-  await renderApplication(authClient());
+  const client = authClient();
+  const request = vi.spyOn(client, "requestMagicLink").mockResolvedValue(undefined);
+  await renderApplication(client);
   expect(screen.getByLabelText("Contrasenya")).toBeVisible();
-  expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
   expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
-  expect(screen.queryByRole("button", { name: /Has oblidat la contrasenya/u })).toBeNull();
-  expect(document.body.textContent).not.toMatch(/AgilityHub/u);
-  expect(window.location.pathname).toBe("/entrar");
+  expect(screen.queryByText(/demana ajuda a l’administració/u)).toBeNull();
+  fireEvent.change(screen.getByLabelText("Correu electrònic"), {
+    target: { value: "laura@example.test" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: /Has oblidat la contrasenya/u }));
+  expect(request).toHaveBeenCalledWith("laura@example.test", "RESET");
+  expect(await screen.findByRole("status")).toHaveTextContent(/Si el correu/u);
 });

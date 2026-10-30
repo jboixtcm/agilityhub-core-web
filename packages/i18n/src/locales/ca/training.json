@@ -18,7 +18,8 @@
     "taken": "ocupada",
     "cell": "{time}, {state}",
     "time": "Hora",
-    "stale": "pot no estar al dia"
+    "stale": "pot no estar al dia",
+    "unavailable": "no disponible"
   },
   "anyRing": {
     "choose": "A les {time} hi ha més d'una pista lliure — tria quina vols:"
@@ -32,7 +33,10 @@
     "button": "Confirma {day} · {from}–{to} · {ring}",
     "idle": "Confirma",
     "sending": "Enviant",
-    "done": "Entrenament reservat"
+    "done": "Entrenament reservat",
+    "title": "Reserva d’entrenament",
+    "chooseTime": "Tria una hora lliure per preparar la reserva.",
+    "dismissError": "Entesos"
   },
   "limit": {
     "withCancellable": "Has arribat al límit de {limit} reserves per aquesta setmana: anul·la alguna de les properes per reservar-ne una altra.",
@@ -49,7 +53,21 @@
     "withDog": "Entrenament · amb {dogArticle}{dogName}",
     "cancelDialog": "Vols anul·lar la reserva d'aquest entrenament?",
     "cancelled": "Entrenament anul·lat",
-    "tooLate": "Ja no es pot anul·lar des de l'app: posa't en contacte amb el club.",
+    "tooLate": "El termini per anul·lar era el {deadline}. Posa’t en contacte amb el club.",
     "tooLateDetails": "Només es pot anul·lar fins a {threshold} abans de començar, i en falten {remaining}."
+  },
+  "conditions": {
+    "link": "Veure condicions",
+    "title": "Funcionament de l’entrenament sense instructor",
+    "close": "Tanca",
+    "error": "No s’han pogut carregar les condicions.",
+    "loading": "Carregant les condicions"
+  },
+  "home": {
+    "title": "Entrenaments aquesta setmana",
+    "used": "{used} de {limit} entrenaments fets o reservats",
+    "remaining": "{count, plural, one {# disponible} other {# disponibles}}",
+    "member": "Total de l’abonat",
+    "stale": "El recompte pot no estar al dia."
   }
 }

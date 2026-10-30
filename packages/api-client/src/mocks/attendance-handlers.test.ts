@@ -239,7 +239,7 @@ describe("E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-0
     ).toEqual([
       "Laura + Duna PRESENT false",
       "Marc + Chun-li PENDING false",
-      "Anna + Nass NOTIFIED true",
+      "Anna + Nass NOTIFIED false",
       "Eva + Fish NO_SHOW false",
     ]);
     expect(data?.rows[0]?.pendingTasksCount).toBe(2);
@@ -316,18 +316,22 @@ describe("E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-0
     ).toBe(5);
   });
 
-  it("R-10-04: one refused item changes nothing (ATTENDANCE_NOTIFIED_FINAL on the saved «ha avisat»)", async () => {
+  it("R-10-04: one unknown booking changes nothing", async () => {
     await expect(
       failure(
         save({
           items: [
             { bookingId: "b2", state: "PRESENT" },
-            { bookingId: "b3", state: "PENDING" },
+            { bookingId: "unknown", state: "PENDING" },
           ],
           version: 4,
         }),
       ),
-    ).resolves.toEqual({ code: "ATTENDANCE_NOTIFIED_FINAL", details: {}, status: 422 });
+    ).resolves.toEqual({
+      code: "ATTENDANCE_BOOKING_NOT_ACTIVE",
+      details: { bookingId: "unknown" },
+      status: 422,
+    });
     const data = (await sheet()).data;
     expect(data?.sheet.version).toBe(4);
     expect(data?.rows[1]?.state).toBe("PENDING");
@@ -363,11 +367,11 @@ describe("E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-0
     expect(raw.status).toBe(400);
   });
 
-  it("R-10-05: «ha avisat» saved 20 min after the start is late, releases the seat and notifies nobody; the row becomes final", async () => {
+  it("R-10-05: «ha avisat» saved 20 min after the start is late, releases the seat and notifies nobody; the row can be corrected", async () => {
     const saved = (await save({ items: [{ bookingId: "b2", state: "NOTIFIED" }], version: 4 }))
       .data;
     expect(saved?.rows[1]).toMatchObject({
-      final: true,
+      final: false,
       notice: {
         afterClassEnd: false,
         atLocal: "08:50",
@@ -379,12 +383,10 @@ describe("E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-0
       },
     });
     expect(saved?.classSession.booked).toBe(2);
-    await expect(
-      failure(save({ items: [{ bookingId: "b2", state: "PRESENT" }], version: 5 })),
-    ).resolves.toMatchObject({
-      code: "ATTENDANCE_NOTIFIED_FINAL",
-      status: 422,
-    });
+    const restored = (await save({ items: [{ bookingId: "b2", state: "PRESENT" }], version: 5 }))
+      .data;
+    expect(restored?.rows[1]?.state).toBe("PRESENT");
+    expect(restored?.classSession.booked).toBe(3);
   });
 
   it("R-10-05: saved 80 min before the start (> 30) with someone waiting, the waiting list is notified", async () => {

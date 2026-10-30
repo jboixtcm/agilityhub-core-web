@@ -1223,6 +1223,45 @@
         "required" : [ ],
         "type" : "object"
       },
+      "AdminDogCreate" : {
+        "properties" : {
+          "birthDate" : {
+            "format" : "date",
+            "type" : "string"
+          },
+          "breed" : {
+            "maxLength" : 60,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "chip" : {
+            "type" : "string"
+          },
+          "freeTrainingAllowed" : {
+            "type" : "boolean"
+          },
+          "handlerIsMember" : {
+            "type" : "boolean"
+          },
+          "handlerName" : {
+            "type" : "string"
+          },
+          "levelId" : {
+            "type" : "string"
+          },
+          "name" : {
+            "maxLength" : 40,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "sex" : {
+            "enum" : [ "MALE", "FEMALE" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "birthDate", "breed", "name", "sex" ],
+        "type" : "object"
+      },
       "AdminInactivityPatchRequest" : {
         "additionalProperties" : false,
         "description" : "R-13-04 from D-screens: only the fields sent change; an unknown field → 400 VALIDATION_ERROR",
@@ -1614,7 +1653,7 @@
             "type" : [ "string", "null" ]
           },
           "final" : {
-            "description" : "A saved NOTIFIED row is fixed (R-10-03)",
+            "description" : "This row cannot currently be corrected. A saved NOTIFIED can be restored by an administrator or an instructor assigned to this class while their attendance window remains open.",
             "type" : "boolean"
           },
           "handlerName" : {
@@ -1636,7 +1675,7 @@
             "type" : "string"
           },
           "memberFullName" : {
-            "description" : "Only when handlerName differs from memberFirstName: the owner's full name, «(abonat: {nom i cognom})» (R-10-00)",
+            "description" : "Only when the explicit handlerIsMember flag is false (legacy rows compare names): the owner's full name, «(abonat: {nom i cognom})» (R-10-00)",
             "type" : "string"
           },
           "memberId" : {
@@ -2778,6 +2817,24 @@
           }
         },
         "required" : [ "club", "countryProfile", "currency", "defaultLocale", "legal", "locales", "modules", "pushPublicKey", "signup", "status", "theme", "timeZone" ],
+        "type" : "object"
+      },
+      "BrevoEvent" : {
+        "properties" : {
+          "X-Mailin-custom" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "event" : {
+            "type" : "string"
+          },
+          "message-id" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "X-Mailin-custom", "email", "event", "message-id" ],
         "type" : "object"
       },
       "BuildJoinRequest" : {
@@ -8458,6 +8515,7 @@
             "type" : "string"
           },
           "chip" : {
+            "description" : "Absent until the chip is recorded, including dogs added by an administrator.",
             "type" : "string"
           },
           "deactivatedAt" : {
@@ -8469,6 +8527,10 @@
           },
           "freeTrainingOverride" : {
             "type" : "boolean"
+          },
+          "handlerIsMember" : {
+            "description" : "The handler is the member, independently of their customary display name. Null uses the legacy name comparison.",
+            "type" : [ "boolean", "null" ]
           },
           "handlerName" : {
             "maxLength" : 80,
@@ -8522,7 +8584,7 @@
             "type" : "integer"
           }
         },
-        "required" : [ "birthDate", "breed", "chip", "id", "licenses", "memberId", "name", "registeredAt", "sex", "status", "version" ],
+        "required" : [ "birthDate", "breed", "id", "licenses", "memberId", "name", "registeredAt", "sex", "status", "version" ],
         "type" : "object"
       },
       "DogDetail" : {
@@ -8668,6 +8730,10 @@
           "handler" : {
             "type" : "string"
           },
+          "handlerIsMember" : {
+            "description" : "The handler is the member, independently of their customary display name. Null uses the legacy name comparison.",
+            "type" : [ "boolean", "null" ]
+          },
           "handlerName" : {
             "maxLength" : 80,
             "type" : "string"
@@ -8703,6 +8769,10 @@
               "type" : "string"
             },
             "type" : "array"
+          },
+          "photoUrl" : {
+            "description" : "Short-lived signed dog photo URL",
+            "type" : "string"
           },
           "registeredAt" : {
             "format" : "date-time",
@@ -8746,6 +8816,10 @@
               "$ref" : "#/components/schemas/SignupDocument"
             },
             "type" : "array"
+          },
+          "handlerIsMember" : {
+            "description" : "The handler is the member, independently of their customary display name. Null uses the legacy name comparison.",
+            "type" : "boolean"
           },
           "handlerName" : {
             "maxLength" : 80,
@@ -8791,6 +8865,10 @@
             "$ref" : "#/components/schemas/LevelSummary"
           },
           "name" : {
+            "type" : "string"
+          },
+          "photoUrl" : {
+            "description" : "Short-lived signed dog photo URL",
             "type" : "string"
           }
         },
@@ -14222,6 +14300,19 @@
             "format" : "int32",
             "type" : [ "integer", "null" ]
           },
+          "mergedAt" : {
+            "format" : "date-time",
+            "type" : [ "string", "null" ]
+          },
+          "mergedIntoMemberId" : {
+            "type" : [ "string", "null" ]
+          },
+          "mergedMembers" : {
+            "items" : {
+              "$ref" : "#/components/schemas/NamedReference"
+            },
+            "type" : [ "array", "null" ]
+          },
           "nextInvoiceDate" : {
             "format" : "date",
             "type" : [ "string", "null" ]
@@ -14738,6 +14829,51 @@
         "required" : [ "submittedAt" ],
         "type" : "object"
       },
+      "MemberMergePreview" : {
+        "properties" : {
+          "blockers" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "counts" : {
+            "additionalProperties" : {
+              "format" : "int64",
+              "type" : "integer"
+            },
+            "type" : "object"
+          },
+          "source" : {
+            "$ref" : "#/components/schemas/MergeMember"
+          },
+          "target" : {
+            "$ref" : "#/components/schemas/MergeMember"
+          }
+        },
+        "required" : [ "blockers", "counts", "source", "target" ],
+        "type" : "object"
+      },
+      "MemberMergeRequest" : {
+        "properties" : {
+          "sourceVersion" : {
+            "format" : "int64",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "targetMemberId" : {
+            "minLength" : 1,
+            "type" : "string"
+          },
+          "targetVersion" : {
+            "format" : "int64",
+            "minimum" : 0,
+            "type" : "integer"
+          }
+        },
+        "required" : [ "sourceVersion", "targetMemberId", "targetVersion" ],
+        "type" : "object"
+      },
       "MemberOverview" : {
         "description" : "Cross-vertical notification preference payload remains owned by S11.",
         "properties" : {
@@ -15131,6 +15267,26 @@
           }
         },
         "required" : [ "clubId", "profiles", "rememberProfile", "roles" ],
+        "type" : "object"
+      },
+      "MergeMember" : {
+        "properties" : {
+          "fullName" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "memberNumber" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "version" : {
+            "format" : "int64",
+            "type" : "integer"
+          }
+        },
+        "required" : [ "fullName", "id", "memberNumber", "version" ],
         "type" : "object"
       },
       "MessageTemplateCreateRequest" : {
@@ -16034,7 +16190,6 @@
             "type" : "boolean"
           },
           "consentVersion" : {
-            "minLength" : 1,
             "type" : "string"
           },
           "fields" : {
@@ -16056,6 +16211,10 @@
               "$ref" : "#/components/schemas/OnboardingField"
             },
             "type" : "array"
+          },
+          "imageConsent" : {
+            "description" : "Existing image permission, absent when no decision is recorded",
+            "type" : [ "boolean", "null" ]
           },
           "pending" : {
             "type" : "boolean"
@@ -16191,6 +16350,10 @@
               "type" : "string"
             },
             "type" : "array"
+          },
+          "photoUrl" : {
+            "description" : "Short-lived signed dog photo URL",
+            "type" : "string"
           }
         },
         "required" : [ "breed", "id", "name", "pendingDocuments" ],
@@ -41473,6 +41636,14 @@
             "enum" : [ "member", "instructor" ],
             "type" : "string"
           }
+        }, {
+          "in" : "query",
+          "name" : "state",
+          "required" : false,
+          "schema" : {
+            "enum" : [ "DRAFT", "ACTIVE", "FINISHED", "CANCELLED" ],
+            "type" : "string"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -41855,7 +42026,7 @@
           "key" : "registeredAt"
         } ],
         "x-exportable" : true,
-        "x-fields" : [ "id", "name", "breed", "level", "owner", "handler", "handlerName", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
+        "x-fields" : [ "id", "name", "photoUrl", "breed", "level", "owner", "handler", "handlerName", "handlerIsMember", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
         "x-filter-operators" : {
           "breed" : [ "contains" ],
           "handlerName" : [ "contains" ],
@@ -42152,7 +42323,7 @@
           "key" : "registeredAt"
         } ],
         "x-exportable" : false,
-        "x-fields" : [ "id", "name", "breed", "level", "owner", "handler", "handlerName", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
+        "x-fields" : [ "id", "name", "photoUrl", "breed", "level", "owner", "handler", "handlerName", "handlerIsMember", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
         "x-filter-operators" : {
           "breed" : [ "contains" ],
           "handlerName" : [ "contains" ],
@@ -42447,7 +42618,7 @@
           "key" : "registeredAt"
         } ],
         "x-exportable" : false,
-        "x-fields" : [ "id", "name", "breed", "level", "owner", "handler", "handlerName", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
+        "x-fields" : [ "id", "name", "photoUrl", "breed", "level", "owner", "handler", "handlerName", "handlerIsMember", "freeTraining", "licenses", "displayStatus", "sex", "age", "chip", "pendingDocuments", "levelAssignedAt", "pack", "registeredAt", "version" ],
         "x-filter-operators" : {
           "breed" : [ "contains" ],
           "handlerName" : [ "contains" ],
@@ -55926,7 +56097,7 @@
     "/api/v1/me/dogs/signup" : {
       "post" : {
         "description" : "R-04-25. MEMBER; accepts valid impersonation with actor attribution. Idempotency-Key required. Verifies member ownership and ACTIVE status. With BILLING, a quote that would read a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138): the requested plan (the member's own, which GET /signup no longer lists as current) or the family fare the added dog moves the member to → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId} on that plan, and nothing is written.",
-        "operationId" : "addDog",
+        "operationId" : "addDog_1",
         "parameters" : [ {
           "in" : "header",
           "name" : "Idempotency-Key",
@@ -59525,7 +59696,7 @@
         "tags" : [ "identity" ]
       },
       "put" : {
-        "description" : "Account token, never impersonated. S01 §14, T-01-26: consentAccepted must be true for the current consentVersion. Profile data may be deferred; imageConsent is optional.",
+        "description" : "Account token, never impersonated. S01 §14, T-01-26: consentAccepted must be true for the current consentVersion when a policy is pending. Already accepted policies need no new acceptance. Profile data may be deferred; imageConsent is optional.",
         "operationId" : "completeOnboarding",
         "requestBody" : {
           "content" : {
@@ -63858,6 +64029,165 @@
         "tags" : [ "clubs.common" ]
       }
     },
+    "/api/v1/members/{id}/dogs" : {
+      "post" : {
+        "description" : "ADMIN only, impersonation refused. Creates an ACTIVE dog linked to the ACTIVE member, preserving their plan and account. No signup approval or automatic payment; fees remain managed through billing. Tenant from the JWT. Idempotency-Key prevents duplicate creation.",
+        "operationId" : "addDog",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "Idempotency-Key",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AdminDogCreate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Dog"
+                }
+              }
+            },
+            "description" : "Active dog"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "VALIDATION_ERROR"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "NOT_FOUND"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/StaleVersion",
+            "description" : "MEMBER_ERASED, CHIP_ALREADY_EXISTS, STALE_VERSION, INVALID_STATE, IDEMPOTENCY_KEY_REUSED"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "TARGET_MEMBER_NOT_ACTIVE"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Add an active dog to an existing member",
+        "tags" : [ "clubs.census" ]
+      }
+    },
     "/api/v1/members/{id}/erasure" : {
       "delete" : {
         "description" : "S14 R-14-14. SCHEDULED or BLOCKED → CANCELLED, audited ERASURE_CANCELLED; ERASING (or the console's account request) is 409 INVALID_STATE; no live request is 404. Tenant comes from the JWT. ADMIN endpoints reject impersonation.",
@@ -64609,6 +64939,319 @@
           }
         },
         "summary" : "scheduleLeave",
+        "tags" : [ "clubs.census" ]
+      }
+    },
+    "/api/v1/members/{id}/merge" : {
+      "post" : {
+        "description" : "ADMIN only, impersonation refused. The path identifies the duplicate source; targetMemberId survives. Both preview versions are required. Moves dogs and operational references atomically, retains historical source records and links, leaves the source inactive and unbillable. Conflicts abort every change. Idempotency-Key required. Tenant from the JWT.",
+        "operationId" : "merge",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "header",
+          "name" : "Idempotency-Key",
+          "required" : true,
+          "schema" : {
+            "format" : "uuid",
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MemberMergeRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MemberMergePreview"
+                }
+              }
+            },
+            "description" : "Applied preview"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "VALIDATION_ERROR"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "NOT_FOUND"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/StaleVersion",
+            "description" : "MEMBER_ERASED, INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Merge duplicate members preserving history",
+        "tags" : [ "clubs.census" ]
+      }
+    },
+    "/api/v1/members/{id}/merge-preview" : {
+      "get" : {
+        "description" : "ADMIN only, impersonation refused. Read-only preview of the source, surviving target, operational references and blocking conflicts. Historical source records remain linked and readable after the merge. Tenant from the JWT.",
+        "operationId" : "preview",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "targetMemberId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/MemberMergePreview"
+                }
+              }
+            },
+            "description" : "Preview"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "NOT_FOUND"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "MEMBER_ERASED, INVALID_STATE"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "summary" : "Preview a member merge",
         "tags" : [ "clubs.census" ]
       }
     },
@@ -94411,6 +95054,164 @@
         },
         "summary" : "Get account claims permitted by the token scopes",
         "tags" : [ "identity" ]
+      }
+    },
+    "/webhooks/email/brevo" : {
+      "post" : {
+        "description" : "Requires the dedicated webhook bearer secret over HTTPS, not an account JWT. Accepts one event or a batch. Events correlate opaque custom metadata, the stored tenant, recipient and provider reference. Replays are idempotent.",
+        "operationId" : "brevoWebhook",
+        "parameters" : [ {
+          "in" : "header",
+          "name" : "Authorization",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "anyOf" : [ {
+                  "$ref" : "#/components/schemas/BrevoEvent"
+                }, {
+                  "items" : {
+                    "$ref" : "#/components/schemas/BrevoEvent"
+                  },
+                  "type" : "array"
+                } ]
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Processed or safely ignored"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "WEBHOOK_SIGNATURE_INVALID"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Found"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Conflict"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Unprocessable Entity"
+          },
+          "429" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Too Many Requests",
+            "headers" : {
+              "Retry-After" : {
+                "description" : "Seconds before retrying",
+                "schema" : {
+                  "format" : "int32",
+                  "type" : "integer"
+                }
+              }
+            }
+          },
+          "4XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Client error"
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Internal Server Error"
+          },
+          "501" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Not Implemented"
+          },
+          "5XX" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            },
+            "description" : "Server error"
+          }
+        },
+        "security" : [ ],
+        "summary" : "Receive authenticated Brevo transactional events",
+        "tags" : [ "clubs.messaging" ]
       }
     },
     "/webhooks/email/sendgrid" : {

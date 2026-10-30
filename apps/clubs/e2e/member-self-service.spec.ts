@@ -119,7 +119,7 @@ test.describe("T-03-40 mobile own dogs", () => {
     await expect(page.getByText("Document desat")).toBeVisible();
     await expect(
       page.getByText(
-        "El nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club",
+        "El nivell l'assigna el club · Per donar de baixa un gos, comunica-ho al club",
       ),
     ).toBeVisible();
 

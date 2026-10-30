@@ -1,0 +1,6 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/messaging/NotificationLogPage.tsx
+  309:30  error  Prefer using nullish coalescing operator (`??`) instead of a logical or (`||`), as it is a safer operator  @typescript-eslint/prefer-nullish-coalescing
+
+✖ 1 problem (1 error, 0 warnings)
+

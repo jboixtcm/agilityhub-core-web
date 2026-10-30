@@ -7,6 +7,17 @@
   overflow-x: auto;
 }
 
+.ah-schedule-grid__scroll:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.ah-schedule-grid__overflow-hint {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
 .ah-schedule-grid__table {
   width: 100%;
   min-width: calc(3.75rem + var(--schedule-columns, 5) * 8rem);
@@ -61,7 +72,7 @@
 }
 
 .ah-schedule-grid__row {
-  border-top: 1px solid var(--ah-color-border);
+  border-top: 1px solid color-mix(in srgb, var(--ah-color-text-muted) 55%, var(--ah-color-border));
 }
 
 .ah-schedule-grid__row-label {

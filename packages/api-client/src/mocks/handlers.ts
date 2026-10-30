@@ -4,6 +4,7 @@ import type { components } from "../generated/schema";
 import type { ListItemWith } from "../list-fields";
 
 import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
+import { adminMemberActionHandlers } from "./admin-member-actions";
 import { attendanceHandlers, resetAttendanceMockState } from "./attendance-handlers";
 import {
   backofficeHandlers,
@@ -1594,6 +1595,7 @@ function clubMemberPreferences(): NotificationPreferences {
 }
 
 export const handlers = [
+  ...adminMemberActionHandlers,
   // S17 D19 (E10-W01): the platform console's `/platform/*` world.
   ...consoleHandlers,
   // E6-W04 step 0b: screen 13's checkbox (S10 R-10-10, §6) completes a task of `GET /me/dogs` for
@@ -1896,7 +1898,7 @@ export const handlers = [
   http.put("*/api/v1/me/onboarding", async ({ request }) => {
     const body = (await request.json()) as OnboardingRequest;
     const state = currentOnboardingState();
-    if (!body.consentAccepted) {
+    if (state.requiredConsent != null && !body.consentAccepted) {
       return validationError([{ code: "REQUIRED", field: "consentAccepted" }]);
     }
     if (currentMockScenario().outdatedConsentOnce === true && !outdatedConsentReturned) {
@@ -1911,13 +1913,18 @@ export const handlers = [
       persistOnboarding(onboardingState);
       return apiError("CONSENT_VERSION_OUTDATED", "Consent version is outdated", 422);
     }
-    if (state.requiredConsent?.version !== body.consentVersion) {
+    if (state.requiredConsent != null && state.requiredConsent.version !== body.consentVersion) {
       return apiError("CONSENT_VERSION_OUTDATED", "Consent version is outdated", 422);
     }
     if (body.fields?.locale !== undefined && !["ca", "es", "en"].includes(body.fields.locale)) {
       return apiError("LOCALE_NOT_SUPPORTED", "Locale not supported", 400);
     }
-    onboardingState = { ...state, pending: false, requiredConsent: null };
+    onboardingState = {
+      ...state,
+      pending: false,
+      requiredConsent: null,
+      ...(body.imageConsent === undefined ? {} : { imageConsent: body.imageConsent }),
+    };
     persistOnboarding(onboardingState);
     return HttpResponse.json(onboardingState);
   }),

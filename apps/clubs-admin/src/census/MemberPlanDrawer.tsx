@@ -1,10 +1,24 @@
-import { apiFieldErrors, isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  isInProgress,
+  type ApiClient,
+  type components,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Drawer, FormField, Input, Select, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { clubToday, formatMoney, invoiceDayOf, shiftPeriod, useBillingLocale, useNextInvoiceDay } from "../billing/shared";
+import {
+  clubToday,
+  formatMoney,
+  invoiceDayOf,
+  shiftPeriod,
+  useBillingLocale,
+  useNextInvoiceDay,
+} from "../billing/shared";
 import { isReadmissionPending } from "../dashboard/readmission";
 import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 
@@ -12,7 +26,14 @@ type Member = components["schemas"]["Member"];
 type Plan = components["schemas"]["Plan"];
 type Price = components["schemas"]["Price"];
 
-export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased, open }: {
+export function MemberPlanDrawer({
+  client,
+  member,
+  onChanged,
+  onClose,
+  onErased,
+  open,
+}: {
   client: ApiClient;
   member: Member;
   onChanged: () => void;
@@ -29,7 +50,6 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   const [prices, setPrices] = useState<Price[]>([]);
   const [planId, setPlanId] = useState("");
   const [priceId, setPriceId] = useState("");
-  const [effectiveMonth, setEffectiveMonth] = useState("");
   const [nextInvoiceDate, setNextInvoiceDate] = useState("");
   // R-12-06: without a date the api puts this day of next month (club-local).
   const nextInvoiceDay = useNextInvoiceDay(client, open && member.nextInvoiceDate == null);
@@ -47,14 +67,22 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
     let current = true;
     void Promise.all([
       client.GET("/plans", { params: { query: { includeInactive: false } } }),
-      client.GET("/parameters/{key}", { params: { path: { key: "billing.packToMemberEntryDiscountPercent" } } }),
-      client.GET("/parameters/{key}", { params: { path: { key: "billing.packToMemberMinSessions" } } }),
+      client.GET("/parameters/{key}", {
+        params: { path: { key: "billing.packToMemberEntryDiscountPercent" } },
+      }),
+      client.GET("/parameters/{key}", {
+        params: { path: { key: "billing.packToMemberMinSessions" } },
+      }),
     ]).then(
       ([result, discount, minimum]) => {
         if (current) {
           setPlans((result.data?.items ?? []) as Plan[]);
-          setDiscountPercent(typeof discount.data?.value === "number" ? discount.data.value : undefined);
-          setMinimumPackSessions(typeof minimum.data?.value === "number" ? minimum.data.value : undefined);
+          setDiscountPercent(
+            typeof discount.data?.value === "number" ? discount.data.value : undefined,
+          );
+          setMinimumPackSessions(
+            typeof minimum.data?.value === "number" ? minimum.data.value : undefined,
+          );
           setFailure(undefined);
           setLoading(false);
         }
@@ -66,17 +94,25 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
         }
       },
     );
-    return () => { current = false; };
+    return () => {
+      current = false;
+    };
   }, [client, open]);
 
   useEffect(() => {
     if (planId === "") return undefined;
     let current = true;
     void client.GET("/prices", { params: { query: { planId } } }).then(
-      (result) => { if (current) setPrices(result.data?.items ?? []); },
-      (cause: unknown) => { if (current) setFailure(cause); },
+      (result) => {
+        if (current) setPrices(result.data?.items ?? []);
+      },
+      (cause: unknown) => {
+        if (current) setFailure(cause);
+      },
     );
-    return () => { current = false; };
+    return () => {
+      current = false;
+    };
   }, [client, planId]);
 
   useEffect(() => {
@@ -94,7 +130,9 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   // E146 (R-12-06): only a member without a date gets one from a change to a MONTHLY plan; an
   // existing date never moves here (D10's «Proper rebut» corrects it).
   const asksInvoiceDate = selected?.type === "MONTHLY" && member.nextInvoiceDate == null;
-  const invoiceDateRefused = apiFieldErrors(failure).some((entry) => entry.field === "nextInvoiceDate");
+  const invoiceDateRefused = apiFieldErrors(failure).some(
+    (entry) => entry.field === "nextInvoiceDate",
+  );
   const error = useMemo(() => {
     if (failure === undefined) return undefined;
     if (invoiceDateRefused) return undefined;
@@ -113,12 +151,19 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   };
 
   return (
-    <Drawer closeLabel={t("admin-census:common.close")} onClose={close} open={open} title={t("admin-census:plan.title")}>
+    <Drawer
+      closeLabel={t("admin-census:common.close")}
+      onClose={close}
+      open={open}
+      title={t("admin-census:plan.title")}
+    >
       {loading ? <p role="status">{t("admin-census:common.loading")}</p> : null}
       {erased ? (
         <>
           <p role="alert">{t("errors:MEMBER_ERASED")}</p>
-          <Button onClick={close} variant="ghost">{t("admin-census:common.cancel")}</Button>
+          <Button onClick={close} variant="ghost">
+            {t("admin-census:common.cancel")}
+          </Button>
         </>
       ) : (
         <>
@@ -126,62 +171,137 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
             <h3>{t("admin-census:plan.current")}</h3>
             <p>{current?.name ?? member.plan?.name ?? t("admin-census:values.empty")}</p>
             {current?.billingMode === undefined ? null : (
-              <p>{current.billingMode === "MAINTENANCE" ? t("admin-census:plan.maintenance") : t("admin-census:plan.monthly")}</p>
+              <p>
+                {current.billingMode === "MAINTENANCE"
+                  ? t("admin-census:plan.maintenance")
+                  : t("admin-census:plan.monthly")}
+              </p>
             )}
           </section>
-          <form className="census-record__form" onSubmit={(event) => {
-            event.preventDefault();
-            if (planId === "" || priceId === "") return;
-            const body: components["schemas"]["MemberPlanChangeRequest"] = {
-              planId,
-              priceId,
-              ...(effectiveMonth === "" ? {} : { effectiveMonth }),
-              ...(asksInvoiceDate && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
-            };
-            setPending(true);
-            setFailure(undefined);
-            void keys.send(JSON.stringify(body), (key) => client.POST("/members/{id}/plan-change", {
-              body,
-              params: { header: { "Idempotency-Key": key }, path: { id: member.id } },
-            }), member.id).then(() => { onChanged(); }).catch((cause: unknown) => {
-              setFailure(cause);
-              if (isApiError(cause, "MEMBER_ERASED")) {
-                setErased(true);
-                onErased();
-              }
-            }).finally(() => { setPending(false); });
-          }}>
+          <form
+            className="census-record__form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (planId === "" || priceId === "") return;
+              const body: components["schemas"]["MemberPlanChangeRequest"] = {
+                planId,
+                priceId,
+                ...(asksInvoiceDate && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
+              };
+              setPending(true);
+              setFailure(undefined);
+              void keys
+                .send(
+                  JSON.stringify(body),
+                  (key) =>
+                    client.POST("/members/{id}/plan-change", {
+                      body,
+                      params: { header: { "Idempotency-Key": key }, path: { id: member.id } },
+                    }),
+                  member.id,
+                )
+                .then(() => {
+                  onChanged();
+                  close();
+                })
+                .catch((cause: unknown) => {
+                  setFailure(cause);
+                  if (isApiError(cause, "MEMBER_ERASED")) {
+                    setErased(true);
+                    onErased();
+                  }
+                })
+                .finally(() => {
+                  setPending(false);
+                });
+            }}
+          >
             <FormField id="member-plan" label={t("admin-census:plan.newPlan")}>
-              <Select id="member-plan" onChange={(event) => { setPlanId(event.currentTarget.value); setPriceId(""); setPrices([]); setFailure(undefined); }} required value={planId}>
+              <Select
+                id="member-plan"
+                onChange={(event) => {
+                  setPlanId(event.currentTarget.value);
+                  setPriceId("");
+                  setPrices([]);
+                  setFailure(undefined);
+                }}
+                required
+                value={planId}
+              >
                 <option value="">{t("admin-census:common.choose")}</option>
-                {plans.map((plan) => <option key={plan.id} value={plan.id}>{plan.name}</option>)}
+                {plans.map((plan) => (
+                  <option key={plan.id} value={plan.id}>
+                    {plan.name}
+                  </option>
+                ))}
               </Select>
             </FormField>
             <FormField id="member-price" label={t("admin-census:plan.price")}>
-              <Select id="member-price" onChange={(event) => { setPriceId(event.currentTarget.value); }} required value={priceId}>
+              <Select
+                id="member-price"
+                onChange={(event) => {
+                  setPriceId(event.currentTarget.value);
+                }}
+                required
+                value={priceId}
+              >
                 <option value="">{t("admin-census:common.choose")}</option>
-                {prices.map((price) => <option key={price.id} value={price.id}>{formatMoney(price.amount, billingLocale)}</option>)}
+                {prices.map((price) => (
+                  <option key={price.id} value={price.id}>
+                    {formatMoney(price.amount, billingLocale)}
+                  </option>
+                ))}
               </Select>
-            </FormField>
-            <FormField id="member-plan-effective-month" label={t("admin-census:plan.effectiveMonth")}>
-              <Input id="member-plan-effective-month" onChange={(event) => { setEffectiveMonth(event.currentTarget.value); }} type="month" value={effectiveMonth} />
             </FormField>
             {asksInvoiceDate ? (
               <>
                 <FormField
-                  {...(invoiceDateRefused ? { error: t("admin-census:member.billing.nextInvoice.notBefore", { date: formats.formatPlainDate(firstAllowed) }) } : {})}
+                  {...(invoiceDateRefused
+                    ? {
+                        error: t("admin-census:member.billing.nextInvoice.notBefore", {
+                          date: formats.formatPlainDate(firstAllowed),
+                        }),
+                      }
+                    : {})}
                   id="member-plan-next-invoice-date"
                   label={t("admin-census:plan.nextInvoiceDate")}
                 >
-                  <Input id="member-plan-next-invoice-date" min={firstAllowed} onChange={(event) => { setNextInvoiceDate(event.currentTarget.value); }} type="date" value={nextInvoiceDate} />
+                  <Input
+                    id="member-plan-next-invoice-date"
+                    min={firstAllowed}
+                    onChange={(event) => {
+                      setNextInvoiceDate(event.currentTarget.value);
+                    }}
+                    type="date"
+                    value={nextInvoiceDate}
+                  />
                 </FormField>
                 {nextInvoiceDay === undefined ? null : (
-                  <p>{t("admin-census:plan.nextInvoiceDefault", { date: formats.formatPlainDate(invoiceDayOf(shiftPeriod(clubMonth, 1), nextInvoiceDay)) })}</p>
+                  <p>
+                    {t("admin-census:plan.nextInvoiceDefault", {
+                      date: formats.formatPlainDate(
+                        invoiceDayOf(shiftPeriod(clubMonth, 1), nextInvoiceDay),
+                      ),
+                    })}
+                  </p>
                 )}
               </>
             ) : null}
-            {packToMonthly ? <p>{t("admin-census:plan.packDiscountRule", { discountPercent, minSessions: minimumPackSessions })}</p> : null}
-            <Button disabled={planId === "" || priceId === "" || pending} loading={pending} type="submit">{t("admin-census:common.save")}</Button>
+            {packToMonthly ? (
+              <p>
+                {t("admin-census:plan.packDiscountRule", {
+                  discountPercent,
+                  minSessions: minimumPackSessions,
+                })}
+              </p>
+            ) : null}
+            <Button
+              disabled={planId === "" || priceId === "" || pending}
+              loading={pending}
+              type="submit"
+            >
+              {t("admin-census:common.save")}
+            </Button>
           </form>
           {error === undefined ? null : <p role="alert">{error}</p>}
         </>

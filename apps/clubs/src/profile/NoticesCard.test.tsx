@@ -843,7 +843,7 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
 
   it("the language select writes Account.locale, switches the UI at once and says only new notices change", async () => {
     await openProfile();
-    expect(screen.getByText("Els avisos nous et arribaran en aquest idioma")).toBeVisible();
+    expect(screen.getByText("Els avisos nous t’arribaran en aquest idioma")).toBeVisible();
     const row = present(document.querySelector<HTMLElement>(".profile-language"));
     fireEvent.change(within(row).getByRole("combobox", { name: "Idioma" }), {
       target: { value: "es" },
@@ -865,6 +865,7 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
   });
 
   it("an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription", async () => {
+    const close = vi.spyOn(window, "close").mockImplementation(() => undefined);
     const { requestPermission } = browserWithPush("granted");
     localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-admin" }));
     await openProfile({ scenario: "impersonated" });
@@ -878,9 +879,10 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     });
     expect(requestPermission).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Tanca la sessió" }));
-    await new Promise((resolve) => {
-      setTimeout(resolve, 100);
+    await waitFor(() => {
+      expect(close).toHaveBeenCalledOnce();
     });
+    close.mockRestore();
     expect(requests.some((item) => item.method === "DELETE")).toBe(false);
     expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBe('{"id":"push-admin"}');
   });

@@ -93,7 +93,7 @@
   "INPUT_SCHEMA_MISMATCH": "The input does not match the expected schema.",
   "INSTRUCTOR_IN_USE": "This instructor is in use.",
   "INSTRUCTOR_NOTICE_DISABLED": "The club does not allow marking “notified” from the sheet.",
-  "INTERNAL_ERROR": "An unexpected error occurred. Try again; if it persists, give the club the reference code.",
+  "INTERNAL_ERROR": "An unexpected error occurred. Try again; if it persists, contact the club.",
   "INVALID_API_KEY": "The API key is invalid.",
   "INVALID_CREDENTIALS": "The email or password is incorrect.",
   "INVALID_FILTER": "The filter is invalid.",

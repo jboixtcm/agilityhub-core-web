@@ -1,4 +1,11 @@
 {
+  "appearance": {
+    "label": "Apariencia",
+    "club": "Tema del club",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "auto": "Sistema"
+  },
   "app": {
     "clubsAdmin": "Administración del club"
   },

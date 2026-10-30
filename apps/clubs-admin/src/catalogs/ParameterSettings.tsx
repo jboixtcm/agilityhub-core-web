@@ -23,6 +23,7 @@ import { ClubPagesCard } from "./ClubPagesCard";
 import { buildDerivedSettingRows, type DerivedSettingRow } from "./derived-settings";
 import { JobsCard } from "./JobsCard";
 import { LocaleTabs, LoadFailure, useCatalogError } from "./shared";
+import { TrainingRingCapacities } from "./TrainingRingCapacities";
 
 /** `jobs.<name>.enabled` (S15 §9): the process switches of the «Processos automàtics» card. */
 const JOB_SWITCH_KEY = /^jobs\.[A-Za-z]+\.enabled$/u;
@@ -328,17 +329,19 @@ export function ParameterControl({
           const enabled = range !== undefined;
           return (
             <div className="settings-hours-row" key={day}>
-              <Switch
-                checked={enabled}
-                label={t(`admin-settings:days.long.${day}`)}
-                onCheckedChange={(checked) => {
-                  const next = checked
-                    ? { ...hours, [day]: { close: "22:00", open: "07:00" } }
-                    : Object.fromEntries(Object.entries(hours).filter(([key]) => key !== day));
-                  onDraftChange(next);
-                }}
-              />
-              <span>{t(`admin-settings:days.long.${day}`)}</span>
+              <div className="settings-hours-row__day">
+                <Switch
+                  checked={enabled}
+                  label={t(`admin-settings:days.long.${day}`)}
+                  onCheckedChange={(checked) => {
+                    const next = checked
+                      ? { ...hours, [day]: { close: "22:00", open: "07:00" } }
+                      : Object.fromEntries(Object.entries(hours).filter(([key]) => key !== day));
+                    onDraftChange(next);
+                  }}
+                />
+                <span>{t(`admin-settings:days.long.${day}`)}</span>
+              </div>
               <Input
                 aria-label={t("admin-settings:editor.opens", {
                   day: t(`admin-settings:days.long.${day}`),
@@ -767,13 +770,9 @@ function ParameterEditor({
     <form className="settings-editor" onSubmit={(event) => void submit(event)}>
       <p className="settings-editor__help">{parameterHelp(t, parameter.key)}</p>
       {parameter.key === "billing.cashInvoicing" ? (
-        <p className="settings-editor__future">
-          {t("admin-settings:editor.reviewCashConditions")}
-        </p>
+        <p className="settings-editor__future">{t("admin-settings:editor.reviewCashConditions")}</p>
       ) : parameter.key === "billing.sepa.collectionDayOfMonth" ? (
-        <p className="settings-editor__future">
-          {t("admin-settings:editor.reviewPaymentDay")}
-        </p>
+        <p className="settings-editor__future">{t("admin-settings:editor.reviewPaymentDay")}</p>
       ) : null}
       <p className="settings-editor__future">{t("admin-settings:editor.appliesFromNow")}</p>
       <ParameterControl
@@ -1156,6 +1155,7 @@ export function ParameterSettings({
               <h2>{t(`admin-settings:blocks.${block.key}`, { defaultValue: block.title })}</h2>
               <div className="settings-parameters">
                 {block.rows.map((parameter) => parameterRow(block.key, parameter))}
+                {block.key === "training" ? <TrainingRingCapacities client={client} /> : null}
                 {derivedRows
                   .filter(
                     (row) =>

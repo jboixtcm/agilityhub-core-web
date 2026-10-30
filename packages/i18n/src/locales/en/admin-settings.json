@@ -823,7 +823,7 @@
       },
       "capacityPerRingSlot": {
         "help": "Number of dogs that can train simultaneously in each ring.",
-        "label": "Dogs at once per ring"
+        "label": "Simultaneous bookings per ring and time slot"
       },
       "freeTrainingRequiresLicense": {
         "help": "Informational indication of whether a sports licence is needed.",
@@ -984,5 +984,13 @@
       "previousPage": "Previous page",
       "nextPage": "Next page"
     }
+  },
+  "ringCapacity": {
+    "title": "Per-ring exceptions",
+    "inherit": "Leave blank to use the general limit.",
+    "save": "Save {ring}",
+    "saved": "Capacity saved.",
+    "loadError": "Could not load the rings.",
+    "saveError": "Could not save the capacity. Please try again."
   }
 }

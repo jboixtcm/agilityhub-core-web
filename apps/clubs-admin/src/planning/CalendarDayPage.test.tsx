@@ -48,8 +48,8 @@ afterAll(() => {
   server.close();
 });
 
-async function renderDay() {
-  window.history.replaceState(null, "", `/calendari/dia/${DATE}?estat=actives`);
+async function renderDay(filter = "actives") {
+  window.history.replaceState(null, "", `/calendari/dia/${DATE}?estat=${filter}`);
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
@@ -138,14 +138,30 @@ describe("T-06-28 D4 day view (/calendari/dia/:date, form D)", () => {
     );
     await renderDay();
 
-    // The mock answers like the api: its «Sense» column goes last, in the reader's language.
-    expect(await columnHeaders()).toEqual([
-      "Muntanya",
-      "Central",
-      "Carretera",
-      "Cadells",
-      "Petita",
-      "Sense",
-    ]);
+    // «Sense» goes last. Cadells has only a draft class and is absent from the active view.
+    expect(await columnHeaders()).toEqual(["Muntanya", "Central", "Carretera", "Petita", "Sense"]);
   });
+});
+
+it("Word: asks for and labels draft classes in the day view", async () => {
+  let selected: string | null = null;
+  server.use(
+    http.get("*/api/v1/day-grid", ({ request }) => {
+      selected = new URL(request.url).searchParams.get("state");
+      return HttpResponse.json({
+        ...formD,
+        rows: formD.rows.map((row) => ({
+          ...row,
+          cells: row.cells.map((cell) =>
+            cell.kind === "CLASS" ? { ...cell, state: "DRAFT" } : cell,
+          ),
+        })),
+      });
+    }),
+  );
+  await renderDay("esborrany");
+  const table = await screen.findByRole("table");
+  expect(selected).toBe("DRAFT");
+  expect(within(table).getAllByText(/esborrany/)).toHaveLength(2);
+  expect(table.querySelectorAll(".ah-schedule-cell--dashed")).toHaveLength(2);
 });

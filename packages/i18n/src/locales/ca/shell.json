@@ -1,4 +1,11 @@
 {
+  "appearance": {
+    "label": "Aparença",
+    "club": "Tema del club",
+    "light": "Clar",
+    "dark": "Fosc",
+    "auto": "Sistema"
+  },
   "app": {
     "clubsAdmin": "Administració del club"
   },

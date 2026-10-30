@@ -123,6 +123,9 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     size: 50,
     sort: ["createdAt,desc"],
   });
+  useEffect(() => {
+    if (state.q !== "") setState({ ...state, q: "" });
+  }, [state, setState]);
   const savedViews = useSavedViews(client, LIST_KEY, applySavedView);
   const listExport = useListExport(client);
   // A row opened in a new tab (`?avis=`) opens its drawer.
@@ -136,7 +139,6 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
           fields: listFields(state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [])),
           filter: apiFilters(state.filters),
           page: state.page,
-          ...(state.q === "" ? {} : { q: state.q }),
           size: state.size,
           sort: state.sort,
         },
@@ -145,6 +147,37 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     if (result.data === undefined) throw new TypeError("Notification log without data");
     return result.data;
   }, JSON.stringify(state));
+
+  // Resolve selected members even when the notification list has no rows.
+  const memberIdsKey = JSON.stringify(
+    [
+      ...new Set(
+        state.filters
+          .filter((filter) => filter.field === "memberId")
+          .flatMap((filter) => filter.value.split(",")),
+      ),
+    ].sort(),
+  );
+  const [memberNames, setMemberNames] = useState<Record<string, string>>({});
+  useEffect(() => {
+    let active = true;
+    const ids = JSON.parse(memberIdsKey) as string[];
+    void Promise.all(
+      ids.map(async (id) => {
+        try {
+          const { data: member } = await client.GET("/members/{id}", { params: { path: { id } } });
+          return [id, member?.fullName ?? ""] as const;
+        } catch {
+          return [id, ""] as const;
+        }
+      }),
+    ).then((entries) => {
+      if (active) setMemberNames(Object.fromEntries(entries.filter(([, name]) => name !== "")));
+    });
+    return () => {
+      active = false;
+    };
+  }, [client, memberIdsKey]);
 
   const dateTime = (instant: string) =>
     t("admin-messaging:log.dateTime", {
@@ -172,7 +205,6 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
           query: {
             field,
             filter: apiFilters(state.filters.filter((filter) => filter.field !== field)),
-            ...(state.q === "" ? {} : { q: state.q }),
           },
         },
       });
@@ -184,7 +216,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     },
     // `enumLabel` only reads `t`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [client, state.filters, state.q, t],
+    [client, state.filters, t],
   );
 
   const filterColumns: UniversalListFilterColumn[] = [
@@ -274,7 +306,8 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     const label = (part: string) =>
       field === "memberId"
         ? (data?.items.find((row) => row.recipient?.memberId === part)?.recipient?.displayName ??
-          part)
+          memberNames[part] ??
+          t("admin-messaging:log.filter.memberId"))
         : field === "createdAt"
           ? dateLabel(part)
           : enumLabel(field, part);
@@ -335,7 +368,6 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
             columns: exportColumns(current.columns),
             filter: apiFilters(current.filters),
             format,
-            ...(current.q === "" ? {} : { q: current.q }),
             sort: current.sort,
           });
         }}
@@ -355,7 +387,8 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
         rowKey={(row) => row.id}
         rows={data?.items ?? []}
         savedViews={savedViews.views}
-        state={state}
+        searchable={false}
+        state={{ ...state, q: "" }}
         totalPages={data?.totalPages ?? 0}
       />
       {openId === undefined ? null : (

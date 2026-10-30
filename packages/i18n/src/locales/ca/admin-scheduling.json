@@ -68,7 +68,12 @@
       "noRing": "Sense",
       "back": "Tornar a la visió setmanal",
       "gridLabel": "Plantilla «{name}» · {day}"
-    }
+    },
+    "rename": "Canvia el nom",
+    "remove": "Esborra plantilla",
+    "removeConfirm": "Vols esborrar la plantilla «{name}»? Deixarà d’aparèixer a la llista i no es podrà triar per generar classes. Les classes ja generades es conservaran.",
+    "renamed": "Nom de la plantilla actualitzat.",
+    "removed": "Plantilla esborrada."
   },
   "classCard": {
     "title": "Crear classe",

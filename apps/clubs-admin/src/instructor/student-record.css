@@ -7,6 +7,7 @@
 
 .student-record__header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ah-space-4);
 }

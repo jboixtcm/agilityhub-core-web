@@ -81,6 +81,10 @@ export function DayScreenHeader({
       <div aria-label={t("home:today.weekDays")} className="day-screen__chips" role="group">
         {weekChipDates(date).map((chip) => (
           <button
+            aria-label={t("home:today.dayChip", {
+              day: String(Number(chip.slice(8, 10))),
+              weekday: formatPlainDate(chip, "weekdayLong"),
+            })}
             aria-pressed={chip === date}
             className="day-screen__chip"
             key={chip}
@@ -89,10 +93,18 @@ export function DayScreenHeader({
             }}
             type="button"
           >
-            {t("home:today.dayChip", {
-              day: String(Number(chip.slice(8, 10))),
-              weekday: weekdayShort(chip, formatPlainDate),
-            })}
+            <span aria-hidden="true" className="day-screen__short-label">
+              {t("home:today.dayChip", {
+                day: String(Number(chip.slice(8, 10))),
+                weekday: weekdayShort(chip, formatPlainDate),
+              })}
+            </span>
+            <span aria-hidden="true" className="day-screen__full-label">
+              {t("home:today.dayChip", {
+                day: String(Number(chip.slice(8, 10))),
+                weekday: formatPlainDate(chip, "weekdayLong"),
+              })}
+            </span>
           </button>
         ))}
       </div>
@@ -174,6 +186,7 @@ export function mapDayGrid(
     color: column.color,
     id: column.ringId ?? DAY_GRID_NO_RING,
     label: column.shortName,
+    fullLabel: column.name,
   }));
   return { cellsById, columns, rows };
 }

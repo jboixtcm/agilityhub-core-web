@@ -44,7 +44,7 @@ async function prepareAdmin(page: Page, scenario: Scenario, branding: unknown) {
     },
     { cachedBranding: branding, mockScenario: scenario },
   );
-  await page.goto(`${baseUrl}/entrar`);
+  await page.goto(`${baseUrl}/login`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
   await page.getByLabel("Contrasenya").fill("secret-password");

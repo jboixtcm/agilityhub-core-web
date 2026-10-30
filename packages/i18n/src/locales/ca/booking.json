@@ -72,7 +72,9 @@
     "calendarGoogle": "Google",
     "calendarOutlook": "Outlook",
     "calendarIcs": ".ics",
-    "seeBooking": "VEURE LA RESERVA"
+    "seeBooking": "VEURE LA RESERVA",
+    "ring": "Pista {name}",
+    "backHome": "Torna a l’inici"
   },
   "detail": {
     "title": "Detall de la reserva",
@@ -94,6 +96,7 @@
     "loading": "Carregant la reserva",
     "error": "No s'ha pogut carregar la reserva.",
     "retry": "Torna-ho a provar",
-    "notFound": "Aquesta reserva no existeix o ja no és accessible."
+    "notFound": "Aquesta reserva no existeix o ja no és accessible.",
+    "inTimeNotice": "Si anul·les ara, la classe no comptarà com a feta: recuperaràs la disponibilitat del límit setmanal o el saldo del pack, segons la teva modalitat."
   }
 }

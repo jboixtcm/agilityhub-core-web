@@ -36,7 +36,7 @@
     "title": "Les meves reserves",
     "withDog": "{title} · amb {dogName}",
     "join": "{first} · {second}",
-    "instructorHidden": "{hours, select, 24 {instructor: es mostra el dia abans} other {instructor: es mostra {hours, number} h abans}}",
+    "instructorHidden": "instructor: es mostra {hours, number} h abans",
     "waitlistNotice": "t'avisarem si s'allibera plaça",
     "empty": "Encara no tens cap reserva",
     "bookClass": "RESERVA UNA CLASSE",

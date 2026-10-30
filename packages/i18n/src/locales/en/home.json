@@ -36,7 +36,7 @@
     "title": "My bookings",
     "withDog": "{title} · with {dogName}",
     "join": "{first} · {second}",
-    "instructorHidden": "{hours, select, 24 {instructor: shown the day before} other {instructor: shown {hours, number} h before}}",
+    "instructorHidden": "instructor: shown {hours, number} h before",
     "waitlistNotice": "we will let you know if a place opens up",
     "empty": "You have no bookings yet",
     "bookClass": "BOOK A CLASS",

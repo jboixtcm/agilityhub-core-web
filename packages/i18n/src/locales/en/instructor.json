@@ -46,7 +46,7 @@
     "save": "Save",
     "saving": "Saving the sheet",
     "saved": "Sheet saved",
-    "legend": "Legend",
+    "legend": "Attendance legend",
     "staleToast": "Someone saved the sheet a moment ago: check it",
     "waitlistTitle": "Waiting list ({count})",
     "joinedAt": "{kind, select, minutes {for {count} min} hours {for {count} h} today {since today {time}} yesterday {since yesterday {time}} other {since {date} {time}}}",
@@ -55,7 +55,8 @@
     "dismiss": "Close",
     "loading": "Loading the sheet",
     "loadError": "The sheet could not be loaded.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "unsaved": "Unsaved changes"
   },
   "card": {
     "title": "Student card",
@@ -296,6 +297,8 @@
     "noticeShort": "notified{released, select, yes { — seat released} other {}}{waitlist, select, yes { · waiting list notified} other {}}",
     "noShowNotice": "notice tomorrow at {time}",
     "waitingList": "Waiting: {names}",
-    "saveSheet": "Save the list"
+    "saveSheet": "Save the list",
+    "overflowHint": "Scroll the grid horizontally to see every day.",
+    "selectClass": "Select a class in the agenda to view its participants and take attendance."
   }
 }

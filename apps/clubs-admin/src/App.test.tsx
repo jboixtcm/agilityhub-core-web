@@ -1093,15 +1093,18 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
   });
 });
 
-it("Internal access: the club back office opens its own password form without email actions", async () => {
-  vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
-  window.history.pushState(null, "", "/entrar");
-  await renderApplication(authClient());
-  expect(screen.getByLabelText("Contrasenya")).toBeVisible();
-  expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
-  expect(screen.queryByRole("button", { name: "Tinc contrasenya" })).toBeNull();
-  expect(screen.queryByRole("button", { name: "Envia'm l'enllaç" })).toBeNull();
-  expect(document.querySelector(".access-brand img")).toHaveAttribute("alt", branding.club.name);
-  expect(document.body.textContent).not.toMatch(/AgilityHub/u);
-  expect(window.location.pathname).toBe("/entrar");
-});
+it.each(["/login", "/entrar"])(
+  "Internal access %s: the club back office opens its own password form without email actions",
+  async (path) => {
+    vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
+    window.history.pushState(null, "", path);
+    await renderApplication(authClient());
+    expect(screen.getByLabelText("Contrasenya")).toBeVisible();
+    expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Tinc contrasenya" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Envia'm l'enllaç" })).toBeNull();
+    expect(document.querySelector(".access-brand img")).toHaveAttribute("alt", branding.club.name);
+    expect(document.body.textContent).not.toMatch(/AgilityHub/u);
+    expect(window.location.pathname).toBe(path);
+  },
+);

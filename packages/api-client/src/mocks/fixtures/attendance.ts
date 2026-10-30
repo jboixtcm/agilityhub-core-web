@@ -475,6 +475,10 @@ export function attendanceSheetView(
     const { pendingTasksCount, ...rest } = item;
     return {
       ...rest,
+      final:
+        item.state === "NOTIFIED" &&
+        !canMarkPresence(stored, context) &&
+        !canMarkNotice(stored, context),
       ...(tasksOn ? { pendingTasksCount: pendingTasksCount ?? 0 } : {}),
       levelCode: context.levelsEnabled ? (item.levelCode ?? null) : null,
     };
@@ -812,15 +816,28 @@ export function saveAttendanceItems(
       };
     }
     if (current.state === item.state) continue;
-    if (current.final || current.state === "NOTIFIED") {
-      return { code: "ATTENDANCE_NOTIFIED_FINAL", status: 422 };
+    if (
+      current.state === "NOTIFIED" &&
+      !current.notice?.afterClassEnd &&
+      booked(stored) +
+        changes.filter(
+          (change) =>
+            stored.rows[change.index]?.state === "NOTIFIED" && change.state !== "NOTIFIED",
+        ).length >=
+        stored.capacity
+    ) {
+      return { code: "CLASS_FULL", status: 409 };
     }
     if (item.state === "NOTIFIED" && !notice) {
       return stored.closed || context.variant === "closed"
         ? closedFailure
         : { code: "INSTRUCTOR_NOTICE_DISABLED", status: 422 };
     }
-    if (item.state !== "NOTIFIED" && !presence) {
+    if (
+      item.state !== "NOTIFIED" &&
+      !presence &&
+      !(item.state === "PENDING" && current.state === "NOTIFIED" && notice)
+    ) {
       return stored.notOpen && context.variant !== "closed"
         ? { code: "ATTENDANCE_NOT_OPEN", status: 422 }
         : closedFailure;
@@ -836,6 +853,7 @@ export function saveAttendanceItems(
     if (current === undefined) continue;
     const marked = {
       ...current,
+      final: false,
       markedAt: at,
       markedByName: context.callerName,
       state: change.state,
@@ -847,7 +865,7 @@ export function saveAttendanceItems(
       const late = !afterClassEnd && minutesBefore < 240;
       stored.rows[change.index] = {
         ...marked,
-        final: true,
+        final: false,
         noShowNotice: null,
         notice: {
           afterClassEnd,

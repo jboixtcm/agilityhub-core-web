@@ -395,7 +395,7 @@ async function riskRowsInTheirWeeks(): Promise<string[]> {
     const week = await as<WeekCalendar>(
       "admin",
       "GET",
-      `/weeks/week-${mondayOf(item.date)}/calendar?filter=ACTIVE`,
+      `/weeks/week-${mondayOf(item.date)}/calendar?filter=${item.status === "AUTO_CANCELLED" ? "CANCELLED" : "ACTIVE"}`,
     );
     const session = week.body.classes.find((candidate) => candidate.id === item.classId);
     expect(session, `${item.status} ${item.classId} is a class of its week`).toBeDefined();

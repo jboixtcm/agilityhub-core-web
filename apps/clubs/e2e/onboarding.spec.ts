@@ -4,7 +4,11 @@ import { resolve } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E1-W02");
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  process.env.E2E_CAPTURE_TASK ?? "E1-W02",
+);
 const branding: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -50,8 +54,20 @@ test.describe("T-01-26 first-access onboarding", () => {
       path: resolve(evidenceDirectory, "benvinguda-375.png"),
     });
 
+    await page.getByRole("button", { name: "CONTINUA" }).click();
+    await expect(
+      page.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    ).toHaveAttribute("aria-invalid", "true");
+    await expect(page.getByRole("alert")).toContainText("L’autorització d’imatge és opcional");
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(evidenceDirectory, "benvinguda-privacy-error-375.png"),
+    });
+
     await page.getByLabel("Telèfon").fill("+34600111222");
-    await page.getByRole("checkbox", { name: "Autoritzo l'ús de la meva imatge" }).check();
+    await page
+      .getByRole("checkbox", { name: "Autoritzo l’ús de la meva imatge (opcional)" })
+      .check();
     await page
       .getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" })
       .check();

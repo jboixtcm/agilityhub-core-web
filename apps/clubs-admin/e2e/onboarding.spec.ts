@@ -4,7 +4,11 @@ import { resolve } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E1-W02");
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  process.env.E2E_CAPTURE_TASK ?? "E1-W02",
+);
 const branding: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -53,7 +57,6 @@ test.describe("T-01-26 clubs-admin onboarding", () => {
     expect((await completion).postDataJSON()).toEqual({
       consentAccepted: true,
       consentVersion: "2026-09-01",
-      imageConsent: false,
     });
     await expect(dialog).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "Configuració" })).toBeVisible();

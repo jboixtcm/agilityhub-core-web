@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { ActivityReservationRow } from "../activities/ActivityReservationRow";
 import { useMeActivities } from "../activities/shared";
 import { readAllNotifications, readAllPending, useUnreadCount } from "../notifications/unread";
+import { HomeTrainingSummary } from "../training/HomeTrainingSummary";
 
 import "./booking.css";
 import { DogChips } from "./DogChips";
@@ -116,7 +117,7 @@ export function HomePage({ client }: { client: ApiClient }) {
 
   if (home.status === "loading") {
     return (
-      <section className="booking-screen">
+      <section className="booking-screen home-page">
         {header(undefined, 0)}
         <Skeleton height="12rem" label={t("home:reservations.loading")} />
       </section>
@@ -125,7 +126,7 @@ export function HomePage({ client }: { client: ApiClient }) {
   if (home.status === "error") {
     const error = home.error;
     return (
-      <section className="booking-screen">
+      <section className="booking-screen home-page">
         {header(undefined, 0)}
         <Card className="booking-error" role="alert">
           <p>{t("home:reservations.error")}</p>
@@ -149,7 +150,7 @@ export function HomePage({ client }: { client: ApiClient }) {
   const busy = (data.selectedDogId ?? null) !== dogId;
   const mine = activities.status === "ready" ? activities.data.mine : [];
   return (
-    <section className="booking-screen">
+    <section className="booking-screen home-page">
       {header(
         data.member.firstName,
         // While quiet: what the read-all answered, once it answered (nothing before).
@@ -167,67 +168,70 @@ export function HomePage({ client }: { client: ApiClient }) {
         </Toast>
       )}
       <DogChips dogs={data.dogs} onSelect={setDogId} selected={dogId} withAll />
-      <Card aria-label={t("home:limits.label")} className="home-limits" role="group">
-        <p className="home-limits__item">
-          <strong className="home-limits__count home-limits__count--current">
-            {String(data.limits.currentWeek.count)}
-          </strong>
-          <span className="home-limits__label">
-            {t("home:limits.currentWeek", { count: data.limits.currentWeek.count })}
-          </span>
-        </p>
-        <span aria-hidden="true" className="home-limits__divider" />
-        <p className="home-limits__item">
-          <strong className="home-limits__count">
-            {t("home:limits.nextWeekCount", { count: data.limits.nextWeek.count })}
-          </strong>
-          <span className="home-limits__label">
-            {t("home:limits.nextWeek", { count: data.limits.nextWeek.count })}
-          </span>
-        </p>
-      </Card>
-      <section
-        aria-busy={busy || undefined}
-        aria-labelledby="home-reservations-title"
-        className="booking-section"
-      >
-        <h2 className="booking-section__title" id="home-reservations-title">
-          {t("home:reservations.title")}
-        </h2>
-        {data.reservations.length === 0 ? (
-          <Card className="home-empty">
-            <EmptyState
-              action={
-                <a className="ah-button ah-button--primary" href="/reservar">
-                  {t("home:reservations.bookClass")}
-                </a>
-              }
-              icon="cal"
-              title={t("home:reservations.empty")}
-            />
-          </Card>
-        ) : (
-          data.reservations.map((row) => {
-            if (row.type === "ACTIVITY") {
-              const registration = mine.find((item) => item.id === row.id);
-              if (registration !== undefined) {
-                return <ActivityReservationRow key={row.id} registration={registration} />;
-              }
-            }
-            // With a single dog its lone chip is the view: no « · amb {dog}» (03, V3).
-            return (
-              <ReservationRow
-                key={`${row.type}-${row.id}`}
-                row={row}
-                showDog={data.dogs.length > 1}
+      <div className="home-layout">
+        <Card aria-label={t("home:limits.label")} className="home-limits" role="group">
+          <p className="home-limits__item">
+            <strong className="home-limits__count home-limits__count--current">
+              {String(data.limits.currentWeek.count)}
+            </strong>
+            <span className="home-limits__label">
+              {t("home:limits.currentWeek", { count: data.limits.currentWeek.count })}
+            </span>
+          </p>
+          <span aria-hidden="true" className="home-limits__divider" />
+          <p className="home-limits__item">
+            <strong className="home-limits__count">
+              {t("home:limits.nextWeekCount", { count: data.limits.nextWeek.count })}
+            </strong>
+            <span className="home-limits__label">
+              {t("home:limits.nextWeek", { count: data.limits.nextWeek.count })}
+            </span>
+          </p>
+          <HomeTrainingSummary client={client} dogId={dogId} />
+        </Card>
+        <section
+          aria-busy={busy || undefined}
+          aria-labelledby="home-reservations-title"
+          className="booking-section"
+        >
+          <h2 className="booking-section__title" id="home-reservations-title">
+            {t("home:reservations.title")}
+          </h2>
+          {data.reservations.length === 0 ? (
+            <Card className="home-empty">
+              <EmptyState
+                action={
+                  <a className="ah-button ah-button--primary" href="/reservar">
+                    {t("home:reservations.bookClass")}
+                  </a>
+                }
+                icon="cal"
+                title={t("home:reservations.empty")}
               />
-            );
-          })
-        )}
-      </section>
-      <a className="home-history" href="/historic">
-        {t("home:history.link", { months: data.history.monthsVisible })}
-      </a>
+            </Card>
+          ) : (
+            data.reservations.map((row) => {
+              if (row.type === "ACTIVITY") {
+                const registration = mine.find((item) => item.id === row.id);
+                if (registration !== undefined) {
+                  return <ActivityReservationRow key={row.id} registration={registration} />;
+                }
+              }
+              // With a single dog its lone chip is the view: no « · amb {dog}» (03, V3).
+              return (
+                <ReservationRow
+                  key={`${row.type}-${row.id}`}
+                  row={row}
+                  showDog={data.dogs.length > 1}
+                />
+              );
+            })
+          )}
+        </section>
+        <a className="home-history" href="/historic">
+          {t("home:history.link", { months: data.history.monthsVisible })}
+        </a>
+      </div>
     </section>
   );
 }

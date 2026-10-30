@@ -95,7 +95,7 @@ export function RingBlockDrawer({
     rangeOptions(openingOf(openingHours, day), settings.slotMinutes, settings.trainingSlotMinutes);
   const [ringId, setRingId] = useState(block?.ringId ?? activeRings[0]?.id ?? "");
   const [date, setDate] = useState(block === undefined ? "" : formatMaskedDate(block.date));
-  const isoDate = parseMaskedDate(date);
+  const isoDate = parseMaskedDate(date, Number(clubToday(timeZone).slice(0, 4)));
   const { ends, starts } = optionsOf(isoDate ?? today);
   /** The typed date is a day the club is closed (absent from `club.openingHours`). */
   const closedDay = isoDate !== undefined && openingOf(openingHours, isoDate) === null;
@@ -138,7 +138,7 @@ export function RingBlockDrawer({
     const next = maskDate(value);
     setDate(next);
     dropBookings();
-    const day = parseMaskedDate(next);
+    const day = parseMaskedDate(next, Number(clubToday(timeZone).slice(0, 4)));
     if (day === undefined) return;
     const options = optionsOf(day);
     const nextFrom = clampTime(from, options.starts);

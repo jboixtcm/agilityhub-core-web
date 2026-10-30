@@ -16,6 +16,7 @@ import {
 import {
   Badge,
   Button,
+  DogPhoto,
   Icon,
   UniversalList,
   type UniversalFilter,
@@ -157,6 +158,7 @@ function toUniversalSavedView(view: SavedView): UniversalListSavedView {
 function queryFor(kind: CensusKind, state: UniversalListState) {
   const requestedFields = [
     ...(kind === "members" ? MEMBER_ROW_FIELDS : DOG_ROW_FIELDS),
+    ...(kind === "dogs" ? ["photoUrl"] : []),
     ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
   ];
   return {
@@ -586,7 +588,9 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               ? t("census:members.status.leaveScheduled", {
                   date: formatDate(status.date, locale, timeZone),
                 })
-              : status.label;
+              : status.kind === "LEFT"
+                ? t("census:members.statuses.left")
+                : status.label;
       return <Badge tone={toneForStatus(status.kind)}>{label}</Badge>;
     },
     [locale, t, timeZone],
@@ -596,7 +600,12 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
     (item: DogRow) => {
       const status = item.displayStatus;
       if (status === undefined) return t("census:values.empty");
-      const label = status.kind === "ACTIVE" ? t("census:values.activeDog") : status.label;
+      const label =
+        status.kind === "ACTIVE"
+          ? t("census:values.activeDog")
+          : status.kind === "INACTIVE"
+            ? t("census:dogs.statuses.inactive")
+            : status.label;
       return <Badge tone={toneForStatus(status.kind)}>{label}</Badge>;
     },
     [t],
@@ -620,7 +629,8 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {(item.dogs ?? []).length === 0
                 ? t("census:values.empty")
                 : (item.dogs ?? []).map((dog) => (
-                    <span key={dog.id}>
+                    <span className="ah-dog-identity" key={dog.id}>
+                      <DogPhoto name={dog.name} src={dog.photoUrl} />
                       {dog.name} {dog.level === undefined ? null : levelChip(dog.level.code)}
                     </span>
                   ))}
@@ -809,7 +819,12 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "name",
           label: t("census:dogs.columns.name"),
-          render: (item) => item.name,
+          render: (item) => (
+            <span className="ah-dog-identity">
+              <DogPhoto name={item.name} src={item.photoUrl} />
+              {item.name}
+            </span>
+          ),
           sortKey: "name",
         },
         {

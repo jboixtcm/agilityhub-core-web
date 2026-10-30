@@ -9,12 +9,14 @@ import "./slot-grid.css";
 import "./tasks-panel.css";
 import "./universal-list.css";
 
+export * from "./appearance";
 export * from "./attendance";
 export * from "./attendance-sheet";
 export * from "./branding";
 export * from "./chunk-reload";
 export * from "./components";
 export * from "./day-grid";
+export * from "./dog-photo";
 export * from "./icons/Icon";
 export * from "./icons/names";
 export * from "./lazy-boundary";

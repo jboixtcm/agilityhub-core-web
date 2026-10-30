@@ -245,7 +245,9 @@ export function BookingDetailPage({
               <Icon aria-hidden="true" name="warn" />
               {t("booking:detail.lateWarning", { threshold: thresholdText(t, threshold) })}
             </p>
-          ) : null}
+          ) : (
+            <p className="booking-note booking-note--neutral">{t("booking:detail.inTimeNotice")}</p>
+          )}
           {error === undefined ? null : (
             <p className="booking-note booking-note--danger" role="alert">
               {error}

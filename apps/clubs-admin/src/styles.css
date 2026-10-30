@@ -29,7 +29,7 @@ select {
 .admin-shell {
   display: grid;
   min-height: 100dvh;
-  grid-template-columns: 16rem minmax(0, 1fr);
+  grid-template-columns: 19rem minmax(0, 1fr);
   grid-template-rows: 4rem minmax(0, 1fr);
   background: var(--ah-color-background);
 }
@@ -1617,6 +1617,7 @@ select {
 
 .settings-editor {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-4);
 }
 
@@ -1664,6 +1665,14 @@ select {
   grid-template-columns: auto minmax(6rem, 1fr) 7rem 7rem;
   gap: var(--ah-space-2);
   align-items: center;
+}
+
+.settings-hours-row__day {
+  display: contents;
+}
+
+.settings-hours-row > .ah-input {
+  min-width: 0;
 }
 
 .settings-holidays,
@@ -1804,6 +1813,7 @@ select {
 
 .club-pages-list button {
   width: 100%;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--ah-space-3);
   min-height: 3.25rem;
@@ -1823,6 +1833,8 @@ select {
 
 .club-pages-list__title {
   display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
   gap: var(--ah-space-1);
 }
 
@@ -2428,4 +2440,83 @@ select {
   .settings-hours-row {
     grid-template-columns: auto minmax(5rem, 1fr) 6.5rem 6.5rem;
   }
+
+  .jobs-card__main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ah-space-1);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 40rem) {
+  .admin-shell__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ah-space-2);
+    padding-block: var(--ah-space-2);
+  }
+
+  .admin-shell__actions {
+    justify-content: flex-end;
+  }
+
+  .admin-shell__actions .ah-appearance {
+    margin-inline-end: auto;
+  }
+
+  .admin-shell__actions .ah-appearance select {
+    max-width: 100%;
+    min-height: 2.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .admin-shell__actions > button,
+  .admin-user-menu > button {
+    width: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .settings-hours-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: var(--ah-space-2);
+  }
+
+  .settings-hours-row__day {
+    display: flex;
+    grid-column: 1 / -1;
+    align-items: center;
+    gap: var(--ah-space-2);
+  }
+
+  .settings-parameter__main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ah-space-1);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 22rem) {
+  .settings-hours-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Keep the navigation label and counter on one line, including Seguiment alumnes. */
+.admin-shell__navigation .ah-sidebar__entry {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.admin-shell__navigation .ah-sidebar__entry > span:not(.ah-sidebar__count) {
+  white-space: nowrap;
+}
+
+.auth-support {
+  margin: var(--ah-space-3) 0 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }

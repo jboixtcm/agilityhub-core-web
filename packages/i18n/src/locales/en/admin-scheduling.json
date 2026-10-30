@@ -68,7 +68,12 @@
       "noRing": "None",
       "back": "Back to the weekly view",
       "gridLabel": "Template “{name}” · {day}"
-    }
+    },
+    "rename": "Rename",
+    "remove": "Delete template",
+    "removeConfirm": "Delete the template “{name}”? It will no longer appear in the list or be available for generating classes. Classes already generated will be kept.",
+    "renamed": "Template name updated.",
+    "removed": "Template deleted."
   },
   "classCard": {
     "title": "Create class",

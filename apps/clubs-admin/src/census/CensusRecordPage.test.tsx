@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { createApiClient, type components } from "@agilityhub/api-client";
 import {
   ERASED_MEMBER_ID,
   handlers,
@@ -80,6 +80,56 @@ async function renderRecord(
     },
   };
 }
+
+describe("Assigned access roles", () => {
+  it("shows the linked dog's photo in the member's Gossos block", async () => {
+    const photoUrl = "/api/v1/attachments/files/example?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({
+          ...overview,
+          dogs: overview.dogs.map((dog) => ({ ...dog, photoUrl })),
+        });
+      }),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const link = document.querySelector<HTMLAnchorElement>(".census-record__dog-link");
+    expect(link?.querySelector("img")).toHaveAttribute("src", photoUrl);
+    expect(link).toHaveAttribute("href", "/gossos/dog-duna");
+  });
+
+  it("shows only assigned roles while retaining the existing role editor", async () => {
+    const { client } = await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    const badges = document.querySelector(".census-record__badges");
+    expect(badges?.children.length).toBe(data?.member.roles.length);
+    expect(badges?.textContent).toBe("alumne");
+  });
+});
+
+describe("MR-03 member tasks", () => {
+  it("links each member dog to its working task management screen", async () => {
+    const { client } = await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    expect(data?.dogs.length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByRole("tab", { name: "Tasques" }));
+    for (const dog of data?.dogs ?? []) {
+      expect(
+        screen.getByRole("link", { name: `Veure i gestionar les tasques de ${dog.name}` }),
+      ).toHaveAttribute("href", `/alumnes/${dog.id}`);
+    }
+  });
+});
 
 describe("T-03-39 INC-98 record navigation isolates member and dog state", () => {
   it("shows one preferences card and no previous booking feedback after navigating to another member", async () => {
@@ -1062,7 +1112,7 @@ describe("T-03-38 dog record", () => {
     const dialog = screen.getByRole("dialog", { name: "Dona de baixa el gos" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Dona de baixa" }));
     expect(await screen.findByText("El gos s'ha donat de baixa.")).toBeVisible();
-    expect(screen.getByText("baixa")).toBeVisible();
+    expect(screen.getByText("Baixa")).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Reactiva" }));
     const reactivation = screen.getByRole("dialog", { name: "Reactiva el gos" });
@@ -1268,5 +1318,176 @@ describe("R-03-14 (E11-W02 round 2, INC-41): the dog transfer offers every activ
     const target = within(drawer).getByLabelText("Abonat de destí");
     // The placeholder, then every active member but Duna's owner.
     expect(within(target).getAllByRole("option")).toHaveLength(total);
+  });
+});
+
+describe("Word feedback: active dog and reviewed merge", () => {
+  it("opens a former member without a recorded leave date and keeps privacy and reactivation available", async () => {
+    resetMemberBillingState();
+    onTestFinished(resetMemberBillingState);
+    mockScenario("memberLeft");
+    await renderRecord("member");
+    expect(await screen.findByRole("heading", { name: "Laura Serra Vidal" })).toBeVisible();
+    const header = document.querySelector<HTMLElement>(".census-record__header");
+    if (header === null) throw new Error("Missing member header");
+    expect(within(header).getByText("Baixa", { exact: true })).toBeVisible();
+    expect(header).toHaveTextContent("(alta:");
+    expect(
+      await screen.findByRole("heading", { name: "Historial de consentiments" }),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Reactiva l'abonat" })).toBeVisible();
+  });
+  it("adds an active dog to the same member with explicit usual handler identity", async () => {
+    let body: Record<string, unknown> | undefined;
+    server.use(
+      http.post("*/api/v1/members/:id/dogs", async ({ request, params }) => {
+        body = (await request.json()) as Record<string, unknown>;
+        expect(params.id).toBe("member-laura");
+        expect(request.headers.get("Idempotency-Key")).toBeTruthy();
+        return HttpResponse.json(
+          { id: "new-dog", ...body, status: "ACTIVE", memberId: params.id, version: 0 },
+          { status: 201 },
+        );
+      }),
+    );
+    await renderRecord("member");
+    fireEvent.click(await screen.findByRole("button", { name: "Afegir un altre gos" }));
+    const drawer = await screen.findByRole("dialog", { name: "Afegir un altre gos" });
+    fireEvent.change(within(drawer).getByLabelText("Nom"), { target: { value: "Nova" } });
+    fireEvent.change(within(drawer).getByLabelText("Raça"), { target: { value: "Mestissa" } });
+    fireEvent.change(within(drawer).getByLabelText("Data de naixement"), {
+      target: { value: "2023-03-12" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Guia"), { target: { value: "Lau" } });
+    expect(within(drawer).getByLabelText("El guia és l’abonat")).toBeChecked();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("Gos afegit i actiu.")).toBeVisible();
+    expect(body).toMatchObject({
+      name: "Nova",
+      handlerName: "Lau",
+      handlerIsMember: true,
+      freeTrainingAllowed: false,
+    });
+    expect(screen.queryByRole("dialog", { name: "Afegir un altre gos" })).not.toBeInTheDocument();
+  });
+  it("requires a target and a preview before confirming a merge and links the surviving record", async () => {
+    const merges: unknown[] = [];
+    server.use(
+      http.post("*/api/v1/members/:id/merge", async ({ request }) => {
+        merges.push(await request.json());
+        return HttpResponse.json({
+          source: { id: "member-laura" },
+          target: { id: "member-target" },
+          counts: {},
+          blockers: [],
+        });
+      }),
+    );
+    await renderRecord("member");
+    fireEvent.click(await screen.findByRole("button", { name: "Fusiona abonats" }));
+    const dialog = await screen.findByRole("dialog", { name: "Fusiona abonats" });
+    expect(within(dialog).getByRole("button", { name: "Previsualitza la fusió" })).toBeDisabled();
+    const option = await within(dialog).findByRole("option", { name: /Marc Prats García · #/ });
+    fireEvent.change(within(dialog).getByLabelText("Abonat que es conserva"), {
+      target: { value: option.getAttribute("value") },
+    });
+    expect(
+      within(dialog).queryByRole("button", { name: "Confirma la fusió" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Previsualitza la fusió" }));
+    const confirm = await within(dialog).findByRole("button", { name: "Confirma la fusió" });
+    expect(merges).toHaveLength(0);
+    expect(within(dialog).getByText(/Es conserva: Marc/)).toBeVisible();
+    fireEvent.click(confirm);
+    await waitFor(() => {
+      expect(merges).toHaveLength(1);
+    });
+    expect(merges[0]).toHaveProperty("sourceVersion");
+    expect(merges[0]).toHaveProperty("targetVersion");
+  });
+  it("requires a fresh merge preview after a concurrent change and preserves a retry after a lost response", async () => {
+    let previews = 0;
+    const attempts: { body: components["schemas"]["MemberMergeRequest"]; key: string | null }[] =
+      [];
+    server.use(
+      http.get("*/api/v1/members/:id/merge-preview", async ({ request }) => {
+        const response = await getResponse(handlers, request);
+        const preview = (await response?.json()) as components["schemas"]["MemberMergePreview"];
+        previews++;
+        return HttpResponse.json({ ...preview, source: { ...preview.source, version: previews } });
+      }),
+      http.post("*/api/v1/members/:id/merge", async ({ request }) => {
+        attempts.push({
+          body: (await request.json()) as components["schemas"]["MemberMergeRequest"],
+          key: request.headers.get("Idempotency-Key"),
+        });
+        if (attempts.length === 1)
+          return HttpResponse.json(
+            { code: "STALE_VERSION", message: "Changed", traceId: "test", details: {} },
+            { status: 409 },
+          );
+        if (attempts.length === 2) return HttpResponse.error();
+        return HttpResponse.json({ source: {}, target: {}, counts: {}, blockers: [] });
+      }),
+    );
+    await renderRecord("member");
+    fireEvent.click(await screen.findByRole("button", { name: "Fusiona abonats" }));
+    const dialog = screen.getByRole("dialog", { name: "Fusiona abonats" });
+    const option = await within(dialog).findByRole("option", { name: /Marc Prats García · #/ });
+    fireEvent.change(within(dialog).getByLabelText("Abonat que es conserva"), {
+      target: { value: option.getAttribute("value") },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Previsualitza la fusió" }));
+    fireEvent.click(await within(dialog).findByRole("button", { name: "Confirma la fusió" }));
+    await within(dialog).findByRole("alert");
+    expect(
+      within(dialog).queryByRole("button", { name: "Confirma la fusió" }),
+    ).not.toBeInTheDocument();
+    expect(within(dialog).getByLabelText("Abonat que es conserva")).toHaveValue("member-marc");
+    expect(previews).toBe(1);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Previsualitza la fusió" }));
+    fireEvent.click(await within(dialog).findByRole("button", { name: "Confirma la fusió" }));
+    await within(dialog).findByRole("alert");
+    expect(previews).toBe(2);
+    expect(within(dialog).getByText(/Es conserva: Marc/)).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Confirma la fusió" }));
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog", { name: "Fusiona abonats" })).not.toBeInTheDocument(),
+    );
+    expect(attempts.map((attempt) => attempt.body.sourceVersion)).toEqual([1, 2, 2]);
+    expect(attempts[0]?.key).not.toBe(attempts[1]?.key);
+    expect(attempts[1]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(attempts[1]?.key).toBe(attempts[2]?.key);
+    expect(attempts[1]?.body).toEqual(attempts[2]?.body);
+  });
+
+  it("strips read-only email metadata when saving the member", async () => {
+    let sent: Record<string, unknown> | undefined;
+    server.use(
+      http.patch("*/api/v1/members/:id", async ({ request }) => {
+        sent = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: { fieldErrors: [{ field: "firstName", code: "REQUIRED" }] },
+            message: "Invalid",
+            traceId: "test",
+          },
+          { status: 400 },
+        );
+      }),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const header = document.querySelector(".census-record__header");
+    if (header === null) throw new Error("No header");
+    fireEvent.click(within(header as HTMLElement).getByRole("button", { name: "Edita" }));
+    const drawer = screen.getByRole("dialog", { name: "Edita l'abonat" });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(sent).toBeDefined();
+    });
+    expect((sent?.contactEmails as Record<string, unknown>[])[0]).not.toHaveProperty("bounced");
+    expect(await within(drawer).findAllByText("Revisa aquest camp.")).not.toHaveLength(0);
   });
 });

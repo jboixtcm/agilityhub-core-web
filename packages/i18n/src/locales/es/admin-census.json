@@ -9,7 +9,8 @@
     "loading": "Cargando la ficha…",
     "retry": "Volver a intentarlo",
     "save": "Guardar",
-    "saving": "Guardando…"
+    "saving": "Guardando…",
+    "invalidField": "Revisa este campo."
   },
   "inactivity": {
     "title": "Inactividad",
@@ -63,7 +64,9 @@
     "confirm": "Programar la baja",
     "cancelledToast": "Se han cancelado {count, plural, one {# reserva} other {# reservas}}",
     "badgeScheduled": "baja prevista {date}",
-    "errors": { "dateInvalid": "La fecha solicitada ya ha pasado: elige una nueva" }
+    "errors": {
+      "dateInvalid": "La fecha solicitada ya ha pasado: elige una nueva"
+    }
   },
   "reactivation": {
     "title": "Reactivar al abonado",
@@ -90,7 +93,6 @@
     "monthly": "Cuota mensual",
     "newPlan": "Modalidad nueva",
     "price": "Tarifa",
-    "effectiveMonth": "Mes de efecto (opcional)",
     "packDiscountRule": "Al pasar de un bono de {minSessions} sesiones o más a una cuota mensual, la entrada tiene un {discountPercent} % de descuento. El importe debe calcularlo la API.",
     "nextInvoiceDate": "Fecha del próximo recibo (opcional)",
     "nextInvoiceDefault": "Si la dejas en blanco, el próximo recibo será el {date}."
@@ -188,7 +190,9 @@
       "type": "Tipo de documento",
       "upload": "Subir el documento"
     },
-    "edit": { "title": "Editar los datos del perro" },
+    "edit": {
+      "title": "Editar los datos del perro"
+    },
     "feedback": {
       "deactivated": "El perro se ha dado de baja.",
       "documentRemoved": "El archivo se ha retirado.",
@@ -219,11 +223,11 @@
       "organisation": "Organismo",
       "owner": "Abonado",
       "registeredAt": "Alta",
-      "sex": "Sexo"
+      "sex": "Sexo",
+      "handlerIsMember": "El guía es el abonado"
     },
     "freeTraining": {
       "byLevel": "El derecho viene del nivel.",
-      "levelOption": "Según el nivel",
       "manual": "Decisión manual del club.",
       "notAllowed": "No puede entrenar solo",
       "title": "Entrenamiento libre"
@@ -234,7 +238,9 @@
       "since": "desde {date}",
       "title": "Cambiar el nivel"
     },
-    "license": { "number": "licencia {number}" },
+    "license": {
+      "number": "licencia {number}"
+    },
     "photo": {
       "alt": "Foto de {name}",
       "empty": "Todavía no hay ninguna foto",
@@ -256,7 +262,7 @@
     },
     "status": {
       "active": "activo",
-      "inactive": "baja",
+      "inactive": "Baja",
       "reason": "Motivo (opcional)"
     },
     "tasks": {
@@ -298,7 +304,9 @@
       "title": "Bloquear las reservas"
     },
     "bookingBlocked": "Reservas bloqueadas",
-    "edit": { "title": "Editar al abonado" },
+    "edit": {
+      "title": "Editar al abonado"
+    },
     "familyHolder": "titular del grupo familiar",
     "familyMember": "miembro del grupo familiar",
     "feedback": {
@@ -338,7 +346,8 @@
       "postalCode": "CP",
       "remarks": "Observaciones visibles",
       "roles": "Roles de acceso",
-      "street": "Calle y número"
+      "street": "Calle y número",
+      "monthlyAmount": "Importe mensual"
     },
     "imageNotice": "No autoriza el uso de su imagen: no publiques fotos en las que aparezca {gender, select, FEMALE {ella} OTHER {esta persona} other {él}}.",
     "readmissionPending": "Este abonado tiene una readmisión pendiente: valídala o recházala desde el panel antes de cambiar la ficha.",
@@ -470,7 +479,9 @@
       "description": "Se enviará un enlace nuevo al correo de acceso de la cuenta.",
       "title": "Reenviar el acceso"
     },
-    "roles": { "title": "Roles de acceso" },
+    "roles": {
+      "title": "Roles de acceso"
+    },
     "sections": {
       "dataPayment": "Datos y pago",
       "dogs": "Perros",
@@ -482,8 +493,14 @@
       "label": "Apartados de la ficha",
       "summary": "Ficha",
       "tasks": "Tareas",
-      "tasksPlaceholder": "La gestión completa de tareas se incorpora con el seguimiento de alumnos."
-    }
+      "tasksLink": "Ver y gestionar las tareas de {dog}",
+      "noDogs": "Este abonado no tiene ningún perro vinculado."
+    },
+    "leftStatus": "Baja",
+    "reactivate": "Reactivar al abonado",
+    "leftSince": "Baja desde el {date}",
+    "joinedOn": "(alta: {date})",
+    "left": "Baja"
   },
   "roles": {
     "admin": "administrador",
@@ -538,7 +555,11 @@
     },
     "sameHolder": "titular: la misma",
     "paymentSummary": "{method} · {account} · {holder}",
-    "paymentMethod": { "SEPA_DD": "Domiciliación", "CARD": "Tarjeta", "MANUAL": "Efectivo" },
+    "paymentMethod": {
+      "SEPA_DD": "Domiciliación",
+      "CARD": "Tarjeta",
+      "MANUAL": "Efectivo"
+    },
     "whatsapp": "WhatsApp",
     "datePlaceholder": "dd/mm/aaaa",
     "required": "obligatorio",
@@ -696,5 +717,47 @@
     "readFailed": "No se ha podido marcar como leído el seguimiento de {name}.",
     "readOffline": "No hay conexión con el servidor.",
     "readRetry": "Volver a intentarlo"
+  },
+  "addDog": {
+    "title": "Añadir otro perro",
+    "help": "El perro quedará activo al guardar y vinculado a {member}.",
+    "saved": "Perro añadido y activo."
+  },
+  "merge": {
+    "title": "Fusionar abonados",
+    "help": "Esta ficha ({source}) quedará vinculada al abonado que elijas.",
+    "target": "Abonado que se conserva",
+    "choose": "Elegir un abonado",
+    "preview": "Previsualizar la fusión",
+    "keep": "Se conserva: {target}",
+    "preserve": "Se conservarán los datos y la tarifa del abonado elegido. Se transferirán los perros y reservas vigentes. Las facturas, asistencias y demás registros anteriores seguirán accesibles desde el historial original.",
+    "confirm": "Confirmar la fusión",
+    "merged": "Este abonado se ha fusionado.",
+    "openTarget": "Abrir el abonado conservado",
+    "history": "Historial de los abonados fusionados",
+    "blocked": "Resuelve los conflictos antes de fusionar.",
+    "counts": {
+      "dogs": "Perros",
+      "classBookings": "Reservas de clases",
+      "waitlist": "Lista de espera",
+      "seatHolds": "Plazas retenidas",
+      "trainingBookings": "Reservas de entrenamiento",
+      "packs": "Paquetes",
+      "accessAccounts": "Cuentas de acceso",
+      "activityRegistrations": "Inscripciones a actividades"
+    },
+    "blockers": {
+      "SAME_MEMBER": "Elige dos abonados distintos.",
+      "ALREADY_MERGED": "Una ficha ya se ha fusionado.",
+      "TARGET_NOT_ACTIVE": "El abonado conservado debe estar activo.",
+      "SIGNUP_PENDING": "Hay un alta o readmisión pendiente.",
+      "DIFFERENT_ACCESS_ACCOUNTS": "Los abonados tienen cuentas de acceso diferentes.",
+      "SOURCE_IS_STAFF": "El origen es administrador o instructor: conserva esa ficha.",
+      "DIFFERENT_FAMILY_GROUPS": "Los abonados pertenecen a grupos familiares diferentes.",
+      "DOG_SIGNUP_PENDING": "Hay un perro pendiente de validar.",
+      "TWO_MEMBERSHIPS": "Ambas fichas tienen acceso: revisa las cuentas antes de fusionar.",
+      "ACTIVITY_CONFLICT": "Ambas fichas tienen una inscripción vigente en la misma actividad.",
+      "MEMBER_PROCESS_PENDING": "Hay una baja, inactividad o cobro pendiente de resolver."
+    }
   }
 }

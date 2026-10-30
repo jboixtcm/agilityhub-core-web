@@ -1,4 +1,11 @@
-import type { CSSProperties, MouseEvent, ReactNode } from "react";
+import {
+  type CSSProperties,
+  type MouseEvent,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { Icon } from "./icons/Icon";
 import type { IconName } from "./icons/names";
@@ -45,6 +52,8 @@ export interface ScheduleGridProps<Cell extends ScheduleGridCell> {
   footer?: ReactNode;
   renderEmpty?: ((row: ScheduleRow<Cell>, column: ScheduleColumn) => ReactNode) | undefined;
   selectedCellId?: string | undefined;
+  /** Shown only when columns extend beyond the available width. */
+  overflowHint?: string;
 }
 
 /**
@@ -60,10 +69,33 @@ export function ScheduleGrid<Cell extends ScheduleGridCell>({
   renderEmpty,
   rows,
   selectedCellId,
+  overflowHint,
 }: ScheduleGridProps<Cell>) {
+  const scroll = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+  useEffect(() => {
+    const element = scroll.current;
+    if (element === null || typeof ResizeObserver === "undefined") return;
+    const measure = () => {
+      setOverflowing(element.scrollWidth > element.clientWidth + 1);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    if (element.firstElementChild !== null) observer.observe(element.firstElementChild);
+    measure();
+    return () => {
+      observer.disconnect();
+    };
+  }, [columns.length, rows.length]);
   return (
     <div className={classes("ah-schedule-grid", className)}>
-      <div className="ah-schedule-grid__scroll">
+      <div
+        aria-label={overflowing ? label : undefined}
+        className="ah-schedule-grid__scroll"
+        ref={scroll}
+        role={overflowing ? "region" : undefined}
+        tabIndex={overflowing ? 0 : undefined}
+      >
         <table
           className="ah-schedule-grid__table"
           style={{ "--schedule-columns": String(columns.length) } as CSSProperties}
@@ -143,6 +175,9 @@ export function ScheduleGrid<Cell extends ScheduleGridCell>({
           </tbody>
         </table>
       </div>
+      {overflowing && overflowHint !== undefined ? (
+        <p className="ah-schedule-grid__overflow-hint">{overflowHint}</p>
+      ) : null}
       {footer}
     </div>
   );

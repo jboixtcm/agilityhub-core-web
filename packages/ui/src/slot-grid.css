@@ -105,6 +105,17 @@
   text-decoration: line-through;
 }
 
+/* A free slot that cannot be booked is not an occupied ring. */
+.ah-slot--unavailable {
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border-style: dashed;
+}
+
+.ah-slot--unavailable .ah-slot__time {
+  text-decoration: none;
+}
+
 /* «18:50 classe»: dimmed, not struck (mockup opacity .35). */
 .ah-slot--class {
   opacity: 0.4;

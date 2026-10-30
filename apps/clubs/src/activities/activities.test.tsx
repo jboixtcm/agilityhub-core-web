@@ -906,7 +906,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration 
     await register();
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     await register();

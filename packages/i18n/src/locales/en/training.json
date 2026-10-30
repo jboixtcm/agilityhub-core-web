@@ -18,7 +18,8 @@
     "taken": "taken",
     "cell": "{time}, {state}",
     "time": "Time",
-    "stale": "may be out of date"
+    "stale": "may be out of date",
+    "unavailable": "unavailable"
   },
   "anyRing": {
     "choose": "At {time} more than one ring is free — choose one:"
@@ -32,7 +33,10 @@
     "button": "Confirm {day} · {from}–{to} · {ring}",
     "idle": "Confirm",
     "sending": "Sending",
-    "done": "Training booked"
+    "done": "Training booked",
+    "title": "Training booking",
+    "chooseTime": "Choose an available time to prepare your booking.",
+    "dismissError": "OK"
   },
   "limit": {
     "withCancellable": "You have reached the limit of {limit} bookings for this week: cancel one of the upcoming ones to book another.",
@@ -49,7 +53,21 @@
     "withDog": "Training · with {dogArticle}{dogName}",
     "cancelDialog": "Do you want to cancel this training booking?",
     "cancelled": "Training cancelled",
-    "tooLate": "It can no longer be cancelled from the app: please contact the club.",
+    "tooLate": "The cancellation deadline was {deadline}. Contact the club.",
     "tooLateDetails": "It can only be cancelled up to {threshold} before it starts, and {remaining} are left."
+  },
+  "conditions": {
+    "link": "View conditions",
+    "title": "Training without an instructor",
+    "close": "Close",
+    "error": "The conditions could not be loaded.",
+    "loading": "Loading conditions"
+  },
+  "home": {
+    "title": "Training this week",
+    "used": "{used} of {limit} training sessions completed or booked",
+    "remaining": "{count} available",
+    "member": "Member total",
+    "stale": "The count may be out of date."
   }
 }

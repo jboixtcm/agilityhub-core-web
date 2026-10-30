@@ -17,7 +17,7 @@ import type { Role } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import { clubsNamespaces } from "@agilityhub/i18n/clubs";
 import {
-  AppBar,
+  AppearanceSelector,
   Avatar,
   Button,
   Card,
@@ -136,6 +136,7 @@ interface RouteDefinition {
 
 export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   // Screens 01 and 02.
+  { path: "/login", public: true },
   { path: "/entrar", public: true },
   { path: "/activacio", public: true },
   { path: "/benvinguda" },
@@ -304,6 +305,7 @@ const MEMBER_PATHS: readonly string[] = [
 
 /** The screens 01–03b and the public ones route themselves; the dev gallery is not a screen. */
 const SELF_ROUTED_PATHS: readonly string[] = [
+  "/login",
   "/entrar",
   "/acces",
   "/activacio",
@@ -342,7 +344,7 @@ function strayLanding(session: SessionSnapshot, pathname: string): string | unde
 }
 
 async function routeAfterLogin(me: Me, authClient: AuthClient): Promise<string> {
-  if (me.account.onboardingPending) {
+  if (me.impersonation === undefined && me.account.onboardingPending) {
     try {
       const onboarding = await authClient.getOnboarding();
       if (onboarding.pending && onboarding.postponeRemaining === 0) {
@@ -395,48 +397,6 @@ function Placeholder() {
       description={t("shell:placeholder.description")}
       title={t("shell:placeholder.title")}
     />
-  );
-}
-
-function LanguageSelector({ authClient }: { authClient: AuthClient }) {
-  const branding = useBranding();
-  const { me } = useSession();
-  const { i18n, t } = useTranslation("shell");
-  const borrowed = me?.impersonation !== undefined || me?.support !== undefined;
-  const locales = productLocales.filter(
-    (locale) => branding.locales.includes(locale) || (borrowed && locale === me.account.locale),
-  );
-
-  return (
-    <label className="shell-language">
-      <span className="ah-sr-only">{t("shell:header.language")}</span>
-      <select
-        aria-label={t("shell:header.language")}
-        disabled={borrowed}
-        onChange={(event) => {
-          if (borrowed) return;
-          const locale = event.currentTarget.value;
-          localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-          void i18n.changeLanguage(locale);
-          // CONVENCIONS_I18N §1 (E11-W06 W5): the choice is the account's (`PATCH /me`), so the
-          // next sign-in keeps it; an impersonated session cannot write it (403).
-          if (me !== null && me.account.locale !== locale) {
-            void authClient.updateLocale(locale).catch(() => undefined);
-          }
-        }}
-        value={i18n.resolvedLanguage ?? branding.defaultLocale}
-      >
-        {locales.map((locale) => (
-          <option key={locale} value={locale}>
-            {locale === "ca"
-              ? t("shell:language.ca")
-              : locale === "es"
-                ? t("shell:language.es")
-                : t("shell:language.en")}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }
 
@@ -583,7 +543,14 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
         disabled={pending}
         onClick={() => {
           setPending(true);
-          void authClient.logout().catch(() => undefined);
+          void authClient
+            .revokeImpersonation()
+            .then(() => {
+              window.close();
+            })
+            .catch(() => {
+              setPending(false);
+            });
         }}
         type="button"
       >
@@ -620,7 +587,6 @@ function MobileShell({
 }) {
   const branding = useBranding();
   const session = useSession();
-  const { t } = useTranslation("shell");
   // A38: the shell stays mounted from one screen to the next; the document's scroll follows them.
   useDocumentScroll(location.visit, location.kind);
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
@@ -633,36 +599,34 @@ function MobileShell({
   );
 
   return (
-    <div className="clubs-shell">
-      <div className="clubs-shell__top">
+    <div className={`clubs-shell${detail && pathname !== "/perfil" ? " clubs-shell--detail" : ""}`}>
+      <div className="clubs-shell__banner">
         <ImpersonationBanner authClient={authClient} />
-        {detail ? null : (
-          <AppBar
-            className="clubs-shell__header"
-            end={
-              <div className="clubs-shell__actions">
-                <LanguageSelector authClient={authClient} />
-                <a
-                  aria-label={t("shell:header.userMenu")}
-                  className="clubs-shell__user"
-                  href="/perfil"
-                >
-                  <Icon aria-hidden="true" name="user" />
-                </a>
-              </div>
-            }
-            start={
-              logo.kind === "initial" ? (
-                <span aria-hidden="true" className="clubs-shell__mark">
-                  {branding.club.name.charAt(0)}
-                </span>
-              ) : (
-                <img alt="" className="clubs-shell__logo" src={logo.src} />
-              )
-            }
-            title={branding.club.name}
-          />
-        )}
+      </div>
+      <header className="clubs-shell__top">
+        <a
+          className="clubs-shell__brand"
+          href={profileLanding(session.activeProfile, session.roles)}
+        >
+          {logo.kind === "initial" ? (
+            <span aria-hidden="true" className="clubs-shell__mark">
+              {branding.club.name.charAt(0)}
+            </span>
+          ) : (
+            <img alt="" className="clubs-shell__logo" src={logo.src} />
+          )}
+          <span>{branding.club.name}</span>
+        </a>
+      </header>
+      <div className="clubs-shell__navigation">
+        <MobileNavigation
+          activeProfile={session.activeProfile}
+          impersonated={session.me?.impersonation !== undefined}
+          modules={branding.modules}
+          pathname={pathname}
+          roles={session.roles}
+          trainingTab={trainingTab}
+        />
       </div>
       <main className="clubs-shell__content">
         {/* A38: one boundary per screen shown. A screen the user left unmounts at once, as when
@@ -672,14 +636,6 @@ function MobileShell({
             address (`/historic?tipus=…` → `/historic`) reads that address again (round 2). */}
         <ScreenBoundary key={location.visit}>{children}</ScreenBoundary>
       </main>
-      <MobileNavigation
-        activeProfile={session.activeProfile}
-        impersonated={session.me?.impersonation !== undefined}
-        modules={branding.modules}
-        pathname={pathname}
-        roles={session.roles}
-        trainingTab={trainingTab}
-      />
     </div>
   );
 }
@@ -768,6 +724,8 @@ export function AccessPage({
   // one) and offers a retry (E47).
   const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
   const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
+  const emailRecoveryEnabled =
+    emailLoginEnabled || import.meta.env.VITE_EMAIL_RECOVERY_ENABLED === "true";
   const countdown = useCountdown();
 
   // E11-W06 W1: 01 opened with `?next=` keeps it for the steps that leave this address (the magic
@@ -961,28 +919,31 @@ export function AccessPage({
             {t("auth:access.enter")}
           </Button>
           {emailLoginEnabled ? (
-            <>
-              <Button
-                disabled={pending !== null || countdown.seconds > 0}
-                loading={pending === "magic"}
-                onClick={() => void requestLink("LOGIN")}
-                type="button"
-                variant="secondary"
-              >
-                <Icon aria-hidden="true" name="mail" />
-                {t("auth:access.passwordlessLink")}
-              </Button>
-              <button
-                className="auth-text-action"
-                disabled={pending !== null || countdown.seconds > 0}
-                onClick={() => void requestLink("RESET")}
-                type="button"
-              >
-                {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
-                {t("auth:access.forgot.question")}{" "}
-                <span className="auth-link">{t("auth:access.forgot.action")}</span>
-              </button>
-            </>
+            <Button
+              disabled={pending !== null || countdown.seconds > 0}
+              loading={pending === "magic"}
+              onClick={() => void requestLink("LOGIN")}
+              type="button"
+              variant="secondary"
+            >
+              <Icon aria-hidden="true" name="mail" />
+              {t("auth:access.passwordlessLink")}
+            </Button>
+          ) : null}
+          {emailRecoveryEnabled ? (
+            <button
+              className="auth-text-action"
+              disabled={pending !== null || countdown.seconds > 0}
+              onClick={() => void requestLink("RESET")}
+              type="button"
+            >
+              {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
+              {t("auth:access.forgot.question")}{" "}
+              <span className="auth-link">{t("auth:access.forgot.action")}</span>
+            </button>
+          ) : null}
+          {!emailRecoveryEnabled ? (
+            <p className="auth-support">{t("auth:access.manualSupport")}</p>
           ) : null}
           {countdown.seconds > 0 ? (
             <p className="auth-message auth-message--error" role="alert">
@@ -1480,7 +1441,9 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
   const profiles = profileRoles(me);
   const localeOptions = productLocales.filter((locale) => branding.locales.includes(locale));
   // S11 §13-11: «Aprèn amb AgilityHub» after «Els meus gossos», only with LEARN_LINK.
-  const learnLink = isModuleUiItemEnabled(branding.modules, "menuEntries", "learn");
+  const learnLink =
+    import.meta.env.VITE_LEARN_ENABLED !== "false" &&
+    isModuleUiItemEnabled(branding.modules, "menuEntries", "learn");
   // INC-73 (S01 §6, E11-T09): the password and the language are the person's own account, which
   // an impersonation token cannot change (`403` to `PUT /me/password` and `PATCH /me`).
   const impersonated = me.impersonation !== undefined;
@@ -1549,46 +1512,60 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
           </a>
         ) : null}
       </Card>
+      <Card className="profile-preferences">
+        <div className="profile-appearance">
+          <span>{t("shell:appearance.label")}</span>
+          <AppearanceSelector
+            labels={{
+              label: t("shell:appearance.label"),
+              club: t("shell:appearance.club"),
+              light: t("shell:appearance.light"),
+              dark: t("shell:appearance.dark"),
+              auto: t("shell:appearance.auto"),
+            }}
+          />
+        </div>
+        {impersonated ? null : (
+          <div className="profile-language-card">
+            <label className="profile-language">
+              <Icon aria-hidden="true" name="globe" />
+              <span>{t("auth:profile.language")}</span>
+              <Select
+                aria-label={t("auth:profile.language")}
+                disabled={working}
+                onChange={(event) => {
+                  const locale = event.currentTarget.value;
+                  setWorking(true);
+                  void authClient.updateLocale(locale).then(
+                    async () => {
+                      localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+                      await i18n.changeLanguage(locale);
+                      setWorking(false);
+                    },
+                    () => {
+                      setWorking(false);
+                    },
+                  );
+                }}
+                value={me.account.locale}
+              >
+                {localeOptions.map((locale) => (
+                  <option key={locale} value={locale}>
+                    {locale === "ca"
+                      ? t("shell:language.ca")
+                      : locale === "es"
+                        ? t("shell:language.es")
+                        : t("shell:language.en")}
+                  </option>
+                ))}
+              </Select>
+            </label>
+            {/* R-11-15: only the notifications created from now on come in the new language. */}
+            <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
+          </div>
+        )}
+      </Card>
       <NoticesCard client={client} />
-      {impersonated ? null : (
-        <Card className="profile-language-card">
-          <label className="profile-language">
-            <Icon aria-hidden="true" name="globe" />
-            <span>{t("auth:profile.language")}</span>
-            <Select
-              aria-label={t("auth:profile.language")}
-              disabled={working}
-              onChange={(event) => {
-                const locale = event.currentTarget.value;
-                setWorking(true);
-                void authClient.updateLocale(locale).then(
-                  async () => {
-                    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
-                    await i18n.changeLanguage(locale);
-                    setWorking(false);
-                  },
-                  () => {
-                    setWorking(false);
-                  },
-                );
-              }}
-              value={me.account.locale}
-            >
-              {localeOptions.map((locale) => (
-                <option key={locale} value={locale}>
-                  {locale === "ca"
-                    ? t("shell:language.ca")
-                    : locale === "es"
-                      ? t("shell:language.es")
-                      : t("shell:language.en")}
-                </option>
-              ))}
-            </Select>
-          </label>
-          {/* R-11-15: only the notifications created from now on come in the new language. */}
-          <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
-        </Card>
-      )}
       {me.impersonation === undefined && me.membership.roles.includes("MEMBER") ? (
         <DataExportCard
           accountId={me.account.id}
@@ -1609,8 +1586,12 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
           void (
             me.impersonation === undefined
               ? logoutWithPush(client, () => authClient.logout())
-              : authClient.logout()
-          ).catch(() => undefined);
+              : authClient.revokeImpersonation().then(() => {
+                  window.close();
+                })
+          ).catch(() => {
+            setWorking(false);
+          });
         }}
         {...(me.paymentMethod === undefined ? {} : { paymentMethod: me.paymentMethod })}
       />
@@ -1814,14 +1795,14 @@ function AppContent({
   }, [navigate, pathname, strayTarget]);
   if (
     session.status === "impersonationExpired" &&
-    !(pathname === "/entrar" && address.searchParams.has("handoff"))
+    !(["/login", "/entrar"].includes(pathname) && address.searchParams.has("handoff"))
   ) {
     return <ImpersonationExpiredPage />;
   }
   if (pathname === "/acces") {
     return <LegacyAccessRedirect />;
   }
-  if (pathname === "/entrar") {
+  if (pathname === "/login" || pathname === "/entrar") {
     return (
       <AccessPage
         authClient={authClient}

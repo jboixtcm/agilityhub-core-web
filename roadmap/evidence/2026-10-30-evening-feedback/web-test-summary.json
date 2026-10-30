@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "ci_tasks": 38,
+  "tests": 3668,
+  "browser_tests": 323,
+  "browser_projects": {
+    "course_ui": 4,
+    "id": 1,
+    "clubs": 133,
+    "clubs_admin": 185
+  },
+  "logs": {
+    "ci": "29-web-ci.log",
+    "browser": "28-e2e-docker.log",
+    "size": "30-size-limit.log",
+    "format": "31-final-format.log",
+    "i18n": "11-i18n.log"
+  },
+  "exit_codes": {
+    "ci": 0,
+    "browser": 0,
+    "size": 0,
+    "format": 0,
+    "i18n": 0
+  }
+}

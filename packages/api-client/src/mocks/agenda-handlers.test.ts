@@ -241,7 +241,7 @@ describe("E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answe
     );
     expect(data?.rows[0]?.pendingTasksCount).toBe(2);
     expect(data?.rows[2]).toMatchObject({
-      final: true,
+      final: false,
       notice: { seatReleased: true, waitlistNotified: false },
     });
     expect(

@@ -427,6 +427,7 @@ export const planningHandlers = [
     const items = planningState.templates
       .filter((template) => kind === null || template.kind === kind)
       .filter((template) => active === null || String(template.active) === active)
+      .sort((left, right) => left.name.localeCompare(right.name) || left.id.localeCompare(right.id))
       .map((template) => ({
         active: template.active,
         classCount: template.classes.length,
@@ -501,11 +502,25 @@ export const planningHandlers = [
     if (body.version !== template.version) {
       return apiError("STALE_VERSION", "Stale template version", 409);
     }
+    const name = body.name?.trim();
+    if (name !== undefined) {
+      if (name === "" || name.length > 40) return validationError("name");
+      if (
+        planningState.templates.some(
+          (item) =>
+            item.id !== template.id &&
+            item.kind === template.kind &&
+            item.name.toLocaleLowerCase() === name.toLocaleLowerCase(),
+        )
+      ) {
+        return apiError("DUPLICATE_NAME", "Duplicate template name", 409, { field: "name" });
+      }
+    }
     return HttpResponse.json(
       forReader(
         store({
           ...template,
-          ...(body.name === undefined ? {} : { name: body.name }),
+          ...(name === undefined ? {} : { name }),
           ...(body.notes === undefined ? {} : { notes: body.notes }),
           ...(body.active === undefined ? {} : { active: body.active }),
         }),

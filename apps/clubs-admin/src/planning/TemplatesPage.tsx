@@ -318,6 +318,94 @@ function TemplateModal({
   );
 }
 
+/** Template removal uses the existing active flag; generated weeks keep their source history. */
+function TemplateActionModal({
+  action,
+  onClose,
+  onSave,
+  source,
+}: {
+  action: "rename" | "remove";
+  onClose: () => void;
+  onSave: (name: string) => Promise<void>;
+  source: WeekTemplate;
+}) {
+  const { t } = useTranslation(["admin-scheduling"]);
+  const errorMessage = useErrorMessage();
+  const [name, setName] = useState(source.name);
+  const [error, setError] = useState<string>();
+  const [pending, setPending] = useState(false);
+  const close = () => {
+    if (!pending) onClose();
+  };
+  const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (pending || (action === "rename" && name.trim() === "")) return;
+    setPending(true);
+    setError(undefined);
+    try {
+      await onSave(name.trim());
+      onClose();
+    } catch (cause) {
+      setError(errorMessage(cause));
+    } finally {
+      setPending(false);
+    }
+  };
+
+  return (
+    <Modal
+      closeLabel={t("admin-scheduling:common.close")}
+      onClose={close}
+      open
+      title={t(`admin-scheduling:templates.${action}`)}
+    >
+      <form className="planning-form" onSubmit={(event) => void submit(event)}>
+        {action === "rename" ? (
+          <FormField
+            id="planning-template-rename"
+            label={t("admin-scheduling:templates.form.name")}
+          >
+            <Input
+              disabled={pending}
+              id="planning-template-rename"
+              maxLength={40}
+              onChange={(event) => {
+                setName(event.currentTarget.value);
+              }}
+              required
+              value={name}
+            />
+          </FormField>
+        ) : (
+          <p>{t("admin-scheduling:templates.removeConfirm", { name: source.name })}</p>
+        )}
+        {error === undefined ? null : (
+          <p className="ah-form-field__error" role="alert">
+            {error}
+          </p>
+        )}
+        <div className="planning-form__actions">
+          <Button disabled={pending} onClick={close} variant="ghost">
+            {t("admin-scheduling:common.cancel")}
+          </Button>
+          <Button
+            disabled={action === "rename" && (name.trim() === "" || name.trim() === source.name)}
+            loading={pending}
+            loadingLabel={t("admin-scheduling:common.saving")}
+            type="submit"
+            variant={action === "remove" ? "danger" : "primary"}
+          >
+            {action === "remove"
+              ? t("admin-scheduling:templates.remove")
+              : t("admin-scheduling:common.save")}
+          </Button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
 type BandField = "end" | "general" | "start";
 
 function minutesOf(time: string): number {
@@ -1013,6 +1101,10 @@ export function TemplatesPage({
     dayOfWeek: TemplateClass["dayOfWeek"];
   }>();
   const [templateModal, setTemplateModal] = useState<{ source?: WeekTemplate } | undefined>();
+  const [templateAction, setTemplateAction] = useState<{
+    action: "rename" | "remove";
+    source: WeekTemplate;
+  }>();
   const [bandDrawer, setBandDrawer] = useState<{ band?: TimeBand } | undefined>();
 
   const loadLists = useCallback(async (): Promise<TemplateLists> => {
@@ -1023,7 +1115,9 @@ export function TemplatesPage({
     return { SATURDAY: saturdays.data?.items ?? [], WEEKDAYS: weekdays.data?.items ?? [] };
   }, [client]);
   const lists = useResource(loadLists);
-  const catalogs = useResource(useCallback(() => loadPlanningCatalogs(client), [client]));
+  const catalogs = useResource(
+    useCallback(() => loadPlanningCatalogs(client, !readOnly), [client, readOnly]),
+  );
   const settings = useResource(
     useCallback(
       async () => (readOnly ? defaultSettings : loadSettings(client)),
@@ -1051,17 +1145,18 @@ export function TemplatesPage({
       : resolveSelected(lists.data?.SATURDAY ?? [], choice.SATURDAY);
 
   useEffect(() => {
-    if (shownId === undefined) return;
+    if (lists.data === undefined) return;
     writeTemplateChoice({
       ...(weekdayId === undefined ? {} : { WEEKDAYS: weekdayId }),
       ...(saturdayId === undefined ? {} : { SATURDAY: saturdayId }),
     });
     const url = new URL(window.location.href);
-    if (url.searchParams.get("template") !== shownId) {
-      url.searchParams.set("template", shownId);
+    if (url.searchParams.get("template") !== (shownId ?? null)) {
+      if (shownId === undefined) url.searchParams.delete("template");
+      else url.searchParams.set("template", shownId);
       window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}`);
     }
-  }, [saturdayId, shownId, weekdayId]);
+  }, [lists.data, saturdayId, shownId, weekdayId]);
 
   const template = useResource(
     useMemo(
@@ -1350,6 +1445,51 @@ export function TemplatesPage({
     }
   };
 
+  const saveTemplateAction = (name: string): Promise<void> => {
+    if (templateAction === undefined) return Promise.resolve();
+    const { action, source } = templateAction;
+    // Wait for any class autosave and use its returned version, without changing its fields.
+    return queueRemoval(async () => {
+      try {
+        const result = await client.PATCH("/week-templates/{id}", {
+          body: {
+            ...(action === "rename" ? { name } : { active: false }),
+            version:
+              versionRef.current?.id === source.id ? versionRef.current.version : source.version,
+          },
+          params: { path: { id: source.id } },
+        });
+        if (result.data === undefined)
+          throw new TypeError("Template response did not contain data");
+        if (action === "rename") {
+          // Renaming may change the API's alphabetical order; keep this template selected.
+          setVisibleId(source.id);
+          applyTemplate(result.data);
+        } else {
+          // Remove it immediately, including from generation and coverage selection. A failed
+          // background refresh must not leave the removed template usable in this page.
+          lists.setData({
+            SATURDAY: (lists.data?.SATURDAY ?? []).filter((item) => item.id !== source.id),
+            WEEKDAYS: (lists.data?.WEEKDAYS ?? []).filter((item) => item.id !== source.id),
+          });
+          setCardMode({ fromEmptyCell: false, kind: "create" });
+          setAskAnother(undefined);
+          lists.reload();
+        }
+        setFeedback({
+          message:
+            action === "rename"
+              ? t("admin-scheduling:templates.renamed")
+              : t("admin-scheduling:templates.removed"),
+          tone: "success",
+        });
+      } catch (cause) {
+        if (isApiError(cause, "STALE_VERSION")) await rereadTemplate(source.id);
+        throw cause;
+      }
+    });
+  };
+
   const saveBand = async (startTime: string, endTime: string) => {
     if (current === undefined) return;
     const band = bandDrawer?.band;
@@ -1486,6 +1626,24 @@ export function TemplatesPage({
           <Button
             disabled={current === undefined}
             onClick={() => {
+              if (current !== undefined) setTemplateAction({ action: "rename", source: current });
+            }}
+            variant="ghost"
+          >
+            {t("admin-scheduling:templates.rename")}
+          </Button>
+          <Button
+            disabled={current === undefined}
+            onClick={() => {
+              if (current !== undefined) setTemplateAction({ action: "remove", source: current });
+            }}
+            variant="ghost"
+          >
+            {t("admin-scheduling:templates.remove")}
+          </Button>
+          <Button
+            disabled={current === undefined}
+            onClick={() => {
               setBandDrawer({});
             }}
             variant="secondary"
@@ -1510,6 +1668,16 @@ export function TemplatesPage({
 
   const overlays = readOnly ? null : (
     <>
+      {templateAction === undefined ? null : (
+        <TemplateActionModal
+          action={templateAction.action}
+          onClose={() => {
+            setTemplateAction(undefined);
+          }}
+          onSave={saveTemplateAction}
+          source={templateAction.source}
+        />
+      )}
       {templateModal === undefined ? null : (
         <TemplateModal
           onClose={() => {

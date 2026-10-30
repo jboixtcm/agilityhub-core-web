@@ -21,6 +21,7 @@ import "./planning.css";
 import "./calendar.css";
 import {
   addDays,
+  apiFilter,
   type DayGridCell,
   parseFilter,
   timeLabel,
@@ -71,11 +72,11 @@ export function CalendarDayPage({
   const grid = useResource(
     useCallback(async () => {
       const result = await client.GET("/day-grid", {
-        params: { query: { date, view: "instructor" } },
+        params: { query: { date, view: "instructor", state: apiFilter[filter] } },
       });
       if (result.data === undefined) throw new TypeError("Missing day grid");
       return result.data;
-    }, [client, date]),
+    }, [client, date, filter]),
   );
 
   const data = grid.data?.date === date ? grid.data : undefined;
@@ -166,9 +167,15 @@ export function CalendarDayPage({
                 : ""
             }`;
       const cancelled = cell.state === "CANCELLED";
-      const subtitle = view === "ring" ? (cell.instructorName ?? "") : ringName(cell.ringId);
+      const subtitle = [
+        view === "ring" ? (cell.instructorName ?? "") : ringName(cell.ringId),
+        cell.state === "DRAFT" ? t("enums:classState.DRAFT") : undefined,
+      ]
+        .filter(Boolean)
+        .join(" · ");
       return (
         <ScheduleCell
+          dashed={cell.state === "DRAFT"}
           color={ringColor(cell.ringId)}
           label={[
             cell.description,
@@ -239,7 +246,7 @@ export function CalendarDayPage({
     <section className="planning-page calendar-page">
       <header className="planning-header">
         <h1>{t("admin-scheduling:calendar.title")}</h1>
-        <Chip className="planning-template-chip">{formatPlainDate(date,"weekday")}</Chip>
+        <Chip className="planning-template-chip">{formatPlainDate(date, "weekday")}</Chip>
         <div className="planning-day-selector">
           <IconButton
             className="planning-day-selector__previous"
@@ -299,7 +306,7 @@ export function CalendarDayPage({
       ) : layout.rows.length === 0 ? (
         <Card className="planning-grid-card">
           <EmptyState
-            description={formatPlainDate(date,"weekday")}
+            description={formatPlainDate(date, "weekday")}
             icon="cal"
             title={t("admin-scheduling:calendar.day.empty")}
           />
@@ -309,7 +316,7 @@ export function CalendarDayPage({
           <ScheduleGrid<DayCell>
             columns={layout.columns}
             label={t("admin-scheduling:calendar.day.gridLabel", {
-              day: formatPlainDate(date,"weekday"),
+              day: formatPlainDate(date, "weekday"),
             })}
             renderCell={renderCell}
             rows={layout.rows}

@@ -31,6 +31,18 @@ function apiFilters(filters: readonly UniversalFilter[]) {
   return filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
 }
 
+// An absent state filter invokes the API's pending-only default. Clearing the UI filters
+// must explicitly request every state; facets need that same unfiltered population.
+function queueFilters(filters: readonly UniversalFilter[], kind: "inactivity" | "leave") {
+  const values = apiFilters(filters);
+  if (!filters.some((filter) => filter.field === "state")) {
+    values.push(kind === "inactivity"
+      ? "state:in:REQUESTED,APPROVED,ACTIVE,FINISHED,DENIED,CANCELLED"
+      : "state:in:PENDING,APPROVED,DENIED,CANCELLED");
+  }
+  return values;
+}
+
 function filterValue(value: unknown): string {
   if (Array.isArray(value)) return value.map(filterValue).join(",");
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : "";
@@ -102,7 +114,7 @@ function useQueue<Row extends InactivityRow | LeaveRow>(client: ApiClient, kind:
     let current = true;
     const query = {
       fields: Array.from(new Set(["member", ...state.columns])).join(","),
-      filter: apiFilters(state.filters),
+      filter: queueFilters(state.filters, kind),
       page: state.page,
       ...(state.q === "" ? {} : { q: state.q }),
       size: state.size,
@@ -147,12 +159,14 @@ function useQueueFilterRows<Row extends InactivityRow | LeaveRow>(client: ApiCli
       const query = kind === "inactivity"
         ? {
             fields: "member,fromMonth,toMonth,state,origin,requestedAt",
+            filter: queueFilters([], kind),
             page,
             size: 1000 as const,
             sort: ["fromMonth,asc"],
           }
         : {
             fields: "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt",
+            filter: queueFilters([], kind),
             page,
             size: 1000 as const,
             sort: ["requestedAt,asc"],

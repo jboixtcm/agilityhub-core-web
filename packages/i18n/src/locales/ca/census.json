@@ -196,7 +196,7 @@
     "documentType": "Tipus",
     "empty": "Encara no tens cap gos donat d'alta",
     "expires": "caduca {date}",
-    "footnote": "El nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club",
+    "footnote": "El nivell l'assigna el club · Per donar de baixa un gos, comunica-ho al club",
     "history": "Veure l'historial ›",
     "level": "Nivell {code}",
     "license": "llicència {number}",
@@ -216,7 +216,9 @@
     "tasksSummary": "{open, plural, one {# pendent} other {# pendents}} · {completed, plural, one {# feta} other {# fetes}}",
     "tasksTitle": "Tasques",
     "title": "Els meus gossos",
-    "uploadDocument": "PUJA EL DOCUMENT"
+    "uploadDocument": "PUJA EL DOCUMENT",
+    "choosingFile": "Selecciona un fitxer a la finestra que s’ha obert.",
+    "selectedFile": "Fitxer seleccionat: {name}"
   },
   "myData": {
     "address": "Adreça",

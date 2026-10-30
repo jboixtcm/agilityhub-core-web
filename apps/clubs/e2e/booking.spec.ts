@@ -105,7 +105,7 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     // 3's instructor shows (R-08-20); Monday 10's does not yet.
     await expect(page.locator(".reservation-row, .activity-row")).toHaveCount(6);
     await expect(page.getByText("Dilluns 3 · 18:50–19:50 · Central · Marc")).toBeVisible();
-    await expect(page.getByText("instructor: es mostra el dia abans").first()).toBeVisible();
+    await expect(page.getByText("instructor: es mostra 24 h abans").first()).toBeVisible();
     await shot(page, "03-inici-375.png");
     await openReserve(page);
     await expect(page.getByText("Pack 10 — amb la Duna")).toBeVisible();
@@ -130,6 +130,11 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await shot(page, "29-confirmar-normal-375.png");
     await page.getByRole("button", { name: "CONFIRMAR LA RESERVA" }).click();
     await expect(page.getByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Torna a l’inici" })).toHaveAttribute(
+      "href",
+      "/inici",
+    );
+    await shot(page, "06-confirmada-tornar-inici-375.png");
     await page.getByRole("link", { name: "VEURE LA RESERVA" }).click();
     await expect(page.getByRole("heading", { name: "Detall de la reserva" })).toBeVisible();
     await expect(page.getByText("Classe B+C · amb la Duna")).toBeVisible();
@@ -199,6 +204,9 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await page.getByRole("radio", { name: /Divendres 7/u }).click();
     await page.getByRole("button", { name: "ANUL·LA DIVENDRES 7 I CONFIRMA DISSABTE 8" }).click();
     await expect(page.getByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
+    await page.getByRole("link", { name: "Torna a l’inici" }).click();
+    await expect(page).toHaveURL(/\/inici$/u);
+    await expect(page.getByRole("link", { exact: true, name: "Inici" })).toBeVisible();
   });
 
   test("T-08-39 07: the booking detail, and the waiting entry with «SURT DE LA LLISTA D'ESPERA»", async ({

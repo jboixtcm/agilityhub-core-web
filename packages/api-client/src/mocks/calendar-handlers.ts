@@ -291,7 +291,7 @@ function calendarOf(week: MockWeek, filter: string): WeekCalendar {
       ? ["DRAFT"]
       : filter === "CANCELLED"
         ? ["CANCELLED"]
-        : ["ACTIVE", "FINISHED", "CANCELLED"];
+        : ["ACTIVE", "FINISHED"];
   const inconsistencies = weekInconsistencies(week);
   const drafts = draftIds(week);
   const classes = planningState.sessions
@@ -606,12 +606,19 @@ function blockProblem(fields: BlockFields, ignoreId?: string) {
     : undefined;
 }
 
-function dayGrid(date: string, view: "instructor" | "member", locale: "ca" | "en" | "es"): DayGrid {
+function dayGrid(
+  date: string,
+  view: "instructor" | "member",
+  locale: "ca" | "en" | "es",
+  state: string | null = null,
+): DayGrid {
   const sessions = planningState.sessions.filter(
     (session) =>
       session.date === date &&
       (view === "instructor"
-        ? session.state !== "DRAFT"
+        ? state === null
+          ? session.state !== "DRAFT"
+          : session.state === state
         : session.state === "ACTIVE" || session.state === "FINISHED"),
   );
   const blocks = planningState.blocks.filter(
@@ -1054,6 +1061,10 @@ export const calendarHandlers = [
     ) {
       return apiError("FORBIDDEN", "Forbidden", 403);
     }
-    return HttpResponse.json(dayGrid(date, view, readerLocale(request)));
+    if (url.searchParams.has("state") && view !== "instructor")
+      return apiError("FORBIDDEN", "Forbidden", 403);
+    return HttpResponse.json(
+      dayGrid(date, view, readerLocale(request), url.searchParams.get("state")),
+    );
   }),
 ];

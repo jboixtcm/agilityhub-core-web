@@ -21,9 +21,10 @@ export function studentSearchGuide(dog: StudentSearchDog): {
 } {
   const handler = dog.handlerName?.trim() ?? "";
   if (handler === "") return { guide: dog.owner?.firstName ?? "" };
-  return dog.owner === undefined ||
-    dog.owner.firstName.trim() === handler ||
-    dog.owner.fullName.trim() === handler
+  return dog.handlerIsMember === true ||
+    dog.owner === undefined ||
+    (dog.handlerIsMember !== false &&
+      (dog.owner.firstName.trim() === handler || dog.owner.fullName.trim() === handler))
     ? { guide: handler }
     : { guide: handler, ownerFullName: dog.owner.fullName };
 }
@@ -67,7 +68,7 @@ export function useStudentSearch(client: ApiClient, query: string) {
       const { data } = await client.GET("/dogs", {
         params: {
           query: {
-            fields: "id,name,handlerName,owner,level",
+            fields: "id,name,photoUrl,handlerName,handlerIsMember,owner,level",
             filter: ["status:eq:ACTIVE"],
             page,
             size: STUDENT_SEARCH_PAGE_SIZE,

@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { createApiClient, type components } from "@agilityhub/api-client";
 import {
   ATTENDANCE_MOCK_NOW,
   handlers,
@@ -110,6 +110,33 @@ afterAll(() => {
 });
 
 describe("T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09)", () => {
+  it("shows the photo and member guide when handlerName is blank, and falls back if the photo cannot load", async () => {
+    server.use(
+      http.get("*/api/v1/dogs/:id/instructor-card", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new TypeError("Expected the instructor card");
+        const card = (await original.json()) as components["schemas"]["InstructorCard"];
+        return HttpResponse.json({ ...card, dog: { ...card.dog, handlerName: "  " } });
+      }),
+    );
+    await renderRecord();
+    const header = present(document.querySelector<HTMLElement>(".student-record__header"));
+    expect(within(header).getByRole("heading", { name: "Laura + Duna" })).toBeVisible();
+    expect(header.querySelector(".student-record__owner")).toBeNull();
+    const photo = within(header).getByRole("img", { name: "Foto de Duna" });
+    expect(photo).toHaveAttribute("src", expect.stringContaining("data:image/svg+xml"));
+    fireEvent.error(photo);
+    expect(within(header).queryByRole("img", { name: "Foto de Duna" })).toBeNull();
+    expect(header.querySelector(".ah-avatar")).toBeVisible();
+  });
+
+  it("shows the dog avatar when the API has no student photo", async () => {
+    await renderRecord({ dogId: "dog-thai" });
+    const header = present(document.querySelector<HTMLElement>(".student-record__header"));
+    expect(header.querySelector("img")).toBeNull();
+    expect(header.querySelector(".ah-avatar")).toBeVisible();
+  });
+
   it("D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table", async () => {
     await renderRecord();
     expect(screen.getByRole("heading", { level: 1, name: "Laura + Duna" })).toBeVisible();
@@ -579,6 +606,19 @@ describe("T-10-28 E7-W06 (E6-W04 question 5 and its report nits): D13's drawer",
 
 describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () => {
   it("instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13", async () => {
+    const photoUrl = "/api/v1/attachments/files/example?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/dogs", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected dogs response");
+        const page = (await original.json()) as components["schemas"]["ListPageDogListItem"];
+        expect(new URL(request.url).searchParams.get("fields")).toContain("photoUrl");
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) => ({ ...item, photoUrl })),
+        });
+      }),
+    );
     const i18n = await createI18n({
       branding: canic,
       browserLanguages: ["ca"],
@@ -626,6 +666,7 @@ describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () =>
       expect(names.every((name) => name.includes("Duna"))).toBe(true);
     });
     const link = present(screen.getAllByRole("link")[0]);
+    expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
     fireEvent.click(link);
     expect(onNavigate).toHaveBeenCalledWith(link.getAttribute("href"));
     expect(link.getAttribute("href")).toMatch(/^\/alumnes\/dog-/u);

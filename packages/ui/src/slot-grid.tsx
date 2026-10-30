@@ -14,7 +14,7 @@ export interface SlotCellModel {
   reason?: SlotCellReason | null;
   /**
    * A `FREE` cell that cannot be taken now (already started, out of the window: `bookable` of
-   * R-09-04) is drawn taken. Defaults to `true`.
+   * R-09-04) is unavailable. Defaults to `true`.
    */
   bookable?: boolean;
   /** «18:50»: the class's own start (`SlotCell.classStartsAtLocal`, INC-44), else the row's. */
@@ -52,6 +52,8 @@ export interface SlotGridLabels {
   cell: (time: string, state: string) => string;
   free: string;
   taken: string;
+  /** A free slot outside the booking window, distinct from an occupied ring. */
+  unavailable?: string;
   /** Why a taken cell is taken («entrenament», «bloqueig»): its state in the accessible name. */
   reason?: (reason: SlotCellReason) => string;
 }
@@ -166,14 +168,23 @@ export function SlotGrid({
     const variant = slotCellVariant(cell);
     const isSelected = selected.includes(cell.id);
     const text = cellText(cell, time, labels);
+    const unavailable =
+      cell.state === "FREE" && cell.bookable === false && labels.unavailable !== undefined;
     const takenBy =
       cell.reason === null || cell.reason === undefined || labels.reason === undefined
         ? labels.taken
         : labels.reason(cell.reason);
-    const state = variant === "free" ? labels.free : variant === "taken" ? takenBy : text;
+    const state = unavailable
+      ? (labels.unavailable ?? labels.taken)
+      : variant === "free"
+        ? labels.free
+        : variant === "taken"
+          ? takenBy
+          : text;
     const className = [
       "ah-slot",
       `ah-slot--${variant}`,
+      unavailable ? "ah-slot--unavailable" : "",
       isSelected ? "ah-slot--selected" : "",
       cell.conflict === true ? "ah-slot--conflict" : "",
     ]
@@ -201,6 +212,7 @@ export function SlotGrid({
         type="button"
       >
         <span className="ah-slot__time">{text}</span>
+        {unavailable ? <span className="ah-slot__detail">{labels.unavailable}</span> : null}
         {cell.detail === null || cell.detail === undefined || cell.detail === "" ? null : (
           <span className="ah-slot__detail">{cell.detail}</span>
         )}

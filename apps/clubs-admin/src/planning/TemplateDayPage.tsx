@@ -56,11 +56,13 @@ export function TemplateDayPage({
     window.location.assign(path);
   },
   templateId,
+  readOnly = true,
 }: {
   client: ApiClient;
   dayOfWeek: DayOfWeek | undefined;
   onNavigate?: (path: string) => void;
   templateId: string;
+  readOnly?: boolean;
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
   const { formatPlainDate } = useClubFormats();
@@ -74,7 +76,9 @@ export function TemplateDayPage({
       return result.data;
     }, [client, templateId]),
   );
-  const catalogs = useResource(useCallback(() => loadPlanningCatalogs(client), [client]));
+  const catalogs = useResource(
+    useCallback(() => loadPlanningCatalogs(client, !readOnly), [client, readOnly]),
+  );
 
   const data = template.data;
   const cat = catalogs.data;

@@ -30,6 +30,8 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { TrainingConditions } from "./training/TrainingConditions";
+
 type License = components["schemas"]["License"];
 // The api sends documents and licences for ACTIVE dogs only; the page reads them as empty lists otherwise.
 type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses"> & {
@@ -501,9 +503,10 @@ function DogDocuments({ dog, onAdd }: { dog: MeDog; onAdd: () => void }) {
                 <span className="dog-documents__pending">
                   {t("census:myDogs.documentPending", { document: document.typeLabel })}
                 </span>
-              ) : (
-                document.files.map((file) => <span key={file.id}>{file.name}</span>)
-              )}
+              ) : null}
+              {document.files.map((file) => (
+                <span key={file.id}>{file.name}</span>
+              ))}
             </div>
           ))
         )}
@@ -560,7 +563,10 @@ function DogCard({
 }) {
   const { t } = useTranslation("census");
   const formats = useClubFormats();
-  const [dog, setDog] = useState(initialDog);
+  // Only the immediate photo preview is local. Fresh server props must replace documents.
+  const [localPhoto, setLocalPhoto] = useState<{ dog: MeDog; url: string }>();
+  const dog =
+    localPhoto?.dog === initialDog ? { ...initialDog, photoUrl: localPhoto.url } : initialDog;
   const tasksEnabled = modules.includes("TASKS");
   const packsEnabled = modules.includes("PACKS");
   const freeTrainingEnabled = modules.includes("FREE_TRAINING");
@@ -586,7 +592,7 @@ function DogCard({
             onMessage(message, true);
           }}
           onUpdated={(photoUrl) => {
-            setDog((current) => ({ ...current, photoUrl }));
+            setLocalPhoto({ dog: initialDog, url: photoUrl });
             onMessage(t("census:myDogs.photoSaved", { dog: dog.name }));
           }}
         />
@@ -636,7 +642,10 @@ function DogCard({
         }}
       />
       {freeTrainingEnabled && dog.freeTrainingAllowed ? (
-        <span className="dog-card__free">{t("census:values.freeTraining")}</span>
+        <div className="dog-card__training">
+          <span className="dog-card__free">{t("census:values.freeTraining")}</span>
+          <TrainingConditions client={client} />
+        </div>
       ) : null}
       {dog.licenses.map((license) => (
         <p className="dog-card__license" key={license.organisation}>
@@ -702,6 +711,15 @@ function DocumentModal({
   const [name, setName] = useState("");
   const [chosenType, setChosenType] = useState<string>();
   const [file, setFile] = useState<File>();
+  const [choosingFile, setChoosingFile] = useState(false);
+  useEffect(() => {
+    const input = document.getElementById("dog-document-file");
+    const cancelled = () => {
+      setChoosingFile(false);
+    };
+    input?.addEventListener("cancel", cancelled);
+    return () => input?.removeEventListener("cancel", cancelled);
+  }, []);
   const [working, setWorking] = useState(false);
   const [failure, setFailure] = useState<string>();
   // The first type of the club's catalog until the member picks another (R-03-15).
@@ -779,12 +797,23 @@ function DocumentModal({
           <Input
             accept="application/pdf,image/*"
             id="dog-document-file"
+            onClick={() => {
+              setChoosingFile(true);
+            }}
             onChange={(event) => {
+              setChoosingFile(false);
               setFile(event.currentTarget.files?.[0]);
             }}
             required
             type="file"
           />
+          <span role="status">
+            {choosingFile
+              ? t("census:myDogs.choosingFile")
+              : file === undefined
+                ? null
+                : t("census:myDogs.selectedFile", { name: file.name })}
+          </span>
         </FormField>
         {failure === undefined ? null : (
           <p className="self-modal-form__error" role="alert">
@@ -805,7 +834,7 @@ function DocumentModal({
 
 export function MyDogsPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
-  const { t } = useTranslation("census");
+  const { t } = useTranslation(["census", "training"]);
   const packsEnabled = branding.modules.includes("PACKS") && branding.modules.includes("BILLING");
   const [data, setData] = useState<MeDogs>();
   const [packs, setPacks] = useState<PackBalance[]>([]);

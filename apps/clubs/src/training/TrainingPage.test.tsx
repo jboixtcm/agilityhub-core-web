@@ -770,7 +770,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the sha
     fireEvent.click(confirmButton());
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     // Not the booking's answer: the choice stays, and the retry is the same submission.
@@ -778,6 +778,8 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the sha
     expect(confirmButton()).toBeEnabled();
     fireEvent.click(confirmButton());
     expect(await screen.findByText("Aquest gos ja té una reserva.")).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Entesos" }));
+    expect(screen.queryByText("Aquest gos ja té una reserva.")).not.toBeInTheDocument();
     // The api answered (a 4xx with its body): the same booking chosen again is a new submission.
     choose();
     fireEvent.click(confirmButton());

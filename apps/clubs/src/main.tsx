@@ -13,7 +13,12 @@ import {
   SessionProvider,
 } from "@agilityhub/auth";
 import { type ClubsNamespace, createClubsI18n, preloadClubsI18n } from "@agilityhub/i18n/clubs";
-import { applyBrandingTheme, BrandingProvider, withProductBrandName } from "@agilityhub/ui";
+import {
+  applyBrandingTheme,
+  AppearanceProvider,
+  withAppearance,
+  withProductBrandName,
+} from "@agilityhub/ui";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
@@ -83,7 +88,7 @@ async function bootstrap(root: HTMLElement) {
     { cachedTimeoutMs: BRANDING_BOOT_TIMEOUT_MS },
   );
   const branding = withProductBrandName(normalizeBranding(source), env.VITE_PLATFORM_BRAND_NAME);
-  applyBrandingTheme(branding.theme);
+  applyBrandingTheme(withAppearance(branding).theme);
   document.title = branding.club.name;
   const i18n = await createClubsI18n({ branding, initialNamespaces: BOOT_NAMESPACES });
   const authClient = new AuthClient({
@@ -117,11 +122,11 @@ async function bootstrap(root: HTMLElement) {
   createRoot(root).render(
     <StrictMode>
       <I18nextProvider i18n={i18n}>
-        <BrandingProvider branding={branding}>
+        <AppearanceProvider branding={branding}>
           <SessionProvider client={authClient}>
             <App apiClient={apiClient} authClient={authClient} publicApiClient={publicApiClient} />
           </SessionProvider>
-        </BrandingProvider>
+        </AppearanceProvider>
       </I18nextProvider>
     </StrictMode>,
   );

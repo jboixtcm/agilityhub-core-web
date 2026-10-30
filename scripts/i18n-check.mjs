@@ -139,6 +139,8 @@ for (const [key, file] of usedKeys) {
 }
 
 const dynamicKeyPrefixes = [
+  "admin-census:merge.blockers.",
+  "admin-census:merge.counts.",
   // S16 (E9-W03): D18 and D16 «Geometria», rendered by the api's enums (owners, geometry rules)
   // and course-core's (obstacle types), and the zone fields of the geometry form.
   "admin-courses:geometry.rule.",

@@ -176,7 +176,15 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
     await expect(
       page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana A»" }),
     ).toBeVisible();
-    for (const name of ["Nova", "Duplica", "Franja", "Crear classe", "GENERAR CLASSES"]) {
+    for (const name of [
+      "Nova",
+      "Duplica",
+      "Canvia el nom",
+      "Esborra plantilla",
+      "Franja",
+      "Crear classe",
+      "GENERAR CLASSES",
+    ]) {
       await expect(page.getByRole("button", { name, exact: true })).toHaveCount(0);
     }
     await expect(page.getByRole("region", { name: "Crear classe" })).toHaveCount(0);
@@ -197,6 +205,66 @@ test.describe("E4-W01 D3 + D3b weekly templates", () => {
       page.getByRole("table", { name: "Plantilla «Setmana A» · dimecres" }),
     ).toBeVisible();
   });
+});
+
+test.describe("T-06-26 template management", () => {
+  for (const width of [1280, 375]) {
+    test(`renames and retires a template at ${String(width)}px`, async ({ page }) => {
+      const captures = resolve(
+        import.meta.dirname,
+        "../../../roadmap/evidence/2026-10-30-template-actions",
+      );
+      mkdirSync(captures, { recursive: true });
+      await signIn(page, "admin");
+      await page.goto(`${baseUrl}/plantilles`);
+      await expect(
+        page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana A»" }),
+      ).toBeVisible();
+      await page.setViewportSize({ height: 900, width });
+      await page.getByRole("button", { name: "Canvia el nom", exact: true }).click();
+      const rename = page.getByRole("dialog", { name: "Canvia el nom" });
+      await expect(rename.getByLabel("Nom")).toHaveValue("Setmana A");
+      await rename.getByLabel("Nom").fill("Setmana de tardor");
+      // Keyboard submission also exercises the dialog's labelled form and focus trap.
+      await rename.getByLabel("Nom").press("Enter");
+      await expect(rename).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "dl–dv: «Setmana de tardor»" })).toBeVisible();
+      await page.screenshot({
+        path: resolve(captures, `renamed-${String(width)}.png`),
+        fullPage: true,
+      });
+      await page.getByRole("button", { name: "Esborra plantilla", exact: true }).click();
+      const confirmation = page.getByRole("dialog", { name: "Esborra plantilla" });
+      await expect(confirmation).toContainText("Setmana de tardor");
+      await expect(confirmation).toContainText("Les classes ja generades es conservaran.");
+      await page.screenshot({
+        path: resolve(captures, `remove-confirmation-${String(width)}.png`),
+        fullPage: true,
+      });
+      await confirmation.getByRole("button", { name: "Cancel·la" }).click();
+      await expect(
+        page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana de tardor»" }),
+      ).toBeVisible();
+      await page.getByRole("button", { name: "Esborra plantilla", exact: true }).click();
+      const removal = page.waitForRequest(
+        (request) =>
+          request.method() === "PATCH" &&
+          request.url().endsWith("/week-templates/template-setmana-a"),
+      );
+      await confirmation.getByRole("button", { name: "Esborra plantilla" }).click();
+      expect((await removal).postDataJSON()).toMatchObject({ active: false, version: 2 });
+      await expect(confirmation).toHaveCount(0);
+      await expect(page).toHaveURL(/template=template-setmana-b$/u);
+      await expect(
+        page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana B»" }),
+      ).toBeVisible();
+      await page.getByRole("button", { name: "dl–dv: «Setmana B»" }).click();
+      await expect(page.getByRole("menuitemradio", { name: "Setmana de tardor" })).toHaveCount(0);
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+      ).toBe(true);
+    });
+  }
 });
 
 test.describe("T-06-26 E4-W10 D3 when a day of the kind is closed", () => {

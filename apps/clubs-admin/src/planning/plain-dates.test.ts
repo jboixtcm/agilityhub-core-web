@@ -22,6 +22,16 @@ describe("R-06-14 planning business dates are calendar dates in every club zone"
     expect(isIsoDate(value)).toBe(false);
   });
 
+  it("accepts abbreviated years and the club-local current year without accepting impossible dates", () => {
+    expect(parseMaskedDate("31/10/26", 2026)).toBe("2026-10-31");
+    expect(parseMaskedDate("31/10", 2027)).toBe("2027-10-31");
+    expect(parseMaskedDate("29/02", 2028)).toBe("2028-02-29");
+    expect(parseMaskedDate("29/02", 2027)).toBeUndefined();
+    expect(parseMaskedDate("31/04/26", 2026)).toBeUndefined();
+    expect(parseMaskedDate("01/01/2", 2026)).toBeUndefined();
+    expect(parseMaskedDate("31/10/1999", 2026)).toBe("1999-10-31");
+  });
+
   it("parses masked dates only when they are real", () => {
     expect(parseMaskedDate("12/08/2026")).toBe("2026-08-12");
     expect(parseMaskedDate("30/02/2026")).toBeUndefined();

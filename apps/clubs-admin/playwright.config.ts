@@ -1,6 +1,14 @@
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
+  projects: [
+    { name: "chromium" },
+    {
+      name: "webkit-ui",
+      testMatch: /(?:ui-closure|mobile-review)\.spec\.ts$/u,
+      use: { browserName: "webkit" },
+    },
+  ],
   outputDir: "../../test-results/clubs-admin",
   testDir: "./e2e",
   use: {

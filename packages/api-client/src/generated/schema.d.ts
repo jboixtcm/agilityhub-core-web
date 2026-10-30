@@ -3228,7 +3228,7 @@ export interface paths {
          * Submit an additional dog
          * @description R-04-25. MEMBER; accepts valid impersonation with actor attribution. Idempotency-Key required. Verifies member ownership and ACTIVE status. With BILLING, a quote that would read a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138): the requested plan (the member's own, which GET /signup no longer lists as current) or the family fare the added dog moves the member to → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId} on that plan, and nothing is written.
          */
-        post: operations["addDog"];
+        post: operations["addDog_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3641,7 +3641,7 @@ export interface paths {
         get: operations["onboarding"];
         /**
          * Complete first-access privacy consent and optional profile fields
-         * @description Account token, never impersonated. S01 §14, T-01-26: consentAccepted must be true for the current consentVersion. Profile data may be deferred; imageConsent is optional.
+         * @description Account token, never impersonated. S01 §14, T-01-26: consentAccepted must be true for the current consentVersion when a policy is pending. Already accepted policies need no new acceptance. Profile data may be deferred; imageConsent is optional.
          */
         put: operations["completeOnboarding"];
         post?: never;
@@ -4051,6 +4051,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/members/{id}/dogs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add an active dog to an existing member
+         * @description ADMIN only, impersonation refused. Creates an ACTIVE dog linked to the ACTIVE member, preserving their plan and account. No signup approval or automatic payment; fees remain managed through billing. Tenant from the JWT. Idempotency-Key prevents duplicate creation.
+         */
+        post: operations["addDog"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/members/{id}/erasure": {
         parameters: {
             query?: never;
@@ -4113,6 +4133,46 @@ export interface paths {
          * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-10 direct leave from D10: an APPROVED LeaveRequest{source ADMIN, origin BACKOFFICE} with the same effects as an approval; a PENDING one becomes CANCELLED{ADMIN}. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE) without a planned leave (409 LEAVE_ALREADY_SCHEDULED). Another club's member → 404; an erased one → 409 MEMBER_ERASED.
          */
         post: operations["scheduleLeave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Merge duplicate members preserving history
+         * @description ADMIN only, impersonation refused. The path identifies the duplicate source; targetMemberId survives. Both preview versions are required. Moves dogs and operational references atomically, retains historical source records and links, leaves the source inactive and unbillable. Conflicts abort every change. Idempotency-Key required. Tenant from the JWT.
+         */
+        post: operations["merge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/merge-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Preview a member merge
+         * @description ADMIN only, impersonation refused. Read-only preview of the source, surviving target, operational references and blocking conflicts. Historical source records remain linked and readable after the merge. Tenant from the JWT.
+         */
+        get: operations["preview"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -7155,6 +7215,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/webhooks/email/brevo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Receive authenticated Brevo transactional events
+         * @description Requires the dedicated webhook bearer secret over HTTPS, not an account JWT. Accepts one event or a batch. Events correlate opaque custom metadata, the stored tenant, recipient and provider reference. Replays are idempotent.
+         */
+        post: operations["brevoWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/webhooks/email/sendgrid": {
         parameters: {
             query?: never;
@@ -7666,6 +7746,19 @@ export interface components {
         AdminCancellationRequest: {
             note?: string;
         };
+        AdminDogCreate: {
+            /** Format: date */
+            birthDate: string;
+            breed: string;
+            chip?: string;
+            freeTrainingAllowed?: boolean;
+            handlerIsMember?: boolean;
+            handlerName?: string;
+            levelId?: string;
+            name: string;
+            /** @enum {string} */
+            sex: "MALE" | "FEMALE";
+        };
         /** @description R-13-04 from D-screens: only the fields sent change; an unknown field → 400 VALIDATION_ERROR */
         AdminInactivityPatchRequest: {
             /** @description Omitted = the comments stay; null clears them */
@@ -7823,7 +7916,7 @@ export interface components {
             dogName: string;
             /** @description Short-lived signed URL */
             dogPhotoUrl?: string | null;
-            /** @description A saved NOTIFIED row is fixed (R-10-03) */
+            /** @description This row cannot currently be corrected. A saved NOTIFIED can be restored by an administrator or an instructor assigned to this class while their attendance window remains open. */
             final: boolean;
             /** @description Dog.handlerName: «{guia} + {gos}» = handlerName ?? memberFirstName (R-10-00) */
             handlerName?: string | null;
@@ -7833,7 +7926,7 @@ export interface components {
             markedAt?: string | null;
             markedByName?: string | null;
             memberFirstName: string;
-            /** @description Only when handlerName differs from memberFirstName: the owner's full name, «(abonat: {nom i cognom})» (R-10-00) */
+            /** @description Only when the explicit handlerIsMember flag is false (legacy rows compare names): the owner's full name, «(abonat: {nom i cognom})» (R-10-00) */
             memberFullName?: string;
             memberId: string;
             /** @description Only NO_SHOW (R-10-06) */
@@ -8294,6 +8387,12 @@ export interface components {
             status: string;
             theme: components["schemas"]["Theme"];
             timeZone: string;
+        };
+        BrevoEvent: {
+            "X-Mailin-custom": string;
+            email: string;
+            event: string;
+            "message-id": string;
         };
         BuildJoinRequest: {
             code: string;
@@ -10296,11 +10395,14 @@ export interface components {
             /** Format: date */
             birthDate: string;
             breed: string;
-            chip: string;
+            /** @description Absent until the chip is recorded, including dogs added by an administrator. */
+            chip?: string;
             /** Format: date-time */
             deactivatedAt?: string;
             deactivationReason?: string;
             freeTrainingOverride?: boolean;
+            /** @description The handler is the member, independently of their customary display name. Null uses the legacy name comparison. */
+            handlerIsMember?: boolean | null;
             handlerName?: string;
             /** Format: uuid */
             id: string;
@@ -10370,6 +10472,8 @@ export interface components {
             displayStatus?: components["schemas"]["DisplayStatus"];
             freeTraining?: components["schemas"]["FreeTraining"];
             handler?: string;
+            /** @description The handler is the member, independently of their customary display name. Null uses the legacy name comparison. */
+            handlerIsMember?: boolean | null;
             handlerName?: string;
             /** Format: uuid */
             id: string;
@@ -10381,6 +10485,8 @@ export interface components {
             owner?: components["schemas"]["OwnerSummary"];
             pack?: components["schemas"]["PackSummary"];
             pendingDocuments?: string[];
+            /** @description Short-lived signed dog photo URL */
+            photoUrl?: string;
             /** Format: date-time */
             registeredAt?: string;
             /** @enum {string} */
@@ -10397,6 +10503,8 @@ export interface components {
             chip?: string;
             /** @description PENDING dogs only; replaces files for the supplied document types. A file key D2's view (GET /members/{id}/signup) shows for that type keeps its file, with its stored name; any other key is a new file: the caller's own POST /attachments/upload-url with purpose = DOG_DOCUMENT, uploaded in the club and not claimed by another dog or type (a signup upload is also taken). Another club's, purpose's or account's key, one claimed elsewhere or never uploaded answers 400 FILE_NOT_FOUND, and so does the key of a file removed through DELETE /dogs/{id}/documents/{docId}/files/{fileId}. At most 10 new files per request (kept files do not count). Sending back the view's keys is no change. */
             documents?: components["schemas"]["SignupDocument"][];
+            /** @description The handler is the member, independently of their customary display name. Null uses the legacy name comparison. */
+            handlerIsMember?: boolean;
             handlerName?: string;
             licenses?: components["schemas"]["License"][];
             name?: string;
@@ -10412,6 +10520,8 @@ export interface components {
             id: string;
             level?: components["schemas"]["LevelSummary"];
             name: string;
+            /** @description Short-lived signed dog photo URL */
+            photoUrl?: string;
         };
         DogTasks: {
             /** Format: int64 */
@@ -12427,6 +12537,10 @@ export interface components {
             maskedAccount?: string | null;
             /** Format: int32 */
             memberNumber?: number | null;
+            /** Format: date-time */
+            mergedAt?: string | null;
+            mergedIntoMemberId?: string | null;
+            mergedMembers?: components["schemas"]["NamedReference"][] | null;
             /** Format: date */
             nextInvoiceDate?: string | null;
             paymentMethod?: components["schemas"]["PaymentMethodView"] | null;
@@ -12607,6 +12721,21 @@ export interface components {
             /** Format: date-time */
             submittedAt: string;
         };
+        MemberMergePreview: {
+            blockers: string[];
+            counts: {
+                [key: string]: number;
+            };
+            source: components["schemas"]["MergeMember"];
+            target: components["schemas"]["MergeMember"];
+        };
+        MemberMergeRequest: {
+            /** Format: int64 */
+            sourceVersion: number;
+            targetMemberId: string;
+            /** Format: int64 */
+            targetVersion: number;
+        };
         /** @description Cross-vertical notification preference payload remains owned by S11. */
         MemberOverview: {
             dogs: components["schemas"]["OverviewDog"][];
@@ -12757,6 +12886,14 @@ export interface components {
             profiles: components["schemas"]["Profile"][];
             rememberProfile: boolean;
             roles: components["schemas"]["Profile"][];
+        };
+        MergeMember: {
+            fullName: string;
+            id: string;
+            /** Format: int32 */
+            memberNumber: number;
+            /** Format: int64 */
+            version: number;
         };
         /** @description [＋ Nova plantilla]: a CUSTOM template (category PERSONAL · CLUB_NEWS · CLUB_CHANGES) */
         MessageTemplateCreateRequest: {
@@ -13120,6 +13257,8 @@ export interface components {
         OnboardingState: {
             /** @description Keys and required flags from signup.onboardingFields */
             fields: components["schemas"]["OnboardingField"][];
+            /** @description Existing image permission, absent when no decision is recorded */
+            imageConsent?: boolean | null;
             pending: boolean;
             /** Format: int32 */
             postponeRemaining: number;
@@ -13161,6 +13300,8 @@ export interface components {
             name: string;
             pack?: components["schemas"]["PackSummary"];
             pendingDocuments: string[];
+            /** @description Short-lived signed dog photo URL */
+            photoUrl?: string;
         };
         OwnerSummary: {
             /** @description Member.firstName, a compound one whole («Joan Antoni»): «{guia}» of «{guia} + {gos}» when the dog has no handlerName (S10 R-10-00, E5-T29) */
@@ -29285,6 +29426,7 @@ export interface operations {
             query: {
                 date: string;
                 view?: "member" | "instructor";
+                state?: "DRAFT" | "ACTIVE" | "FINISHED" | "CANCELLED";
             };
             header?: never;
             path?: never;
@@ -40406,7 +40548,7 @@ export interface operations {
             };
         };
     };
-    addDog: {
+    addDog_1: {
         parameters: {
             query?: never;
             header: {
@@ -46528,6 +46670,128 @@ export interface operations {
             };
         };
     };
+    addDog: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminDogCreate"];
+            };
+        };
+        responses: {
+            /** @description Active dog */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Dog"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, STALE_VERSION, INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
+            409: components["responses"]["StaleVersion"];
+            /** @description TARGET_MEMBER_NOT_ACTIVE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     memberErasure: {
         parameters: {
             query?: never;
@@ -47096,6 +47360,253 @@ export interface operations {
                 };
             };
             /** @description MEMBER_NOT_ACTIVE, LEAVE_DATE_INVALID, LEAVE_REASON_UNKNOWN */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    merge: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberMergeRequest"];
+            };
+        };
+        responses: {
+            /** @description Applied preview */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberMergePreview"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
+            409: components["responses"]["StaleVersion"];
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    preview: {
+        parameters: {
+            query: {
+                targetMemberId: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Preview */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberMergePreview"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -70362,6 +70873,131 @@ export interface operations {
                 };
             };
             /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    brevoWebhook: {
+        parameters: {
+            query?: never;
+            header?: {
+                Authorization?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BrevoEvent"] | components["schemas"]["BrevoEvent"][];
+            };
+        };
+        responses: {
+            /** @description Processed or safely ignored */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description WEBHOOK_SIGNATURE_INVALID */
             401: {
                 headers: {
                     [name: string]: unknown;

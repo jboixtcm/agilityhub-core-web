@@ -62,16 +62,27 @@
   font-weight: 700;
 }
 
+/* Native WebKit select chrome ignores a transparent/themed background in dark mode. */
+.week-agenda__filter::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-inline: 0.25rem solid transparent;
+  border-top: 0.3rem solid currentColor;
+  pointer-events: none;
+}
+
 .week-agenda__filter svg {
   width: 0.9rem;
   height: 0.9rem;
 }
 
 .week-agenda__filter select {
-  min-height: 2.25rem;
+  appearance: none;
+  min-height: 2.75rem;
   color: inherit;
   font: inherit;
-  background: transparent;
+  background: inherit;
   border: 0;
   cursor: pointer;
 }
@@ -181,13 +192,14 @@
 
 .week-agenda__below {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-4);
   align-items: start;
 }
 
 .week-agenda__panel {
   display: grid;
+  min-width: 0;
   gap: var(--ah-space-3);
   padding: var(--ah-space-4);
 }
@@ -208,21 +220,91 @@
   list-style: none;
 }
 
-/* Mockup D12: name and level · the tasks or the status line · the badge, on one line. */
+/* Give the selected class the full width; the status must not be squeezed between columns. */
 .week-agenda__row {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) minmax(10rem, auto) auto;
+  grid-template-areas: "who status badge" "tasks status badge";
   gap: var(--ah-space-3);
   align-items: center;
   min-height: 3rem;
+  padding-block: var(--ah-space-3);
   border-bottom: 1px solid var(--ah-color-border);
 }
 
 .week-agenda__who {
+  grid-area: who;
   display: flex;
+  flex-wrap: wrap;
+  min-width: 0;
   align-items: center;
   gap: var(--ah-space-2);
-  white-space: nowrap;
+}
+
+.week-agenda__student {
+  overflow-wrap: anywhere;
+}
+.week-agenda__tasks {
+  grid-area: tasks;
+}
+.week-agenda__tasks:empty {
+  display: none;
+}
+.week-agenda__status {
+  grid-area: status;
+  max-width: 26rem;
+}
+.week-agenda__row > :last-child {
+  grid-area: badge;
+}
+
+.week-agenda__ring-action > .ring-block-card {
+  width: 100%;
+  max-width: none;
+}
+
+.week-agenda__selection-hint {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.875rem;
+}
+
+.week-agenda__ring-action {
+  min-width: 0;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.week-agenda__ring-action > summary {
+  padding: var(--ah-space-4);
+  color: var(--ah-color-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.week-agenda__ring-action > summary:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.week-agenda__ring-action .ring-block-card {
+  border: 0;
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.week-agenda__below .ring-block-card select,
+.week-agenda__below .ring-block-card__chip,
+.week-agenda__panel-footer .ah-button {
+  min-height: 2.75rem;
+}
+
+@media (max-width: 47.999rem) {
+  .week-agenda__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "who badge" "status status" "tasks tasks";
+    gap: var(--ah-space-2);
+  }
 }
 
 /* Mockup D12 V7: each name is an orange, underlined link to the dog's record (D13). */
@@ -325,4 +407,13 @@
   .week-agenda__below {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.week-agenda__legend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+  margin-block: var(--ah-space-3);
 }

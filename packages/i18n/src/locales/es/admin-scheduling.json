@@ -68,7 +68,12 @@
       "noRing": "Sin",
       "back": "Volver a la vista semanal",
       "gridLabel": "Plantilla «{name}» · {day}"
-    }
+    },
+    "rename": "Cambiar el nombre",
+    "remove": "Borrar plantilla",
+    "removeConfirm": "¿Quieres borrar la plantilla «{name}»? Dejará de aparecer en la lista y no se podrá elegir para generar clases. Las clases ya generadas se conservarán.",
+    "renamed": "Nombre de la plantilla actualizado.",
+    "removed": "Plantilla borrada."
   },
   "classCard": {
     "title": "Crear clase",

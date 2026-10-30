@@ -9,7 +9,8 @@
     "loading": "Loading record…",
     "retry": "Try again",
     "save": "Save",
-    "saving": "Saving…"
+    "saving": "Saving…",
+    "invalidField": "Check this field."
   },
   "inactivity": {
     "title": "Inactivity",
@@ -63,7 +64,9 @@
     "confirm": "Schedule leave",
     "cancelledToast": "{count, plural, one {# booking has been cancelled} other {# bookings have been cancelled}}",
     "badgeScheduled": "leave scheduled {date}",
-    "errors": { "dateInvalid": "The requested date has passed: choose a new one" }
+    "errors": {
+      "dateInvalid": "The requested date has passed: choose a new one"
+    }
   },
   "reactivation": {
     "title": "Reactivate member",
@@ -90,7 +93,6 @@
     "monthly": "Monthly fee",
     "newPlan": "New plan",
     "price": "Price",
-    "effectiveMonth": "Effective month (optional)",
     "packDiscountRule": "When moving from a pack of {minSessions} sessions or more to a monthly plan, the entry fee has a {discountPercent}% discount. The API must calculate the amount.",
     "nextInvoiceDate": "Next invoice date (optional)",
     "nextInvoiceDefault": "If you leave it blank, the next invoice will be on {date}."
@@ -188,7 +190,9 @@
       "type": "Document type",
       "upload": "Upload document"
     },
-    "edit": { "title": "Edit dog details" },
+    "edit": {
+      "title": "Edit dog details"
+    },
     "feedback": {
       "deactivated": "The dog was deactivated.",
       "documentRemoved": "The file was removed.",
@@ -219,11 +223,11 @@
       "organisation": "Organisation",
       "owner": "Member",
       "registeredAt": "Registered",
-      "sex": "Sex"
+      "sex": "Sex",
+      "handlerIsMember": "The handler is the member"
     },
     "freeTraining": {
       "byLevel": "Permission comes from the level.",
-      "levelOption": "According to level",
       "manual": "Manual club decision.",
       "notAllowed": "Cannot train independently",
       "title": "Free training"
@@ -234,7 +238,9 @@
       "since": "since {date}",
       "title": "Change level"
     },
-    "license": { "number": "licence {number}" },
+    "license": {
+      "number": "licence {number}"
+    },
     "photo": {
       "alt": "Photo of {name}",
       "empty": "No photo yet",
@@ -256,7 +262,7 @@
     },
     "status": {
       "active": "active",
-      "inactive": "inactive",
+      "inactive": "Inactive",
       "reason": "Reason (optional)"
     },
     "tasks": {
@@ -298,7 +304,9 @@
       "title": "Block bookings"
     },
     "bookingBlocked": "Bookings blocked",
-    "edit": { "title": "Edit member" },
+    "edit": {
+      "title": "Edit member"
+    },
     "familyHolder": "family group holder",
     "familyMember": "family group member",
     "feedback": {
@@ -338,7 +346,8 @@
       "postalCode": "Postcode",
       "remarks": "Visible remarks",
       "roles": "Access roles",
-      "street": "Street and number"
+      "street": "Street and number",
+      "monthlyAmount": "Monthly amount"
     },
     "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} OTHER {Does not authorise use of their image: do not publish photos showing them.} other {Does not authorise use of his image: do not publish photos showing him.}}",
     "readmissionPending": "This member has a pending readmission: validate or reject it from the dashboard before changing the record.",
@@ -470,7 +479,9 @@
       "description": "A new link will be sent to the account access email.",
       "title": "Resend access"
     },
-    "roles": { "title": "Access roles" },
+    "roles": {
+      "title": "Access roles"
+    },
     "sections": {
       "dataPayment": "Details and payment",
       "dogs": "Dogs",
@@ -482,8 +493,14 @@
       "label": "Record sections",
       "summary": "Record",
       "tasks": "Tasks",
-      "tasksPlaceholder": "Full task management will be added with student follow-up."
-    }
+      "tasksLink": "View and manage tasks for {dog}",
+      "noDogs": "This member has no linked dogs."
+    },
+    "leftStatus": "Left",
+    "reactivate": "Reactivate member",
+    "leftSince": "Left on {date}",
+    "joinedOn": "(joined: {date})",
+    "left": "Left"
   },
   "roles": {
     "admin": "administrator",
@@ -538,7 +555,11 @@
     },
     "sameHolder": "holder: same person",
     "paymentSummary": "{method} · {account} · {holder}",
-    "paymentMethod": { "SEPA_DD": "Direct debit", "CARD": "Card", "MANUAL": "Cash" },
+    "paymentMethod": {
+      "SEPA_DD": "Direct debit",
+      "CARD": "Card",
+      "MANUAL": "Cash"
+    },
     "whatsapp": "WhatsApp",
     "datePlaceholder": "mm/dd/yyyy",
     "required": "required",
@@ -696,5 +717,47 @@
     "readFailed": "{name}'s follow-up could not be marked as read.",
     "readOffline": "There is no connection to the server.",
     "readRetry": "Try again"
+  },
+  "addDog": {
+    "title": "Add another dog",
+    "help": "The dog will be active on save and linked to {member}.",
+    "saved": "Dog added and active."
+  },
+  "merge": {
+    "title": "Merge members",
+    "help": "This record ({source}) will be linked to the member you choose.",
+    "target": "Member to keep",
+    "choose": "Choose a member",
+    "preview": "Preview merge",
+    "keep": "Keeping: {target}",
+    "preserve": "The selected member’s details and rate will remain. Dogs and current bookings will transfer. Earlier invoices, attendance and other records remain accessible through the original history.",
+    "confirm": "Confirm merge",
+    "merged": "This member has been merged.",
+    "openTarget": "Open surviving member",
+    "history": "Merged member history",
+    "blocked": "Resolve the conflicts before merging.",
+    "counts": {
+      "dogs": "Dogs",
+      "classBookings": "Class bookings",
+      "waitlist": "Waitlist entries",
+      "seatHolds": "Seat holds",
+      "trainingBookings": "Training bookings",
+      "packs": "Packs",
+      "accessAccounts": "Access accounts",
+      "activityRegistrations": "Activity registrations"
+    },
+    "blockers": {
+      "SAME_MEMBER": "Choose two different members.",
+      "ALREADY_MERGED": "One record has already been merged.",
+      "TARGET_NOT_ACTIVE": "The surviving member must be active.",
+      "SIGNUP_PENDING": "A signup or readmission is pending.",
+      "DIFFERENT_ACCESS_ACCOUNTS": "The members have different access accounts.",
+      "SOURCE_IS_STAFF": "The source is an administrator or instructor: keep that record.",
+      "DIFFERENT_FAMILY_GROUPS": "The members belong to different family groups.",
+      "DOG_SIGNUP_PENDING": "A dog is awaiting approval.",
+      "TWO_MEMBERSHIPS": "Both records have access: review the accounts before merging.",
+      "ACTIVITY_CONFLICT": "Both records have a current registration for the same activity.",
+      "MEMBER_PROCESS_PENDING": "A leave request, inactivity period or payment is pending."
+    }
   }
 }

@@ -9,6 +9,7 @@ export const RETURN_PATH_PARAM = "next";
 const RETURN_PATH_TTL_MS = 15 * 60_000;
 /** The access screens themselves, and the gates the sign-in goes through: never a return path. */
 const ACCESS_PATHS = [
+  "/login",
   "/entrar",
   "/activacio",
   "/acces",
@@ -51,9 +52,7 @@ export function isReturnPath(path: string | null | undefined): path is string {
   if (url.origin !== "https://return-path.invalid" || url.pathname === "/") return false;
   return (
     !url.pathname.startsWith("/alta") &&
-    !ACCESS_PATHS.some(
-      (access) => url.pathname === access || url.pathname.startsWith(`${access}/`),
-    )
+    !ACCESS_PATHS.some((access) => url.pathname === access || url.pathname.startsWith(`${access}/`))
   );
 }
 

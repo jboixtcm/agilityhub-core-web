@@ -93,7 +93,7 @@
   "INPUT_SCHEMA_MISMATCH": "Los datos no siguen el esquema esperado.",
   "INSTRUCTOR_IN_USE": "Este instructor está en uso.",
   "INSTRUCTOR_NOTICE_DISABLED": "El club no permite marcar «ha avisado» desde la lista.",
-  "INTERNAL_ERROR": "Se ha producido un error inesperado. Vuelve a intentarlo; si persiste, indica el código de referencia al club.",
+  "INTERNAL_ERROR": "Se ha producido un error inesperado. Volver a intentarlo; si persiste, contactar con el club.",
   "INVALID_API_KEY": "La clave de la API no es válida.",
   "INVALID_CREDENTIALS": "El correo electrónico o la contraseña son incorrectos.",
   "INVALID_FILTER": "El filtro no es válido.",

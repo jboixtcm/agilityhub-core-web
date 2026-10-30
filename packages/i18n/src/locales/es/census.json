@@ -216,7 +216,9 @@
     "tasksSummary": "{open, plural, one {# pendiente} other {# pendientes}} · {completed, plural, one {# hecha} other {# hechas}}",
     "tasksTitle": "Tareas",
     "title": "Mis perros",
-    "uploadDocument": "SUBIR EL DOCUMENTO"
+    "uploadDocument": "SUBIR EL DOCUMENTO",
+    "choosingFile": "Selecciona un archivo en la ventana que se ha abierto.",
+    "selectedFile": "Archivo seleccionado: {name}"
   },
   "myData": {
     "address": "Dirección",

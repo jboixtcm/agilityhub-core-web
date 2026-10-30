@@ -74,6 +74,13 @@
   margin-top: 0.2rem;
 }
 
+/* Keep the missing required choice visible alongside its accessible error. */
+.onboarding-form__check:has([aria-invalid="true"]) {
+  outline: 2px solid var(--ah-color-danger);
+  outline-offset: var(--ah-space-2);
+  border-radius: var(--ah-radius-sm);
+}
+
 .onboarding-form__check a {
   color: var(--ah-color-primary);
 }

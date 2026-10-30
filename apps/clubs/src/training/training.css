@@ -132,6 +132,99 @@
   text-transform: uppercase;
 }
 
+/* Keep the chosen time, ring and action together; the phone dock reserves its own height. */
+.training-layout,
+.training-times {
+  display: grid;
+  min-width: 0;
+  gap: var(--ah-space-4);
+  align-content: start;
+}
+
+.training-actions {
+  display: grid;
+  gap: var(--ah-space-3);
+  min-width: 0;
+  padding: var(--ah-space-4);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.training-actions__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-2);
+}
+
+.training-actions__heading h2 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.training-actions__hint {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+}
+
+.training-actions__dog {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.training-actions:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.training-screen .training-chip,
+.training-screen .ah-slot,
+.training-actions .ah-button {
+  min-height: 2.75rem;
+}
+
+.training-times .ah-slot-grid--flow {
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+}
+
+@media (max-width: 47.999rem) {
+  .training-screen--selected {
+    padding-bottom: calc(var(--training-action-height, 16rem) + var(--ah-space-4));
+  }
+  .training-actions[data-selected] {
+    position: fixed;
+    z-index: 20;
+    inset-inline: var(--ah-space-2);
+    bottom: calc(var(--clubs-navigation-height) + env(safe-area-inset-bottom));
+    max-height: 48dvh;
+    overflow: auto;
+    box-shadow: var(--ah-shadow-lg);
+  }
+}
+
+@media (min-width: 48rem) {
+  .training-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 20rem);
+    gap: var(--ah-space-5);
+    align-items: start;
+  }
+  .training-actions {
+    position: sticky;
+    top: var(--ah-space-4);
+  }
+  .training-actions .training-confirm {
+    width: fit-content;
+    max-width: 100%;
+    justify-self: end;
+  }
+}
+
 .training-limit p {
   margin: 0;
 }

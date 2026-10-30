@@ -32,7 +32,8 @@ export function attendanceTone(state: AttendanceState): Tone {
 export interface AttendancePermissions {
   canMarkNotice: boolean;
   canMarkPresence: boolean;
-  /** A saved NOTIFIED row is fixed. */
+  current?: AttendanceState;
+  /** The API has closed this row to editing. */
   final: boolean;
 }
 
@@ -42,10 +43,14 @@ export interface AttendancePermissions {
  */
 export function canChooseAttendance(
   state: AttendanceState,
-  { canMarkNotice, canMarkPresence, final }: AttendancePermissions,
+  { canMarkNotice, canMarkPresence, final, current }: AttendancePermissions,
 ): boolean {
   if (final) return false;
-  return state === "NOTIFIED" ? canMarkNotice : canMarkPresence;
+  return state === "NOTIFIED"
+    ? canMarkNotice
+    : state === "PENDING"
+      ? canMarkPresence || (current === "NOTIFIED" && canMarkNotice)
+      : canMarkPresence;
 }
 
 /** A row of the sheet as the api delivers it: its booking and its saved state. */
@@ -101,7 +106,7 @@ export function mergeSheet(
       touchedIds.has(row.bookingId) &&
       !theirs &&
       mine !== row.state &&
-      canChooseAttendance(mine, { ...permissions, final: row.final === true })
+      canChooseAttendance(mine, { ...permissions, current: row.state, final: row.final === true })
     ) {
       merged[row.bookingId] = mine;
     }
@@ -138,7 +143,9 @@ export function AttendanceCircles({
   value,
 }: AttendanceCirclesProps) {
   const buttons = useRef(new Map<AttendanceState, HTMLButtonElement>());
-  const available = ATTENDANCE_STATES.filter((state) => canChooseAttendance(state, permissions));
+  const available = ATTENDANCE_STATES.filter((state) =>
+    canChooseAttendance(state, { ...permissions, current: value }),
+  );
   const enabled = disabled ? [] : available;
   // The one tab stop of the group: the chosen circle, else the first one that can be chosen.
   const tabStop = enabled.includes(value) ? value : enabled[0];
@@ -216,7 +223,8 @@ export function nextAttendanceState(
   const from = ATTENDANCE_STATES.indexOf(value);
   for (let step = 1; step < ATTENDANCE_STATES.length; step += 1) {
     const next = ATTENDANCE_STATES[(from + step) % ATTENDANCE_STATES.length];
-    if (next !== undefined && canChooseAttendance(next, permissions)) return next;
+    if (next !== undefined && canChooseAttendance(next, { ...permissions, current: value }))
+      return next;
   }
   return value;
 }
@@ -247,10 +255,11 @@ export function AttendanceBadgeCycler({
   onChange,
   value,
 }: AttendanceBadgeCyclerProps) {
-  const inert = final || !canMarkPresence;
+  const inert = final || (!canMarkPresence && !(value === "NOTIFIED" && canMarkNotice));
   return (
     <button
       aria-label={label}
+      title={label}
       className={[
         "ah-badge",
         `ah-tone--${attendanceTone(value)}`,

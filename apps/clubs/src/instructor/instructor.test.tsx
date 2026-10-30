@@ -290,7 +290,7 @@ describe("T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01)", () => {
     // Round 2 #4: the catalog message of the answer's code (INTERNAL_ERROR).
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     refuse = false;
@@ -330,7 +330,7 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     ).toHaveAttribute("aria-checked", "true");
     expect(screen.getByText("Un toc a la rodona per canviar l'estat")).toBeVisible();
     expect(
-      within(screen.getByRole("list", { name: "Llegenda" }))
+      within(screen.getByRole("list", { name: "Llegenda d’assistència" }))
         .getAllByRole("listitem")
         .map((item) => item.textContent),
     ).toEqual(["pendent", "present", "ha avisat", "no presentat"]);
@@ -386,10 +386,10 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     expect(screen.getByRole("button", { name: "Desa" })).toBeDisabled();
   });
 
-  it("a saved «ha avisat» row is inert; «ha avisat» saved now shows its line from the answer", async () => {
+  it("a saved «ha avisat» row can be corrected; «ha avisat» saved now shows its line from the answer", async () => {
     await sheetPage();
     const anna = await sheetRow("Anna + Nass");
-    for (const radio of within(anna).getAllByRole("radio")) expect(radio).toBeDisabled();
+    for (const radio of within(anna).getAllByRole("radio")) expect(radio).toBeEnabled();
     const marc = await sheetRow("Marc + Chun-li");
     fireEvent.click(within(marc).getByRole("radio", { name: "ha avisat" }));
     fireEvent.click(screen.getByRole("button", { name: "Desa" }));
@@ -397,7 +397,7 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     expect(await within(marc).findByText("ha avisat (8:50)")).toBeVisible();
     expect(within(marc).getByText("plaça alliberada")).toBeVisible();
     expect(within(marc).queryByText("espera avisada")).toBeNull();
-    for (const radio of within(marc).getAllByRole("radio")) expect(radio).toBeDisabled();
+    for (const radio of within(marc).getAllByRole("radio")) expect(radio).toBeEnabled();
     expect(screen.getByText("2/5")).toBeVisible();
   });
 
@@ -577,7 +577,7 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     fireEvent.click(screen.getByRole("button", { name: "Desa" }));
     expect(
       await screen.findByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     fail = false;
@@ -998,7 +998,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     expect(await screen.findByRole("link", { name: "Clara + Gos 50 · C" })).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
     );
     expect(within(screen.getByRole("list")).getAllByRole("link")).toHaveLength(50);
     refuse = false;

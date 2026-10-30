@@ -481,6 +481,16 @@ button.class-row__body {
 }
 
 /* 06/29: the new booking, the countdown and the swap. */
+.confirm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-3);
+}
+
+.confirm-actions > a {
+  flex: 1 1 auto;
+}
+
 .confirm-card {
   display: grid;
   gap: var(--ah-space-2);
@@ -506,8 +516,11 @@ button.class-row__body {
   --ah-tone-color: var(--ah-color-primary);
 }
 
-.confirm-card__ring {
+.confirm-card__dog {
   margin-left: auto;
+}
+
+.confirm-card__ring {
   color: var(--ah-color-text-muted);
   font-size: 0.78rem;
 }
@@ -523,7 +536,7 @@ button.class-row__body {
   align-items: center;
   gap: var(--ah-space-1);
   padding: var(--ah-space-1) var(--ah-space-3);
-  color: var(--ah-color-warning);
+  color: var(--ah-color-text);
   background: color-mix(in srgb, var(--ah-color-warning) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--ah-color-warning) 35%, transparent);
   border-radius: var(--ah-radius-full);
@@ -633,4 +646,19 @@ button.confirm-option {
   gap: var(--ah-space-1);
   color: var(--ah-color-text-muted);
   font-size: 0.75rem;
+}
+
+.home-training {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--ah-color-border);
+  margin-top: var(--ah-space-3);
+  padding-top: var(--ah-space-3);
+}
+.home-training h2 {
+  font-size: 0.875rem;
+  margin: 0 0 var(--ah-space-2);
+}
+.home-training__counter p {
+  margin: var(--ah-space-1) 0;
+  font-size: 0.8rem;
 }

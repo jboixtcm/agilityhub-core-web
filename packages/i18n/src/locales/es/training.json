@@ -18,7 +18,8 @@
     "taken": "ocupada",
     "cell": "{time}, {state}",
     "time": "Hora",
-    "stale": "puede no estar al día"
+    "stale": "puede no estar al día",
+    "unavailable": "no disponible"
   },
   "anyRing": {
     "choose": "A las {time} hay más de una pista libre; elige cuál quieres:"
@@ -32,7 +33,10 @@
     "button": "Confirmar {day} · {from}–{to} · {ring}",
     "idle": "Confirmar",
     "sending": "Enviando",
-    "done": "Entrenamiento reservado"
+    "done": "Entrenamiento reservado",
+    "title": "Reserva de entrenamiento",
+    "chooseTime": "Seleccionar una hora libre para preparar la reserva.",
+    "dismissError": "Entendido"
   },
   "limit": {
     "withCancellable": "Has llegado al límite de {limit} reservas para esta semana: anula alguna de las próximas para reservar otra.",
@@ -49,7 +53,21 @@
     "withDog": "Entrenamiento · con {dogArticle}{dogName}",
     "cancelDialog": "¿Quieres anular la reserva de este entrenamiento?",
     "cancelled": "Entrenamiento anulado",
-    "tooLate": "Ya no se puede anular desde la app: ponte en contacto con el club.",
+    "tooLate": "El plazo para cancelar terminó el {deadline}. Contacta con el club.",
     "tooLateDetails": "Solo se puede anular hasta {threshold} antes de empezar, y faltan {remaining}."
+  },
+  "conditions": {
+    "link": "Ver condiciones",
+    "title": "Funcionamiento del entrenamiento sin instructor",
+    "close": "Cerrar",
+    "error": "No se han podido cargar las condiciones.",
+    "loading": "Cargando las condiciones"
+  },
+  "home": {
+    "title": "Entrenamientos esta semana",
+    "used": "{used} de {limit} entrenamientos realizados o reservados",
+    "remaining": "{count, plural, one {# disponible} other {# disponibles}}",
+    "member": "Total del abonado",
+    "stale": "El recuento puede no estar actualizado."
   }
 }

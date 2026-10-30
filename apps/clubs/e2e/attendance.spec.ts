@@ -235,8 +235,25 @@ test.describe("E6-W01 S10 screens 20, 21 and 22 against MSW", () => {
     await expect(row(page, "Marc + Chun-li")).toContainText("plaça alliberada");
     await expect(page.getByText("2/5")).toBeVisible();
     for (const radio of await row(page, "Marc + Chun-li").getByRole("radio").all()) {
-      await expect(radio).toBeDisabled();
+      await expect(radio).toBeEnabled();
     }
+    // Word feedback: the assigned instructor can restore the same booking after a notice.
+    await row(page, "Marc + Chun-li").getByRole("radio", { exact: true, name: "pendent" }).click();
+    const restored = page.waitForRequest(
+      (request) =>
+        request.method() === "PUT" && request.url().endsWith("/class-sessions/c1/attendance"),
+    );
+    await page.getByRole("button", { name: "Desa" }).click();
+    const restoredRequest = await restored;
+    expect(restoredRequest.postDataJSON()).toEqual({
+      items: [{ bookingId: "b2", state: "PENDING" }],
+      version: 5,
+    });
+    expect(restoredRequest.headers()["idempotency-key"]).not.toBe(
+      sent.headers()["idempotency-key"],
+    );
+    await expect(page.getByText("3/5")).toBeVisible();
+    await expect(row(page, "Marc + Chun-li")).not.toContainText("plaça alliberada");
   });
 
   test("T-10-27 21's 409: another instructor saved first; the toast, and the caller's edit merged and sent again", async ({

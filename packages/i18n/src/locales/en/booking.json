@@ -72,7 +72,9 @@
     "calendarGoogle": "Google",
     "calendarOutlook": "Outlook",
     "calendarIcs": ".ics",
-    "seeBooking": "SEE THE BOOKING"
+    "seeBooking": "SEE THE BOOKING",
+    "ring": "Ring {name}",
+    "backHome": "Back to home"
   },
   "detail": {
     "title": "Booking details",
@@ -94,6 +96,7 @@
     "loading": "Loading the booking",
     "error": "The booking could not be loaded.",
     "retry": "Try again",
-    "notFound": "This booking does not exist or is no longer available."
+    "notFound": "This booking does not exist or is no longer available.",
+    "inTimeNotice": "If you cancel now, the class will not count as attended: you will recover your weekly allowance or pack credit, depending on your plan."
   }
 }

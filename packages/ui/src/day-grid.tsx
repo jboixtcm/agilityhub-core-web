@@ -27,6 +27,7 @@ export interface DayGridColumnAction {
 export interface DayGridColumnModel {
   id: string;
   label: string;
+  fullLabel?: string;
   color?: string | null | undefined;
   action?: DayGridColumnAction | undefined;
 }
@@ -211,6 +212,7 @@ export function DayGrid({
         </span>
         {allColumns.map((column) => (
           <span
+            aria-label={column.fullLabel}
             className="ah-day-grid__column"
             data-colored={column.color === undefined || column.color === null ? undefined : ""}
             key={column.id}
@@ -221,7 +223,18 @@ export function DayGrid({
                 : ({ "--schedule-color": column.color } as CSSProperties)
             }
           >
-            {column.label}
+            {column.fullLabel === undefined ? (
+              column.label
+            ) : (
+              <>
+                <span aria-hidden="true" className="ah-day-grid__short-label">
+                  {column.label}
+                </span>
+                <span aria-hidden="true" className="ah-day-grid__full-label">
+                  {column.fullLabel}
+                </span>
+              </>
+            )}
             {column.action === undefined ? null : (
               <button
                 aria-label={column.action.label}

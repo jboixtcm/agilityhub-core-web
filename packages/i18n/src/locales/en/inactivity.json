@@ -4,11 +4,11 @@
   "loading": "Loading inactivity period",
   "loadError": "The inactivity period could not be loaded.",
   "retry": "Try again",
-  "intro": "You are entitled to request a break (in months). During this time you will not take part in the club's activities and will pay a minimum maintenance fee that keeps your place and your current fee for when you return. It can be requested until day {deadlineDay} of the month before the inactivity period starts.",
-  "endNote": "The end date can be changed during the inactivity period (also until day {deadlineDay}).",
+  "intro": "You are entitled to request a break (in months).\n\nDuring this time you will not take part in the club's activities and will pay a minimum maintenance fee that keeps your place and your current fee for when you return.\n\nIt can be requested until day {deadlineDay} of the month before the inactivity period starts.",
+  "endNote": "You can change your return month during the break. Changes affecting the next month must be requested by day {deadlineDay}.",
   "form": {
     "fromMonth": "Start month (required)",
-    "toMonth": "End month (if known)",
+    "toMonth": "Return month (optional)",
     "openEnd": "— I don't know yet",
     "comments": "Comments",
     "firstMonth": "First month fee",
@@ -19,8 +19,9 @@
     "modify": "UPDATE",
     "withdraw": "WITHDRAW REQUEST",
     "confirmWithdraw": "Do you want to withdraw this request?",
-    "saved": "The request has been saved.",
-    "withdrawn": "The request has been withdrawn."
+    "saved": "Changes saved.",
+    "withdrawn": "The request has been withdrawn.",
+    "sent": "Your request has been sent."
   },
   "profileRow": {
     "requested": "pending approval · {month}",

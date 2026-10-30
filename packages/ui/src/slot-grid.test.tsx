@@ -31,6 +31,27 @@ function row(time: string, overrides: Partial<SlotCellModel> = {}): SlotGridRow 
 const columns = [{ id: "ring-mun", label: "Muntanya" }];
 
 describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
+  it("distinguishes an unavailable free slot from an occupied ring without allowing either to book", () => {
+    const onCellPress = vi.fn();
+    render(
+      <SlotGrid
+        columns={columns}
+        labels={{ ...labels, unavailable: "no disponible" }}
+        mode="single"
+        onCellPress={onCellPress}
+        rows={[row("08:00", { bookable: false }), row("08:30", { state: "BOOKED" })]}
+      />,
+    );
+    const unavailable = screen.getByRole("button", { name: "8:00, no disponible" });
+    expect(unavailable).toHaveClass("ah-slot--unavailable");
+    expect(unavailable).toBeDisabled();
+    expect(unavailable).toHaveTextContent("no disponible");
+    const occupied = screen.getByRole("button", { name: "8:30, ocupada" });
+    expect(occupied).not.toHaveClass("ah-slot--unavailable");
+    fireEvent.click(unavailable);
+    fireEvent.click(occupied);
+    expect(onCellPress).not.toHaveBeenCalled();
+  });
   it("draws each variant of the api's state and reason, and only a bookable FREE cell is pressable", () => {
     const onCellPress = vi.fn();
     render(

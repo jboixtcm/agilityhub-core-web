@@ -70,7 +70,7 @@ describe("E9-W02 round 2 #8/#9: the course texts shared by course-ui's callers",
       "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
     );
     const generic =
-      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.";
     expect(ca.errorText({ code: "NETWORK", details: null, status: 0 })).toBe(generic);
     expect(ca.errorText(new TypeError("Failed to fetch"))).toBe(generic);
     expect(ca.errorText(apiError(422, "SOMETHING_NEW"))).toBe(generic);

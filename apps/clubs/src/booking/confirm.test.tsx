@@ -149,7 +149,7 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
     expect(within(card).getByText("nova")).toBeVisible();
     expect(within(card).getByText("Nivell C")).toBeVisible();
     expect(within(card).getByText("amb la Duna")).toBeVisible();
-    expect(within(card).getByText("Muntanya")).toBeVisible();
+    expect(within(card).getByText("Pista Muntanya")).toBeVisible();
     expect(screen.getByText("Plaça bloquejada per a tu · 0:30")).toBeVisible();
     expect(
       screen.getByText("Ja tens 2 classes aquesta setmana amb la Duna (límit per gos)."),

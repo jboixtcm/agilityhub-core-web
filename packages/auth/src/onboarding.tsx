@@ -129,12 +129,28 @@ function OnboardingForm({
     initialFields(state, accountLocale, locales),
   );
   const [consentAccepted, setConsentAccepted] = useState(false);
-  const [imageConsent, setImageConsent] = useState(false);
+  const [imageConsent, setImageConsent] = useState(state.imageConsent ?? false);
+  const [imageChanged, setImageChanged] = useState(false);
+  const [consentInvalid, setConsentInvalid] = useState(false);
   const [working, setWorking] = useState<"complete" | "postpone" | "skip" | null>(null);
   const [error, setError] = useState<string>();
   const profileCompletion = state.fields.length > 0;
   const canPostponePolicy = !profileCompletion && state.postponeRemaining > 0;
   const requiredConsent = state.requiredConsent ?? null;
+
+  const consentKey = JSON.stringify([
+    requiredConsent?.policy,
+    requiredConsent?.version,
+    state.imageConsent,
+  ]);
+  const [previousConsentKey, setPreviousConsentKey] = useState(consentKey);
+  if (previousConsentKey !== consentKey) {
+    setPreviousConsentKey(consentKey);
+    setConsentAccepted(false);
+    setConsentInvalid(false);
+    setImageConsent(state.imageConsent ?? false);
+    setImageChanged(false);
+  }
 
   useEffect(() => {
     if (presentation === "modal") {
@@ -143,13 +159,10 @@ function OnboardingForm({
   }, [presentation]);
 
   const complete = async (includeFields: boolean) => {
-    if (!consentAccepted) {
-      setError(t("errors:VALIDATION_ERROR"));
+    if (requiredConsent !== null && !consentAccepted) {
+      setConsentInvalid(true);
+      setError(t("auth:onboarding.consentRequired"));
       document.querySelector<HTMLInputElement>("#onboarding-consent")?.focus();
-      return;
-    }
-    if (requiredConsent === null) {
-      setError(t("auth:onboarding.loadError"));
       return;
     }
     setError(undefined);
@@ -157,10 +170,10 @@ function OnboardingForm({
     try {
       const selectedFields = includeFields ? nonEmptyFields(fields) : undefined;
       const updated = await authClient.completeOnboarding({
-        consentAccepted: true,
-        consentVersion: requiredConsent.version,
+        consentAccepted: requiredConsent !== null && consentAccepted,
+        consentVersion: requiredConsent?.version ?? "",
         ...(selectedFields === undefined ? {} : { fields: selectedFields }),
-        ...(profileCompletion ? { imageConsent } : {}),
+        ...(profileCompletion && imageChanged ? { imageConsent } : {}),
       });
       if (selectedFields?.locale !== undefined) {
         localStorage.setItem(LOCALE_STORAGE_KEY, selectedFields.locale);
@@ -280,22 +293,23 @@ function OnboardingForm({
             checked={imageConsent}
             onChange={(event) => {
               setImageConsent(event.currentTarget.checked);
+              setImageChanged(true);
             }}
           />
           <span>{t("auth:onboarding.imageConsent")}</span>
         </label>
       ) : null}
-      {requiredConsent === null ? (
-        <p className="onboarding-form__error" role="alert">
-          {t("auth:onboarding.loadError")}
-        </p>
-      ) : (
+      {requiredConsent === null ? null : (
         <div className="onboarding-form__check">
           <Checkbox
             checked={consentAccepted}
             id="onboarding-consent"
+            aria-invalid={consentInvalid}
+            aria-describedby={consentInvalid ? "onboarding-error" : undefined}
             onChange={(event) => {
               setConsentAccepted(event.currentTarget.checked);
+              setConsentInvalid(false);
+              setError(undefined);
             }}
             required
           />
@@ -308,7 +322,7 @@ function OnboardingForm({
         </div>
       )}
       {error === undefined ? null : (
-        <p className="onboarding-form__error" role="alert">
+        <p className="onboarding-form__error" id="onboarding-error" role="alert">
           {error}
         </p>
       )}
@@ -337,7 +351,7 @@ function OnboardingForm({
           </Button>
         ) : null}
         <Button
-          disabled={working !== null || state.requiredConsent === null}
+          disabled={working !== null}
           loading={working === "complete"}
           loadingLabel={t("auth:onboarding.saving")}
           type="submit"
@@ -365,7 +379,8 @@ export function OnboardingExperience({
   const [dismissed, setDismissed] = useState(false);
   const acceptedRef = useRef(onAccepted);
   const blockingRef = useRef(onBlockingRequired);
-  const onboardingPending = session.me?.account.onboardingPending === true;
+  const onboardingPending =
+    session.me?.impersonation === undefined && session.me?.account.onboardingPending === true;
 
   useEffect(() => {
     acceptedRef.current = onAccepted;

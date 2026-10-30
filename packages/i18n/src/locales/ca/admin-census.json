@@ -9,7 +9,8 @@
     "loading": "Carregant la fitxa…",
     "retry": "Torna-ho a provar",
     "save": "Desa",
-    "saving": "Desant…"
+    "saving": "Desant…",
+    "invalidField": "Revisa aquest camp."
   },
   "inactivity": {
     "title": "Inactivitat",
@@ -92,7 +93,6 @@
     "monthly": "Quota mensual",
     "newPlan": "Modalitat nova",
     "price": "Tarifa",
-    "effectiveMonth": "Mes d'efecte (opcional)",
     "packDiscountRule": "En passar d'un pack de {minSessions} sessions o més a una quota mensual, l'entrada té un {discountPercent} % de descompte. L'import l'ha de calcular l'API.",
     "nextInvoiceDate": "Data del proper rebut (opcional)",
     "nextInvoiceDefault": "Si la deixes en blanc, el proper rebut serà el {date}."
@@ -223,11 +223,11 @@
       "organisation": "Organisme",
       "owner": "Abonat",
       "registeredAt": "Alta",
-      "sex": "Sexe"
+      "sex": "Sexe",
+      "handlerIsMember": "El guia és l’abonat"
     },
     "freeTraining": {
       "byLevel": "El dret ve del nivell.",
-      "levelOption": "Segons el nivell",
       "manual": "Decisió manual del club.",
       "notAllowed": "No pot entrenar sol",
       "title": "Entrenament lliure"
@@ -262,7 +262,7 @@
     },
     "status": {
       "active": "actiu",
-      "inactive": "baixa",
+      "inactive": "Baixa",
       "reason": "Motiu (opcional)"
     },
     "tasks": {
@@ -346,7 +346,8 @@
       "postalCode": "CP",
       "remarks": "Observacions visibles",
       "roles": "Rols d'accés",
-      "street": "Carrer i número"
+      "street": "Carrer i número",
+      "monthlyAmount": "Import mensual"
     },
     "imageNotice": "No autoritza l'ús de la seva imatge: no publiquis fotos on surti {gender, select, FEMALE {ella} OTHER {aquesta persona} other {ell}}.",
     "readmissionPending": "Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.",
@@ -492,8 +493,14 @@
       "label": "Apartats de la fitxa",
       "summary": "Fitxa",
       "tasks": "Tasques",
-      "tasksPlaceholder": "La gestió completa de tasques s'incorpora amb el seguiment d'alumnes."
-    }
+      "tasksLink": "Veure i gestionar les tasques de {dog}",
+      "noDogs": "Aquest abonat no té cap gos vinculat."
+    },
+    "leftStatus": "Baixa",
+    "reactivate": "Reactiva l’abonat",
+    "leftSince": "Baixa des del {date}",
+    "joinedOn": "(alta: {date})",
+    "left": "Baixa"
   },
   "roles": {
     "admin": "administrador",
@@ -710,5 +717,47 @@
     "readFailed": "No s'ha pogut marcar com a llegit el seguiment de {name}.",
     "readOffline": "No hi ha connexió amb el servidor.",
     "readRetry": "Torna-ho a provar"
+  },
+  "addDog": {
+    "title": "Afegir un altre gos",
+    "help": "El gos quedarà actiu en desar i vinculat a {member}.",
+    "saved": "Gos afegit i actiu."
+  },
+  "merge": {
+    "title": "Fusiona abonats",
+    "help": "Aquesta fitxa ({source}) quedarà vinculada a l’abonat que triïs.",
+    "target": "Abonat que es conserva",
+    "choose": "Tria un abonat",
+    "preview": "Previsualitza la fusió",
+    "keep": "Es conserva: {target}",
+    "preserve": "Es conservaran les dades i la tarifa de l’abonat escollit. Els gossos i les reserves vigents es traspassaran. Les factures, assistències i altres registres anteriors seguiran accessibles des de l’historial original.",
+    "confirm": "Confirma la fusió",
+    "merged": "Aquest abonat s’ha fusionat.",
+    "openTarget": "Obre l’abonat conservat",
+    "history": "Historial dels abonats fusionats",
+    "blocked": "Cal resoldre els conflictes abans de fusionar.",
+    "counts": {
+      "dogs": "Gossos",
+      "classBookings": "Reserves de classes",
+      "waitlist": "Llista d’espera",
+      "seatHolds": "Places retingudes",
+      "trainingBookings": "Reserves d’entrenament",
+      "packs": "Paquets",
+      "accessAccounts": "Comptes d’accés",
+      "activityRegistrations": "Inscripcions a activitats"
+    },
+    "blockers": {
+      "SAME_MEMBER": "Cal triar dos abonats diferents.",
+      "ALREADY_MERGED": "Una de les fitxes ja s’ha fusionat.",
+      "TARGET_NOT_ACTIVE": "L’abonat que es conserva ha d’estar actiu.",
+      "SIGNUP_PENDING": "Hi ha una alta o readmissió pendent.",
+      "DIFFERENT_ACCESS_ACCOUNTS": "Els abonats tenen comptes d’accés diferents.",
+      "SOURCE_IS_STAFF": "La fitxa d’origen té un rol d’administrador o instructor: conserva aquesta fitxa.",
+      "DIFFERENT_FAMILY_GROUPS": "Els abonats pertanyen a grups familiars diferents.",
+      "DOG_SIGNUP_PENDING": "Hi ha un gos pendent de validar.",
+      "TWO_MEMBERSHIPS": "Totes dues fitxes tenen accés: cal revisar els comptes abans de fusionar.",
+      "ACTIVITY_CONFLICT": "Totes dues fitxes tenen una inscripció vigent a la mateixa activitat.",
+      "MEMBER_PROCESS_PENDING": "Hi ha una baixa, inactivitat o cobrament pendent de resoldre."
+    }
   }
 }

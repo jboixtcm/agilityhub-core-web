@@ -1,0 +1,2 @@
+# Keep the task verification logs in its release evidence.
+!*.log

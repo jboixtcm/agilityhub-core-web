@@ -388,9 +388,15 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     fireEvent.click(confirm);
 
     expect(await screen.findByText("Classe anul·lada")).toBeVisible();
+    await waitFor(() =>
+      expect(
+        within(week).queryByRole("button", { name: /^dc 12 18:50 · B/u }),
+      ).not.toBeInTheDocument(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Anul·lades" }));
     await waitFor(() => {
       expect(
-        within(week).getByRole("button", {
+        screen.getByRole("button", {
           name: /^dc 12 18:50 · B\+C · 0\/5 · anul·lada · pel club/u,
         }),
       ).toBeVisible();
@@ -416,13 +422,11 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     fireEvent.click(confirm);
 
     expect(await screen.findByText("Classe eliminada")).toBeVisible();
-    await waitFor(() => {
+    await waitFor(() =>
       expect(
-        within(week).getByRole("button", {
-          name: /^dt 11 18:50 · A\+B · 0\/5 · anul·lada · eliminada/u,
-        }),
-      ).toBeVisible();
-    });
+        within(week).queryByRole("button", { name: /^dt 11 18:50 · A/u }),
+      ).not.toBeInTheDocument(),
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Anul·lades" }));
     const cancelled = await grid(/del 10 al 16 d.agost$/u);
@@ -512,7 +516,9 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     );
 
     await waitFor(() => {
-      expect(selectedCard()).toHaveTextContent(/^Classe seleccionada — dc 12 .*anul·lada0\/5/u);
+      expect(
+        screen.queryByRole("region", { name: /^Classe seleccionada/u }),
+      ).not.toBeInTheDocument();
     });
     expect(
       screen.getByText("Aquest element no està en un estat vàlid per a aquesta operació."),
@@ -1000,6 +1006,16 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
   });
 
   it("R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels", async () => {
+    server.use(
+      ...["rings", "levels", "instructors"].map((catalog) =>
+        http.get(`*/api/v1/${catalog}`, ({ request }) => {
+          if (new URL(request.url).searchParams.get("includeInactive") === "true") {
+            return HttpResponse.json({ code: "FORBIDDEN", message: "Forbidden" }, { status: 403 });
+          }
+          return undefined;
+        }),
+      ),
+    );
     mockScenario("instructor");
     planningState.sessions = planningState.sessions.map((session) =>
       session.id === WEDNESDAY_1850 ? { ...session, levelIds: [] } : session,
@@ -1245,11 +1261,11 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
 
     calendar.release();
     await waitFor(() => {
-      expect(selectedCard()).toHaveTextContent(/^Classe seleccionada — dc 12 .*anul·lada0\/5/u);
+      expect(
+        screen.queryByRole("region", { name: /^Classe seleccionada/u }),
+      ).not.toBeInTheDocument();
     });
-    // The cancelled class keeps only «Notes», editable again.
-    expect(within(selectedCard()).getByLabelText("Notes")).toBeEnabled();
-    expect(within(selectedCard()).queryByRole("spinbutton")).not.toBeInTheDocument();
+    // A concurrent cancellation removes the card from Active; its conflict feedback remains.
     expect(screen.getByText(INVALID_STATE_MESSAGE)).toBeVisible();
   });
 
@@ -1408,7 +1424,7 @@ describe("T-06-28 E4-W10 D4 follow-ups of the E4-W09 review", () => {
     const retry = await screen.findByRole("button", { name: "Torna-ho a provar" });
     expect(
       screen.getByText(
-        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+        "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
       ),
     ).toBeVisible();
     // No default hours are assumed: nothing that picks a time can open.
@@ -1808,7 +1824,7 @@ const INTERNAL_ERROR_BODY = {
   traceId: "t-503",
 };
 const INTERNAL_ERROR_TEXT =
-  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
+  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.";
 
 describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule", () => {
   it("T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key", async () => {
@@ -1945,13 +1961,16 @@ describe("R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time 
   it("R-06-13 D4: under a review at 08:00 the struck cell reads «revisió de les 8:00» (the cancellation's reviewTime) and the exempt chip «Exempta de la revisió de les 8:00» (classes.riskReviewTime)", async () => {
     await reviewAt("08:00");
     await renderCalendar();
-    const week = await grid(/del 10 al 16 d.agost$/u);
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Anul·lades" }));
+    await screen.findByRole("button", { name: /^dc 12 9:30/u });
 
     expect(
-      within(week).getByRole("button", { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u }),
+      screen.getByRole("button", { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u }),
     ).toBeVisible();
-    expect(within(week).queryByText(/7:30/u)).not.toBeInTheDocument();
-    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    expect(screen.queryByText(/7:30/u)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Actives" }));
+    fireEvent.click(await screen.findByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
     expect(
       await within(selectedCard()).findByRole("button", {
         name: "Exempta de la revisió de les 8:00",
@@ -1964,27 +1983,32 @@ describe("R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time 
     const reviewed = reviewedClass();
     const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
     const answered = await api.GET("/weeks/{id}/calendar", {
-      params: { path: { id: reviewed.weekId }, query: { filter: "ACTIVE" } },
+      params: { path: { id: reviewed.weekId }, query: { filter: "CANCELLED" } },
     });
     if (answered.data === undefined) throw new TypeError("Missing calendar");
-    const calendar = structuredClone(answered.data);
-    for (const session of calendar.classes) {
-      if (session.id === reviewed.id && session.cancellation) {
+    const cancelledCalendar = structuredClone(answered.data);
+    for (const session of cancelledCalendar.classes) {
+      if (session.id === reviewed.id && session.cancellation)
         session.cancellation.reviewTime = "07:30";
-      }
     }
     server.use(
-      http.get("*/api/v1/weeks/:id/calendar", ({ params }) =>
-        params.id === reviewed.weekId ? HttpResponse.json(calendar) : undefined,
+      http.get("*/api/v1/weeks/:id/calendar", ({ params, request }) =>
+        params.id === reviewed.weekId &&
+        new URL(request.url).searchParams.get("filter") === "CANCELLED"
+          ? HttpResponse.json(cancelledCalendar)
+          : undefined,
       ),
     );
     await renderCalendar();
-    const week = await grid(/del 10 al 16 d.agost$/u);
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Anul·lades" }));
+    await screen.findByRole("button", { name: /^dc 12 9:30/u });
 
     expect(
-      within(week).getByRole("button", { name: /^dc 12 9:30 · Cadells · .*revisió de les 7:30/u }),
+      screen.getByRole("button", { name: /^dc 12 9:30 · Cadells · .*revisió de les 7:30/u }),
     ).toBeVisible();
-    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    fireEvent.click(screen.getByRole("button", { name: "Actives" }));
+    fireEvent.click(await screen.findByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
     expect(
       await within(selectedCard()).findByRole("button", {
         name: "Exempta de la revisió de les 8:00",

@@ -198,7 +198,9 @@ export function TrainingDetailPage({
         </Button>
       ) : future ? (
         <p className="booking-note booking-note--warning" role="note">
-          {t("training:detail.tooLate")}
+          {t("training:detail.tooLate", {
+            deadline: formats.formatDateTime(data.cancellableUntil),
+          })}
         </p>
       ) : null}
       {dialog ? (

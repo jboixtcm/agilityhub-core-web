@@ -79,8 +79,8 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     expect(
       within(grid)
         .getAllByRole("columnheader")
-        .map((header) => header.textContent),
-    ).toEqual(["Hora", "MUN", "CEN", "CAR", "CAD", "PET"]);
+        .map((header) => header.getAttribute("aria-label") ?? header.textContent),
+    ).toEqual(["Hora", "Muntanya", "Central", "Carretera", "Cadells", "Petita"]);
     expect(
       within(grid)
         .getAllByRole("rowheader")
@@ -91,9 +91,12 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     expect(
       within(screen.getByRole("group", { name: "Dies de la setmana" }))
         .getAllByRole("button")
-        .map((chip) => chip.textContent),
-    ).toEqual(["dl 3", "dt 4", "dc 5", "dj 6", "dv 7", "ds 8"]);
-    expect(screen.getByRole("button", { name: "dt 4" })).toHaveAttribute("aria-pressed", "true");
+        .map((chip) => chip.getAttribute("aria-label")),
+    ).toEqual(["dilluns 3", "dimarts 4", "dimecres 5", "dijous 6", "divendres 7", "dissabte 8"]);
+    expect(screen.getByRole("button", { name: "dimarts 4" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
     expect(
       screen.getByText("Ocupada = pista reservada per a entrenament o bloquejada"),
     ).toBeVisible();
@@ -214,13 +217,13 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     expect(
       within(screen.getByRole("group", { name: "Dies de la setmana" }))
         .getAllByRole("button")
-        .map((chip) => chip.textContent),
-    ).toEqual(["dl 3", "dt 4", "dc 5", "dj 6", "dv 7", "ds 8"]);
+        .map((chip) => chip.getAttribute("aria-label")),
+    ).toEqual(["dilluns 3", "dimarts 4", "dimecres 5", "dijous 6", "divendres 7", "dissabte 8"]);
     expect(
       screen.queryByRole("button", { name: /^d[a-z] \d$/u, pressed: true }),
     ).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "dc 5" }));
+    fireEvent.click(screen.getByRole("button", { name: "dimecres 5" }));
     expect(await screen.findByText("Cap classe aquest dia")).toBeVisible();
     expect(window.location.search).toBe("?date=2026-08-05");
     fireEvent.click(screen.getByRole("button", { name: "Dia anterior" }));
@@ -240,8 +243,8 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     expect(
       within(grid)
         .getAllByRole("columnheader")
-        .map((header) => header.textContent),
-    ).toEqual(["Hora", "MUN", "CEN", "CAR", "CAD", "PET", "Sense"]);
+        .map((header) => header.getAttribute("aria-label") ?? header.textContent),
+    ).toEqual(["Hora", "Muntanya", "Central", "Carretera", "Cadells", "Petita", "Sense pista"]);
     expect(within(grid).getByText("Activitat · Taller d'iniciació")).toBeVisible();
     expect(within(grid).getByText("Obediència")).toBeVisible();
   });
@@ -293,8 +296,8 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     expect(
       within(grid)
         .getAllByRole("columnheader")
-        .map((header) => header.textContent),
-    ).toEqual(["Hora", "PET"]);
+        .map((header) => header.getAttribute("aria-label") ?? header.textContent),
+    ).toEqual(["Hora", "Petita"]);
     expect(within(grid).getByText("A+B")).toBeVisible();
     expect(screen.queryByText("Sense")).not.toBeInTheDocument();
     // Intended: a cell whose ring matches no column («Obediència», `ringId: null` without the
@@ -322,7 +325,10 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
       expect(window.location.search).toBe("?date=2026-08-04");
       expect(requestedDates).toEqual(["2026-08-04|member"]);
       expect(screen.getByText("dt 4 d’agost")).toBeVisible();
-      expect(screen.getByRole("button", { name: "dt 4" })).toHaveAttribute("aria-pressed", "true");
+      expect(screen.getByRole("button", { name: "dimarts 4" })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
     },
   );
 
@@ -354,10 +360,10 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
   });
 
   it.each([
-    ["Pacific/Auckland", "2026-08-04", "dt 4 d’agost", "dt 4"],
-    ["Pacific/Kiritimati", "2026-08-04", "dt 4 d’agost", "dt 4"],
-    ["Europe/Madrid", "2026-08-04", "dt 4 d’agost", "dt 4"],
-    ["America/Bogota", "2026-08-03", "dl 3 d’agost", "dl 3"],
+    ["Pacific/Auckland", "2026-08-04", "dt 4 d’agost", "dimarts 4"],
+    ["Pacific/Kiritimati", "2026-08-04", "dt 4 d’agost", "dimarts 4"],
+    ["Europe/Madrid", "2026-08-04", "dt 4 d’agost", "dimarts 4"],
+    ["America/Bogota", "2026-08-03", "dl 3 d’agost", "dilluns 3"],
   ])(
     "R-06-14 in %s: requested date, header and chips name the club's calendar day",
     async (timeZone, today, header, chip) => {
@@ -373,8 +379,8 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
       expect(
         within(screen.getByRole("group", { name: "Dies de la setmana" }))
           .getAllByRole("button")
-          .map((button) => button.textContent),
-      ).toEqual(["dl 3", "dt 4", "dc 5", "dj 6", "dv 7", "ds 8"]);
+          .map((button) => button.getAttribute("aria-label")),
+      ).toEqual(["dilluns 3", "dimarts 4", "dimecres 5", "dijous 6", "divendres 7", "dissabte 8"]);
       cleanup();
 
       requestedDates.length = 0;

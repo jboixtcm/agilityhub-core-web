@@ -4,8 +4,16 @@ import { resolve } from "node:path";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W02");
-const followUpDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W09");
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  process.env.E2E_CAPTURE_TASK ?? "E4-W02",
+);
+const followUpDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  process.env.E2E_CAPTURE_TASK ?? "E4-W09",
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -89,7 +97,7 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
       week.getByRole("button", {
         name: /^dc 12 9:30 · Cadells · 0\/5 · anul·lada · revisió de les 7:30/u,
       }),
-    ).toBeVisible();
+    ).toHaveCount(0);
 
     await week.getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 \+2/u }).click();
     const card = page.getByRole("region", { name: /^Classe seleccionada/u });
@@ -130,9 +138,7 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
     await confirm.click();
     expect((await cancellation).headers()["idempotency-key"]).toMatch(/^[0-9a-f-]{36}$/u);
     await expect(page.getByText("Classe anul·lada")).toBeVisible();
-    await expect(
-      week.getByRole("button", { name: /^dc 12 18:50 · B\+C · 0\/5 · anul·lada · pel club/u }),
-    ).toBeVisible();
+    await expect(week.getByRole("button", { name: /^dc 12 18:50 · B\+C/u })).toHaveCount(0);
 
     await page.getByRole("button", { name: "Anul·lades", exact: true }).click();
     await page.waitForURL("**/calendari?estat=anul%C2%B7lades&setmana=2026-08-10");
@@ -146,8 +152,8 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
     await page.getByRole("button", { name: "Bloqueja pista" }).click();
     const drawer = page.getByRole("dialog", { name: "Bloqueja pista" });
     await drawer.getByLabel("Pista").selectOption({ label: "Cadells" });
-    await drawer.getByLabel("Data").fill("13082026");
-    await expect(drawer.getByLabel("Data")).toHaveValue("13/08/2026");
+    await drawer.getByLabel("Data").fill("130826");
+    await expect(drawer.getByLabel("Data")).toHaveValue("13/08/26");
     await drawer.getByLabel("De", { exact: true }).selectOption("18:00");
     await drawer.getByLabel("A", { exact: true }).selectOption("19:00");
     await drawer.getByLabel("Nota").fill("Reg de la gespa");
@@ -203,7 +209,6 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
       /Muntanya/iu,
       /Central/iu,
       /Carretera/iu,
-      /Cadells/iu,
       /Petita/iu,
     ]);
     await expect(day.getByText("Bloq. manteniment")).toBeVisible();
@@ -279,7 +284,7 @@ test.describe("T-06-28 E4-W09 D4 time pickers and opening hours", () => {
 
     await page.getByRole("button", { name: "Crear classe" }).click();
     const create = page.getByRole("dialog", { name: "Crear classe" });
-    await create.getByLabel("Data").fill("13082026");
+    await create.getByLabel("Data").fill("1308");
     await expect(create.getByLabel("Inici")).toHaveValue("07:10");
     await expect(create.getByLabel("Final")).toHaveValue("08:10");
     await expectIconsPainted(create);
@@ -306,7 +311,7 @@ test.describe("T-06-28 E4-W09 D4 time pickers and opening hours", () => {
       fullPage: true,
       path: resolve(followUpDirectory, "D4-bloqueja-pista-diumenge-tancat-1280.png"),
     });
-    await block.getByLabel("Data").fill("13082026");
+    await block.getByLabel("Data").fill("1308");
     await expect(block.getByLabel("De", { exact: true })).toHaveValue("07:10");
     await expect(block.getByLabel("A", { exact: true })).toHaveValue("07:40");
     const saved = page.waitForRequest(

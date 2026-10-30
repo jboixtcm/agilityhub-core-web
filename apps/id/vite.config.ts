@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
@@ -21,9 +23,22 @@ export default defineConfig(({ mode }) => {
         };
 
   return {
-    // The public directory contains only MSW's worker; ship it only with mock builds.
+    // Keep MSW out of production; emit the public favicon explicitly.
     build: { copyPublicDir: mockEnabled },
-    plugins: [react(), tailwindcss()],
+    plugins: [
+      {
+        name: "app-favicon",
+        generateBundle() {
+          this.emitFile({
+            type: "asset",
+            fileName: "favicon.svg",
+            source: readFileSync(new URL("./public/favicon.svg", import.meta.url), "utf8"),
+          });
+        },
+      },
+      react(),
+      tailwindcss(),
+    ],
     server: mockEnabled
       ? {}
       : {

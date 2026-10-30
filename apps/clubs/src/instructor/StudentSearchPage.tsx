@@ -1,5 +1,15 @@
 import { type ApiClient, studentSearchGuide, useStudentSearch } from "@agilityhub/api-client";
-import { AppBar, Button, Card, EmptyState, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
+import {
+  AppBar,
+  Button,
+  Card,
+  DogPhoto,
+  EmptyState,
+  Icon,
+  Input,
+  Skeleton,
+  Toast,
+} from "@agilityhub/ui";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -88,18 +98,21 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
                       navigateInApp(path);
                     }}
                   >
-                    <span>
-                      {dog.level === undefined
-                        ? name
-                        : t("instructor:student.withLevel", { level: dog.level.code, name })}
-                      {ownerFullName === undefined ? null : (
-                        <>
-                          {" "}
-                          <span className="instructor-students__owner">
-                            {t("instructor:student.owner", { name: ownerFullName })}
-                          </span>
-                        </>
-                      )}
+                    <span className="ah-dog-identity">
+                      <DogPhoto name={dog.name ?? ""} src={dog.photoUrl} />
+                      <span>
+                        {dog.level === undefined
+                          ? name
+                          : t("instructor:student.withLevel", { level: dog.level.code, name })}
+                        {ownerFullName === undefined ? null : (
+                          <>
+                            {" "}
+                            <span className="instructor-students__owner">
+                              {t("instructor:student.owner", { name: ownerFullName })}
+                            </span>
+                          </>
+                        )}
+                      </span>
                     </span>
                     <Icon aria-hidden="true" name="chev" />
                   </a>

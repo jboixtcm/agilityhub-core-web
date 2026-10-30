@@ -894,7 +894,7 @@ const INTERNAL_ERROR_BODY = {
   traceId: "t-503",
 };
 const INTERNAL_ERROR_TEXT =
-  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.";
+  "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.";
 
 describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule", () => {
   it("T-07-29 T-07-10 E7-W07 step 4 (CONVENCIONS_API §7, E85): [PUBLICA] keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ACTIVITY_IN_PAST retires it, so the same publication sent again takes a new key", async () => {
@@ -1430,7 +1430,7 @@ describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => 
     const card = await maintenance("Torneig d'Estiu 2026");
     const retry = await within(card).findByRole("button", { name: "Torna-ho a provar" });
     expect(within(card).getByRole("alert")).toHaveTextContent(
-      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, indica el codi de referència al club.",
+      "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
     );
     // No 07:00–22:00 is assumed: only «—» and the activity's own time.
     expect(optionValues(within(card).getByLabelText("Hora d'inici"))).toEqual(["", "18:30"]);

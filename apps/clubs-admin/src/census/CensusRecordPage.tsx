@@ -1,4 +1,5 @@
 import {
+  apiFieldErrors,
   isApiError,
   itemsWith,
   listFields,
@@ -13,6 +14,7 @@ import {
   Button,
   Card,
   Checkbox,
+  DogPhoto,
   Drawer,
   FormField,
   Icon,
@@ -28,11 +30,13 @@ import { type ReactNode, type SyntheticEvent, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 
 import { AuditTrail, auditActionLabel, auditRoleLabel } from "../audit/AuditPage";
+import { formatMoney, useBillingLocale } from "../billing/shared";
 import { useRefreshCounters } from "../dashboard/counters";
 import { isReadmissionPending, loadDogDocumentTypes } from "../dashboard/readmission";
 import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
+import { AdminMemberActions } from "./AdminMemberActions";
 import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
 import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
@@ -233,6 +237,7 @@ function MemberEditDrawer({
   onClose,
   onErased,
   onSaved,
+  onReactivate,
   open,
 }: {
   client: ApiClient;
@@ -242,6 +247,7 @@ function MemberEditDrawer({
   onClose: () => void;
   onErased: () => void;
   onSaved: (member: MemberDetail) => void;
+  onReactivate: () => void;
   open: boolean;
 }) {
   const { t } = useTranslation(["admin-census", "errors"]);
@@ -249,6 +255,16 @@ function MemberEditDrawer({
   const [draft, setDraft] = useState(member);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
+  const [fieldErrors, setFieldErrors] = useState<ReturnType<typeof apiFieldErrors>>([]);
+  const fieldError = (field: string) =>
+    fieldErrors.some(
+      (error) =>
+        error.field === field ||
+        error.field.startsWith(`${field}[`) ||
+        error.field.startsWith(`${field}.`),
+    )
+      ? { error: t("admin-census:common.invalidField") }
+      : {};
   // A new phone takes the prefix of the club's country (`countryProfile`, as signup does), never a
   // typed one (E11-W02 round 2, INC-41).
   const phonePrefix = countryPhonePrefix(branding.countryProfile);
@@ -263,6 +279,14 @@ function MemberEditDrawer({
       open={open}
       title={t("admin-census:member.edit.title")}
     >
+      {member.status === "LEFT" ? (
+        <div role="status">
+          <Badge tone="danger">{t("admin-census:member.leftStatus")}</Badge>{" "}
+          <Button onClick={onReactivate} variant="secondary">
+            {t("admin-census:member.reactivate")}
+          </Button>
+        </div>
+      ) : null}
       <form
         className="census-record__form"
         onSubmit={(event) => {
@@ -270,6 +294,7 @@ function MemberEditDrawer({
           if (erased) return;
           setPending(true);
           setFailure(undefined);
+          setFieldErrors([]);
           const body: MemberPatchRequest = {
             ...(draft.address == null ? {} : { address: draft.address }),
             ...(draft.birthDate == null ? {} : { birthDate: draft.birthDate }),
@@ -281,7 +306,9 @@ function MemberEditDrawer({
                     imageRights: { granted: draft.consents.imageRights.granted },
                   },
                 }),
-            contactEmails: draft.contactEmails.filter((item) => item.email.trim() !== ""),
+            contactEmails: draft.contactEmails
+              .filter((item) => item.email.trim() !== "")
+              .map(({ email }) => ({ email: email.trim() })),
             firstName: draft.firstName,
             gender: draft.gender,
             ...(draft.idDocument == null ? {} : { idDocument: draft.idDocument }),
@@ -303,6 +330,7 @@ function MemberEditDrawer({
             .catch((error: unknown) => {
               // S14 §5 (E7-W07 step 3): erased meanwhile — final, nothing to send again.
               if (isApiError(error, "MEMBER_ERASED")) onErased();
+              setFieldErrors(apiFieldErrors(error));
               setFailure(errorText(error, t));
             })
             .finally(() => {
@@ -311,7 +339,11 @@ function MemberEditDrawer({
         }}
       >
         <div className="census-record__form-grid">
-          <FormField id="member-document-type" label={t("admin-census:member.fields.documentType")}>
+          <FormField
+            {...fieldError("idDocument")}
+            id="member-document-type"
+            label={t("admin-census:member.fields.documentType")}
+          >
             <Input
               id="member-document-type"
               onChange={(event) => {
@@ -326,7 +358,11 @@ function MemberEditDrawer({
               value={draft.idDocument?.type ?? ""}
             />
           </FormField>
-          <FormField id="member-document-number" label={t("admin-census:member.fields.document")}>
+          <FormField
+            {...fieldError("idDocument")}
+            id="member-document-number"
+            label={t("admin-census:member.fields.document")}
+          >
             <Input
               id="member-document-number"
               onChange={(event) => {
@@ -341,7 +377,11 @@ function MemberEditDrawer({
               value={draft.idDocument?.number ?? ""}
             />
           </FormField>
-          <FormField id="member-first-name" label={t("admin-census:member.fields.firstName")}>
+          <FormField
+            {...fieldError("firstName")}
+            id="member-first-name"
+            label={t("admin-census:member.fields.firstName")}
+          >
             <Input
               id="member-first-name"
               onChange={(event) => {
@@ -350,7 +390,11 @@ function MemberEditDrawer({
               value={draft.firstName}
             />
           </FormField>
-          <FormField id="member-last-name-1" label={t("admin-census:member.fields.lastName1")}>
+          <FormField
+            {...fieldError("lastName1")}
+            id="member-last-name-1"
+            label={t("admin-census:member.fields.lastName1")}
+          >
             <Input
               id="member-last-name-1"
               onChange={(event) => {
@@ -359,7 +403,11 @@ function MemberEditDrawer({
               value={draft.lastName1}
             />
           </FormField>
-          <FormField id="member-last-name-2" label={t("admin-census:member.fields.lastName2")}>
+          <FormField
+            {...fieldError("lastName2")}
+            id="member-last-name-2"
+            label={t("admin-census:member.fields.lastName2")}
+          >
             <Input
               id="member-last-name-2"
               onChange={(event) => {
@@ -368,7 +416,11 @@ function MemberEditDrawer({
               value={draft.lastName2 ?? ""}
             />
           </FormField>
-          <FormField id="member-gender" label={t("admin-census:member.fields.gender")}>
+          <FormField
+            {...fieldError("gender")}
+            id="member-gender"
+            label={t("admin-census:member.fields.gender")}
+          >
             <Select
               id="member-gender"
               onChange={(event) => {
@@ -381,7 +433,11 @@ function MemberEditDrawer({
               <option value="OTHER">{t("admin-census:values.other")}</option>
             </Select>
           </FormField>
-          <FormField id="member-birth-date" label={t("admin-census:member.fields.birthDate")}>
+          <FormField
+            {...fieldError("birthDate")}
+            id="member-birth-date"
+            label={t("admin-census:member.fields.birthDate")}
+          >
             <Input
               id="member-birth-date"
               onChange={(event) => {
@@ -397,6 +453,7 @@ function MemberEditDrawer({
           {[0, 1].map((index) => (
             <FormField
               id={`member-email-${String(index)}`}
+              {...fieldError("contactEmails")}
               key={index}
               label={t("admin-census:member.fields.email", { number: index + 1 })}
             >
@@ -473,7 +530,11 @@ function MemberEditDrawer({
         </fieldset>
         <fieldset className="census-record__fieldset">
           <legend>{t("admin-census:member.fields.address")}</legend>
-          <FormField id="member-street" label={t("admin-census:member.fields.street")}>
+          <FormField
+            {...fieldError("address")}
+            id="member-street"
+            label={t("admin-census:member.fields.street")}
+          >
             <Input
               id="member-street"
               onChange={(event) => {
@@ -486,7 +547,11 @@ function MemberEditDrawer({
             />
           </FormField>
           <div className="census-record__form-grid">
-            <FormField id="member-postal-code" label={t("admin-census:member.fields.postalCode")}>
+            <FormField
+              {...fieldError("address")}
+              id="member-postal-code"
+              label={t("admin-census:member.fields.postalCode")}
+            >
               <Input
                 id="member-postal-code"
                 onChange={(event) => {
@@ -498,7 +563,11 @@ function MemberEditDrawer({
                 value={address.postalCode}
               />
             </FormField>
-            <FormField id="member-city" label={t("admin-census:member.fields.city")}>
+            <FormField
+              {...fieldError("address")}
+              id="member-city"
+              label={t("admin-census:member.fields.city")}
+            >
               <Input
                 id="member-city"
                 onChange={(event) => {
@@ -550,7 +619,23 @@ function MemberEditDrawer({
           />
           {t("admin-census:member.fields.imageRights")}
         </label>
-        {failure === undefined ? null : <p role="alert">{failure}</p>}
+        {failure === undefined ? null : (
+          <div role="alert">
+            <p>{failure}</p>
+            {fieldErrors.length === 0 ? null : (
+              <ul>
+                {fieldErrors.map((error) => (
+                  <li key={error.field}>
+                    {t(`admin-census:member.fields.${error.field.split(/[.[]/)[0] ?? ""}`, {
+                      defaultValue: t("admin-census:common.invalidField"),
+                    })}
+                    : {t("admin-census:common.invalidField")}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
         <div className="census-record__dialog-actions">
           <Button onClick={onClose} variant="ghost">
             {t("admin-census:common.cancel")}
@@ -599,6 +684,23 @@ function MemberSummary({
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<ReactNode>();
   const [plan, setPlan] = useState<Plan>();
+  const [price, setPrice] = useState<components["schemas"]["Price"]>();
+  const billingLocale = useBillingLocale();
+  useEffect(() => {
+    if (!modules.includes("BILLING") || member.planId == null) return;
+    let current = true;
+    void client.GET("/prices", { params: { query: { planId: member.planId } } }).then(
+      (result) => {
+        if (current) setPrice(result.data?.items.find((item) => item.id === member.priceId));
+      },
+      () => {
+        if (current) setPrice(undefined);
+      },
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, member.planId, member.priceId, modules]);
   const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>(
     () => new Map(),
   );
@@ -716,6 +818,11 @@ function MemberSummary({
                   : t("admin-census:member.billingMode.monthlyFee")}
               </DataRow>
             ) : null}
+            {price?.id === member.priceId && price !== undefined ? (
+              <DataRow label={t("admin-census:member.fields.monthlyAmount")}>
+                {formatMoney(price.amount, billingLocale)}
+              </DataRow>
+            ) : null}
             {modules.includes("BILLING") ? (
               <DataRow label={t("admin-census:member.fields.payment")}>
                 {/* AGENTS rule 1 (E4-W17 step 9): the method's label, never the raw enum. */}
@@ -779,11 +886,13 @@ function MemberSummary({
             </DataRow>
             <DataRow label={t("admin-census:member.fields.roles")}>
               <span className="census-record__badges">
-                {(["MEMBER", "INSTRUCTOR", "ADMIN"] as const).map((role) => (
-                  <Badge key={role} tone={member.roles.includes(role) ? "success" : "neutral"}>
-                    {roleLabel(role)}
-                  </Badge>
-                ))}
+                {(["MEMBER", "INSTRUCTOR", "ADMIN"] as const)
+                  .filter((role) => member.roles.includes(role))
+                  .map((role) => (
+                    <Badge key={role} tone="success">
+                      {roleLabel(role)}
+                    </Badge>
+                  ))}
               </span>{" "}
               {erased ? null : (
                 <Button
@@ -820,7 +929,8 @@ function MemberSummary({
             {overview.dogs.map((dog) => (
               <li key={dog.id}>
                 <a className="census-record__dog-link" href={`/gossos/${dog.id}`}>
-                  <span>
+                  <span className="ah-dog-identity">
+                    <DogPhoto name={dog.name} src={dog.photoUrl} />
                     <strong>{dog.name}</strong> · {dog.breed}
                   </span>
                   <span className="census-record__dog-details">
@@ -1314,12 +1424,14 @@ function MemberRecordContent({
   const member = overview.member;
   const joinedYear =
     member.joinedAt == null ? undefined : new Date(member.joinedAt).getUTCFullYear();
+  const leaveDate = member.leaveDate ?? member.displayStatus.date;
   const holder = overview.familyGroup?.holderMemberId === member.id;
   const primaryPhone = member.phones[0];
   // S14 §5 (E7-W07 step 3): an erased member takes no S03/S13 change — the api answers
   // `409 MEMBER_ERASED` to each — so the record offers none: read erased, or found erased by a
   // change sent from a record read before the erasure.
-  const erased = member.erasedAt != null || erasedMeanwhile === member.id;
+  const erased =
+    member.erasedAt != null || erasedMeanwhile === member.id || member.mergedIntoMemberId != null;
   const onErased = () => {
     setErasedMeanwhile(member.id);
   };
@@ -1334,7 +1446,22 @@ function MemberRecordContent({
           {member.memberNumber == null ? null : (
             <Badge>{t("admin-census:member.number", { number: member.memberNumber })}</Badge>
           )}
-          {joinedYear === undefined ? null : (
+          {member.status === "LEFT" ? (
+            <>
+              <Badge tone="danger">
+                {leaveDate == null
+                  ? t("admin-census:member.left")
+                  : t("admin-census:member.leftSince", { date: formatDate(leaveDate, formats) })}
+              </Badge>
+              {member.joinedAt == null ? null : (
+                <span>
+                  {t("admin-census:member.joinedOn", {
+                    date: formatDate(member.joinedAt, formats),
+                  })}
+                </span>
+              )}
+            </>
+          ) : joinedYear === undefined ? null : (
             <Badge tone="success">
               {t("admin-census:member.activeSince", { year: joinedYear })}
             </Badge>
@@ -1356,7 +1483,9 @@ function MemberRecordContent({
             </Badge>
           ) : null}
           {/* S14 §2: read erased, or found erased by a change (the same `erased` as the actions). */}
-          {erased ? <Badge tone="neutral">{t("admin-census:member.privacy.erased")}</Badge> : null}
+          {member.erasedAt != null || erasedMeanwhile === member.id ? (
+            <Badge tone="neutral">{t("admin-census:member.privacy.erased")}</Badge>
+          ) : null}
           {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
             <Badge>
               {holder
@@ -1435,6 +1564,14 @@ function MemberRecordContent({
           )}
         </div>
       </header>
+      <AdminMemberActions
+        client={client}
+        member={member}
+        onChanged={() => {
+          setReload((value) => value + 1);
+          refreshCounters();
+        }}
+      />
       <Tabs
         items={[
           {
@@ -1459,7 +1596,21 @@ function MemberRecordContent({
           ...(branding.modules.includes("TASKS")
             ? [
                 {
-                  content: <p>{t("admin-census:member.tabs.tasksPlaceholder")}</p>,
+                  content: (
+                    <ul className="census-record__dog-list">
+                      {overview.dogs.map((dog) => (
+                        <li key={dog.id}>
+                          <a className="census-record__dog-link" href={`/alumnes/${dog.id}`}>
+                            {t("admin-census:member.tabs.tasksLink", { dog: dog.name })}
+                            <Icon aria-hidden="true" name="chev" />
+                          </a>
+                        </li>
+                      ))}
+                      {overview.dogs.length === 0 ? (
+                        <li>{t("admin-census:member.tabs.noDogs")}</li>
+                      ) : null}
+                    </ul>
+                  ),
                   label: t("admin-census:member.tabs.tasks"),
                   value: "tasks",
                 },
@@ -1482,6 +1633,10 @@ function MemberRecordContent({
           setEditOpen(false);
         }}
         onErased={onErased}
+        onReactivate={() => {
+          setEditOpen(false);
+          setMemberDialog("leave");
+        }}
         onSaved={(saved) => {
           setOverview({ ...overview, member: saved });
           setEditOpen(false);
@@ -1607,8 +1762,9 @@ function DogEditDrawer({
           const body: DogPatchRequest = {
             birthDate: draft.birthDate,
             breed: draft.breed,
-            chip: draft.chip,
+            ...(draft.chip == null ? {} : { chip: draft.chip }),
             ...(draft.handlerName === undefined ? {} : { handlerName: draft.handlerName }),
+            ...(draft.handlerIsMember == null ? {} : { handlerIsMember: draft.handlerIsMember }),
             licenses: draft.licenses.filter(
               (license) => license.organisation.trim() !== "" && license.number.trim() !== "",
             ),
@@ -1680,9 +1836,24 @@ function DogEditDrawer({
             onChange={(event) => {
               setDraft({ ...draft, chip: event.currentTarget.value });
             }}
-            value={draft.chip}
+            value={draft.chip ?? ""}
           />
         </FormField>
+        <label className="census-record__check">
+          <input
+            type="checkbox"
+            checked={
+              draft.handlerIsMember ??
+              (!draft.handlerName ||
+                draft.handlerName === dog.owner.firstName ||
+                draft.handlerName === dog.owner.fullName)
+            }
+            onChange={(event) => {
+              setDraft({ ...draft, handlerIsMember: event.currentTarget.checked });
+            }}
+          />
+          {t("admin-census:dog.fields.handlerIsMember")}
+        </label>
         <FormField id="dog-handler" label={t("admin-census:dog.fields.handler")}>
           <Input
             id="dog-handler"
@@ -1958,7 +2129,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
   const [pending, setPending] = useState(false);
   const [dialogError, setDialogError] = useState<string>();
   const [selectedLevel, setSelectedLevel] = useState("");
-  const [freeOverride, setFreeOverride] = useState<"false" | "level" | "true">("level");
+  const [freeOverride, setFreeOverride] = useState<"false" | "true">("false");
   const [toMemberId, setToMemberId] = useState("");
   const [reason, setReason] = useState("");
   const [photo, setPhoto] = useState<File>();
@@ -1979,13 +2150,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
         setDog(dogDetailView(dogResult.data));
         setFailure(false);
         setSelectedLevel(dogResult.data.level?.id ?? "");
-        setFreeOverride(
-          dogResult.data.freeTraining?.override == null
-            ? "level"
-            : dogResult.data.freeTraining.override
-              ? "true"
-              : "false",
-        );
+        setFreeOverride(dogResult.data.freeTraining?.allowed ? "true" : "false");
         setLevels(levelResult.data?.items ?? []);
         try {
           setMembers(itemsWith(memberResult.data?.items ?? [], TRANSFER_MEMBER_FIELDS));
@@ -2322,7 +2487,6 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             }}
             value={freeOverride}
           >
-            <option value="level">{t("admin-census:dog.freeTraining.levelOption")}</option>
             <option value="true">{t("admin-census:values.yes")}</option>
             <option value="false">{t("admin-census:values.no")}</option>
           </Select>
@@ -2341,7 +2505,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             loading={pending}
             onClick={() =>
               void run(async () => {
-                const override = freeOverride === "level" ? null : freeOverride === "true";
+                const override = freeOverride === "true";
                 const result = await client.PATCH("/dogs/{id}/free-training", {
                   body: { override },
                   params: { path: { id: dog.id } },

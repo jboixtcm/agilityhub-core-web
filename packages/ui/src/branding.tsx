@@ -384,6 +384,25 @@ function setAttribute(element: Element, name: string, value: string | null): voi
 
 export function BrandingProvider({ branding, children }: BrandingProviderProps) {
   const dark = useMediaDarkScheme();
+  const markUrl = resolveBrandingLogo(branding.theme, { placement: "compact" }).src;
+  useLayoutEffect(() => {
+    const previous = document.head.querySelector<HTMLLinkElement>('link[rel="icon"]');
+    const icon = previous ?? document.createElement("link");
+    const previousHref = icon.getAttribute("href");
+    const previousType = icon.getAttribute("type");
+    icon.rel = "icon";
+    icon.href = markUrl ?? "/favicon.svg";
+    // Club marks may be PNG, SVG or another supported image format.
+    setAttribute(icon, "type", markUrl === undefined ? "image/svg+xml" : null);
+    if (previous === null) document.head.append(icon);
+    return () => {
+      if (previous === null) icon.remove();
+      else {
+        setAttribute(icon, "href", previousHref);
+        setAttribute(icon, "type", previousType);
+      }
+    };
+  }, [markUrl]);
   useLayoutEffect(() => {
     const root = document.documentElement;
     const productDark = computedProductDark(root);

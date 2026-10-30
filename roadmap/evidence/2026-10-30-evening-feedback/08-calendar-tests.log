@@ -1,0 +1,564 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/CalendarPage.test.tsx (50 tests | 1 failed) 9443ms
+   ❯ R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy (3)
+     × R-06-13 D4: a cancellation that carries reviewTime 07:30 reads «7:30» (the time it ran) under a parameter now at 08:00 127ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time comes from the data, not the copy > R-06-13 D4: a cancellation that carries reviewTime 07:30 reads «7:30» (the time it ran) under a parameter now at 08:00
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/^dc 12 9:30 · Cadells · .*revisió de les 7:30/u`
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"planning-header calendar-header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Calendari de classes":
+  [36m<h1 />[39m
+
+  Name "Avisos d'incoherència de la setmana":
+  [36m<h2[39m
+    [33mclass[39m=[32m"planning-card-title"[39m
+    [33mid[39m=[32m"calendar-warnings-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "Estat de les classes":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Estat de les classes"[39m
+    [33mclass[39m=[32m"calendar-filter"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Actives":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Esborrany":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Anul·lades":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Setmana anterior":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Setmana anterior"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button calendar-week__previous"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Setmana":
+  [36m<button[39m
+    [33maria-expanded[39m=[32m"false"[39m
+    [33maria-haspopup[39m=[32m"menu"[39m
+    [33maria-label[39m=[32m"Setmana"[39m
+    [33mclass[39m=[32m"calendar-week__toggle"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Setmana següent":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Setmana següent"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Crear classe":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Bloqueja pista":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dl 10":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dt 11":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dj 13":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dv 14":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ds 15":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dc 12 9:30 · Cadells · 0/5 · anul·lada · revisió de les 8:00 · anul·lada":
+  [36m<button[39m
+    [33maria-label[39m=[32m"dc 12 9:30 · Cadells · 0/5 · anul·lada · revisió de les 8:00 · anul·lada"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--muted ah-schedule-cell--struck"[39m
+    [33mdata-class-id[39m=[32m"cls-2026-08-12-0930-0"[39m
+    [33mstyle[39m=[32m"--schedule-color: #F5D67A;"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Carretera bloquejada · manteniment 16:00–18:00":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Carretera bloquejada · manteniment 16:00–18:00"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-schedule-cell ah-schedule-cell--neutral"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "dj 18:50 — Marc assignat a dues pistes alhora (Cadells i Petita)":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong[39m
+    [33mclass[39m=[32m"ah-schedule-cell__meta"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "Calendari de classes · del 10 al 16 d’agost":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+    [33mstyle[39m=[32m"--schedule-columns: 6;"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "Calendari de classes · del 10 al 16 d’agost":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "dl 10 dt 11 dc 12 dj 13 dv 14 ds 15":
+  [36m<tr />[39m
+
+  Name "9:30 Cadells0/5anul·lada · revisió de les 8:00":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  Name "16:00 Carretera bloquejadamanteniment 16:00–18:00":
+  [36m<tr[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Cadells0/5anul·lada · revisió de les 8:00":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "Carretera bloquejadamanteniment 16:00–18:00":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-schedule-grid__slot"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "dl 10":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dt 11":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dc 12":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dj 13":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "dv 14":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "ds 15":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowheader:
+
+  Name "9:30":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "16:00":
+  [36m<th[39m
+    [33mclass[39m=[32m"ah-schedule-grid__row-label"[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"planning-grid__hint calendar-footer"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "Avisos d'incoherència de la setmana":
+  [36m<div[39m
+    [33maria-labelledby[39m=[32m"calendar-warnings-title"[39m
+    [33mclass[39m=[32m"ah-card calendar-warnings-card"[39m
+    [33mrole[39m=[32m"region"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"calendar-warnings"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"planning-page calendar-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"planning-header calendar-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mCalendari de classes[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Estat de les classes"[39m
+          [33mclass[39m=[32m"calendar-filter"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mActives[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"false"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mEsborrany[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-pressed[39m=[32m"true"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAnul·lades[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"calendar-week"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button calendar-week__previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-expanded[39m=[32m"false"[39m
+            [33maria-haspopup[39m=[32m"menu"[39m
+            [33maria-label[39m=[32m"Setmana"[39m
+            [33mclass[39m=[32m"calendar-week__toggle"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mSetmana en curs[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m · [0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0mdel 10 al 16 d’agost[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"planning-header__actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mCrear classe[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mBloqueja pista[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-schedule-grid calendar-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+          [36m>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+              [33mstyle[39m=[32m"--schedule-columns: 6;"[39m
+            [36m>[39m
+              [36m<caption[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCalendari de classes · del 10 al 16 d’agost[0m
+              [36m</caption>[39m
+              [36m<thead>[39m
+                [36m<tr>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                  [36m/>[39m
+                  [36m<th[39m
+                    [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                    [33mscope[39m=[32m"col"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-label"[39m
+                      [36m>[39m
+                        [0mdl 10[0m
+                      [36m</span>[39m
+                      [36...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/planning/CalendarPage.test.tsx:1991:14
+    1989|
+    1990|     expect(
+    1991|       screen.getByRole("button", { name: /^dc 12 9:30 · Cadells · .*re…
+       |              ^
+    1992|     ).toBeVisible();
+    1993|     fireEvent.click(screen.getByRole("button", { name: "Actives" }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 49 passed (50)
+   Start at  20:10:38
+   Duration  11.26s (tests 85%, transform 7%, environment 4%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/CalendarPage.test.tsx

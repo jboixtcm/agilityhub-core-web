@@ -1,0 +1,734 @@
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh 2026-10-30-evening-feedback --capture-task\=2026-10-30-evening-feedback --workers\=2 --output\=/evidence/2026-10-30-evening-feedback/browser-results
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: 2026-10-30-evening-feedback
+Capture folder of the permanent mock specs: 2026-10-30-evening-feedback
+Playwright arguments: --workers=2 --output=/evidence/2026-10-30-evening-feedback/browser-results
+Checkout copied into the container: 1.3G
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 98, added 98
+Progress: resolved 858, reused 0, downloaded 203, added 203
+Progress: resolved 858, reused 0, downloaded 353, added 352
+Progress: resolved 858, reused 0, downloaded 517, added 517
+Progress: resolved 858, reused 0, downloaded 546, added 546
+Progress: resolved 858, reused 0, downloaded 564, added 564
+Progress: resolved 858, reused 0, downloaded 591, added 591
+Progress: resolved 858, reused 0, downloaded 636, added 634
+Progress: resolved 858, reused 0, downloaded 719, added 719
+Progress: resolved 858, reused 0, downloaded 787, added 787
+Progress: resolved 858, reused 0, downloaded 854, added 854
+Progress: resolved 858, reused 0, downloaded 855, added 855
+Progress: resolved 858, reused 0, downloaded 856, added 855
+Progress: resolved 858, reused 0, downloaded 857, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 16.9s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing aff22f02e54da326
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 2db4395071528050
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing 2b867642a31e8d74
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 74006c29782c38ae
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=2 --output\=/evidence/2026-10-30-evening-feedback/browser-results
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+@agilityhub/course-ui:e2e: ····
+@agilityhub/course-ui:e2e:   4 passed (7.2s)
+id:build: cache miss, executing 2b08fe8299ccf8bd
+id:build: 
+id:build: > id@0.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+id:build: transforming...
+id:build: ✓ 263 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/favicon.svg                                          0.43 kB │ gzip:   0.27 kB
+id:build: dist/index.html                                           0.45 kB │ gzip:   0.30 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-U5PBVIGE.css                           56.79 kB │ gzip:  10.22 kB
+id:build: dist/assets/common-BLOgpJZf.js                            2.51 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-CH3g49TU.js                            2.64 kB │ gzip:   1.31 kB
+id:build: dist/assets/common-DDszVK_x.js                            2.71 kB │ gzip:   1.32 kB
+id:build: dist/assets/id-B7fN0oKw.js                                3.01 kB │ gzip:   1.33 kB
+id:build: dist/assets/id-DUR_B-8l.js                                3.17 kB │ gzip:   1.47 kB
+id:build: dist/assets/id-C-7TeTu2.js                                3.25 kB │ gzip:   1.48 kB
+id:build: dist/assets/errors-BK9wXSkI.js                           21.98 kB │ gzip:   7.17 kB
+id:build: dist/assets/errors-hleDn1V_.js                           23.24 kB │ gzip:   7.54 kB
+id:build: dist/assets/errors-B_xAcX5p.js                           23.27 kB │ gzip:   7.53 kB
+id:build: dist/assets/index-B6Z_D4O9.js                           337.13 kB │ gzip: 103.46 kB
+id:build: 
+id:build: [32m✓ built in 274ms[39m
+clubs-admin:build: cache miss, executing f8990798df552580
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 483 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs-admin:build: dist/index.html                                             2.96 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-B4BC4Pxa.css                       5.83 kB │ gzip:   1.27 kB
+clubs-admin:build: dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+clubs-admin:build: dist/assets/list-helpers-BasqzGHV.css                      40.26 kB │ gzip:   6.73 kB
+clubs-admin:build: dist/assets/index-DSBwPuam.css                            121.97 kB │ gzip:  19.11 kB
+clubs-admin:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs-admin:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs-admin:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs-admin:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-BeJlwKIP.js                      1.44 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/home-CiD_uZx5.js                                1.52 kB │ gzip:   0.76 kB
+clubs-admin:build: dist/assets/home-DuPmgVRC.js                                1.58 kB │ gzip:   0.82 kB
+clubs-admin:build: dist/assets/home-DUEt_q5U.js                                1.60 kB │ gzip:   0.82 kB
+clubs-admin:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-x72vHJv9.js                          2.03 kB │ gzip:   0.99 kB
+clubs-admin:build: dist/assets/training-C5U_DqNB.js                            2.08 kB │ gzip:   0.99 kB
+clubs-admin:build: dist/assets/admin-dashboard-CaRQFr39.js                     2.09 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/inactivity-BJp8fZBZ.js                          2.13 kB │ gzip:   1.08 kB
+clubs-admin:build: dist/assets/admin-dashboard-BQL-FPZU.js                     2.15 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/inactivity-BwqNBSeQ.js                          2.15 kB │ gzip:   1.07 kB
+clubs-admin:build: dist/assets/admin-dashboard-Dp6ttMdC.js                     2.20 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/training-ChM_Sijs.js                            2.25 kB │ gzip:   1.12 kB
+clubs-admin:build: dist/assets/training-B5utM-gP.js                            2.25 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/id-B7fN0oKw.js                                  3.01 kB │ gzip:   1.33 kB
+clubs-admin:build: dist/assets/id-DUR_B-8l.js                                  3.17 kB │ gzip:   1.47 kB
+clubs-admin:build: dist/assets/id-C-7TeTu2.js                                  3.25 kB │ gzip:   1.48 kB
+clubs-admin:build: dist/assets/courses-TACQmmua.js                             3.82 kB │ gzip:   1.71 kB
+clubs-admin:build: dist/assets/courses-Cjf27sNl.js                             4.10 kB │ gzip:   1.86 kB
+clubs-admin:build: dist/assets/courses-CfAin0Ix.js                             4.12 kB │ gzip:   1.89 kB
+clubs-admin:build: dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/admin-messaging-BoZ0pzIg.js                     4.81 kB │ gzip:   2.04 kB
+clubs-admin:build: dist/assets/booking-CiDk8cUs.js                             5.03 kB │ gzip:   1.93 kB
+clubs-admin:build: dist/assets/booking-DoLZzZWK.js                             5.39 kB │ gzip:   2.13 kB
+clubs-admin:build: dist/assets/booking-CvOLfA27.js                             5.41 kB │ gzip:   2.13 kB
+clubs-admin:build: dist/assets/signup-BmSJtF8d.js                              5.69 kB │ gzip:   2.57 kB
+clubs-admin:build: dist/assets/admin-catalogs-AKjEDNr_.js                      5.73 kB │ gzip:   2.15 kB
+clubs-admin:build: dist/assets/signup-BEXtMoHG.js                              5.96 kB │ gzip:   2.83 kB
+clubs-admin:build: dist/assets/auth-BZk439LJ.js                                5.99 kB │ gzip:   2.47 kB
+clubs-admin:build: dist/assets/admin-catalogs-7QkeG0Op.js                      6.01 kB │ gzip:   2.38 kB
+clubs-admin:build: dist/assets/signup-YXsCeWqq.js                              6.07 kB │ gzip:   2.84 kB
+clubs-admin:build: dist/assets/admin-catalogs-Di08FnYi.js                      6.21 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/admin-activities-Cq_gSQfl.js                    6.61 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-audit-DtzazTMe.js                         6.68 kB │ gzip:   2.75 kB
+clubs-admin:build: dist/assets/auth-DtJYMxBz.js                                6.80 kB │ gzip:   2.77 kB
+clubs-admin:build: dist/assets/admin-activities-BniXEHx4.js                    6.86 kB │ gzip:   2.84 kB
+clubs-admin:build: dist/assets/auth-Q2nXi_05.js                                6.88 kB │ gzip:   2.77 kB
+clubs-admin:build: dist/assets/census-DYZmqNm-.js                              6.89 kB │ gzip:   2.72 kB
+clubs-admin:build: dist/assets/admin-activities-CgUWXhLO.js                    7.06 kB │ gzip:   2.90 kB
+clubs-admin:build: dist/assets/census-l8cQ-ayF.js                              7.29 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-audit-DFZs4JjB.js                         7.34 kB │ gzip:   3.06 kB
+clubs-admin:build: dist/assets/admin-audit-CijyfZZw.js                         7.48 kB │ gzip:   3.07 kB
+clubs-admin:build: dist/assets/census-CsRr2e7A.js                              7.51 kB │ gzip:   3.03 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/admin-scheduling-DZKYvRNX.js                    8.74 kB │ gzip:   3.23 kB
+clubs-admin:build: dist/assets/admin-scheduling-BpVcdbOX.js                    9.21 kB │ gzip:   3.50 kB
+clubs-admin:build: dist/assets/admin-scheduling-Dhwchaco.js                    9.23 kB │ gzip:   3.50 kB
+clubs-admin:build: dist/assets/instructor-yKJeDcX7.js                          9.47 kB │ gzip:   3.41 kB
+clubs-admin:build: dist/assets/instructor-BDzhTZj9.js                          9.94 kB │ gzip:   3.64 kB
+clubs-admin:build: dist/assets/instructor-DJ8c2w9D.js                         10.08 kB │ gzip:   3.66 kB
+clubs-admin:build: dist/assets/admin-billing-CZFSME4s.js                      10.24 kB │ gzip:   3.63 kB
+clubs-admin:build: dist/assets/admin-billing-DCRzb_Gs.js                      10.45 kB │ gzip:   3.96 kB
+clubs-admin:build: dist/assets/enums-CWQyt4Yf.js                              10.50 kB │ gzip:   4.36 kB
+clubs-admin:build: dist/assets/admin-billing-BYH6Z6c6.js                      10.66 kB │ gzip:   4.00 kB
+clubs-admin:build: dist/assets/enums-BXPvt30r.js                              10.87 kB │ gzip:   4.57 kB
+clubs-admin:build: dist/assets/enums-CfRepzh0.js                              10.93 kB │ gzip:   4.57 kB
+clubs-admin:build: dist/assets/admin-courses-Ck0h_Li2.js                      12.87 kB │ gzip:   4.91 kB
+clubs-admin:build: dist/assets/admin-courses-DuWn-ntx.js                      13.75 kB │ gzip:   5.24 kB
+clubs-admin:build: dist/assets/admin-courses-CqAy07HT.js                      14.07 kB │ gzip:   5.28 kB
+clubs-admin:build: dist/assets/console-y2Qd044H.js                            20.25 kB │ gzip:   7.94 kB
+clubs-admin:build: dist/assets/console-itJKmAP_.js                            21.48 kB │ gzip:   8.63 kB
+clubs-admin:build: dist/assets/admin-census-CCIyIFc6.js                       21.77 kB │ gzip:   8.00 kB
+clubs-admin:build: dist/assets/errors-BK9wXSkI.js                             21.98 kB │ gzip:   7.17 kB
+clubs-admin:build: dist/assets/console-CghUU9LZ.js                            22.15 kB │ gzip:   8.73 kB
+clubs-admin:build: dist/assets/admin-census-D0tUKWPE.js                       23.18 kB │ gzip:   8.69 kB
+clubs-admin:build: dist/assets/errors-hleDn1V_.js                             23.24 kB │ gzip:   7.54 kB
+clubs-admin:build: dist/assets/errors-B_xAcX5p.js                             23.27 kB │ gzip:   7.53 kB
+clubs-admin:build: dist/assets/admin-census-CsyL8b0h.js                       23.65 kB │ gzip:   8.72 kB
+clubs-admin:build: dist/assets/admin-settings-C5DlaZuI.js                     27.56 kB │ gzip:   9.29 kB
+clubs-admin:build: dist/assets/admin-settings-BmrqxkTJ.js                     29.77 kB │ gzip:  10.05 kB
+clubs-admin:build: dist/assets/admin-settings-D5gwmV9F.js                     30.36 kB │ gzip:  10.11 kB
+clubs-admin:build: dist/assets/ConsolePage-XFCKzPd9.js                       116.95 kB │ gzip:  27.86 kB
+clubs-admin:build: dist/assets/list-helpers-CfJdt6U1.js                      228.98 kB │ gzip:  71.15 kB
+clubs-admin:build: dist/assets/CoursesRoute-CHTe-AiN.js                      231.55 kB │ gzip:  64.15 kB
+clubs-admin:build: dist/assets/CourseViewer3D-DT9dWvbv.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-BefABD1_.js                           1,116.37 kB │ gzip: 376.70 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs-admin:build: [32m✓ built in 1.34s[39m
+clubs:build: cache miss, executing 59cb64511e986eb4
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: transforming...
+clubs:build: ✓ 428 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs:build: dist/index.html                                             3.00 kB │ gzip:   1.02 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-BGS1-rQF.css                          14.68 kB │ gzip:   3.03 kB
+clubs:build: dist/assets/screens-B1WyLGC1.css                           21.13 kB │ gzip:   3.50 kB
+clubs:build: dist/assets/shared-C9ryLneM.css                            41.93 kB │ gzip:   7.02 kB
+clubs:build: dist/assets/index-r50HEoqE.css                             69.83 kB │ gzip:  12.61 kB
+clubs:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-BK61wd9J.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/home-CiD_uZx5.js                                1.52 kB │ gzip:   0.76 kB
+clubs:build: dist/assets/home-DuPmgVRC.js                                1.58 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/home-DUEt_q5U.js                                1.60 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-x72vHJv9.js                          2.03 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/training-C5U_DqNB.js                            2.08 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/inactivity-BJp8fZBZ.js                          2.13 kB │ gzip:   1.08 kB
+clubs:build: dist/assets/inactivity-BwqNBSeQ.js                          2.15 kB │ gzip:   1.07 kB
+clubs:build: dist/assets/training-ChM_Sijs.js                            2.25 kB │ gzip:   1.12 kB
+clubs:build: dist/assets/training-B5utM-gP.js                            2.25 kB │ gzip:   1.11 kB
+clubs:build: dist/assets/training-DYzniDgN.js                            2.91 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/courses-TACQmmua.js                             3.82 kB │ gzip:   1.71 kB
+clubs:build: dist/assets/courses-Cjf27sNl.js                             4.10 kB │ gzip:   1.86 kB
+clubs:build: dist/assets/courses-CfAin0Ix.js                             4.12 kB │ gzip:   1.89 kB
+clubs:build: dist/assets/booking-CiDk8cUs.js                             5.03 kB │ gzip:   1.93 kB
+clubs:build: dist/assets/booking-DoLZzZWK.js                             5.39 kB │ gzip:   2.13 kB
+clubs:build: dist/assets/booking-CvOLfA27.js                             5.41 kB │ gzip:   2.13 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/signup-BmSJtF8d.js                              5.69 kB │ gzip:   2.57 kB
+clubs:build: dist/assets/signup-BEXtMoHG.js                              5.96 kB │ gzip:   2.83 kB
+clubs:build: dist/assets/auth-BZk439LJ.js                                5.99 kB │ gzip:   2.47 kB
+clubs:build: dist/assets/signup-YXsCeWqq.js                              6.07 kB │ gzip:   2.84 kB
+clubs:build: dist/assets/auth-DtJYMxBz.js                                6.80 kB │ gzip:   2.77 kB
+clubs:build: dist/assets/auth-Q2nXi_05.js                                6.88 kB │ gzip:   2.77 kB
+clubs:build: dist/assets/census-DYZmqNm-.js                              6.89 kB │ gzip:   2.72 kB
+clubs:build: dist/assets/census-l8cQ-ayF.js                              7.29 kB │ gzip:   2.99 kB
+clubs:build: dist/assets/census-CsRr2e7A.js                              7.51 kB │ gzip:   3.03 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/instructor-yKJeDcX7.js                          9.47 kB │ gzip:   3.41 kB
+clubs:build: dist/assets/instructor-BDzhTZj9.js                          9.94 kB │ gzip:   3.64 kB
+clubs:build: dist/assets/instructor-DJ8c2w9D.js                         10.08 kB │ gzip:   3.66 kB
+clubs:build: dist/assets/enums-CWQyt4Yf.js                              10.50 kB │ gzip:   4.36 kB
+clubs:build: dist/assets/enums-BXPvt30r.js                              10.87 kB │ gzip:   4.57 kB
+clubs:build: dist/assets/enums-CfRepzh0.js                              10.93 kB │ gzip:   4.57 kB
+clubs:build: dist/assets/errors-BK9wXSkI.js                             21.98 kB │ gzip:   7.17 kB
+clubs:build: dist/assets/errors-hleDn1V_.js                             23.24 kB │ gzip:   7.54 kB
+clubs:build: dist/assets/errors-B_xAcX5p.js                             23.27 kB │ gzip:   7.53 kB
+clubs:build: dist/assets/CoursesRoute-CLEi8BcR.js                      134.46 kB │ gzip:  37.39 kB
+clubs:build: dist/assets/screens-DsBZdcQS.js                           225.93 kB │ gzip:  57.68 kB
+clubs:build: dist/assets/shared-KZupw2oC.js                            244.79 kB │ gzip:  74.81 kB
+clubs:build: dist/assets/index-DZ0aqoyp.js                             254.85 kB │ gzip:  77.42 kB
+clubs:build: dist/assets/CourseViewer3D-BISsWLMs.js                    582.82 kB │ gzip: 151.71 kB
+clubs:build: 
+clubs:build: [33m[plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs:build: [32m✓ built in 377ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+clubs:build: 
+clubs:build: [32m✓ built in 35ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  62 entries (1258.07 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: check-clubs-bundle: 57 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+id:e2e: cache bypass, force executing 73698bbfe37cd555
+id:e2e: 
+id:e2e: > id@0.0.0 e2e /work/apps/id
+id:e2e: > playwright test --workers\=2 --output\=/evidence/2026-10-30-evening-feedback/browser-results
+id:e2e: 
+id:e2e: 
+id:e2e: Running 1 test using 1 worker
+id:e2e: ·
+id:e2e:   1 passed (4.2s)
+clubs-admin:e2e: cache bypass, force executing 92491ac113c1b51a
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test --workers\=2 --output\=/evidence/2026-10-30-evening-feedback/browser-results
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:1233) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 185 tests using 2 workers
+clubs-admin:e2e: ·····································································F········F·
+clubs-admin:e2e: ················································································
+clubs-admin:e2e: ·························
+clubs-admin:e2e: 
+clubs-admin:e2e:   1) [chromium] › e2e/e11-w05.spec.ts:130:5 › E11-W05: the back office (1280 px) › E11-W05 step 2 (R-06-13): D4 under an 08:00 review reads «revisió de les 8:00» (1280 px) 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('button', { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('button', { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('button', { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       147 |         name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u,
+clubs-admin:e2e:       148 |       });
+clubs-admin:e2e:     > 149 |       await expect(cell).toBeVisible();
+clubs-admin:e2e:           |                          ^
+clubs-admin:e2e:       150 |       await expect(page.getByText(/revisió de les 7:30/u)).toHaveCount(0);
+clubs-admin:e2e:       151 |       await cell.click();
+clubs-admin:e2e:       152 |       await expect(page.getByRole("region", { name: /^Classe seleccionada/u })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/e11-w05.spec.ts:149:26
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../../evidence/2026-10-30-evening-feedback/browser-results/e11-w05-E11-W05-the-back-o-fb661-visió-de-les-8-00»-1280-px--chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../../evidence/2026-10-30-evening-feedback/browser-results/e11-w05-E11-W05-the-back-o-fb661-visió-de-les-8-00»-1280-px--chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../../evidence/2026-10-30-evening-feedback/browser-results/e11-w05-E11-W05-the-back-o-fb661-visió-de-les-8-00»-1280-px--chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   2) [chromium] › e2e/e11-w05.spec.ts:130:5 › E11-W05: the back office (375 px) › E11-W05 step 2 (R-06-13): D4 under an 08:00 review reads «revisió de les 8:00» (375 px) 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('button', { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('button', { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('button', { name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       147 |         name: /^dc 12 9:30 · Cadells · .*revisió de les 8:00/u,
+clubs-admin:e2e:       148 |       });
+clubs-admin:e2e:     > 149 |       await expect(cell).toBeVisible();
+clubs-admin:e2e:           |                          ^
+clubs-admin:e2e:       150 |       await expect(page.getByText(/revisió de les 7:30/u)).toHaveCount(0);
+clubs-admin:e2e:       151 |       await cell.click();
+clubs-admin:e2e:       152 |       await expect(page.getByRole("region", { name: /^Classe seleccionada/u })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/e11-w05.spec.ts:149:26
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../../evidence/2026-10-30-evening-feedback/browser-results/e11-w05-E11-W05-the-back-o-7819c-evisió-de-les-8-00»-375-px--chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../../evidence/2026-10-30-evening-feedback/browser-results/e11-w05-E11-W05-the-back-o-7819c-evisió-de-les-8-00»-375-px--chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../../evidence/2026-10-30-evening-feedback/browser-results/e11-w05-E11-W05-the-back-o-7819c-evisió-de-les-8-00»-375-px--chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   2 failed
+clubs-admin:e2e:     [chromium] › e2e/e11-w05.spec.ts:130:5 › E11-W05: the back office (1280 px) › E11-W05 step 2 (R-06-13): D4 under an 08:00 review reads «revisió de les 8:00» (1280 px) 
+clubs-admin:e2e:     [chromium] › e2e/e11-w05.spec.ts:130:5 › E11-W05: the back office (375 px) › E11-W05 step 2 (R-06-13): D4 under an 08:00 review reads «revisió de les 8:00» (375 px) 
+clubs-admin:e2e:   183 passed (6.1m)
+clubs-admin:e2e:  ELIFECYCLE  Command failed with exit code 1.
+clubs:e2e: cache bypass, force executing 68023cc7166b6c71
+clubs-admin#e2e:  ERROR  command (/work/apps/clubs-admin) /usr/bin/pnpm run e2e --workers=2 --output=/evidence/2026-10-30-evening-feedback/browser-results exited (1)
+
+ Tasks:    8 successful, 10 total
+Cached:    0 cached, 10 total
+  Time:    6m46.569s 
+Failed:    clubs-admin#e2e
+
+ ERROR  run failed: command  exited (1)
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-1280.json
+evidence: 2026-10-30-evening-feedback/D4-crear-classe-obertura-0705-1280.png
+evidence: 2026-10-30-evening-feedback/50-D10-dog-dates-1280.png
+evidence: 2026-10-30-evening-feedback/user-menu-chromium-320.png
+evidence: 2026-10-30-evening-feedback/D4-bloqueja-pista-1280.png
+evidence: 2026-10-30-evening-feedback/header-webkit-768.png
+evidence: 2026-10-30-evening-feedback/50-D6-price-overlap-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-3d-375-dark.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-dashboard-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-member-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-member-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-3-768.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-1-1280.png
+evidence: 2026-10-30-evening-feedback/page-gossos-chromium-375.png
+evidence: 2026-10-30-evening-feedback/agenda-selected-webkit-1512.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-768.png
+evidence: 2026-10-30-evening-feedback/D4-bloqueja-pista-diumenge-tancat-1280.png
+evidence: 2026-10-30-evening-feedback/hours-webkit-390.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-create-menu-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-1-375.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-2-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-0-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-member-768.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-library-375.json
+evidence: 2026-10-30-evening-feedback/user-menu-chromium-375.png
+evidence: 2026-10-30-evening-feedback/user-menu-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-dashboard-1280.png
+evidence: 2026-10-30-evening-feedback/club-pages-chromium-375.png
+evidence: 2026-10-30-evening-feedback/header-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-calendar-selected-1280.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-member-375.json
+evidence: 2026-10-30-evening-feedback/debug-E11-W05-step-2-R-06-13-D4-under-an-08-00-review-reads-revisi-de-les-8-00-375-px-.png
+evidence: 2026-10-30-evening-feedback/merge-webkit-375.png
+evidence: 2026-10-30-evening-feedback/admin-D18-importa-1280-dark.png
+evidence: 2026-10-30-evening-feedback/50-d10-inactividad-modificar-es-375.png
+evidence: 2026-10-30-evening-feedback/50-d10-inactividad-modificar-es-1280.png
+evidence: 2026-10-30-evening-feedback/D4c-anullar-classe-1280.png
+evidence: 2026-10-30-evening-feedback/club-pages-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-3-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-2-375.png
+evidence: 2026-10-30-evening-feedback/D6-facturacio-confirmacio-1280.png
+evidence: 2026-10-30-evening-feedback/61-D10-next-invoice-drawer-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-3d-1280-dark.png
+evidence: 2026-10-30-evening-feedback/club-pages-webkit-320.png
+evidence: 2026-10-30-evening-feedback/50-D10-readmission-pending-1280.png
+evidence: 2026-10-30-evening-feedback/planning-form-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-dashboard-768.json
+evidence: 2026-10-30-evening-feedback/add-dog-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-375.json
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-2d-375-light.png
+evidence: 2026-10-30-evening-feedback/entrenaments-bloquejos-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D12-agenda-muntatges-1280-light.png
+evidence: 2026-10-30-evening-feedback/hours-webkit-320.png
+evidence: 2026-10-30-evening-feedback/page-parametres-webkit-375.png
+evidence: 2026-10-30-evening-feedback/planning-form-webkit-320.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-calendar-selected-375.png
+evidence: 2026-10-30-evening-feedback/admin-D18-biblioteca-1280-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-3-768.png
+evidence: 2026-10-30-evening-feedback/D10-reserves-1280.png
+evidence: 2026-10-30-evening-feedback/D4-dia-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-375.png
+evidence: 2026-10-30-evening-feedback/page-gossos-webkit-375.png
+evidence: 2026-10-30-evening-feedback/admin-D7-col-locacions-375-dark.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-calendar-selected-768.json
+evidence: 2026-10-30-evening-feedback/50-D16-ring-bookings-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-library-768.json
+evidence: 2026-10-30-evening-feedback/responsive-instructor-agenda-1280.json
+evidence: 2026-10-30-evening-feedback/admin-D18-importa-375-light.png
+evidence: 2026-10-30-evening-feedback/page-abonats-webkit-375.png
+evidence: 2026-10-30-evening-feedback/agenda-selected-chromium-1512.png
+evidence: 2026-10-30-evening-feedback/debug-E11-W05-step-2-R-06-13-D4-under-an-08-00-review-reads-revisi-de-les-8-00-1280-px.png
+evidence: 2026-10-30-evening-feedback/responsive-instructor-navigation-375.png
+evidence: 2026-10-30-evening-feedback/D4-calendari-actives-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D16-geometria-375-dark.png
+evidence: 2026-10-30-evening-feedback/D4b-calendari-esborrany-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-0-768.json
+evidence: 2026-10-30-evening-feedback/admin-D18-col-locacio-375-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-create-menu-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-1280.png
+evidence: 2026-10-30-evening-feedback/planning-form-chromium-320.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-2-375.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-library-768.png
+evidence: 2026-10-30-evening-feedback/admin-D12-agenda-muntatges-1280-dark.png
+evidence: 2026-10-30-evening-feedback/D11-simulacio-1280.png
+evidence: 2026-10-30-evening-feedback/hours-chromium-1280.png
+evidence: 2026-10-30-evening-feedback/D11-processos-1280.png
+evidence: 2026-10-30-evening-feedback/club-pages-webkit-390.png
+evidence: 2026-10-30-evening-feedback/hours-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-2-1280.json
+evidence: 2026-10-30-evening-feedback/50-D5-unlabelled-channel-1280.png
+evidence: 2026-10-30-evening-feedback/D4-calendari-anullades-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-registra-375-dark.png
+evidence: 2026-10-30-evening-feedback/20-console-product-host-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-2d-1280-dark.png
+evidence: 2026-10-30-evening-feedback/50-d10-inactividad-es-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-import-375.json
+evidence: 2026-10-30-evening-feedback/D4-crear-classe-diumenge-tancat-1280.png
+evidence: 2026-10-30-evening-feedback/add-dog-chromium-375.png
+evidence: 2026-10-30-evening-feedback/user-menu-chromium-390.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-dashboard-1280.json
+evidence: 2026-10-30-evening-feedback/responsive-instructor-agenda-1280.png
+evidence: 2026-10-30-evening-feedback/50-chunk-failure-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-calendar-selected-768.png
+evidence: 2026-10-30-evening-feedback/admin-D12-agenda-muntatges-375-dark.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-2-768.json
+evidence: 2026-10-30-evening-feedback/agenda-selected-webkit-768.png
+evidence: 2026-10-30-evening-feedback/page-tauler-chromium-375.png
+evidence: 2026-10-30-evening-feedback/admin-D7-col-locacions-375-light.png
+evidence: 2026-10-30-evening-feedback/50-D16-ring-bookings-1280.png
+evidence: 2026-10-30-evening-feedback/header-chromium-320.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-import-375.png
+evidence: 2026-10-30-evening-feedback/admin-D16-geometria-1280-dark.png
+evidence: 2026-10-30-evening-feedback/admin-D18-registra-375-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-library-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-create-menu-375.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-2-1280.png
+evidence: 2026-10-30-evening-feedback/60-D10-next-invoice-375.png
+evidence: 2026-10-30-evening-feedback/header-chromium-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-1-768.json
+evidence: 2026-10-30-evening-feedback/50-D2-no-plan-proposal-1280.png
+evidence: 2026-10-30-evening-feedback/user-menu-webkit-390.png
+evidence: 2026-10-30-evening-feedback/D1-risc-1280.png
+evidence: 2026-10-30-evening-feedback/header-chromium-375.png
+evidence: 2026-10-30-evening-feedback/62-D6-submission-due-375.png
+evidence: 2026-10-30-evening-feedback/add-dog-bottom-webkit-375.png
+evidence: 2026-10-30-evening-feedback/user-menu-webkit-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-1-375.png
+evidence: 2026-10-30-evening-feedback/60-D10-next-invoice-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-library-1280.json
+evidence: 2026-10-30-evening-feedback/user-menu-chromium-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-calendar-selected-1280.png
+evidence: 2026-10-30-evening-feedback/header-webkit-320.png
+evidence: 2026-10-30-evening-feedback/50-d12-abrir-recorrido-es-1280.png
+evidence: 2026-10-30-evening-feedback/remeses-1280.png
+evidence: 2026-10-30-evening-feedback/header-webkit-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-768.json
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-3-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-0-768.png
+evidence: 2026-10-30-evening-feedback/admin-D7-col-locacions-1280-dark.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-member-1280.json
+evidence: 2026-10-30-evening-feedback/D6-facturacio-manual-only-1280.png
+evidence: 2026-10-30-evening-feedback/add-dog-bottom-chromium-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-create-menu-1280.json
+evidence: 2026-10-30-evening-feedback/admin-onboarding-1280.png
+evidence: 2026-10-30-evening-feedback/63-D6-collection-date-passed-1280.png
+evidence: 2026-10-30-evening-feedback/50-D5-unlabelled-channel-375.png
+evidence: 2026-10-30-evening-feedback/D6-facturacio-1280.png
+evidence: 2026-10-30-evening-feedback/page-calendari-webkit-375.png
+evidence: 2026-10-30-evening-feedback/page-calendari-chromium-375.png
+evidence: 2026-10-30-evening-feedback/21-console-platform-only-1280.png
+evidence: 2026-10-30-evening-feedback/D6-facturacio-calaix-rebut-1280.png
+evidence: 2026-10-30-evening-feedback/entrenaments-registre-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-0-375.json
+evidence: 2026-10-30-evening-feedback/responsive-instructor-navigation-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-2d-375-dark.png
+evidence: 2026-10-30-evening-feedback/D6-facturacio-retroces-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-col-locacio-1280-dark.png
+evidence: 2026-10-30-evening-feedback/61-D10-next-invoice-drawer-375.png
+evidence: 2026-10-30-evening-feedback/agenda-selected-chromium-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-create-menu-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-import-1280.json
+evidence: 2026-10-30-evening-feedback/admin-D4-recorregut-previst-1280-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-1-768.png
+evidence: 2026-10-30-evening-feedback/23-D10-next-invoice-row-1280.png
+evidence: 2026-10-30-evening-feedback/merge-chromium-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-navigation-375.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-3d-1280-light.png
+evidence: 2026-10-30-evening-feedback/agenda-selected-webkit-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-3-1280.json
+evidence: 2026-10-30-evening-feedback/admin-D18-registra-1280-dark.png
+evidence: 2026-10-30-evening-feedback/page-tauler-webkit-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-navigation-768.png
+evidence: 2026-10-30-evening-feedback/50-d10-inactividad-es-375.png
+evidence: 2026-10-30-evening-feedback/planning-form-webkit-390.png
+evidence: 2026-10-30-evening-feedback/hours-chromium-390.png
+evidence: 2026-10-30-evening-feedback/hours-webkit-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-instructor-agenda-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-library-1280.png
+evidence: 2026-10-30-evening-feedback/planning-form-chromium-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-dashboard-375.json
+evidence: 2026-10-30-evening-feedback/63-D6-collection-date-passed-375.png
+evidence: 2026-10-30-evening-feedback/header-webkit-390.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-3d-375-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-3-375.json
+evidence: 2026-10-30-evening-feedback/50-chunk-failure-375.png
+evidence: 2026-10-30-evening-feedback/D4-inscrits-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-col-locacio-375-dark.png
+evidence: 2026-10-30-evening-feedback/admin-D18-biblioteca-375-dark.png
+evidence: 2026-10-30-evening-feedback/page-abonats-chromium-375.png
+evidence: 2026-10-30-evening-feedback/admin-D4-recorregut-previst-1280-dark.png
+evidence: 2026-10-30-evening-feedback/responsive-instructor-agenda-375.json
+evidence: 2026-10-30-evening-feedback/admin-D4-recorregut-previst-375-light.png
+evidence: 2026-10-30-evening-feedback/50-d12-abrir-recorrido-es-375.png
+evidence: 2026-10-30-evening-feedback/r2-course-ui-harness-1280-light.png
+evidence: 2026-10-30-evening-feedback/admin-D18-importa-375-dark.png
+evidence: 2026-10-30-evening-feedback/50-user-menu-1280.png
+evidence: 2026-10-30-evening-feedback/22-D6-rollback-file-not-sent-375.png
+evidence: 2026-10-30-evening-feedback/club-pages-chromium-390.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-calendar-selected-375.json
+evidence: 2026-10-30-evening-feedback/planning-form-chromium-390.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-dashboard-768.png
+evidence: 2026-10-30-evening-feedback/admin-D18-biblioteca-375-light.png
+evidence: 2026-10-30-evening-feedback/22-D6-rollback-file-not-sent-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-importa-1280-light.png
+evidence: 2026-10-30-evening-feedback/agenda-selected-chromium-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-import-768.json
+evidence: 2026-10-30-evening-feedback/club-pages-chromium-320.png
+evidence: 2026-10-30-evening-feedback/r2-course-ui-harness-1280-dark.png
+evidence: 2026-10-30-evening-feedback/admin-dashboard-1280-dark.png
+evidence: 2026-10-30-evening-feedback/admin-D18-biblioteca-1280-dark.png
+evidence: 2026-10-30-evening-feedback/page-parametres-chromium-375.png
+evidence: 2026-10-30-evening-feedback/admin-D18-recorregut-2d-1280-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-import-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D16-geometria-375-light.png
+evidence: 2026-10-30-evening-feedback/62-D6-submission-due-1280.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-member-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D18-registra-1280-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-0-1280.png
+evidence: 2026-10-30-evening-feedback/admin-D4-recorregut-previst-375-dark.png
+evidence: 2026-10-30-evening-feedback/agenda-selected-webkit-1920.png
+evidence: 2026-10-30-evening-feedback/admin-dashboard-1280-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-0-1280.json
+evidence: 2026-10-30-evening-feedback/agenda-selected-chromium-1920.png
+evidence: 2026-10-30-evening-feedback/admin-D18-col-locacio-1280-light.png
+evidence: 2026-10-30-evening-feedback/hours-chromium-375.png
+evidence: 2026-10-30-evening-feedback/admin-D16-geometria-1280-light.png
+evidence: 2026-10-30-evening-feedback/header-chromium-768.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-billing-menu-1-1280.json
+evidence: 2026-10-30-evening-feedback/admin-D12-agenda-muntatges-375-light.png
+evidence: 2026-10-30-evening-feedback/hours-chromium-320.png
+evidence: 2026-10-30-evening-feedback/r2-course-ui-harness-1280-after-nudge.png
+evidence: 2026-10-30-evening-feedback/user-menu-webkit-320.png
+evidence: 2026-10-30-evening-feedback/header-chromium-390.png
+evidence: 2026-10-30-evening-feedback/admin-D7-col-locacions-1280-light.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-create-menu-768.json
+evidence: 2026-10-30-evening-feedback/23-D10-next-invoice-row-375.png
+evidence: 2026-10-30-evening-feedback/responsive-admin-import-768.png
+ ELIFECYCLE  Command failed with exit code 1.
