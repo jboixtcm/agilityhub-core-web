@@ -367,3 +367,8 @@ evidence: 2026-10-30-evening-feedback/23-D10-next-invoice-row-375.png
 evidence: 2026-10-30-evening-feedback/member-today-375-light.png
 evidence: 2026-10-30-evening-feedback/responsive-admin-import-768.png
 ```
+
+
+## Deployment CI browser installation
+
+CI run 41121817101 passed lint, type checks, all unit/component tests, builds, translations and generated-client checks. Playwright failed 14 WebKit mobile cases because the workflow installed only Chromium (`webkit-2359/pw_run.sh` missing); the existing local Docker run had all 323 tests green with both engines present. Install Chromium and WebKit with their system dependencies before the unchanged full browser suite. Application code, assertions, browser projects and test coverage are unchanged. The next CI run validates the workflow on Ubuntu.
