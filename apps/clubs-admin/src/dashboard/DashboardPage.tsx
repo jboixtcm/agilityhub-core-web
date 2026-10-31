@@ -1,9 +1,10 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { Badge, BarChart, Button, Card, Skeleton, Toast } from "@agilityhub/ui";
+import { Badge, Button, Card, Skeleton, Toast } from "@agilityhub/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { DogLevelsChart } from "./DogLevelsChart";
 import { RiskReviewCard } from "./RiskReviewCard";
 
 // S14 §6 sends every disabled block as `null`, and the snapshot declares it (api E5-T16).
@@ -145,18 +146,7 @@ export function DashboardPage({
         )}
       </div>
 
-      {dashboard.dogsByLevel === null ? null : (
-        <Card className="dashboard-chart">
-          <header><h2>{t("admin-dashboard:chart.title", { count: dashboard.dogsByLevel.totalActiveDogs })}</h2><small className="dashboard-chart__legend">
-            {/* INC-11 (mockup D1): each part of the legend with the swatch of its bars. */}
-            <span><i aria-hidden="true" className="dashboard-chart__swatch ah-bar-chart__bar--highlighted" data-swatch="" />{t("admin-dashboard:chart.legendRecent", { previous: Math.max(0, dashboard.dogsByLevel.activeDogWeeks - 1) })}</span>
-            {" · "}
-            <span><i aria-hidden="true" className="dashboard-chart__swatch ah-bar-chart__bar--total" data-swatch="" />{t("admin-dashboard:chart.legendTotal")}</span>
-          </small></header>
-          {/* R-14-07 (E35): one column per progression level; `others` is counted, never painted. */}
-          <BarChart data={dashboard.dogsByLevel.levels.map((level) => ({ highlighted: level.withRecentBooking, label: level.code, title: level.name, total: level.total }))} highlightedLabel={t("admin-dashboard:chart.recent")} label={t("admin-dashboard:chart.title", { count: dashboard.dogsByLevel.totalActiveDogs })} totalLabel={t("admin-dashboard:chart.total")} valueLabel={(item) => t("admin-dashboard:chart.value", { recent: item.highlighted, total: item.total })} />
-        </Card>
-      )}
+      {dashboard.dogsByLevel === null ? null : <DogLevelsChart data={dashboard.dogsByLevel} />}
     </section>
   );
 }

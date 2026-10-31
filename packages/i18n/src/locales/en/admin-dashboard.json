@@ -62,9 +62,16 @@
   "chart": {
     "title": "Dogs by level — {count} active",
     "legendRecent": "{previous, plural, =0 {with booking (current week)} one {with booking (current or previous week)} other {with booking (current or # previous weeks)}}",
-    "legendTotal": "total active",
-    "recent": "With booking",
-    "total": "Total active",
-    "value": "{total} · {recent} booked"
+    "titleRecent": "Dogs by level — {count} with bookings",
+    "filter": "Dogs to show",
+    "all": "All",
+    "withBookings": "With bookings",
+    "descriptionAll": "All active dogs in progression levels",
+    "activeDogs": "active dogs",
+    "level": "Level",
+    "dogs": "Dogs",
+    "share": "Percentage",
+    "emptyAll": "There are no active dogs in these levels.",
+    "emptyRecent": "There are no dogs with bookings in this period."
   }
 }

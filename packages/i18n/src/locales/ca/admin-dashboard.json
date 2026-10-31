@@ -62,9 +62,16 @@
   "chart": {
     "title": "Gossos per nivell — {count} actius",
     "legendRecent": "{previous, plural, =0 {amb reserva (setm. en curs)} one {amb reserva (setm. en curs o anterior)} other {amb reserva (setm. en curs o les # anteriors)}}",
-    "legendTotal": "total actius",
-    "recent": "Amb reserva",
-    "total": "Total actius",
-    "value": "{total} · {recent} res."
+    "titleRecent": "Gossos per nivell — {count} amb reserves",
+    "filter": "Gossos que es mostren",
+    "all": "Tots",
+    "withBookings": "Amb reserves",
+    "descriptionAll": "Tots els gossos actius dels nivells de progressió",
+    "activeDogs": "gossos actius",
+    "level": "Nivell",
+    "dogs": "Gossos",
+    "share": "Percentatge",
+    "emptyAll": "No hi ha gossos actius en aquests nivells.",
+    "emptyRecent": "No hi ha gossos amb reserves en aquest període."
   }
 }
