@@ -1,0 +1,33 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/instructor/student-filters.test.tsx src/instructor/student-record.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/student-filters.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/student-filters.test.tsx [ src/instructor/student-filters.test.tsx ]
+Error: "./mocks/fixtures/branding-canic" is not exported under the conditions ["node", "development", "import"] from package /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/node_modules/@agilityhub/api-client (see exports field in /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/node_modules/@agilityhub/api-client/package.json)
+  Plugin: builtin:vite-resolve
+ ❯ EnvironmentPluginContainer.resolveId ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30848:19
+ ❯ TransformPluginContext.resolve ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31077:13
+ ❯ normalizeUrl ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28075:22
+ ❯ ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  20 passed (20)
+   Start at  16:37:13
+   Duration  4.86s (tests 45%, transform 28%, environment 15%, import 7%, setup 4%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/instructor/student-filters.test.tsx src/instructor/student-record.test.tsx`
+Exit status 1

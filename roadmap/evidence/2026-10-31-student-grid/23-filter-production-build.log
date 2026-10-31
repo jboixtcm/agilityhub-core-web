@@ -1,0 +1,51 @@
+heavy.sh: 16:39 waiting for the host lock, held by: 16:38 agilityhub-core-web: pnpm turbo run lint typecheck test build --concurrency=2
+Traceback (most recent call last):
+  File "/Users/jordib/.config/agilityhub-clubs/production/student-grid-20261031/filter-preview-build.py", line 5, in <module>
+    m=b.build_release(w/'filter-preview-build.json',Path('/Users/jordib/dev/agilityhub/agilityhub-core-web'),Path(c['web_manifest']).parent,Path('/opt/homebrew/opt/node@22/bin/node'),Path('/opt/homebrew/bin/pnpm'))
+  File "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/ops/build-clubs-web.py", line 376, in build_release
+    result = runner(command, copied, env)
+  File "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/ops/build-clubs-web.py", line 266, in run_command
+    require(result.returncode == 0,
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+            f"Build command failed ({result.returncode}): {Path(command[0]).name} {' '.join(command[1:])}\n{result.stdout[-4000:]}")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/ops/build-clubs-web.py", line 64, in require
+    raise BuildError(message)
+builder.BuildError: Build command failed (2): pnpm turbo run build --filter=clubs --filter=clubs-admin --filter=id --force
+in:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build: src/instructor/student-filters.test.tsx(93,63): error TS2769: No overload matches this call.
+clubs-admin:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined, waitForElementOptions?: waitForOptions | undefined): Promise<HTMLElement>', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined, waitForElementOptions?: waitForOptions | undefined): Promise<HTMLElement>', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build: src/instructor/student-filters.test.tsx(100,57): error TS2769: No overload matches this call.
+clubs-admin:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build: src/instructor/student-filters.test.tsx(101,56): error TS2769: No overload matches this call.
+clubs-admin:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build: src/instructor/student-filters.test.tsx(119,61): error TS2769: No overload matches this call.
+clubs-admin:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement | null', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement | null', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build: src/instructor/student-filters.test.tsx(121,56): error TS2769: No overload matches this call.
+clubs-admin:build:   Overload 1 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build:   Overload 2 of 2, '(role: ByRoleMatcher, options?: ByRoleOptions | undefined): HTMLElement', gave the following error.
+clubs-admin:build:     Object literal may only specify known properties, and 'exact' does not exist in type 'ByRoleOptions'.
+clubs-admin:build:  ELIFECYCLE  Command failed with exit code 2.
+clubs-admin#build:  ERROR  command (/private/var/folders/xn/c1yrcx212h18679n6kwf4kxh0000gn/T/clubs-web-build-2_lkfj3u/source/apps/clubs-admin) /opt/homebrew/bin/pnpm run build exited (2)
+
+ Tasks:    5 successful, 6 total
+Cached:    0 cached, 6 total
+  Time:    18.565s 
+Failed:    clubs-admin#build
+
+ ERROR  run failed: command  exited (2)
+

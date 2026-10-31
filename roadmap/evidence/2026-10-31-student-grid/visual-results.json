@@ -1,0 +1,516 @@
+[
+  {
+    "engine": "chromium",
+    "theme": "dark",
+    "width": 320,
+    "view": "grid",
+    "scrollWidth": 320,
+    "columns": "122px 122px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "dark",
+    "width": 320,
+    "view": "list",
+    "scrollWidth": 320,
+    "columns": "254px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "dark",
+    "width": 375,
+    "view": "grid",
+    "scrollWidth": 375,
+    "columns": "149.5px 149.5px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "dark",
+    "width": 375,
+    "view": "list",
+    "scrollWidth": 375,
+    "columns": "309px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "dark",
+    "width": 1280,
+    "view": "grid",
+    "scrollWidth": 1280,
+    "columns": "204px 204px 204px 204px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "dark",
+    "width": 1280,
+    "view": "list",
+    "scrollWidth": 1280,
+    "columns": "862px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "light",
+    "width": 320,
+    "view": "grid",
+    "scrollWidth": 320,
+    "columns": "122px 122px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "light",
+    "width": 320,
+    "view": "list",
+    "scrollWidth": 320,
+    "columns": "254px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "light",
+    "width": 375,
+    "view": "grid",
+    "scrollWidth": 375,
+    "columns": "149.5px 149.5px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "light",
+    "width": 375,
+    "view": "list",
+    "scrollWidth": 375,
+    "columns": "309px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "light",
+    "width": 1280,
+    "view": "grid",
+    "scrollWidth": 1280,
+    "columns": "204px 204px 204px 204px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "theme": "light",
+    "width": 1280,
+    "view": "list",
+    "scrollWidth": 1280,
+    "columns": "862px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "chromium",
+    "interactions": "default grid, list persistence, retained pagination/search/sort, badge, record navigation, back navigation and keyboard activation passed",
+    "errors": []
+  },
+  {
+    "engine": "webkit",
+    "theme": "dark",
+    "width": 320,
+    "view": "grid",
+    "scrollWidth": 320,
+    "columns": "122px 122px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "dark",
+    "width": 320,
+    "view": "list",
+    "scrollWidth": 320,
+    "columns": "254px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "dark",
+    "width": 375,
+    "view": "grid",
+    "scrollWidth": 375,
+    "columns": "149.5px 149.5px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "dark",
+    "width": 375,
+    "view": "list",
+    "scrollWidth": 375,
+    "columns": "309px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "dark",
+    "width": 1280,
+    "view": "grid",
+    "scrollWidth": 1280,
+    "columns": "204px 204px 204px 204px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "dark",
+    "width": 1280,
+    "view": "list",
+    "scrollWidth": 1280,
+    "columns": "862px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "light",
+    "width": 320,
+    "view": "grid",
+    "scrollWidth": 320,
+    "columns": "122px 122px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "light",
+    "width": 320,
+    "view": "list",
+    "scrollWidth": 320,
+    "columns": "254px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "light",
+    "width": 375,
+    "view": "grid",
+    "scrollWidth": 375,
+    "columns": "149.5px 149.5px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "light",
+    "width": 375,
+    "view": "list",
+    "scrollWidth": 375,
+    "columns": "309px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "light",
+    "width": 1280,
+    "view": "grid",
+    "scrollWidth": 1280,
+    "columns": "204px 204px 204px 204px",
+    "avatarAboveName": true,
+    "badgeBelowName": true,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "theme": "light",
+    "width": 1280,
+    "view": "list",
+    "scrollWidth": 1280,
+    "columns": "862px",
+    "avatarAboveName": false,
+    "badgeBelowName": false,
+    "buttons": [
+      {
+        "width": 44,
+        "height": 44
+      },
+      {
+        "width": 44,
+        "height": 44
+      }
+    ],
+    "iconPainted": true
+  },
+  {
+    "engine": "webkit",
+    "interactions": "default grid, list persistence, retained pagination/search/sort, badge, record navigation, back navigation and keyboard activation passed",
+    "errors": []
+  }
+]

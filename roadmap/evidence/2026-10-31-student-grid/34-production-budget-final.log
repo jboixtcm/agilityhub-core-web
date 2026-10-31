@@ -1,0 +1,9 @@
+heavy.sh: 16:56 waiting for the host lock, held by: 16:56 agilityhub-core-web: pnpm e2e:docker 2026-10-31-student-grid --capture-task=2026-10-31-student-grid --workers=2
+heavy.sh: 17:08 got the host lock after 12 min 31 s
+{
+  "release": "20261031T153924Z-grid-filter-preview",
+  "sourceSha256": "8815f88cd8e5d11b03125e620940fdb9242d130b58f255b3cab50ac96f41e848",
+  "sourceFiles": 978,
+  "buildExecuted": true,
+  "manifest": "/Users/jordib/.config/agilityhub-clubs/production/artifacts/20261031T153924Z-grid-filter-preview/manifest.json"
+}

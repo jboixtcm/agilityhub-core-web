@@ -201,6 +201,101 @@ test("T-02-14 mobile review: census actions and settings remain usable", async (
 });
 
 for (const theme of ["light", "dark"]) {
+  test(`T-10-28 student grid: view preference and search ${theme}`, async ({
+    page,
+    browserName,
+  }) => {
+    await page.clock.setFixedTime(new Date("2026-08-03T08:50:00+02:00"));
+    await login(page);
+    await page.getByRole("combobox", { name: "Aparença" }).selectOption(theme);
+    await page.goto(`${baseUrl}/alumnes`);
+    const grid = page.getByRole("button", { name: "Vista de graella" });
+    const list = page.getByRole("button", { name: "Vista de llista" });
+    const items = page.locator(".students-page__student");
+    await expect(items.first()).toBeVisible();
+    await expect(grid).toHaveAttribute("aria-pressed", "true");
+    const initialCount = await items.count();
+    await page.getByRole("button", { name: "Mostra'n més" }).click();
+    await expect.poll(() => items.count()).toBeGreaterThan(initialCount);
+    const expandedCount = await items.count();
+    await list.click();
+    await expect(list).toHaveAttribute("aria-pressed", "true");
+    await expect(items).toHaveCount(expandedCount);
+    await page.reload();
+    await expect(list).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("combobox", { name: "Nivell", exact: true }).selectOption("level-c");
+    const inactive = page.waitForRequest((request) => {
+      const url = new URL(request.url());
+      return (
+        url.pathname.endsWith("/dogs") &&
+        url.searchParams.getAll("filter").includes("status:eq:INACTIVE")
+      );
+    });
+    await page.getByRole("combobox", { name: "Estat", exact: true }).selectOption("INACTIVE");
+    const inactiveQuery = new URL((await inactive).url()).searchParams;
+    expect(inactiveQuery.getAll("filter")).toContain("levelId:eq:level-c");
+    expect(inactiveQuery.get("page")).toBe("0");
+    await page.getByRole("combobox", { name: "Estat", exact: true }).selectOption("ALL");
+    await page.getByRole("combobox", { name: "Ordena per" }).selectOption("ownerLastName,asc");
+    await page.getByPlaceholder("Cerca un alumne").fill("Duna");
+    await expect
+      .poll(async () => {
+        const names = await items.allTextContents();
+        return names.length > 0 && names.every((name) => name.includes("Duna"));
+      })
+      .toBe(true);
+    const count = await items.count();
+    await grid.click();
+    await expect(page.getByPlaceholder("Cerca un alumne")).toHaveValue("Duna");
+    await expect(page.getByRole("combobox", { name: "Ordena per" })).toHaveValue(
+      "ownerLastName,asc",
+    );
+    await expect(items).toHaveCount(count);
+    await expect(page.getByRole("combobox", { name: "Nivell", exact: true })).toHaveValue(
+      "level-c",
+    );
+    await expect(page.getByRole("combobox", { name: "Estat", exact: true })).toHaveValue("ALL");
+    const student = page.getByRole("link", { name: "Laura + Duna · C", exact: true });
+    await expect(student.locator(".students-page__level")).toHaveText("Nivell C");
+    await page.getByRole("button", { name: "Restableix els filtres" }).click();
+    await expect(page.getByPlaceholder("Cerca un alumne")).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Nivell", exact: true })).toHaveValue("");
+    await expect(page.getByRole("combobox", { name: "Estat", exact: true })).toHaveValue("ACTIVE");
+    await page.getByPlaceholder("Cerca un alumne").fill("Duna");
+    await page.getByRole("combobox", { name: "Nivell", exact: true }).selectOption("level-c");
+    await expect(student).toBeVisible();
+    for (const width of [320, 375, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const view of ["grid", "list"]) {
+        await (view === "grid" ? grid : list).click();
+        await expect(page.locator(`.students-page__items--${view}`)).toBeVisible();
+        await fits(page);
+        for (const button of [grid, list]) {
+          const box = await button.boundingBox();
+          if (box === null) throw new Error("Missing view selector");
+          expect(box.width).toBeGreaterThanOrEqual(44);
+          expect(box.height).toBeGreaterThanOrEqual(44);
+        }
+        if (view === "grid") {
+          const avatar = await student.locator(".ah-dog-photo").boundingBox();
+          const name = await student.locator(".students-page__name").boundingBox();
+          const badge = await student.locator(".students-page__level").boundingBox();
+          if (avatar === null || name === null || badge === null)
+            throw new Error("Missing card content");
+          expect(avatar.y + avatar.height).toBeLessThanOrEqual(name.y);
+          expect(name.y + name.height).toBeLessThanOrEqual(badge.y);
+        }
+        if (width !== 320)
+          await capture(page, `student-${view}-${browserName}-${theme}-${String(width)}.png`);
+      }
+    }
+    await grid.click();
+    await student.focus();
+    await expect(student).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("heading", { level: 1, name: "Laura + Duna" })).toBeVisible();
+  });
+
   test(`T-10-28 second feedback: agenda and student navigation ${theme}`, async ({
     page,
     browserName,

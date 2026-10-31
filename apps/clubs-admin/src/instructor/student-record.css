@@ -201,35 +201,13 @@
   display: grid;
   align-content: start;
   gap: var(--ah-space-4);
-  max-width: 48rem;
+  max-width: 76rem;
   padding: var(--ah-space-6);
 }
 
 .students-page h1 {
   margin: 0;
   font: 700 1.6rem/1.2 var(--ah-font-display);
-}
-
-.students-page__list {
-  display: grid;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.students-page__list a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--ah-space-3) var(--ah-space-4);
-  color: var(--ah-color-text);
-  text-decoration: none;
-  border-bottom: 1px solid var(--ah-color-border);
-}
-
-.students-page__list a:hover,
-.students-page__list a:focus-visible {
-  background: var(--ah-color-surface-2);
 }
 
 /* R-10-00: «(abonat: {nom i cognom})» after a dog led by another guide. */

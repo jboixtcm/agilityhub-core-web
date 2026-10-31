@@ -50,7 +50,7 @@
       "!apps/clubs-admin/dist/assets/CoursesRoute-*.js",
       "!apps/clubs-admin/dist/assets/CourseViewer3D-*.js"
     ],
-    "limit": "685 kB",
+    "limit": "686 kB",
     "gzip": true
   },
   {

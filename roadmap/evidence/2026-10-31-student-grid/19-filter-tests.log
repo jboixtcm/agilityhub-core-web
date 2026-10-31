@@ -1,0 +1,17 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/instructor/student-filters.test.tsx src/instructor/student-record.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  2 passed (2)
+      Tests  23 passed (23)
+   Start at  16:37:47
+   Duration  4.56s (tests 49%, transform 30%, environment 9%, import 9%, setup 2%)
+
+  Transform  transforming modules took 2.27s · 30% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

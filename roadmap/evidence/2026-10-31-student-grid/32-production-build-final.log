@@ -1,0 +1,68 @@
+heavy.sh: 16:47 waiting for the host lock, held by: 16:44 agilityhub-core-web: pnpm e2e:docker 2026-10-31-student-grid --capture-task=2026-10-31-student-grid
+heavy.sh: 16:55 got the host lock after 7 min 32 s
+Traceback (most recent call last):
+  File "/Users/jordib/.config/agilityhub-clubs/production/student-grid-20261031/filter-preview-build.py", line 5, in <module>
+    m=b.build_release(w/'filter-preview-build.json',Path('/Users/jordib/dev/agilityhub/agilityhub-core-web'),Path(c['web_manifest']).parent,Path('/opt/homebrew/opt/node@22/bin/node'),Path('/opt/homebrew/bin/pnpm'))
+  File "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/ops/build-clubs-web.py", line 376, in build_release
+    result = runner(command, copied, env)
+  File "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/ops/build-clubs-web.py", line 266, in run_command
+    require(result.returncode == 0,
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+            f"Build command failed ({result.returncode}): {Path(command[0]).name} {' '.join(command[1:])}\n{result.stdout[-4000:]}")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/ops/build-clubs-web.py", line 64, in require
+    raise BuildError(message)
+builder.BuildError: Build command failed (1): pnpm size-limit
+
+> agilityhub-core-web@0.0.0 size-limit /private/var/folders/xn/c1yrcx212h18679n6kwf4kxh0000gn/T/clubs-web-build-e3dhie5k/source
+> size-limit
+
+  
+  [1mclubs initial JavaScript[22m
+  Size limit: [32m[1m300 kB[22m[39m
+  Size:       [32m[1m154.03 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs all JavaScript[22m
+  Size limit: [32m[1m420 kB[22m[39m
+  Size:       [32m[1m318.08 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)[22m
+  Size limit: [32m[1m40 kB[22m[39m
+  Size:       [32m[1m36.84 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs course 3D viewer JavaScript (the viewer's 3D tab, lazy, three.js)[22m
+  Size limit: [32m[1m167 kB[22m[39m
+  Size:       [32m[1m149.27 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs-admin initial JavaScript[22m
+  Size limit: [32m[1m460 kB[22m[39m
+  Size:       [32m[1m451.38 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs-admin all JavaScript[22m
+  [31mPackage size limit has exceeded by 57 B[39m
+  Size limit: [31m[1m685 kB[22m[39m
+  Size:       [31m[1m685.06 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)[22m
+  Size limit: [32m[1m66 kB[22m[39m
+  Size:       [32m[1m63.19 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs-admin course 3D viewer JavaScript (D18's 3D tab, lazy, three.js)[22m
+  Size limit: [32m[1m167 kB[22m[39m
+  Size:       [32m[1m149.28 kB[22m[39m [90mgzipped[39m
+  
+  [1mclubs-admin platform console JavaScript (D19, lazy, AGILITYHUB_ADMIN only)[22m
+  Size limit: [32m[1m58 kB[22m[39m
+  Size:       [32m[1m52.76 kB[22m[39m [90mgzipped[39m
+  
+  [1mid initial JavaScript[22m
+  Size limit: [32m[1m110 kB[22m[39m
+  Size:       [32m[1m102.17 kB[22m[39m [90mgzipped[39m
+  
+  [1mid all JavaScript[22m
+  Size limit: [32m[1m310 kB[22m[39m
+  Size:       [32m[1m132.21 kB[22m[39m [90mgzipped[39m
+  
+  [33mTry to reduce size or increase limit at [1m.size-limit.json[22m[39m
+ ELIFECYCLE  Command failed with exit code 1.
+

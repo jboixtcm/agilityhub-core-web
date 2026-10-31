@@ -53,9 +53,13 @@ export function useStudentSearch(
   client: ApiClient,
   query: string,
   sort: "name,asc" | "ownerLastName,asc" = "name,asc",
+  {
+    levelId = "",
+    status = "ACTIVE",
+  }: { levelId?: string; status?: "ACTIVE" | "INACTIVE" | "ALL" } = {},
 ) {
   const [reload, setReload] = useState(0);
-  const requestKey = `${query}|${sort}|${String(reload)}`;
+  const requestKey = JSON.stringify([query, sort, levelId, status, reload]);
   const [pages, setPages] = useState<SearchPages>({
     items: [],
     key: "",
@@ -72,8 +76,11 @@ export function useStudentSearch(
       const { data } = await client.GET("/dogs", {
         params: {
           query: {
-            fields: "id,name,photoUrl,handlerName,handlerIsMember,owner,level",
-            filter: ["status:eq:ACTIVE"],
+            fields: "id,name,photoUrl,handlerName,handlerIsMember,owner,level,displayStatus",
+            filter: [
+              ...(status === "ALL" ? [] : [`status:eq:${status}`]),
+              ...(levelId === "" ? [] : [`levelId:eq:${levelId}`]),
+            ],
             page,
             size: STUDENT_SEARCH_PAGE_SIZE,
             sort: sort === "name,asc" ? [sort] : [sort, "name,asc"],
@@ -84,7 +91,7 @@ export function useStudentSearch(
       if (data === undefined) throw new TypeError("The dogs response did not contain data");
       return data;
     },
-    [client, query, sort],
+    [client, query, sort, levelId, status],
   );
 
   useEffect(() => {

@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- Make the dashboard risk review easier to scan: separate its review schedule from the heading, put class date/ring beneath the name, align booking counts, and display notification recipients outside the status badge. Long text wraps on phones; Catalan, Spanish and English retain the same information.
+
+- Add a remembered grid/list selector to the administration student search, with responsive photo cards, student names and level badges; retain search, sorting, pagination and record links.
+- Students: combine server-side search with level and active/inactive/all filters in both grid and list views; reset filters and preserve pagination correctness.
+- Allow 686 kB for the administration's total JavaScript after the grid and filters (685.06 kB measured with production settings); retain the 460 kB initial-load budget (451.38 kB measured).
+
 - Apply Josep's second 30 October review: month in ring-block dates, ring selection before time, clearer hourly separators, explicit student sorting and member links for administrators.
 
 
