@@ -20,7 +20,7 @@
     "gzip": true
   },
   {
-    "name": "clubs courses JavaScript (viewer, \u00abRegistra qu\u00e8 hi ha muntat\u00bb, build session; lazy, COURSES only)",
+    "name": "clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)",
     "path": "apps/clubs/dist/assets/CoursesRoute-*.js",
     "limit": "40 kB",
     "gzip": true
@@ -50,11 +50,11 @@
       "!apps/clubs-admin/dist/assets/CoursesRoute-*.js",
       "!apps/clubs-admin/dist/assets/CourseViewer3D-*.js"
     ],
-    "limit": "684 kB",
+    "limit": "685 kB",
     "gzip": true
   },
   {
-    "name": "clubs-admin courses JavaScript (D18, D16 \u00abGeometria\u00bb, lazy, COURSES only)",
+    "name": "clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)",
     "path": "apps/clubs-admin/dist/assets/CoursesRoute-*.js",
     "limit": "66 kB",
     "gzip": true

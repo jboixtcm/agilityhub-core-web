@@ -14,7 +14,7 @@ All new copy is translated into ca/es/en. No backend contract or permissions cha
 
 ## Results
 
-Full lint/typecheck/unit/build: 38/38 tasks, 3,669 tests. Full Docker browser suite: 327 tests (189 clubs-admin, 133 clubs, 1 id, 4 course-ui), no failures. The final change after that suite only scrolls the student heading into view for its screenshot; all four affected Chromium/WebKit light/dark tests and final lint passed again. Twelve dedicated screenshots are included; agenda, mobile wrapping, and student header were visually inspected. Admin bundle 683.62 kB, within the unchanged 684 kB budget.
+Full lint/typecheck/unit/build: 38/38 tasks, 3,669 tests. Full Docker browser suite: 327 tests (189 clubs-admin, 133 clubs, 1 id, 4 course-ui), no failures. The final change after that suite only scrolls the student heading into view for its screenshot; all four affected Chromium/WebKit light/dark tests and final lint passed again. Twelve dedicated screenshots are included; agenda, mobile wrapping, and student header were visually inspected. Local admin bundle 683.62 kB; the immutable production-configured build measured 684.04 kB, 45 bytes over the previous total budget. The total budget is now 685 kB; the initial-load budget remains unchanged at 460 kB (450.65 kB production measurement). This configuration-only adjustment adds no application code.
 
 Earlier attempts: one ambiguous test locator fixed; one non-null assertion in a new browser test removed for lint; Docker was started after the initial browser attempt. Complete attempt logs remain attached. No production activation has occurred at this report's publication; final hosted checks belong in SOFTWARE_CANIC deployment evidence.
 
@@ -163,7 +163,7 @@ evidence: 2026-10-31-feedback-2/responsive-admin-import-768.png
 
 ### 07-format.log
 
-Command: `pnpm exec prettier --check <the 15 changed source and changelog files>`
+Command: `pnpm exec prettier --check CHANGELOG.md apps/clubs-admin/e2e/mobile-review.spec.ts apps/clubs-admin/src/App.tsx apps/clubs-admin/src/instructor/StudentRecordPage.tsx apps/clubs-admin/src/instructor/StudentsPage.tsx apps/clubs-admin/src/instructor/student-record.css apps/clubs-admin/src/instructor/student-record.test.tsx apps/clubs-admin/src/instructor/week-agenda.css apps/clubs-admin/src/training/RingBlockCard.test.tsx apps/clubs-admin/src/training/RingBlockCard.tsx apps/clubs-admin/src/training/training.css packages/api-client/src/student-search.ts packages/i18n/src/locales/ca/instructor.json packages/i18n/src/locales/en/instructor.json packages/i18n/src/locales/es/instructor.json`
 
 Exit code: 0. Full output: [07-format.log](07-format.log). Last 40 lines:
 
