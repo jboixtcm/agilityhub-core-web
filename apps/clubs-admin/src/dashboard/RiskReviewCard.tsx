@@ -78,20 +78,21 @@ export function RiskReviewCard({
       ? formats.formatPlainDate(item.date, "weekdayShort").replaceAll(/[.,]/gu, "")
       : t(`admin-dashboard:risk.day.${item.dayLabel}`);
 
-  const statusText = (item: RiskReviewItem) => {
+  const notifiedText = (item: RiskReviewItem) => {
+    if (item.status !== "AUTO_CANCELLED" && item.status !== "AT_RISK") return null;
     const names = item.notified
       .map((person) =>
         t("admin-dashboard:risk.name", { dog: person.dogName, member: person.memberName }),
       )
       .join(", ");
+    return names === "" ? null : t(`admin-dashboard:risk.notified.${item.status}`, { names });
+  };
+
+  const statusText = (item: RiskReviewItem) => {
     switch (item.status) {
       case "AUTO_CANCELLED":
-      case "AT_RISK": {
-        const status = t(`admin-dashboard:risk.status.${item.status}`);
-        return names === ""
-          ? status
-          : `${status} · ${t(`admin-dashboard:risk.notified.${item.status}`, { names })}`;
-      }
+      case "AT_RISK":
+        return t(`admin-dashboard:risk.status.${item.status}`);
       case "WILL_CANCEL": {
         // `reviewAt` is the class day's review instant (S15 §6): its club-local day and time.
         const reviewAt = item.reviewAt;
@@ -143,14 +144,18 @@ export function RiskReviewCard({
   const firstHidden = hidden[0];
   return (
     <Card className="dashboard-risk">
-      <header>
-        <h2>
-          <Icon aria-hidden="true" name="warn" />{" "}
-          {t("admin-dashboard:risk.title", {
-            days: review.lookaheadDays,
-            time: clockTime(review.reviewTime),
-          })}
-        </h2>
+      <header className="dashboard-risk__header">
+        <div className="dashboard-risk__heading">
+          <h2>
+            <Icon aria-hidden="true" name="warn" /> {t("admin-dashboard:risk.title")}
+          </h2>
+          <p className="dashboard-risk__schedule">
+            {t("admin-dashboard:risk.schedule", {
+              days: review.lookaheadDays,
+              time: clockTime(review.reviewTime),
+            })}
+          </p>
+        </div>
         <Badge tone={review.items.length > 0 ? "warning" : "neutral"}>
           {t("admin-dashboard:risk.alerts", { count: review.items.length })}
         </Badge>
@@ -161,19 +166,28 @@ export function RiskReviewCard({
         review.items.slice(0, RISK_ROWS).map((item) => (
           <article className="dashboard-risk__row" data-class-id={item.classId} key={item.classId}>
             <a
+              className="dashboard-risk__class"
               href={riskReviewPath(item)}
               onClick={(event) => {
                 event.preventDefault();
                 onNavigate(riskReviewPath(item));
               }}
             >
-              <strong>{item.displayDescription}</strong> · {dayOf(item)} {clockTime(item.startTime)}
-              {item.ringName === null || item.ringName === undefined ? "" : ` · ${item.ringName}`}
+              <strong>{item.displayDescription}</strong>{" "}
+              <span className="dashboard-risk__meta">
+                {dayOf(item)} {clockTime(item.startTime)}
+                {item.ringName === null || item.ringName === undefined ? "" : ` · ${item.ringName}`}
+              </span>
             </a>
             <span className="dashboard-risk__booked">
               {t("admin-dashboard:risk.booked", { count: item.bookedCount })}
             </span>
-            <Badge tone={STATUS_TONES[item.status]}>{statusText(item)}</Badge>
+            <div className="dashboard-risk__status">
+              <Badge tone={STATUS_TONES[item.status]}>{statusText(item)}</Badge>
+              {notifiedText(item) === null ? null : (
+                <span className="dashboard-risk__notified"> {notifiedText(item)}</span>
+              )}
+            </div>
           </article>
         ))
       )}

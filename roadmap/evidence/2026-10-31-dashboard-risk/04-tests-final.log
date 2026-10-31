@@ -1,0 +1,17 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/dashboard/RiskReviewCard.test.tsx src/dashboard/DashboardPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  2 passed (2)
+      Tests  35 passed (35)
+   Start at  17:03:02
+   Duration  4.62s (transform 47%, tests 32%, environment 10%, import 8%, setup 2%)
+
+  Transform  transforming modules took 4.21s · 47% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

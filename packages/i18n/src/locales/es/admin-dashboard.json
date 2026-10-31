@@ -19,7 +19,8 @@
     "older": "{count} de hace más de {days, plural, one {# día} other {# días}}"
   },
   "risk": {
-    "title": "Revisión de clases en riesgo — {time}, hoy y {days} días vista",
+    "title": "Revisión de clases en riesgo",
+    "schedule": "{time}, hoy y {days} días vista",
     "alerts": "{count, plural, one {# aviso} other {# avisos}}",
     "empty": "Ninguna clase en riesgo",
     "booked": "{count, plural, one {# inscrito} other {# inscritos}}",

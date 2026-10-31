@@ -120,8 +120,8 @@ describe("T-14-25 D1 dashboard", () => {
     expect(screen.getByText("1 de fa més de 2 dies")).toBeVisible();
     // The mockup's literals (form A carries no gender, E5-W03): «avisada» / «avisats». The dogs
     // have a level their class allows (E5-W05 round 3 #4, S08 R-08-04).
-    expect(await screen.findByText(/anul·lada · avisada Clara \+ Trevi/u)).toBeVisible();
-    expect(screen.getByText(/en risc · avisats Dani \+ Rayo/u)).toBeVisible();
+    expect(await screen.findByText(/avisada Clara \+ Trevi/u)).toBeVisible();
+    expect(screen.getByText(/avisats Dani \+ Rayo/u)).toBeVisible();
     expect(screen.getAllByText("1 inscrit").length).toBeGreaterThan(0);
     expect(screen.getByText("Compte no informat")).toBeVisible();
 
@@ -279,11 +279,12 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     const { navigate } = await renderDashboard();
     expect(
       await screen.findByRole("heading", {
-        name: /Revisió de classes en risc — 7:30, avui i 2 dies vista/u,
+        name: "Revisió de classes en risc",
       }),
     ).toBeVisible();
     expect(screen.getByText(/s'anul·larà dc a les 7:30/u)).toBeVisible();
-    const row = screen.getByRole("link", { name: "Cadells · avui 9:30 · Cadells" });
+    expect(screen.getByText("7:30, avui i 2 dies vista")).toBeVisible();
+    const row = screen.getByRole("link", { name: "Cadells avui 9:30 · Cadells" });
     const expected =
       "/calendari?classe=cls-2026-08-10-0930-7&estat=anul%C2%B7lades&setmana=2026-08-10";
     expect(row).toHaveAttribute("href", expected);

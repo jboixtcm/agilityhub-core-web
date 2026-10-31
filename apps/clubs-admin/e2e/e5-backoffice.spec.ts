@@ -254,12 +254,12 @@ test.describe("E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A)", (
     const card = page.locator(".dashboard-risk");
     // E5-W05 round 3 #4: a D dog in «Nivell D» and an F one in «F i G» (S08 R-08-04), where mockup
     // D1 names Laura + Duna («C») and Pau + Blat («B»).
-    await expect(card.getByText("anul·lada · avisada Clara + Trevi")).toBeVisible();
-    await expect(card.getByText("en risc · avisats Dani + Rayo")).toBeVisible();
+    await expect(card.getByText("avisada Clara + Trevi")).toBeVisible();
+    await expect(card.getByText("avisats Dani + Rayo")).toBeVisible();
     await expect(card.getByText("s'anul·larà dc a les 7:30")).toBeVisible();
     await expectIconsPainted(card);
     await card.screenshot({ path: resolve(evidenceDirectory, "D1-risc-1280.png") });
-    const row = card.getByRole("link", { name: "Cadells · dc 9:30 · Cadells" });
+    const row = card.getByRole("link", { name: "Cadells dc 9:30 · Cadells" });
     await expect(row).toHaveAttribute(
       "href",
       "/calendari?classe=cls-2026-08-12-0930-0&estat=actives&setmana=2026-08-10",
@@ -275,7 +275,7 @@ test.describe("E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A)", (
     await page.goto(`${baseUrl}/tauler`);
     await page
       .locator(".dashboard-risk")
-      .getByRole("link", { name: "Nivell D · avui 17:40 · Petita" })
+      .getByRole("link", { name: "Nivell D avui 17:40 · Petita" })
       .click();
     await expect(page.getByRole("button", { name: "Anul·lades" })).toHaveAttribute(
       "aria-pressed",

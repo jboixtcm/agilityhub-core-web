@@ -1999,25 +1999,85 @@ select {
   white-space: nowrap;
 }
 
-/* INC-11 (mockup D1): the class stays on one line. At 1280 px the card cannot hold a long row
-   (mockup D1 is drawn at 1920), so the status goes under it, to the right; on a phone a title
-   longer than the card ends in «…». */
-.dashboard-risk__row > a {
-  flex: 1 0 auto;
-  max-width: 100%;
-  overflow: hidden;
+.dashboard-page .ah-card > .dashboard-risk__header {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  margin-bottom: var(--ah-space-2);
+}
+
+.dashboard-risk__heading {
+  min-width: 0;
+}
+
+.dashboard-risk__heading .ah-icon {
+  flex: none;
+}
+
+.dashboard-risk__schedule {
+  margin: var(--ah-space-2) 0 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.dashboard-risk__class {
+  display: grid;
+  gap: var(--ah-space-1);
+  min-width: 0;
   color: inherit;
   text-decoration: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
 }
 
-.dashboard-risk__row > .ah-badge {
-  margin-left: auto;
+.dashboard-risk__class > strong {
+  font-size: 0.9375rem;
 }
 
-.dashboard-risk__row > a:hover {
+.dashboard-risk__class:hover > strong {
   text-decoration: underline;
+}
+
+.dashboard-risk__class:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: var(--ah-space-1);
+  border-radius: var(--ah-radius-sm);
+}
+
+.dashboard-risk__meta,
+.dashboard-risk__booked,
+.dashboard-risk__notified {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.dashboard-risk__booked {
+  padding-top: 0.125rem;
+  text-align: end;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-risk__status {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1) var(--ah-space-2);
+  min-width: 0;
+}
+
+.dashboard-risk__status > .ah-badge {
+  max-width: 100%;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-risk__notified {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-risk__more {
@@ -2042,8 +2102,11 @@ select {
 }
 
 .dashboard-risk__row {
-  flex-wrap: wrap;
-  row-gap: var(--ah-space-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--ah-space-2) var(--ah-space-3);
+  padding: var(--ah-space-4) 0;
 }
 
 .dashboard-risk__row:last-child,
@@ -2051,7 +2114,6 @@ select {
   border-bottom: 0;
 }
 
-.dashboard-risk__row > div,
 .dashboard-signups__row > div {
   display: grid;
   flex: 1;

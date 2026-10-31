@@ -19,7 +19,8 @@
     "older": "{count} older than {days, plural, one {# day} other {# days}}"
   },
   "risk": {
-    "title": "At-risk class review — {time}, today and {days} days ahead",
+    "title": "At-risk class review",
+    "schedule": "{time}, today and {days} days ahead",
     "alerts": "{count, plural, one {# alert} other {# alerts}}",
     "empty": "No classes at risk",
     "booked": "{count, plural, one {# booked} other {# booked}}",

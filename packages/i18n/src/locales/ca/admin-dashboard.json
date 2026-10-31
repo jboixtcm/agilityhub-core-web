@@ -19,7 +19,8 @@
     "older": "{count} de fa més de {days, plural, one {# dia} other {# dies}}"
   },
   "risk": {
-    "title": "Revisió de classes en risc — {time}, avui i {days} dies vista",
+    "title": "Revisió de classes en risc",
+    "schedule": "{time}, avui i {days} dies vista",
     "alerts": "{count, plural, one {# avís} other {# avisos}}",
     "empty": "Cap classe en risc",
     "booked": "{count, plural, one {# inscrit} other {# inscrits}}",
