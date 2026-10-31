@@ -1,0 +1,1022 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/instructor/student-record.test.tsx src/training/RingBlockCard.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/student-record.test.tsx (20 tests | 1 failed) 11991ms
+   ❯ «Alumnes» of the back office (mockups D12–D14, S10 §13-9) (2)
+     × instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13 10526ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13
+TestingLibraryElementError: Found multiple elements with the role "link" and name `/Duna/u`
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-13"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAnna + Duna 13 · F[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-73"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAnna + Duna 73 · C[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-133"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAnna + Duna 133 · G[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-193"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAnna + Duna 193 · D[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-49"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mClara + Duna 49 · G[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-109"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mClara + Duna 109 · D[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-169"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mClara + Duna 169 · A[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-229"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mClara + Duna 229 · E[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-25"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mSergio + Duna 25 · D[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-85"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mSergio + Duna 85 · A[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-145"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mSergio + Duna 145 · E[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-205"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mSergio + Duna 205 · B[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-37"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAina + Duna 37 · B[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-97"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAina + Duna 97 · F[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-157"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAina + Duna 157 · C[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-217"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mAina + Duna 217 · G[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-duna"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mLaura + Duna · C[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-1"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mLaura + Duna 1 · A[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-61"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mLaura + Duna 61 · E[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-121"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mLaura + Duna 121 · B[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+Ignored nodes: comments, script, style
+[36m<a[39m
+  [33mhref[39m=[32m"/alumnes/dog-generated-181"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-dog-identity"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+    [36m>[39m
+      [36m<img[39m
+        [33malt[39m=[32m""[39m
+        [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+      [36m/>[39m
+    [36m</span>[39m
+    [36m<span>[39m
+      [0mLaura + Duna 181 · F[0m
+    [36m</span>[39m
+  [36m</span>[39m
+  [36m<svg[39m
+    [33maria-hidden[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-icon"[39m
+  [36m>[39m
+    [36m<use[39m
+      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+    [36m/>[39m
+  [36m</svg>[39m
+[36m</a>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"students-page"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mAlumnes[0m
+      [36m</h1>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"students-page__search"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m"Duna"[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"students-page__tools"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"students-page__hint"[39m
+        [36m>[39m
+          [0mAlumnes actius. Cerca pel nom del gos, del guia o de l’abonat.[0m
+        [36m</p>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"students-page__sort"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOrdena per[0m
+          [36m</span>[39m
+          [36m<select>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"name,asc"[39m
+            [36m>[39m
+              [0mNom del gos[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ownerLastName,asc"[39m
+            [36m>[39m
+              [0mCognoms de l’abonat[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</label>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card"[39m
+      [36m>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"students-page__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-13"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 13 · F[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-73"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 73 · C[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-133"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 133 · G[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-193"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 193 · D[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"students-page"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mAlumnes[0m
+      [36m</h1>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"students-page__search"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m"Duna"[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"students-page__tools"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"students-page__hint"[39m
+        [36m>[39m
+          [0mAlumnes actius. Cerca pel nom del gos, del guia o de l’abonat.[0m
+        [36m</p>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"students-page__sort"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mOrdena per[0m
+          [36m</span>[39m
+          [36m<select>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"name,asc"[39m
+            [36m>[39m
+              [0mNom del gos[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ownerLastName,asc"[39m
+            [36m>[39m
+              [0mCognoms de l’abonat[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</label>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card"[39m
+      [36m>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"students-page__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-13"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 13 · F[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-73"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 73 · C[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-133"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 133 · G[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/dog-generated-193"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-dog-identity"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-dog-photo ah-dog-photo--small"[39m
+                [36m>[39m
+                  [36m<img[39m
+                    [33malt[39m=[32m""[39m
+                    [33msrc[39m=[32m"/api/v1/attachments/files/example?expires=10&signature=example"[39m
+                  [36m/>[39m
+                [36m</span>[39m
+                [36m<span>[39m
+                  [0mAnna + Duna 193 · D[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/student-record.test.tsx:688:18
+    686|       ).toBe(true);
+    687|     });
+    688|     await screen.findByRole("link", { name: /Duna/u });
+       |                  ^
+    689|     const link = present(screen.getAllByRole("link")[0]);
+    690|     expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 27 passed (28)
+   Start at  15:51:59
+   Duration  14.17s (tests 78%, transform 10%, environment 6%, import 4%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/instructor/student-record.test.tsx src/training/RingBlockCard.test.tsx`
+Exit status 1

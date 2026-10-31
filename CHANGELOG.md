@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- Apply Josep's second 30 October review: month in ring-block dates, ring selection before time, clearer hourly separators, explicit student sorting and member links for administrators.
+
+
 - 2026-10-30 evening feedback (`20263010-1_Josep.docx`): accept short/omitted years in planning dates, keep cancelled classes in their own tab, explain required privacy acceptance and preserve optional image consent. Skip personal onboarding in impersonation and revoke only its temporary grant when closing the tab. Add a home action after booking and resolve recipient filter names when the notification list is empty. Adopt the generated onboarding image-consent contract. The administration total JavaScript budget becomes 684 kB for these forms and three-language copy (683.21 kB measured; initial-load budgets unchanged).
 
 - Follow-up from the photo release review: keep the member's first name in the desktop student heading when the optional handler name is empty or whitespace, matching the student search fallback.

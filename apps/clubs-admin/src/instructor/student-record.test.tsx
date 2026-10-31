@@ -51,11 +51,13 @@ function requestLines(): string[] {
 }
 
 async function renderRecord({
+  canOpenMember = false,
   dogId = "dog-duna",
   locale = "ca",
   modules = canic.modules,
   scenario = "instructor",
 }: {
+  canOpenMember?: boolean;
   dogId?: string;
   locale?: "ca" | "en" | "es";
   modules?: readonly string[];
@@ -77,7 +79,7 @@ async function renderRecord({
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
-        <StudentRecordPage client={client} dogId={dogId} />
+        <StudentRecordPage canOpenMember={canOpenMember} client={client} dogId={dogId} />
       </BrandingProvider>
     </I18nextProvider>,
   );
@@ -122,12 +124,19 @@ describe("T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09)",
     await renderRecord();
     const header = present(document.querySelector<HTMLElement>(".student-record__header"));
     expect(within(header).getByRole("heading", { name: "Laura + Duna" })).toBeVisible();
-    expect(header.querySelector(".student-record__owner")).toBeNull();
+    expect(header.querySelector(".student-record__owner")).toHaveTextContent("Abonat: Laura");
+    expect(within(header).queryByRole("link", { name: /^Abonat:/u })).toBeNull();
     const photo = within(header).getByRole("img", { name: "Foto de Duna" });
     expect(photo).toHaveAttribute("src", expect.stringContaining("data:image/svg+xml"));
     fireEvent.error(photo);
     expect(within(header).queryByRole("img", { name: "Foto de Duna" })).toBeNull();
     expect(header.querySelector(".ah-avatar")).toBeVisible();
+  });
+
+  it("T-10-28 identifies the member and links the record only for an administrator", async () => {
+    await renderRecord({ canOpenMember: true });
+    const link = screen.getByRole("link", { name: /^Abonat: Laura/u });
+    expect(link).toHaveAttribute("href", "/abonats/member-laura");
   });
 
   it("shows the dog avatar when the API has no student photo", async () => {
@@ -665,6 +674,18 @@ describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () =>
       expect(names.length).toBeGreaterThan(0);
       expect(names.every((name) => name.includes("Duna"))).toBe(true);
     });
+    fireEvent.change(screen.getByRole("combobox", { name: "Ordena per" }), {
+      target: { value: "ownerLastName,asc" },
+    });
+    await waitFor(() => {
+      expect(
+        lines.some(
+          (line) =>
+            line.includes("ownerLastName") && line.includes("q=Duna") && line.includes("status"),
+        ),
+      ).toBe(true);
+    });
+    await screen.findAllByRole("link", { name: /Duna/u });
     const link = present(screen.getAllByRole("link")[0]);
     expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
     fireEvent.click(link);

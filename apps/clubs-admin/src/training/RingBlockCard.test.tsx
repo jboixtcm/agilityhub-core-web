@@ -169,7 +169,7 @@ describe("D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D1
       "motiu: altres",
     ]);
     expect(options("Pista")).toEqual(["Muntanya", "Central", "Carretera", "Cadells", "Petita"]);
-    expect(select("Dia").options[0]?.textContent).toBe("dl 3");
+    expect(select("Dia").options[0]?.textContent).toBe("dl 3 d’agost");
     // Muntanya today: 7:00 has begun, so the first free half hour is 7:30.
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Reserva" })).toBeEnabled();

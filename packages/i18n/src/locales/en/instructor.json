@@ -112,7 +112,8 @@
       "attendance": "Attendance"
     },
     "headerLevelCode": "Level {code}",
-    "lastClassFull": "{description} · {ring} · {instructor}"
+    "lastClassFull": "{description} · {ring} · {instructor}",
+    "memberLink": "Member: {name}"
   },
   "students": {
     "title": "Students",
@@ -121,7 +122,11 @@
     "loading": "Loading the students",
     "loadError": "The students could not be loaded.",
     "retry": "Try again",
-    "more": "Show more"
+    "more": "Show more",
+    "searchHint": "Active students. Search by dog, handler or member name.",
+    "sort": "Sort by",
+    "sortDog": "Dog name",
+    "sortMember": "Member surname"
   },
   "overview": {
     "title": "Overview",

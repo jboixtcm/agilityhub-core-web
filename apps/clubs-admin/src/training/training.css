@@ -64,7 +64,8 @@
   flex: 1;
   align-items: center;
   gap: var(--ah-space-1);
-  min-width: 16rem;
+  flex-wrap: wrap;
+  min-width: min(100%, 22rem);
   padding: var(--ah-space-1) var(--ah-space-2);
   color: var(--ah-color-text-muted);
   background: var(--ah-color-surface-2);

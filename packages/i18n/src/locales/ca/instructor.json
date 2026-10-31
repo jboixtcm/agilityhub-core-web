@@ -112,7 +112,8 @@
       "attendance": "Assistència"
     },
     "headerLevelCode": "Nivell {code}",
-    "lastClassFull": "{description} · {ring} · {instructor}"
+    "lastClassFull": "{description} · {ring} · {instructor}",
+    "memberLink": "Abonat: {name}"
   },
   "students": {
     "title": "Alumnes",
@@ -121,7 +122,11 @@
     "loading": "Carregant els alumnes",
     "loadError": "No s'han pogut carregar els alumnes.",
     "retry": "Torna-ho a provar",
-    "more": "Mostra'n més"
+    "more": "Mostra'n més",
+    "searchHint": "Alumnes actius. Cerca pel nom del gos, del guia o de l’abonat.",
+    "sort": "Ordena per",
+    "sortDog": "Nom del gos",
+    "sortMember": "Cognoms de l’abonat"
   },
   "overview": {
     "title": "Visió global",

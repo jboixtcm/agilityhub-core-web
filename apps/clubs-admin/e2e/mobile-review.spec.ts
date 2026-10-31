@@ -199,3 +199,54 @@ test("T-02-14 mobile review: census actions and settings remain usable", async (
   await page.keyboard.press("Escape");
   await expect(merge).toHaveCount(0);
 });
+
+for (const theme of ["light", "dark"]) {
+  test(`T-10-28 second feedback: agenda and student navigation ${theme}`, async ({
+    page,
+    browserName,
+  }) => {
+    await page.clock.setFixedTime(new Date("2026-08-03T08:50:00+02:00"));
+    await login(page);
+    await page.getByRole("combobox", { name: "Aparença" }).selectOption(theme);
+    await page.goto(`${baseUrl}/agenda`);
+    await page.locator(".week-agenda__ring-action summary").click();
+    const card = page.locator(".ring-block-card");
+    await expect(
+      card.getByRole("combobox", { name: "Dia", exact: true }).locator("option").first(),
+    ).toHaveText("dl 3 d’agost");
+    await expect(
+      card
+        .getByRole("combobox", { name: "Dia", exact: true })
+        .locator('option[value="2026-09-01"]'),
+    ).toContainText("setembre");
+    const ring = await card.getByRole("combobox", { name: "Pista", exact: true }).boundingBox();
+    const day = await card.getByRole("combobox", { name: "Dia", exact: true }).boundingBox();
+    expect(ring).not.toBeNull();
+    expect(day).not.toBeNull();
+    if (ring === null || day === null) throw new Error("Missing ring or date selector");
+    expect(ring.x).toBeLessThan(day.x);
+    await expect(page.locator(".week-agenda__hour").first()).toHaveCSS("border-top-width", "2px");
+    await fits(page);
+    await capture(page, `feedback2-agenda-${browserName}-${theme}.png`);
+    await page.setViewportSize({ width: 375, height: 900 });
+    await fits(page);
+    await card.scrollIntoViewIfNeeded();
+    await capture(page, `feedback2-ring-mobile-${browserName}-${theme}.png`);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${baseUrl}/alumnes`);
+    await expect(page.getByRole("combobox", { name: "Ordena per" })).toHaveValue("name,asc");
+    const sorted = page.waitForRequest(
+      (request) => request.url().includes("/dogs?") && request.url().includes("ownerLastName"),
+    );
+    await page.getByRole("combobox", { name: "Ordena per" }).selectOption("ownerLastName,asc");
+    await sorted;
+    await page.getByPlaceholder("Cerca un alumne").fill("Duna");
+    await page.getByRole("link", { name: "Laura + Duna · C", exact: true }).click();
+    const member = page.getByRole("link", { name: /^Abonat: Laura/u });
+    await expect(member).toHaveAttribute("href", "/abonats/member-laura");
+    await page.getByRole("heading", { level: 1, name: "Laura + Duna" }).scrollIntoViewIfNeeded();
+    await capture(page, `feedback2-student-${browserName}-${theme}.png`);
+    await member.click();
+    await page.waitForURL("**/abonats/member-laura");
+  });
+}

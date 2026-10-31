@@ -241,3 +241,38 @@
 .students-page__more {
   justify-self: center;
 }
+
+.student-record__owner {
+  flex-basis: 100%;
+}
+.student-record__owner a {
+  color: var(--ah-color-primary);
+  text-underline-offset: 0.2em;
+}
+.students-page__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-3);
+  align-items: end;
+  justify-content: space-between;
+}
+.students-page__hint {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.875rem;
+}
+.students-page__sort {
+  display: grid;
+  gap: var(--ah-space-1);
+  font-size: 0.875rem;
+}
+.students-page__sort select {
+  min-height: 2.75rem;
+  max-width: 100%;
+  padding: var(--ah-space-2);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  font: inherit;
+}

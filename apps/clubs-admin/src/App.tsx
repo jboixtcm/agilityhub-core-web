@@ -524,6 +524,11 @@ function TemplateDayRoute(props: React.ComponentProps<typeof TemplateDayPage>) {
   return <TemplateDayPage {...props} readOnly={!session.roles.includes("ADMIN")} />;
 }
 
+function StudentRecordRoute(props: React.ComponentProps<typeof StudentRecordPage>) {
+  const session = useSession();
+  return <StudentRecordPage {...props} canOpenMember={session.roles.includes("ADMIN")} />;
+}
+
 function routeContent(
   route: AdminRouteDefinition,
   client: ReturnType<typeof createAuthenticatedApiClient>,
@@ -588,7 +593,7 @@ function routeContent(
   if (route.path === "/alumnes/:id") {
     // D13 (S10 §2): INSTRUCTOR and ADMIN, never an impersonation (an admin session never is one).
     const dogId = decodeURIComponent(pathname.split("/")[2] ?? "");
-    return <StudentRecordPage client={client} dogId={dogId} key={pathname} />;
+    return <StudentRecordRoute client={client} dogId={dogId} key={pathname} />;
   }
   if (route.path === "/tauler") {
     return <DashboardPage client={client} onNavigate={onNavigate} />;

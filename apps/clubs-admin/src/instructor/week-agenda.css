@@ -113,13 +113,13 @@
   min-width: 0;
 }
 
-/* Thin lines at the hour boundaries only (mockup V6): rows of the same hour form one band. */
+/* Distinct hour boundaries in every theme; rows of the same hour form one band. */
 .week-agenda .ah-schedule-grid__row {
   border-top-color: transparent;
 }
 
 .week-agenda .ah-schedule-grid__row.week-agenda__hour {
-  border-top-color: var(--ah-color-border);
+  border-top: 2px solid color-mix(in srgb, var(--ah-color-text-muted) 65%, var(--ah-color-border));
 }
 
 .week-agenda .ah-schedule-cell {

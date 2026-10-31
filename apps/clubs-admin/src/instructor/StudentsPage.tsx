@@ -24,6 +24,7 @@ export function StudentsPage({
   const texts = useFollowupTexts();
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<"name,asc" | "ownerLastName,asc">("name,asc");
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setQuery(text.trim());
@@ -32,7 +33,7 @@ export function StudentsPage({
       window.clearTimeout(timer);
     };
   }, [text]);
-  const dogs = useStudentSearch(client, query);
+  const dogs = useStudentSearch(client, query, sort);
   const loadError = t("instructor:students.loadError");
 
   return (
@@ -49,6 +50,25 @@ export function StudentsPage({
           value={text}
         />
       </label>
+      <div className="students-page__tools">
+        <p className="students-page__hint">{t("instructor:students.searchHint")}</p>
+        <label className="students-page__sort">
+          <span>{t("instructor:students.sort")}</span>
+          <select
+            onChange={(event) => {
+              setSort(
+                event.currentTarget.value === "ownerLastName,asc"
+                  ? "ownerLastName,asc"
+                  : "name,asc",
+              );
+            }}
+            value={sort}
+          >
+            <option value="name,asc">{t("instructor:students.sortDog")}</option>
+            <option value="ownerLastName,asc">{t("instructor:students.sortMember")}</option>
+          </select>
+        </label>
+      </div>
       {dogs.loading ? <Skeleton height="12rem" label={t("instructor:students.loading")} /> : null}
       {dogs.firstFailed ? (
         <Toast tone="danger">

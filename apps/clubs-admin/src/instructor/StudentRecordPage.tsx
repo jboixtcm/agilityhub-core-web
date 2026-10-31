@@ -46,7 +46,15 @@ const DISPLAY_TONES: Readonly<Record<LastClass["displayState"], Tone>> = {
  * table; [GESTIONAR TASQUES I NOTES] opens the same editor as screen 26 in a drawer. The three
  * blocks and the button need TASKS; nothing is recomputed here.
  */
-export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId: string }) {
+export function StudentRecordPage({
+  client,
+  dogId,
+  canOpenMember = false,
+}: {
+  client: ApiClient;
+  dogId: string;
+  canOpenMember?: boolean;
+}) {
   const { t } = useTranslation(["instructor", "enums", "errors"]);
   const branding = useBranding();
   const formats = useClubFormats();
@@ -178,11 +186,15 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
           </Chip>
           {dogLine === undefined ? null : <Chip className="student-record__dog">{dogLine}</Chip>}
           {dog.status === "ACTIVE" ? null : <Chip tone="danger">{t("instructor:card.left")}</Chip>}
-          {handler === "" || handler === member.firstName ? null : (
-            <span className="student-record__owner">
-              {t("instructor:student.owner", { name: member.fullName })}
-            </span>
-          )}
+          <span className="student-record__owner">
+            {canOpenMember ? (
+              <a href={`/abonats/${encodeURIComponent(member.id)}`}>
+                {t("instructor:card.memberLink", { name: member.fullName })}
+              </a>
+            ) : (
+              t("instructor:card.memberLink", { name: member.fullName })
+            )}
+          </span>
         </div>
         {tasksModule ? (
           <Button

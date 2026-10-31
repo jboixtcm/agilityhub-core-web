@@ -112,7 +112,8 @@
       "attendance": "Asistencia"
     },
     "headerLevelCode": "Nivel {code}",
-    "lastClassFull": "{description} · {ring} · {instructor}"
+    "lastClassFull": "{description} · {ring} · {instructor}",
+    "memberLink": "Abonado: {name}"
   },
   "students": {
     "title": "Alumnos",
@@ -121,7 +122,11 @@
     "loading": "Cargando los alumnos",
     "loadError": "No se han podido cargar los alumnos.",
     "retry": "Volver a intentarlo",
-    "more": "Mostrar más"
+    "more": "Mostrar más",
+    "searchHint": "Alumnos activos. Busca por el nombre del perro, del guía o del abonado.",
+    "sort": "Ordenar por",
+    "sortDog": "Nombre del perro",
+    "sortMember": "Apellidos del abonado"
   },
   "overview": {
     "title": "Visión global",

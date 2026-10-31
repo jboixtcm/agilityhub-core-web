@@ -1,0 +1,12 @@
+heavy.sh: 15:52 waiting for the host lock, held by: 15:52 agilityhub-core-web: pnpm turbo run lint typecheck test build --concurrency=2
+heavy.sh: 15:53 got the host lock after 0 min 30 s
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh 2026-10-31-feedback-2 --capture-task\=2026-10-31-feedback-2
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: 2026-10-31-feedback-2
+Capture folder of the permanent mock specs: 2026-10-31-feedback-2
+Playwright arguments: --workers=4
+failed to connect to the docker API at unix:///Users/jordib/.docker/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /Users/jordib/.docker/run/docker.sock: connect: no such file or directory
+ ELIFECYCLE  Command failed with exit code 1.

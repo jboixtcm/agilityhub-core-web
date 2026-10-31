@@ -49,9 +49,13 @@ interface SearchPages {
  * the query settles, each next one on `more()`, appended. An answer for another query than the
  * one on screen is dropped; the api searches, the list is never filtered here.
  */
-export function useStudentSearch(client: ApiClient, query: string) {
+export function useStudentSearch(
+  client: ApiClient,
+  query: string,
+  sort: "name,asc" | "ownerLastName,asc" = "name,asc",
+) {
   const [reload, setReload] = useState(0);
-  const requestKey = `${query}|${String(reload)}`;
+  const requestKey = `${query}|${sort}|${String(reload)}`;
   const [pages, setPages] = useState<SearchPages>({
     items: [],
     key: "",
@@ -72,7 +76,7 @@ export function useStudentSearch(client: ApiClient, query: string) {
             filter: ["status:eq:ACTIVE"],
             page,
             size: STUDENT_SEARCH_PAGE_SIZE,
-            sort: ["name,asc"],
+            sort: sort === "name,asc" ? [sort] : [sort, "name,asc"],
             ...(query === "" ? {} : { q: query }),
           },
         },
@@ -80,7 +84,7 @@ export function useStudentSearch(client: ApiClient, query: string) {
       if (data === undefined) throw new TypeError("The dogs response did not contain data");
       return data;
     },
-    [client, query],
+    [client, query, sort],
   );
 
   useEffect(() => {

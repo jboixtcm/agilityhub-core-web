@@ -252,6 +252,30 @@ export function RingBlockCard({
         </select>
       </div>
       <div className="ring-block-card__row">
+        <label className="ring-block-card__ring">
+          <span
+            aria-hidden="true"
+            className="ring-block-card__dot"
+            style={{ "--ah-ring-color": ring?.color } as CSSProperties}
+          />
+          <select
+            aria-label={t("instructor:ringBlock.ring")}
+            disabled={pending || rings.data === undefined}
+            onChange={(event) => {
+              setRingId(event.currentTarget.value);
+              setFrom("");
+              setTo("");
+              changed();
+            }}
+            value={ring?.id ?? ""}
+          >
+            {(rings.data ?? []).map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </label>
         <div
           aria-label={t("instructor:ringBlock.card.when")}
           className="ring-block-card__when"
@@ -272,7 +296,7 @@ export function RingBlockCard({
               addDays(today, index),
             ).map((day) => (
               <option key={day} value={day}>
-                {formats.formatActivityDate(day, null, null, "list", day)}
+                {formats.formatActivityDate(day, null, null, "long", day)}
               </option>
             ))}
           </select>
@@ -310,30 +334,6 @@ export function RingBlockCard({
             ))}
           </select>
         </div>
-        <label className="ring-block-card__ring">
-          <span
-            aria-hidden="true"
-            className="ring-block-card__dot"
-            style={{ "--ah-ring-color": ring?.color } as CSSProperties}
-          />
-          <select
-            aria-label={t("instructor:ringBlock.ring")}
-            disabled={pending || rings.data === undefined}
-            onChange={(event) => {
-              setRingId(event.currentTarget.value);
-              setFrom("");
-              setTo("");
-              changed();
-            }}
-            value={ring?.id ?? ""}
-          >
-            {(rings.data ?? []).map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </label>
         <Button
           className="ring-block-card__submit"
           disabled={ring === undefined || start === "" || end === "" || grid.status === "loading"}
