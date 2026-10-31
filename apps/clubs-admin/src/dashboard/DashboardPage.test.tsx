@@ -120,8 +120,8 @@ describe("T-14-25 D1 dashboard", () => {
     expect(screen.getByText("1 de fa més de 2 dies")).toBeVisible();
     // The mockup's literals (form A carries no gender, E5-W03): «avisada» / «avisats». The dogs
     // have a level their class allows (E5-W05 round 3 #4, S08 R-08-04).
-    expect(await screen.findByText(/anul·lada · avisada Clara \+ Trevi/u)).toBeVisible();
-    expect(screen.getByText(/en risc · avisats Dani \+ Rayo/u)).toBeVisible();
+    expect(await screen.findByText(/avisada Clara \+ Trevi/u)).toBeVisible();
+    expect(screen.getByText(/avisats Dani \+ Rayo/u)).toBeVisible();
     expect(screen.getAllByText("1 inscrit").length).toBeGreaterThan(0);
     expect(screen.getByText("Compte no informat")).toBeVisible();
 
@@ -129,7 +129,7 @@ describe("T-14-25 D1 dashboard", () => {
     expect(
       within(chart).getByRole("table", { name: "Gossos per nivell — 242 actius" }),
     ).toBeInTheDocument();
-    expect(within(chart).getByRole("row", { name: /CAD 24 19/u })).toBeInTheDocument();
+    expect(within(chart).getByRole("row", { name: /CAD 24 9,9/u })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "VALIDA: Marta R. + Kiwi (whippet)" }));
     expect(navigate).toHaveBeenCalledWith("/preinscripcions/42000000-0000-4000-8000-000000000001");
@@ -279,11 +279,12 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     const { navigate } = await renderDashboard();
     expect(
       await screen.findByRole("heading", {
-        name: /Revisió de classes en risc — 7:30, avui i 2 dies vista/u,
+        name: "Revisió de classes en risc",
       }),
     ).toBeVisible();
     expect(screen.getByText(/s'anul·larà dc a les 7:30/u)).toBeVisible();
-    const row = screen.getByRole("link", { name: "Cadells · avui 9:30 · Cadells" });
+    expect(screen.getByText("7:30, avui i 2 dies vista")).toBeVisible();
+    const row = screen.getByRole("link", { name: "Cadells avui 9:30 · Cadells" });
     const expected =
       "/calendari?classe=cls-2026-08-10-0930-7&estat=anul%C2%B7lades&setmana=2026-08-10";
     expect(row).toHaveAttribute("href", expected);
@@ -320,15 +321,16 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     expect(title.querySelector(".ah-icon")).not.toBeNull();
   });
 
-  it("E35 paints one column per progression level with the level name as tooltip, never `others`", async () => {
+  it("E35 shows progression levels with their name as tooltip, never `others`", async () => {
     await renderDashboard(
       vi.fn(),
       dashboardFetch((body) => {
         body.dogsByLevel.others = 999;
+        body.dogsByLevel.totalActiveDogs = 1241;
       }),
     );
     const chart = screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" });
-    expect(within(chart).getByRole("row", { name: /CAD 24 19/u })).toHaveAttribute(
+    expect(within(chart).getByRole("row", { name: /CAD 24 9,9/u })).toHaveAttribute(
       "title",
       "Cadells",
     );
@@ -337,27 +339,53 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
   });
 
   it.each([
-    [1, "amb reserva (setm. en curs) · total actius"],
-    [2, "amb reserva (setm. en curs o anterior) · total actius"],
-    [3, "amb reserva (setm. en curs o les 2 anteriors) · total actius"],
-  ])("follows coverage.activeDogWeeks = %i in the chart legend", async (weeks, text) => {
-    await renderDashboard(
+    [1, "amb reserva (setm. en curs)"],
+    [2, "amb reserva (setm. en curs o anterior)"],
+    [3, "amb reserva (setm. en curs o les 2 anteriors)"],
+  ])("follows coverage.activeDogWeeks = %i in the selected booking population", async (weeks, text) => {
+    const { client } = await renderDashboard(
       vi.fn(),
       dashboardFetch((body) => {
         body.dogsByLevel.activeDogWeeks = weeks;
       }),
     );
-    const legend = document.querySelector(".dashboard-chart__legend");
-    expect(legend).toHaveTextContent(text);
-    // INC-11 (mockup D1): each part of the legend has its swatch, in the colour of its bars.
-    expect(
-      [...(legend?.querySelectorAll("[data-swatch]") ?? [])].map((swatch) =>
-        swatch.getAttribute("class"),
-      ),
-    ).toEqual([
-      "dashboard-chart__swatch ah-bar-chart__bar--highlighted",
-      "dashboard-chart__swatch ah-bar-chart__bar--total",
-    ]);
+    const get = vi.spyOn(client, "GET");
+    const colors = [...document.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")]
+      .map((swatch) => swatch.style.getPropertyValue("--ah-level-color"));
+    fireEvent.click(screen.getByRole("radio", { name: "Amb reserves" }));
+    expect(screen.getByRole("radio", { name: "Amb reserves" })).toBeChecked();
+    expect(document.querySelector(".dashboard-chart__description")).toHaveTextContent(text);
+    const chart = screen.getByRole("figure", { name: "Gossos per nivell — 179 amb reserves" });
+    expect(within(chart).getByRole("row", { name: /CAD 19 10,6/u })).toBeVisible();
+    expect(chart.querySelector(".dashboard-chart__center strong")).toHaveTextContent("179");
+    expect([...chart.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")]
+      .map((swatch) => swatch.style.getPropertyValue("--ah-level-color"))).toEqual(colors);
+    fireEvent.click(screen.getByRole("radio", { name: "Tots" }));
+    expect(screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
+    expect(get).not.toHaveBeenCalled();
+  });
+
+  it("T-14-25 shows an empty booking population and recovers the active dogs", async () => {
+    await renderDashboard(vi.fn(), dashboardFetch((body) => {
+      body.dogsByLevel.levels.forEach((level) => { level.withRecentBooking = 0; });
+    }));
+    fireEvent.click(screen.getByRole("radio", { name: "Amb reserves" }));
+    expect(within(screen.getByRole("figure")).getByRole("status")).toHaveTextContent("No hi ha gossos amb reserves en aquest període.");
+    const chart = screen.getByRole("figure", { name: "Gossos per nivell — 0 amb reserves" });
+    expect(within(chart).getByRole("row", { name: "CAD 0 —" })).toBeVisible();
+    expect(chart.querySelector<HTMLElement>(".dashboard-chart__donut")?.style.background).toBe("");
+    fireEvent.click(screen.getByRole("radio", { name: "Tots" }));
+    expect(within(chart).queryByRole("status")).toBeNull();
+    expect(screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
+  });
+
+  it("T-14-25 handles no progression levels without invalid percentages", async () => {
+    await renderDashboard(vi.fn(), dashboardFetch((body) => {
+      body.dogsByLevel.levels = [];
+      body.dogsByLevel.totalActiveDogs = 0;
+    }));
+    expect(within(screen.getByRole("figure")).getByRole("status")).toHaveTextContent("No hi ha gossos actius en aquests nivells.");
+    expect(screen.getByRole("figure")).not.toHaveTextContent(/NaN|Infinity/u);
   });
 
   it("R-04-23 keeps the refund notice after a rejection with a collected payment", async () => {

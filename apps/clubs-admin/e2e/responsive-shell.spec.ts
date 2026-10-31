@@ -80,11 +80,8 @@ for (const width of [375, 768, 1280]) {
     test.setTimeout(90_000);
     await page.setViewportSize({ width, height: 900 });
     await signIn(page, "admin");
-    await expect(page.locator(".dashboard-chart .ah-bar-chart")).toBeVisible();
+    await expect(page.locator(".dashboard-chart__figure")).toBeVisible();
     await measure(page, `responsive-admin-dashboard-${String(width)}`);
-    if (width === 375) {
-      await checkContainedScroll(page.locator(".dashboard-chart .ah-bar-chart"));
-    }
 
     await page.clock.setFixedTime(new Date("2026-08-12T10:00:00+02:00"));
     await page.goto(`${baseUrl}/calendari?estat=actives&setmana=2026-08-10`);

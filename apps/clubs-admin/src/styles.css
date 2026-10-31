@@ -1999,25 +1999,85 @@ select {
   white-space: nowrap;
 }
 
-/* INC-11 (mockup D1): the class stays on one line. At 1280 px the card cannot hold a long row
-   (mockup D1 is drawn at 1920), so the status goes under it, to the right; on a phone a title
-   longer than the card ends in «…». */
-.dashboard-risk__row > a {
-  flex: 1 0 auto;
-  max-width: 100%;
-  overflow: hidden;
+.dashboard-page .ah-card > .dashboard-risk__header {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  margin-bottom: var(--ah-space-2);
+}
+
+.dashboard-risk__heading {
+  min-width: 0;
+}
+
+.dashboard-risk__heading .ah-icon {
+  flex: none;
+}
+
+.dashboard-risk__schedule {
+  margin: var(--ah-space-2) 0 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.dashboard-risk__class {
+  display: grid;
+  gap: var(--ah-space-1);
+  min-width: 0;
   color: inherit;
   text-decoration: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
 }
 
-.dashboard-risk__row > .ah-badge {
-  margin-left: auto;
+.dashboard-risk__class > strong {
+  font-size: 0.9375rem;
 }
 
-.dashboard-risk__row > a:hover {
+.dashboard-risk__class:hover > strong {
   text-decoration: underline;
+}
+
+.dashboard-risk__class:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: var(--ah-space-1);
+  border-radius: var(--ah-radius-sm);
+}
+
+.dashboard-risk__meta,
+.dashboard-risk__booked,
+.dashboard-risk__notified {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.dashboard-risk__booked {
+  padding-top: 0.125rem;
+  text-align: end;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-risk__status {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1) var(--ah-space-2);
+  min-width: 0;
+}
+
+.dashboard-risk__status > .ah-badge {
+  max-width: 100%;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-risk__notified {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-risk__more {
@@ -2042,8 +2102,11 @@ select {
 }
 
 .dashboard-risk__row {
-  flex-wrap: wrap;
-  row-gap: var(--ah-space-1);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--ah-space-2) var(--ah-space-3);
+  padding: var(--ah-space-4) 0;
 }
 
 .dashboard-risk__row:last-child,
@@ -2051,7 +2114,6 @@ select {
   border-bottom: 0;
 }
 
-.dashboard-risk__row > div,
 .dashboard-signups__row > div {
   display: grid;
   flex: 1;
@@ -2066,26 +2128,138 @@ select {
   gap: var(--ah-space-4);
 }
 
-.dashboard-chart .ah-bar-chart {
-  position: relative;
-  min-width: 0;
-  overflow-x: auto;
+/* The selected population drives the ring, total and accessible legend together. */
+.dashboard-chart__description {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
 }
 
-.dashboard-chart__legend span {
+.dashboard-chart__filter .ah-radio-group {
+  gap: var(--ah-space-1);
+  padding: var(--ah-space-1);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  background: var(--ah-color-surface-2);
+}
+
+.dashboard-chart__filter .ah-radio {
+  min-height: 2.75rem;
+  padding-inline: var(--ah-space-3);
+  border-radius: var(--ah-radius-sm);
+  font-size: 0.8rem;
+}
+
+.dashboard-chart__filter .ah-radio:has(input:checked) {
+  background: var(--ah-color-surface);
+  font-weight: 600;
+  box-shadow: var(--ah-shadow-sm);
+}
+
+.dashboard-chart__filter .ah-radio:has(input:focus-visible) {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.dashboard-chart__figure {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ah-space-6) var(--ah-space-10);
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.dashboard-chart__donut {
+  display: grid;
+  place-items: center;
+  width: min(100%, 15rem);
+  aspect-ratio: 1;
+  justify-self: center;
+  border-radius: 50%;
+  background: var(--ah-color-border);
+}
+
+.dashboard-chart__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ah-space-1);
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--ah-color-surface);
+  text-align: center;
+}
+
+.dashboard-chart__center strong {
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.dashboard-chart__center span {
+  max-width: 80%;
+  color: var(--ah-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.dashboard-chart__legend {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.dashboard-chart__legend th,
+.dashboard-chart__legend td {
+  padding: var(--ah-space-2) var(--ah-space-1);
+  border-bottom: 1px solid var(--ah-color-border);
+  text-align: end;
+}
+
+.dashboard-chart__legend th:first-child {
+  text-align: start;
+}
+
+.dashboard-chart__legend thead th {
+  color: var(--ah-color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.dashboard-chart__level {
   display: inline-flex;
   align-items: center;
-  gap: var(--ah-space-1);
+  gap: var(--ah-space-2);
+  overflow-wrap: anywhere;
 }
 
-/* The bars' own classes give each swatch its colour (packages/ui `.ah-bar-chart__bar--*`). */
-.dashboard-chart__swatch.ah-bar-chart__bar--highlighted,
-.dashboard-chart__swatch.ah-bar-chart__bar--total {
-  display: inline-block;
-  width: 0.625rem;
-  height: 0.625rem;
-  min-height: 0;
-  border-radius: 2px;
+.dashboard-chart__swatch {
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 3px;
+  background: var(--ah-level-color);
+}
+
+.dashboard-chart__empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 36rem) {
+  .dashboard-chart__figure {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-chart__donut {
+    width: 12rem;
+  }
 }
 
 /* INC-11 (mockup D1): the name with its dogs and the plan share the row's first line. */

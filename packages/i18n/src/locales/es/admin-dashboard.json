@@ -19,7 +19,8 @@
     "older": "{count} de hace más de {days, plural, one {# día} other {# días}}"
   },
   "risk": {
-    "title": "Revisión de clases en riesgo — {time}, hoy y {days} días vista",
+    "title": "Revisión de clases en riesgo",
+    "schedule": "{time}, hoy y {days} días vista",
     "alerts": "{count, plural, one {# aviso} other {# avisos}}",
     "empty": "Ninguna clase en riesgo",
     "booked": "{count, plural, one {# inscrito} other {# inscritos}}",
@@ -61,9 +62,16 @@
   "chart": {
     "title": "Perros por nivel — {count} activos",
     "legendRecent": "{previous, plural, =0 {con reserva (sem. actual)} one {con reserva (sem. actual o anterior)} other {con reserva (sem. actual o las # anteriores)}}",
-    "legendTotal": "total activos",
-    "recent": "Con reserva",
-    "total": "Total activos",
-    "value": "{total} · {recent} res."
+    "titleRecent": "Perros por nivel — {count} con reservas",
+    "filter": "Perros que se muestran",
+    "all": "Todos",
+    "withBookings": "Con reservas",
+    "descriptionAll": "Todos los perros activos de los niveles de progresión",
+    "activeDogs": "perros activos",
+    "level": "Nivel",
+    "dogs": "Perros",
+    "share": "Porcentaje",
+    "emptyAll": "No hay perros activos en estos niveles.",
+    "emptyRecent": "No hay perros con reservas en este período."
   }
 }
