@@ -39,7 +39,7 @@ async function passwordLogin(page: Page) {
   await prepareScenario(page, "multiProfile");
   await page.goto(`${baseUrl}/login`);
   await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
 }
 

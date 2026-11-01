@@ -85,5 +85,14 @@
   "placeholder": {
     "description": "Aquesta pantalla estarà disponible aviat.",
     "title": "Aviat"
+  },
+  "pwa": {
+    "title": "Instal·la l’aplicació",
+    "description": "Accedeix al club des de la pantalla d’inici del teu dispositiu.",
+    "install": "Instal·la",
+    "instructions": "Com instal·lar-la",
+    "ios": "A Safari, obre el menú de compartir i tria «Afegeix a la pantalla d’inici». Si apareix «Obre com a app», activa-ho i confirma amb «Afegeix».",
+    "browser": "Obre el menú del navegador i busca «Instal·la l’aplicació» o «Afegeix a la pantalla d’inici». Si no hi apareix, prova-ho amb Chrome, Edge o Safari.",
+    "connection": "Cal connexió per consultar les dades i gestionar les reserves."
   }
 }

@@ -121,5 +121,15 @@
     "today": "Avui",
     "training": "Entrenaments",
     "updated": "Canvis desats"
+  },
+  "password": {
+    "show": "Mostra la contrasenya",
+    "hide": "Amaga la contrasenya"
+  },
+  "recovery": {
+    "title": "Revisa el correu",
+    "acknowledge": "Entesos",
+    "checkSpam": "Si no trobes el missatge, comprova també la carpeta de correu no desitjat.",
+    "close": "Tanca"
   }
 }

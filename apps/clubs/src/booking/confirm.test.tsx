@@ -305,6 +305,42 @@ describe("29: the normal confirmation and the informative variants (S08 §2 29, 
     return card;
   }
 
+  it("Josep feedback: explains every counted class and a late cancellation without attendance", async () => {
+    limitReached({
+      current: 2,
+      limit: 2,
+      unit: "DOG",
+      week: "CURRENT",
+      notSelectable: [
+        {
+          bookingId: "done",
+          description: "Salts",
+          startsAtLocal: "2026-08-03T18:50",
+          reason: "DONE",
+          bookingState: "ACTIVE",
+        },
+        {
+          bookingId: "late",
+          description: "Eslàlom",
+          startsAtLocal: "2026-08-04T09:00",
+          reason: "DONE",
+          bookingState: "CANCELLED_LATE",
+        },
+      ],
+    });
+    await tapRow(0);
+    const list = within(
+      await screen.findByRole("region", { name: "Classes que compten en el límit setmanal" }),
+    );
+    expect(list.getAllByRole("listitem")).toHaveLength(2);
+    expect(list.getByText("Dilluns 3 · 18:50")).toBeVisible();
+    expect(list.getByText("Dimarts 4 · 9:00")).toBeVisible();
+    expect(list.getByText("Eslàlom")).toBeVisible();
+    expect(list.getByText("Anul·lada tard · compta com a feta")).toBeVisible();
+    expect(list.queryByText(/assistència|presentat|attendance/iu)).toBeNull();
+    expect(list.queryByRole("button")).toBeNull();
+  });
+
   it("E5-W05 step 6: the limit of next week reached on a next-week row («dl 10», NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h», the coming opening", async () => {
     // At the clock (Sunday 2 at 20:30) Monday 10 belongs to the next booking week. Duna's other
     // class of that week waits for its payment: PAYMENT_PENDING counts and is never swappable, so

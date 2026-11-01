@@ -74,7 +74,11 @@
     "calendarIcs": ".ics",
     "seeBooking": "SEE THE BOOKING",
     "ring": "Ring {name}",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "countedClasses": "Classes counted towards the weekly limit",
+    "countedLate": "Cancelled late · counts as taken",
+    "countedDone": "Counts as taken",
+    "countedReserved": "Booked · counts towards the limit"
   },
   "detail": {
     "title": "Booking details",

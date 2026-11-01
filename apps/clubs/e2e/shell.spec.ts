@@ -48,13 +48,13 @@ async function prepareScenario(page: Page, scenario: "member" | "minimal", brand
 async function login(page: Page) {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("biel.roca@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
 }
 
 test.describe("T-02-14 clubs shell", () => {
-  test("applies cached Cànic branding before React and exposes the dynamic manifest", async ({
+  test("applies cached Cànic branding before React and keeps PWA installation opt-in", async ({
     page,
   }) => {
     await prepareScenario(page, "member", brandingCanic);
@@ -70,14 +70,8 @@ test.describe("T-02-14 clubs shell", () => {
     // E4-W03: the member tab bar of mockup 10 has «Avui» → /avui.
     await expect(page.getByRole("link", { name: "Avui" })).toHaveAttribute("href", "/avui");
 
-    const manifest = await page.evaluate(async () => {
-      const href = document.querySelector<HTMLLinkElement>('link[rel="manifest"]')?.href;
-      return href === undefined ? null : ((await fetch(href)).json() as Promise<unknown>);
-    });
-    expect(manifest).toMatchObject({
-      name: "Club Agility Cànic",
-      short_name: "Club Agility Cànic",
-    });
+    // The mock build has no reviewed PWA configuration or exact member origin.
+    await expect(page.locator('link[rel="manifest"]')).toHaveCount(0);
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "clubs-canic-375.png"),

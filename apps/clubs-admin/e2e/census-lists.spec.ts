@@ -24,7 +24,7 @@ async function prepareAdmin(page: Page) {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }
@@ -133,9 +133,7 @@ test.describe("E2-W01 census universal lists", () => {
     expect(response.status()).toBe(200);
     const exportUrl = new URL(response.url());
     expect(exportUrl.searchParams.get("format")).toBe("xlsx");
-    expect(exportUrl.searchParams.get("columns")).toBe(
-      "fullName,dogs,plan,displayStatus",
-    );
+    expect(exportUrl.searchParams.get("columns")).toBe("fullName,dogs,plan,displayStatus");
     // E4-W07: the inline `200` is saved as the api's file, byte for byte (R-14-12).
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/^canic_members_\d{8}-\d{4}\.xlsx$/u);

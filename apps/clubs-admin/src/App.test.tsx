@@ -465,8 +465,39 @@ describe("E11-W06 W4 (AGENTS rule 3, S01 R-01-06): the back office's user menu",
     window.history.pushState(null, "", "/tauler");
     const assign = stubFullLoads();
     await renderApplication(client);
-    return { assign, toggle: await screen.findByRole("button", { name: "Menú d’usuari" }) };
+    return { client, assign, toggle: await screen.findByRole("button", { name: "Menú d’usuari" }) };
   }
+
+  it("Josep feedback: a remembered administrator can select instructor without logging out", async () => {
+    const { client, assign, toggle } = await openShell();
+    const update = vi.spyOn(client, "updateProfile").mockResolvedValue();
+    const handoff = vi
+      .spyOn(client, "createHandoff")
+      .mockResolvedValue({ url: "https://app.example.test/entrar?handoff=test", code: "test" });
+    const logout = vi.spyOn(client, "logout");
+    fireEvent.click(toggle);
+    fireEvent.click(screen.getByRole("menuitem", { name: "Canviar de perfil" }));
+    const choices = within(screen.getByRole("group", { name: "Canviar de perfil" }));
+    expect(choices.queryByRole("button", { name: /alumn/u })).toBeNull();
+    fireEvent.click(choices.getByRole("button", { name: "Com a instructora" }));
+    await waitFor(() => { expect(assign).toHaveBeenCalledWith("https://app.example.test/entrar?handoff=test"); },
+    );
+    expect(update).toHaveBeenCalledWith("INSTRUCTOR", true);
+    expect(handoff).toHaveBeenCalledWith("clubs-app");
+    expect(logout).not.toHaveBeenCalled();
+  });
+
+  it("Josep feedback: a failed profile handoff stays in the menu and can be retried", async () => {
+    const { client, assign, toggle } = await openShell();
+    vi.spyOn(client, "updateProfile").mockResolvedValue();
+    vi.spyOn(client, "createHandoff").mockRejectedValue(new Error("offline"));
+    fireEvent.click(toggle);
+    fireEvent.click(screen.getByRole("menuitem", { name: "Canviar de perfil" }));
+    fireEvent.click(screen.getByRole("button", { name: "Com a instructora" }));
+    expect(await screen.findByRole("alert")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Com a instructora" })).toBeEnabled();
+    expect(assign).not.toHaveBeenCalled();
+  });
 
   it("R-01-06 user menu → «Tanca la sessió» revokes (POST /oauth2/revoke) and lands on /entrar", async () => {
     const revokes: string[] = [];

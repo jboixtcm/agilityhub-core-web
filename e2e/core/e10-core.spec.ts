@@ -277,7 +277,7 @@ async function submitPassword(page: Page, email: string, password: string): Prom
   await page.getByLabel("Correu electrònic").fill(email);
   const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
   if (await reveal.isVisible()) await reveal.click();
-  await page.getByLabel("Contrasenya").fill(password);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(password);
   const token = page.waitForResponse(isPasswordGrant);
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click({ noWaitAfter: true });
   return token;
@@ -375,7 +375,7 @@ test("E10-W02 · the console's entry: the product host's branding and boot, the 
   const idPage = await idContext.newPage();
   await idPage.goto(`${idUrl}/login`);
   await idPage.getByLabel("Correu electrònic").fill(PLATFORM_EMAIL);
-  await idPage.getByLabel("Contrasenya").fill(corePassword);
+  await idPage.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   // The password grant's answer, read as it arrives: the ID app reloads into /account right after.
   const issued = new Promise<{ body: string; status: number }>((resolveIssued) => {
     idPage.on("response", (response) => {
@@ -1459,7 +1459,7 @@ test("E10-W02 · a second club in under an hour: the manual script, step by step
     await office.goto(`${secondClubAdminUrl}/entrar`);
     await office.getByLabel("Correu electrònic").fill(SECOND_CLUB.adminEmail);
     await office.getByRole("button", { name: "Tinc contrasenya" }).click();
-    await office.getByLabel("Contrasenya").fill(firstAdminPassword);
+    await office.getByLabel("Contrasenya", { exact: true }).fill(firstAdminPassword);
     const signedIn = office.waitForResponse(
       (response) =>
         new URL(response.url()).pathname === "/oauth2/token" &&

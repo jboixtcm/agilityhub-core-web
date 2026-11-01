@@ -20,6 +20,25 @@ body {
   background: var(--ah-color-background);
 }
 
+.profile-install {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.profile-install h2,
+.profile-install p {
+  margin: 0;
+}
+
+.profile-install h2 {
+  font-size: 16px;
+}
+
+.profile-install small {
+  color: var(--ah-color-text-muted);
+}
+
 button,
 select,
 input {

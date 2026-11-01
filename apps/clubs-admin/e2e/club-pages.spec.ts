@@ -32,7 +32,7 @@ async function loginAdmin(page: Page) {
   await page.goto(`${adminUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }
@@ -41,7 +41,7 @@ async function loginMember(page: Page) {
   await prepare(page, "member");
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
 }

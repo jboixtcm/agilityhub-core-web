@@ -1,0 +1,6 @@
+apps/clubs/e2e/word-feedback.spec.ts 51ms
+apps/clubs/src/App.tsx 182ms
+apps/id/src/App.tsx 57ms
+apps/clubs-admin/src/UserMenu.tsx 7ms
+packages/ui/src/password-input.test.tsx 2ms
+packages/ui/src/password-input.tsx 2ms

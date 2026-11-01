@@ -27,7 +27,7 @@ async function login(page: Page): Promise<void> {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }

@@ -53,7 +53,9 @@ async function login(page: Page, scenario = "member", { clock = bookingNow, loca
   await page
     .getByLabel(locale === "es" ? "Correo electrónico" : "Correu electrònic")
     .fill("laura@example.test");
-  await page.getByLabel(locale === "es" ? "Contraseña" : "Contrasenya").fill("secret-password");
+  await page
+    .getByLabel(locale === "es" ? "Contraseña" : "Contrasenya", { exact: true })
+    .fill("secret-password");
   await page
     .getByRole("button", { exact: true, name: locale === "es" ? "ENTRAR" : "ENTRA" })
     .click();
@@ -157,6 +159,9 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
         "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
+    const counted = page.getByRole("region", { name: "Classes que compten en el límit setmanal" });
+    await expect(counted.getByRole("listitem")).toHaveCount(2);
+    await expect(counted).not.toContainText(/assistència|presentat/iu);
     await shot(page, "29-limit-375.png");
     await page.getByRole("button", { name: "Tanca" }).click();
     await expect(page.getByRole("heading", { name: "Classes" })).toBeVisible();
@@ -170,7 +175,7 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await prepare(page, "member");
     await page.goto(`${baseUrl}/entrar`);
     await page.getByLabel("Correu electrònic").fill("laura@example.test");
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
     await page.waitForURL("**/inici");
     await openReserve(page);

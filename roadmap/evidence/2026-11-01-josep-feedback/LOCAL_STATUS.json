@@ -1,0 +1,13 @@
+{
+  "status": "LOCAL_VALIDATION_PASSED",
+  "browserTests": 351,
+  "vitestTests": 3683,
+  "nodeTests": 20,
+  "tasks": 38,
+  "exitCode": 0,
+  "sourceSha256": "c755480e69e2cc6f5ee1091d184a5afd897cdf6c04125731fef64a78f8068503",
+  "sourceInputs": 986,
+  "browser": "Docker Chromium and WebKit",
+  "productionBrowser": "Unavailable: local browser use disabled in Work settings",
+  "pushDelivery": "PENDING_CONFIGURATION"
+}

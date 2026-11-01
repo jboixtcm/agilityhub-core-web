@@ -1,0 +1,122 @@
+heavy.sh: 13:35 waiting for the host lock, held by: 13:34 agilityhub-core-api: ./mvnw -q -Dtest=BookingRulesTest,OpenApiSnapshotTest -Dit.test=BookingsIT -Djacoco.skip=true verify
+heavy.sh: 13:35 got the host lock after 0 min 45 s
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ ❯ src/history/history.test.tsx (17 tests | 2 failed) 1644ms
+   ❯ T-10-31 screen 25 «Històric» (S10 §2, R-10-14) (11)
+     × every other line of R-10-14's table: a cancelled future class on top, «ha avisat» late and in time, the club on the member's behalf, the system, a cancelled training, and a club cancellation without a message 39ms
+     × the detail's instant is read in the club's time zone, never the device's (a late cancellation near midnight) 24ms
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > every other line of R-10-14's table: a cancelled future class on top, «ha avisat» late and in time, the club on the member's behalf, the system, a cancelled training, and a club cancellation without a message
+AssertionError: expected [ …(15) ] to deeply equal [ …(15) ]
+
+- Expected
++ Received
+
+  [
+-   "dl 10/08 | Classe B+C · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",
+-   "dj 30/07 | Classe B+C · amb Duna | anul·lada tard / Vas avisar el club el 30/07 a les 17:05 · compta com a feta",
++   "dl 10/08 · 18:50 | Classe B+C · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",
++   "dj 30/07 · 18:50 | Classe B+C · amb Duna | anul·lada tard / Vas avisar el club el 30/07 a les 17:05 · compta com a feta",
+    "dt 28/07 · 18:50 | Classe B+C · amb Duna | feta",
+-   "dl 27/07 | Classe A+B · amb Toby | anul·lada / Vas avisar el club, dins termini · no compta",
++   "dl 27/07 · 18:50 | Classe A+B · amb Toby | anul·lada / Vas avisar el club, dins termini · no compta",
+    "dv 24/07 | Entrenament · amb Rock | fet",
+-   "dj 23/07 | Classe D i sup. · amb Rock | anul·lada / Pel club en nom teu · no compta",
++   "dj 23/07 · 19:00 | Classe D i sup. · amb Rock | anul·lada / Pel club en nom teu · no compta",
+    "dt 21/07 · 18:50 | Classe B+C · amb Duna | anul·lada tard / Anul·lada per tu, el 21/07 a les 19:10 · compta com a feta",
+-   "dl 20/07 | Classe B+C · amb Duna | anul·lada / Per inactivitat o baixa · no compta",
++   "dl 20/07 · 18:50 | Classe B+C · amb Duna | anul·lada / Per inactivitat o baixa · no compta",
+    "ds 18/07 | Entrenament · amb Rock | anul·lada / Per tu",
+    "dv 17/07 · 19:00 | Classe D i sup. · amb Rock | cancel·lada pel club / «Pluja forta: pistes tancades»",
+    "dj 16/07 | Entrenament · amb Rock | cancel·lada pel club",
+-   "dc 15/07 | Classe D i sup. · amb Rock | cancel·lada pel club",
++   "dc 15/07 · 19:00 | Classe D i sup. · amb Rock | cancel·lada pel club",
+    "dt 14/07 · 18:50 | Classe B+C · amb Duna | no presentat / Sense avís previ · compta com a feta",
+    "dg 12/07 | Seminari d'obstacles | feta",
+    "dc 8/07 · 18:50 | Classe C+D · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",
+  ]
+
+ ❯ src/history/history.test.tsx:98:27
+     96|     await renderHistory({ scenario: "historyAllReasons" });
+     97|     // As delivered (`startsAt` desc): the eight extra lines mixed wit…
+     98|     expect(historyRows()).toEqual([
+       |                           ^
+     99|       "dl 10/08 | Classe B+C · amb Duna | anul·lada / Anul·lada per tu…
+    100|       "dj 30/07 | Classe B+C · amb Duna | anul·lada tard / Vas avisar …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the detail's instant is read in the club's time zone, never the device's (a late cancellation near midnight)
+AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   "dt 21/07 · 18:50 | Classe B+C | anul·lada tard / Anul·lada per tu, el 21/07 a les 22:30 · compta com a feta",
++   "dt 21/07 · 23:00 | Classe B+C | anul·lada tard / Anul·lada per tu, el 21/07 a les 22:30 · compta com a feta",
+  ]
+
+ ❯ src/history/history.test.tsx:181:27
+    179|       branding: { ...canic, timeZone: "America/Argentina/Buenos_Aires"…
+    180|     });
+    181|     expect(historyRows()).toEqual([
+       |                           ^
+    182|       "dt 21/07 · 18:50 | Classe B+C | anul·lada tard / Anul·lada per …
+    183|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  2 failed | 132 passed (134)
+   Start at  13:35:48
+   Duration  9.19s (tests 64%, transform 16%, environment 11%, import 5%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx src/booking/confirm.test.tsx src/history/history.test.tsx

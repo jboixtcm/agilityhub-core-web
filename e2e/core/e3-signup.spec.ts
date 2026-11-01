@@ -314,7 +314,7 @@ async function loginAdmin(page: Page): Promise<void> {
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
   if (await reveal.isVisible()) await reveal.click();
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
   await page.waitForURL("**/tauler");
   await expect(page.locator(".admin-shell")).toBeVisible();

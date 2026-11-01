@@ -51,7 +51,7 @@ async function desktopContext(browser: Browser): Promise<BrowserContext> {
 async function login(page: Page, baseUrl: string, email: string): Promise<void> {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
 }
 
@@ -178,7 +178,7 @@ test("T-01-18 password login reaches the seeded account", async ({ browser }) =>
   await expect(page.getByPlaceholder("correu@exemple.cat")).toBeVisible();
   await screenshot(page, "01-entrar-core-375.png");
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
   await page.waitForURL(`${adminUrl}/tauler`);
   expect(handoffs).toEqual(["admin.example.test"]);
@@ -200,7 +200,7 @@ test("T-11-11 E11-W06 W1 · a member screen opened signed out is the one the pas
   await page.goto(`${clubsUrl}/historic`);
   await page.waitForURL(/\/entrar\?next=%2Fhistoric$/u);
   await page.getByLabel("Correu electrònic").fill("member@example.test");
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
   await page.waitForURL(/\/(?:historic|perfil-acces)$/u);
   // A multi-profile account chooses on 03b first; the kept address opens after its choice.
@@ -224,7 +224,7 @@ test("T-01-21 seeded administrator opens the real backoffice", async ({ browser 
   await screenshot(page, "admin-entrar-core-1280.png");
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
   await expect(page).toHaveURL(/\/tauler$/u);
   // INC-97: the mobile sidebar is collapsed; prove the loaded dashboard itself.
@@ -301,7 +301,7 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   await expect(accountPage.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
   await screenshot(accountPage, "id-login-core-1280.png");
   await accountPage.getByLabel("Correu electrònic").fill("admin@example.test");
-  await accountPage.getByLabel("Contrasenya").fill(corePassword);
+  await accountPage.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await accountPage.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await accountPage.waitForURL("**/account");
   await expect(accountPage.getByRole("heading", { name: "El teu compte" })).toBeVisible();
@@ -387,7 +387,7 @@ test("T-01-22 apps/id resumes a real authorize flow through oauth2/session", asy
   );
   await expect(page.getByRole("heading", { name: "Entra al teu compte" })).toBeVisible();
   await screenshot(page, "id-oidc-login-core-1280.png");
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await expect.poll(() => callbackUrl !== undefined).toBe(true);
   expect(sessionRequestFlow).toBe(flow);

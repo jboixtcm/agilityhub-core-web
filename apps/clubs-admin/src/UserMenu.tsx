@@ -1,4 +1,4 @@
-import { type AuthClient, useSession } from "@agilityhub/auth";
+import { type AuthClient, type Role, useSession } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import { Icon, useBranding } from "@agilityhub/ui";
 import { useEffect, useId, useRef, useState } from "react";
@@ -67,6 +67,11 @@ export function UserMenu({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation(["shell", "auth"]);
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(false);
+  const [choosingProfile, setChoosingProfile] = useState(false);
+  const [profileError, setProfileError] = useState(false);
+  const profiles = me?.membership?.profiles ?? [];
+  const canChangeProfile =
+    profiles.length > 1 && me?.impersonation === undefined && me?.support === undefined;
   const container = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
@@ -126,6 +131,24 @@ export function UserMenu({ authClient }: { authClient: AuthClient }) {
       });
   };
 
+  const changeProfile = async (profile: Role) => {
+    setPending(true);
+    setProfileError(false);
+    try {
+      await authClient.updateProfile(profile, me?.membership?.rememberProfile ?? false);
+      if (profile === "ADMIN") {
+        setChoosingProfile(false);
+        setPending(false);
+        return;
+      }
+      const handoff = await authClient.createHandoff("clubs-app");
+      window.location.assign(handoff.url);
+    } catch {
+      setProfileError(true);
+      setPending(false);
+    }
+  };
+
   return (
     <div className="admin-user-menu" ref={container}>
       <button
@@ -157,11 +180,51 @@ export function UserMenu({ authClient }: { authClient: AuthClient }) {
             </p>
           )}
           <LanguageSelector authClient={authClient} />
+          {choosingProfile && canChangeProfile ? (
+            <div
+              className="admin-user-menu__items"
+              role="group"
+              aria-label={t("auth:profile.changeProfile")}
+            >
+              {profiles.map((profile) => (
+                <button
+                  disabled={pending}
+                  key={profile}
+                  onClick={() => void changeProfile(profile)}
+                  type="button"
+                >
+                  {t(
+                    profile === "MEMBER"
+                      ? "auth:profileChoice.member"
+                      : profile === "INSTRUCTOR"
+                        ? "auth:profileChoice.instructor"
+                        : "auth:profileChoice.admin",
+                    { gender: me?.membership?.gender ?? "OTHER" },
+                  )}
+                </button>
+              ))}
+              {profileError ? <p role="alert">{t("auth:access.genericError")}</p> : null}
+            </div>
+          ) : null}
           <ul
             aria-label={t("shell:header.userMenu")}
             className="admin-user-menu__items"
             role="menu"
           >
+            {canChangeProfile ? (
+              <li role="none">
+                <button
+                  disabled={pending}
+                  onClick={() => {
+                    setChoosingProfile((value) => !value);
+                  }}
+                  role="menuitem"
+                  type="button"
+                >
+                  {t("auth:profile.changeProfile")}
+                </button>
+              </li>
+            ) : null}
             <li role="none">
               <button
                 aria-busy={pending || undefined}

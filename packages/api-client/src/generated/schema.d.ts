@@ -13050,6 +13050,11 @@ export interface components {
         };
         NotSelectable: {
             bookingId: string;
+            /**
+             * @description Booking state, including CANCELLED_LATE; no attendance data. Lets the weekly-limit list distinguish a late cancellation from a class already started.
+             * @enum {string|null}
+             */
+            bookingState?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB" | null;
             description?: string | null;
             /** @enum {string} */
             reason: "DONE" | "LATE_WINDOW";

@@ -20,9 +20,9 @@
   "withDog": "{title} · con {dog}",
   "detail": {
     "noShow": "Sin aviso previo · cuenta como hecha",
-    "byMemberLate": "Por ti, el {date} a las {time} · cuenta como hecha",
+    "byMemberLate": "Anulada por ti, el {date} a las {time} · cuenta como realizada",
     "noticeLate": "Avisaste al club el {date} a las {time} · cuenta como hecha",
-    "byMemberInTime": "Por ti, dentro de plazo · no cuenta",
+    "byMemberInTime": "Anulada por ti, dentro del plazo · no cuenta",
     "noticeInTime": "Avisaste al club, dentro de plazo · no cuenta",
     "byClubOnBehalf": "Por el club en tu nombre · no cuenta",
     "system": "Por inactividad o baja · no cuenta",

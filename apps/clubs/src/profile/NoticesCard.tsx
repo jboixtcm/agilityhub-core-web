@@ -250,6 +250,9 @@ export function NoticesCard({ client }: { client: ApiClient }) {
               }}
             />
           </div>
+          {support === "supported" && !impersonated ? (
+            <p className="profile-notices__note">{t("auth:profile.pushPermissionHint")}</p>
+          ) : null}
           {support === "ios-install" ? (
             <p className="profile-notices__note">
               {t("auth:profile.iosInstall")}

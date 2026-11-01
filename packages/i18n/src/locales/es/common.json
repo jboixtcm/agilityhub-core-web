@@ -121,5 +121,15 @@
     "today": "Hoy",
     "training": "Entrenamientos",
     "updated": "Cambios guardados"
+  },
+  "password": {
+    "show": "Mostrar la contraseña",
+    "hide": "Ocultar la contraseña"
+  },
+  "recovery": {
+    "title": "Solicitud recibida",
+    "acknowledge": "Entendido",
+    "checkSpam": "Si no encuentras el mensaje, comprueba también la carpeta de correo no deseado.",
+    "close": "Cerrar"
   }
 }

@@ -1,0 +1,95 @@
+heavy.sh: 13:52 waiting for the host lock, held by: 13:51 agilityhub-core-api: ./mvnw -q test-compile failsafe:integration-test failsafe:verify -Dit.test=UniversalListsIT
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-audit-20261101/web-source
+> bash scripts/e2e-docker.sh feedback-20261101 -- --capture-task\=2026-11-01-josep-feedback --workers\=2
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: 2026-11-01-josep-feedback
+Capture folder of the permanent mock specs: 2026-11-01-josep-feedback
+Playwright arguments: --workers=2
+Checkout copied into the container: 816M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 247, added 244
+Progress: resolved 858, reused 0, downloaded 561, added 560
+Progress: resolved 858, reused 0, downloaded 739, added 739
+Progress: resolved 858, reused 0, downloaded 857, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.9s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 66b5b4fedba9fa7a
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 9282b385a4138a53
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing ff9c8ff9f4e93101
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 34a85fe5f960b82f
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=2
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+ ELIFECYCLE  Command failed with exit code 137.

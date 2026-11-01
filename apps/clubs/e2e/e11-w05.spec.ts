@@ -42,7 +42,7 @@ async function signIn(page: Page, scenario: string, email: string, landing: stri
   );
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL((url) => url.pathname === landing);
 }

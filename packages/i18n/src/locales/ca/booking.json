@@ -74,7 +74,11 @@
     "calendarIcs": ".ics",
     "seeBooking": "VEURE LA RESERVA",
     "ring": "Pista {name}",
-    "backHome": "Torna a l’inici"
+    "backHome": "Torna a l’inici",
+    "countedClasses": "Classes que compten en el límit setmanal",
+    "countedLate": "Anul·lada tard · compta com a feta",
+    "countedDone": "Compta com a feta",
+    "countedReserved": "Reservada · compta en el límit"
   },
   "detail": {
     "title": "Detall de la reserva",

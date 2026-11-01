@@ -72,13 +72,13 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
     ]);
     expect(screen.getByText("Darrers 2 mesos, del més recent al més antic")).toBeVisible();
     expect(historyRows()).toEqual([
-      "dt 28/07 | Classe B+C · amb Duna | feta",
+      "dt 28/07 · 18:50 | Classe B+C · amb Duna | feta",
       "dv 24/07 | Entrenament · amb Rock | fet",
-      "dt 21/07 | Classe B+C · amb Duna | anul·lada tard / Per tu, el 21/07 a les 19:10 · compta com a feta",
-      "dv 17/07 | Classe D i sup. · amb Rock | cancel·lada pel club / «Pluja forta: pistes tancades»",
-      "dt 14/07 | Classe B+C · amb Duna | no presentat / Sense avís previ · compta com a feta",
+      "dt 21/07 · 18:50 | Classe B+C · amb Duna | anul·lada tard / Anul·lada per tu, el 21/07 a les 19:10 · compta com a feta",
+      "dv 17/07 · 19:00 | Classe D i sup. · amb Rock | cancel·lada pel club / «Pluja forta: pistes tancades»",
+      "dt 14/07 · 18:50 | Classe B+C · amb Duna | no presentat / Sense avís previ · compta com a feta",
       "dg 12/07 | Seminari d'obstacles | feta",
-      "dc 8/07 | Classe C+D · amb Duna | anul·lada / Per tu, dins termini · no compta",
+      "dc 8/07 · 18:50 | Classe C+D · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",
     ]);
     const badge = (text: string) =>
       [...document.querySelectorAll(".history-row__badge")].find(
@@ -96,21 +96,21 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
     await renderHistory({ scenario: "historyAllReasons" });
     // As delivered (`startsAt` desc): the eight extra lines mixed with mockup 25's seven.
     expect(historyRows()).toEqual([
-      "dl 10/08 | Classe B+C · amb Duna | anul·lada / Per tu, dins termini · no compta",
-      "dj 30/07 | Classe B+C · amb Duna | anul·lada tard / Vas avisar el club el 30/07 a les 17:05 · compta com a feta",
-      "dt 28/07 | Classe B+C · amb Duna | feta",
-      "dl 27/07 | Classe A+B · amb Toby | anul·lada / Vas avisar el club, dins termini · no compta",
+      "dl 10/08 · 18:50 | Classe B+C · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",
+      "dj 30/07 · 18:50 | Classe B+C · amb Duna | anul·lada tard / Vas avisar el club el 30/07 a les 17:05 · compta com a feta",
+      "dt 28/07 · 18:50 | Classe B+C · amb Duna | feta",
+      "dl 27/07 · 18:50 | Classe A+B · amb Toby | anul·lada / Vas avisar el club, dins termini · no compta",
       "dv 24/07 | Entrenament · amb Rock | fet",
-      "dj 23/07 | Classe D i sup. · amb Rock | anul·lada / Pel club en nom teu · no compta",
-      "dt 21/07 | Classe B+C · amb Duna | anul·lada tard / Per tu, el 21/07 a les 19:10 · compta com a feta",
-      "dl 20/07 | Classe B+C · amb Duna | anul·lada / Per inactivitat o baixa · no compta",
+      "dj 23/07 · 19:00 | Classe D i sup. · amb Rock | anul·lada / Pel club en nom teu · no compta",
+      "dt 21/07 · 18:50 | Classe B+C · amb Duna | anul·lada tard / Anul·lada per tu, el 21/07 a les 19:10 · compta com a feta",
+      "dl 20/07 · 18:50 | Classe B+C · amb Duna | anul·lada / Per inactivitat o baixa · no compta",
       "ds 18/07 | Entrenament · amb Rock | anul·lada / Per tu",
-      "dv 17/07 | Classe D i sup. · amb Rock | cancel·lada pel club / «Pluja forta: pistes tancades»",
+      "dv 17/07 · 19:00 | Classe D i sup. · amb Rock | cancel·lada pel club / «Pluja forta: pistes tancades»",
       "dj 16/07 | Entrenament · amb Rock | cancel·lada pel club",
-      "dc 15/07 | Classe D i sup. · amb Rock | cancel·lada pel club",
-      "dt 14/07 | Classe B+C · amb Duna | no presentat / Sense avís previ · compta com a feta",
+      "dc 15/07 · 19:00 | Classe D i sup. · amb Rock | cancel·lada pel club",
+      "dt 14/07 · 18:50 | Classe B+C · amb Duna | no presentat / Sense avís previ · compta com a feta",
       "dg 12/07 | Seminari d'obstacles | feta",
-      "dc 8/07 | Classe C+D · amb Duna | anul·lada / Per tu, dins termini · no compta",
+      "dc 8/07 · 18:50 | Classe C+D · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",
     ]);
   });
 
@@ -142,7 +142,7 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
     );
     window.history.replaceState(null, "", "/historic");
     await renderHistory();
-    expect(historyRows()).toEqual(["dc 8/07 | Classe C+D | anul·lada"]);
+    expect(historyRows()).toEqual(["dc 8/07 · 18:50 | Classe C+D | anul·lada"]);
     expect(screen.getByText("Darrer mes, del més recent al més antic")).toBeVisible();
     server.resetHandlers();
   });
@@ -179,7 +179,7 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
       branding: { ...canic, timeZone: "America/Argentina/Buenos_Aires" },
     });
     expect(historyRows()).toEqual([
-      "dt 21/07 | Classe B+C | anul·lada tard / Per tu, el 21/07 a les 22:30 · compta com a feta",
+      "dt 21/07 · 23:00 | Classe B+C | anul·lada tard / Anul·lada per tu, el 21/07 a les 22:30 · compta com a feta",
     ]);
     server.resetHandlers();
   });
@@ -188,7 +188,7 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
     window.history.replaceState(null, "", "/historic");
     await renderHistory({ scenario: "historySingleDog" });
     expect(screen.queryByRole("group", { name: "Gossos" })).toBeNull();
-    expect(historyRows()[0]).toBe("dt 28/07 | Classe B+C | feta");
+    expect(historyRows()[0]).toBe("dt 28/07 · 18:50 | Classe B+C | feta");
     expect(historyRows().some((row) => row.includes(" · amb "))).toBe(false);
     cleanup();
     window.history.replaceState(null, "", "/historic");

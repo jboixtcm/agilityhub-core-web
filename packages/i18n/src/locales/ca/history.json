@@ -20,9 +20,9 @@
   "withDog": "{title} · amb {dog}",
   "detail": {
     "noShow": "Sense avís previ · compta com a feta",
-    "byMemberLate": "Per tu, el {date} a les {time} · compta com a feta",
+    "byMemberLate": "Anul·lada per tu, el {date} a les {time} · compta com a feta",
     "noticeLate": "Vas avisar el club el {date} a les {time} · compta com a feta",
-    "byMemberInTime": "Per tu, dins termini · no compta",
+    "byMemberInTime": "Anul·lada per tu, dins termini · no compta",
     "noticeInTime": "Vas avisar el club, dins termini · no compta",
     "byClubOnBehalf": "Pel club en nom teu · no compta",
     "system": "Per inactivitat o baixa · no compta",

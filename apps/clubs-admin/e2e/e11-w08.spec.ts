@@ -54,7 +54,7 @@ async function prepare(page: Page, scenario: string, branding: unknown) {
 async function submitPassword(page: Page, email: string) {
   await page.getByLabel("Correu electrònic").fill(email);
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   const token = page.waitForRequest(
     (request) =>
       new URL(request.url()).pathname === "/oauth2/token" &&

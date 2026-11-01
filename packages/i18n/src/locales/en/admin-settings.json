@@ -819,7 +819,7 @@
       },
       "cancelThresholdMinutes": {
         "help": "Minimum notice required to cancel a training session.",
-        "label": "Cancellation up to"
+        "label": "Training cancellation until"
       },
       "capacityPerRingSlot": {
         "help": "Number of dogs that can train simultaneously in each ring.",

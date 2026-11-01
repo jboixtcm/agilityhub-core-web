@@ -22,7 +22,7 @@ async function htmlFiles(directory) {
 }
 
 const symbols = new Map();
-const files = (await htmlFiles(mockupRoot)).sort();
+const files = [...(await htmlFiles(mockupRoot)).sort(), path.join(iconRoot, "additional.svg")];
 
 for (const file of files) {
   const source = await readFile(file, "utf8");

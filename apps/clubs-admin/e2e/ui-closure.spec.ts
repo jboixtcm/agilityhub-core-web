@@ -22,7 +22,7 @@ for (const width of [768, 1280, 1512, 1920]) {
     await page.goto("http://127.0.0.1:4174/entrar");
     await page.getByLabel("Correu electrònic").fill("instructor@example.test");
     await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     await expect(page.getByText("Setmana actual")).toBeVisible();
     const filterColors = await page
@@ -31,7 +31,7 @@ for (const width of [768, 1280, 1512, 1920]) {
         if (select.parentElement === null) throw new Error("Missing filter label");
         return {
           appearance: getComputedStyle(select).appearance,
-        select: getComputedStyle(select).backgroundColor,
+          select: getComputedStyle(select).backgroundColor,
           label: getComputedStyle(select.parentElement).backgroundColor,
         };
       });
@@ -85,5 +85,40 @@ for (const width of [768, 1280, 1512, 1920]) {
     await expect(
       page.locator(".ring-block-card").getByRole("combobox", { name: "Dia", exact: true }),
     ).toBeVisible();
+  });
+}
+
+for (const width of [375, 1280]) {
+  test(`Josep November administrator profile menu ${String(width)}`, async ({
+    page,
+    browserName,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.addInitScript(() => {
+      localStorage.setItem("agilityhub.locale", "ca");
+      localStorage.setItem("agilityhub.mockScenario", "admin");
+    });
+    await page.goto("http://127.0.0.1:4174/entrar");
+    await page.getByLabel("Correu electrònic").fill("aina.serra@example.test");
+    await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
+    await page.getByRole("button", { name: "ENTRA", exact: true }).click();
+    await page.waitForURL("**/tauler");
+    await page.getByRole("button", { name: "Menú d’usuari" }).click();
+    await page.getByRole("menuitem", { name: "Canviar de perfil" }).click();
+    const profiles = page.getByRole("group", { name: "Canviar de perfil" });
+    await expect(profiles.getByRole("button")).toHaveCount(2);
+    await expect(profiles).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      width,
+    );
+    mkdirSync(evidence, { recursive: true });
+    await page.screenshot({
+      fullPage: true,
+      path: resolve(evidence, `feedback3-profiles-${browserName}-${String(width)}.png`),
+    });
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Menú d’usuari" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Menú d’usuari" })).toBeFocused();
   });
 }

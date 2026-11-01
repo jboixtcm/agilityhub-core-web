@@ -23,6 +23,7 @@ afterEach(() => {
   server.events.removeAllListeners();
   resetConsoleMockState();
   vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 afterAll(() => {
   server.close();
@@ -798,6 +799,9 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
   });
 
   it("Auditoria and Ús: the club's configuration audit, and the month's aggregates in the club's month", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    // Match the fixed October usage fixtures; the assertion must survive a real month rollover.
+    vi.setSystemTime(new Date("2026-10-15T09:00:00Z"));
     const reads = captureRequests(
       (method, url) =>
         method === "GET" &&
@@ -810,7 +814,7 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     cleanup();
     await openTab(CANIC, "us");
     expect(await screen.findByText("168")).toBeInTheDocument();
-    expect(reads.at(-1)?.url.searchParams.get("month")).toMatch(/^\d{4}-\d{2}$/u);
+    expect(reads.at(-1)?.url.searchParams.get("month")).toBe("2026-10");
     fireEvent.change(screen.getByLabelText("Mes"), { target: { value: "2026-09" } });
     expect(await screen.findByText("165")).toBeInTheDocument();
     expect(reads.at(-1)?.url.searchParams.get("month")).toBe("2026-09");

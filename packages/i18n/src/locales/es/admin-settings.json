@@ -819,7 +819,7 @@
       },
       "cancelThresholdMinutes": {
         "help": "Antelación mínima para cancelar un entrenamiento.",
-        "label": "Cancelación hasta"
+        "label": "Cancelación de entrenamientos hasta"
       },
       "capacityPerRingSlot": {
         "help": "Número de perros que pueden entrenar a la vez en cada pista.",

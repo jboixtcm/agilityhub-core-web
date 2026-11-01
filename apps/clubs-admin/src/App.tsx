@@ -20,6 +20,7 @@ import {
   FormField,
   Icon,
   Input,
+  PasswordInput,
   isModuleUiItemEnabled,
   requiredModulesForUiItem,
   resolveBrandingLogo,
@@ -1125,14 +1126,15 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
           {passwordVisible ? (
             <>
               <FormField id="access-password" label={t("auth:access.passwordLabel")}>
-                <Input
+                <PasswordInput
                   autoComplete="current-password"
                   id="access-password"
                   onChange={(event) => {
                     setPassword(event.currentTarget.value);
                   }}
                   required
-                  type="password"
+                  showLabel={t("common:password.show")}
+                  hideLabel={t("common:password.hide")}
                   value={password}
                 />
               </FormField>

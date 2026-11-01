@@ -502,6 +502,7 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
     expect(hold.limit.notSelectable).toEqual([
       {
         bookingId: "booking-duna-done",
+        bookingState: "ACTIVE",
         description: "B+C",
         reason: "DONE",
         startsAtLocal: "2026-08-02T20:00",
@@ -647,12 +648,14 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
       notSelectable: [
         {
           bookingId: "booking-duna-mon3",
+          bookingState: "ACTIVE",
           description: "B+C",
           reason: "DONE",
           startsAtLocal: "2026-08-03T18:50",
         },
         {
           bookingId: "booking-duna-done",
+          bookingState: "ACTIVE",
           description: "B+C",
           reason: "DONE",
           startsAtLocal: "2026-08-02T20:00",
@@ -698,12 +701,14 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
     expect(details.notSelectable).toEqual([
       {
         bookingId: "booking-duna-mon3",
+        bookingState: "CANCELLED_LATE",
         description: "B+C",
         reason: "DONE",
         startsAtLocal: "2026-08-03T18:50",
       },
       {
         bookingId: "booking-duna-done",
+        bookingState: "ACTIVE",
         description: "B+C",
         reason: "DONE",
         startsAtLocal: "2026-08-02T20:00",
@@ -748,6 +753,7 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
     expect(hold.limit.notSelectable).toEqual([
       {
         bookingId: "booking-duna-mon3",
+        bookingState: "PAYMENT_PENDING",
         description: "B+C",
         reason: "LATE_WINDOW",
         startsAtLocal: "2026-08-03T18:50",
@@ -762,12 +768,14 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
     expect((await saturdayRefusal("bookingLimitDone")).notSelectable).toEqual([
       {
         bookingId: "booking-duna-mon3",
+        bookingState: "PAYMENT_PENDING",
         description: "B+C",
         reason: "LATE_WINDOW",
         startsAtLocal: "2026-08-03T18:50",
       },
       {
         bookingId: "booking-duna-done",
+        bookingState: "ACTIVE",
         description: "B+C",
         reason: "DONE",
         startsAtLocal: "2026-08-02T20:00",
@@ -799,6 +807,7 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
     expect(limit.notSelectable).toEqual([
       {
         bookingId: created.id,
+        bookingState: "PAYMENT_PENDING",
         description: "B+C",
         reason: "LATE_WINDOW",
         startsAtLocal: "2026-08-05T18:50",

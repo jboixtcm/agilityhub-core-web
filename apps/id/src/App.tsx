@@ -1,7 +1,7 @@
 import { isApiError } from "@agilityhub/api-client";
 import { type AccountSession, type AuthClient, useSession } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales, type Locale } from "@agilityhub/i18n";
-import { Badge, Button, Card, Icon, Input, Select } from "@agilityhub/ui";
+import { Badge, Button, Card, Icon, Input, Modal, PasswordInput, Select } from "@agilityhub/ui";
 import {
   type ReactNode,
   type SyntheticEvent,
@@ -288,6 +288,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
   const [pending, setPending] = useState<"login" | "magic" | "reset" | null>(null);
   const [error, setError] = useState<string>();
   const [message, setMessage] = useState<string>();
+  const [recoverySent, setRecoverySent] = useState(false);
   const flow = oidcFlow();
   const continuation = oidcContinuation();
 
@@ -332,6 +333,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
       rememberOidcRequest(flow, continuation);
       await authClient.requestMagicLink(email, purpose);
       setMessage(t("id:login.magicSent"));
+      if (purpose === "RESET") setRecoverySent(true);
     } catch (requestFailure) {
       if (isApiError(requestFailure) && requestFailure.status === 429) {
         countdown.start(requestFailure.retryAfter ?? 60);
@@ -345,6 +347,27 @@ function LoginPage({ authClient, navigate }: PageProps) {
 
   return (
     <main className="id-page id-page--login">
+      {recoverySent ? (
+        <Modal
+          closeLabel={t("common:recovery.close")}
+          onClose={() => {
+            setRecoverySent(false);
+          }}
+          open
+          title={t("common:recovery.title")}
+        >
+          <p>{t("id:login.magicSent")}</p>
+          <p>{t("common:recovery.checkSpam")}</p>
+          <Button
+            onClick={() => {
+              setRecoverySent(false);
+            }}
+            type="button"
+          >
+            {t("common:recovery.acknowledge")}
+          </Button>
+        </Modal>
+      ) : null}
       <Card className="id-auth-card">
         <PageIntro description={t("id:login.description")} title={t("id:login.title")} />
         <form className="id-form" noValidate onSubmit={(event) => void submit(event)}>
@@ -360,13 +383,14 @@ function LoginPage({ authClient, navigate }: PageProps) {
             value={email}
           />
           <label htmlFor="id-password">{t("id:login.password")}</label>
-          <Input
+          <PasswordInput
             autoComplete="current-password"
             id="id-password"
             onChange={(event) => {
               setPassword(event.currentTarget.value);
             }}
-            type="password"
+            showLabel={t("common:password.show")}
+            hideLabel={t("common:password.hide")}
             value={password}
           />
           <Button
@@ -521,20 +545,21 @@ function PasswordForm({ authClient, navigate }: PageProps) {
             {me.account.hasPassword ? (
               <>
                 <label htmlFor="id-current-password">{t("id:password.current")}</label>
-                <Input
+                <PasswordInput
                   autoComplete="current-password"
                   id="id-current-password"
                   onChange={(event) => {
                     setCurrent(event.currentTarget.value);
                   }}
                   required
-                  type="password"
+                  showLabel={t("common:password.show")}
+                  hideLabel={t("common:password.hide")}
                   value={current}
                 />
               </>
             ) : null}
             <label htmlFor="id-new-password">{t("id:password.next")}</label>
-            <Input
+            <PasswordInput
               autoComplete="new-password"
               id="id-new-password"
               minLength={8}
@@ -542,11 +567,12 @@ function PasswordForm({ authClient, navigate }: PageProps) {
                 setNext(event.currentTarget.value);
               }}
               required
-              type="password"
+              showLabel={t("common:password.show")}
+              hideLabel={t("common:password.hide")}
               value={next}
             />
             <label htmlFor="id-repeat-password">{t("id:password.repeat")}</label>
-            <Input
+            <PasswordInput
               autoComplete="new-password"
               id="id-repeat-password"
               minLength={8}
@@ -554,7 +580,8 @@ function PasswordForm({ authClient, navigate }: PageProps) {
                 setRepeat(event.currentTarget.value);
               }}
               required
-              type="password"
+              showLabel={t("common:password.show")}
+              hideLabel={t("common:password.hide")}
               value={repeat}
             />
             {error === undefined ? null : <p role="alert">{error}</p>}

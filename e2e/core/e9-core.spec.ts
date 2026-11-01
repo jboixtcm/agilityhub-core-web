@@ -90,7 +90,7 @@ async function adminBearer(browser: Browser): Promise<{ bearer: string; page: Pa
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
   if (await reveal.isVisible()) await reveal.click();
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   const request = page.waitForRequest(
     (candidate) =>
       new URL(candidate.url()).pathname.startsWith("/api/v1/") &&

@@ -44,7 +44,7 @@ test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (
     );
     await page.goto(`${baseUrl}/entrar`);
     await page.getByLabel("Correu electrònic").fill("ivet.puig@example.test");
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
     // E6-W01 round 2 #7 (ruling E71): an instructor lands on 20.
     await page.waitForURL((url) => url.pathname === "/instructor/dia");

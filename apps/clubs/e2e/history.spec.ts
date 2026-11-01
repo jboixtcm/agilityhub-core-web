@@ -4,7 +4,11 @@ import { resolve } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E6-W02");
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  process.env.E2E_CAPTURE_TASK ?? "E6-W02",
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -40,7 +44,7 @@ async function openHistory(page: Page, scenario: string) {
   await prepare(page, scenario);
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
   await page.goto(`${baseUrl}/historic`);
@@ -93,17 +97,24 @@ test.describe("E6-W02 T-10-31 screen 25 «Històric» against MSW", () => {
     await expect(rows(page).nth(2)).toContainText("Classe B+C · amb Duna");
     await expect(rows(page).nth(2)).toContainText("anul·lada tard");
     await expect(rows(page).nth(2)).toContainText(
-      "Per tu, el 21/07 a les 19:10 · compta com a feta",
+      "Anul·lada per tu, el 21/07 a les 19:10 · compta com a feta",
     );
     await expect(rows(page).nth(3)).toContainText("«Pluja forta: pistes tancades»");
     await expect(rows(page).nth(4)).toContainText("Sense avís previ · compta com a feta");
-    await expect(rows(page).nth(6)).toContainText("Per tu, dins termini · no compta");
+    await expect(rows(page).nth(6)).toContainText("Anul·lada per tu, dins termini · no compta");
     // «Inici» stays lit (mockup 25), and nothing overflows at 375 px.
     await expect(page.getByRole("link", { name: "Inici" })).toHaveAttribute("aria-current", "page");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
       375,
     );
+    await expect(rows(page).nth(2).locator(".history-row__date")).toContainText(/\d{1,2}:[0-5]\d/u);
     await shot(page, "25-historic-375.png");
+    await page.setViewportSize({ width: 1280, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      1280,
+    );
+    await shot(page, "feedback3-history-1280.png");
+    await page.setViewportSize({ width: 375, height: 812 });
 
     await page.getByRole("button", { name: "Entrenaments" }).click();
     await expect(page).toHaveURL(/\?tipus=TRAINING$/u);

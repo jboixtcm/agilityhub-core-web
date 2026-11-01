@@ -662,3 +662,19 @@ button.confirm-option {
   margin: var(--ah-space-1) 0;
   font-size: 0.8rem;
 }
+.weekly-limit-classes__list {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weekly-limit-classes__list .ah-card {
+  padding: var(--ah-space-3);
+}
+
+.weekly-limit-classes__list p {
+  margin: var(--ah-space-1) 0;
+  overflow-wrap: anywhere;
+}

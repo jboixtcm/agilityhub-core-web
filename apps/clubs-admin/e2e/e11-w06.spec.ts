@@ -42,7 +42,7 @@ async function signIn(page: Page, scenario: string) {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }
@@ -74,17 +74,18 @@ test.describe("E11-W06: the audit's fixes on the back office (1280 px)", () => {
         localStorage.setItem("agilityhub.locale", "ca");
         // No session until the sign-in: the restore answers `400 REFRESH_EXPIRED`.
         localStorage.setItem("agilityhub.mockScenario", "adminSignedOut");
-        localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cachedBranding));
+        localStorage.setItem(
+          `agilityhub.branding:${location.host}`,
+          JSON.stringify(cachedBranding),
+        );
       },
       { cachedBranding: brandingCanic },
     );
     await page.goto(`${baseUrl}/preinscripcions/${signupMemberId}`);
-    await expect(page).toHaveURL(
-      `${baseUrl}/entrar?next=%2Fpreinscripcions%2F${signupMemberId}`,
-    );
+    await expect(page).toHaveURL(`${baseUrl}/entrar?next=%2Fpreinscripcions%2F${signupMemberId}`);
     await page.getByLabel("Correu electrònic").fill("admin@example.test");
     await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
     await expect(page).toHaveURL(`${baseUrl}/preinscripcions/${signupMemberId}`);
     await expect(page.getByRole("combobox", { name: "Modalitat i tarifa" })).toBeVisible();
@@ -105,7 +106,8 @@ test.describe("E11-W06: the audit's fixes on the back office (1280 px)", () => {
     await expect(button).toBeFocused();
     await button.click();
     const revoked = page.waitForRequest(
-      (request) => request.method() === "POST" && new URL(request.url()).pathname === "/oauth2/revoke",
+      (request) =>
+        request.method() === "POST" && new URL(request.url()).pathname === "/oauth2/revoke",
     );
     await page.getByRole("menuitem", { name: "Tanca la sessió" }).click();
     await revoked;
@@ -120,7 +122,9 @@ test.describe("E11-W06: the audit's fixes on the back office (1280 px)", () => {
     await signIn(page, "admin");
     await page.goto(`${baseUrl}/gossos/dog-duna`);
     await expect(page.getByRole("heading", { name: "Duna" })).toBeVisible();
-    await expect(page.locator(".census-record__level-current")).toContainText(/\d{2}\/\d{2}\/\d{4}/u);
+    await expect(page.locator(".census-record__level-current")).toContainText(
+      /\d{2}\/\d{2}\/\d{4}/u,
+    );
     await shot(page, "50-D10-dog-dates-1280.png");
   });
 
@@ -131,7 +135,9 @@ test.describe("E11-W06: the audit's fixes on the back office (1280 px)", () => {
     await page.goto(`${baseUrl}/facturacio?mes=2026-10`);
     await page.getByRole("button", { name: "1 · SIMULA EL MES" }).first().click();
     const alert = page.getByRole("alert").filter({ hasText: "té dos preus vigents" });
-    await expect(alert).toContainText("La modalitat Abonat té dos preus vigents per a Quota mensual.");
+    await expect(alert).toContainText(
+      "La modalitat Abonat té dos preus vigents per a Quota mensual.",
+    );
     await expect(alert.getByRole("link", { name: "Modalitats i tarifes" })).toHaveAttribute(
       "href",
       "/modalitats",

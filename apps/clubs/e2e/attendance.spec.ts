@@ -36,7 +36,7 @@ async function login(page: Page, scenario: string) {
   );
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   // Round 2 #7 (ruling E71): an instructor lands on 20.
   await page.waitForURL((url) => url.pathname === "/instructor/dia");

@@ -31,7 +31,7 @@ async function loginMember(page: Page, scenario = "member") {
   await prepare(page, scenario);
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
 }
@@ -41,7 +41,7 @@ async function loginAdmin(page: Page) {
   await page.goto(`${adminUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }
@@ -87,7 +87,6 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     await expect(page.getByRole("link", { name: "VULL DEMANAR INACTIVITAT" })).toBeVisible();
     await expect(page.getByRole("group").getByRole("button")).toHaveCount(11);
     await shot(page, "15-baixa-375.png");
-
   });
 
   test("T-13-29 renders a new inactivity request", async ({ page }) => {

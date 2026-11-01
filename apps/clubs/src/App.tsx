@@ -25,6 +25,7 @@ import {
   EmptyState,
   Icon,
   Input,
+  PasswordInput,
   isModuleUiItemEnabled,
   Modal,
   requiredModulesForUiItem,
@@ -57,6 +58,7 @@ import { DataExportCard, dataExportJobFromUrl } from "./profile/DataExportCard";
 import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
+import { InstallAppCard } from "./pwa/InstallAppCard";
 import {
   navigate as navigateTo,
   type NavigationKind,
@@ -712,6 +714,7 @@ export function AccessPage({
     handoff === null || handoff === "" ? null : "handoff",
   );
   const [message, setMessage] = useState<string>();
+  const [recoverySent, setRecoverySent] = useState(false);
   // E4-W18 round 2: the tab was reloaded while a code was being exchanged. The code has left the
   // address and may already be redeemed (it is single-use), so it cannot be sent again: the link
   // is no longer valid, and the admin opens «Entra com l'abonat» again.
@@ -842,6 +845,7 @@ export function AccessPage({
     try {
       await authClient.requestMagicLink(email, purpose);
       setMessage(t("auth:access.neutralSuccess"));
+      if (purpose === "RESET") setRecoverySent(true);
     } catch (requestError) {
       if (isApiError(requestError) && requestError.status === 429) {
         countdown.start(requestError.retryAfter ?? 60);
@@ -876,6 +880,27 @@ export function AccessPage({
 
   return (
     <main className="auth-page">
+      {recoverySent ? (
+        <Modal
+          closeLabel={t("common:recovery.close")}
+          onClose={() => {
+            setRecoverySent(false);
+          }}
+          open
+          title={t("common:recovery.title")}
+        >
+          <p>{t("auth:access.neutralSuccess")}</p>
+          <p>{t("common:recovery.checkSpam")}</p>
+          <Button
+            onClick={() => {
+              setRecoverySent(false);
+            }}
+            type="button"
+          >
+            {t("common:recovery.acknowledge")}
+          </Button>
+        </Modal>
+      ) : null}
       <section aria-labelledby="access-title" className="auth-panel">
         <h1 className="ah-sr-only" id="access-title">
           {t("auth:access.title")}
@@ -898,7 +923,7 @@ export function AccessPage({
           <label className="ah-sr-only" htmlFor="access-password">
             {t("auth:access.passwordLabel")}
           </label>
-          <Input
+          <PasswordInput
             autoComplete="current-password"
             id="access-password"
             onChange={(event) => {
@@ -906,7 +931,8 @@ export function AccessPage({
             }}
             placeholder={t("auth:access.passwordPlaceholder")}
             required
-            type="password"
+            showLabel={t("common:password.show")}
+            hideLabel={t("common:password.hide")}
             value={password}
           />
           <Button
@@ -1112,7 +1138,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
           <label className="ah-sr-only" htmlFor="activation-password">
             {t("auth:activation.newPassword")}
           </label>
-          <Input
+          <PasswordInput
             autoComplete="new-password"
             id="activation-password"
             onChange={(event) => {
@@ -1120,13 +1146,14 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
             }}
             placeholder={t("auth:activation.newPassword")}
             required
-            type="password"
+            showLabel={t("common:password.show")}
+            hideLabel={t("common:password.hide")}
             value={newPassword}
           />
           <label className="ah-sr-only" htmlFor="activation-password-repeat">
             {t("auth:activation.repeatPassword")}
           </label>
-          <Input
+          <PasswordInput
             autoComplete="new-password"
             id="activation-password-repeat"
             onChange={(event) => {
@@ -1134,7 +1161,8 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
             }}
             placeholder={t("auth:activation.repeatPassword")}
             required
-            type="password"
+            showLabel={t("common:password.show")}
+            hideLabel={t("common:password.hide")}
             value={repeatPassword}
           />
           <Button
@@ -1370,38 +1398,41 @@ function PasswordModal({
           {hasPassword ? (
             <>
               <label htmlFor="profile-current-password">{t("auth:profile.currentPassword")}</label>
-              <Input
+              <PasswordInput
                 autoComplete="current-password"
                 id="profile-current-password"
                 onChange={(event) => {
                   setCurrent(event.currentTarget.value);
                 }}
                 required
-                type="password"
+                showLabel={t("common:password.show")}
+                hideLabel={t("common:password.hide")}
                 value={current}
               />
             </>
           ) : null}
           <label htmlFor="profile-new-password">{t("auth:profile.newPassword")}</label>
-          <Input
+          <PasswordInput
             autoComplete="new-password"
             id="profile-new-password"
             onChange={(event) => {
               setNext(event.currentTarget.value);
             }}
             required
-            type="password"
+            showLabel={t("common:password.show")}
+            hideLabel={t("common:password.hide")}
             value={next}
           />
           <label htmlFor="profile-repeat-password">{t("auth:profile.repeatPassword")}</label>
-          <Input
+          <PasswordInput
             autoComplete="new-password"
             id="profile-repeat-password"
             onChange={(event) => {
               setRepeat(event.currentTarget.value);
             }}
             required
-            type="password"
+            showLabel={t("common:password.show")}
+            hideLabel={t("common:password.hide")}
             value={repeat}
           />
           {error === undefined ? null : <p role="alert">{error}</p>}
@@ -1565,6 +1596,7 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
           </div>
         )}
       </Card>
+      <InstallAppCard />
       <NoticesCard client={client} />
       {me.impersonation === undefined && me.membership.roles.includes("MEMBER") ? (
         <DataExportCard

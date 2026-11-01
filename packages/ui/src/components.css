@@ -727,3 +727,28 @@
   font-family: inherit;
   font-size: inherit;
 }
+.ah-password-input {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.ah-password-input .ah-input {
+  width: 100%;
+  padding-inline-end: 3rem;
+}
+
+.ah-password-input button {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  padding: 0;
+  color: var(--ah-color-text);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: var(--ah-radius-md);
+}

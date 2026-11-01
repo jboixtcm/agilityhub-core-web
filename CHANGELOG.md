@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-01 — Josep feedback: access, profile switching and booking explanations
+
+- Show/hide passwords across access and password forms; acknowledge recovery requests in a dialog with spam-folder guidance.
+- Offer authorized profile switching from the administrator menu, retain the remembered-profile choice, and explain notification permission.
+- Show class times and explicit member cancellation text in history; clarify that the two-hour setting applies to training.
+- Explain a weekly-limit refusal with the counted classes and late-cancellation state, without attendance. Adopt API `525e5f5`'s additive bookingState field.
+- Preserve the published student grid, dashboard risk/donut changes and member-only PWA. Pin the usage fixture clock so its existing test survives month rollover.
+- Total admin JavaScript budget: 686 → 688 kB for the translated access/profile additions (measured 687.10 kB gzip); the 460 kB initial-load budget stays unchanged (452.75 kB).
+- Validation: `roadmap/evidence/2026-11-01-josep-feedback/VALIDATION.md`.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -13,7 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Allow 686 kB for the administration's total JavaScript after the grid and filters (685.06 kB measured with production settings); retain the 460 kB initial-load budget (451.38 kB measured).
 
 - Apply Josep's second 30 October review: month in ring-block dates, ring selection before time, clearer hourly separators, explicit student sorting and member links for administrators.
-
 
 - 2026-10-30 evening feedback (`20263010-1_Josep.docx`): accept short/omitted years in planning dates, keep cancelled classes in their own tab, explain required privacy acceptance and preserve optional image consent. Skip personal onboarding in impersonation and revoke only its temporary grant when closing the tab. Add a home action after booking and resolve recipient filter names when the notification list is empty. Adopt the generated onboarding image-consent contract. The administration total JavaScript budget becomes 684 kB for these forms and three-language copy (683.21 kB measured; initial-load budgets unchanged).
 

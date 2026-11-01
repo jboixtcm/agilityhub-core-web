@@ -36,7 +36,7 @@ async function signIn(page: Page, scenario: "admin" | "instructor") {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(`${scenario}@example.test`);
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: "ENTRA" }).click();
   // The account's landing (E11-W02 round 2, INC-41): D1 for an ADMIN, D12 for an INSTRUCTOR.
   await page.waitForURL(/\/(tauler|agenda)$/u);

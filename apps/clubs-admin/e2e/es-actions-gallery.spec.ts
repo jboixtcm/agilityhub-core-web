@@ -38,7 +38,7 @@ async function signInEs(page: Page, scenario: "admin" | "instructor", now?: Date
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correo electrónico").fill(`${scenario}@example.test`);
   await page.getByRole("button", { name: "Tengo contraseña" }).click();
-  await page.getByLabel("Contraseña").fill("secret-password");
+  await page.getByLabel("Contraseña", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRAR" }).click();
   await page.waitForURL(/\/(tauler|agenda)$/u);
 }

@@ -68,7 +68,7 @@ async function prepareAdmin(
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel(accessCopy[locale].email).fill("admin@example.test");
   await page.getByRole("button", { name: accessCopy[locale].reveal }).click();
-  await page.getByLabel(accessCopy[locale].password).fill("secret-password");
+  await page.getByLabel(accessCopy[locale].password, { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: accessCopy[locale].enter }).click();
   await page.waitForURL("**/tauler");
 }
@@ -116,10 +116,15 @@ test.describe("E2-W05 generated club settings", () => {
       path: resolve(evidenceDirectory, "D11-parametres-1280.png"),
     });
 
-    await page.getByRole("button", { exact: true, name: "Edita Anul·lació fins a" }).click();
-    let drawer = page.getByRole("dialog", { name: "Anul·lació fins a" });
+    await page
+      .getByRole("button", { exact: true, name: "Edita Anul·lació d’entrenaments fins a" })
+      .click();
+    let drawer = page.getByRole("dialog", { name: "Anul·lació d’entrenaments fins a" });
     await expect(drawer.getByText("S'aplica a partir d'ara.")).toBeVisible();
-    await expect(drawer.getByLabel("Anul·lació fins a")).toHaveAttribute("type", "number");
+    await expect(drawer.getByLabel("Anul·lació d’entrenaments fins a")).toHaveAttribute(
+      "type",
+      "number",
+    );
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "D11-parametre-calaix-1280.png"),
@@ -129,7 +134,7 @@ test.describe("E2-W05 generated club settings", () => {
         request.method() === "PUT" &&
         request.url().includes("/parameters/training.cancelThresholdMinutes"),
     );
-    await drawer.getByLabel("Anul·lació fins a").fill("180");
+    await drawer.getByLabel("Anul·lació d’entrenaments fins a").fill("180");
     await drawer.getByLabel("Motiu del canvi (opcional)").fill("Canvi de prova");
     await drawer.getByRole("button", { name: "DESA" }).click();
     await updateRequest;
@@ -138,10 +143,10 @@ test.describe("E2-W05 generated club settings", () => {
     await page
       .getByRole("button", {
         exact: true,
-        name: "Mostra l'històric de Anul·lació fins a",
+        name: "Mostra l'històric de Anul·lació d’entrenaments fins a",
       })
       .click();
-    drawer = page.getByRole("dialog", { name: "Històric · Anul·lació fins a" });
+    drawer = page.getByRole("dialog", { name: "Històric · Anul·lació d’entrenaments fins a" });
     await expect(drawer.locator("li")).toHaveCount(2);
     await drawer.getByRole("button", { name: "Tanca" }).click();
 
@@ -198,7 +203,8 @@ test.describe("E2-W05 generated club settings", () => {
       await page.goto(`${baseUrl}/parametres`);
 
       const duration = locale === "es" ? "2 h antes" : "2 h before";
-      const label = locale === "es" ? "Cancelación hasta" : "Cancellation up to";
+      const label =
+        locale === "es" ? "Cancelación de entrenamientos hasta" : "Training cancellation until";
       const help =
         locale === "es"
           ? "Antelación mínima para cancelar un entrenamiento."

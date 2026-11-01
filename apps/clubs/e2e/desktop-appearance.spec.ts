@@ -53,7 +53,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
     });
     await page.goto("http://127.0.0.1:4173/login");
     await page.getByLabel("Correu electrònic").fill("laura@example.test");
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     await expect(page.getByRole("heading", { name: /Hola, Laura/u })).toBeVisible();
     const nav = page.getByRole("navigation", { name: "Navegació principal" });

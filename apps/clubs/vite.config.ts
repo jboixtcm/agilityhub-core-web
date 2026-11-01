@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import tailwindcss from "@tailwindcss/vite";
@@ -76,6 +76,20 @@ export default defineConfig(({ mode }) => {
             fileName: "favicon.svg",
             source: readFileSync(new URL("./public/favicon.svg", import.meta.url), "utf8"),
           });
+          // The release builder supplies the reviewed tenant assets. They never enter other SPAs.
+          if (process.env.VITE_MEMBER_PWA_NAME ?? env.VITE_MEMBER_PWA_NAME) {
+            for (const file of [
+              "manifest.webmanifest",
+              "icon-192.png",
+              "icon-512.png",
+              "maskable-512.png",
+              "apple-touch-icon.png",
+            ]) {
+              const path = new URL(`./public/pwa/${file}`, import.meta.url);
+              if (!existsSync(path)) throw new Error(`Missing member PWA asset: ${file}`);
+              this.emitFile({ type: "asset", fileName: `pwa/${file}`, source: readFileSync(path) });
+            }
+          }
         },
       },
       react(),
@@ -89,6 +103,7 @@ export default defineConfig(({ mode }) => {
         devOptions: { enabled: false },
         filename: "sw.ts",
         injectManifest: {
+          globPatterns: ["**/*.{js,wasm,css,html}", "pwa/*.{png,webmanifest}"],
           // INC-20: the mock world (and its worker) never goes into the production precache.
           // S16 (E9-W04): nor the viewer's 3D tab (three.js), loaded only when someone opens it.
           globIgnores: ["**/browser-*.js", "**/mockServiceWorker.js", "**/CourseViewer3D-*.js"],

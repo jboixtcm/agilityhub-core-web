@@ -19,7 +19,7 @@ test("desktop admin keeps the follow-up label on one line and the counter separa
   await page.goto("http://127.0.0.1:4174/login");
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: "ENTRA", exact: true }).click();
   const link = page.getByRole("link", { name: /^Seguiment alumnes/u });
   await expect(link).toBeVisible();

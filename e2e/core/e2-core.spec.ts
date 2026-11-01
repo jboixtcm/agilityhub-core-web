@@ -70,7 +70,7 @@ async function loginAdmin(page: Page): Promise<void> {
   await page.goto(`${adminUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await revealPassword(page);
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
   await page.waitForURL("**/tauler");
   await expect(page.locator(".admin-shell")).toBeVisible();
@@ -99,7 +99,7 @@ async function loginAdmin(page: Page): Promise<void> {
 async function loginMember(page: Page, email = "member@example.test"): Promise<void> {
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await expectNoRefreshDuring(page, async () => {
     await submitPasswordLogin(page);
     await page.waitForURL("**/inici");

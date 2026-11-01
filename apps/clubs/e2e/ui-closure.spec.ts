@@ -22,7 +22,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
     });
     await page.goto("http://127.0.0.1:4173/entrar");
     await page.getByLabel("Correu electrònic").fill("laura@example.test");
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     await page.getByRole("link", { name: "Entrenaments", exact: true }).click();
     await expect(page.getByRole("group", { name: "Matí" })).toBeVisible();

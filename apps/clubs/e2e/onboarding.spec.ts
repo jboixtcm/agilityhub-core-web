@@ -33,7 +33,7 @@ async function prepareScenario(page: Page, scenario: "onboarding" | "policyRecon
 async function login(page: Page) {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("biel.roca@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
 }
 

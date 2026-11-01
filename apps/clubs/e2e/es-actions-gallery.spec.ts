@@ -39,7 +39,7 @@ async function loginEs(page: Page): Promise<void> {
   );
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correo electrónico").fill("laura@example.test");
-  await page.getByLabel("Contraseña").fill("secret-password");
+  await page.getByLabel("Contraseña", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRAR" }).click();
   await page.waitForURL("**/instructor/dia");
 }

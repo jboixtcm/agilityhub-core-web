@@ -20,9 +20,9 @@
   "withDog": "{title} · with {dog}",
   "detail": {
     "noShow": "No notice given · counts as attended",
-    "byMemberLate": "By you, on {date} at {time} · counts as attended",
+    "byMemberLate": "Cancelled by you on {date} at {time} · counts as taken",
     "noticeLate": "You told the club on {date} at {time} · counts as attended",
-    "byMemberInTime": "By you, in time · does not count",
+    "byMemberInTime": "Cancelled by you in time · does not count",
     "noticeInTime": "You told the club, in time · does not count",
     "byClubOnBehalf": "By the club on your behalf · does not count",
     "system": "Due to inactivity or leave · does not count",

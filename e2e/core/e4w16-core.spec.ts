@@ -91,7 +91,7 @@ async function loginAdmin(page: Page): Promise<void> {
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
   if (await reveal.isVisible()) await reveal.click();
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
   await page.waitForURL("**/tauler");
   await expect(page.locator(".admin-shell")).toBeVisible();
@@ -100,7 +100,7 @@ async function loginAdmin(page: Page): Promise<void> {
 async function loginMember(page: Page, email = memberEmail): Promise<void> {
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
-  await page.getByLabel("Contrasenya").fill(corePassword);
+  await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   // A38 (E11-W02): /inici opens in place with the login's session, so no refresh can be aborted
   // by leaving it (the `400 REFRESH_REUSED` this helper used to wait out).
   await expectNoRefreshDuring(page, async () => {

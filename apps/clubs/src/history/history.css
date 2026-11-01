@@ -83,23 +83,32 @@
 }
 
 .history-row__line {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--ah-space-3);
+  gap: var(--ah-space-1) var(--ah-space-3);
   font-size: 0.88rem;
 }
 
 .history-row__date {
-  width: 3.75rem;
-  flex: none;
+  grid-column: 1 / -1;
   color: var(--ah-color-text-muted);
   font-size: 0.8rem;
   white-space: nowrap;
 }
 
 .history-row__title {
-  flex: 1;
   min-width: 0;
+}
+
+@media (min-width: 48rem) {
+  .history-row__line {
+    grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+  }
+
+  .history-row__date {
+    grid-column: auto;
+  }
 }
 
 /* E6-W04 step 0b: an activity with a page — the title's link covers the whole row. */

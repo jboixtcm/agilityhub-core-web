@@ -26,7 +26,7 @@ async function prepareAdmin(page: Page) {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("admin@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }
@@ -123,7 +123,9 @@ test("T-14-27 renders the audit and PDF export state in ca/es/en without missing
     // Signed in first (the account's language applies at the sign-in, E11-W06 W5); the language
     // selector lives in the user menu (E11-W06 W4).
     await expect(page.getByRole("table")).toBeVisible();
-    await page.getByRole("button", { name: /^(Menú d’usuari|Menú de usuario|User menu)$/u }).click();
+    await page
+      .getByRole("button", { name: /^(Menú d’usuari|Menú de usuario|User menu)$/u })
+      .click();
     await page.locator(".admin-user-menu .shell-language select").selectOption(item.locale);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("heading", { name: item.title })).toBeVisible();

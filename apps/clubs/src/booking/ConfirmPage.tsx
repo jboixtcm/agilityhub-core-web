@@ -474,7 +474,42 @@ function RefusedView({
         session={state.classSession}
       />
       {note}
+      {state.code === "BOOKING_LIMIT_REACHED" ? (
+        <WeeklyLimitClasses details={state.details} />
+      ) : null}
     </>
+  );
+}
+
+/** The API's counted bookings for this week and subject; attendance never appears here. */
+function WeeklyLimitClasses({ details }: { details: Partial<BookingLimitReachedDetails> }) {
+  const { t } = useTranslation("booking");
+  const dayTime = useDayTime();
+  const items = details.notSelectable ?? [];
+  if (items.length === 0) return null;
+  return (
+    <section aria-labelledby="weekly-limit-title" className="weekly-limit-classes">
+      <h2 className="booking-section__title" id="weekly-limit-title">
+        {t("booking:confirm.countedClasses")}
+      </h2>
+      <ul className="weekly-limit-classes__list">
+        {items.map((item) => (
+          <li key={item.bookingId}>
+            <Card>
+              {item.startsAtLocal ? <strong>{dayTime(item.startsAtLocal)}</strong> : null}
+              <p>{item.description}</p>
+              <Badge tone={item.bookingState === "CANCELLED_LATE" ? "warning" : "neutral"}>
+                {item.bookingState === "CANCELLED_LATE"
+                  ? t("booking:confirm.countedLate")
+                  : item.reason === "DONE"
+                    ? t("booking:confirm.countedDone")
+                    : t("booking:confirm.countedReserved")}
+              </Badge>
+            </Card>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

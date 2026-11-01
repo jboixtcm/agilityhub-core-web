@@ -121,5 +121,15 @@
     "today": "Today",
     "training": "Training",
     "updated": "Changes saved"
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "recovery": {
+    "title": "Check your email",
+    "acknowledge": "Got it",
+    "checkSpam": "If you cannot find the message, check your spam or junk folder too.",
+    "close": "Close"
   }
 }

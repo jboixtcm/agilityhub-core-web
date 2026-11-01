@@ -85,5 +85,14 @@
   "placeholder": {
     "description": "Esta pantalla estará disponible pronto.",
     "title": "Próximamente"
+  },
+  "pwa": {
+    "title": "Instala la aplicación",
+    "description": "Accede al club desde la pantalla de inicio de tu dispositivo.",
+    "install": "Instala",
+    "instructions": "Cómo instalarla",
+    "ios": "En Safari, abre el menú de compartir y elige «Añadir a pantalla de inicio». Si aparece «Abrir como app», actívalo y confirma con «Añadir».",
+    "browser": "Abre el menú del navegador y busca «Instalar aplicación» o «Añadir a pantalla de inicio». Si no aparece, pruébalo con Chrome, Edge o Safari.",
+    "connection": "Necesitas conexión para consultar los datos y gestionar las reservas."
   }
 }

@@ -59,7 +59,7 @@ for (const mode of ["dark", "light"] as const) {
     await page.goto("http://127.0.0.1:4174/entrar");
     await page.getByLabel("Correu electrònic").fill("admin@example.test");
     await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     await page.waitForURL("**/tauler");
     await page.getByRole("combobox", { name: /Aparença/u }).selectOption(mode);

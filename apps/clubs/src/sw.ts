@@ -62,7 +62,13 @@ precacheAndRoute(self.__WB_MANIFEST);
 // The app shell answers navigations, never the same-site proxy routes (api, OAuth2, OIDC).
 registerRoute(
   new NavigationRoute(createHandlerBoundToURL("/index.html"), {
-    denylist: [/^\/api\//u, /^\/oauth2\//u, /^\/connect\//u, /^\/\.well-known\//u],
+    denylist: [
+      /^\/api(?:\/|$)/u,
+      /^\/oauth2(?:\/|$)/u,
+      /^\/connect(?:\/|$)/u,
+      /^\/\.well-known(?:\/|$)/u,
+      /^\/pwa(?:\/|$)/u,
+    ],
   }),
 );
 

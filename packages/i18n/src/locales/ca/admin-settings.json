@@ -819,7 +819,7 @@
       },
       "cancelThresholdMinutes": {
         "help": "Antelació mínima per anul·lar un entrenament.",
-        "label": "Anul·lació fins a"
+        "label": "Anul·lació d’entrenaments fins a"
       },
       "capacityPerRingSlot": {
         "help": "Nombre de gossos que poden entrenar alhora a cada pista.",

@@ -27,6 +27,7 @@ import { App } from "./App";
 import { BOOT_FAILURE_BRANDING, BootFailurePage } from "./BootFailurePage";
 import { configureBuildEvents } from "./courses/live-events";
 import { setPushRegistration } from "./notifications/push";
+import { initializeMemberPwa } from "./pwa/install";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
@@ -48,6 +49,7 @@ const BOOT_NAMESPACES: readonly ClubsNamespace[] = [
 
 async function bootstrap(root: HTMLElement) {
   const env = import.meta.env as Record<string, string | undefined>;
+  initializeMemberPwa(env.VITE_CLUBS_URL, env.VITE_MEMBER_PWA_NAME);
   const mockEnabled = import.meta.env.VITE_MOCK === "1";
   // INC-20: the literal `import.meta.env.VITE_MOCK` lets Vite drop the mock world (MSW, fixtures)
   // from a production build; a variable would keep its chunk in the bundle and the precache.

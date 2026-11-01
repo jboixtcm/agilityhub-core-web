@@ -27,15 +27,19 @@ async function login(page: Page, scenario = "admin") {
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("aina.serra@example.test");
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: "ENTRA" }).click();
   await page.waitForURL("**/tauler");
 }
 
-test("T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the counters", async ({ page }) => {
+test("T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the counters", async ({
+  page,
+}) => {
   await login(page);
 
-  await expect(page.getByRole("heading", { name: /Bon dia!.*dilluns.*10 d’agost/iu })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Bon dia!.*dilluns.*10 d’agost/iu }),
+  ).toBeVisible();
   await expect(page.getByText("184", { exact: true })).toBeVisible();
   await expect(page.getByText("87%", { exact: true })).toBeVisible();
   await expect(page.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
@@ -49,9 +53,13 @@ test("T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the co
 
   await page.getByRole("button", { name: "VALIDA" }).first().click();
   await expect(page).toHaveURL(/\/preinscripcions\/42000000-0000-4000-8000-000000000001$/u);
-  await expect(page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u }),
+  ).toBeVisible();
   await expect(page.getByText(/no publiquis fotos on surti ella/u)).toBeVisible();
-  await expect(page.getByLabel("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
+  await expect(page.getByLabel("Nivell inicial")).toHaveValue(
+    "43000000-0000-4000-8000-000000000001",
+  );
   await expect(page.getByLabel("Import efectivament cobrat:")).toHaveValue(/130,00/u);
   await page.screenshot({
     fullPage: true,
@@ -73,15 +81,23 @@ test("E3-W08 step 6 (R-04-06, E38): D2 shows a readmission's old and new values,
 }) => {
   await login(page, "adminSignupReviewReadmission");
   await page.getByRole("button", { name: "VALIDA" }).first().click();
-  await expect(page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u }),
+  ).toBeVisible();
   await expect(page.locator(".ah-badge", { hasText: "Readmissió" })).toBeVisible();
   // `exact`: the reused dog has its own block, «Canvis respecte de la fitxa de baixa Kiwi» (E4-W13).
-  const changes = page.getByRole("region", { exact: true, name: "Canvis respecte de la fitxa de baixa" });
+  const changes = page.getByRole("region", {
+    exact: true,
+    name: "Canvis respecte de la fitxa de baixa",
+  });
   await expect(changes.getByText("Abans: marta.antic@example.test")).toBeVisible();
   await expect(changes.getByText("Ara: marta.roca@example.test")).toBeVisible();
   await page.screenshot({
     fullPage: true,
-    path: resolve(import.meta.dirname, "../../../roadmap/evidence/E3-W08/D2-readmission-mock-1280.png"),
+    path: resolve(
+      import.meta.dirname,
+      "../../../roadmap/evidence/E3-W08/D2-readmission-mock-1280.png",
+    ),
   });
   await page.getByRole("button", { name: "EDITA LES DADES" }).click();
   const drawer = page.getByRole("dialog", { name: "Edita les dades de la preinscripció" });
@@ -98,18 +114,28 @@ test("T-04-12 E4-W13 (R-04-06, R-04-19, E38): D2 shows the reused dog's old and 
   const frozenCalls: string[] = [];
   page.on("request", (request) => {
     const path = new URL(request.url()).pathname;
-    if (path.startsWith(`${kiwiPath}/`) && request.method() !== "GET") frozenCalls.push(`${request.method()} ${path}`);
+    if (path.startsWith(`${kiwiPath}/`) && request.method() !== "GET")
+      frozenCalls.push(`${request.method()} ${path}`);
   });
   await login(page, "adminSignupReviewReadmission");
   await page.getByRole("button", { name: "VALIDA" }).first().click();
-  await expect(page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u })).toBeVisible();
-  const dogChanges = page.getByRole("region", { exact: true, name: "Canvis respecte de la fitxa de baixa Kiwi" });
+  await expect(
+    page.getByRole("heading", { name: /Preinscripció #1042 — Marta Roca Pujol \+ Kiwi/u }),
+  ).toBeVisible();
+  const dogChanges = page.getByRole("region", {
+    exact: true,
+    name: "Canvis respecte de la fitxa de baixa Kiwi",
+  });
   await expect(dogChanges.getByText("Abans: Kivi", { exact: true })).toBeVisible();
   await expect(dogChanges.getByText("Ara: Kiwi", { exact: true })).toBeVisible();
   // E4-W13 round 2 (review nit #5): one line per document type, named after the club's types.
   await expect(dogChanges.getByText("Cartilla de vacunes", { exact: true })).toBeVisible();
-  await expect(dogChanges.getByText("Abans: cartilla_Kivi_2025.pdf", { exact: true })).toBeVisible();
-  await expect(dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true })).toBeVisible();
+  await expect(
+    dogChanges.getByText("Abans: cartilla_Kivi_2025.pdf", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true }),
+  ).toBeVisible();
   await expect(dogChanges.getByText("Assegurança", { exact: true })).toBeVisible();
   await expect(dogChanges.getByText("Ara: Assegurança.pdf", { exact: true })).toBeVisible();
   await page.screenshot({ fullPage: true, path: resolve(evidence, "D2-reused-dog-mock-1280.png") });
@@ -120,10 +146,21 @@ test("T-04-12 E4-W13 (R-04-06, R-04-19, E38): D2 shows the reused dog's old and 
   await expect(drawer.locator("#signup-edit-dog-0-chip-help")).toHaveText(
     "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.",
   );
-  const patch = page.waitForRequest((request) => new URL(request.url()).pathname === kiwiPath && request.method() === "PATCH");
-  await drawer.locator(".signup-edit-documents li").filter({ hasText: "Assegurança.pdf" }).getByRole("button", { name: "Retira" }).click();
-  expect((await patch).postDataJSON()).toEqual({ documents: [{ files: [], type: "INSURANCE" }], version: 1 });
-  await expect(dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true })).toBeVisible();
+  const patch = page.waitForRequest(
+    (request) => new URL(request.url()).pathname === kiwiPath && request.method() === "PATCH",
+  );
+  await drawer
+    .locator(".signup-edit-documents li")
+    .filter({ hasText: "Assegurança.pdf" })
+    .getByRole("button", { name: "Retira" })
+    .click();
+  expect((await patch).postDataJSON()).toEqual({
+    documents: [{ files: [], type: "INSURANCE" }],
+    version: 1,
+  });
+  await expect(
+    dogChanges.getByText("Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg", { exact: true }),
+  ).toBeVisible();
   await expect(dogChanges.getByText("Assegurança", { exact: true })).toHaveCount(0);
   await expect(drawer.getByText("Assegurança.pdf")).toHaveCount(0);
   // The drawer stays where the admin is: no jump back to its top after the change (packages/ui overlay).

@@ -85,5 +85,14 @@
   "placeholder": {
     "description": "This screen will be available soon.",
     "title": "Coming soon"
+  },
+  "pwa": {
+    "title": "Install the app",
+    "description": "Open your club from your device’s home screen.",
+    "install": "Install",
+    "instructions": "How to install",
+    "ios": "In Safari, open the share menu and choose “Add to Home Screen”. If “Open as Web App” appears, turn it on and confirm with “Add”.",
+    "browser": "Open your browser’s menu and look for “Install app” or “Add to Home Screen”. If neither appears, try Chrome, Edge or Safari.",
+    "connection": "An internet connection is needed to view your data and manage bookings."
   }
 }

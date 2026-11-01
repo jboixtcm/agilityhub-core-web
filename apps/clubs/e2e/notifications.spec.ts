@@ -87,7 +87,7 @@ async function login(page: Page, scenario = "member") {
   await prepare(page, scenario);
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
 }

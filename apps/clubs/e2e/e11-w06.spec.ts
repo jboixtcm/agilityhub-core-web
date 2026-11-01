@@ -42,7 +42,7 @@ async function prepare(page: Page, scenario: string) {
 
 async function passwordLogin(page: Page, email: string) {
   await page.getByLabel("Correu electrònic").fill(email);
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
 }
 
@@ -84,7 +84,8 @@ test.describe("E11-W06: the audit's fixes on the members' app (375 px)", () => {
   }) => {
     const homeReads: string[] = [];
     page.on("request", (request) => {
-      if (/\/api\/v1\/me\/(home|bookable-classes)/u.test(request.url())) homeReads.push(request.url());
+      if (/\/api\/v1\/me\/(home|bookable-classes)/u.test(request.url()))
+        homeReads.push(request.url());
     });
     // The back office is another app (not served here): its load is recorded and stopped, so 03b
     // stays with its pending state for the capture.
@@ -97,10 +98,14 @@ test.describe("E11-W06: the audit's fixes on the members' app (375 px)", () => {
     await page.goto(`${baseUrl}/entrar`);
     await passwordLogin(page, "aina.serra@example.test");
     await page.waitForURL("**/perfil-acces");
-    await expect.poll(() => backOfficeUrl).toBe("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+    await expect
+      .poll(() => backOfficeUrl)
+      .toBe("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
     // 03b's pending state on the administrator's card while the back office opens.
     await expect(page.locator(".profile-choice__card[aria-busy='true']")).toHaveCount(1);
-    await expect(page.getByRole("button").filter({ hasText: /Com a administradora/u })).toHaveCount(0);
+    await expect(page.getByRole("button").filter({ hasText: /Com a administradora/u })).toHaveCount(
+      0,
+    );
     await shot(page, "50-03b-admin-landing-375.png");
     expect(homeReads).toEqual([]);
   });

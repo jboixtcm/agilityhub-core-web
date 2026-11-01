@@ -877,6 +877,11 @@ describe("T-01-18 access screen", () => {
       expect(requestMagicLink).toHaveBeenCalledWith("estel.rius@example.test", "RESET");
     });
 
+    const confirmation = await screen.findByRole("dialog", { name: "Revisa el correu" });
+    expect(within(confirmation).getByText(/correu no desitjat/u)).toBeVisible();
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Entesos" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+
     cleanup();
     window.history.pushState(null, "", "/entrar");
     mockScenario("minimal");

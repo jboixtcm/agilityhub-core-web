@@ -1,0 +1,9 @@
+apps/clubs-admin/src/App.test.tsx 133ms
+apps/clubs/src/App.test.tsx 161ms (unchanged)
+apps/clubs/src/booking/confirm.test.tsx 30ms
+apps/clubs/src/history/history.test.tsx 19ms (unchanged)
+apps/clubs/e2e/history.spec.ts 8ms (unchanged)
+packages/ui/src/password-input.test.tsx 2ms
+packages/i18n/src/locales/ca/common.json 7ms (unchanged)
+packages/i18n/src/locales/es/common.json 2ms (unchanged)
+packages/i18n/src/locales/en/common.json 2ms (unchanged)

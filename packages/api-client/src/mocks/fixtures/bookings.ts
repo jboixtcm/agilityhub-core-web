@@ -983,6 +983,7 @@ function weekBookings(dogId: string, week: BookingWeek, options: BookingOptions)
     else
       notSelectable.push({
         bookingId: item.id,
+        bookingState: item.state,
         description: session.description,
         reason: done ? "DONE" : "LATE_WINDOW",
         startsAtLocal: session.startsAtLocal,

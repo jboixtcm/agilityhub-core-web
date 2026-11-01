@@ -282,12 +282,7 @@ export function HistoryPage({ client }: { client: ApiClient }) {
                   label: t(`enums:historyState.${badgeKey(item)}`),
                   tone: TONES[item.state],
                 }}
-                date={formats.formatActivityDate(
-                  item.startsAtLocal ?? item.date,
-                  null,
-                  null,
-                  "history",
-                )}
+                date={`${formats.formatActivityDate(item.startsAtLocal ?? item.date, null, null, "history")}${item.type === "CLASS" && item.startsAtLocal ? ` · ${shortTime(item.startsAtLocal.slice(11, 16))}` : ""}`}
                 detail={historyDetail(t, formats, item)}
                 // An activity whose page answers (`activityId` not null, S07 §6) opens it.
                 href={

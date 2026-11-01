@@ -28,7 +28,7 @@ test.describe("T-01-22 AgilityHub ID", () => {
     const oidcSessionRequest = page.waitForRequest(
       (request) => request.url().endsWith("/oauth2/session") && request.method() === "POST",
     );
-    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
     expect((await oidcSessionRequest).postDataJSON()).toEqual({ flow: "mock-flow" });
     await page.waitForURL("**/products?authorization=complete");

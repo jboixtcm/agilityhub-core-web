@@ -31,7 +31,7 @@ async function login(page: Page) {
   await prepareScenario(page);
   await page.goto(`${baseUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
-  await page.getByLabel("Contrasenya").fill("secret-password");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await page.waitForURL("**/inici");
 }
@@ -166,7 +166,11 @@ test.describe("E3-W08 T-04-32 the «Pagament inicial» card before the split day
           passport: "",
           payment: { firstMonthOption: "TODAY", type: "SEPA_DD" },
           person: {
-            address: { postalCode: "08349", street: "Carrer de la Font, 3", town: "Cabrera de Mar" },
+            address: {
+              postalCode: "08349",
+              street: "Carrer de la Font, 3",
+              town: "Cabrera de Mar",
+            },
             birthDate: "05/04/1992",
             emails: ["nora.soler@example.test", ""],
             firstName: "Nora",
@@ -187,8 +191,12 @@ test.describe("E3-W08 T-04-32 the «Pagament inicial» card before the split day
     });
     await page.goto(`${baseUrl}/apuntat-hi/pagament`);
     await expect(page.getByText(/Pas 4 de 4/u)).toBeVisible();
-    await expect(page.getByRole("radio", { name: /Alta avui, 5 d’agost \(mes complet\)/u })).toBeChecked();
-    await expect(page.getByRole("radio", { name: /Alta el dia 16 d’agost \(mig mes\)/u })).toBeVisible();
+    await expect(
+      page.getByRole("radio", { name: /Alta avui, 5 d’agost \(mes complet\)/u }),
+    ).toBeChecked();
+    await expect(
+      page.getByRole("radio", { name: /Alta el dia 16 d’agost \(mig mes\)/u }),
+    ).toBeVisible();
     await expect(page.locator(".signup-upfront__total")).toContainText("160,00 €");
     await expect(page.locator(".signup-footer")).toHaveText(/ · G\d+ · /u);
     await page.screenshot({

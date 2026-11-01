@@ -14,6 +14,8 @@ export const ICON_NAMES = [
   "dup",
   "edit",
   "export",
+  "eye",
+  "eye-off",
   "filter",
   "flag",
   "flame",
