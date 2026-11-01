@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "reviewers": [
+    "release owner",
+    "parent reviewer"
+  ],
+  "availableScreenshots": 28,
+  "reviewedSamples": [
+    "attention-dark-webkit-ui-375.png",
+    "attention-light-reduced-motion-chromium-1280.png",
+    "app-profile-chooser-webkit-ui-375.png",
+    "app-admin-only-chromium-1280.png",
+    "delivery-log-chromium-375.png",
+    "delivery-log-chromium-1280.png",
+    "delivery-log-webkit-1280.png",
+    "delivery-detail-chromium-375.png",
+    "delivery-detail-webkit-1280.png",
+    "delivery-history-chromium-375.png",
+    "delivery-history-webkit-1280.png"
+  ],
+  "findings": [
+    "Readable text and reachable calls to action at 375 and 1280 pixels; no document overflow.",
+    "Member/instructor selection and ADMIN-only explanation match the requested access boundary.",
+    "Masked recipient and temporary-incident status are clear; provider acceptance is explicitly not delivery.",
+    "Shared administration tables retain their horizontal scroll pattern on phones.",
+    "The mobile detail scrolls to the complete timestamp and SpamCop classification; the incident is asserted inside the viewport.",
+    "Attention captures cover actual dark and light themes and reduced motion."
+  ],
+  "productionDataInScreenshots": false
+}

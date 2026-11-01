@@ -106,7 +106,7 @@
     "link": "Avisos enviados ›",
     "title": "Avisos enviados",
     "caption": "Avisos enviados por el club",
-    "search": "Buscar por código o destinatario",
+    "search": "Buscar por nombre, correo, código o asunto",
     "selectRow": "Seleccionar el aviso de {name}",
     "empty": "Ningún aviso",
     "emptyDescription": "Cambia los filtros o la búsqueda para ver más.",
@@ -147,10 +147,27 @@
       "channel": "Canal",
       "target": "Destino",
       "status": "Estado",
-      "attempts": "Intentos",
+      "attempts": "Intentos de la plataforma",
       "providerRef": "Referencia del proveedor",
       "lastError": "Último error",
-      "noDeliveries": "Sin entregas externas"
+      "noDeliveries": "Sin entregas externas",
+      "timeline": "Historial · {channel}",
+      "sentAt": "Enviado / aceptado",
+      "deliveredAt": "Entrega confirmada",
+      "failedAt": "Fallo definitivo",
+      "temporaryFailureAt": "Incidencia temporal registrada"
+    },
+    "description": "Registro de correos y notificaciones del club, incluidos los correos de acceso. Busca por nombre, correo, código o asunto.",
+    "accessEmail": "Acceso y recuperación de contraseña",
+    "accepted": "aceptado por el proveedor",
+    "temporaryFailure": "incidencia temporal",
+    "deliveryHelp": "Aceptado por el proveedor todavía no confirma la entrega. Una incidencia temporal puede recuperarse; el historial se conserva cuando llega la confirmación de entrega.",
+    "reason": {
+      "SENDING_IP_BLOCKED_SPAMCOP": "IP de envío bloqueada por SpamCop",
+      "SENDING_IP_BLOCKED": "IP de envío bloqueada",
+      "MAILBOX_FULL": "Buzón lleno",
+      "RATE_LIMITED": "Límite temporal del servidor receptor",
+      "TEMPORARY_REJECTION": "Rechazo temporal del servidor receptor"
     }
   }
 }

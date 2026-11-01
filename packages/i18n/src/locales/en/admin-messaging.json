@@ -106,7 +106,7 @@
     "link": "Sent notifications ›",
     "title": "Sent notifications",
     "caption": "Notifications sent by the club",
-    "search": "Search by code or recipient",
+    "search": "Search by name, email, code or subject",
     "selectRow": "Select the notification of {name}",
     "empty": "No notifications",
     "emptyDescription": "Change the filters or the search to see more.",
@@ -147,10 +147,27 @@
       "channel": "Channel",
       "target": "Destination",
       "status": "Status",
-      "attempts": "Attempts",
+      "attempts": "Platform attempts",
       "providerRef": "Provider reference",
       "lastError": "Last error",
-      "noDeliveries": "No external deliveries"
+      "noDeliveries": "No external deliveries",
+      "timeline": "History · {channel}",
+      "sentAt": "Sent / accepted",
+      "deliveredAt": "Delivery confirmed",
+      "failedAt": "Definitive failure",
+      "temporaryFailureAt": "Temporary issue recorded"
+    },
+    "description": "Club email and notification log, including access emails. Search by name, email, code or subject.",
+    "accessEmail": "Access and password recovery",
+    "accepted": "accepted by provider",
+    "temporaryFailure": "temporary delivery issue",
+    "deliveryHelp": "Accepted by the provider does not yet confirm delivery. A temporary issue may recover; its history is retained when delivery is confirmed.",
+    "reason": {
+      "SENDING_IP_BLOCKED_SPAMCOP": "Sending IP blocked by SpamCop",
+      "SENDING_IP_BLOCKED": "Sending IP blocked",
+      "MAILBOX_FULL": "Mailbox full",
+      "RATE_LIMITED": "Receiving server rate limit",
+      "TEMPORARY_REJECTION": "Temporary rejection by the receiving server"
     }
   }
 }

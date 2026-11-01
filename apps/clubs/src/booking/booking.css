@@ -174,19 +174,23 @@
 .home-header__bell {
   position: relative;
   display: grid;
-  min-width: 2rem;
-  min-height: 2rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
   color: var(--ah-color-text-muted);
   place-items: center;
 }
 
 .home-header__bell-icon {
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.home-header__bell--unread {
+  color: var(--ah-color-text);
 }
 
 .home-header__bell-icon--ringing {
-  animation: home-bell 1.8s ease-in-out infinite;
+  animation: home-bell 1.4s ease-in-out 3;
   transform-origin: 50% 0;
 }
 

@@ -98,7 +98,7 @@ export function HomePage({ client }: { client: ApiClient }) {
       <h1>{firstName === undefined ? null : t("home:greeting", { firstName })}</h1>
       <a
         aria-label={t("home:notifications", { count: unread })}
-        className="home-header__bell"
+        className={`home-header__bell${unread > 0 ? " home-header__bell--unread" : ""}`}
         href="/notificacions"
       >
         <Icon
@@ -108,6 +108,7 @@ export function HomePage({ client }: { client: ApiClient }) {
               ? "home-header__bell-icon home-header__bell-icon--ringing"
               : "home-header__bell-icon"
           }
+          key={unread}
           name="bell"
         />
         {unread > 0 ? <span aria-hidden="true" className="home-header__dot" /> : null}

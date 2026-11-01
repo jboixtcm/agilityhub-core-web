@@ -2,6 +2,8 @@
 
 ## 2026-11-01 — Josep feedback: access, profile switching and booking explanations
 
+- Club app access keeps students and instructors on the app origin. A remembered administrator profile no longer opens management automatically; the profile selector offers only available student/instructor profiles, and admin-only accounts get an explicit access explanation.
+
 - Show/hide passwords across access and password forms; acknowledge recovery requests in a dialog with spam-folder guidance.
 - Offer authorized profile switching from the administrator menu, retain the remembered-profile choice, and explain notification permission.
 - Show class times and explicit member cancellation text in history; clarify that the two-hour setting applies to training.
@@ -15,6 +17,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+- Improve the admin sending log with recipient/subject search, safe access-email labels and recoverable delivery incidents; distinguish provider acceptance from confirmed delivery.
+- Allow 690 kB for the administration's total JavaScript after adding the delivery history and Catalan, Spanish and English explanations (689.05 kB measured, +1.95 kB from the published baseline); retain the 460 kB initial-load budget (453.23 kB measured). No new runtime dependency is introduced.
+- Make the notification bell reachable from the home header and show important unread club changes on entering the app, without marking them read.
 
 - Make the dashboard risk review easier to scan: separate its review schedule from the heading, put class date/ring beneath the name, align booking counts, and display notification recipients outside the status badge. Long text wraps on phones; Catalan, Spanish and English retain the same information.
 

@@ -1,0 +1,4 @@
+
+> agilityhub-core-web@0.0.0 typecheck:e2e-core /Users/jordib/.config/agilityhub-clubs/production/admin-delivery-log-20261101/web-source
+> tsc -p e2e/core/tsconfig.json --noEmit
+

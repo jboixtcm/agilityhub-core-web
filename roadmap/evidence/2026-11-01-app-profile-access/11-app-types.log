@@ -1,0 +1,4 @@
+
+> clubs@0.0.0 typecheck /Users/jordib/.config/agilityhub-clubs/production/app-profile-access-20261101/web-source/apps/clubs
+> tsc --noEmit
+

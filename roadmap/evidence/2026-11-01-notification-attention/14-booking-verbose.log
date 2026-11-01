@@ -1,0 +1,557 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/apps/clubs
+
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions 2648ms
+ × src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.») 10055ms
+   → Found multiple elements with the text: /^Classe /u
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<p>[39m
+  [0mClasse anul·lada pel club[0m
+[36m</p>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong[39m
+  [33mclass[39m=[32m"detail-card__title"[39m
+[36m>[39m
+  [0mClasse B+C · amb la Duna[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+ × src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > inside the 4 h threshold the dialog warns, and the late note names «4 hores» 10033ms
+   → Found multiple elements with the text: /^Classe /u
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<p>[39m
+  [0mClasse anul·lada pel club[0m
+[36m</p>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong[39m
+  [33mclass[39m=[32m"detail-card__title"[39m
+[36m>[39m
+  [0mClasse B+C · amb la Duna[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+ × src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:30:00+02:00 warns «Falten menys de 90 minuts»: true 10042ms
+   → Found multiple elements with the text: /^Classe /u
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<p>[39m
+  [0mClasse anul·lada pel club[0m
+[36m</p>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong[39m
+  [33mclass[39m=[32m"detail-card__title"[39m
+[36m>[39m
+  [0mClasse B+C · amb la Duna[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+Not implemented: Window's scrollTo() method
+ × src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:10:00+02:00 warns «Falten menys de 90 minuts»: false 10041ms
+   → Found multiple elements with the text: /^Classe /u
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<p>[39m
+  [0mClasse anul·lada pel club[0m
+[36m</p>[39m
+
+Ignored nodes: comments, script, style
+[36m<strong[39m
+  [33mclass[39m=[32m"detail-card__title"[39m
+[36m>[39m
+  [0mClasse B+C · amb la Duna[0m
+[36m</strong>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell clubs-shell--detail"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__banner"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-label[39m=[32m"Tens avisos importants pendents"[39m
+          [33mclass[39m=[32m"notification-attention"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon notification-attention__icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-bell"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"notification-attention__copy"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mTens avisos importants pendents[0m
+            [36m</strong>[39m
+            [36m<p>[39m
+              [0mClasse anul·lada pel club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"notification-attention__open"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mRevisa els avisos[0m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/packages/ui/src/icons/sprite.svg#i-chev"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</a>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"clubs-shell__brand"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<img[39m
+            [33malt[39m=[32m""[39m
+            [33mclass[39m=[32m"clubs-shell__logo"[39m
+            [33msrc[39m=[32m"data:image/[fixture asset omitted]...

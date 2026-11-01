@@ -361,6 +361,12 @@ export function AdminNavigation({
           id: "announcements",
           label: t("shell:nav.announcements"),
         },
+        {
+          href: "/notificacions",
+          icon: "mail",
+          id: "delivery-log",
+          label: t("shell:nav.deliveryLog"),
+        },
       ],
     },
     {
@@ -419,7 +425,6 @@ export function AdminNavigation({
             // Mockup D13: «Alumnes» stays lit on a student's record.
             (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")) ||
             // The notification log belongs to «Comunicats» (S11 §2).
-            (entry.id === "announcements" && matchesPath(pathname, "/notificacions")) ||
             // The remittances page belongs to «Facturació» (S12 §2).
             (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")) ||
             // A course and its placement editor belong to «Recorreguts»; a ring's geometry to

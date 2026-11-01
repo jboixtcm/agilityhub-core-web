@@ -1,7 +1,6 @@
 import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agilityhub/api-client";
 import {
   type AuthClient,
-  dropReturnPath,
   keepReturnPath,
   type Me,
   OnboardingExperience,
@@ -11,7 +10,6 @@ import {
   type SessionSnapshot,
   takeReturnPath,
   useAccountLocale,
-  useSession,
 } from "@agilityhub/auth";
 import type { Role } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
@@ -50,9 +48,16 @@ import {
 } from "react";
 import { getI18n, useTranslation } from "react-i18next";
 
+import {
+  activeAppProfile,
+  appProfiles,
+  directAppProfile,
+  useAppSession as useSession,
+} from "./access-profiles";
 import { safeDecode } from "./activities/shared";
 import { navigateInApp } from "./booking/shared";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
+import { NotificationAttention } from "./notifications/NotificationAttention";
 import { logoutWithPush } from "./notifications/push";
 import { DataExportCard, dataExportJobFromUrl } from "./profile/DataExportCard";
 import { NoticesCard } from "./profile/NoticesCard";
@@ -174,17 +179,17 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/apuntat-hi/*", public: true },
   { path: "/gossos/nou*" },
   // Screens 20, 21, 22 and the student search (S10 §2, E6-W01; R-10-01: instructors and admins).
-  { path: "/instructor/dia", roles: ["INSTRUCTOR", "ADMIN"] },
-  { path: "/instructor/classes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
-  { path: "/instructor/alumnes", roles: ["INSTRUCTOR", "ADMIN"] },
-  { path: "/instructor/alumnes/:dogId", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/dia", roles: ["INSTRUCTOR"] },
+  { path: "/instructor/classes/:id", roles: ["INSTRUCTOR"] },
+  { path: "/instructor/alumnes", roles: ["INSTRUCTOR"] },
+  { path: "/instructor/alumnes/:dogId", roles: ["INSTRUCTOR"] },
   // Screen 24 (S09 §2 writes it as `/instructor/ring-blocks/new`).
-  { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/pistes/:ringId/reservar", roles: ["INSTRUCTOR"] },
   // Screen 26 (S10 §2, E6-W02; TASKS through `modules.ts`, off → back to 22 with a note).
-  { path: "/instructor/alumnes/:dogId/tasques", roles: ["INSTRUCTOR", "ADMIN"] },
-  { path: "/instructor/*", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/alumnes/:dogId/tasques", roles: ["INSTRUCTOR"] },
+  { path: "/instructor/*", roles: ["INSTRUCTOR"] },
   // Screen 23 (S06 §2 writes `/instructor/visio-global`; the shell keeps PLA_FRONTEND's path).
-  { path: "/instructor/avui", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/avui", roles: ["INSTRUCTOR"] },
   // Screen 25 (S10 §2, E6-W02): MEMBER and impersonated sessions (`MemberHistoryRoute`).
   { path: "/historic" },
   // Activity detail (S07 §2, no mockup; ACTIVITIES through `moduleUi`): MEMBER and impersonated
@@ -196,8 +201,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   // instructors' «Registra què hi ha muntat» and build session (INSTRUCTOR · ADMIN).
   { path: "/recorreguts/muntat/:ringId" },
   { path: "/recorreguts/:setupId" },
-  { path: "/instructor/pistes/:ringId/muntat", roles: ["INSTRUCTOR", "ADMIN"] },
-  { path: "/instructor/muntatge/:sessionId", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/pistes/:ringId/muntat", roles: ["INSTRUCTOR"] },
+  { path: "/instructor/muntatge/:sessionId", roles: ["INSTRUCTOR"] },
   // Screens 27 and 27b (reserved for R2).
   { path: "/estadistiques" },
   { path: "/estadistiques/lliga" },
@@ -252,15 +257,13 @@ function isCurrentClubMe(me: Me): me is CurrentMe {
 }
 
 function profileRoles(me: CurrentMe): readonly Role[] {
-  return me.membership.profiles;
+  return appProfiles(me);
 }
 
 /**
  * Where a profile lands after 01/03b: an instructor on 20 «Grups del dia» (mockup 20, V6 note;
- * ruling E71), a member on 03. An administrator's landing is the back office (S01 R-01-07,
- * R-01-13; E11-W06 W2): 03b opens it with the handoff and its pending and error states, so the
- * app never shows an ADMIN 03, whose reads need MEMBER (E41). A profile the membership no longer
- * has goes back to 03b.
+ * ruling E71), a member on 03. Jordi 2026-11-01: ADMIN belongs to the separate management
+ * entry point. An incompatible remembered profile goes to 03b and never leaves this app.
  */
 function profileLanding(profile: Role | null | undefined, roles: readonly Role[]): string {
   if (profile === "INSTRUCTOR" && roles.includes("INSTRUCTOR")) {
@@ -277,9 +280,7 @@ function profileLanding(profile: Role | null | undefined, roles: readonly Role[]
 
 /** R-01-07: the profile the access opens without asking (one role, or «Recorda la meva tria»). */
 function directProfile(me: CurrentMe): Role | undefined {
-  return profileRoles(me).length > 1 && !me.membership.rememberProfile
-    ? undefined
-    : (me.membership.activeProfile ?? profileRoles(me)[0]);
+  return directAppProfile(me);
 }
 
 function routeAfterOnboarding(me: Me): string {
@@ -335,6 +336,7 @@ function strayLanding(session: SessionSnapshot, pathname: string): string | unde
   ) {
     return undefined;
   }
+  if (activeAppProfile(me) === undefined) return "/perfil-acces";
   const route = currentRoute(pathname);
   const allowed =
     route === undefined
@@ -454,7 +456,7 @@ export function MobileNavigation({
     ];
     return <TabBar items={tabs} label={t("shell:nav.main")} />;
   }
-  const staffProfile = activeProfile === "INSTRUCTOR" || activeProfile === "ADMIN";
+  const staffProfile = activeProfile === "INSTRUCTOR";
   const definitions: (TabBarItem & { id: string; roles?: readonly Role[] })[] = [
     { href: "/inici", icon: "home", id: "home", label: t("shell:nav.home") },
     { href: "/reservar", icon: "cal", id: "reserve", label: t("shell:nav.reserve") },
@@ -471,7 +473,7 @@ export function MobileNavigation({
           icon: "globe",
           id: "globalView",
           label: t("shell:nav.globalView"),
-          roles: ["INSTRUCTOR", "ADMIN"],
+          roles: ["INSTRUCTOR"],
         }
       : { href: "/avui", icon: "day", id: "today", label: t("shell:nav.today") },
     { href: "/perfil", icon: "user", id: "profile", label: t("shell:nav.profile") },
@@ -604,6 +606,11 @@ function MobileShell({
     <div className={`clubs-shell${detail && pathname !== "/perfil" ? " clubs-shell--detail" : ""}`}>
       <div className="clubs-shell__banner">
         <ImpersonationBanner authClient={authClient} />
+        <NotificationAttention
+          active={session.status === "signedIn" && pathname !== "/notificacions"}
+          client={client}
+          key={`${session.me?.account.id ?? ""}:${session.me?.membership?.clubId ?? ""}:${session.me?.impersonation?.memberName ?? ""}`}
+        />
       </div>
       <header className="clubs-shell__top">
         <a
@@ -1226,14 +1233,6 @@ function roleCopy(role: Role, gender: IcuGender, t: ReturnType<typeof useTransla
  */
 const PROFILE_CHANGE_STATE = { profileChange: true } as const;
 
-function isProfileChange(state: unknown): boolean {
-  return (
-    typeof state === "object" &&
-    state !== null &&
-    (state as { profileChange?: unknown }).profileChange === true
-  );
-}
-
 function ProfileChoicePage({
   authClient,
   navigate,
@@ -1246,55 +1245,23 @@ function ProfileChoicePage({
   const [remember, setRemember] = useState(true);
   const [pending, setPending] = useState<Role>();
   const [error, setError] = useState(false);
-  // E160 #1: one automatic handoff per entry, never on «Canviar de perfil» (the account changes a
-  // remembered choice there) and never again once a card was chosen.
-  const backofficeStarted = useRef(isProfileChange(window.history.state));
-  // R-01-07, R-01-13 (E11-W06 W2): an ADMIN the access opens without asking (one role, or the
-  // remembered choice) goes to the back office at once, with 03b's pending and error states; on an
-  // error the cards stay to try again or to choose another profile.
-  const directAdmin =
-    me !== null &&
-    isCurrentClubMe(me) &&
-    directProfile(me) === "ADMIN" &&
-    profileRoles(me).includes("ADMIN");
-  useEffect(() => {
-    if (!directAdmin || backofficeStarted.current) {
-      return;
-    }
-    backofficeStarted.current = true;
-    setPending("ADMIN");
-    authClient.createHandoff("clubs-admin").then(
-      (handoff) => {
-        dropReturnPath();
-        window.location.assign(handoff.url);
-      },
-      () => {
-        setError(true);
-        setPending(undefined);
-      },
-    );
-  }, [authClient, directAdmin]);
   if (me === null || !isCurrentClubMe(me)) {
     return null;
   }
   const roles = profileRoles(me);
   const gender = icuGender(me.membership.gender);
 
+  if (roles.length === 0) {
+    return <NoAppProfilePage authClient={authClient} />;
+  }
+
   const selectProfile = async (role: Role) => {
-    // The choice saved below may make ADMIN the remembered profile: it opens its own handoff.
-    backofficeStarted.current = true;
+    if (!roles.includes(role)) return;
     setPending(role);
     setError(false);
     try {
       await authClient.updateProfile(role, remember);
-      if (role === "ADMIN") {
-        const handoff = await authClient.createHandoff("clubs-admin");
-        // The members' app paths mean nothing to the back office (E11-W06 W1).
-        dropReturnPath();
-        window.location.assign(handoff.url);
-      } else {
-        navigate(takeReturnPath() ?? profileLanding(role, me.membership.roles));
-      }
+      navigate(takeReturnPath() ?? profileLanding(role, me.membership.roles));
     } catch {
       setError(true);
       setPending(undefined);
@@ -1340,6 +1307,34 @@ function ProfileChoicePage({
         </label>
         {error ? <p role="alert">{t("auth:profileChoice.error")}</p> : null}
         <p className="profile-choice__footnote">{t("auth:profileChoice.footer")}</p>
+      </section>
+    </main>
+  );
+}
+
+function NoAppProfilePage({ authClient }: { authClient: AuthClient }) {
+  const { t } = useTranslation("auth");
+  const [working, setWorking] = useState(false);
+  return (
+    <main className="auth-page">
+      <section className="auth-panel profile-choice">
+        <LogoMark compact />
+        <h1>{t("auth:profileChoice.unavailableTitle")}</h1>
+        <p>{t("auth:profileChoice.unavailableDescription")}</p>
+        <Button
+          disabled={working}
+          onClick={() => {
+            setWorking(true);
+            void authClient
+              .logout()
+              .catch(() => undefined)
+              .finally(() => {
+                setWorking(false);
+              });
+          }}
+        >
+          {t("auth:profile.logout")}
+        </Button>
       </section>
     </main>
   );
@@ -1537,7 +1532,7 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             <Icon aria-hidden="true" name="user" />
             <span>{t("auth:profile.changeProfile")}</span>
             <small>
-              {activeProfileLabel(me.membership.activeProfile, icuGender(me.membership.gender), t)}
+              {activeProfileLabel(activeAppProfile(me), icuGender(me.membership.gender), t)}
             </small>
             <Icon aria-hidden="true" name="chev" />
           </a>
@@ -1677,7 +1672,7 @@ function InstructorRoute({ children }: { children: ReactNode }) {
       </RequireAuth>
     );
   }
-  return <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>{children}</RequireRole>;
+  return <RequireRole roles={["INSTRUCTOR"]}>{children}</RequireRole>;
 }
 
 /**
@@ -1979,7 +1974,7 @@ function AppContent({
         <TodayPage client={apiClient} />
       </RequireAuth>
     ) : pathname === "/instructor/avui" ? (
-      <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>
+      <RequireRole roles={["INSTRUCTOR"]}>
         <OverviewPage client={apiClient} />
       </RequireRole>
     ) : pathname === "/instructor/dia" ? (
@@ -2074,7 +2069,7 @@ function AppContent({
       </RequireAuth>
     ) : route.path === "/instructor/pistes/:ringId/reservar" ? (
       // Screen 24 (S09 §2): not module-gated, blocks exist without FREE_TRAINING (§9).
-      <RequireRole roles={["INSTRUCTOR", "ADMIN"]}>
+      <RequireRole roles={["INSTRUCTOR"]}>
         <RingBlockPage
           client={apiClient}
           key={pathname}

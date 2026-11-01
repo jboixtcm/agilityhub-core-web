@@ -1,5 +1,8 @@
 # S01 — AgilityHub ID i accés
 
+
+> **Decisió Jordi · 01-11-2026 (accés app/admin):** l'app del club només ofereix els perfils **MEMBER (alumne)** i **INSTRUCTOR (professor)** que el compte tingui. Amb un únic perfil compatible hi entra directament; amb dos conserva una tria recordada vàlida o mostra 03b. Una tria antiga ADMIN no provoca cap salt de domini: es descarta per a l'app. Un compte només ADMIN veu una explicació i pot tancar sessió, sense adquirir altres rols. L'administració continua a `admin.*`. Aquesta decisió supera la targeta ADMIN de 03b i l'autoredirecció cap a administració de R-01-07, R-01-13 i T-01-20. No canvia els permisos de l'API ni l'entrada directa al backoffice.
+
 **Etapa:** E1 (l'esquelet d'`identity` i el grant de contrasenya a E0 per a les proves) · **Mòduls:** — (transversal; el correu transaccional és ADR-005) · **Pantalles:** 01, 02, 03b, 12 (files «Canvia la contrasenya», «Canviar de perfil», «Idioma», tancar sessió) (`03-disseny/mockups/pantalles/mobil/`), `apps/id` (sense mockup: login OIDC, enllaç màgic, contrasenya, compte, selector de productes — design system) · **Model:** PLATAFORMA §1 (ACCOUNT, MEMBERSHIP, tokens, OIDC_CLIENT) — **substitueix** USUARI de v1.6 · ADR-004 + ADR-010 · **Estat:** esborrany (03-09-2026) · **Versió:** 0.2 (05-09: revisió del codi de Learn, §14)
 
 ## 1. Propòsit i abast

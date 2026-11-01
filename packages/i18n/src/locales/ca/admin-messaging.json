@@ -106,7 +106,7 @@
     "link": "Avisos enviats ›",
     "title": "Avisos enviats",
     "caption": "Avisos enviats pel club",
-    "search": "Cerca per codi o destinatari",
+    "search": "Cerca per nom, correu, codi o assumpte",
     "selectRow": "Selecciona l'avís de {name}",
     "empty": "Cap avís",
     "emptyDescription": "Canvia els filtres o la cerca per veure'n més.",
@@ -147,10 +147,27 @@
       "channel": "Canal",
       "target": "Destí",
       "status": "Estat",
-      "attempts": "Intents",
+      "attempts": "Intents de la plataforma",
       "providerRef": "Referència del proveïdor",
       "lastError": "Darrer error",
-      "noDeliveries": "Sense entregues externes"
+      "noDeliveries": "Sense entregues externes",
+      "timeline": "Historial · {channel}",
+      "sentAt": "Enviat / acceptat",
+      "deliveredAt": "Lliurament confirmat",
+      "failedAt": "Fallada definitiva",
+      "temporaryFailureAt": "Incidència temporal registrada"
+    },
+    "description": "Registre de correus i notificacions del club, inclosos els correus d’accés. Cerca per nom, correu, codi o assumpte.",
+    "accessEmail": "Accés i recuperació de contrasenya",
+    "accepted": "acceptat pel proveïdor",
+    "temporaryFailure": "incidència temporal",
+    "deliveryHelp": "Acceptat pel proveïdor encara no confirma el lliurament. Una incidència temporal pot recuperar-se; l’historial es conserva quan arriba la confirmació de lliurament.",
+    "reason": {
+      "SENDING_IP_BLOCKED_SPAMCOP": "IP d’enviament bloquejada per SpamCop",
+      "SENDING_IP_BLOCKED": "IP d’enviament bloquejada",
+      "MAILBOX_FULL": "Bústia plena",
+      "RATE_LIMITED": "Límit temporal del servidor receptor",
+      "TEMPORARY_REJECTION": "Rebuig temporal del servidor receptor"
     }
   }
 }

@@ -1,0 +1,8 @@
+
+/Users/jordib/.config/agilityhub-clubs/production/app-profile-access-20261101/web-source/apps/clubs/e2e/app-profiles.spec.ts
+  13:66   error  Invalid type "number" of template literal expression  @typescript-eslint/restrict-template-expressions
+  42:126  error  Invalid type "number" of template literal expression  @typescript-eslint/restrict-template-expressions
+  49:121  error  Invalid type "number" of template literal expression  @typescript-eslint/restrict-template-expressions
+
+✖ 3 problems (3 errors, 0 warnings)
+

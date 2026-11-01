@@ -80,7 +80,8 @@
     "team": "Instructors and administrators",
     "today": "Today",
     "training": "Training",
-    "weeklyTemplate": "Weekly template"
+    "weeklyTemplate": "Weekly template",
+    "deliveryLog": "Delivery log"
   },
   "placeholder": {
     "description": "This screen will be available soon.",

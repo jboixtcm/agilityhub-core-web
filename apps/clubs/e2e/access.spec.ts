@@ -210,7 +210,7 @@ test.describe("T-01-20 profile choice", () => {
     await page.waitForURL("**/perfil-acces");
     await expect(page.getByRole("button", { name: /Com a alumna/u })).toBeVisible();
     await expect(page.getByRole("button", { name: /Com a instructora/u })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Com a administradora/u })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Com a administradora/u })).toHaveCount(0);
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "03b-perfil-acces-375.png"),
@@ -227,20 +227,25 @@ test.describe("T-01-20 profile choice", () => {
     await page.waitForURL("**/inici");
   });
 
-  test("administrator selection creates a clubs-admin handoff", async ({ page }) => {
+  test("2026-11-01: profile changes stay on the app and never request an admin handoff", async ({
+    page,
+  }) => {
+    const handoffs: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes("/auth/handoff")) handoffs.push(request.url());
+    });
     await passwordLogin(page);
     await page.waitForURL("**/perfil-acces");
-    const handoffRequest = page.waitForRequest(
-      (request) => request.url().includes("/auth/handoff") && request.method() === "POST",
-    );
-    const navigationRequest = page.waitForRequest(
-      (request) =>
-        request.isNavigationRequest() &&
-        request.url() === "http://127.0.0.1:4174/entrar?handoff=mock-handoff-code",
-    );
-    await page.getByRole("button", { name: /Com a administradora/u }).click();
-    expect((await handoffRequest).postDataJSON()).toEqual({ targetClientId: "clubs-admin" });
-    await navigationRequest;
+    await expect(page.getByRole("button", { name: /Com a administradora/u })).toHaveCount(0);
+    await page.getByRole("button", { name: /Com a instructora/u }).click();
+    await page.waitForURL("**/instructor/dia");
+    await expect(page.getByRole("link", { name: "Alumnes", exact: true })).toBeVisible();
+    await page.getByRole("link", { name: "Perfil", exact: true }).click();
+    await page.getByRole("link", { name: /Canviar de perfil/u }).click();
+    await page.getByRole("button", { name: /Com a alumna/u }).click();
+    await page.waitForURL("**/inici");
+    expect(new URL(page.url()).origin).toBe(baseUrl);
+    expect(handoffs).toEqual([]);
   });
 });
 

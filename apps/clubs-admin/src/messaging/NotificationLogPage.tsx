@@ -36,7 +36,7 @@ const DEFAULT_COLUMNS = ["createdAt", "code", "category", "recipient", "channels
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   category: ["category"],
   channels: ["channels"],
-  code: ["code"],
+  code: ["code", "title"],
   createdAt: ["createdAt"],
   readAt: ["readAt"],
   recipient: ["recipient", "audience"],
@@ -63,7 +63,7 @@ const STATUS_TONES: Readonly<Record<DeliveryStatus, Tone>> = {
   DELIVERED: "success",
   FAILED: "danger",
   QUEUED: "info",
-  SENT: "success",
+  SENT: "info",
   SKIPPED_BY_PREFERENCE: "neutral",
   SKIPPED_CAP: "warning",
   SKIPPED_MODULE_OFF: "neutral",
@@ -71,6 +71,10 @@ const STATUS_TONES: Readonly<Record<DeliveryStatus, Tone>> = {
   SKIPPED_NO_CONTACT: "warning",
   SKIPPED_STALE: "neutral",
 };
+
+function presentText(value: string | null | undefined): string | undefined {
+  return value == null || value.trim() === "" ? undefined : value;
+}
 
 /**
  * A delivery's destination, never printed whole (S11 §2, E7-W01): an e-mail as `l···a@domini`, a
@@ -123,9 +127,6 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     size: 50,
     sort: ["createdAt,desc"],
   });
-  useEffect(() => {
-    if (state.q !== "") setState({ ...state, q: "" });
-  }, [state, setState]);
   const savedViews = useSavedViews(client, LIST_KEY, applySavedView);
   const listExport = useListExport(client);
   // A row opened in a new tab (`?avis=`) opens its drawer.
@@ -139,6 +140,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
           fields: listFields(state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [])),
           filter: apiFilters(state.filters),
           page: state.page,
+          ...(state.q === "" ? {} : { q: state.q }),
           size: state.size,
           sort: state.sort,
         },
@@ -204,6 +206,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
         params: {
           query: {
             field,
+            ...(state.q === "" ? {} : { q: state.q }),
             filter: apiFilters(state.filters.filter((filter) => filter.field !== field)),
           },
         },
@@ -216,7 +219,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     },
     // `enumLabel` only reads `t`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [client, state.filters, t],
+    [client, state.filters, state.q, t],
   );
 
   const filterColumns: UniversalListFilterColumn[] = [
@@ -240,7 +243,19 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
       render: (row) => (row.createdAt === undefined ? "" : dateTime(row.createdAt)),
       sortKey: "createdAt",
     },
-    { key: "code", label: t("admin-messaging:log.column.code"), render: (row) => row.code ?? "" },
+    {
+      key: "code",
+      label: t("admin-messaging:log.column.code"),
+      render: (row) => (
+        <span className="messaging-log__subject">
+          {row.code}
+          <small>
+            {presentText(row.title) ??
+              (row.code === "N-25" ? t("admin-messaging:log.accessEmail") : "")}
+          </small>
+        </span>
+      ),
+    },
     {
       key: "category",
       label: t("admin-messaging:log.column.category"),
@@ -252,7 +267,9 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
       label: t("admin-messaging:log.column.recipient"),
       render: (row) => (
         <span className="messaging-log__recipient">
-          {row.recipient?.displayName ?? ""}
+          {presentText(row.recipient?.displayName) ??
+            maskedTarget(row.recipient?.email) ??
+            t("admin-messaging:log.noValue")}
           {row.audience == null || row.audience === "MEMBER" ? null : (
             <small>{t(`enums:notificationAudience.${row.audience}`)}</small>
           )}
@@ -270,11 +287,16 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
               data-channel={item.channel}
               data-delivery-status={item.status}
               key={`${item.channel}-${String(index)}`}
-              tone={STATUS_TONES[item.status]}
+              tone={item.temporaryFailure === true ? "warning" : STATUS_TONES[item.status]}
             >
               {t("admin-messaging:log.channelState", {
                 channel: t(`enums:notificationChannel.${item.channel}`),
-                status: t(`enums:deliveryStatus.${item.status}`, { defaultValue: item.status }),
+                status:
+                  item.temporaryFailure === true
+                    ? t("admin-messaging:log.temporaryFailure")
+                    : item.status === "SENT" && item.channel === "EMAIL"
+                      ? t("admin-messaging:log.accepted")
+                      : t(`enums:deliveryStatus.${item.status}`, { defaultValue: item.status }),
               })}
             </Badge>
           ))}
@@ -337,7 +359,9 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     emptyTitle: t("admin-messaging:log.empty"),
     search: t("admin-messaging:log.search"),
     selectRow: (row) =>
-      t("admin-messaging:log.selectRow", { name: row.recipient?.displayName ?? "" }),
+      t("admin-messaging:log.selectRow", {
+        name: presentText(row.recipient?.displayName) ?? maskedTarget(row.recipient?.email) ?? "",
+      }),
   };
   const listError =
     error === undefined
@@ -349,6 +373,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
   return (
     <section className="messaging-log">
       <h1>{t("admin-messaging:log.title")}</h1>
+      <p>{t("admin-messaging:log.description")}</p>
       <UniversalList<Row>
         appliedFilters={applied}
         caption={t("admin-messaging:log.caption")}
@@ -368,6 +393,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
             columns: exportColumns(current.columns),
             filter: apiFilters(current.filters),
             format,
+            ...(current.q === "" ? {} : { q: current.q }),
             sort: current.sort,
           });
         }}
@@ -387,8 +413,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
         rowKey={(row) => row.id}
         rows={data?.items ?? []}
         savedViews={savedViews.views}
-        searchable={false}
-        state={{ ...state, q: "" }}
+        state={state}
         totalPages={data?.totalPages ?? 0}
       />
       {openId === undefined ? null : (
@@ -416,6 +441,13 @@ function NotificationDrawer({
   const { t } = useTranslation(["admin-messaging", "enums", "errors"]);
   const formats = useClubFormats();
   const [state, setState] = useState<{ detail: Detail } | { error: unknown } | undefined>();
+  const temporaryReasons: Readonly<Record<string, string>> = {
+    SENDING_IP_BLOCKED_SPAMCOP: t("admin-messaging:log.reason.SENDING_IP_BLOCKED_SPAMCOP"),
+    SENDING_IP_BLOCKED: t("admin-messaging:log.reason.SENDING_IP_BLOCKED"),
+    MAILBOX_FULL: t("admin-messaging:log.reason.MAILBOX_FULL"),
+    RATE_LIMITED: t("admin-messaging:log.reason.RATE_LIMITED"),
+    TEMPORARY_REJECTION: t("admin-messaging:log.reason.TEMPORARY_REJECTION"),
+  };
 
   useEffect(() => {
     let current = true;
@@ -462,7 +494,12 @@ function NotificationDrawer({
       ) : (
         <div className="messaging-log__detail">
           <p>
-            <strong>{state.detail.title}</strong>
+            <strong>
+              {presentText(state.detail.title) ??
+                (state.detail.code === "N-25"
+                  ? t("admin-messaging:log.accessEmail")
+                  : state.detail.code)}
+            </strong>
           </p>
           <p className="messaging-log__body">{state.detail.body}</p>
           {state.detail.smsBody == null ? null : (
@@ -473,7 +510,9 @@ function NotificationDrawer({
           <dl className="messaging-log__facts">
             <dt>{t("admin-messaging:log.detail.recipient")}</dt>
             <dd>
-              {state.detail.recipient.displayName}
+              {presentText(state.detail.recipient.displayName) ??
+                maskedTarget(state.detail.recipient.email) ??
+                t("admin-messaging:log.noValue")}
               {state.detail.audience == null
                 ? null
                 : ` · ${t(`enums:notificationAudience.${state.detail.audience}`)}`}
@@ -496,6 +535,7 @@ function NotificationDrawer({
             <dt>{t("admin-messaging:log.detail.readAt")}</dt>
             <dd>{dateTime(state.detail.readAt)}</dd>
           </dl>
+          <p>{t("admin-messaging:log.deliveryHelp")}</p>
           <DataTable<Delivery>
             caption={t("admin-messaging:log.detail.deliveries")}
             columns={[
@@ -516,9 +556,19 @@ function NotificationDrawer({
                   <Badge
                     data-channel={row.channel}
                     data-delivery-status={row.status}
-                    tone={STATUS_TONES[row.status]}
+                    tone={
+                      row.temporaryFailureAt != null &&
+                      (row.status === "SENT" || row.status === "QUEUED")
+                        ? "warning"
+                        : STATUS_TONES[row.status]
+                    }
                   >
-                    {t(`enums:deliveryStatus.${row.status}`, { defaultValue: row.status })}
+                    {row.temporaryFailureAt != null &&
+                    (row.status === "SENT" || row.status === "QUEUED")
+                      ? t("admin-messaging:log.temporaryFailure")
+                      : row.status === "SENT" && row.channel === "EMAIL"
+                        ? t("admin-messaging:log.accepted")
+                        : t(`enums:deliveryStatus.${row.status}`, { defaultValue: row.status })}
                   </Badge>
                 ),
               },
@@ -543,6 +593,33 @@ function NotificationDrawer({
             rowKey={(row) => `${row.channel}-${row.target ?? "app"}`}
             rows={state.detail.deliveries}
           />
+          {state.detail.deliveries.map((delivery, index) => (
+            <section key={`${delivery.channel}-${String(index)}`}>
+              <h3>
+                {t("admin-messaging:log.detail.timeline", {
+                  channel: t(`enums:notificationChannel.${delivery.channel}`),
+                })}
+              </h3>
+              <dl className="messaging-log__facts">
+                <dt>{t("admin-messaging:log.detail.sentAt")}</dt>
+                <dd>{dateTime(delivery.sentAt)}</dd>
+                <dt>{t("admin-messaging:log.detail.deliveredAt")}</dt>
+                <dd>{dateTime(delivery.deliveredAt)}</dd>
+                <dt>{t("admin-messaging:log.detail.failedAt")}</dt>
+                <dd>{dateTime(delivery.failedAt)}</dd>
+                {delivery.temporaryFailureAt == null ? null : (
+                  <>
+                    <dt>{t("admin-messaging:log.detail.temporaryFailureAt")}</dt>
+                    <dd>
+                      {dateTime(delivery.temporaryFailureAt)} ·{" "}
+                      {temporaryReasons[delivery.temporaryFailureReason ?? "TEMPORARY_REJECTION"] ??
+                        t("admin-messaging:log.reason.TEMPORARY_REJECTION")}
+                    </dd>
+                  </>
+                )}
+              </dl>
+            </section>
+          ))}
         </div>
       )}
     </Drawer>

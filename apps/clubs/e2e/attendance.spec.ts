@@ -279,7 +279,9 @@ test.describe("E6-W01 S10 screens 20, 21 and 22 against MSW", () => {
   test("21 of a class cancelled by the club: the banner and an inert list", async ({ page }) => {
     await login(page, "instructor");
     await page.goto(`${baseUrl}/instructor/classes/c4`);
-    await expect(page.getByText("Classe anul·lada pel club")).toBeVisible();
+    await expect(
+      page.getByRole("alert").getByText("Classe anul·lada pel club", { exact: true }),
+    ).toBeVisible();
     await expect(page.getByRole("button", { name: "Desa" })).toHaveCount(0);
     await shot(page, "21-anullada-375.png");
   });

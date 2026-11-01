@@ -1,0 +1,52 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/apps/clubs
+
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions 2441ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.») 108ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > inside the 4 h threshold the dialog warns, and the late note names «4 hores» 78ms
+Not implemented: Window's scrollTo() method
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:30:00+02:00 warns «Falten menys de 90 minuts»: true 49ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:10:00+02:00 warns «Falten menys de 90 minuts»: false 46ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4) 451ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a CANCELLED booking cancelled by SYSTEM, opened later: its chip «anul·lada» only, no note (review #4) 43ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a CANCELLED_LATE booking cancelled by MEMBER, opened later: its chip «anul·lada tard» only, no note (review #4) 41ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor` 38ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9: a ring without a colour (`ringColor` null) draws no dot 40ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > who booked it: another member of the group 45ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel» 41ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): the reader's own booking reads «Reservada el …» whatever the name it carries 38ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > booked by the club reads «Reservada pel club el …» 38ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T16:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T16:00:00Z the dialog warns: false 40ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T12:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T09:00:00Z the dialog warns: true 42ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note 82ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (422) shows its message inside the dialog and reads the booking again 65ms
+Not implemented: Window's scrollTo() method
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (409) shows its message inside the dialog and reads the booking again 64ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03 398ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it 74ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title 33ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > a FIFO club's NOTIFIED entry: the position, the deadline and [AGAFA LA PLAÇA] 37ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > an entry no longer live is read-only with its state; leaving a dead one says so 36ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE on leaving shows its message and reads the entry again 48ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > WAITLIST off: there is no waiting entry page 15ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 558ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E7-W06 step 5 (E6-W04 question 6): each class booking's row of 03 carries data-booking-id, its booking's id; the training, waiting and activity rows carry none 61ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none 59ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back 101ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04 79ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still 62ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch 43ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a non-whole number of hours reads with the reader's decimal comma 55ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > WAITLIST off: no waiting row 52ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > es: 03 and 04 read in Spanish, with no Catalan article 71ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > en: 04's badges and pack in English 54ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14» 85ms
+
+ Test Files  2 passed (2)
+      Tests  38 passed (38)
+   Start at  18:54:13
+   Duration  8.51s (tests 69%, transform 12%, environment 10%, import 7%, setup 2%)
+
+    Isolate  2 workers spawned · ~522ms startup each (spawn + environment, per file)
+             at least ~522ms faster with isolate: false — reuses workers across files instead of one per file
+

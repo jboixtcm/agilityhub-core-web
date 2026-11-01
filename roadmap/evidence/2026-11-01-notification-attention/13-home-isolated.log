@@ -1,0 +1,21 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/apps/clubs
+
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 625ms
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E7-W06 step 5 (E6-W04 question 6): each class booking's row of 03 carries data-booking-id, its booking's id; the training, waiting and activity rows carry none
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a non-whole number of hours reads with the reader's decimal comma
+ ↓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > WAITLIST off: no waiting row
+ ↓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > es: 03 and 04 read in Spanish, with no Catalan article
+ ↓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > en: 04's badges and pack in English
+ ↓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14»
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 11 skipped (12)
+   Start at  18:53:07
+   Duration  3.04s (transform 41%, tests 21%, environment 19%, import 14%, setup 5%)
+

@@ -22,5 +22,9 @@
     "error": "The unsubscription could not be completed.",
     "retry": "Try again",
     "toPreferences": "Change your notifications in your profile"
+  },
+  "attention": {
+    "title": "You have important unread notices",
+    "open": "Review notices"
   }
 }

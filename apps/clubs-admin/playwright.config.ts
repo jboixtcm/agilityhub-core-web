@@ -5,7 +5,8 @@ export default defineConfig({
     { name: "chromium" },
     {
       name: "webkit-ui",
-      testMatch: /(?:ui-closure|mobile-review|dashboard-risk|dashboard-chart)\.spec\.ts$/u,
+      testMatch:
+        /(?:ui-closure|mobile-review|dashboard-risk|dashboard-chart|delivery-log)\.spec\.ts$/u,
       use: { browserName: "webkit" },
     },
   ],

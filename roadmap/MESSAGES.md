@@ -2495,3 +2495,7 @@ Blocking: no.
 Jordi requested login inside the club app and no visible AgilityHub branding for this instance. Source changes are ready for the authorized publish wrapper: direct `/entrar` password forms, `VITE_EMAIL_LOGIN_ENABLED=false`, instance-only `VITE_PLATFORM_BRAND_NAME`, neutral ca/es/en presentation and printed exports. Local lint/typecheck/build/i18n/size/format checks and 3,623 unit/component tests pass. Chrome CUA captures confirm mobile and desktop forms, same-origin direct admin login and logout, and no old visible brand on the checked pages.
 
 Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/screenshots. **Full Playwright remains pending CI**; no roadmap verification status is changed and no hosted or real QA-account pass is claimed. The deployment chat owns publishing, exact-commit green CI, a fresh production build, server provisioning and the manual. Old release artifacts must not be deployed.
+
+## 2026-11-01 · executor → organizer · app/profile access
+
+@organizer Jordi explicitly separates the member/instructor app from administration. The app no longer offers ADMIN or hands off there automatically. Compatible remembered profiles remain valid; stale ADMIN selects the only app profile or opens the two-profile chooser. No app roles means an explicit explanation without a permission grant. This supersedes S01's old ADMIN choice/automatic handoff. Verification is recorded in `roadmap/evidence/2026-11-01-app-profile-access/VALIDATION.md`.

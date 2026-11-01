@@ -16,6 +16,7 @@ import {
   createAuthenticatedApiClient,
   IMPERSONATION_STORAGE_KEY,
   MemoryRefreshTokenStore,
+  type Me,
   RETURN_PATH_STORAGE_KEY,
   SessionProvider,
 } from "@agilityhub/auth";
@@ -656,137 +657,206 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     window.history.pushState(null, "", "/");
   });
 
-  it("R-01-13 remembered ADMIN profile → POST /auth/handoff and clubs-admin opened, no /me/home read", async () => {
-    // `me-admin`: ADMIN + INSTRUCTOR, «Recorda la meva tria» with «Com a administradora».
+  async function overrideMembership(changes: Partial<NonNullable<Me["membership"]>>) {
+    const seed = authClient();
+    await seed.login("aina.serra@example.test", "secret-password");
+    const me = seed.getMe();
+    if (me?.membership === undefined) throw new TypeError("Expected club membership");
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({
+          ...me,
+          membership: { ...me.membership, ...changes },
+        }),
+      ),
+    );
+  }
+
+  it("2026-11-01: remembered ADMIN with INSTRUCTOR stays in the app with instructor navigation", async () => {
     mockScenario("admin");
     window.history.pushState(null, "", "/entrar");
     const assign = stubPageLoads();
     const recorded = recordApiRequests();
     await renderApplication(authClient());
     passwordLogin("aina.serra@example.test");
-
     await waitFor(() => {
-      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+      expect(window.location.pathname).toBe("/instructor/dia");
     });
+    expect(await screen.findByRole("link", { name: "El meu dia" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Alumnes" })).toBeVisible();
     recorded.stop();
-    expect(recorded.requests).toContain("POST /api/v1/auth/handoff");
+    expect(assign).not.toHaveBeenCalled();
+    expect(recorded.requests).not.toContain("POST /api/v1/auth/handoff");
     expect(
       recorded.requests.filter((request) => /\/me\/(home|bookable-classes)$/u.test(request)),
     ).toEqual([]);
   });
 
-  it("R-01-13 the remembered ADMIN's handoff fails → 03b's error, and its cards stay to retry or choose", async () => {
-    mockScenario("admin");
-    let refuse = true;
-    server.use(
-      http.post("*/auth/handoff", () =>
-        refuse
-          ? HttpResponse.json(
-              { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
-              // CATALEG_ERRORS rule 0: any 5xx of the framework answers this 500.
-              { status: 500 },
-            )
-          : undefined,
-      ),
-    );
+  it("2026-11-01: remembered ADMIN with MEMBER enters as a member and cannot open instructor routes", async () => {
+    mockScenario("multiProfile");
+    await overrideMembership({
+      activeProfile: "ADMIN",
+      defaultProfile: "ADMIN",
+      rememberProfile: true,
+      profiles: ["ADMIN", "MEMBER"],
+      roles: ["ADMIN", "MEMBER"],
+    });
     window.history.pushState(null, "", "/entrar");
     const assign = stubPageLoads();
     await renderApplication(authClient());
-    passwordLogin("aina.serra@example.test");
-
-    expect(await screen.findByRole("alert")).toHaveTextContent("No s'ha pogut canviar de perfil.");
-    expect(window.location.pathname).toBe("/perfil-acces");
-    refuse = false;
-    fireEvent.click(screen.getByRole("button", { name: /Com a administradora/u }));
+    passwordLogin();
     await waitFor(() => {
-      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+      expect(window.location.pathname).toBe("/inici");
     });
-  });
-
-  it("R-01-07 / E160 #1: a remembered ADMIN who opens 03b through «Canviar de perfil» sees the cards and no POST /auth/handoff", async () => {
-    mockScenario("admin");
-    const client = authClient();
-    await client.login("aina.serra@example.test", "secret-password");
-    window.history.pushState(null, "", "/perfil");
-    const assign = stubPageLoads();
-    await renderApplication(client);
-    const recorded = recordApiRequests();
-
-    fireEvent.click(await screen.findByRole("link", { name: /Canviar de perfil/u }));
-
-    expect(await screen.findByRole("button", { name: /Com a administradora/u })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /Com a instructora/u })).toBeEnabled();
-    expect(window.location.pathname).toBe("/perfil-acces");
-    // A reload of that entry is still the explicit visit.
-    expect(window.history.state).toEqual({ profileChange: true });
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    recorded.stop();
-    expect(recorded.requests).not.toContain("POST /api/v1/auth/handoff");
+    expect(await screen.findByRole("link", { name: "Reservar" })).toBeVisible();
+    expect(screen.queryByRole("link", { name: "Alumnes" })).toBeNull();
+    window.history.pushState(null, "", "/instructor/dia");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
     expect(assign).not.toHaveBeenCalled();
   });
 
-  it("R-01-13 / E160 #1: choosing ADMIN on 03b (remembered) opens one handoff, never a second automatic one", async () => {
-    mockScenario("admin");
-    const admin = (await (await fetch(`${window.location.origin}/api/v1/me`)).json()) as {
-      membership: Record<string, unknown>;
-    };
-    // No remembered choice: the sign-in lands on 03b's cards; `updateProfile` then remembers ADMIN.
-    server.use(
-      http.get("*/api/v1/me", () =>
-        HttpResponse.json({
-          ...admin,
-          membership: { ...admin.membership, activeProfile: null, rememberProfile: false },
-        }),
-      ),
-    );
+  it("2026-11-01: a remembered ADMIN with both app profiles chooses only student or instructor", async () => {
+    mockScenario("multiProfile");
+    await overrideMembership({
+      activeProfile: "ADMIN",
+      defaultProfile: "ADMIN",
+      rememberProfile: true,
+    });
     window.history.pushState(null, "", "/entrar");
     const assign = stubPageLoads();
-    await renderApplication(authClient());
-    const recorded = recordApiRequests();
-    passwordLogin("aina.serra@example.test");
-
-    fireEvent.click(await screen.findByRole("button", { name: /Com a administradora/u }));
+    const client = authClient();
+    const update = vi.spyOn(client, "updateProfile");
+    await renderApplication(client);
+    passwordLogin();
+    expect(await screen.findByRole("button", { name: /Com a instructora/u })).toBeVisible();
+    expect(screen.getByRole("button", { name: /Com a alumna/u })).toBeVisible();
+    expect(screen.queryByRole("button", { name: /Com a administradora/u })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: /Com a instructora/u }));
     await waitFor(() => {
-      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+      expect(window.location.pathname).toBe("/instructor/dia");
     });
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    recorded.stop();
-    expect(
-      recorded.requests.filter((request) => request === "POST /api/v1/auth/handoff"),
-    ).toHaveLength(1);
-    expect(assign).toHaveBeenCalledTimes(1);
+    expect(update).toHaveBeenCalledWith("INSTRUCTOR", true);
+    expect(assign).not.toHaveBeenCalled();
   });
 
-  it("R-01-07 a remembered MEMBER on an account that lost the role falls back to 03b", async () => {
+  it("2026-11-01: a restored ADMIN preference on a protected app page asks for a valid app profile", async () => {
+    mockScenario("multiProfile");
+    await overrideMembership({
+      activeProfile: "ADMIN",
+      defaultProfile: "ADMIN",
+      rememberProfile: true,
+    });
+    const client = authClient();
+    await client.login("estel.rius@example.test", "secret-password");
+    window.history.pushState(null, "", "/inici");
+    const recorded = recordApiRequests();
+    await renderApplication(client);
+    expect(await screen.findByRole("button", { name: /Com a instructora/u })).toBeVisible();
+    expect(window.location.pathname).toBe("/perfil-acces");
+    recorded.stop();
+    expect(recorded.requests).not.toContain("GET /api/v1/me/home");
+    expect(recorded.requests).not.toContain("POST /api/v1/auth/handoff");
+  });
+
+  it("2026-11-01: a valid remembered app profile still opens directly even with ADMIN available", async () => {
+    for (const [profile, path] of [
+      ["MEMBER", "/inici"],
+      ["INSTRUCTOR", "/instructor/dia"],
+    ] as const) {
+      mockScenario("multiProfile");
+      await overrideMembership({
+        activeProfile: profile,
+        defaultProfile: profile,
+        rememberProfile: true,
+      });
+      window.history.pushState(null, "", "/entrar");
+      await renderApplication(authClient());
+      passwordLogin();
+      await waitFor(() => {
+        expect(window.location.pathname).toBe(path);
+      });
+      expect(screen.queryByRole("button", { name: /Com a administradora/u })).toBeNull();
+      cleanup();
+      server.resetHandlers();
+    }
+  });
+
+  it("2026-11-01: a failed app-profile change keeps the two choices for retry", async () => {
+    mockScenario("multiProfile");
+    const client = authClient();
+    await client.login("estel.rius@example.test", "secret-password");
+    vi.spyOn(client, "updateProfile").mockRejectedValueOnce(new Error("Temporary failure"));
+    window.history.pushState(null, "", "/perfil-acces");
+    await renderApplication(client);
+    fireEvent.click(screen.getByRole("button", { name: /Com a instructora/u }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("No s'ha pogut canviar de perfil.");
+    fireEvent.click(screen.getByRole("button", { name: /Com a instructora/u }));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/instructor/dia");
+    });
+  });
+
+  it("2026-11-01: an explicit profile change keeps only both app profiles", async () => {
+    mockScenario("multiProfile");
+    const client = authClient();
+    await client.login("estel.rius@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    const assign = stubPageLoads();
+    await renderApplication(client);
+    fireEvent.click(await screen.findByRole("link", { name: /Canviar de perfil/u }));
+    expect(await screen.findByRole("button", { name: /Com a instructora/u })).toBeEnabled();
+    expect(screen.getByRole("button", { name: /Com a alumna/u })).toBeEnabled();
+    expect(screen.queryByRole("button", { name: /Com a administradora/u })).toBeNull();
+    expect(window.location.pathname).toBe("/perfil-acces");
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("2026-11-01: ADMIN-only accounts stay here with an explanation, no app reads or profile grant", async () => {
+    mockScenario("admin");
+    await overrideMembership({ profiles: ["ADMIN"], roles: ["ADMIN"] });
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    const update = vi.spyOn(client, "updateProfile");
+    const assign = stubPageLoads();
+    const recorded = recordApiRequests();
+    for (const path of ["/inici", "/instructor/dia", "/perfil"]) {
+      window.history.pushState(null, "", path);
+      await renderApplication(client);
+      expect(
+        await screen.findByRole("heading", { name: "Accés d’alumne o professor" }),
+      ).toBeVisible();
+      expect(screen.getByText(/Aquest compte no té perfil/u)).toBeVisible();
+      expect(screen.queryByRole("checkbox", { name: "Recorda la meva tria" })).toBeNull();
+      expect(window.location.pathname).toBe("/perfil-acces");
+      cleanup();
+    }
+    recorded.stop();
+    expect(assign).not.toHaveBeenCalled();
+    expect(update).not.toHaveBeenCalled();
+    expect(
+      recorded.requests.some((request) => /auth\/handoff|me\/home|instructor/u.test(request)),
+    ).toBe(false);
+  });
+
+  it("2026-11-01: a removed remembered member profile falls back to the remaining instructor profile", async () => {
     mockScenario("instructor");
-    const instructor = (await (await fetch(`${window.location.origin}/api/v1/me`)).json()) as {
-      membership: Record<string, unknown>;
-    };
-    server.use(
-      http.get("*/api/v1/me", () =>
-        HttpResponse.json({
-          ...instructor,
-          membership: {
-            ...instructor.membership,
-            activeProfile: "MEMBER",
-            defaultProfile: "MEMBER",
-            profiles: ["INSTRUCTOR", "ADMIN"],
-            rememberProfile: true,
-            roles: ["INSTRUCTOR", "ADMIN"],
-          },
-        }),
-      ),
-    );
+    await overrideMembership({
+      activeProfile: "MEMBER",
+      defaultProfile: "MEMBER",
+      rememberProfile: true,
+      profiles: ["INSTRUCTOR", "ADMIN"],
+      roles: ["INSTRUCTOR", "ADMIN"],
+    });
     window.history.pushState(null, "", "/entrar");
     await renderApplication(authClient());
     passwordLogin();
-
     await waitFor(() => {
-      expect(window.location.pathname).toBe("/perfil-acces");
+      expect(window.location.pathname).toBe("/instructor/dia");
     });
-    expect(await screen.findByRole("button", { name: /Com a instructor/u })).toBeVisible();
-    expect(screen.getByRole("button", { name: /Com a administrador/u })).toBeVisible();
-    expect(screen.queryByRole("button", { name: /Com a alumn/u })).toBeNull();
+    expect(await screen.findByRole("link", { name: "Alumnes" })).toBeVisible();
   });
 
   it("E11-W06 W13: an instructor-only session on /inici is sent to /instructor/dia", async () => {
@@ -970,7 +1040,7 @@ describe("T-01-20 profile choice", () => {
 
     expect(screen.getByRole("button", { name: /Com a alumna/u })).toBeVisible();
     expect(screen.getByRole("button", { name: /Com a instructora/u })).toBeVisible();
-    expect(screen.getByRole("button", { name: /Com a administradora/u })).toBeVisible();
+    expect(screen.queryByRole("button", { name: /Com a administradora/u })).toBeNull();
     const remember = screen.getByRole("checkbox", { name: "Recorda la meva tria" });
     expect(remember).toBeChecked();
     fireEvent.click(remember);
@@ -1773,7 +1843,7 @@ describe("E4-W16 step 12 member-app fixes", () => {
     await renderApplication(client);
     expect(screen.getByRole("button", { name: /Com a alumne\/a/u })).toBeVisible();
     expect(screen.getByRole("button", { name: /Com a instructor\/a/u })).toBeVisible();
-    expect(screen.getByRole("button", { name: /Com a administrador\/a/u })).toBeVisible();
+    expect(screen.queryByRole("button", { name: /Com a administrador\/a/u })).toBeNull();
 
     cleanup();
     window.history.pushState(null, "", "/perfil");
@@ -2206,7 +2276,8 @@ describe("T-03-40 mobile own dogs", () => {
     const note = screen.getAllByLabelText(/Notes als instructors/u)[0] as HTMLTextAreaElement;
     fireEvent.change(note, { target: { value: "Treballarem el balancí amb calma." } });
     fireEvent.click(screen.getAllByRole("button", { name: "DESA" })[0] as HTMLButtonElement);
-    expect(await screen.findByRole("status")).toHaveTextContent("Nota de Duna desada");
+    const savedNote = await screen.findByText("Nota de Duna desada");
+    expect(savedNote.closest('[role="status"]')).toBeVisible();
 
     expect(screen.getByText("2 pendents · 1 feta")).toBeVisible();
     fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);

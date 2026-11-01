@@ -1,0 +1,114 @@
+[
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-detail-chromium-1280.png",
+    "sha256": "d8803e98195697ac6ff70d1c684fd76b212bc300cd7376ab6f7e1de9e54ec9ca"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-detail-chromium-375.png",
+    "sha256": "7d50b6e9f2fe718bb65f888571d8da9de3fbed48f6ec17e01607ba85bc42f7a4"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-detail-webkit-1280.png",
+    "sha256": "9b4f68ede011a5160d92e64fa92b5da8ad109452bfd6feb529729a918b1aab7c"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-detail-webkit-375.png",
+    "sha256": "0759c6c6a4b266667766aebb263da2c4b87c1edc0753577cd242be52e2554fc4"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-history-chromium-1280.png",
+    "sha256": "d8803e98195697ac6ff70d1c684fd76b212bc300cd7376ab6f7e1de9e54ec9ca"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-history-chromium-375.png",
+    "sha256": "18865738514ef21aa67a8f86ff60c2fd470b155780d6093ccb112207730e0efb"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-history-webkit-1280.png",
+    "sha256": "0ccfdca03481db02a8c58e48b85b0dca400c8c47907886e0d7577b033decfe8e"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-history-webkit-375.png",
+    "sha256": "4fbd30c801adc3e7aa6210a85ec91b8e49f63dc011f1139e257b403a28d6c2f4"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-log-chromium-1280.png",
+    "sha256": "e69635677a1d1161233ef5471933539ba0904113bf6b0f9301df36547624f733"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-log-chromium-375.png",
+    "sha256": "1a279d90639703bce3d320ade3fa64d5489227231c216509334572cc97ed1850"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-log-webkit-1280.png",
+    "sha256": "4f36b8ac0716eb2d383d690c3ff1c14c3a8383f9d3def78980a739cc71a38f83"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-access/delivery-log-webkit-375.png",
+    "sha256": "ea12224869ea6255294a0251b778581836cb536063abead1a610b10cf05b9e79"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-admin-only-chromium-1280.png",
+    "sha256": "785a3e4c9a40623d6ab53903e646a30d84fb784cb48578c943595c642f779553"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-admin-only-chromium-375.png",
+    "sha256": "0c34e7549155974e2f779d87fe15f406114e1e604a335758ade05e5ae45e1bee"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-admin-only-webkit-ui-1280.png",
+    "sha256": "4040caa4b60fbc8688805f5f4bba252b158d13d20f449b427e3ed4f836266545"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-admin-only-webkit-ui-375.png",
+    "sha256": "5f0fd06c6244213cb5b0360dffedf61c8046a61a1aecc0d357456b029dc83254"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-profile-chooser-chromium-1280.png",
+    "sha256": "b2714f07399b7e0d4adbd43fa321d001779cbf07cc03a151491df2ad5e3f070d"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-profile-chooser-chromium-375.png",
+    "sha256": "ddc5a064c5755a364edfe371c9d6a91d379ad64d31ee043a2dea633cca924297"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-profile-chooser-webkit-ui-1280.png",
+    "sha256": "62d162c6d73c2137da01d4792025e05dc8637988da216e2bad7702aef7652c9c"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-app-profile-access/app-profile-chooser-webkit-ui-375.png",
+    "sha256": "9af5b19396624e8faaae975ff052051008b1b56933cdbb91c4576e7301e47b77"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-dark-chromium-1280.png",
+    "sha256": "d9deed57f49274aa9404efc6f3cb020c6001add4b8af666536325ce3ed3f0b56"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-dark-chromium-375.png",
+    "sha256": "6937243a140f30c69669ec936d6843e2c825a5a4edbaf3bbd64b34aae931ad10"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-dark-webkit-ui-1280.png",
+    "sha256": "9f20f29033aa583a0c1c92aa700b909e0f7e40c4f17257f4aaaab932c6993483"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-dark-webkit-ui-375.png",
+    "sha256": "64fa73320de5ba57362d04303cc139d986c55abf3f4c51a18ca380fabbe60ee8"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-light-reduced-motion-chromium-1280.png",
+    "sha256": "b3498878d0c29c3de2e2d1d6e68aeb8621f8a202ce6a5ecf72882f8573c6adee"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-light-reduced-motion-chromium-375.png",
+    "sha256": "66ee79b87317ed23b6766ebd864c6d5bdd5c07b96696b5f26bda8d056e6d2717"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-light-reduced-motion-webkit-ui-1280.png",
+    "sha256": "6ab3f7558b027716701f5a9822f80b5ffd6f4c3925de863ff247f78974a29ff2"
+  },
+  {
+    "path": "roadmap/evidence/2026-11-01-notification-attention/attention-light-reduced-motion-webkit-ui-375.png",
+    "sha256": "7a84b0953cd4a317ec140210aba6634c54e2a6abe71e0e97d7624c68ea92d374"
+  }
+]

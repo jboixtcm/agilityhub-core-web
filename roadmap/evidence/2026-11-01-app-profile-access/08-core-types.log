@@ -1,0 +1,4 @@
+
+> agilityhub-core-web@0.0.0 typecheck:e2e-core /Users/jordib/.config/agilityhub-clubs/production/app-profile-access-20261101/web-source
+> tsc -p e2e/core/tsconfig.json --noEmit
+

@@ -1057,6 +1057,7 @@ export function notificationListItem(item: StoredNotification): NotificationList
     category: item.category,
     channels: item.channels,
     code: item.code,
+    title: item.title,
     createdAt: item.createdAt,
     id: item.id,
     readAt: item.readAt ?? null,

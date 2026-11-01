@@ -30,7 +30,7 @@ function rewrite(path: string, change: (body: Record<string, unknown>) => void):
 async function openBooking(id = "booking-duna-mon3") {
   await renderApp(`/reserves/${id}`);
   await screen.findByRole("heading", { name: "Detall de la reserva" });
-  return screen.findByText(/^Classe /u);
+  return screen.findByText(/^Classe /u, { selector: ".detail-card__title" });
 }
 
 /** The colour the club's ring catalogue gives `name` (the api's `ringColor`). */

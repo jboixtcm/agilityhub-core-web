@@ -22,5 +22,9 @@
     "error": "No s'ha pogut completar la baixa.",
     "retry": "Torna-ho a provar",
     "toPreferences": "Canvia els teus avisos al perfil"
+  },
+  "attention": {
+    "title": "Tens avisos importants pendents",
+    "open": "Revisa els avisos"
   }
 }

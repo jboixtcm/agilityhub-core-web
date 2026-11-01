@@ -1,0 +1,15 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/apps/clubs
+
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+   Start at  18:50:10
+   Duration  8.47s (tests 68%, transform 16%, environment 9%, import 6%, setup 2%)
+

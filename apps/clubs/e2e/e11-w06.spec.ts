@@ -79,35 +79,23 @@ test.describe("E11-W06: the audit's fixes on the members' app (375 px)", () => {
     await shot(page, "50-espera-after-sign-in-375.png");
   });
 
-  test("E11-W06 W2 (R-01-07, R-01-13): a remembered ADMIN profile opens the back office from 03b, never 03", async ({
+  test("2026-11-01: a remembered ADMIN with INSTRUCTOR enters the app as instructor", async ({
     page,
   }) => {
-    const homeReads: string[] = [];
+    const unexpected: string[] = [];
     page.on("request", (request) => {
-      if (/\/api\/v1\/me\/(home|bookable-classes)/u.test(request.url()))
-        homeReads.push(request.url());
-    });
-    // The back office is another app (not served here): its load is recorded and stopped, so 03b
-    // stays with its pending state for the capture.
-    let backOfficeUrl: string | undefined;
-    await page.route("http://127.0.0.1:4174/**", async (route) => {
-      backOfficeUrl = route.request().url();
-      await route.abort("aborted");
+      if (/\/api\/v1\/me\/(home|bookable-classes)|\/auth\/handoff/u.test(request.url()))
+        unexpected.push(request.url());
     });
     await prepare(page, "admin");
     await page.goto(`${baseUrl}/entrar`);
     await passwordLogin(page, "aina.serra@example.test");
-    await page.waitForURL("**/perfil-acces");
-    await expect
-      .poll(() => backOfficeUrl)
-      .toBe("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
-    // 03b's pending state on the administrator's card while the back office opens.
-    await expect(page.locator(".profile-choice__card[aria-busy='true']")).toHaveCount(1);
-    await expect(page.getByRole("button").filter({ hasText: /Com a administradora/u })).toHaveCount(
-      0,
-    );
-    await shot(page, "50-03b-admin-landing-375.png");
-    expect(homeReads).toEqual([]);
+    await page.waitForURL("**/instructor/dia");
+    await expect(page.getByRole("link", { name: "El meu dia", exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Alumnes", exact: true })).toBeVisible();
+    await shot(page, "app-remembered-admin-instructor-375.png");
+    expect(new URL(page.url()).origin).toBe(baseUrl);
+    expect(unexpected).toEqual([]);
   });
 
   test("E11-W06 W8: 30's failed read offers a retry that reads again", async ({ page }) => {

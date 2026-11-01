@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/notification-attention-20261101/web-source/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  18:39:54
+   Duration  1.54s (transform 44%, environment 27%, import 17%, tests 7%, setup 5%)
+

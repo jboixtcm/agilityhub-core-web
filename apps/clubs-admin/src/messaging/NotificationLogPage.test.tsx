@@ -94,27 +94,42 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     ).not.toHaveTextContent("member-empty");
   });
 
-  it("MR-02 ignores unsupported legacy q and keeps the supported code filter", async () => {
+  it("keeps recipient search and code filters in the same server query", async () => {
     const lines = requestLines();
     server.use(
-      http.get("*/api/v1/notifications", ({ request }) => {
-        if (new URL(request.url).searchParams.has("q")) {
-          return HttpResponse.json({ code: "INVALID_FILTER" }, { status: 400 });
-        }
-        return undefined;
-      }),
+      http.get("*/api/v1/notifications", () =>
+        HttpResponse.json({
+          items: [
+            {
+              id: "reset-example",
+              code: "N-25",
+              title: "",
+              createdAt: "2026-11-01T03:03:00Z",
+              recipient: { displayName: "", email: "example@example.test" },
+              channels: [{ channel: "EMAIL", status: "SENT", temporaryFailure: true }],
+            },
+          ],
+          page: 0,
+          size: 50,
+          totalPages: 1,
+          totalItems: 1,
+          appliedFilters: [],
+        }),
+      ),
     );
-    await renderLog("/notificacions?q=N-21&filter=code:eq:N-08a");
-    await waitFor(() => {
-      expect(rows()).toHaveLength(1);
-      expect(rows()[0]).toHaveTextContent("N-08a");
-    });
-    expect(screen.queryByRole("searchbox")).toBeNull();
-    expect(rows().every((row) => row.textContent.includes("N-08a"))).toBe(true);
+    await renderLog("/notificacions?q=example%40example.test&filter=code:eq:N-25");
+    await screen.findByText("Accés i recuperació de contrasenya");
+    expect(screen.getByRole("searchbox")).toHaveValue("example@example.test");
+    expect(rows()[0]).toHaveTextContent("e···e@example.test");
+    expect(rows()[0]).toHaveTextContent("Correu · incidència temporal");
+    expect(rows()[0]).not.toHaveTextContent("lliurat");
     expect(
-      lines
-        .filter((line) => line.startsWith("GET /notifications?"))
-        .every((line) => !line.includes("q=")),
+      lines.some(
+        (line) =>
+          line.startsWith("GET /notifications?") &&
+          line.includes("q=example%40example.test") &&
+          line.includes("code%3Aeq%3AN-25"),
+      ),
     ).toBe(true);
   });
 
@@ -301,6 +316,49 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     expect(drawer.textContent).not.toContain("notificationAudience");
     expect(drawer.textContent).not.toContain("Pau Fictici Soler ·");
   });
+
+  it.each(["SENT", "DELIVERED"] as const)(
+    "shows %s accurately and keeps a temporary incident in the detail history",
+    async (status) => {
+      server.use(
+        http.get("*/api/v1/notifications/reset-history", () =>
+          HttpResponse.json({
+            id: "reset-history",
+            code: "N-25",
+            title: "",
+            body: "",
+            locale: "ca",
+            category: "SYSTEM",
+            createdAt: "2026-11-01T03:03:00Z",
+            recipient: { displayName: "", email: "alex@example.test" },
+            channels: [],
+            deliveries: [
+              {
+                channel: "EMAIL",
+                status,
+                target: "alex@example.test",
+                attempts: 1,
+                sentAt: "2026-11-01T03:03:01Z",
+                deliveredAt: status === "DELIVERED" ? "2026-11-01T03:04:00Z" : null,
+                temporaryFailureAt: "2026-11-01T03:03:02Z",
+                temporaryFailureReason: "SENDING_IP_BLOCKED_SPAMCOP",
+              },
+            ],
+          }),
+        ),
+      );
+      await renderLog("/notificacions?avis=reset-history");
+      const drawer = await screen.findByRole("dialog", { name: "Avís N-25" });
+      await within(drawer).findByText("Accés i recuperació de contrasenya");
+      expect(drawer).toHaveTextContent("IP d’enviament bloquejada per SpamCop");
+      expect(drawer).toHaveTextContent("a···x@example.test");
+      expect(drawer).not.toHaveTextContent("alex@example.test");
+      expect(drawer.querySelector("[data-delivery-status]")).toHaveTextContent(
+        status === "SENT" ? "incidència temporal" : "lliurat",
+      );
+      expect(drawer).toHaveTextContent("01/11/2026 04:03");
+    },
+  );
 
   it("masks an e-mail and a phone, never prints them whole", () => {
     expect(maskedTarget("laura@example.test")).toBe("l···a@example.test");

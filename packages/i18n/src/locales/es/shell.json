@@ -80,7 +80,8 @@
     "team": "Instructores y administradores",
     "today": "Hoy",
     "training": "Entrenamientos",
-    "weeklyTemplate": "Plantilla semanal"
+    "weeklyTemplate": "Plantilla semanal",
+    "deliveryLog": "Registro de envíos"
   },
   "placeholder": {
     "description": "Esta pantalla estará disponible pronto.",

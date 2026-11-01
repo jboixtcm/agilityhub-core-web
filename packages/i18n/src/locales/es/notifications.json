@@ -22,5 +22,9 @@
     "error": "No se ha podido completar la baja.",
     "retry": "Volver a intentarlo",
     "toPreferences": "Cambia tus avisos en el perfil"
+  },
+  "attention": {
+    "title": "Tienes avisos importantes pendientes",
+    "open": "Revisar los avisos"
   }
 }

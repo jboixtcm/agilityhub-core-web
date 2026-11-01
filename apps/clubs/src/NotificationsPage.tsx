@@ -1,5 +1,4 @@
 import type { ApiClient, components } from "@agilityhub/api-client";
-import { useSession } from "@agilityhub/auth";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -14,6 +13,7 @@ import {
 import { type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useAppSession as useSession } from "./access-profiles";
 import { errorText, navigateInApp } from "./booking/shared";
 import { startClaim } from "./booking/useSeatHold";
 import { changeClassHref, feedActionHref } from "./notifications/actions";
@@ -62,9 +62,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
   const readAllTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mounted = useRef(true);
   const sentinel = useRef<HTMLDivElement>(null);
-  const staff =
-    session.me?.impersonation === undefined &&
-    (session.activeProfile === "INSTRUCTOR" || session.activeProfile === "ADMIN");
+  const staff = session.me?.impersonation === undefined && session.activeProfile === "INSTRUCTOR";
   // The account and club the visit's read-all belongs to (its pending marker, E7-W05 step 3).
   const accountId = session.me?.account.id ?? "";
   const clubId = session.me?.membership?.clubId ?? "";

@@ -80,7 +80,8 @@
     "team": "Instructors i administradors",
     "today": "Avui",
     "training": "Entrenaments",
-    "weeklyTemplate": "Plantilla setmanal"
+    "weeklyTemplate": "Plantilla setmanal",
+    "deliveryLog": "Registre d’enviaments"
   },
   "placeholder": {
     "description": "Aquesta pantalla estarà disponible aviat.",

@@ -157,9 +157,20 @@ function nonEmpty(texts: unknown): texts is Record<string, string> {
 
 /** «Avisos enviats» (R-11-10): `x-fields`, `x-filterable` and `x-sortable` of `GET /notifications`. */
 const NOTIFICATION_SPEC: ListSpec<StoredNotification> = {
-  fields: ["id", "createdAt", "code", "category", "audience", "recipient", "channels", "readAt"],
+  fields: [
+    "id",
+    "createdAt",
+    "code",
+    "title",
+    "category",
+    "audience",
+    "recipient",
+    "channels",
+    "readAt",
+  ],
   filterable: ["code", "category", "channel", "status", "memberId", "createdAt"],
-  search: (item) => `${item.code} ${item.recipient.displayName} ${item.title}`,
+  search: (item) =>
+    `${item.code} ${item.recipient.displayName} ${item.recipient.email ?? ""} ${item.title}`,
   sortable: ["createdAt"],
   values: (item, field) => {
     switch (field) {

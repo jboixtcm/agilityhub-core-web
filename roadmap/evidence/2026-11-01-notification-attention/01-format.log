@@ -1,0 +1,8 @@
+apps/clubs/src/App.tsx 358ms (unchanged)
+apps/clubs/src/booking/HomePage.tsx 25ms (unchanged)
+apps/clubs/src/booking/booking.css 65ms (unchanged)
+apps/clubs/src/notifications/NotificationAttention.tsx 11ms (unchanged)
+apps/clubs/src/notifications/NotificationAttention.test.tsx 15ms (unchanged)
+apps/clubs/src/notifications/attention.css 8ms (unchanged)
+apps/clubs/playwright.config.ts 4ms (unchanged)
+apps/clubs/e2e/notification-attention.spec.ts 14ms

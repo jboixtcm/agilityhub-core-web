@@ -4544,7 +4544,7 @@ export interface paths {
         };
         /**
          * notifications
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The club's notification log (R-11-10, T-11-26), universal list (CONVENCIONS_API §4) createdAt desc by default: every notification, also those with no external channel sent and those without an APP delivery; never another club's. channel/status filter on any delivery; memberId on the recipient. An undeclared filter, sort or fields key is 400 INVALID_FILTER. The log has no free-text search: it declares no q, and a non-blank one is INVALID_FILTER (CONVENCIONS_API §4, E75). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The club's notification log (R-11-10, T-11-26), universal list (CONVENCIONS_API §4) createdAt desc by default: every notification, also those with no external channel sent and those without an APP delivery; never another club's. channel/status filter on any delivery; memberId on the recipient. An undeclared filter, sort or fields key is 400 INVALID_FILTER. Search matches code, stored title, recipient name or email within the tenant. Tenant comes from the JWT.
          */
         get: operations["notifications"];
         put?: never;
@@ -4564,7 +4564,7 @@ export interface paths {
         };
         /**
          * Export notifications
-         * @description Roles: ADMIN (impersonation → 403). S14 §6, R-14-12. The list contract of GET /notifications (S11 log, E7-T03): the same filter/sort, fields and selected columns, the same rows of the club; an undeclared one is 400 INVALID_FILTER. 200 binary file or 202 ExportAccepted. Sensitive values are masked.
+         * @description Roles: ADMIN (impersonation → 403). S14 §6, R-14-12. The list contract of GET /notifications (S11 log, E7-T03): the same q/filter/sort, fields and selected columns, the same rows of the club; an undeclared one is 400 INVALID_FILTER. 200 binary file or 202 ExportAccepted. Sensitive values are masked.
          */
         get: operations["exportNotifications"];
         put?: never;
@@ -4584,7 +4584,7 @@ export interface paths {
         };
         /**
          * notificationFilterValues
-         * @description Roles: ADMIN (impersonation → 403). The values of one x-filterable field with their counts under the other filters (CONVENCIONS_API §4), labelled in the reader's language (the member's name for memberId); another field → INVALID_FILTER. No q: the log has no free-text search, and a non-blank q is INVALID_FILTER (E75). Tenant comes from the JWT.
+         * @description Roles: ADMIN (impersonation → 403). The values of one x-filterable field with their counts under the other filters (CONVENCIONS_API §4), labelled in the reader's language (the member's name for memberId); another field → INVALID_FILTER. Search matches code, stored title, recipient name or email. Tenant comes from the JWT.
          */
         get: operations["notificationFilterValues"];
         put?: never;
@@ -8393,6 +8393,7 @@ export interface components {
             email: string;
             event: string;
             "message-id": string;
+            reason: string;
         };
         BuildJoinRequest: {
             code: string;
@@ -9087,6 +9088,8 @@ export interface components {
         ChannelState: {
             channel: components["schemas"]["NotificationChannel"];
             status: components["schemas"]["DeliveryStatus"];
+            /** @description A temporary provider rejection is awaiting delivery; never a permanent bounce */
+            temporaryFailure?: boolean | null;
         };
         CheckoutSession: {
             checkoutSessionId: string;
@@ -10365,6 +10368,13 @@ export interface components {
             status: components["schemas"]["DeliveryStatus"];
             /** @description The address, phone (E.164) or push subscription id; null for APP */
             target?: string | null;
+            /**
+             * Format: date-time
+             * @description When a temporary rejection was received; retained if delivery later succeeds
+             */
+            temporaryFailureAt?: string | null;
+            /** @description Safe classification: SENDING_IP_BLOCKED_SPAMCOP, SENDING_IP_BLOCKED, MAILBOX_FULL, RATE_LIMITED or TEMPORARY_REJECTION; never raw provider text */
+            temporaryFailureReason?: string | null;
         };
         DirectLeaveRequest: {
             /** Format: date */
@@ -13127,6 +13137,8 @@ export interface components {
             /** Format: date-time */
             readAt?: string | null;
             recipient?: components["schemas"]["NotificationRecipient"];
+            /** @description Safe stored title; empty for credential emails, whose type is identified by code */
+            title?: string;
         };
         /** @description Universal list page (CONVENCIONS_API §4) of the notification log, createdAt desc by default */
         NotificationPage: {
@@ -50299,6 +50311,8 @@ export interface operations {
                 size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
                 /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
@@ -50433,6 +50447,8 @@ export interface operations {
                 size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
+                /** @description Free-text search within the caller's permitted projection. */
+                q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
                 /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
@@ -50572,6 +50588,7 @@ export interface operations {
             query: {
                 field: string;
                 filter?: string[];
+                q?: string;
             };
             header?: never;
             path?: never;

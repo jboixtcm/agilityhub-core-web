@@ -429,11 +429,13 @@
   font-size: 1.5rem;
 }
 
-.messaging-log__recipient {
+.messaging-log__recipient,
+.messaging-log__subject {
   display: grid;
 }
 
-.messaging-log__recipient small {
+.messaging-log__recipient small,
+.messaging-log__subject small {
   color: var(--ah-color-text-muted);
 }
 
@@ -477,6 +479,17 @@
 
 .messaging-log__facts dd {
   margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (width <= 36rem) {
+  .messaging-log__facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .messaging-log__facts dd {
+    margin-bottom: var(--ah-space-2);
+  }
 }
 
 .notification-preferences__app {

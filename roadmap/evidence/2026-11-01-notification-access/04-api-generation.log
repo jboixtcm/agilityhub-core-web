@@ -1,0 +1,9 @@
+
+> agilityhub-core-web@0.0.0 api:generate /Users/jordib/.config/agilityhub-clubs/production/admin-delivery-log-20261101/web-source
+> pnpm --filter @agilityhub/api-client api:generate
+
+
+> @agilityhub/api-client@0.0.0 api:generate /Users/jordib/.config/agilityhub-clubs/production/admin-delivery-log-20261101/web-source/packages/api-client
+> node scripts/generate.mjs
+
+Generated /Users/jordib/.config/agilityhub-clubs/production/admin-delivery-log-20261101/web-source/packages/api-client/src/generated/schema.d.ts from /Users/jordib/.config/agilityhub-clubs/production/admin-delivery-log-20261101/web-source/packages/api-client/openapi/openapi.json merged with /Users/jordib/.config/agilityhub-clubs/production/admin-delivery-log-20261101/web-source/packages/api-client/openapi/pending.json
