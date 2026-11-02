@@ -63,6 +63,8 @@ export default defineConfig(({ mode }) => {
   return {
     // Keep MSW out of production; emit the public favicon explicitly.
     build: { copyPublicDir: mockEnabled },
+    // Locale loaders use the default JSON export. Omit the duplicate named exports in each language chunk.
+    json: { namedExports: false },
     plugins: [
       {
         name: "app-favicon",
