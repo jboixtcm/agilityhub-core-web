@@ -64,7 +64,7 @@ interface PersonForm {
 }
 
 interface DogForm {
-  birthMonth: string;
+  birthDate: string;
   breed: string;
   chip: string;
   name: string;
@@ -119,9 +119,9 @@ function personForm(member: Member, paymentType: PaymentType | ""): PersonForm {
 
 function dogForm(dog: Dog): DogForm {
   return {
-    birthMonth: dog.birthMonth,
+    birthDate: dog.birthDate ?? "",
     breed: dog.breed,
-    chip: dog.chip,
+    chip: dog.chip ?? "",
     name: dog.name,
     notesToInstructors: dog.notesToInstructors ?? "",
     sex: dog.sex,
@@ -222,7 +222,7 @@ function dogPatch(dog: Dog, edits: Partial<DogForm>): DogPatch | undefined {
   const body: DogPatch = { version: dog.version };
   for (const key of changedKeys(current, edits)) {
     if (key === "sex") body.sex = value.sex;
-    else if (key === "birthMonth") body.birthMonth = value.birthMonth.trim();
+    else if (key === "birthDate") body.birthDate = value.birthDate.trim();
     else body[key] = value[key].trim();
   }
   return Object.keys(body).length > 1 ? body : undefined;
@@ -743,7 +743,7 @@ export function SignupEditDrawer({
       for (const dog of signup.dogs) {
         const edits = dogEdits[dog.id];
         // R-04-06 (b): the reused dog's chip is read-only while the readmission waits (never sent).
-        const editable = dog.readmission == null ? edits : { ...edits, chip: dog.chip };
+        const editable = dog.readmission == null ? edits : { ...edits, chip: dog.chip ?? "" };
         const dogBody =
           dog.status === "PENDING" && edits !== undefined
             ? dogPatch({ ...dog, version: dogVersion(dog) }, editable ?? {})
@@ -929,6 +929,7 @@ export function SignupEditDrawer({
             >
               <Input
                 id={`${idPrefix}-${key}`}
+                type={key === "birthDate" ? "date" : "text"}
                 onChange={(event) => {
                   editDog(dog, { [key]: event.currentTarget.value });
                 }}
@@ -951,7 +952,7 @@ export function SignupEditDrawer({
               </legend>
               {dogInput("name")}
               {dogInput("breed")}
-              {dogInput("birthMonth")}
+              {dogInput("birthDate")}
               {reused ? (
                 // R-04-06 (b): the readmission matched on the chip, so it cannot change while it waits.
                 <FormField

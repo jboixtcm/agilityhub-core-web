@@ -130,7 +130,8 @@
       },
       "cashInvoicing": {
         "MONTHLY": "Mensual",
-        "SEMESTER": "Semestral"
+        "SEMESTER": "Semestral",
+        "QUARTERLY": "Trimestral"
       },
       "singleClassCancelPolicy": {
         "CREDIT": "Crédito",
@@ -319,7 +320,7 @@
       },
       "cashInvoicing": {
         "help": "Periodicidad de facturación de los pagos en efectivo.",
-        "label": "Facturación en efectivo"
+        "label": "Cobro en efectivo"
       },
       "cashPeriodMonths": {
         "help": "Meses incluidos en cada período de pago en efectivo.",

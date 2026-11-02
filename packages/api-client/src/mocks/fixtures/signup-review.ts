@@ -176,7 +176,9 @@ export function dogReadmissionChanges(current: SignupDogValues, submitted: Signu
       rowKeys(document) !== rowKeys(current.documents.find((own) => own.type === document.type)),
   );
   return [
-    ...fields.filter((field) => (current[field] ?? "") !== (submitted[field] ?? "")),
+    ...fields.filter((field) => field === "birthMonth"
+      ? (current.birthDate ?? `${current.birthMonth ?? ""}-01`) !== (submitted.birthDate ?? `${submitted.birthMonth}-01`)
+      : (current[field] ?? "") !== (submitted[field] ?? "")),
     ...(documentsChanged ? ["documents"] : []),
   ];
 }

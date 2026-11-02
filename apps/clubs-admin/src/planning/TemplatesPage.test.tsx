@@ -424,10 +424,10 @@ describe("T-06-26 D3 weekly templates", () => {
     const fieldOf = (input: HTMLElement) => input.closest(".ah-form-field");
 
     fireEvent.change(start, { target: { value: "21:10" } });
-    fireEvent.change(end, { target: { value: "21:35" } });
+    fireEvent.change(end, { target: { value: "21:34" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
     expect(
-      await within(drawer).findByText("L'interval de les franges horàries no és vàlid."),
+      await within(drawer).findByText("Tria una hora en intervals de cinc minuts."),
     ).toBeVisible();
     expect(fieldOf(end)).toHaveClass("ah-form-field--error");
     expect(fieldOf(start)).not.toHaveClass("ah-form-field--error");
@@ -509,6 +509,35 @@ describe("T-06-26 D3 weekly templates", () => {
     await waitFor(() => {
       expect(within(weeks).queryByText("pendent")).not.toBeInTheDocument();
     });
+    const undo = within(weeks).getByRole("button", { name: "Anul·la la generació" });
+    fireEvent.click(undo);
+    const cancelled = await screen.findByRole("dialog", { name: "Anul·la la generació" });
+    fireEvent.click(within(cancelled).getByRole("button", { name: "Cancel·la" }));
+    expect(
+      await within(weeks).findByRole("button", { name: "Anul·la la generació" }),
+    ).toBeEnabled();
+    fireEvent.click(undo);
+    const confirmed = await screen.findByRole("dialog", { name: "Anul·la la generació" });
+    fireEvent.click(within(confirmed).getByRole("button", { name: "Anul·la la generació" }));
+    expect(await screen.findByText("La setmana torna a estar pendent de generar.")).toBeVisible();
+    expect(await within(weeks).findByText("pendent")).toBeVisible();
+  });
+
+  it("offers undo on the last generated draft even when that week has already ended", async () => {
+    const previous = planningState.weeks.find((week) => week.state === "GENERATED");
+    if (previous === undefined) throw new TypeError("missing generated week fixture");
+    planningState.weeks.splice(0, planningState.weeks.length, {
+      ...previous,
+      id: "week-2020-01-06",
+      startDate: "2020-01-06",
+      endDate: "2020-01-12",
+      isoWeek: 2,
+      isoYear: 2020,
+      generatedAt: "2020-01-01T08:00:00Z",
+    });
+    await renderTemplates();
+    const row = await screen.findByRole("row", { name: /2020/u });
+    expect(within(row).getByRole("button", { name: "Anul·la la generació" })).toBeVisible();
   });
 
   it("hides every action from INSTRUCTOR and keeps the cells inert (A22 c)", async () => {

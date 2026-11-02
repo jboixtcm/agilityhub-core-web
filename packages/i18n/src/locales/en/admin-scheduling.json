@@ -40,6 +40,7 @@
       "copyName": "{name} (copy)"
     },
     "bandForm": {
+      "fiveMinutes": "Choose a time in five-minute increments.",
       "newTitle": "New time band",
       "editTitle": "Time band {range}",
       "start": "Start",
@@ -55,7 +56,10 @@
       "blocked": "blocked: {count, plural, one {# inconsistency} other {# inconsistencies}} in the template",
       "confirm": "The classes of the week of {date} will be generated as drafts",
       "done": "{count, plural, one {# class generated} other {# classes generated}}",
-      "skipped": "{count} skipped ({reasons})"
+      "skipped": "{count} skipped ({reasons})",
+      "undo": "Undo generation",
+      "undoConfirm": "Delete the generated classes for the week of {date} and return it to pending?",
+      "undone": "The week is ready to generate again."
     },
     "day": {
       "header": "Template: “{name}” ({kind})",

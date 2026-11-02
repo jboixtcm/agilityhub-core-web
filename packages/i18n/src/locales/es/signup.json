@@ -12,7 +12,6 @@
     "duplicateEmail": "Los dos correos deben ser diferentes.",
     "invalidPhone": "El teléfono no es válido.",
     "invalidDate": "La fecha no es válida.",
-    "invalidMonth": "El mes de nacimiento no es válido.",
     "invalidPostalCode": "El código postal no es válido.",
     "genericError": "No se ha podido completar la acción.",
     "rateLimited": "Demasiados intentos. Vuelve a intentarlo dentro de {seconds} s.",
@@ -67,7 +66,6 @@
     "female": "Hembra",
     "breed": "Raza",
     "birthMonth": "Nac.",
-    "birthMonthPlaceholder": "mm/aaaa",
     "chip": "Núm. de chip",
     "invalidChip": "El número de chip no es válido.",
     "notesToInstructors": "Notas para los instructores (opcional)",
@@ -87,7 +85,8 @@
     "maintenance": "{withEntry, select, yes {Entrada a cuenta: {entry} · cuota mínima durante el tratamiento: {fee}/mes} other {Cuota mínima durante el tratamiento: {fee}/mes}}",
     "selectPlan": "Seleccionar {plan}",
     "activate": "ACTIVAR",
-    "priceOverlap": "El club tiene que revisar los precios de esta modalidad."
+    "priceOverlap": "El club tiene que revisar los precios de esta modalidad.",
+    "otherActiveDog": "Ya tenemos otro perro activo en el club"
   },
   "family": {
     "title": "Más de un perro en la familia",

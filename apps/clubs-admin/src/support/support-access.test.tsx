@@ -840,7 +840,7 @@ describe("E11-W01 round 2 #1 · D10 offers no personal-data export to a support 
     ).toBeVisible();
     expect(screen.getByRole("region", { name: "Accés de suport" })).toBeVisible();
     // The record's other actions stay (audited as PLATFORM); only the closed export goes.
-    expect(screen.getByRole("button", { name: "Reenvia accés" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Envia la benvinguda" })).toBeVisible();
     expect(screen.queryByRole("button", { name: "Descarrega les dades (RGPD)" })).toBeNull();
 
     cleanup();
@@ -869,7 +869,7 @@ describe("E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support a
       await screen.findByRole("heading", { level: 1, name: "Laura Serra Vidal" }),
     ).toBeVisible();
     expect(screen.getByRole("region", { name: "Accés de suport" })).toBeVisible();
-    expect(screen.getByRole("button", { name: "Reenvia accés" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Envia la benvinguda" })).toBeVisible();
     expect(screen.queryByRole("button", { name: "Entra com l'abonat" })).toBeNull();
 
     cleanup();

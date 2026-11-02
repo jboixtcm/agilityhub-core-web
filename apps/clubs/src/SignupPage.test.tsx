@@ -175,7 +175,7 @@ function seedDraft(
       additionalDogOption: "TODAY",
       consentVersion: "",
       dog: {
-        birthMonth: "03/2022",
+        birthDate: "17/03/2022",
         breed: "Mestís",
         chip: "941000012345678",
         documents: [{ files: [], type: "VACCINATION_CARD" }],
@@ -483,9 +483,9 @@ describe("T-04-30 signup dog, uploads, plans and module gates", () => {
     fireEvent.change(screen.getByLabelText("Raça"), { target: { value: "Mestís" } });
     const birthMonth = screen.getByLabelText("Naix.");
     expect(birthMonth).toHaveAttribute("type", "text");
-    expect(birthMonth).toHaveAttribute("placeholder", "mm/aaaa");
-    fireEvent.change(birthMonth, { target: { value: "032022" } });
-    expect(birthMonth).toHaveValue("03/2022");
+    expect(birthMonth).toHaveAttribute("placeholder", "dd/mm/aaaa");
+    fireEvent.change(birthMonth, { target: { value: "17032022" } });
+    expect(birthMonth).toHaveValue("17/03/2022");
     fireEvent.change(screen.getByLabelText("Núm. de xip"), {
       target: { value: "941000012345678" },
     });
@@ -554,16 +554,16 @@ describe("T-04-30 signup dog, uploads, plans and module gates", () => {
     await renderSignup({ navigate, path: "/apuntat-hi/gos" });
     const chip = screen.getByLabelText("Núm. de xip");
     fireEvent.change(chip, { target: { value: "94100001234567" } });
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "122999" } });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "12122999" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(await screen.findByText("El número de xip no és vàlid.")).toBeVisible();
-    expect(screen.getByText("El mes de naixement no és vàlid.")).toBeVisible();
+    expect(screen.getByText("La data no és vàlida.")).toBeVisible();
     expect(navigate).not.toHaveBeenCalled();
 
     fireEvent.change(chip, { target: { value: "941 000-012 345 679" } });
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "032022" } });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "17032022" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
     await waitFor(() => {
       expect((savedDraft().dog as Record<string, unknown>).chip).toBe("941000012345679");
     });
@@ -577,7 +577,7 @@ describe("T-04-30 signup dog, uploads, plans and module gates", () => {
     expect(await screen.findByText("El número de xip no és vàlid.")).toBeVisible();
     fireEvent.change(screen.getByLabelText("Núm. de xip"), { target: { value: "ab-123-456" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
   });
 
   it("keeps fields typed while an upload is in flight", async () => {
@@ -613,6 +613,7 @@ describe("T-04-30 signup dog, uploads, plans and module gates", () => {
 describe("T-04-31 signup family lookup", () => {
   it("continues empty, resolves the fixture family and supports a pending lookup", async () => {
     const emptyNavigate = vi.fn();
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ navigate: emptyNavigate, path: "/apuntat-hi/familia" });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(emptyNavigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
@@ -620,6 +621,7 @@ describe("T-04-31 signup family lookup", () => {
     cleanup();
     sessionStorage.clear();
     const foundNavigate = vi.fn();
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ navigate: foundNavigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Marta Roca" },
@@ -640,6 +642,7 @@ describe("T-04-31 signup family lookup", () => {
     cleanup();
     sessionStorage.clear();
     const pendingNavigate = vi.fn();
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ navigate: pendingNavigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Persona desconeguda" },
@@ -659,10 +662,11 @@ describe("T-04-31 signup family lookup", () => {
     await renderSignup({ path: "/apuntat-hi/gos" });
     fireEvent.change(screen.getByLabelText("Nom del gos"), { target: { value: "Kiwi" } });
     fireEvent.change(screen.getByLabelText("Raça"), { target: { value: "Mestís" } });
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "03/2022" } });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "17/03/2022" } });
     fireEvent.change(screen.getByLabelText("Núm. de xip"), {
       target: { value: "941000012345678" },
     });
+    fireEvent.click(screen.getByLabelText("Ja tenim un altre gos actiu dins el club"));
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(await screen.findByLabelText("Nom del responsable")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Torna al pas anterior" }));
@@ -670,7 +674,7 @@ describe("T-04-31 signup family lookup", () => {
   });
 
   it("prefills the account holder with the group holder when the group is found (R-04-10)", async () => {
-    seedDraft();
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Marta Roca" },
@@ -691,7 +695,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     let submittedBody: unknown;
     seedDraft({
       dog: {
-        birthMonth: "03/2022",
+        birthDate: "17/03/2022",
         breed: "Mestís",
         chip: "941000012345678",
         documents: [{ files: [], type: "VACCINATION_CARD" }],
@@ -747,7 +751,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
       expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
     });
     expect(submittedBody).toMatchObject({
-      dog: { birthMonth: "2022-03" },
+      dog: { birthDate: "2022-03-17" },
       person: { birthDate: "1992-04-05" },
     });
     expect(sessionStorage.getItem(DRAFT_KEY)).toBeNull();
@@ -838,7 +842,6 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
       target: { value: "Iniciar-nos a l'agility" },
     });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    fireEvent.click(await screen.findByRole("button", { name: "CONTINUA" }));
     fireEvent.change(await screen.findByLabelText("NIF del titular (opcional)"), {
       target: { value: "12345678z" },
     });
@@ -1381,7 +1384,7 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
       );
       const navigate = vi.fn();
       const recorded = recordRequests();
-      seedDraft();
+      seedDraft({wantsFamilyGroup:path === "/apuntat-hi/familia"});
       await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
       acceptPrivacy();
       submitSignup();
@@ -1628,7 +1631,7 @@ describe("E3-W06 round 2", () => {
     expect(window.document.getElementById("signup-id-error")).toHaveTextContent(
       "El document d'identitat no és vàlid.",
     );
-    expect(screen.getByText(/Pas 1 de 4/u)).toBeVisible();
+    expect(screen.getByText(/Pas 1 de 3/u)).toBeVisible();
     // Consumed once: a reload of 16 does not show it again.
     await waitFor(() => {
       expect(savedDraft()).not.toHaveProperty("pendingError");
@@ -1750,7 +1753,7 @@ describe("E3-W06 round 2", () => {
 
   it("#4 a cleared FOUND claim gives the account holder back to the applicant (R-04-10)", async () => {
     const navigate = vi.fn();
-    seedDraft();
+    seedDraft({wantsFamilyGroup:true});
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Marta Roca" },
@@ -1823,14 +1826,14 @@ describe("E3-W06 round 2", () => {
     const navigate = vi.fn();
     seedDraft();
     await renderSignup({ navigate, path: "/apuntat-hi/gos" });
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "092026" } });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "01092026" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(await screen.findByText("El mes de naixement no és vàlid.")).toBeVisible();
+    expect(await screen.findByText("La data no és vàlida.")).toBeVisible();
     expect(navigate).not.toHaveBeenCalled();
 
-    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "082026" } });
+    fireEvent.change(screen.getByLabelText("Naix."), { target: { value: "31082026" } });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
   });
 });
 
@@ -2162,6 +2165,7 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
       ),
     );
     const navigate = vi.fn();
+    seedDraft({wantsFamilyGroup:true});
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Persona desconeguda" },
@@ -2179,6 +2183,7 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
     const config = await signupConfigJson();
     expect(config.allowFamilyGroupPending).toBe(true);
     const navigate = vi.fn();
+    seedDraft({wantsFamilyGroup:true});
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Persona desconeguda" },
@@ -2219,7 +2224,7 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
     expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBeVisible();
     expect(file).not.toHaveAttribute("aria-invalid");
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
   });
 
   it("T-04-30 requireDogDocumentAtSignup=false: 17 continues without a file and shows the optional note", async () => {
@@ -2230,7 +2235,7 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
     await renderSignup({ navigate, path: "/apuntat-hi/gos" });
     expect(screen.getByText(/si ara no la tens a mà, te la demanarem més endavant/u)).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/familia");
+    expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
   });
 });
 
@@ -2623,7 +2628,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
   });
 
   it("round 2 #2: a page restored from the back-forward cache shows its step again, with the draft the next page left", async () => {
-    seedDraft();
+    seedDraft({wantsFamilyGroup:true});
     const loads = stubFullPageLoads("/apuntat-hi/gos", { aborted: true });
     await renderSignup({ path: "/apuntat-hi/gos", productionNavigator: true });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
@@ -2661,7 +2666,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
   });
 
   it("round 2 #2: a pageshow that is not a bfcache restore changes nothing", async () => {
-    seedDraft();
+    seedDraft({wantsFamilyGroup:true});
     const loads = stubFullPageLoads("/apuntat-hi/gos", { aborted: true });
     await renderSignup({ path: "/apuntat-hi/gos", productionNavigator: true });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
@@ -2695,7 +2700,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
 });
 
 describe("T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22)", () => {
-  const THERAPY_INTRO = /^Es poden fer també classes de teràpia individual/u;
+  const THERAPY_INTRO = /^Si abans de fer classes en grup/u;
   const SINGLE_CLASS_PLAN = "10000000-0000-4000-8000-000000000005";
   const singleClass = (config: SignupConfigJson, current?: boolean) => ({
     ...config.plans[0],
@@ -2907,7 +2912,7 @@ describe("E11-W08 step 5 (S04 §2 16, §6, ruling E138): the member's add-dog on
     mockScenario("signupMemberPriceTwin");
     const response = await fetch(`${window.location.origin}/api/v1/me/dogs/signup`, {
       body: JSON.stringify({
-        dog: { birthMonth: "2022-03", breed: "Mestís", chip: "941000099999999", name: "Kiwi", sex: "FEMALE" },
+        dog: { birthDate: "2022-03-17", breed: "Mestís", chip: "941000099999999", name: "Kiwi", sex: "FEMALE" },
         planIdRequested: MEMBER_PLAN,
       }),
       headers: {

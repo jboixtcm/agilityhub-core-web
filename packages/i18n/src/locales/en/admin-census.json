@@ -283,7 +283,7 @@
       "impersonate": "Enter as member",
       "inactivity": "Inactivity",
       "leave": "Leave (with date)",
-      "resend": "Resend access",
+      "resend": "Send welcome email",
       "unblock": "Unblock bookings",
       "whatsapp": "WhatsApp"
     },
@@ -310,7 +310,7 @@
     "familyHolder": "family group holder",
     "familyMember": "family group member",
     "feedback": {
-      "accessSent": "Link sent to {email}",
+      "accessSent": "Welcome email requested for {email}",
       "blocked": "Bookings were blocked.",
       "payment": "The payment method was updated.",
       "preferences": "Notification preferences were saved.",
@@ -476,8 +476,8 @@
       "retry": "Try again"
     },
     "resend": {
-      "description": "A new link will be sent to the account access email.",
-      "title": "Resend access"
+      "description": "A welcome email will go to the member’s sign-in address. The personal, single-use link lets them open the app or set a password.",
+      "title": "Send a welcome email"
     },
     "roles": {
       "title": "Access roles"

@@ -60,7 +60,7 @@ async function fillDog(page: Page, name: string, chip: string) {
   await page.getByLabel("Nom del gos").fill(name);
   await page.getByRole("button", { name: "Mascle" }).click();
   await page.getByLabel("Raça").fill("Mestís");
-  await page.getByLabel("Naix.").fill("03/2022");
+  await page.getByLabel("Naix.").fill("17/03/2022");
   // ES profile: 15 digits (S04 §3).
   await page.getByLabel("Núm. de xip").fill(chip);
   await page.getByLabel("Cartilla de vacunes").setInputFiles({
@@ -75,7 +75,7 @@ test.describe("T-04-29–32 public signup", () => {
   test("completes screens 16–19 and the sent state against MSW", async ({ page }) => {
     await prepareScenario(page);
     await page.goto(`${baseUrl}/apuntat-hi`);
-    await expect(page.getByText(/Pas 1 de 4/u)).toBeVisible();
+    await expect(page.getByText(/Pas 1 de 3/u)).toBeVisible();
     await fillPerson(page);
     await page.screenshot({
       fullPage: true,
@@ -84,7 +84,7 @@ test.describe("T-04-29–32 public signup", () => {
 
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/gos");
-    await expect(page.getByText(/Pas 2 de 4/u)).toBeVisible();
+    await expect(page.getByText(/Pas 2 de 3/u)).toBeVisible();
     await fillDog(page, "Kiwi", "941000012345678");
     await page.screenshot({
       fullPage: true,
@@ -104,6 +104,7 @@ test.describe("T-04-29–32 public signup", () => {
       path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W12/17-dog-375.png"),
     });
 
+    await page.getByLabel("Ja tenim un altre gos actiu dins el club").check();
     await page.getByRole("button", { name: "CONTINUA" }).click();
     await page.waitForURL("**/apuntat-hi/familia");
     await expect(page.getByLabel("Nom del responsable")).toBeVisible();
@@ -150,7 +151,7 @@ test.describe("E3-W08 T-04-32 the «Pagament inicial» card before the split day
           additionalDogOption: "TODAY",
           consentVersion: "",
           dog: {
-            birthMonth: "03/2022",
+            birthDate: "17/03/2022",
             breed: "Mestís",
             chip: "941000012345678",
             documents: [{ files: [], type: "VACCINATION_CARD" }],
@@ -190,7 +191,7 @@ test.describe("E3-W08 T-04-32 the «Pagament inicial» card before the split day
       );
     });
     await page.goto(`${baseUrl}/apuntat-hi/pagament`);
-    await expect(page.getByText(/Pas 4 de 4/u)).toBeVisible();
+    await expect(page.getByText(/Pas 3 de 3/u)).toBeVisible();
     await expect(
       page.getByRole("radio", { name: /Alta avui, 5 d’agost \(mes complet\)/u }),
     ).toBeChecked();

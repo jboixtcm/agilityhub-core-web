@@ -19,18 +19,21 @@ export function DogLevelsChart({ data }: { data: components["schemas"]["DogsByLe
     style: "percent",
     maximumFractionDigits: 1,
   });
-  const { stops } = data.levels.reduce<{ offset: number; stops: string[] }>(
-    (result, level, index) => {
-      const value = values[index] ?? 0;
-      if (value === 0 || total === 0) return result;
-      const offset = result.offset + (value / total) * 100;
-      return {
-        offset,
-        stops: [...result.stops, `${level.color} ${String(result.offset)}% ${String(offset)}%`],
-      };
-    },
-    { offset: 0, stops: [] },
-  );
+  const segments = [];
+  let offset = 0;
+  for (const [index, level] of data.levels.entries()) {
+    const value = values[index] ?? 0;
+    if (!value || !total) continue;
+    const start = offset;
+    offset += value / total;
+    const angle = (start + offset) * Math.PI;
+    segments.push({
+      level,
+      stop: `${level.color} ${String(start * 100)}% ${String(offset * 100)}%`,
+      x: 50 + 42 * Math.sin(angle),
+      y: 50 - 42 * Math.cos(angle),
+    });
+  }
 
   return (
     <Card className="dashboard-chart">
@@ -64,9 +67,22 @@ export function DogLevelsChart({ data }: { data: components["schemas"]["DogsByLe
           aria-hidden="true"
           className="dashboard-chart__donut"
           style={
-            stops.length === 0 ? undefined : { background: `conic-gradient(${stops.join(", ")})` }
+            segments.length === 0
+              ? undefined
+              : {
+                  background: `conic-gradient(${segments.map((segment) => segment.stop).join(", ")})`,
+                }
           }
         >
+          {segments.map(({ level, x, y }) => (
+            <span
+              key={level.levelId}
+              className="dashboard-chart__segment"
+              style={{ left: `${String(x)}%`, top: `${String(y)}%` }}
+            >
+              {level.code}
+            </span>
+          ))}
           <div className="dashboard-chart__center">
             <strong>{number.format(total)}</strong>
             <span>

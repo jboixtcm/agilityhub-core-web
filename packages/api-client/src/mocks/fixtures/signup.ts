@@ -51,7 +51,7 @@ const content = {
     freeTraining:
       "Classes always have an instructor and members can attend up to two per week. Free training outside class hours is also available from level D with a sporting licence.",
     therapy:
-      "Individual therapy classes are also available, combined with group classes or as a preliminary step. Select Member or Pack when combining therapy with group classes; otherwise select Therapy.",
+      "If you will have individual therapy sessions before starting group classes, select Therapy.",
     family:
       "When a family registers more than one dog, a reduced monthly fee may apply from the second dog onwards. The joining fee still applies to each dog.",
     monthly:
@@ -81,7 +81,7 @@ const content = {
     freeTraining:
       "Las clases son siempre con instructor y se pueden hacer hasta dos por semana. También hay entrenamiento libre fuera del horario de clase a partir del nivel D con licencia deportiva.",
     therapy:
-      "También se ofrecen clases de terapia individual, combinadas con clases en grupo o como paso previo. Selecciona Socio o Bono para combinarla con clases en grupo; en caso contrario, selecciona Terapia.",
+      "Si antes de empezar las clases en grupo haremos alguna sesión de terapia individual selecciona la opción terapia.",
     family:
       "Cuando una familia inscribe más de un perro, puede aplicarse una cuota mensual reducida a partir del segundo. La entrada corresponde a cada perro.",
     monthly:

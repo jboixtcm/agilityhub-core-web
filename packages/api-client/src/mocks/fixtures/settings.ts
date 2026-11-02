@@ -154,8 +154,8 @@ const initialParameters: Parameters = {
           { amountMinor: 1000, currency: "EUR" },
           { module: "BILLING" },
         ),
-        parameter("billing.cashInvoicing", "billing", "enum", "SEMESTER", {
-          constraints: { values: ["MONTHLY", "SEMESTER"] },
+        parameter("billing.cashInvoicing", "billing", "enum", "QUARTERLY", {
+          constraints: { values: ["MONTHLY", "QUARTERLY", "SEMESTER"] },
           module: "BILLING",
         }),
         parameter("billing.cashPeriodMonths", "billing", "int", 6, {

@@ -12,7 +12,6 @@
     "duplicateEmail": "Els dos correus han de ser diferents.",
     "invalidPhone": "El telèfon no és vàlid.",
     "invalidDate": "La data no és vàlida.",
-    "invalidMonth": "El mes de naixement no és vàlid.",
     "invalidPostalCode": "El codi postal no és vàlid.",
     "genericError": "No s'ha pogut completar l'acció.",
     "rateLimited": "Massa intents. Torna-ho a provar d'aquí a {seconds} s.",
@@ -67,7 +66,6 @@
     "female": "Femella",
     "breed": "Raça",
     "birthMonth": "Naix.",
-    "birthMonthPlaceholder": "mm/aaaa",
     "chip": "Núm. de xip",
     "invalidChip": "El número de xip no és vàlid.",
     "notesToInstructors": "Notes als instructors (opcional)",
@@ -87,7 +85,8 @@
     "maintenance": "{withEntry, select, yes {Entrada a compte: {entry} · quota mínima durant el tractament: {fee}/mes} other {Quota mínima durant el tractament: {fee}/mes}}",
     "selectPlan": "Selecciona {plan}",
     "activate": "ACTIVAR",
-    "priceOverlap": "El club ha de revisar els preus d'aquesta modalitat."
+    "priceOverlap": "El club ha de revisar els preus d'aquesta modalitat.",
+    "otherActiveDog": "Ja tenim un altre gos actiu dins el club"
   },
   "family": {
     "title": "Més d'un gos a la família",

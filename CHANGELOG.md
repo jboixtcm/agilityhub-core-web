@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- Clarify the individual welcome email action on the member record and update signup forms, dashboard labels and draft-week planning.
+
 - Improve the admin sending log with recipient/subject search, safe access-email labels and recoverable delivery incidents; distinguish provider acceptance from confirmed delivery.
 - Allow 690 kB for the administration's total JavaScript after adding the delivery history and Catalan, Spanish and English explanations (689.05 kB measured, +1.95 kB from the published baseline); retain the 460 kB initial-load budget (453.23 kB measured). No new runtime dependency is introduced.
 - Make the notification bell reachable from the home header and show important unread club changes on entering the app, without marking them read.

@@ -2172,6 +2172,7 @@ select {
 }
 
 .dashboard-chart__donut {
+  position: relative;
   display: grid;
   place-items: center;
   width: min(100%, 15rem);
@@ -2179,6 +2180,17 @@ select {
   justify-self: center;
   border-radius: 50%;
   background: var(--ah-color-border);
+}
+
+.dashboard-chart__segment {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: var(--ah-radius-sm);
+  padding: 0 0.12rem;
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
+  font-size: 0.65rem;
+  font-weight: 700;
 }
 
 .dashboard-chart__center {

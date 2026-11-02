@@ -111,9 +111,10 @@ interface SignupDraft {
   additionalDogOption: "ALTERNATIVE" | "TODAY";
   /** The legal texts version the applicant accepted (R-04-17); "" until accepted. */
   consentVersion: string;
-  dog: SignupDog;
+  dog: SignupDog & { birthDate: string; chip: string };
   familyClaim: components["schemas"]["SignupFamilyGroupClaim"];
   familyFound: boolean;
+  wantsFamilyGroup: boolean;
   /** R-04-10: the account holder was prefilled with the group holder of a FOUND claim. */
   holderFromGroup: boolean;
   imageConsent: boolean;
@@ -144,6 +145,7 @@ const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const STEP_ORDER: readonly SignupStep[] = ["person", "dog", "family", "payment"];
 const PERSON_FIELDS = new Set(["birthDate", "firstName", "gender", "lastName1", "lastName2"]);
 const DOG_FIELDS = new Set([
+  "birthDate",
   "birthMonth",
   "breed",
   "chip",
@@ -231,26 +233,11 @@ function birthDateToIso(value: string): string | undefined {
     : undefined;
 }
 
-function birthMonthToIso(value: string): string | undefined {
-  const match = /^(\d{2})\/(\d{4})$/u.exec(value);
-  if (match === null) return undefined;
-  const [, month = "", year = ""] = match;
-  const monthNumber = Number(month);
-  return Number(year) > 0 && monthNumber >= 1 && monthNumber <= 12 ? `${year}-${month}` : undefined;
-}
-
 function legacyDateToDisplay(value: string): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/u.exec(value);
   if (match === null) return value;
   const [, year = "", month = "", day = ""] = match;
   return `${day}/${month}/${year}`;
-}
-
-function legacyMonthToDisplay(value: string): string {
-  const match = /^(\d{4})-(\d{2})$/u.exec(value);
-  if (match === null) return value;
-  const [, year = "", month = ""] = match;
-  return `${month}/${year}`;
 }
 
 function normaliseDocument(value: string): string {
@@ -435,7 +422,7 @@ function emptyDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
     additionalDogOption: "TODAY",
     consentVersion: "",
     dog: {
-      birthMonth: "",
+      birthDate: "",
       breed: "",
       chip: "",
       documents: [{ files: [], type: "VACCINATION_CARD" }],
@@ -445,6 +432,7 @@ function emptyDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
     },
     familyClaim: { dogName: "", holderName: "", leavePending: false },
     familyFound: false,
+    wantsFamilyGroup: false,
     holderFromGroup: false,
     imageConsent: false,
     mode: addDog ? "add-dog" : "public",
@@ -476,12 +464,20 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
     if (serialized !== null) {
       const candidate = JSON.parse(serialized) as Omit<
         SignupDraft,
-        "additionalDogOption" | "consentVersion" | "familyFound" | "holderFromGroup"
-      > &
-        Partial<
+        | "additionalDogOption"
+        | "consentVersion"
+        | "familyFound"
+        | "holderFromGroup"
+        | "wantsFamilyGroup"
+        | "dog"
+      > & { dog: SignupDog } & Partial<
           Pick<
             SignupDraft,
-            "additionalDogOption" | "consentVersion" | "familyFound" | "holderFromGroup"
+            | "additionalDogOption"
+            | "consentVersion"
+            | "familyFound"
+            | "holderFromGroup"
+            | "wantsFamilyGroup"
           >
         >;
       const mode = addDog ? "add-dog" : "public";
@@ -505,9 +501,11 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
           consentVersion,
           dog: {
             ...candidate.dog,
-            birthMonth: legacyMonthToDisplay(candidate.dog.birthMonth),
+            birthDate: legacyDateToDisplay(candidate.dog.birthDate ?? ""),
+            chip: candidate.dog.chip ?? "",
           },
           familyFound: candidate.familyFound ?? false,
+          wantsFamilyGroup: candidate.wantsFamilyGroup ?? Boolean(candidate.familyClaim.holderName),
           holderFromGroup: candidate.holderFromGroup ?? false,
           imageConsent: consentKnown && candidate.imageConsent,
           person: {
@@ -1444,16 +1442,14 @@ function DogStep({
     for (const key of ["name", "breed"] as const) {
       if (draft.dog[key].trim() === "") next[key] = t("signup:common.required");
     }
-    const birthMonth = birthMonthToIso(draft.dog.birthMonth);
-    if (draft.dog.birthMonth.trim() === "") {
-      next.birthMonth = t("signup:common.required");
-    } else if (birthMonth === undefined || birthMonth > today.slice(0, 7)) {
-      next.birthMonth = t("signup:common.invalidMonth");
+    const birthDate = birthDateToIso(draft.dog.birthDate);
+    if (draft.dog.birthDate.trim() === "") {
+      next.birthDate = t("signup:common.required");
+    } else if (birthDate === undefined || birthDate > today) {
+      next.birthDate = t("signup:common.invalidDate");
     }
     const chip = normaliseChip(draft.dog.chip);
-    if (chip === "") {
-      next.chip = t("signup:common.required");
-    } else if (!validChip(chip, profile.code)) {
+    if (chip !== "" && !validChip(chip, profile.code)) {
       next.chip = t("signup:dog.invalidChip");
     }
     if (documentRequired && files.length === 0) next.documents = t("signup:dog.documentRequired");
@@ -1467,7 +1463,7 @@ function DogStep({
     onContinue(
       addDog
         ? "/gossos/nou/pagament"
-        : config.steps.includes("FAMILY_GROUP")
+        : config.steps.includes("FAMILY_GROUP") && draft.wantsFamilyGroup
           ? "/apuntat-hi/familia"
           : "/apuntat-hi/pagament",
     );
@@ -1522,21 +1518,21 @@ function DogStep({
           />
         </FormField>
         <FormField
-          error={errors.birthMonth}
+          error={errors.birthDate}
           id="signup-dog-birth"
           label={t("signup:dog.birthMonth")}
         >
           <Input
-            {...invalidProps("signup-dog-birth", errors.birthMonth)}
+            {...invalidProps("signup-dog-birth", errors.birthDate)}
             id="signup-dog-birth"
             inputMode="numeric"
-            maxLength={7}
+            maxLength={10}
             onChange={(event) => {
-              patchDog("birthMonth", maskNumericDate(event.currentTarget.value, [2, 4]));
+              patchDog("birthDate", maskNumericDate(event.currentTarget.value, [2, 2, 4]));
             }}
-            placeholder={t("signup:dog.birthMonthPlaceholder")}
+            placeholder={t("signup:person.birthDatePlaceholder")}
             type="text"
-            value={draft.dog.birthMonth}
+            value={draft.dog.birthDate}
           />
         </FormField>
       </div>
@@ -1567,6 +1563,11 @@ function DogStep({
           value={draft.dog.notesToInstructors ?? ""}
         />
       </FormField>
+      {documentRequired ? null : (
+        <aside className="signup-note signup-note--neutral">
+          {t("signup:dog.optionalDocument")}
+        </aside>
+      )}
       <div
         className={`ah-form-field signup-file-field${errors.documents === undefined ? "" : " ah-form-field--error"}`}
       >
@@ -1601,11 +1602,6 @@ function DogStep({
           {uploading ? t("signup:dog.uploading") : t("signup:dog.addPage")}
         </label>
       </div>
-      {documentRequired ? null : (
-        <aside className="signup-note signup-note--neutral">
-          {t("signup:dog.optionalDocument")}
-        </aside>
-      )}
       {config.texts.freeTrainingConditions === "" ? null : (
         <p className="signup-copy">{config.texts.freeTrainingConditions}</p>
       )}
@@ -1658,7 +1654,16 @@ function DogStep({
                     aria-pressed={selected}
                     disabled={unavailable}
                     onClick={() => {
-                      onChange((current) => ({ ...current, planId: plan.id }));
+                      onChange((current) =>
+                        current.planId === plan.id
+                          ? current
+                          : {
+                              ...withoutGroupHolder(current),
+                              planId: plan.id,
+                              wantsFamilyGroup: false,
+                              familyClaim: { dogName: "", holderName: "", leavePending: false },
+                            },
+                      );
                     }}
                     type="button"
                   >
@@ -1716,6 +1721,30 @@ function DogStep({
                       <span className="signup-plan__activate">{t("signup:dog.activate")}</span>
                     ) : null}
                   </button>
+                  {selected &&
+                  !addDog &&
+                  plan.type === "MONTHLY" &&
+                  plan.maintenanceFee === undefined &&
+                  config.steps.includes("FAMILY_GROUP") ? (
+                    <label className="signup-family-choice">
+                      <Checkbox
+                        checked={draft.wantsFamilyGroup}
+                        onChange={(event) => {
+                          const checked = event.currentTarget.checked;
+                          onChange((current) =>
+                            checked
+                              ? { ...current, wantsFamilyGroup: true }
+                              : {
+                                  ...withoutGroupHolder(current),
+                                  wantsFamilyGroup: false,
+                                  familyClaim: { dogName: "", holderName: "", leavePending: false },
+                                },
+                          );
+                        }}
+                      />
+                      {t("signup:dog.otherActiveDog")}
+                    </label>
+                  ) : null}
                 </Card>
               );
             })}
@@ -2166,12 +2195,21 @@ function PaymentStep({
       imageUse: { granted: draft.imageConsent, version },
       privacyPolicy: { accepted: draft.privacyAccepted, version },
     };
-    const { notesToInstructors, ...dogFields } = draft.dog;
+    const {
+      notesToInstructors,
+      // eslint-disable-next-line @typescript-eslint/no-deprecated -- Resume drafts saved with a month only.
+      birthMonth: legacyBirthMonth,
+      birthDate,
+      chip,
+      ...dogFields
+    } = draft.dog;
     const notes = notesToInstructors?.trim() ?? "";
     const dog: SignupDog = {
       ...dogFields,
-      birthMonth: birthMonthToIso(draft.dog.birthMonth) ?? draft.dog.birthMonth,
-      chip: normaliseChip(draft.dog.chip),
+      ...(birthDate === "" && legacyBirthMonth
+        ? { birthMonth: legacyBirthMonth.replace(/^(\d{2})\/(\d{4})$/u, "$2-$1") }
+        : { birthDate: birthDateToIso(birthDate) ?? birthDate }),
+      ...(chip === "" ? {} : { chip: normaliseChip(chip) }),
       ...(notes === "" ? {} : { notesToInstructors: notes }),
     };
     try {
@@ -2190,7 +2228,7 @@ function PaymentStep({
           : {
               consents,
               dog,
-              ...(draft.familyClaim.holderName === ""
+              ...(!draft.wantsFamilyGroup || draft.familyClaim.holderName === ""
                 ? {}
                 : { familyGroupClaim: draft.familyClaim }),
               locale: i18n.resolvedLanguage ?? branding.defaultLocale,
@@ -2955,7 +2993,9 @@ export function SignupPage({
     );
   }
 
-  const steps = addDog ? (["DOG", "PAYMENT"] as const) : config.steps;
+  const steps = addDog
+    ? (["DOG", "PAYMENT"] as const)
+    : config.steps.filter((step) => step !== "FAMILY_GROUP" || draft.wantsFamilyGroup);
   const totalSteps = steps.length;
   const dogStep = addDog ? 1 : 2;
   const paymentStep = totalSteps;
@@ -2969,7 +3009,10 @@ export function SignupPage({
       ? "person"
       : path === "/apuntat-hi/gos" || path === "/gossos/nou"
         ? "dog"
-        : path === "/apuntat-hi/familia" && !addDog
+        : path === "/apuntat-hi/familia" &&
+            !addDog &&
+            config.steps.includes("FAMILY_GROUP") &&
+            draft.wantsFamilyGroup
           ? "family"
           : "payment";
 

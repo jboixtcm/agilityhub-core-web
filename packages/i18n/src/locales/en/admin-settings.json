@@ -130,7 +130,8 @@
       },
       "cashInvoicing": {
         "MONTHLY": "Monthly",
-        "SEMESTER": "Every six months"
+        "SEMESTER": "Every six months",
+        "QUARTERLY": "Quarterly"
       },
       "singleClassCancelPolicy": {
         "CREDIT": "Credit",
@@ -319,7 +320,7 @@
       },
       "cashInvoicing": {
         "help": "Billing frequency for cash payments.",
-        "label": "Cash invoicing"
+        "label": "Cash collection"
       },
       "cashPeriodMonths": {
         "help": "Number of months included in each cash-payment period.",

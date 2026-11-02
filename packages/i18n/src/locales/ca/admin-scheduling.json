@@ -40,6 +40,7 @@
       "copyName": "{name} (còpia)"
     },
     "bandForm": {
+      "fiveMinutes": "Tria una hora en intervals de cinc minuts.",
       "newTitle": "Nova franja",
       "editTitle": "Franja {range}",
       "start": "Inici",
@@ -55,7 +56,10 @@
       "blocked": "bloquejat: {count, plural, one {# incoherència} other {# incoherències}} a la plantilla",
       "confirm": "Es generaran com a esborrany les classes de la setmana del {date}",
       "done": "{count, plural, one {# classe generada} other {# classes generades}}",
-      "skipped": "{count, plural, one {# omesa} other {# omeses}} ({reasons})"
+      "skipped": "{count, plural, one {# omesa} other {# omeses}} ({reasons})",
+      "undo": "Anul·la la generació",
+      "undoConfirm": "Vols esborrar les classes generades per a la setmana del {date} i deixar-la pendent de generar?",
+      "undone": "La setmana torna a estar pendent de generar."
     },
     "day": {
       "header": "Plantilla: «{name}» ({kind})",

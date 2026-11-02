@@ -130,7 +130,8 @@
       },
       "cashInvoicing": {
         "MONTHLY": "Mensual",
-        "SEMESTER": "Semestral"
+        "SEMESTER": "Semestral",
+        "QUARTERLY": "Trimestral"
       },
       "singleClassCancelPolicy": {
         "CREDIT": "Crèdit",
@@ -319,7 +320,7 @@
       },
       "cashInvoicing": {
         "help": "Periodicitat de facturació dels pagaments en efectiu.",
-        "label": "Facturació en efectiu"
+        "label": "Cobrament en efectiu"
       },
       "cashPeriodMonths": {
         "help": "Mesos que inclou cada període de pagament en efectiu.",

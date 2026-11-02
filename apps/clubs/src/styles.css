@@ -1545,6 +1545,13 @@ div.lifecycle-error p {
   cursor: not-allowed;
 }
 
+.signup-family-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-2) var(--ah-space-3);
+}
+
 .signup-plan--unavailable .signup-plan__head {
   color: var(--ah-color-text-muted);
 }

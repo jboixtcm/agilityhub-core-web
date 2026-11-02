@@ -44,7 +44,7 @@ test.describe("E2-W02 census records", () => {
       "href",
       "https://wa.me/34655100101",
     );
-    await expect(page.getByRole("button", { name: "Reenvia accés" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Envia la benvinguda" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Entra com l'abonat" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Edita" }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();

@@ -564,7 +564,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
   /** Every change D10 offers on a member; none of them is left once the member is erased. */
   const changeButtons = [
     "Edita",
-    "Reenvia accés",
+    "Envia la benvinguda",
     "Entra com l'abonat",
     "Bloqueja les reserves",
     "Desbloqueja les reserves",
@@ -719,16 +719,16 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
     },
     {
       method: "post",
-      name: "«Reenvia accés» (POST /members/{id}/access-resend)",
+      name: "«Envia la benvinguda» (POST /members/{id}/access-resend)",
       path: "/members/:id/access-resend",
-      saved: /Enllaç enviat a/u,
+      saved: /S’ha sol·licitat la benvinguda per a/u,
       send: () => {
-        headerAction("Reenvia accés");
-        const dialog = screen.getByRole("dialog", { name: "Reenvia l'accés" });
-        fireEvent.click(within(dialog).getByRole("button", { name: "Reenvia accés" }));
+        headerAction("Envia la benvinguda");
+        const dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+        fireEvent.click(within(dialog).getByRole("button", { name: "Envia la benvinguda" }));
         return dialog;
       },
-      submit: "Reenvia accés",
+      submit: "Envia la benvinguda",
       unchanged: () => undefined,
     },
     {

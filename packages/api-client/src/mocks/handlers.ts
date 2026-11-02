@@ -274,13 +274,9 @@ const resolvedSignups = new Set<string>();
 // Signup file keys removed through `DELETE /dogs/{id}/documents/{docId}/files/{fileId}`: a D2
 // `PATCH /dogs/{id}` that sends one back answers 400 FILE_NOT_FOUND (api E5-T19/E5-T21).
 const removedSignupFileKeys = new Set<string>();
-// A signup dog's whole birth date: the D2 view keeps its month, and a `PATCH /dogs/{id}` may send
-// the day (`birthDate`, E4-W17 review #2). The first of the month until a PATCH sends another day.
 type SignupDogView = MemberSignupView["dogs"][number];
-const signupDogBirthDates = new WeakMap<SignupDogView, string>();
 function signupDogBirthDate(dog: SignupDogView): string {
-  const stored = signupDogBirthDates.get(dog);
-  return stored?.startsWith(`${dog.birthMonth}-`) === true ? stored : `${dog.birthMonth}-01`;
+  return dog.birthDate ?? `${dog.birthMonth}-01`;
 }
 
 /** The D2 view of the Marta Roca signup for the current scenario's variant, with its edits. */
@@ -2141,7 +2137,7 @@ export const handlers = [
     if (missingRequiredDogDocument(request, body.dog.documents)) {
       return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
     }
-    if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
+    if (body.dog.chip === "registered" || (body.dog.chip && submittedDogChips.has(body.dog.chip))) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
     if (
@@ -2151,7 +2147,7 @@ export const handlers = [
       return apiError("SIGNUP_ALREADY_PENDING", "Signup already pending", 422);
     }
     submittedSignupIdentities.add(identity);
-    submittedDogChips.add(body.dog.chip);
+    if (body.dog.chip) submittedDogChips.add(body.dog.chip);
     const checkoutRequired = scenario.signupStripe === true;
     const upfront = signupResultUpfront(
       submittedQuote(request, body.planId),
@@ -2203,10 +2199,10 @@ export const handlers = [
     if (missingRequiredDogDocument(request, body.documents)) {
       return apiError("DOG_DOCUMENT_REQUIRED", "Dog document required", 422);
     }
-    if (body.dog.chip === "registered" || submittedDogChips.has(body.dog.chip)) {
+    if (body.dog.chip === "registered" || (body.dog.chip && submittedDogChips.has(body.dog.chip))) {
       return apiError("DOG_CHIP_ALREADY_REGISTERED", "Dog chip already registered", 422);
     }
-    submittedDogChips.add(body.dog.chip);
+    if (body.dog.chip) submittedDogChips.add(body.dog.chip);
     const scenario = currentMockScenario();
     const dogId = `dog-pending-${String(memberDogsState.dogs.length + 1)}`;
     // E36: screen 13 lists the member's own PENDING dog until the club validates it.
@@ -2216,7 +2212,8 @@ export const handlers = [
         ...memberDogsState.dogs,
         {
           ageYears: ageYears(
-            body.dog.birthMonth,
+            // eslint-disable-next-line @typescript-eslint/no-deprecated -- Accept requests from earlier signup clients.
+            body.dog.birthDate ?? body.dog.birthMonth ?? "",
             signupMockToday ?? scenario.signupToday ?? SIGNUP_MOCK_TODAY,
           ),
           breed: body.dog.breed,
@@ -3574,14 +3571,19 @@ export const handlers = [
       if (!unchanged) {
         signupDog.name = body.name ?? signupDog.name;
         signupDog.breed = body.breed ?? signupDog.breed;
-        signupDog.chip = body.chip ?? signupDog.chip;
+        if (body.chip !== undefined) {
+          if (body.chip) signupDog.chip = body.chip;
+          else delete signupDog.chip;
+        }
         signupDog.sex = body.sex ?? signupDog.sex;
         if (body.notesToInstructors !== undefined)
           signupDog.notesToInstructors = body.notesToInstructors;
-        if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
-        else if (body.birthDate !== undefined) {
+        if (body.birthMonth !== undefined) {
+          signupDog.birthMonth = body.birthMonth;
+          signupDog.birthDate = `${body.birthMonth}-01`;
+        } else if (body.birthDate !== undefined) {
           signupDog.birthMonth = body.birthDate.slice(0, 7);
-          signupDogBirthDates.set(signupDog, body.birthDate);
+          signupDog.birthDate = body.birthDate;
         }
         if (documents !== undefined) signupDog.documents = documents;
         signupDog.version += 1;
@@ -3591,7 +3593,7 @@ export const handlers = [
         // its own values until the validation (D2 re-reads the view for the submitted ones).
         reused.changedFields = dogReadmissionChanges(reused.current, signupDog);
         return HttpResponse.json({
-          birthDate: `${reused.current.birthMonth ?? signupDog.birthMonth}-01`,
+          birthDate: reused.current.birthDate ?? `${reused.current.birthMonth ?? signupDog.birthMonth}-01`,
           breed: reused.current.breed ?? signupDog.breed,
           chip: signupDog.chip,
           id: signupDog.id,

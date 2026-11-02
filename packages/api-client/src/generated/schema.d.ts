@@ -7029,7 +7029,11 @@ export interface paths {
          * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
          */
         post: operations["generate"];
-        delete?: never;
+        /**
+         * undoWeekGeneration
+         * @description Roles: ADMIN. Remove template drafts from the latest generated week. The observed generation timestamp protects retries.
+         */
+        delete: operations["undoWeekGeneration"];
         options?: never;
         head?: never;
         patch?: never;
@@ -15452,10 +15456,15 @@ export interface components {
             type: string;
         };
         SignupDog: {
-            /** @example 2024-04 */
-            birthMonth: string;
+            /** Format: date */
+            birthDate?: string;
+            /**
+             * @deprecated
+             * @example 2024-04
+             */
+            birthMonth?: string;
             breed: string;
-            chip: string;
+            chip?: string;
             /** @description Public signup documents; add-dog uses its top-level documents array */
             documents?: components["schemas"]["SignupDocument"][];
             name: string;
@@ -15474,6 +15483,8 @@ export interface components {
         };
         /** @description The values and documents of the dog record */
         SignupDogValues: {
+            /** Format: date */
+            birthDate?: string;
             birthMonth?: string;
             breed?: string;
             documents: components["schemas"]["SignupDocumentView"][];
@@ -15483,9 +15494,11 @@ export interface components {
             sex?: "MALE" | "FEMALE";
         };
         SignupDogView: {
+            /** Format: date */
+            birthDate?: string;
             birthMonth: string;
             breed: string;
-            chip: string;
+            chip?: string;
             documents: components["schemas"]["SignupDocumentView"][];
             /** Format: uuid */
             id: string;
@@ -69837,6 +69850,129 @@ export interface operations {
             /** @description WEEK_ALREADY_GENERATED, INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
             409: components["responses"]["StaleVersion"];
             /** @description TEMPLATE_INCONSISTENT, TEMPLATE_KIND_MISMATCH, WEEK_IN_PAST */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    undoWeekGeneration: {
+        parameters: {
+            query: {
+                generatedAt: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Week reset to pending */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, STALE_VERSION */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;

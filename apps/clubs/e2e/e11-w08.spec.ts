@@ -76,7 +76,7 @@ test.describe("E11-W08 step 5 (S04 §2 16, §6, ruling E138): the add-dog on a p
             additionalDogOption: "TODAY",
             consentVersion: "",
             dog: {
-              birthMonth: "03/2022",
+              birthDate: "17/03/2022",
               breed: "Mestís",
               chip: "941000012345670",
               documents: [{ files: [], type: "VACCINATION_CARD" }],

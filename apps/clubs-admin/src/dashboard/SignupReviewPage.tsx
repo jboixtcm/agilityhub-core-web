@@ -60,7 +60,7 @@ const DOG_READMISSION_FIELDS = {
   name: "name",
   sex: "sex",
   breed: "breed",
-  birthMonth: "birthMonth",
+  birthMonth: "birthDate",
   notesToInstructors: "notes",
   documents: "documents",
 } as const;
@@ -605,7 +605,7 @@ export function SignupReviewPage({
         case "breed":
           return values.breed ?? "";
         case "birthMonth":
-          return values.birthMonth === undefined ? "" : formatPlainDate(`${values.birthMonth}-01`, "monthYear");
+          return values.birthDate ? formatPlainDate(values.birthDate, "short") : values.birthMonth === undefined ? "" : formatPlainDate(`${values.birthMonth}-01`, "monthYear");
         case "notesToInstructors":
           return values.notesToInstructors ?? "";
         case "documents":
@@ -770,7 +770,7 @@ export function SignupReviewPage({
             <Card key={dog.id}>
               <h2>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })} {signup.signup.source === "APP_ADD_DOG" && dog.status === "PENDING" ? <Badge>{t("admin-census:signupReview.newDog")}</Badge> : null}</h2>
               <dl className="signup-review-data">
-                <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong id={`signup-dog-name-${dog.id}`}>{dog.name}</strong> · {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} · {formatPlainDate(`${dog.birthMonth}-01`, "monthYear")}</dd>
+                <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong id={`signup-dog-name-${dog.id}`}>{dog.name}</strong> · {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} · {dogValue(dog, "birthMonth")}</dd>
                 <dt>{t("admin-census:signupReview.fields.chip")}</dt><dd>{dog.chip}</dd>
                 <dt>{t("admin-census:signupReview.fields.documents")}</dt><dd>{files.map((file) => <a href={file.downloadUrl} key={file.downloadUrl} rel="noreferrer" target="_blank"><Icon aria-hidden="true" name="doc" /> {file.name}</a>)}</dd>
                 {/* S04 §3 and §13 #1: the signup notes carry no attachments (those come from 13). */}

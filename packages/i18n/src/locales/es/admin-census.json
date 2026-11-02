@@ -283,7 +283,7 @@
       "impersonate": "Entrar como el abonado",
       "inactivity": "Inactividad",
       "leave": "Baja (con fecha)",
-      "resend": "Reenviar acceso",
+      "resend": "Enviar bienvenida",
       "unblock": "Desbloquear las reservas",
       "whatsapp": "WhatsApp"
     },
@@ -310,7 +310,7 @@
     "familyHolder": "titular del grupo familiar",
     "familyMember": "miembro del grupo familiar",
     "feedback": {
-      "accessSent": "Enlace enviado a {email}",
+      "accessSent": "Se ha solicitado la bienvenida para {email}",
       "blocked": "Las reservas se han bloqueado.",
       "payment": "El método de pago se ha actualizado.",
       "preferences": "Las preferencias de avisos se han guardado.",
@@ -476,8 +476,8 @@
       "retry": "Volver a intentarlo"
     },
     "resend": {
-      "description": "Se enviará un enlace nuevo al correo de acceso de la cuenta.",
-      "title": "Reenviar el acceso"
+      "description": "Se enviará un correo de bienvenida a la dirección de acceso de la persona abonada. El enlace personal de un solo uso le permitirá entrar en la aplicación o configurar su contraseña.",
+      "title": "Enviar la bienvenida"
     },
     "roles": {
       "title": "Roles de acceso"

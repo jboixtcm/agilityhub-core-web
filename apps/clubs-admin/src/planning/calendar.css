@@ -229,6 +229,11 @@
   appearance: none;
 }
 
+.calendar-chip--select option {
+  color: var(--ah-color-text);
+  background-color: var(--ah-color-surface);
+}
+
 .calendar-chip--select::after {
   content: "▾";
   pointer-events: none;

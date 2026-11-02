@@ -283,7 +283,7 @@
       "impersonate": "Entra com l'abonat",
       "inactivity": "Inactivitat",
       "leave": "Baixa (amb data)",
-      "resend": "Reenvia accés",
+      "resend": "Envia la benvinguda",
       "unblock": "Desbloqueja les reserves",
       "whatsapp": "WhatsApp"
     },
@@ -310,7 +310,7 @@
     "familyHolder": "titular del grup familiar",
     "familyMember": "membre del grup familiar",
     "feedback": {
-      "accessSent": "Enllaç enviat a {email}",
+      "accessSent": "S’ha sol·licitat la benvinguda per a {email}",
       "blocked": "Les reserves s'han bloquejat.",
       "payment": "El mètode de pagament s'ha actualitzat.",
       "preferences": "Les preferències d'avisos s'han desat.",
@@ -476,8 +476,8 @@
       "retry": "Torna-ho a provar"
     },
     "resend": {
-      "description": "S'enviarà un enllaç nou al correu d'accés del compte.",
-      "title": "Reenvia l'accés"
+      "description": "S’enviarà un correu de benvinguda a l’adreça d’accés de l’abonat. L’enllaç personal d’un sol ús li permetrà entrar a l’aplicació o configurar la contrasenya.",
+      "title": "Envia la benvinguda"
     },
     "roles": {
       "title": "Rols d'accés"

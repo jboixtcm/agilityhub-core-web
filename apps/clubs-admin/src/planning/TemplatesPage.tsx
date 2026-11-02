@@ -102,13 +102,11 @@ interface TemplateLists {
 interface PlanningSettings {
   levelsEnabled: boolean;
   maxInstructors: number;
-  slotMinutes: number;
 }
 
 const defaultSettings: PlanningSettings = {
   levelsEnabled: true,
   maxInstructors: 1,
-  slotMinutes: 10,
 };
 
 const coverageTones: Readonly<Record<CoverageLevel["status"], Tone>> = {
@@ -146,15 +144,14 @@ async function numericParameter(client: ApiClient, key: string, fallback: number
 }
 
 async function loadSettings(client: ApiClient): Promise<PlanningSettings> {
-  const [levelsEnabled, maxInstructors, slotMinutes] = await Promise.all([
+  const [levelsEnabled, maxInstructors] = await Promise.all([
     client
       .GET("/parameters/{key}", { params: { path: { key: "levels.enabled" } } })
       .then((result) => result.data?.value !== false)
       .catch(() => true),
     numericParameter(client, "classes.maxInstructorsPerClass", 1),
-    numericParameter(client, "classes.slotMinutes", 10),
   ]);
-  return { levelsEnabled, maxInstructors, slotMinutes };
+  return { levelsEnabled, maxInstructors };
 }
 
 function TemplateTab({
@@ -533,7 +530,9 @@ function BandDrawer({
         { endTime, startTime },
         { band, bands, opening: opening.window, slotMinutes },
       ),
-      message: errorMessage(cause),
+      message: isApiError(cause, "INVALID_SLOT_GRANULARITY")
+        ? t("admin-scheduling:templates.bandForm.fiveMinutes")
+        : errorMessage(cause),
     });
   };
 
@@ -596,10 +595,19 @@ function BandDrawer({
         >
           <Input
             id="planning-band-start"
+            onInvalid={(event) => {
+              if (event.currentTarget.validity.stepMismatch) {
+                setError({
+                  field: "start",
+                  message: t("admin-scheduling:templates.bandForm.fiveMinutes"),
+                });
+              }
+            }}
             onChange={(event) => {
               setStartTime(event.currentTarget.value);
             }}
             required
+            min="00:00"
             step={slotMinutes * 60}
             type="time"
             value={startTime}
@@ -612,10 +620,19 @@ function BandDrawer({
         >
           <Input
             id="planning-band-end"
+            onInvalid={(event) => {
+              if (event.currentTarget.validity.stepMismatch) {
+                setError({
+                  field: "end",
+                  message: t("admin-scheduling:templates.bandForm.fiveMinutes"),
+                });
+              }
+            }}
             onChange={(event) => {
               setEndTime(event.currentTarget.value);
             }}
             required
+            min="00:00"
             step={slotMinutes * 60}
             type="time"
             value={endTime}
@@ -802,6 +819,7 @@ function GenerationCard({
   blockedCount,
   candidates,
   onGenerate,
+  onUndo,
   readOnly,
   weeks,
   weekdayTemplateId,
@@ -814,6 +832,7 @@ function GenerationCard({
    * modal stays and its button sends the same submission with the same key; `undefined` once the
    * api answered (the page says the outcome and the modal closes).
    */
+  onUndo: (week: WeekRow) => Promise<void>;
   onGenerate: (candidate: GenerationCandidate) => Promise<string | undefined>;
   readOnly: boolean;
   weekdayTemplateId: string | undefined;
@@ -821,6 +840,13 @@ function GenerationCard({
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums"]);
   const { formatDate, formatPlainDate, formatTime, formatWeekRange } = useClubFormats();
+  const [undo, setUndo] = useState<WeekRow>();
+  const latest = weeks
+    ?.filter((week) => week.generatedAt)
+    .reduce<WeekRow | undefined>(
+      (last, week) => (last === undefined || week.startDate > last.startDate ? week : last),
+      undefined,
+    );
   const proposed = candidates.find((candidate) => candidate.proposed) ?? candidates[0];
   const [chosen, setChosen] = useState<string>();
   const selected = candidates.some((candidate) => candidate.startDate === chosen)
@@ -924,6 +950,25 @@ function GenerationCard({
             key: "validated",
             render: (week) => stamp(week.validatedAt) ?? t("admin-scheduling:common.none"),
           },
+          ...(!readOnly
+            ? [
+                {
+                  key: "undo",
+                  header: t("admin-scheduling:templates.generation.undo"),
+                  render: (week: WeekRow) =>
+                    week.id === latest?.id && !week.validatedAt ? (
+                      <Button
+                        variant="ghost"
+                        onClick={() => {
+                          setUndo(week);
+                        }}
+                      >
+                        {t("admin-scheduling:templates.generation.undo")}
+                      </Button>
+                    ) : null,
+                },
+              ]
+            : []),
         ]}
         empty={t("admin-scheduling:weeks.empty")}
         loading={weeks === undefined}
@@ -931,6 +976,43 @@ function GenerationCard({
         rowKey={(week) => week.id}
         rows={[...(weeks ?? [])]}
       />
+      <Modal
+        closeLabel={t("admin-scheduling:common.close")}
+        open={undo !== undefined}
+        onClose={() => {
+          setUndo(undefined);
+        }}
+        title={t("admin-scheduling:templates.generation.undo")}
+      >
+        <p>
+          {t("admin-scheduling:templates.generation.undoConfirm", {
+            date: undo && formatPlainDate(undo.startDate, "short"),
+          })}
+        </p>
+        <div className="planning-form__actions">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setUndo(undefined);
+            }}
+          >
+            {t("admin-scheduling:common.cancel")}
+          </Button>
+          <Button
+            loading={pending}
+            onClick={() => {
+              if (!undo || pending) return;
+              setPending(true);
+              void onUndo(undo).finally(() => {
+                setPending(false);
+                setUndo(undefined);
+              });
+            }}
+          >
+            {t("admin-scheduling:templates.generation.undo")}
+          </Button>
+        </div>
+      </Modal>
       <Modal
         closeLabel={t("admin-scheduling:common.close")}
         onClose={closeConfirmation}
@@ -1203,17 +1285,33 @@ export function TemplatesPage({
   const weeks = useResource(
     useCallback(async () => {
       const monday = mondayOf(clubToday(branding.timeZone));
-      const result = await client.GET("/weeks", {
-        params: {
-          query: {
-            fields: listFields([...WEEK_ROW_FIELDS, "generatedAt", "validatedAt"]),
-            filter: [`startDate:gte:${monday}`],
-            sort: ["startDate,asc"],
+      const rows: WeekRow[] = [];
+      let page = 0;
+      let totalPages = 1;
+      while (page < totalPages) {
+        const result = await client.GET("/weeks", {
+          params: {
+            query: {
+              fields: listFields([...WEEK_ROW_FIELDS, "generatedAt", "validatedAt"]),
+              ...(readOnly ? { filter: [`startDate:gte:${monday}`] } : {}),
+              sort: ["startDate,desc"],
+              page,
+            },
           },
-        },
-      });
-      return itemsWith(result.data?.items ?? [], WEEK_ROW_FIELDS);
-    }, [branding.timeZone, client]),
+        });
+        const batch = itemsWith(result.data?.items ?? [], WEEK_ROW_FIELDS);
+        rows.push(...batch);
+        const oldest = batch.at(-1);
+        if (!oldest || (oldest.startDate < monday && rows.some((week) => week.generatedAt))) break;
+        totalPages = result.data?.totalPages ?? 0;
+        page += 1;
+      }
+      // An earlier draft can become the latest generation after undoing the current week.
+      const latest = rows.find((week) => week.generatedAt);
+      return rows
+        .filter((week) => week.startDate >= monday || (week === latest && !week.validatedAt))
+        .reverse();
+    }, [branding.timeZone, client, readOnly]),
   );
 
   const candidates = useResource(
@@ -1697,7 +1795,7 @@ export function TemplatesPage({
           onRemove={removeBand}
           onSave={saveBand}
           opening={templateOpening(openingHours.data, current?.days ?? [])}
-          slotMinutes={config.slotMinutes}
+          slotMinutes={5}
         />
       )}
       <Modal
@@ -1869,6 +1967,23 @@ export function TemplatesPage({
           blockedCount={blockedCount}
           candidates={candidates.data ?? []}
           onGenerate={generate}
+          onUndo={async (week) => {
+            if (!week.generatedAt) return;
+            try {
+              await client.DELETE("/weeks/{id}/generation", {
+                params: { path: { id: week.id }, query: { generatedAt: week.generatedAt } },
+              });
+              setFeedback({
+                message: t("admin-scheduling:templates.generation.undone"),
+                tone: "success",
+              });
+            } catch (error) {
+              setFeedback({ message: errorMessage(error), tone: "danger" });
+            } finally {
+              weeks.reload();
+              candidates.reload();
+            }
+          }}
           readOnly={readOnly}
           weekdayTemplateId={weekdayId}
           weeks={weeks.data ?? (weeks.error === undefined ? undefined : [])}

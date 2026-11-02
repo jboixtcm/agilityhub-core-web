@@ -49,7 +49,7 @@ type GenerationRequest = components["schemas"]["GenerationRequest"];
 type GenerationCandidate = components["schemas"]["GenerationCandidate"];
 type SkippedClasses = components["schemas"]["SkippedClasses"];
 
-const SLOT_MINUTES = 10;
+const SLOT_MINUTES = 5;
 const DEFAULT_CAPACITY = 5;
 const CANDIDATE_WEEKS = 13;
 
@@ -767,13 +767,14 @@ export const planningHandlers = [
       (left, right) => (descending ? -1 : 1) * left.startDate.localeCompare(right.startDate),
     );
     const size = Number(url.searchParams.get("size") ?? 50);
+    const page = Number(url.searchParams.get("page") ?? 0);
     return HttpResponse.json({
       appliedFilters: [],
       items: items
-        .slice(0, size)
+        .slice(page * size, (page + 1) * size)
         .map(weekListItem)
         .map((item) => (projection === null ? item : projection(item))),
-      page: 0,
+      page,
       size,
       totalItems: items.length,
       totalPages: items.length === 0 ? 0 : Math.ceil(items.length / size),
@@ -812,6 +813,39 @@ export const planningHandlers = [
     return week === undefined
       ? apiError("NOT_FOUND", "Week not found", 404)
       : HttpResponse.json(weekResource(week));
+  }),
+  http.delete("*/api/v1/weeks/:id/generation", ({ params, request }) => {
+    const week =
+      callerClubOwnsTheWorld() && planningState.weeks.find((item) => item.id === params.id);
+    if (!week) return apiError("NOT_FOUND", "Week not found", 404);
+    if (
+      week.state !== "GENERATED" ||
+      week.generatedAt !== new URL(request.url).searchParams.get("generatedAt")
+    )
+      return apiError("STALE_VERSION", "Generation changed", 409);
+    const generated = planningState.sessions.filter(
+      (session) => session.weekId === week.id && session.origin,
+    );
+    if (
+      planningState.weeks.some((item) => item.generatedAt && item.startDate > week.startDate) ||
+      generated.some((session) => session.state !== "DRAFT")
+    )
+      return apiError("INVALID_STATE", "Week cannot be reset", 409);
+    planningState.sessions = planningState.sessions.filter(
+      (session) => !generated.includes(session),
+    );
+    Object.assign(week, {
+      state: "PENDING",
+      generatedAt: null,
+      generatedByAccountId: null,
+      weekdayTemplateId: null,
+      saturdayTemplateId: null,
+      weekdayTemplateName: null,
+      saturdayTemplateName: null,
+      version: week.version + 1,
+      classCounts: { ...week.classCounts, draft: week.classCounts.draft - generated.length },
+    });
+    return new HttpResponse(null, { status: 204 });
   }),
   http.post("*/api/v1/weeks/:id/generation", async ({ params, request }) => {
     // The tenant comes from the JWT: another club's token generates none of this club's weeks.
