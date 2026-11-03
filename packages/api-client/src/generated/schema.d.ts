@@ -3828,7 +3828,7 @@ export interface paths {
         };
         /**
          * memberTrainingSlots
-         * @description Member booking grid for an accessible dog, clipped to the club booking window. Accounts with additional staff roles see the same member projection.
+         * @description Roles: MEMBER. Booking grid for an accessible dog, clipped to the club booking window. Accounts with additional staff roles see the same member projection.
          */
         get: operations["memberTrainingSlots"];
         put?: never;

@@ -93,6 +93,10 @@ select {
   position: relative;
 }
 
+.admin-shell__actions > .ah-appearance select {
+  min-width: 8rem;
+}
+
 .admin-user-menu__panel {
   position: absolute;
   z-index: 20;
