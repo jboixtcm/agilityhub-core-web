@@ -57,7 +57,8 @@
     "swappable": "{ring, select, none {Classe {description} · anul·lable dins termini} other {Classe {description} · {ring} · anul·lable dins termini}}",
     "notSelectableDONE": "Classe {description} · ja feta — no es pot seleccionar",
     "notSelectableLATE_WINDOW": "Classe {description} · fora de termini — no es pot seleccionar",
-    "swapButton": "ANUL·LA {oldDay} I CONFIRMA {newDay}",
+    "overrideWeeklyLimit": "Supera el límit i confirma sense anul·lar cap classe",
+    "swapButton": "ANUL·LA {oldDay} A LES {oldTime} I CONFIRMA {newDay} A LES {newTime}",
     "cancelNew": "CANCEL·LAR LA NOVA RESERVA",
     "limitDone": "{unit, select, DOG {{week, select, NEXT {La setmana vinent ja tens {count, plural, one {una classe} =2 {dues classes} other {# classes}} amb {dogArticle}{dogName}.} other {Aquesta setmana ja has fet {count, plural, one {una classe} =2 {dues classes} other {# classes}} amb {dogArticle}{dogName}.}}} other {{week, select, NEXT {La setmana vinent ja tens {count, plural, one {una classe} =2 {dues classes} other {# classes}}.} other {Aquesta setmana ja has fet {count, plural, one {una classe} =2 {dues classes} other {# classes}}.}}}}",
     "limitNoneNextWeek": "Encara no pots reservar classes de la setmana vinent.",
@@ -78,7 +79,9 @@
     "countedClasses": "Classes que compten en el límit setmanal",
     "countedLate": "Anul·lada tard · compta com a feta",
     "countedDone": "Compta com a feta",
-    "countedReserved": "Reservada · compta en el límit"
+    "countedReserved": "Reservada · compta en el límit",
+    "awaitMemberPayment": "La reserva està pendent de pagament. L’alumne pot pagar-la des de la seva app.",
+    "memberPays": "L’alumne haurà de pagar {price} des de la seva app."
   },
   "detail": {
     "title": "Detall de la reserva",
@@ -101,6 +104,7 @@
     "error": "No s'ha pogut carregar la reserva.",
     "retry": "Torna-ho a provar",
     "notFound": "Aquesta reserva no existeix o ja no és accessible.",
-    "inTimeNotice": "Si anul·les ara, la classe no comptarà com a feta: recuperaràs la disponibilitat del límit setmanal o el saldo del pack, segons la teva modalitat."
+    "inTimeNotice": "Si anul·les ara, la classe no comptarà com a feta: recuperaràs la disponibilitat del límit setmanal o el saldo del pack, segons la teva modalitat.",
+    "completePayment": "Completa el pagament"
   }
 }

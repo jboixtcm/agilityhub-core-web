@@ -30,3 +30,5 @@ export { TodayPage } from "./today/TodayPage";
 export { TrainingDetailPage } from "./training/TrainingDetailPage";
 export { TrainingPage } from "./training/TrainingPage";
 export { UnsubscribePage } from "./UnsubscribePage";
+
+export { BookingDeskHome } from "./booking/HomePage";

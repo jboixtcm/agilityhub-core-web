@@ -113,7 +113,11 @@
     },
     "headerLevelCode": "Level {code}",
     "lastClassFull": "{description} · {ring} · {instructor}",
-    "memberLink": "Member: {name}"
+    "memberLink": "Member: {name}",
+    "manageBookings": "Manage bookings",
+    "bookingList": "Student bookings",
+    "bookingOpenError": "The booking session could not open.",
+    "bookingPopupBlocked": "Allow the browser to open a new tab and try again."
   },
   "students": {
     "title": "Students",

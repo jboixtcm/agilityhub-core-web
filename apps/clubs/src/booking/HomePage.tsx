@@ -236,3 +236,32 @@ export function HomePage({ client }: { client: ApiClient }) {
     </section>
   );
 }
+
+/** Only the reservations of the member selected by the instructor. */
+export function BookingDeskHome({ client }: { client: ApiClient }) {
+  const { t } = useTranslation(["home", "instructor"]);
+  const home = useMeHome(client, null);
+  return (
+    <section className="booking-screen">
+      <h1>{t("instructor:card.bookingList")}</h1>
+      {home.status === "loading" ? (
+        <Skeleton height="8rem" label={t("home:reservations.loading")} />
+      ) : home.status === "error" ? (
+        <Toast tone="danger">
+          {t("home:reservations.error")}{" "}
+          <Button
+            onClick={() => {
+              home.refetch();
+            }}
+          >
+            {t("home:reservations.retry")}
+          </Button>
+        </Toast>
+      ) : home.data.reservations.length === 0 ? (
+        <p>{t("home:reservations.empty")}</p>
+      ) : (
+        home.data.reservations.map((row) => <ReservationRow key={row.id} row={row} showDog />)
+      )}
+    </section>
+  );
+}

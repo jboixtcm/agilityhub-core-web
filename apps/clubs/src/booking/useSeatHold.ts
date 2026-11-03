@@ -82,7 +82,7 @@ export async function releaseHold(client: ApiClient, holdId: string): Promise<vo
   try {
     await client.DELETE("/seat-holds/{id}", { params: { path: { id: holdId } } });
   } catch {
-    // The hold expires with its TTL (30 s): nothing to tell the member.
+    // The hold expires at its server-defined deadline: nothing to tell the member.
   }
 }
 

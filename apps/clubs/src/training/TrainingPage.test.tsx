@@ -197,7 +197,9 @@ describe("T-09-38 screen 08 grid, «Qualsevol» and the confirmation", () => {
     ).toBeVisible();
     expect(screen.queryByRole("button", { name: /^Confirma/u })).not.toBeInTheDocument();
     // The grid and the counter were read again after the booking.
-    expect(requests.list.filter((line) => line.startsWith("GET /training-slots"))).toHaveLength(2);
+    expect(requests.list.filter((line) => line.startsWith("GET /me/training-slots"))).toHaveLength(
+      2,
+    );
   });
 
   it("the counter card reads the selected day's week and follows the dog", async () => {
@@ -217,7 +219,7 @@ describe("T-09-38 screen 08 grid, «Qualsevol» and the confirmation", () => {
     expect(requests.list).toEqual(
       expect.arrayContaining([
         "GET /me/training-summary?dogId=dog-rock&date=2026-08-03",
-        "GET /training-slots?from=2026-08-03&to=2026-09-03&dogId=dog-toby",
+        "GET /me/training-slots?dogId=dog-toby&from=2026-08-03&to=2026-09-03",
         "GET /me/training-summary?dogId=dog-toby&date=2026-08-03",
       ]),
     );
@@ -286,7 +288,9 @@ describe("screen 08 refusals by code (S09 §6, R-09-06)", () => {
         within(group("Matí")).getByRole("button", { name: "8:30, entrenament" }),
       ).toBeDisabled();
     });
-    expect(requests.list.filter((line) => line.startsWith("GET /training-slots"))).toHaveLength(2);
+    expect(requests.list.filter((line) => line.startsWith("GET /me/training-slots"))).toHaveLength(
+      2,
+    );
   });
 
   it("409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details", async () => {
@@ -380,7 +384,7 @@ describe("screen 08 refusals by code (S09 §6, R-09-06)", () => {
 });
 
 function slotReads(requests: { list: string[] }): number {
-  return requests.list.filter((line) => line.startsWith("GET /training-slots")).length;
+  return requests.list.filter((line) => line.startsWith("GET /me/training-slots")).length;
 }
 
 describe("E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03)", () => {
@@ -456,7 +460,7 @@ describe("E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 re
     expect(confirmButton()).toBeEnabled();
     // The browser says online, but the api cannot be reached.
     expect(navigator.onLine).toBe(true);
-    server.use(http.get("*/api/v1/training-slots", () => HttpResponse.error()));
+    server.use(http.get("*/api/v1/me/training-slots", () => HttpResponse.error()));
     fireEvent.focus(window);
     expect(await screen.findByText("pot no estar al dia")).toBeVisible();
     expect(navigator.onLine).toBe(true);
@@ -499,7 +503,7 @@ describe("screen 08 without network (S09 §2 «sense connexió»)", () => {
     await openTraining();
     fireEvent.click(within(group("Matí")).getByRole("button", { name: "7:30, lliure" }));
     vi.spyOn(navigator, "onLine", "get").mockReturnValue(false);
-    server.use(http.get("*/api/v1/training-slots", () => HttpResponse.error()));
+    server.use(http.get("*/api/v1/me/training-slots", () => HttpResponse.error()));
     window.dispatchEvent(new Event("offline"));
     window.dispatchEvent(new Event("focus"));
     expect(await screen.findByText("pot no estar al dia")).toBeVisible();
@@ -517,7 +521,7 @@ async function scenarioMe(): Promise<Me> {
 function trainingOffline(): void {
   server.use(
     http.get("*/api/v1/me/training-summary", () => HttpResponse.error()),
-    http.get("*/api/v1/training-slots", () => HttpResponse.error()),
+    http.get("*/api/v1/me/training-slots", () => HttpResponse.error()),
   );
 }
 
@@ -614,7 +618,7 @@ describe("E5-W02 round 2 · review #3: the tab follows the member's rights (R-09
       );
     server.use(
       http.get("*/api/v1/me/training-summary", moduleOff),
-      http.get("*/api/v1/training-slots", moduleOff),
+      http.get("*/api/v1/me/training-slots", moduleOff),
     );
     const before = requests.list.filter((line) => line === "GET /me/training-summary").length;
     // Another day: the counter of its week is a training read, and it is refused.

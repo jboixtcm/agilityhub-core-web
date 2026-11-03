@@ -91,6 +91,8 @@ function options(request: Request): BookingOptions {
   }
   const threshold = findParameter("bookings.lateCancelThresholdMinutes")?.value;
   return {
+    delegated:
+      scenario.me.impersonation !== undefined && scenario.me.impersonation.bookingsOnly !== true,
     locale: readerLocale(request),
     modules: scenario.branding.modules,
     now: Date.now(),
@@ -227,7 +229,15 @@ function confirm(
     return apiError("SEAT_HOLD_EXPIRED", "Seat hold expired", 409);
   }
   const swapId = body.swapBookingId ?? null;
-  if (hold.limitReached && (swapId === null || !hold.swappable.includes(swapId))) {
+  if (body.overrideWeeklyLimit === true && !context.delegated)
+    return apiError("OVERRIDE_NOT_ALLOWED", "Forbidden", 403);
+  if (body.overrideWeeklyLimit === true && swapId !== null)
+    return apiError("SWAP_NOT_ALLOWED", "Swap not allowed", 422);
+  if (
+    hold.limitReached &&
+    body.overrideWeeklyLimit !== true &&
+    (swapId === null || !hold.swappable.includes(swapId))
+  ) {
     return apiError("SWAP_NOT_ALLOWED", "Swap not allowed", 422);
   }
   if (swapId !== null) {
@@ -253,7 +263,7 @@ function confirm(
     bookedBy: {
       displayName: viewerFirstName(),
       self: currentMockScenarioName() !== "impersonated",
-      viaClub: currentMockScenarioName() === "impersonated",
+      viaClub: currentMockScenario().me.impersonation !== undefined,
     },
     cancellation: null,
     charge: payment === null ? null : { mode: payment.mode, paidAt: null, price: payment.price },
@@ -263,7 +273,12 @@ function confirm(
     dogId: hold.dogId,
     id,
     memberId: findDog(hold.dogId)?.memberId ?? "",
-    origin: currentMockScenarioName() === "impersonated" ? "BACKOFFICE" : "APP",
+    origin:
+      currentMockScenarioName() === "instructorBookings"
+        ? "INSTRUCTOR"
+        : currentMockScenario().me.impersonation !== undefined
+          ? "BACKOFFICE"
+          : "APP",
     pack:
       pack === null
         ? null
@@ -286,7 +301,9 @@ function confirm(
     }
   }
   persist();
-  return HttpResponse.json(bookingResource(created, context, false), { status: 201 });
+  const response = bookingResource(created, context, false);
+  if (currentMockScenario().me.impersonation?.bookingsOnly === true) response.checkoutUrl = null;
+  return HttpResponse.json(response, { status: 201 });
 }
 
 /**
@@ -306,9 +323,10 @@ export const bookingHandlers = [
     if (refused !== undefined) return refused;
     const context = options(request);
     const dogId = new URL(request.url).searchParams.get("dogId");
-    const home = meHome(dogId, context, activityRows(context.locale, context.now));
+    const scoped = currentMockScenario().me.impersonation?.bookingsOnly === true;
+    const home = meHome(dogId, context, scoped ? [] : activityRows(context.locale, context.now));
     if (home === undefined) return dogNotAccessible();
-    const impersonated = currentMockScenarioName() === "impersonated";
+    const impersonated = scoped || currentMockScenarioName() === "impersonated";
     // The admin acting as the member, as `/me` names them (`me-impersonated.json`).
     const actorName = currentMockScenario().me.impersonation?.actorName;
     const scenario = currentMockScenario();
@@ -317,7 +335,7 @@ export const bookingHandlers = [
     return HttpResponse.json({
       ...home,
       impersonation: impersonated && actorName !== undefined ? { actorName } : null,
-      notifications: { unreadCount: feedUnreadCount(feed) },
+      notifications: { unreadCount: scoped ? 0 : feedUnreadCount(feed) },
     });
   }),
   http.get("*/api/v1/me/bookable-classes", ({ request }) => {
@@ -375,9 +393,10 @@ export const bookingHandlers = [
   http.get("*/api/v1/bookings/:id", ({ params, request }) => {
     const context = options(request);
     const item = bookingState.bookings.find((candidate) => candidate.id === String(params.id));
-    return item === undefined
-      ? apiError("NOT_FOUND", "Booking not found", 404)
-      : HttpResponse.json(bookingResource(item, context));
+    if (item === undefined) return apiError("NOT_FOUND", "Booking not found", 404);
+    const detail = bookingResource(item, context);
+    if (currentMockScenario().me.impersonation?.bookingsOnly === true) detail.checkoutUrl = null;
+    return HttpResponse.json(detail);
   }),
   http.post("*/api/v1/bookings/:id/cancellation", ({ params, request }) => {
     const context = options(request);

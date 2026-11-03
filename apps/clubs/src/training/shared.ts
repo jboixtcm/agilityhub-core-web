@@ -19,9 +19,9 @@ export type SlotCell = components["schemas"]["SlotCell"];
 export const AFTERNOON_STARTS_AT = "14:00";
 
 /**
- * `GET /training-slots` asks for a month: a MEMBER's interval is cut by the api to
+ * `GET /me/training-slots` asks for a month: a MEMBER's interval is cut by the api to
  * `[today, today + training.bookingWindowDays]` (R-09-04), a parameter the member cannot read, so
- * the front never computes the window; 31 days is the api's longest interval.
+ * the front requests through day +31 and renders the dates returned by the club.
  */
 export const TRAINING_REQUEST_DAYS = 31;
 
@@ -422,25 +422,15 @@ export function useTrainingSummary(
   return useCachedLoad(enabled ? `summary|${dogId ?? ""}|${date ?? ""}` : null, load);
 }
 
-/** `GET /training-slots?from={today}&to=…&dogId=` once for the whole window (S09 §2 step 2). */
+/** `GET /me/training-slots?from={today}&to=…&dogId=` once for the whole window (S09 §2 step 2). */
 export function useTrainingSlots(client: ApiClient, dogId: string | null, today: string) {
-  const load = useCallback(
-    async () =>
-      required(
-        (
-          await client.GET("/training-slots", {
-            params: {
-              query: {
-                from: today,
-                to: addDays(today, TRAINING_REQUEST_DAYS),
-                ...(dogId === null ? {} : { dogId }),
-              },
-            },
-          })
-        ).data,
-      ),
-    [client, dogId, today],
-  );
+  const load = useCallback(async () => {
+    if (dogId === null) throw new TypeError("Select a dog before requesting its training grid");
+    const result = await client.GET("/me/training-slots", {
+      params: { query: { dogId, from: today, to: addDays(today, TRAINING_REQUEST_DAYS) } },
+    });
+    return required(result.data);
+  }, [client, dogId, today]);
   return useCachedLoad(dogId === null ? null : `slots|${dogId}|${today}`, load);
 }
 

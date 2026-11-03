@@ -1199,18 +1199,27 @@ function MemberSummary({
               loading={pending}
               onClick={() =>
                 void run(async () => {
-                  const result = await client.POST("/members/{id}/impersonation-token", {
-                    body: reason.trim() === "" ? {} : { reason },
-                    params: { path: { id: member.id } },
-                  });
-                  // S01 D10 (E47): only the api's `launchUrl` opens: the club app's host with a
-                  // one-time code (`/entrar?handoff=`). The token never goes into a URL, and a
-                  // missing `launchUrl` is an error in this dialog, never a guessed address.
-                  const launchUrl = result.data?.launchUrl;
-                  if (typeof launchUrl !== "string" || launchUrl === "") {
-                    throw new TypeError("Impersonation response did not contain launchUrl");
+                  // Open during the click so browsers keep the user's tab-opening gesture.
+                  const tab = window.open("about:blank", "_blank");
+                  if (tab !== null) tab.opener = null;
+                  try {
+                    const result = await client.POST("/members/{id}/impersonation-token", {
+                      body: reason.trim() === "" ? {} : { reason },
+                      params: { path: { id: member.id } },
+                    });
+                    // S01 D10 (E47): only the api's `launchUrl` opens: the club app's host with a
+                    // one-time code (`/entrar?handoff=`). The token never goes into a URL, and a
+                    // missing `launchUrl` is an error in this dialog, never a guessed address.
+                    const launchUrl = result.data?.launchUrl;
+                    if (typeof launchUrl !== "string" || launchUrl === "") {
+                      throw new TypeError("Impersonation response did not contain launchUrl");
+                    }
+                    if (tab === null || tab.closed) window.location.assign(launchUrl);
+                    else tab.location.replace(launchUrl);
+                  } catch (error) {
+                    tab?.close();
+                    throw error;
                   }
-                  window.open(launchUrl, "_blank", "noopener,noreferrer");
                 })
               }
             >
@@ -1372,6 +1381,7 @@ function MemberRecordContent({
   const [reload, setReload] = useState(0);
   const [editOpen, setEditOpen] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>();
+  const [tab, setTab] = useState("summary");
   const [memberDialog, setMemberDialog] = useState<MemberDialog>(() => {
     const requested = new URLSearchParams(window.location.search).get("calaix");
     return requested === "inactivitat"
@@ -1532,6 +1542,7 @@ function MemberRecordContent({
               )}
               <Button
                 onClick={() => {
+                  setTab("summary");
                   setMemberDialog("resend");
                 }}
                 variant="ghost"
@@ -1543,9 +1554,10 @@ function MemberRecordContent({
               {supportAccess ? null : (
                 <Button
                   onClick={() => {
+                    setTab("summary");
                     setMemberDialog("impersonate");
                   }}
-                  variant="ghost"
+                  variant="primary"
                 >
                   <Icon aria-hidden="true" name="user" />
                   {t("admin-census:member.actions.impersonate")}
@@ -1573,6 +1585,8 @@ function MemberRecordContent({
         }}
       />
       <Tabs
+        value={tab}
+        onValueChange={setTab}
         items={[
           {
             content: (

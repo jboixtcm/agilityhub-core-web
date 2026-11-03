@@ -339,6 +339,7 @@
 
 .instructor-sheet__legend {
   display: flex;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: var(--ah-space-2);
   margin: 0;

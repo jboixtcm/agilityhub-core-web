@@ -219,6 +219,11 @@ export function BookingDetailPage({
         {/* S16 §2 / R-16-13: what is set up on the class's ring, and the course it plans. */}
         <BookingCourseLines classSessionId={data.classSessionId} client={client} />
       </Card>
+      {data.state === "PAYMENT_PENDING" && data.checkoutUrl ? (
+        <a className="ah-button ah-button--primary" href={data.checkoutUrl}>
+          {t("booking:detail.completePayment")}
+        </a>
+      ) : null}
       {cancellable ? <Button onClick={open}>{t("booking:detail.cancel")}</Button> : null}
       {note !== undefined ? (
         note.late ? (

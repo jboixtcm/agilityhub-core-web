@@ -917,7 +917,7 @@ function GenerationCard({
                 setUnanswered(undefined);
                 setConfirming(candidate?.startDate);
               }}
-              variant="ghost"
+              variant="primary"
             >
               {t("admin-scheduling:templates.generation.submit")}
             </Button>

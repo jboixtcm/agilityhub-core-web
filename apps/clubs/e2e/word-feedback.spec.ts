@@ -136,3 +136,29 @@ for (const width of [375, 1512]) {
     );
   });
 }
+
+test("text size is remembered separately on a phone and a desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => {
+    localStorage.setItem("agilityhub.locale", "ca");
+    localStorage.setItem("agilityhub.mockScenario", "member");
+  });
+  await page.goto("http://127.0.0.1:4173/entrar");
+  await page.getByLabel("Correu electrònic").fill("laura@example.test");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
+  await page.getByRole("button", { name: "ENTRA", exact: true }).click();
+  await page.waitForURL("**/inici");
+  await page.goto("http://127.0.0.1:4173/perfil");
+  const selector = page.getByLabel("Mida del text");
+  const root = page.locator("html");
+  await selector.selectOption("large");
+  await expect(root).toHaveCSS("font-size", "20px");
+  await page.reload();
+  await expect(selector).toHaveValue("large");
+  expect(await root.evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(375);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect(selector).toHaveValue("normal");
+  await expect(root).toHaveCSS("font-size", "16px");
+  await page.setViewportSize({ width: 375, height: 812 });
+  await expect(root).toHaveCSS("font-size", "20px");
+});

@@ -135,7 +135,8 @@
   },
   "trainingOrigin": {
     "APP": "app",
-    "BACKOFFICE": "club"
+    "BACKOFFICE": "club",
+    "INSTRUCTOR": "instructor"
   },
   "ringBlockState": {
     "ACTIVE": "active",
@@ -362,13 +363,21 @@
     "PACK_EXPIRED": "pack expiry",
     "MIGRATED": "migration"
   },
-  "origin": { "APP": "app", "BACKOFFICE": "club", "SYSTEM": "system" },
+  "origin": {
+    "APP": "app",
+    "BACKOFFICE": "club",
+    "SYSTEM": "system"
+  },
   "memberDisplayStatus": {
     "INACTIVE_PERIOD": "inactive",
     "INACTIVE_PERIOD_DATED": "inactive until {date}",
     "LEAVE_SCHEDULED": "leave scheduled {date}"
   },
-  "finishReason": { "SCHEDULED": "scheduled end", "ADMIN": "club decision", "LEAVE": "leave" },
+  "finishReason": {
+    "SCHEDULED": "scheduled end",
+    "ADMIN": "club decision",
+    "LEAVE": "leave"
+  },
   "cancelReason": {
     "WITHDRAWN": "withdrawn",
     "EXPIRED": "expired",
@@ -377,14 +386,22 @@
     "ADMIN": "by club",
     "SYSTEM": "by system"
   },
-  "courseDiscipline": { "AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Other" },
+  "courseDiscipline": {
+    "AGILITY": "Agility",
+    "JUMPING": "Jumping",
+    "OTHER": "Other"
+  },
   "courseSource": {
     "SMARTER": "Smarter",
     "EDITOR": "Editor",
     "IMAGE": "Plan or photo",
     "AGILITYHUB_COPY": "Library copy"
   },
-  "agilityhubLevel": { "EASY": "Easy", "MEDIUM": "Medium", "HARD": "Hard" },
+  "agilityhubLevel": {
+    "EASY": "Easy",
+    "MEDIUM": "Medium",
+    "HARD": "Hard"
+  },
   "setupKind": {
     "AGILITY": "Agility",
     "JUMPING": "Jumping",
@@ -392,7 +409,11 @@
     "OBSTACLE_DRILL": "Obstacle drill",
     "EMPTY": "Empty"
   },
-  "setupStatus": { "ACTIVE": "Set up", "EXPIRED": "Expired", "DISMANTLED": "Taken down" },
+  "setupStatus": {
+    "ACTIVE": "Set up",
+    "EXPIRED": "Expired",
+    "DISMANTLED": "Taken down"
+  },
   "obstacleType": {
     "Jump": "Jump",
     "DoubleJump": "Double jump",
@@ -416,8 +437,17 @@
     "INDOOR": "Indoor",
     "OTHER": "Other"
   },
-  "doorFlow": { "IN": "entry", "OUT": "exit", "BOTH": "entry and exit" },
-  "doorSide": { "NORTH": "North", "SOUTH": "South", "EAST": "East", "WEST": "West" },
+  "doorFlow": {
+    "IN": "entry",
+    "OUT": "exit",
+    "BOTH": "entry and exit"
+  },
+  "doorSide": {
+    "NORTH": "North",
+    "SOUTH": "South",
+    "EAST": "East",
+    "WEST": "West"
+  },
   "courseWarningRule": {
     "outside-ring": "Outside the ring",
     "border-clearance": "Perimeter clearance",

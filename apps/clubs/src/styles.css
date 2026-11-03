@@ -32,7 +32,7 @@ body {
 }
 
 .profile-install h2 {
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .profile-install small {
@@ -2564,4 +2564,20 @@ div.lifecycle-error p {
   .day-screen__full-label {
     display: inline;
   }
+}
+
+.booking-desk {
+  max-width: 58rem;
+  margin-inline: auto;
+}
+.booking-desk__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--ah-color-surface);
+}
+.booking-desk__nav a {
+  color: var(--ah-color-text);
+  text-decoration: underline;
 }

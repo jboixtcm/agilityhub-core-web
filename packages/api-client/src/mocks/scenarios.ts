@@ -936,6 +936,19 @@ const scenarios = {
     me: meImpersonated as Me,
     sessions: accountSessions,
   },
+  instructorBookings: {
+    branding: canic,
+    me: {
+      ...(meImpersonated as Me),
+      account: (meInstructor as Me).account,
+      impersonation: {
+        actorName: (meInstructor as Me).account.name,
+        memberName: meImpersonated.impersonation.memberName,
+        bookingsOnly: true,
+      },
+    },
+    sessions: accountSessions,
+  },
   /**
    * E5-W05 step 24 (ruling E73): a family group's account opened on another member's record. The
    * account is the parent's; `/me`'s `impersonation.memberName` names the member the admin opened.

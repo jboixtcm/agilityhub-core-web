@@ -85,6 +85,31 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
   const card = useLoader(load);
   // Screen 26 sends a caller back here when the club has no TASKS (`errors:MODULE_DISABLED`).
   const [notice, setNotice] = useState<PageNotice | undefined>(pageNotice);
+  const [bookingPending, setBookingPending] = useState(false);
+  const [bookingError, setBookingError] = useState<string>();
+  const manageBookings = async (memberId: string) => {
+    const tab = window.open("about:blank", "_blank");
+    if (tab === null) {
+      setBookingError(t("instructor:card.bookingPopupBlocked"));
+      return;
+    }
+    tab.opener = null;
+    setBookingError(undefined);
+    setBookingPending(true);
+    try {
+      const { data } = await client.POST("/members/{id}/impersonation-token", {
+        params: { path: { id: memberId } },
+        body: { bookingsOnly: true },
+      });
+      if (!data?.launchUrl) throw new TypeError("Missing booking session URL");
+      tab.location.replace(data.launchUrl);
+    } catch (error) {
+      tab.close();
+      setBookingError(readErrorText(t, error, t("instructor:card.bookingOpenError")));
+    } finally {
+      setBookingPending(false);
+    }
+  };
   const tasksModule = branding.modules.includes("TASKS");
   const trainingModule = branding.modules.includes("FREE_TRAINING");
   const tasksPath = `/instructor/alumnes/${encodeURIComponent(dogId)}/tasques`;
@@ -190,6 +215,10 @@ export function StudentCardPage({ client, dogId }: { client: ApiClient; dogId: s
     <section className="instructor-screen instructor-card">
       {bar}
       {noticeToast}
+      <Button disabled={bookingPending} onClick={() => void manageBookings(member.id)}>
+        {t("instructor:card.manageBookings")}
+      </Button>
+      {bookingError === undefined ? null : <p role="alert">{bookingError}</p>}
       <Card className="instructor-card__header">
         <div className="instructor-card__who">
           {dog.photoUrl == null ? (

@@ -122,13 +122,13 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await shot(page, "04-reservar-375.png");
   });
 
-  test("29 normal: the held seat for 30 s, the confirmation with the calendar links, then 07", async ({
+  test("29 normal: the held seat for 60 s, the confirmation with the calendar links, then 07", async ({
     page,
   }) => {
     await login(page);
     await openReserve(page);
     await tapRow(page, "dc 5 · 18:50");
-    await expect(page.getByText("Plaça bloquejada per a tu · 0:30")).toBeVisible();
+    await expect(page.getByText("Plaça bloquejada per a tu · 1:00")).toBeVisible();
     await shot(page, "29-confirmar-normal-375.png");
     await page.getByRole("button", { name: "CONFIRMAR LA RESERVA" }).click();
     await expect(page.getByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
@@ -180,8 +180,8 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await page.waitForURL("**/inici");
     await openReserve(page);
     await tapRow(page, "dc 5 · 18:50");
-    await expect(page.getByText("Plaça bloquejada per a tu · 0:30")).toBeVisible();
-    await page.clock.runFor(31_000);
+    await expect(page.getByText("Plaça bloquejada per a tu · 1:00")).toBeVisible();
+    await page.clock.runFor(61_000);
     const note = page.getByRole("button", {
       name: "Reserva cancel·lada per temps. Toca per tornar a la llista de classes.",
     });
@@ -203,11 +203,17 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     ).toBeVisible();
     await expect(page.getByRole("radio")).toHaveCount(2);
     await expect(
-      page.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" }),
+      page.getByRole("button", {
+        name: "ANUL·LA DILLUNS 3 A LES 18:50 I CONFIRMA DISSABTE 8 A LES 09:00",
+      }),
     ).toBeVisible();
     await shot(page, "06-confirmar-canvi-375.png");
     await page.getByRole("radio", { name: /Divendres 7/u }).click();
-    await page.getByRole("button", { name: "ANUL·LA DIVENDRES 7 I CONFIRMA DISSABTE 8" }).click();
+    await page
+      .getByRole("button", {
+        name: "ANUL·LA DIVENDRES 7 A LES 20:00 I CONFIRMA DISSABTE 8 A LES 09:00",
+      })
+      .click();
     await expect(page.getByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
     await page.getByRole("link", { name: "Torna a l’inici" }).click();
     await expect(page).toHaveURL(/\/inici$/u);

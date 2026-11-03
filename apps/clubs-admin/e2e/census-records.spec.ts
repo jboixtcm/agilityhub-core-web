@@ -65,6 +65,7 @@ test.describe("E2-W02 census records", () => {
         }
       }
     });
+    await page.getByRole("tab", { name: "Auditoria" }).click();
     await page.getByRole("button", { name: "Entra com l'abonat" }).click();
     const impersonationDialog = page.getByRole("dialog", { name: "Entra com l'abonat" });
     await impersonationDialog.getByLabel("Motiu (opcional)").fill("Comprovació de la fitxa");

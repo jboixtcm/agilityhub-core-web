@@ -4,6 +4,7 @@ import {
   isUnanswered,
   useSubmissionKeys,
 } from "@agilityhub/api-client";
+import { useSession } from "@agilityhub/auth";
 import { dogArticle, useClubFormats } from "@agilityhub/i18n";
 import { AppBar, Badge, Button, Card, Chip, Icon, IconButton } from "@agilityhub/ui";
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
@@ -132,6 +133,8 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
   const dog = hold.dog;
   const article = dogArticle(dog.name, dog.sex, formats.locale);
   const swap = hold.limit.reached;
+  const delegation = useSession().me?.impersonation;
+  const delegated = delegation !== undefined && delegation.bookingsOnly !== true;
   const price =
     hold.payment === null || hold.payment === undefined
       ? undefined
@@ -143,10 +146,14 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
     navigateInApp("/reservar");
   };
 
-  const confirm = async () => {
+  const confirm = async (overrideWeeklyLimit = false) => {
     const body = {
       seatHoldId: hold.id,
-      ...(swap && swapId !== undefined ? { swapBookingId: swapId } : {}),
+      ...(overrideWeeklyLimit
+        ? { overrideWeeklyLimit: true }
+        : swap && swapId !== undefined
+          ? { swapBookingId: swapId }
+          : {}),
     };
     setPending(true);
     setError(undefined);
@@ -167,7 +174,11 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
       if (booking === undefined) throw new TypeError("The booking response did not contain data");
       kept.current = true;
       // PAY_TO_BOOK (R-08-18): the booking waits for the payment on the api's Checkout page.
-      if (booking.state === "PAYMENT_PENDING" && typeof booking.checkoutUrl === "string") {
+      if (
+        delegation?.bookingsOnly !== true &&
+        booking.state === "PAYMENT_PENDING" &&
+        typeof booking.checkoutUrl === "string"
+      ) {
         window.location.assign(booking.checkoutUrl);
         return;
       }
@@ -200,20 +211,26 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
           session={hold.classSession}
         />
         <div className="booking-note booking-note--success" role="status">
-          <p>{t("booking:confirm.done")}</p>
-          <p className="booking-note__links">
-            <a href={booked.calendarLinks.google} rel="noopener noreferrer" target="_blank">
-              {t("booking:confirm.calendarGoogle")}
-            </a>
-            {t("booking:separator")}
-            <a href={booked.calendarLinks.outlook} rel="noopener noreferrer" target="_blank">
-              {t("booking:confirm.calendarOutlook")}
-            </a>
-            {t("booking:separator")}
-            <a href={booked.calendarLinks.ics} rel="noopener noreferrer" target="_blank">
-              {t("booking:confirm.calendarIcs")}
-            </a>
+          <p>
+            {booked.state === "PAYMENT_PENDING"
+              ? t("booking:confirm.awaitMemberPayment")
+              : t("booking:confirm.done")}
           </p>
+          {booked.state !== "PAYMENT_PENDING" ? (
+            <p className="booking-note__links">
+              <a href={booked.calendarLinks.google} rel="noopener noreferrer" target="_blank">
+                {t("booking:confirm.calendarGoogle")}
+              </a>
+              {t("booking:separator")}
+              <a href={booked.calendarLinks.outlook} rel="noopener noreferrer" target="_blank">
+                {t("booking:confirm.calendarOutlook")}
+              </a>
+              {t("booking:separator")}
+              <a href={booked.calendarLinks.ics} rel="noopener noreferrer" target="_blank">
+                {t("booking:confirm.calendarIcs")}
+              </a>
+            </p>
+          ) : null}
         </div>
         <div className="confirm-actions">
           <a
@@ -273,66 +290,73 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
               week: hold.limit.week,
             })}
           </p>
-          <h2 className="booking-section__title confirm-swap__title" id="confirm-swap-title">
-            <Icon aria-hidden="true" name="swap" />
-            {t("booking:confirm.swapTitle")}
-          </h2>
-          <div aria-labelledby="confirm-swap-title" className="confirm-swap" role="radiogroup">
-            {hold.limit.swappable.map((option) => {
-              const checked = option.bookingId === swapId;
-              return (
-                <button
-                  aria-checked={checked}
-                  className={`ah-card confirm-option${checked ? " confirm-option--selected" : ""}`}
-                  disabled={pending || expired}
-                  key={option.bookingId}
-                  onClick={() => {
-                    setSwapId(option.bookingId);
-                  }}
-                  role="radio"
-                  type="button"
-                >
-                  <span aria-hidden="true" className="confirm-option__check">
-                    {checked ? <Icon name="check" /> : null}
-                  </span>
-                  <span className="confirm-option__text">
-                    <strong>{dayTime(option.startsAtLocal)}</strong>
-                    <small>
-                      {t("booking:confirm.swappable", {
-                        description: option.description,
-                        ring: option.ringName ?? "none",
-                      })}
-                    </small>
-                  </span>
-                </button>
-              );
-            })}
-            {hold.limit.notSelectable.map((option) => (
-              <div
-                aria-disabled="true"
-                className="ah-card confirm-option confirm-option--inert"
-                key={option.bookingId}
-              >
-                <span aria-hidden="true" className="confirm-option__check">
-                  <Icon name="ban" />
-                </span>
-                <span className="confirm-option__text">
-                  {option.startsAtLocal === null || option.startsAtLocal === undefined ? null : (
-                    <strong>{dayTime(option.startsAtLocal)}</strong>
-                  )}
-                  <small>
-                    {option.reason === "DONE"
-                      ? t("booking:confirm.notSelectableDONE", {
-                          description: option.description ?? "",
-                        })
-                      : t("booking:confirm.notSelectableLATE_WINDOW", {
-                          description: option.description ?? "",
-                        })}
-                  </small>
-                </span>
+          {hold.limit.swappable.length > 0 ? (
+            <>
+              <h2 className="booking-section__title confirm-swap__title" id="confirm-swap-title">
+                <Icon aria-hidden="true" name="swap" />
+                {t("booking:confirm.swapTitle")}
+              </h2>
+              <div aria-labelledby="confirm-swap-title" className="confirm-swap" role="radiogroup">
+                {hold.limit.swappable.map((option) => {
+                  const checked = option.bookingId === swapId;
+                  return (
+                    <button
+                      aria-checked={checked}
+                      className={`ah-card confirm-option${checked ? " confirm-option--selected" : ""}`}
+                      disabled={pending || expired}
+                      key={option.bookingId}
+                      onClick={() => {
+                        setSwapId(option.bookingId);
+                      }}
+                      role="radio"
+                      type="button"
+                    >
+                      <span aria-hidden="true" className="confirm-option__check">
+                        {checked ? <Icon name="check" /> : null}
+                      </span>
+                      <span className="confirm-option__text">
+                        <strong>{dayTime(option.startsAtLocal)}</strong>
+                        <small>
+                          {t("booking:confirm.swappable", {
+                            description: option.description,
+                            ring: option.ringName ?? "none",
+                          })}
+                        </small>
+                      </span>
+                    </button>
+                  );
+                })}
+                {hold.limit.notSelectable.map((option) => (
+                  <div
+                    aria-disabled="true"
+                    className="ah-card confirm-option confirm-option--inert"
+                    key={option.bookingId}
+                  >
+                    <span aria-hidden="true" className="confirm-option__check">
+                      <Icon name="ban" />
+                    </span>
+                    <span className="confirm-option__text">
+                      {option.startsAtLocal === null ||
+                      option.startsAtLocal === undefined ? null : (
+                        <strong>{dayTime(option.startsAtLocal)}</strong>
+                      )}
+                      <small>
+                        {option.reason === "DONE"
+                          ? t("booking:confirm.notSelectableDONE", {
+                              description: option.description ?? "",
+                            })
+                          : t("booking:confirm.notSelectableLATE_WINDOW", {
+                              description: option.description ?? "",
+                            })}
+                      </small>
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <WeeklyLimitClasses details={hold.limit} />
+          )}
         </>
       ) : null}
       {hold.payment?.mode === "CHARGE_ON_ATTENDANCE" && price !== undefined ? (
@@ -342,11 +366,13 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
       ) : null}
       {hold.payment?.mode === "PAY_TO_BOOK" &&
       price !== undefined &&
-      swap &&
-      selected !== undefined ? (
+      (swap || delegation?.bookingsOnly === true) &&
+      (selected !== undefined || delegation !== undefined) ? (
         // The swap button names both days, not the payment: the Checkout still follows (R-08-18).
         <p className="booking-note booking-note--neutral">
-          {t("booking:confirm.payAfterSwap", { price })}
+          {delegation?.bookingsOnly === true
+            ? t("booking:confirm.memberPays", { price })
+            : t("booking:confirm.payAfterSwap", { price })}
         </p>
       ) : null}
       {error === undefined ? null : (
@@ -354,21 +380,36 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
           {error}
         </p>
       )}
-      <Button
-        disabled={expired || (swap && selected === undefined)}
-        loading={pending}
-        loadingLabel={t("booking:confirm.sending")}
-        onClick={() => void confirm()}
-      >
-        {swap && selected !== undefined
-          ? t("booking:confirm.swapButton", {
-              newDay: upper(dayTime(hold.classSession.startsAtLocal, null, false)),
-              oldDay: upper(dayTime(selected.startsAtLocal, null, false)),
-            })
-          : hold.payment?.mode === "PAY_TO_BOOK" && price !== undefined
-            ? t("booking:confirm.payAndBook", { price })
-            : t("booking:confirm.submit")}
-      </Button>
+      {!swap || selected !== undefined ? (
+        <Button
+          disabled={expired}
+          loading={pending}
+          loadingLabel={t("booking:confirm.sending")}
+          onClick={() => void confirm()}
+        >
+          {swap && selected !== undefined
+            ? t("booking:confirm.swapButton", {
+                newDay: upper(dayTime(hold.classSession.startsAtLocal, null, false)),
+                newTime: localParts(hold.classSession.startsAtLocal).time,
+                oldDay: upper(dayTime(selected.startsAtLocal, null, false)),
+                oldTime: localParts(selected.startsAtLocal).time,
+              })
+            : hold.payment?.mode === "PAY_TO_BOOK" &&
+                price !== undefined &&
+                delegation?.bookingsOnly !== true
+              ? t("booking:confirm.payAndBook", { price })
+              : t("booking:confirm.submit")}
+        </Button>
+      ) : null}
+      {swap && delegated ? (
+        <Button
+          disabled={expired || pending}
+          onClick={() => void confirm(true)}
+          variant="secondary"
+        >
+          {t("booking:confirm.overrideWeeklyLimit")}
+        </Button>
+      ) : null}
       {swap ? (
         <Button disabled={pending} onClick={() => void leave()} variant="ghost">
           {t("booking:confirm.cancelNew")}
@@ -515,7 +556,7 @@ function WeeklyLimitClasses({ details }: { details: Partial<BookingLimitReachedD
 
 /**
  * Screens 06 and 29 (`/reservar/confirmar`, S08 §2): painted from the seat hold that 04 (or the
- * claim of a waiting entry) left in the history entry — the hold with its 30 s countdown on the
+ * claim of a waiting entry) left in the history entry — the hold with its countdown on the
  * api clock, the swap when the week's limit is reached, the single-class payment — or from the
  * refusal the api gave instead (limit done, «Properament», a seat another hold takes). Without
  * that state (a reload after it was lost) it goes back to 04.

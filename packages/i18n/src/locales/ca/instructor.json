@@ -113,7 +113,11 @@
     },
     "headerLevelCode": "Nivell {code}",
     "lastClassFull": "{description} · {ring} · {instructor}",
-    "memberLink": "Abonat: {name}"
+    "memberLink": "Abonat: {name}",
+    "manageBookings": "Gestiona les reserves",
+    "bookingList": "Reserves de l’alumne",
+    "bookingOpenError": "No s’ha pogut obrir la sessió de reserves.",
+    "bookingPopupBlocked": "Permet que el navegador obri una pestanya nova i torna-ho a provar."
   },
   "students": {
     "title": "Alumnes",

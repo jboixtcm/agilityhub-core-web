@@ -97,3 +97,54 @@ for (const width of [375, 1280]) {
     await page.waitForURL("**/entrar");
   });
 }
+
+test("an instructor opens only the selected student's bookings and can return to their own tab", async ({
+  context,
+  page,
+}) => {
+  await context.addInitScript(() => {
+    localStorage.setItem("agilityhub.locale", "ca");
+    localStorage.setItem("agilityhub.mockScenario", "instructor");
+  });
+  await page.goto(baseUrl + "/entrar");
+  await page.getByLabel("Correu electrònic").fill("instructor@example.test");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
+  await page.getByRole("button", { name: "ENTRA", exact: true }).click();
+  await page.waitForURL("**/instructor/dia");
+  await page.goto(baseUrl + "/instructor/alumnes/dog-duna");
+  const [desk] = await Promise.all([
+    page.waitForEvent("popup"),
+    page.getByRole("button", { name: "Gestiona les reserves" }).click(),
+  ]);
+  await expect(desk.getByText("Estàs gestionant les reserves de Laura Serra Vidal")).toBeVisible();
+  await expect(desk.getByRole("heading", { name: "Reserves de l’alumne" })).toBeVisible();
+  await desk.getByRole("link", { name: "Reservar", exact: true }).click();
+  await expect(desk.getByRole("heading", { name: "Classes" })).toBeVisible();
+  await desk.goto(baseUrl + "/rebuts");
+  await desk.waitForURL("**/inici");
+  await expect(desk.getByRole("heading", { name: "Reserves de l’alumne" })).toBeVisible();
+  await desk.getByRole("button", { name: "Surt" }).click();
+  await expect.poll(() => desk.isClosed()).toBe(true);
+  await expect(page.getByRole("button", { name: "Gestiona les reserves" })).toBeVisible();
+});
+
+test("an administrator explicitly returns to the portal from the instructor's profile", async ({
+  context,
+  page,
+}) => {
+  await context.addInitScript(() => {
+    localStorage.setItem("agilityhub.locale", "ca");
+    localStorage.setItem("agilityhub.mockScenario", "multiProfile");
+  });
+  await page.goto(baseUrl + "/entrar");
+  await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
+  await page.getByRole("button", { name: "ENTRA", exact: true }).click();
+  await expect(page.getByRole("button", { name: /Obre el portal/u })).toHaveCount(0);
+  await page.getByRole("button", { name: /Com a instructora/u }).click();
+  await page.waitForURL("**/instructor/dia");
+  await page.goto(baseUrl + "/perfil");
+  await page.getByRole("link", { name: /Canviar de perfil/u }).click();
+  await page.getByRole("button", { name: /Obre el portal d’administració/u }).click();
+  await page.waitForURL("http://127.0.0.1:4174/tauler");
+});

@@ -1475,7 +1475,7 @@ test.describe("week 0 at demoNow", () => {
     test.setTimeout(420_000);
     const member = await clubsSession(browser, BOOKER);
     const { page } = member;
-    const slotsRead = page.waitForResponse(isCall("GET", /\/api\/v1\/training-slots$/u));
+    const slotsRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-slots$/u));
     const summaryRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-summary$/u));
     await navigateClubRoute(page, "/entrenaments");
     const slots = (await (await slotsRead).json()) as TrainingSlots;
@@ -1990,7 +1990,7 @@ test("R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches t
     ).body.counter.used;
   const monday = addDays(opening, 1);
   const trainingPage = member.page;
-  const slotsRead = trainingPage.waitForResponse(isCall("GET", /\/api\/v1\/training-slots$/u));
+  const slotsRead = trainingPage.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-slots$/u));
   await navigateClubRoute(trainingPage, "/entrenaments");
   const trainingWindow = (await (await slotsRead).json()) as TrainingSlots;
   expect(trainingWindow.days.map((day) => day.date)).toEqual(

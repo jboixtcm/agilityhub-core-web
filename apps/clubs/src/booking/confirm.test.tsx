@@ -139,6 +139,37 @@ describe("T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-
 });
 
 describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)", () => {
+  it("offers an explicit weekly-limit exception while acting for a member", async () => {
+    const writes = recordWrites();
+    const now = Date.now();
+    const hold = heldSeat(new Date(now).toISOString(), new Date(now + 60_000).toISOString());
+    window.history.replaceState(
+      {
+        confirm: {
+          kind: "hold",
+          hold: { ...hold, limit: { ...hold.limit, count: 2, reached: true } },
+          receivedAt: now,
+          waitlistEntryId: null,
+        },
+      },
+      "",
+      "/reservar/confirmar",
+    );
+    await renderPage(<ConfirmPage client={apiClient()} />, { scenario: "impersonated" });
+    expect(screen.queryByRole("radiogroup")).toBeNull();
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Supera el límit i confirma sense anul·lar cap classe",
+      }),
+    );
+    await waitFor(() => {
+      expect(writes.find((write) => write.path === "/api/v1/bookings")?.body).toEqual({
+        seatHoldId: hold.id,
+        overrideWeeklyLimit: true,
+      });
+    });
+  });
+
   it("single selection among the swappable bookings, the button names both days, then the swap is confirmed", async () => {
     const writes = recordWrites();
     await tapRow(3, { scenario: "bookingLimit" });
@@ -150,7 +181,7 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
     expect(within(card).getByText("Nivell C")).toBeVisible();
     expect(within(card).getByText("amb la Duna")).toBeVisible();
     expect(within(card).getByText("Pista Muntanya")).toBeVisible();
-    expect(screen.getByText("Plaça bloquejada per a tu · 0:30")).toBeVisible();
+    expect(screen.getByText("Plaça bloquejada per a tu · 1:00")).toBeVisible();
     expect(
       screen.getByText("Ja tens 2 classes aquesta setmana amb la Duna (límit per gos)."),
     ).toBeVisible();
@@ -164,12 +195,16 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
     // E7-W07 round 2 #5a: Duna's week is 2 of 2, both swappable; the done row is the next test's.
     expect(within(group).queryByText(/ja feta/u)).toBeNull();
     expect(
-      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" }),
+      screen.getByRole("button", {
+        name: "ANUL·LA DILLUNS 3 A LES 18:50 I CONFIRMA DISSABTE 8 A LES 09:00",
+      }),
     ).toBeEnabled();
     fireEvent.click(options[1] ?? document.body);
     expect(options.map((option) => option.getAttribute("aria-checked"))).toEqual(["false", "true"]);
     fireEvent.click(
-      screen.getByRole("button", { name: "ANUL·LA DIVENDRES 7 I CONFIRMA DISSABTE 8" }),
+      screen.getByRole("button", {
+        name: "ANUL·LA DIVENDRES 7 A LES 20:00 I CONFIRMA DISSABTE 8 A LES 09:00",
+      }),
     );
     expect(await screen.findByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
     const booking = writes.find((write) => write.path === "/api/v1/bookings");
@@ -208,7 +243,9 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
     expect(done).toHaveAttribute("aria-disabled", "true");
     expect(done?.tagName).toBe("DIV");
     expect(
-      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" }),
+      screen.getByRole("button", {
+        name: "ANUL·LA DILLUNS 3 A LES 18:50 I CONFIRMA DISSABTE 8 A LES 09:00",
+      }),
     ).toBeEnabled();
   });
 
@@ -497,7 +534,9 @@ describe("R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-
     await renderPage(<ConfirmPage client={apiClient()} />, single);
     const note = screen.getByText("En confirmar, pagaràs aquesta classe (12,00 €).");
     expect(note).toBeVisible();
-    const button = screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DIMECRES 5" });
+    const button = screen.getByRole("button", {
+      name: "ANUL·LA DILLUNS 3 A LES 18:50 I CONFIRMA DIMECRES 5 A LES 18:50",
+    });
     expect(button).toBeEnabled();
     // Above: the button follows the note in the document (E5-W01 round-2 review #4).
     expect(note.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
@@ -521,7 +560,9 @@ describe("R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-
       screen.getByText("Ja tens 1 classe la setmana vinent amb en Rock (límit per gos)."),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "ANUL·LA DILLUNS 10 I CONFIRMA DIMECRES 12" }),
+      screen.getByRole("button", {
+        name: "ANUL·LA DILLUNS 10 A LES 19:00 I CONFIRMA DIMECRES 12 A LES 19:00",
+      }),
     ).toBeEnabled();
   });
 
@@ -640,7 +681,9 @@ describe("T-08-16 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's bo
     );
     await tapRow(3, { scenario: "bookingLimit" });
     const confirm = () =>
-      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" });
+      screen.getByRole("button", {
+        name: "ANUL·LA DILLUNS 3 A LES 18:50 I CONFIRMA DISSABTE 8 A LES 09:00",
+      });
     fireEvent.click(confirm());
     expect(await screen.findByRole("alert")).toHaveTextContent(IN_PROGRESS_TEXT);
     // Not the booking's answer: the member stays with the hold, and no notice goes to 04.

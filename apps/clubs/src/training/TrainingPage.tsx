@@ -109,7 +109,7 @@ function TrainingBar() {
  * Screen 08 «Entrenaments» (`/entrenaments`, S09 §2; the spec writes `/training`): the dogs with
  * the right (R-09-01, the default one selected), the api's days of the window (R-09-04), «Qualsevol»
  * and the rings open to training, the grid split at 14:00 club-local, the counter of the selected
- * day's training week (R-09-05) and [CONFIRMA …]. Every state comes from `GET /training-slots` and
+ * day's training week (R-09-05) and [CONFIRMA …]. Every state comes from `GET /me/training-slots` and
  * `GET /me/training-summary`: the front never computes a slot, a window, a week or an eligibility.
  */
 export function TrainingPage({ client }: { client: ApiClient }) {

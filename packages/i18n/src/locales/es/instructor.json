@@ -113,7 +113,11 @@
     },
     "headerLevelCode": "Nivel {code}",
     "lastClassFull": "{description} · {ring} · {instructor}",
-    "memberLink": "Abonado: {name}"
+    "memberLink": "Abonado: {name}",
+    "manageBookings": "Gestionar las reservas",
+    "bookingList": "Reservas del alumno",
+    "bookingOpenError": "No se ha podido abrir la sesión de reservas.",
+    "bookingPopupBlocked": "Permite que el navegador abra una pestaña nueva y vuelve a intentarlo."
   },
   "students": {
     "title": "Alumnos",

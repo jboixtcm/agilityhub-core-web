@@ -1,5 +1,8 @@
 {
   "appearance": {
+    "textSize": "Text size",
+    "normalText": "Normal",
+    "largeText": "Large",
     "label": "Appearance",
     "club": "Club theme",
     "light": "Light",

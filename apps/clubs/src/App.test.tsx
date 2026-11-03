@@ -799,7 +799,7 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     });
   });
 
-  it("2026-11-01: an explicit profile change keeps only both app profiles", async () => {
+  it("an administrator can explicitly open the separate portal from the profile chooser", async () => {
     mockScenario("multiProfile");
     const client = authClient();
     await client.login("estel.rius@example.test", "secret-password");
@@ -809,9 +809,11 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     fireEvent.click(await screen.findByRole("link", { name: /Canviar de perfil/u }));
     expect(await screen.findByRole("button", { name: /Com a instructora/u })).toBeEnabled();
     expect(screen.getByRole("button", { name: /Com a alumna/u })).toBeEnabled();
-    expect(screen.queryByRole("button", { name: /Com a administradora/u })).toBeNull();
-    expect(window.location.pathname).toBe("/perfil-acces");
     expect(assign).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /Obre el portal d’administració/u }));
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+    });
   });
 
   it("2026-11-01: ADMIN-only accounts stay here with an explanation, no app reads or profile grant", async () => {

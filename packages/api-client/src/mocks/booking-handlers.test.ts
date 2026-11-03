@@ -168,7 +168,7 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
     expect(single.classes.every((row) => row.price?.amountMinor === 1200)).toBe(true);
   });
 
-  it("POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details", async () => {
+  it("POST /seat-holds: a plain hold of 60 s from the api clock; each refused row with its code, status and details", async () => {
     mockScenario("member");
     const hold = await call("POST", "/seat-holds", {
       classSessionId: "class-2026-08-05-1850",
@@ -176,9 +176,9 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
     });
     expect(hold.status).toBe(201);
     const response = hold.body as SeatHoldResponse;
-    expect(Date.parse(response.expiresAt) - Date.parse(response.serverNow)).toBe(30_000);
+    expect(Date.parse(response.expiresAt) - Date.parse(response.serverNow)).toBe(60_000);
     expect(response).toMatchObject({
-      holdSeconds: 30,
+      holdSeconds: 60,
       limit: { count: 1, max: 2, reached: false, swappable: [] },
       payment: null,
     });

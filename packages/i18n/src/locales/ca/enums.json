@@ -135,7 +135,8 @@
   },
   "trainingOrigin": {
     "APP": "app",
-    "BACKOFFICE": "club"
+    "BACKOFFICE": "club",
+    "INSTRUCTOR": "instructor"
   },
   "ringBlockState": {
     "ACTIVE": "actiu",
@@ -362,7 +363,11 @@
     "PACK_EXPIRED": "caducitat del pack",
     "MIGRATED": "migració"
   },
-  "origin": { "APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema" },
+  "origin": {
+    "APP": "app",
+    "BACKOFFICE": "club",
+    "SYSTEM": "sistema"
+  },
   "memberDisplayStatus": {
     "INACTIVE_PERIOD": "inactiva",
     "INACTIVE_PERIOD_DATED": "inactiva fins {date}",
@@ -381,14 +386,22 @@
     "ADMIN": "pel club",
     "SYSTEM": "pel sistema"
   },
-  "courseDiscipline": { "AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Altres" },
+  "courseDiscipline": {
+    "AGILITY": "Agility",
+    "JUMPING": "Jumping",
+    "OTHER": "Altres"
+  },
   "courseSource": {
     "SMARTER": "Smarter",
     "EDITOR": "Editor",
     "IMAGE": "Plànol o foto",
     "AGILITYHUB_COPY": "Còpia de la biblioteca"
   },
-  "agilityhubLevel": { "EASY": "Fàcil", "MEDIUM": "Mitjà", "HARD": "Difícil" },
+  "agilityhubLevel": {
+    "EASY": "Fàcil",
+    "MEDIUM": "Mitjà",
+    "HARD": "Difícil"
+  },
   "setupKind": {
     "AGILITY": "Agility",
     "JUMPING": "Jumping",
@@ -396,7 +409,11 @@
     "OBSTACLE_DRILL": "Treball d'obstacle",
     "EMPTY": "Buida"
   },
-  "setupStatus": { "ACTIVE": "Muntat", "EXPIRED": "Caducat", "DISMANTLED": "Desmuntat" },
+  "setupStatus": {
+    "ACTIVE": "Muntat",
+    "EXPIRED": "Caducat",
+    "DISMANTLED": "Desmuntat"
+  },
   "obstacleType": {
     "Jump": "Salt",
     "DoubleJump": "Salt doble",
@@ -420,8 +437,17 @@
     "INDOOR": "Interior",
     "OTHER": "Altra"
   },
-  "doorFlow": { "IN": "entrada", "OUT": "sortida", "BOTH": "entrada i sortida" },
-  "doorSide": { "NORTH": "Nord", "SOUTH": "Sud", "EAST": "Est", "WEST": "Oest" },
+  "doorFlow": {
+    "IN": "entrada",
+    "OUT": "sortida",
+    "BOTH": "entrada i sortida"
+  },
+  "doorSide": {
+    "NORTH": "Nord",
+    "SOUTH": "Sud",
+    "EAST": "Est",
+    "WEST": "Oest"
+  },
   "courseWarningRule": {
     "outside-ring": "Fora de la pista",
     "border-clearance": "Marge al perímetre",

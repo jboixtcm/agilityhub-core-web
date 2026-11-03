@@ -122,7 +122,12 @@ function accessibleDogIds(current: MockScenarioDefinition): string[] {
 function memberIdentity(current: MockScenarioDefinition) {
   return {
     impersonatedBy: current.me.impersonation?.actorName ?? null,
-    origin: isImpersonation(current) ? ("BACKOFFICE" as const) : ("APP" as const),
+    origin:
+      current.me.impersonation?.bookingsOnly === true
+        ? ("INSTRUCTOR" as const)
+        : isImpersonation(current)
+          ? ("BACKOFFICE" as const)
+          : ("APP" as const),
   };
 }
 
@@ -137,7 +142,11 @@ function bookingProblem(
   now: number,
 ): { response: Response } | { ringId: string } {
   const fail = (response: Response) => ({ response });
-  if (body.override !== null && body.override !== undefined && !isImpersonation(current)) {
+  if (
+    body.override !== null &&
+    body.override !== undefined &&
+    (!isImpersonation(current) || current.me.impersonation?.bookingsOnly === true)
+  ) {
     return fail(apiError("OVERRIDE_NOT_ALLOWED", "Override needs impersonation", 403));
   }
   const startsAt = Date.parse(body.startsAt);
@@ -347,7 +356,7 @@ export const trainingHandlers = [
       }),
     );
   }),
-  http.get("*/api/v1/training-slots", ({ request }) => {
+  http.get(/\/api\/v1\/(?:me\/)?training-slots$/u, ({ request }) => {
     const current = scenario();
     const off = moduleOff(current);
     if (off !== undefined) return off;
@@ -356,10 +365,10 @@ export const trainingHandlers = [
     const to = url.searchParams.get("to");
     if (!isPlainDate(from)) return validationError("from");
     if (!isPlainDate(to) || to < from) return validationError("to");
-    const staff = isStaff(current);
+    const staff = !url.pathname.endsWith("/me/training-slots") && isStaff(current);
     if (!staff && !isMember(current)) return apiError("FORBIDDEN", "Forbidden", 403);
     // Staff: at most 31 days; a member's interval is cut to the window (R-09-04).
-    if (staff && daysBetween(from, to) > 31) return validationError("to", "RANGE");
+    if (staff && daysBetween(from, to) >= 31) return validationError("to", "RANGE");
     const dogId = url.searchParams.get("dogId");
     if (
       dogId !== null &&
@@ -462,7 +471,14 @@ export const trainingHandlers = [
     const body = (await request.json().catch(() => ({}))) as TrainingCancellationRequest;
     const reason = body.reason?.trim() ?? "";
     const late = now > Date.parse(cancellableUntilOf(booking));
-    if (late && !(isImpersonation(current) && reason !== "")) {
+    if (
+      late &&
+      !(
+        isImpersonation(current) &&
+        current.me.impersonation?.bookingsOnly !== true &&
+        reason !== ""
+      )
+    ) {
       const minutesBefore = Math.floor((Date.parse(startsAtOf(booking)) - now) / 60_000);
       return apiError("TRAINING_CANCEL_TOO_LATE", "Too late to cancel", 422, {
         minutesBefore,

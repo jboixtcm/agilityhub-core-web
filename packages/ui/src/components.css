@@ -701,6 +701,17 @@
   background: var(--ah-color-primary);
 }
 
+:root.ah-large-text {
+  font-size: 125%;
+}
+
+.ah-text-size {
+  display: flex;
+  gap: var(--ah-space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
 .ah-appearance select {
   max-width: 8.5rem;
   min-height: 2.25rem;

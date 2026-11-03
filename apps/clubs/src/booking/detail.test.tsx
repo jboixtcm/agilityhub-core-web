@@ -52,6 +52,20 @@ function cardDot(title: HTMLElement) {
 }
 
 describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10)", () => {
+  it("lets the member finish payment for an existing pending reservation", async () => {
+    const checkout = "https://checkout.example.test/reservation";
+    rewrite("/bookings/booking-duna-mon3", (body) => {
+      body.state = "PAYMENT_PENDING";
+      body.displayState = "PAYMENT_PENDING";
+      body.checkoutUrl = checkout;
+    });
+    await openBooking();
+    expect(screen.getByRole("link", { name: "Completa el pagament" })).toHaveAttribute(
+      "href",
+      checkout,
+    );
+  });
+
   it("E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions", async () => {
     const reads = rewrite("/bookings/booking-duna-mon3", (body) => {
       if (reads.calls === 1) {
@@ -150,7 +164,9 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     fireEvent.click(within(limitRow ?? document.body).getByRole("button"));
     fireEvent.click(await screen.findByRole("radio", { name: /^Divendres 7/u }));
     fireEvent.click(
-      screen.getByRole("button", { name: "ANUL·LA DIVENDRES 7 I CONFIRMA DISSABTE 8" }),
+      screen.getByRole("button", {
+        name: "ANUL·LA DIVENDRES 7 A LES 20:00 I CONFIRMA DISSABTE 8 A LES 09:00",
+      }),
     );
     await screen.findByText("Reserva confirmada. Afegeix-la al calendari:");
     cleanup();

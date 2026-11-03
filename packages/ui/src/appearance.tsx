@@ -52,8 +52,26 @@ export function withAppearance(
   };
 }
 
+function compactLayout() {
+  return (window as Partial<Window>).matchMedia?.("(max-width: 767px)");
+}
+
+function textSizeKey(clubKey: string, layout = compactLayout()) {
+  return clubKey + (layout?.matches ? ":text:mobile" : ":text:desktop");
+}
+
+function readLargeText(key: string) {
+  try {
+    return localStorage.getItem(key) === "large";
+  } catch {
+    return false;
+  }
+}
+
 const AppearanceContext = createContext<
   | {
+      largeText: boolean;
+      setLargeText: (large: boolean) => void;
       value: Appearance;
       change: (value: Appearance) => void;
     }
@@ -64,6 +82,36 @@ function AppearanceState({ branding, children }: { branding: Branding; children:
   const [preference, setPreference] = useState(() => readAppearance(branding));
   const [dark, setDark] = useState(prefersDarkScheme);
   const key = storageKey(branding);
+  const [largeText, setLargeText] = useState(() => readLargeText(textSizeKey(key)));
+  useEffect(() => {
+    const layout = compactLayout();
+    const refresh = () => {
+      setLargeText(readLargeText(textSizeKey(key, layout)));
+    };
+    layout?.addEventListener("change", refresh);
+    const stored = (event: StorageEvent) => {
+      if (event.key === null || event.key === textSizeKey(key, layout)) refresh();
+    };
+    window.addEventListener("storage", stored);
+    return () => {
+      layout?.removeEventListener("change", refresh);
+      window.removeEventListener("storage", stored);
+    };
+  }, [key]);
+  useEffect(() => {
+    document.documentElement.classList.toggle("ah-large-text", largeText);
+    return () => {
+      document.documentElement.classList.remove("ah-large-text");
+    };
+  }, [largeText]);
+  const changeText = (large: boolean) => {
+    setLargeText(large);
+    try {
+      localStorage.setItem(textSizeKey(key), large ? "large" : "normal");
+    } catch {
+      /* The preference still applies to this view. */
+    }
+  };
   useEffect(() => {
     const match = (window as Partial<Window>).matchMedia;
     const query =
@@ -90,7 +138,9 @@ function AppearanceState({ branding, children }: { branding: Branding; children:
     }
   };
   return (
-    <AppearanceContext.Provider value={{ value: preference, change }}>
+    <AppearanceContext.Provider
+      value={{ value: preference, change, largeText, setLargeText: changeText }}
+    >
       <BrandingProvider branding={withAppearance(branding, preference, dark)}>
         {children}
       </BrandingProvider>
@@ -118,6 +168,33 @@ export function AppearanceSelector({
         <option value="light">{labels.light}</option>
         <option value="dark">{labels.dark}</option>
         <option value="auto">{labels.auto}</option>
+      </select>
+    </label>
+  );
+}
+
+export function TextSizeSelector({
+  label,
+  normal,
+  large,
+}: {
+  label: string;
+  normal: string;
+  large: string;
+}) {
+  const context = useContext(AppearanceContext);
+  if (context === undefined) return null;
+  return (
+    <label className="ah-appearance ah-text-size">
+      <span>{label}</span>
+      <select
+        value={context.largeText ? "large" : "normal"}
+        onChange={(event) => {
+          context.setLargeText(event.currentTarget.value === "large");
+        }}
+      >
+        <option value="normal">{normal}</option>
+        <option value="large">{large}</option>
       </select>
     </label>
   );

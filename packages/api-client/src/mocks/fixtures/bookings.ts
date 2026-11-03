@@ -415,6 +415,7 @@ export function nextBookingId(prefix: string): string {
 }
 
 export interface BookingOptions {
+  delegated?: boolean;
   locale: string;
   modules: readonly string[];
   now: number;
@@ -860,7 +861,7 @@ function rowState(
 ): BookableClass["state"] {
   if (row.state === "NOT_BOOKABLE" || row.state === "NOT_YET_OPEN" || row.state === "PACK_EMPTY")
     return row.state;
-  if (limitRefuses(dogId, week, options)) return "WEEKLY_LIMIT_DONE";
+  if (!options.delegated && limitRefuses(dogId, week, options)) return "WEEKLY_LIMIT_DONE";
   if (
     !options.modules.includes("WAITLIST") &&
     (row.state === "WAITLIST_OPEN" || row.state === "WAITLIST_FULL")
@@ -1065,7 +1066,7 @@ export function limitReachedDetails(
   };
 }
 
-/** `SeatHoldResponse` (R-08-07): `serverNow` and `expiresAt` from the api clock, 30 s apart. */
+/** `SeatHoldResponse` (R-08-07): `serverNow` and `expiresAt` from the api clock, 60 s apart. */
 export function seatHoldResponse(
   hold: StoredHold,
   options: BookingOptions,
@@ -1089,7 +1090,7 @@ export function seatHoldResponse(
     dog: { id: dog.id, name: dog.name, sex: dog.sex },
     dogId: dog.id,
     expiresAt: new Date(hold.expiresAt).toISOString(),
-    holdSeconds: 30,
+    holdSeconds: 60,
     id: hold.id,
     limit,
     pack: pack === null ? null : { available: pack.available, expiresOn: pack.expiresOn },
@@ -1116,7 +1117,7 @@ export function createHold(
   const hold: StoredHold = {
     classSessionId,
     dogId,
-    expiresAt: options.now + 30_000,
+    expiresAt: options.now + 60_000,
     id: nextBookingId("hold"),
     limitReached: limit?.reached ?? false,
     swappable: limit?.swappable.map((option) => option.bookingId) ?? [],

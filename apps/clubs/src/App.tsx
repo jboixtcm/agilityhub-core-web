@@ -16,6 +16,8 @@ import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import { clubsNamespaces } from "@agilityhub/i18n/clubs";
 import {
   AppearanceSelector,
+  BrandingProvider,
+  TextSizeSelector,
   Avatar,
   Button,
   Card,
@@ -100,6 +102,9 @@ const BookingDetailPage = lazy(() =>
 );
 const BookPage = lazy(() => screens().then((module) => ({ default: module.BookPage })));
 const ConfirmPage = lazy(() => screens().then((module) => ({ default: module.ConfirmPage })));
+const BookingDeskHome = lazy(() =>
+  screens().then((module) => ({ default: module.BookingDeskHome })),
+);
 const HomePage = lazy(() => screens().then((module) => ({ default: module.HomePage })));
 const WaitlistDetailPage = lazy(() =>
   screens().then((module) => ({ default: module.WaitlistDetailPage })),
@@ -324,6 +329,22 @@ const SELF_ROUTED_PATHS: readonly string[] = [
  */
 function strayLanding(session: SessionSnapshot, pathname: string): string | undefined {
   const { me } = session;
+  if (session.status === "signedIn" && me?.impersonation?.bookingsOnly === true) {
+    if (pathname === "/entrar" || pathname === "/login") return undefined;
+    const path = currentRoute(pathname)?.path;
+    return path !== undefined &&
+      [
+        "/inici",
+        "/reservar",
+        "/reservar/confirmar",
+        "/reserves/:id",
+        "/espera/:id",
+        "/entrenaments",
+        "/entrenaments/:id",
+      ].includes(path)
+      ? undefined
+      : "/inici";
+  }
   if (session.status !== "signedIn" || me === null || me.impersonation !== undefined) {
     return undefined;
   }
@@ -532,6 +553,39 @@ function ImpersonationExpiredPage() {
   );
 }
 
+function BookingDeskFrame({
+  authClient,
+  children,
+}: {
+  authClient: AuthClient;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation(["shell", "instructor"]);
+  const branding = useBranding();
+  return (
+    <main className="booking-desk">
+      <ImpersonationBanner authClient={authClient} />
+      <nav className="booking-desk__nav" aria-label={t("instructor:card.manageBookings")}>
+        <a href="/inici">{t("instructor:card.bookingList")}</a>
+        <a href="/reservar">{t("shell:nav.reserve")}</a>
+        {branding.modules.includes("FREE_TRAINING") ? (
+          <a href="/entrenaments">{t("shell:nav.training")}</a>
+        ) : null}
+      </nav>
+      <BrandingProvider
+        branding={{
+          ...branding,
+          modules: branding.modules.filter(
+            (module) => module !== "ACTIVITIES" && module !== "COURSES",
+          ),
+        }}
+      >
+        <ScreenBoundary>{children}</ScreenBoundary>
+      </BrandingProvider>
+    </main>
+  );
+}
+
 function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   const { me } = useSession();
   const { t } = useTranslation("auth");
@@ -542,7 +596,11 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   return (
     <div className="impersonation-banner" role="status">
       {/* The member the admin opened (ruling E73), not the account: a family group's differ. */}
-      <span>{t("auth:impersonation.banner", { member: me.impersonation.memberName })}</span>
+      <span>
+        {me.impersonation.bookingsOnly === true
+          ? t("auth:impersonation.bookingBanner", { member: me.impersonation.memberName })
+          : t("auth:impersonation.banner", { member: me.impersonation.memberName })}
+      </span>
       <button
         disabled={pending}
         onClick={() => {
@@ -1233,6 +1291,15 @@ function roleCopy(role: Role, gender: IcuGender, t: ReturnType<typeof useTransla
  */
 const PROFILE_CHANGE_STATE = { profileChange: true } as const;
 
+function hasAdminPortal(me: CurrentMe) {
+  return (
+    me.impersonation === undefined &&
+    me.support === undefined &&
+    appProfiles(me).length > 0 &&
+    me.membership.roles.includes("ADMIN")
+  );
+}
+
 function ProfileChoicePage({
   authClient,
   navigate,
@@ -1248,7 +1315,10 @@ function ProfileChoicePage({
   if (me === null || !isCurrentClubMe(me)) {
     return null;
   }
-  const roles = profileRoles(me);
+  const explicit =
+    (window.history.state as { profileChange?: boolean } | null)?.profileChange === true;
+  const roles: readonly Role[] =
+    explicit && hasAdminPortal(me) ? [...profileRoles(me), "ADMIN"] : profileRoles(me);
   const gender = icuGender(me.membership.gender);
 
   if (roles.length === 0) {
@@ -1261,6 +1331,11 @@ function ProfileChoicePage({
     setError(false);
     try {
       await authClient.updateProfile(role, remember);
+      if (role === "ADMIN") {
+        const handoff = await authClient.createHandoff("clubs-admin");
+        window.location.assign(handoff.url);
+        return;
+      }
       navigate(takeReturnPath() ?? profileLanding(role, me.membership.roles));
     } catch {
       setError(true);
@@ -1288,7 +1363,13 @@ function ProfileChoicePage({
               >
                 <Icon aria-hidden="true" name={copy.icon} />
                 <span>
-                  <strong>{pending === role ? t("auth:profileChoice.saving") : copy.label}</strong>
+                  <strong>
+                    {pending === role
+                      ? t("auth:profileChoice.saving")
+                      : role === "ADMIN"
+                        ? t("auth:profileChoice.openAdminPortal")
+                        : copy.label}
+                  </strong>
                   <small>{copy.description}</small>
                 </span>
                 <Icon aria-hidden="true" name="chev" />
@@ -1512,7 +1593,7 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             <Icon aria-hidden="true" name="chev" />
           </button>
         )}
-        {profiles.length > 1 ? (
+        {!impersonated && (profiles.length > 1 || (profiles.length > 0 && hasAdminPortal(me))) ? (
           <a
             href="/perfil-acces"
             onClick={(event) => {
@@ -1551,6 +1632,11 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             }}
           />
         </div>
+        <TextSizeSelector
+          label={t("shell:appearance.textSize")}
+          normal={t("shell:appearance.normalText")}
+          large={t("shell:appearance.largeText")}
+        />
         {impersonated ? null : (
           <div className="profile-language-card">
             <label className="profile-language">
@@ -1826,6 +1912,7 @@ function AppContent({
   ) {
     return <ImpersonationExpiredPage />;
   }
+  if (strayTarget !== undefined && session.me?.impersonation?.bookingsOnly === true) return null;
   if (pathname === "/acces") {
     return <LegacyAccessRedirect />;
   }
@@ -2116,12 +2203,19 @@ function AppContent({
     ) : pathname === "/inici" ? (
       // Screen 03 (S08 §2): «Les meves reserves» of `/me/home`, with E4-W04's activity rows.
       <RequireAuth>
-        <HomePage client={apiClient} />
+        {session.me?.impersonation?.bookingsOnly === true ? (
+          <BookingDeskHome client={apiClient} />
+        ) : (
+          <HomePage client={apiClient} />
+        )}
       </RequireAuth>
     ) : (
       routePlaceholder(route)
     );
 
+  if (session.me?.impersonation?.bookingsOnly === true) {
+    return <BookingDeskFrame authClient={authClient}>{content}</BookingDeskFrame>;
+  }
   return route.public === true ? (
     content
   ) : (

@@ -1,5 +1,8 @@
 {
   "appearance": {
+    "textSize": "Tamaño del texto",
+    "normalText": "Normal",
+    "largeText": "Grande",
     "label": "Apariencia",
     "club": "Tema del club",
     "light": "Claro",

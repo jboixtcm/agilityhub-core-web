@@ -57,7 +57,8 @@
     "swappable": "{ring, select, none {Clase {description} · anulable dentro de plazo} other {Clase {description} · {ring} · anulable dentro de plazo}}",
     "notSelectableDONE": "Clase {description} · ya hecha — no se puede seleccionar",
     "notSelectableLATE_WINDOW": "Clase {description} · fuera de plazo — no se puede seleccionar",
-    "swapButton": "ANULAR {oldDay} Y CONFIRMAR {newDay}",
+    "overrideWeeklyLimit": "Superar el límite y confirmar sin anular ninguna clase",
+    "swapButton": "ANULAR {oldDay} A LAS {oldTime} Y CONFIRMAR {newDay} A LAS {newTime}",
     "cancelNew": "CANCELAR LA NUEVA RESERVA",
     "limitDone": "{unit, select, DOG {{week, select, NEXT {La semana que viene ya tienes {count, plural, one {una clase} =2 {dos clases} other {# clases}} con {dogArticle}{dogName}.} other {Esta semana ya has hecho {count, plural, one {una clase} =2 {dos clases} other {# clases}} con {dogArticle}{dogName}.}}} other {{week, select, NEXT {La semana que viene ya tienes {count, plural, one {una clase} =2 {dos clases} other {# clases}}.} other {Esta semana ya has hecho {count, plural, one {una clase} =2 {dos clases} other {# clases}}.}}}}",
     "limitNoneNextWeek": "Todavía no puedes reservar clases de la semana que viene.",
@@ -78,7 +79,9 @@
     "countedClasses": "Clases que cuentan en el límite semanal",
     "countedLate": "Anulada tarde · cuenta como realizada",
     "countedDone": "Cuenta como realizada",
-    "countedReserved": "Reservada · cuenta en el límite"
+    "countedReserved": "Reservada · cuenta en el límite",
+    "awaitMemberPayment": "La reserva está pendiente de pago. El alumno puede pagarla desde su app.",
+    "memberPays": "El alumno deberá pagar {price} desde su app."
   },
   "detail": {
     "title": "Detalle de la reserva",
@@ -101,6 +104,7 @@
     "error": "No se ha podido cargar la reserva.",
     "retry": "Volver a intentarlo",
     "notFound": "Esta reserva no existe o ya no es accesible.",
-    "inTimeNotice": "Si cancelas ahora, la clase no contará como realizada: recuperarás la disponibilidad del límite semanal o el saldo del bono, según tu modalidad."
+    "inTimeNotice": "Si cancelas ahora, la clase no contará como realizada: recuperarás la disponibilidad del límite semanal o el saldo del bono, según tu modalidad.",
+    "completePayment": "Completar el pago"
   }
 }

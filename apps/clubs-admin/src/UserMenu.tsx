@@ -1,6 +1,6 @@
 import { type AuthClient, type Role, useSession } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
-import { Icon, useBranding } from "@agilityhub/ui";
+import { Icon, TextSizeSelector, useBranding } from "@agilityhub/ui";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -180,6 +180,11 @@ export function UserMenu({ authClient }: { authClient: AuthClient }) {
             </p>
           )}
           <LanguageSelector authClient={authClient} />
+          <TextSizeSelector
+            label={t("shell:appearance.textSize")}
+            normal={t("shell:appearance.normalText")}
+            large={t("shell:appearance.largeText")}
+          />
           {choosingProfile && canChangeProfile ? (
             <div
               className="admin-user-menu__items"

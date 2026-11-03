@@ -1,5 +1,8 @@
 {
   "appearance": {
+    "textSize": "Mida del text",
+    "normalText": "Normal",
+    "largeText": "Gran",
     "label": "Aparença",
     "club": "Tema del club",
     "light": "Clar",

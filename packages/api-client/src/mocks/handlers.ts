@@ -1465,10 +1465,10 @@ function consumeResetPasswordMark(): boolean {
   return valid;
 }
 
-function mockImpersonationTokens() {
+function mockImpersonationTokens(bookingsOnly = false) {
   // R-01-09: the impersonation JWT, `auth.impersonationMinutes` = 60, and no refresh token.
   return {
-    access_token: "mock-impersonation-token",
+    access_token: bookingsOnly ? "mock-booking-session" : "mock-impersonation-token",
     expires_in: 3600,
     scope: "openid profile",
     token_type: "Bearer",
@@ -1553,8 +1553,10 @@ function adminRouteRefusal() {
  * its handler goes on.
  */
 function erasedMemberRefusal(memberId: string) {
-  const refused = adminRouteRefusal();
-  if (refused !== undefined) return refused;
+  return adminRouteRefusal() ?? missingOrErasedMember(memberId);
+}
+
+function missingOrErasedMember(memberId: string) {
   if (!callerClubOwnsTheWorld()) return apiError("NOT_FOUND", "Member not found", 404);
   return memberId === ERASED_MEMBER_ID
     ? apiError("MEMBER_ERASED", "Member erased", 409)
@@ -1727,6 +1729,10 @@ export const handlers = [
       // S17 R-17-10: a support access answers an ADMIN membership without a member and
       // `support {actorName, expiresAt}` for the banner.
       return HttpResponse.json(supportMe(supportExpiry()));
+    }
+    if (request.headers.get("Authorization") === "Bearer mock-booking-session") {
+      mockScenario("instructorBookings");
+      return HttpResponse.json(currentMockScenario().me);
     }
     if (
       request.headers.get("Authorization") === "Bearer mock-impersonation-token" &&
@@ -2730,7 +2736,9 @@ export const handlers = [
       if (refusedOnProductHost) return apiError("PLATFORM_ONLY", "Platform accounts only", 403);
       if (token.startsWith(IMPERSONATION_HANDOFF_PREFIX)) {
         redeemHandoff(token);
-        return HttpResponse.json(mockImpersonationTokens());
+        return HttpResponse.json(
+          mockImpersonationTokens(token.startsWith(IMPERSONATION_HANDOFF_PREFIX + "bookings-")),
+        );
       }
       return HttpResponse.json(mockTokens());
     }
@@ -3379,17 +3387,29 @@ export const handlers = [
   }),
   http.post("*/api/v1/members/:id/impersonation-token", async ({ params, request }) => {
     // S01 R-01-09 and the snapshot: an impersonation token is 403, an erased member 409 MEMBER_ERASED.
-    const erased = erasedMemberRefusal(String(params.id));
-    if (erased !== undefined) return erased;
-    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
-      return apiError("NOT_FOUND", "Member not found", 404);
+    const body = (await request.json()) as { bookingsOnly?: boolean };
+    const me = currentMockScenario().me;
+    if (body.bookingsOnly === true) {
+      if (me.impersonation !== undefined || me.membership?.roles.includes("INSTRUCTOR") !== true)
+        return apiError("IMPERSONATION_DENIED", "Forbidden", 403);
+    } else {
+      const denied = adminRouteRefusal();
+      if (denied !== undefined) return denied;
     }
-    await request.json();
+    const erased = missingOrErasedMember(String(params.id));
+    if (erased !== undefined) return erased;
+    if (String(params.id) !== censusRecordState.memberOverview.member.id)
+      return apiError("NOT_FOUND", "Member not found", 404);
+    const issued = issueImpersonationHandoff();
+    const code =
+      body.bookingsOnly === true
+        ? issued.replace(IMPERSONATION_HANDOFF_PREFIX, IMPERSONATION_HANDOFF_PREFIX + "bookings-")
+        : issued;
     return HttpResponse.json(
       {
         expiresAt: "2026-09-06T16:00:00Z",
-        launchUrl: `${CLUBS_APP_ORIGIN}/entrar?handoff=${issueImpersonationHandoff()}`,
-        token: "mock-impersonation-token",
+        launchUrl: `${CLUBS_APP_ORIGIN}/entrar?handoff=${code}`,
+        token: body.bookingsOnly === true ? "mock-booking-session" : "mock-impersonation-token",
       },
       { status: 201 },
     );
@@ -3593,7 +3613,8 @@ export const handlers = [
         // its own values until the validation (D2 re-reads the view for the submitted ones).
         reused.changedFields = dogReadmissionChanges(reused.current, signupDog);
         return HttpResponse.json({
-          birthDate: reused.current.birthDate ?? `${reused.current.birthMonth ?? signupDog.birthMonth}-01`,
+          birthDate:
+            reused.current.birthDate ?? `${reused.current.birthMonth ?? signupDog.birthMonth}-01`,
           breed: reused.current.breed ?? signupDog.breed,
           chip: signupDog.chip,
           id: signupDog.id,

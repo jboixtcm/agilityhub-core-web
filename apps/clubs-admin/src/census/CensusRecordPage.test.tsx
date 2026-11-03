@@ -416,11 +416,10 @@ describe("T-03-39 D10 member record", () => {
 
 describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl", () => {
   function recordOpens() {
-    const spy = vi.spyOn(window, "open").mockImplementation(() => null);
+    const tab = { opener: window, location: { replace: vi.fn() }, close: vi.fn() };
+    const spy = vi.spyOn(window, "open").mockReturnValue(tab as unknown as Window);
     return {
-      get opened() {
-        return spy.mock.calls;
-      },
+      tab,
       restore: () => {
         spy.mockRestore();
       },
@@ -430,6 +429,7 @@ describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the 
   async function impersonate() {
     await renderRecord("member");
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    fireEvent.click(screen.getByRole("tab", { name: "Auditoria" }));
     fireEvent.click(screen.getByRole("button", { name: "Entra com l'abonat" }));
     const dialog = screen.getByRole("dialog", { name: "Entra com l'abonat" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Entra com l'abonat" }));
@@ -441,14 +441,11 @@ describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the 
     await impersonate();
 
     await waitFor(() => {
-      expect(opens.opened).toHaveLength(1);
+      expect(opens.tab.location.replace).toHaveBeenCalledWith(
+        "http://127.0.0.1:4173/entrar?handoff=mock-impersonation-handoff-1",
+      );
     });
-    expect(opens.opened[0]).toEqual([
-      "http://127.0.0.1:4173/entrar?handoff=mock-impersonation-handoff-1",
-      "_blank",
-      "noopener,noreferrer",
-    ]);
-    expect(String(opens.opened[0]?.[0])).not.toContain("mock-impersonation-token");
+    expect(opens.tab.opener).toBeNull();
     expect(window.location.hash).toBe("");
     opens.restore();
   });
@@ -468,7 +465,8 @@ describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the 
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "No s'ha pogut completar l'acció.",
     );
-    expect(opens.opened).toEqual([]);
+    expect(opens.tab.location.replace).not.toHaveBeenCalled();
+    expect(opens.tab.close).toHaveBeenCalled();
     opens.restore();
   });
 });
@@ -735,7 +733,6 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
       method: "post",
       name: "«Entra com l'abonat» (POST /members/{id}/impersonation-token)",
       path: "/members/:id/impersonation-token",
-      // A started impersonation would open the club app (`window.open`): it never does.
       send: () => {
         headerAction("Entra com l'abonat");
         const dialog = screen.getByRole("dialog", { name: "Entra com l'abonat" });
@@ -763,7 +760,8 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
   for (const action of actions) {
     it(`E7-W07 step 3 (S14 §5, T-14-19): ${action.name} on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved`, async () => {
       mockScenario("admin");
-      const opened = vi.spyOn(window, "open").mockImplementation(() => null);
+      const tab = { opener: window, location: { replace: vi.fn() }, close: vi.fn() };
+      const opened = vi.spyOn(window, "open").mockReturnValue(tab as unknown as Window);
       let calls = 0;
       // The member was erased after D10 read the record: the api refuses the change (S14 §5).
       server.use(
@@ -806,7 +804,9 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
         expectNoChangeOffered();
         // E11-W01 round 2 #6: the «suprimit» badge follows the same `erased` as the actions.
         expect(screen.getByText("suprimit")).toBeVisible();
-        expect(opened).not.toHaveBeenCalled();
+        expect(tab.location.replace).not.toHaveBeenCalled();
+        if (action.path.endsWith("/impersonation-token")) expect(tab.close).toHaveBeenCalledOnce();
+        else expect(opened).not.toHaveBeenCalled();
         expect(calls).toBe(1);
       } finally {
         opened.mockRestore();

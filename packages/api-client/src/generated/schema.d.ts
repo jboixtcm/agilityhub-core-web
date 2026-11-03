@@ -3819,6 +3819,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/me/training-slots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * memberTrainingSlots
+         * @description Member booking grid for an accessible dog, clipped to the club booking window. Accounts with additional staff roles see the same member projection.
+         */
+        get: operations["memberTrainingSlots"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/me/training-summary": {
         parameters: {
             query?: never;
@@ -4110,7 +4130,7 @@ export interface paths {
         put?: never;
         /**
          * Create a non-refreshable member impersonation token
-         * @description ADMIN of the same club, never an impersonated token. R-01-09. Access expires per auth.impersonationMinutes; no refresh token is issued. launchUrl = https://{club app host}/entrar?handoff=<code>: a one-shot handoff code valid 60 s, bound to this grant; the club app redeems it once with POST /oauth2/token grant_type=urn:agilityhub:grant:handoff, client_id=clubs-app, into this grant's JWT (no refresh token, no cookie). The JWT never travels in a URL (rulings E17/E47). token and expiresAt stay for API clients.
+         * @description ADMIN of the same club, or INSTRUCTOR with bookingsOnly=true for a reservations-only session. Never a borrowed token. R-01-09. Access expires per auth.impersonationMinutes; no refresh token is issued. launchUrl = https://{club app host}/entrar?handoff=<code>: a one-shot handoff code valid 60 s, bound to this grant; the club app redeems it once with POST /oauth2/token grant_type=urn:agilityhub:grant:handoff, client_id=clubs-app, into this grant's JWT (no refresh token, no cookie). The JWT never travels in a URL (rulings E17/E47). token and expiresAt stay for API clients.
          */
         post: operations["impersonation"];
         delete?: never;
@@ -8360,6 +8380,8 @@ export interface components {
             state?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
         };
         BookingRequest: {
+            /** @description Explicit confirmation of a weekly-limit exception by an administrator acting for the member */
+            overrideWeeklyLimit?: boolean;
             seatHoldId: string;
             /** @description Booking to cancel in the same transaction (R-08-09) */
             swapBookingId?: string | null;
@@ -9125,6 +9147,8 @@ export interface components {
         /** @enum {string} */
         CheckoutStatus: "PENDING" | "PAID" | "EXPIRED";
         ClaimRequest: {
+            /** @description Explicit confirmation of a weekly-limit exception by an administrator acting for the member */
+            overrideWeeklyLimit?: boolean;
             seatHoldId: string;
             swapBookingId?: string | null;
         };
@@ -11095,10 +11119,14 @@ export interface components {
         };
         Impersonation: {
             actorName: string;
+            /** @description Only booking operations are permitted */
+            bookingsOnly?: boolean;
             /** @description The impersonated member's display name as D10 shows it, first name and last names, for the banner «Estàs veient l'app com {nom}»; not the account's name, which in a family group is another person's (E5-T29) */
             memberName: string;
         };
         ImpersonationRequest: {
+            /** @description Request an instructor booking-only session for this member */
+            bookingsOnly?: boolean;
             reason?: string;
         };
         ImpersonationTokenResponse: {
@@ -16220,7 +16248,7 @@ export interface components {
             impersonation?: components["schemas"]["TrainingImpersonation"] | null;
             memberId: string;
             /** @enum {string} */
-            origin: "APP" | "BACKOFFICE";
+            origin: "APP" | "BACKOFFICE" | "INSTRUCTOR";
             ringId: string;
             ringName: string;
             slotId: string;
@@ -16260,7 +16288,7 @@ export interface components {
              */
             memberNumber?: number | null;
             /** @enum {string} */
-            origin?: "APP" | "BACKOFFICE";
+            origin?: "APP" | "BACKOFFICE" | "INSTRUCTOR";
             ringId?: string;
             ringName?: string;
             /** Format: date-time */
@@ -22938,7 +22966,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description OVERRIDE_NOT_ALLOWED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -44819,6 +44847,131 @@ export interface operations {
                 };
             };
             /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    memberTrainingSlots: {
+        parameters: {
+            query: {
+                from: string;
+                to: string;
+                dogId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description TrainingSlots */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrainingSlots"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED, DOG_NOT_ACCESSIBLE */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -67819,7 +67972,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description OVERRIDE_NOT_ALLOWED */
             403: {
                 headers: {
                     [name: string]: unknown;

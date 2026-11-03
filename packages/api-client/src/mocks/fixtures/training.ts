@@ -92,7 +92,7 @@ export interface StoredTraining {
   impersonatedBy?: string | null;
   memberId: string;
   memberName: string;
-  origin: "APP" | "BACKOFFICE";
+  origin: "APP" | "BACKOFFICE" | "INSTRUCTOR";
   ringId: string;
   start: string;
   state: TrainingBooking["state"];

@@ -57,7 +57,8 @@
     "swappable": "{ring, select, none {{description} class · can be cancelled in time} other {{description} class · {ring} · can be cancelled in time}}",
     "notSelectableDONE": "{description} class · already done — cannot be selected",
     "notSelectableLATE_WINDOW": "{description} class · too late to cancel — cannot be selected",
-    "swapButton": "CANCEL {oldDay} AND BOOK {newDay}",
+    "overrideWeeklyLimit": "Exceed the limit and book without cancelling a class",
+    "swapButton": "CANCEL {oldDay} AT {oldTime} AND BOOK {newDay} AT {newTime}",
     "cancelNew": "CANCEL THE NEW BOOKING",
     "limitDone": "{unit, select, DOG {{week, select, NEXT {Next week you already have {count, plural, one {one class} =2 {two classes} other {# classes}} with {dogArticle}{dogName}.} other {This week you have already done {count, plural, one {one class} =2 {two classes} other {# classes}} with {dogArticle}{dogName}.}}} other {{week, select, NEXT {Next week you already have {count, plural, one {one class} =2 {two classes} other {# classes}}.} other {This week you have already done {count, plural, one {one class} =2 {two classes} other {# classes}}.}}}}",
     "limitNoneNextWeek": "You cannot book classes for next week yet.",
@@ -78,7 +79,9 @@
     "countedClasses": "Classes counted towards the weekly limit",
     "countedLate": "Cancelled late · counts as taken",
     "countedDone": "Counts as taken",
-    "countedReserved": "Booked · counts towards the limit"
+    "countedReserved": "Booked · counts towards the limit",
+    "awaitMemberPayment": "Payment is pending. The student can pay from their app.",
+    "memberPays": "The student will need to pay {price} from their app."
   },
   "detail": {
     "title": "Booking details",
@@ -101,6 +104,7 @@
     "error": "The booking could not be loaded.",
     "retry": "Try again",
     "notFound": "This booking does not exist or is no longer available.",
-    "inTimeNotice": "If you cancel now, the class will not count as attended: you will recover your weekly allowance or pack credit, depending on your plan."
+    "inTimeNotice": "If you cancel now, the class will not count as attended: you will recover your weekly allowance or pack credit, depending on your plan.",
+    "completePayment": "Complete payment"
   }
 }
