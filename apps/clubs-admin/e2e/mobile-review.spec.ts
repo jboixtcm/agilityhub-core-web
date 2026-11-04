@@ -261,8 +261,19 @@ for (const theme of ["light", "dark"]) {
     await expect(page.getByPlaceholder("Cerca un alumne")).toHaveValue("");
     await expect(page.getByRole("combobox", { name: "Nivell", exact: true })).toHaveValue("");
     await expect(page.getByRole("combobox", { name: "Estat", exact: true })).toHaveValue("ACTIVE");
+    const finalSearch = page.waitForResponse((response) => {
+      const url = new URL(response.url());
+      const filters = url.searchParams.getAll("filter");
+      return (
+        url.pathname.endsWith("/dogs") &&
+        url.searchParams.get("q") === "Duna" &&
+        filters.includes("levelId:eq:level-c") &&
+        filters.includes("status:eq:ACTIVE")
+      );
+    });
     await page.getByPlaceholder("Cerca un alumne").fill("Duna");
     await page.getByRole("combobox", { name: "Nivell", exact: true }).selectOption("level-c");
+    expect((await finalSearch).ok()).toBe(true);
     await expect(student).toBeVisible();
     for (const width of [320, 375, 1280]) {
       await page.setViewportSize({ width, height: 900 });
@@ -277,13 +288,27 @@ for (const theme of ["light", "dark"]) {
           expect(box.height).toBeGreaterThanOrEqual(44);
         }
         if (view === "grid") {
-          const avatar = await student.locator(".ah-dog-photo").boundingBox();
-          const name = await student.locator(".students-page__name").boundingBox();
-          const badge = await student.locator(".students-page__level").boundingBox();
-          if (avatar === null || name === null || badge === null)
-            throw new Error("Missing card content");
-          expect(avatar.y + avatar.height).toBeLessThanOrEqual(name.y);
-          expect(name.y + name.height).toBeLessThanOrEqual(badge.y);
+          // Read all three boxes in the same layout after a resize or view switch.
+          await expect
+            .poll(
+              () =>
+                student.evaluateAll(([card]) => {
+                  const boxes = [
+                    ".ah-dog-photo",
+                    ".students-page__name",
+                    ".students-page__level",
+                  ].map((selector) => card?.querySelector(selector)?.getBoundingClientRect());
+                  const [avatar, name, badge] = boxes;
+                  if (!avatar || !name || !badge || boxes.some((box) => !box?.width || !box.height))
+                    return null;
+                  return {
+                    avatarAboveName: avatar.bottom <= name.top,
+                    nameAboveBadge: name.bottom <= badge.top,
+                  };
+                }),
+              { message: "The visible grid card places the photo, name and level in order" },
+            )
+            .toEqual({ avatarAboveName: true, nameAboveBadge: true });
         }
         if (width !== 320)
           await capture(page, `student-${view}-${browserName}-${theme}-${String(width)}.png`);
