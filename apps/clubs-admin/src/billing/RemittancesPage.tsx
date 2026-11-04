@@ -2,6 +2,8 @@ import {
   type ApiClient,
   type components,
   isApiError,
+  contentDispositionFileName,
+  saveFile,
   listFields,
   openDownloadUrl,
   type SubmissionKeys,
@@ -219,9 +221,22 @@ export function RemittancesPage({
     [client, formats, t],
   );
 
-  const download = async (item: RemittanceListItem) => {
-    setDownloading(item.id);
+  const download = async (item: RemittanceListItem, excel = false) => {
+    setDownloading(excel ? "xlsx-" + item.id : item.id);
     try {
+      if (excel) {
+        const { data, response } = await client.GET("/remittances/{id}/spreadsheet", {
+          params: { path: { id: item.id } },
+          parseAs: "blob",
+        });
+        if (!data) throw new TypeError("The remittance has no spreadsheet");
+        saveFile(
+          data,
+          contentDispositionFileName(response.headers.get("Content-Disposition")) ??
+            `remesa-${item.period ?? item.id}.xlsx`,
+        );
+        return;
+      }
       const response = await client.GET("/remittances/{id}/file", {
         params: { path: { id: item.id } },
       });
@@ -360,15 +375,28 @@ export function RemittancesPage({
       render: (item) => (
         <span className="billing-remittance-actions">
           {item.fileAvailable === true ? (
-            <Button
-              loading={downloading === item.id}
-              loadingLabel={t("admin-billing:remittances.downloading")}
-              onClick={() => void download(item)}
-              variant="ghost"
-            >
-              <Icon aria-hidden="true" name="export" />
-              {t("admin-billing:remittances.download")}
-            </Button>
+            <>
+              <Button
+                disabled={downloading !== undefined}
+                loading={downloading === item.id}
+                loadingLabel={t("admin-billing:remittances.downloading")}
+                onClick={() => void download(item)}
+                variant="ghost"
+              >
+                <Icon aria-hidden="true" name="export" />
+                {t("admin-billing:remittances.download")}
+              </Button>
+              <Button
+                variant="ghost"
+                disabled={downloading !== undefined}
+                loading={downloading === "xlsx-" + item.id}
+                loadingLabel={t("admin-billing:remittances.downloading")}
+                onClick={() => void download(item, true)}
+              >
+                <Icon aria-hidden="true" name="export" />
+                {t("admin-billing:remittances.downloadExcel")}
+              </Button>
+            </>
           ) : null}
           {item.status === "GENERATED" ? (
             <Button

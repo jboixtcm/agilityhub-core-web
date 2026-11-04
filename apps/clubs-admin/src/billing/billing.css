@@ -502,3 +502,24 @@
     white-space: normal;
   }
 }
+
+.billing-concept-form,
+.billing-concept-title {
+  margin-block-start: var(--ah-space-3);
+}
+
+.billing-concept-title {
+  font-weight: 700;
+}
+
+.billing-concept-list {
+  display: grid;
+  gap: var(--ah-space-3);
+  padding: 0;
+  overflow-wrap: anywhere;
+}
+
+.billing-concept-list > li {
+  padding-block: var(--ah-space-2);
+  border-top: 1px solid var(--ah-color-border);
+}

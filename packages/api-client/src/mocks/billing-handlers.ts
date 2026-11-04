@@ -5,6 +5,7 @@ import type { components } from "../generated/schema";
 import { refuse, selectItems, type ListSpec } from "./backoffice-handlers";
 import {
   BILLING_ADMIN_ACCOUNT_ID,
+  appliesInPeriod,
   billingState,
   billingUuid,
   buildSimulation,
@@ -30,6 +31,7 @@ import {
 } from "./fixtures/billing";
 import { censusMembers, ERASED_MEMBER_ID } from "./fixtures/census";
 import { addDays, clubLocalDate } from "./fixtures/planning";
+import { mockExportBody } from "./list-exports";
 import { fieldsProjection } from "./list-fields";
 import { apiError, validationError } from "./planning-handlers";
 import {
@@ -569,6 +571,75 @@ const MOCK_PDF = new TextEncoder().encode("%PDF-1.4\n% AgilityHub mock receipt\n
  * E8-T01). Stateful: a write shows on the next read of the month, the list and the drawer.
  */
 export const billingHandlers = [
+  http.get(
+    "*/api/v1/billing/concepts",
+    () => refused() ?? json(callerClubOwnsTheWorld() ? world().concepts : []),
+  ),
+  http.post("*/api/v1/billing/concepts", async ({ request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    const input = await body<components["schemas"]["InvoiceConceptInput"]>(request);
+    return keyed(request, JSON.stringify(input), () => {
+      if (
+        !input?.description?.trim() ||
+        !input.amount?.amountMinor ||
+        input.taxPercent === undefined ||
+        typeof input.allMembers !== "boolean" ||
+        !input.firstPeriod ||
+        !isPeriod(input.firstPeriod) ||
+        !Array.isArray(input.memberIds) ||
+        input.allMembers !== (input.memberIds.length === 0) ||
+        (input.endsOn && (!isDate(input.endsOn) || input.endsOn < input.firstPeriod + "-01"))
+      )
+        return validationError("concept");
+      if (!callerClubOwnsTheWorld()) return notFound();
+      const target = world();
+      const run = periodRun(target, input.firstPeriod);
+      if (run && run.run.status !== "ROLLED_BACK")
+        return apiError("RUN_EXISTS", "A live run exists for this month", 409);
+      const memberNames: string[] = [];
+      const memberIds: string[] = [];
+      for (const id of input.memberIds) {
+        const census = censusMembers.find((m) => m.id === id);
+        // The census and billing mock worlds use different IDs for the same featured people.
+        const billed = target.members.find(
+          (m) =>
+            m.id === id ||
+            (m.memberNumber === census?.memberNumber && census.fullName.startsWith(m.fullName)),
+        );
+        const name = census?.fullName ?? billed?.fullName;
+        if (!name) return notFound();
+        memberNames.push(name);
+        memberIds.push(billed?.id ?? id);
+      }
+      const rule = {
+        ...input,
+        allMembers: input.allMembers,
+        amount: input.amount,
+        description: input.description.trim(),
+        firstPeriod: input.firstPeriod,
+        id: billingUuid(7, ++target.sequence),
+        memberIds,
+        memberNames,
+        taxPercent: input.taxPercent,
+      };
+      target.concepts.push(rule);
+      for (const [period, kept] of target.simulations)
+        if (appliesInPeriod(rule, period)) kept.stale = true;
+      return { body: rule, status: 201 };
+    });
+  }),
+  http.delete("*/api/v1/billing/concepts/:id", ({ params }) => {
+    const denied = refused();
+    if (denied) return denied;
+    const target = world();
+    const rule = target.concepts.find((c) => c.id === params.id);
+    if (!callerClubOwnsTheWorld() || !rule) return notFound();
+    target.concepts = target.concepts.filter((c) => c !== rule);
+    for (const [period, kept] of target.simulations)
+      if (appliesInPeriod(rule, period)) kept.stale = true;
+    return new HttpResponse(null, { status: 204 });
+  }),
   http.get("*/api/v1/billing/periods/:period", ({ params }) => {
     const denied = refused();
     if (denied !== undefined) return denied;
@@ -753,6 +824,18 @@ export const billingHandlers = [
     if (denied !== undefined) return denied;
     const remittance = findRemittance(String(params.id));
     return remittance === undefined ? notFound() : json(structuredClone(remittance));
+  }),
+  http.get("*/api/v1/remittances/:id/spreadsheet", ({ params }) => {
+    const denied = refused();
+    if (denied) return denied;
+    const item = findRemittance(String(params.id));
+    if (!item?.fileAvailable) return notFound();
+    return new HttpResponse(mockExportBody("xlsx"), {
+      headers: {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename="remesa-${item.period}.xlsx"`,
+      },
+    });
   }),
   http.get("*/api/v1/remittances/:id/file", ({ params }) => {
     const denied = refused();

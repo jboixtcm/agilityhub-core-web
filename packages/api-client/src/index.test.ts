@@ -660,7 +660,7 @@ describe("MSW bootstrap handlers", () => {
     // GET/POST/DELETE erasure routes from E11-T01's contract.
     // E11-W07: + E11-T15's `PUT /members/{id}/next-invoice-date` (member-billing-handlers.ts).
     // Word feedback: add-dog, merge preview and confirmed merge.
-    expect(handlers).toHaveLength(401);
+    expect(handlers).toHaveLength(405);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

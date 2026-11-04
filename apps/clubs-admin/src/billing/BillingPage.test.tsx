@@ -2437,3 +2437,40 @@ describe("E11-W08 steps 3–4 (R-12-14, R-12-15, R-12-07, ruling E156): D6 past 
     }
   });
 });
+
+it("programa un descompte recurrent per a dos abonats i permet retirar-lo", async () => {
+  await renderPage({ search: "?mes=2026-10" });
+  fireEvent.click(screen.getByRole("button", { name: "Conceptes addicionals" }));
+  const dialog = within(await screen.findByRole("dialog", { name: "Conceptes addicionals" }));
+  const change = (label: string, value: string) =>
+    fireEvent.change(dialog.getByLabelText(label), { target: { value } });
+  change("Concepte", "Descompte equip");
+  change("Import final (EUR), amb signe", "-3,50");
+  change("Periodicitat", "recurring");
+  change("Fins al dia (mes inclòs)", "2026-11-03");
+  expect(dialog.getByRole("button", { name: "Afegeix el concepte" })).toBeDisabled();
+  for (const [query, name] of [
+    ["Laura", "Laura Serra Vidal"],
+    ["Marc", "Marc Prats García"],
+  ] as const) {
+    change("Cerca per nom o número", query);
+    fireEvent.click(await dialog.findByRole("button", { name }));
+  }
+  fireEvent.click(dialog.getByRole("button", { name: "Afegeix el concepte" }));
+  await dialog.findByText(/Descompte equip ·/u);
+  expect(billingState.world.concepts[0]).toMatchObject({
+    amount: { amountMinor: -350 },
+    firstPeriod: "2026-10",
+    endsOn: "2026-11-03",
+    allMembers: false,
+    memberNames: ["Laura Serra Vidal", "Marc Prats García"],
+  });
+  const view = await client().POST("/billing/simulations", { body: { period: "2026-10" } });
+  const laura = view.data?.invoicesPreview.find((member) => member.memberName === "Laura Serra");
+  expect(
+    laura?.lines.find((line) => line.description === "Descompte equip")?.total.amountMinor,
+  ).toBe(-350);
+  fireEvent.click(dialog.getByRole("button", { name: "Retira" }));
+  fireEvent.click(dialog.getByRole("button", { name: "Retira" }));
+  await dialog.findByText("Encara no hi ha conceptes programats.");
+});

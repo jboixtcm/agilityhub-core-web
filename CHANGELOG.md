@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-04 — Invoice adjustments and remittance Excel
+
+- Schedule signed, one-off or monthly adjustments for selected members or the entire club. Preview and issue the same totals, including family billing. Download a remittance as one Excel row per bank debit.
+
 ## 2026-11-01 — Josep feedback: access, profile switching and booking explanations
 
 - Club app access keeps students and instructors on the app origin. A remembered administrator profile no longer opens management automatically; the profile selector offers only available student/instructor profiles, and admin-only accounts get an explicit access explanation.

@@ -438,3 +438,31 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
     await expect(september).toBeVisible();
   });
 });
+
+test("Conceptes addicionals: un suplement puntual per a tots i l'Excel de la remesa", async ({
+  page,
+}) => {
+  await signIn(page, "admin");
+  await page.goto(`${baseUrl}/facturacio?mes=2026-10`);
+  await page.getByRole("button", { name: "Conceptes addicionals" }).click();
+  const dialog = page.getByRole("dialog", { name: "Conceptes addicionals" });
+  await dialog.getByLabel("Concepte", { exact: true }).fill("Suplement puntual");
+  await dialog.getByLabel(/Import final/u).fill("+2,00");
+  await dialog.getByRole("combobox", { name: "Destinataris" }).selectOption("all");
+  await dialog.getByRole("button", { name: "Afegeix el concepte" }).click();
+  await expect(dialog.getByText(/Suplement puntual ·/u)).toBeVisible();
+  await test
+    .info()
+    .attach("conceptes-escriptori", { body: await page.screenshot(), contentType: "image/png" });
+  await page.setViewportSize({ width: 375, height: 810 });
+  await expect(dialog.getByRole("button", { name: "Afegeix el concepte" })).toBeVisible();
+  await test
+    .info()
+    .attach("conceptes-mobil", { body: await page.screenshot(), contentType: "image/png" });
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await dialog.getByRole("button", { name: "Tanca", exact: true }).click();
+  await page.goto(`${baseUrl}/facturacio/remeses`);
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Excel de la remesa" }).first().click();
+  expect((await download).suggestedFilename()).toMatch(/^remesa-.*\.xlsx$/u);
+});

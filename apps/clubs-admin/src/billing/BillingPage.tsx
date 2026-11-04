@@ -44,6 +44,7 @@ import {
   type RollbackKeyword,
   RollbackModal,
 } from "./BillingModals";
+import { InvoiceConceptsModal } from "./InvoiceConceptsModal";
 import { InvoiceDrawer } from "./InvoiceDrawer";
 import { ManualInvoiceModal } from "./ManualInvoiceModal";
 import { isPriceOverlap, PriceOverlapMessage } from "./PriceOverlapMessage";
@@ -179,7 +180,8 @@ interface Feedback {
   tone: Tone;
 }
 
-type ModalState = "charge" | "export" | "generate" | "manual" | "markPaid" | "rollback" | undefined;
+type ModalState =
+  "concepts" | "charge" | "export" | "generate" | "manual" | "markPaid" | "rollback" | undefined;
 
 /**
  * D6 «Facturació» (S12 §2, `/facturacio?mes=YYYY-MM`, ADMIN, module BILLING): the month's
@@ -954,6 +956,14 @@ export function BillingPage({
             ) : null}
           </>
         )}
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setModal("concepts");
+          }}
+        >
+          {t("admin-billing:concepts.title")}
+        </Button>
         {/* The discreet [＋ Rebut manual] of step 6 (not in the mockup): its name is its label. It
             sits with the month's actions: the receipts toolbar fills the 1280 px row already. */}
         <IconButton
@@ -1088,7 +1098,9 @@ export function BillingPage({
                     className="billing-kpi__due"
                     {...(month.remittance.submissionDue ? { "data-tone": "warning" } : {})}
                   >
-                    {month.remittance.submissionDue ? <Icon aria-hidden="true" name="warn" /> : null}
+                    {month.remittance.submissionDue ? (
+                      <Icon aria-hidden="true" name="warn" />
+                    ) : null}
                     {t("admin-billing:kpi.submitBefore", {
                       date: formats.formatPlainDate(
                         month.remittance.requestedCollectionDate,
@@ -1347,6 +1359,17 @@ export function BillingPage({
             setModal(undefined);
           }}
           period={period}
+        />
+      ) : null}
+      {modal === "concepts" ? (
+        <InvoiceConceptsModal
+          client={client}
+          keys={keys}
+          period={period}
+          onClose={() => {
+            setModal(undefined);
+          }}
+          onChanged={refreshAll}
         />
       ) : null}
       {modal === "manual" ? (

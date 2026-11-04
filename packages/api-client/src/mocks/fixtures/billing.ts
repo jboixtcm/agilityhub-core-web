@@ -326,7 +326,15 @@ export interface IdempotentAnswer {
   status: number;
 }
 
+type Concept = components["schemas"]["InvoiceConceptInput"] &
+  components["schemas"]["InvoiceConceptView"];
+export function appliesInPeriod(concept: Concept, period: string) {
+  return (
+    period >= concept.firstPeriod && period <= (concept.endsOn?.slice(0, 7) ?? concept.firstPeriod)
+  );
+}
 export interface BillingWorld {
+  concepts: Concept[];
   idempotency: Map<string, IdempotentAnswer>;
   invoices: StoredInvoice[];
   members: BillingMember[];
@@ -365,22 +373,67 @@ function incidentsOf(variant: BillingVariant): readonly BillingIncident[] {
   return INCIDENTS;
 }
 
+function linesOf(world: BillingWorld, member: BillingMember, period: string): Invoice["lines"] {
+  const base = eur(member.amountMinor);
+  const lines: Invoice["lines"] = [
+    {
+      base,
+      bookingId: null,
+      description: `${member.concept} — ${frozenMonth(period)}`,
+      lineNo: 1,
+      origin: member.origin,
+      priceId: null,
+      tax: eur(0),
+      taxPercent: 0,
+      total: base,
+    },
+  ];
+  for (const concept of world.concepts) {
+    if (
+      !appliesInPeriod(concept, period) ||
+      (!concept.allMembers && !concept.memberIds.includes(member.id))
+    )
+      continue;
+    const amount = concept.amount.amountMinor;
+    const raw = (amount * 100) / (100 + concept.taxPercent);
+    const floor = Math.floor(raw);
+    const net = raw - floor === 0.5 ? floor + Math.abs(floor % 2) : Math.round(raw);
+    lines.push({
+      base: eur(net),
+      bookingId: null,
+      description: concept.description,
+      lineNo: lines.length + 1,
+      origin: "ADJUSTMENT",
+      priceId: null,
+      tax: eur(amount - net),
+      taxPercent: concept.taxPercent,
+      total: concept.amount,
+    });
+  }
+  return lines;
+}
+
+function receiptTotal(lines: Invoice["lines"]) {
+  return eur(lines.reduce((sum, line) => sum + line.total.amountMinor, 0));
+}
+
 /** The KPIs of a month (R-12-07): counts and totals by provider of what the run would issue. */
-export function simulationKpis(world: BillingWorld): SimulationKpis {
+export function simulationKpis(world: BillingWorld, period: string): SimulationKpis {
   const byProvider: ByProvider = {};
   let total = 0;
   for (const member of world.members) {
-    const provider = providerOf(memberMethod(world, member));
+    const amount = receiptTotal(linesOf(world, member, period)).amountMinor;
+    const provider = amount <= 0 ? "MANUAL" : providerOf(memberMethod(world, member));
     const current = byProvider[provider] ?? { count: 0, total: eur(0) };
     byProvider[provider] = {
       count: current.count + 1,
-      total: eur(current.total.amountMinor + member.amountMinor),
+      total: eur(current.total.amountMinor + amount),
     };
-    total += member.amountMinor;
+    total += amount;
   }
   return {
     byProvider,
-    cashPending: world.members.filter((member) => memberMethod(world, member) === "MANUAL").length,
+    cashPending: byProvider.MANUAL?.count ?? 0,
     count: world.members.length,
     inactivityFees: {
       count: world.members.filter((member) => member.origin === "INACTIVITY_FEE").length,
@@ -396,19 +449,17 @@ export function buildSimulation(
   period: string,
   at: string,
 ): BillingSimulation {
-  const preview: InvoicePreview[] = world.members.map((member) => ({
-    lines: [
-      {
-        description: `${member.concept} — ${frozenMonth(period)}`,
-        origin: member.origin,
-        total: eur(member.amountMinor),
-      },
-    ],
-    memberId: member.id,
-    memberName: member.fullName,
-    paymentMethodType: memberMethod(world, member),
-    total: eur(member.amountMinor),
-  }));
+  const preview: InvoicePreview[] = world.members.map((member) => {
+    const lines = linesOf(world, member, period);
+    const total = receiptTotal(lines);
+    return {
+      lines,
+      memberId: member.id,
+      memberName: member.fullName,
+      paymentMethodType: total.amountMinor > 0 ? memberMethod(world, member) : "MANUAL",
+      total,
+    };
+  });
   world.sequence += 1;
   return {
     at,
@@ -418,7 +469,7 @@ export function buildSimulation(
     invoicesPreview: preview,
     // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1), null without SEPA.
     kpis: {
-      ...simulationKpis(world),
+      ...simulationKpis(world, period),
       collectionDate: world.providers.includes("SEPA_XML") ? `${period}-01` : null,
     },
     period,
@@ -433,8 +484,7 @@ function mandateRef(member: BillingMember): string {
   return `canic-${String(member.memberNumber)}-1`;
 }
 
-function paymentMethodOf(world: BillingWorld, member: BillingMember): Invoice["paymentMethod"] {
-  const type = memberMethod(world, member);
+function paymentMethodOf(type: PaymentMethodType, member: BillingMember): Invoice["paymentMethod"] {
   if (type === "SEPA_DD") {
     return {
       channel: null,
@@ -499,11 +549,15 @@ interface IssueOptions {
 /** One receipt of a run (R-12-11): SEPA COLLECTING in the remittance, cash and cards PENDING. */
 function issueInvoice(world: BillingWorld, options: IssueOptions): StoredInvoice {
   const { member } = options;
-  const paymentMethod = paymentMethodOf(world, member);
+  const lines = linesOf(world, member, options.period);
+  const total = receiptTotal(lines);
+  const paymentMethod = paymentMethodOf(
+    total.amountMinor <= 0 ? "MANUAL" : memberMethod(world, member),
+    member,
+  );
   world.sequence += 1;
-  const total = eur(member.amountMinor);
   const invoice: Invoice = {
-    base: total,
+    base: eur(lines.reduce((sum, line) => sum + line.base.amountMinor, 0)),
     cancelReason: null,
     cancelledAt: null,
     collections: [],
@@ -516,19 +570,7 @@ function issueInvoice(world: BillingWorld, options: IssueOptions): StoredInvoice
     includeInNextRun: false,
     issueDate: options.issueDate,
     kind: "PERIODIC",
-    lines: [
-      {
-        base: total,
-        bookingId: null,
-        description: `${member.concept} — ${frozenMonth(options.period)}`,
-        lineNo: 1,
-        origin: member.origin,
-        priceId: null,
-        tax: eur(0),
-        taxPercent: 0,
-        total,
-      },
-    ],
+    lines,
     memberId: member.id,
     memberSnapshot: { fullName: member.fullName, number: member.memberNumber, taxId: null },
     note: null,
@@ -542,7 +584,7 @@ function issueInvoice(world: BillingWorld, options: IssueOptions): StoredInvoice
     runId: options.runId,
     series: SERIES,
     status: paymentMethod.type === "SEPA_DD" ? "COLLECTING" : "PENDING",
-    tax: eur(0),
+    tax: eur(lines.reduce((sum, line) => sum + line.tax.amountMinor, 0)),
     total,
     version: 1,
   };
@@ -602,7 +644,7 @@ export function generateRun(
   world.invoices.push(...issued);
   const previousNextNumber = world.nextNumber;
   world.nextNumber = firstNumber + issued.length;
-  const kpis = simulationKpis(world);
+  const kpis = simulationKpis(world, options.period);
   const byProvider: ByProvider = {};
   for (const [provider, totals] of Object.entries(kpis.byProvider) as [
     BillingProvider,
@@ -979,6 +1021,7 @@ function seedSeptember(world: BillingWorld, withRun: boolean) {
 
 export function createBillingWorld(variant: BillingVariant = "default"): BillingWorld {
   const world: BillingWorld = {
+    concepts: [],
     idempotency: new Map(),
     invoices: [],
     members: billingMembers(),
