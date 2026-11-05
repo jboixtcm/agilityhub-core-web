@@ -661,7 +661,7 @@ function PlanForm({
                 <li key={price.id}>
                   <PriceStatus status={price.status} />
                   <strong>{formatMoneyMinor(price.amount, { compact: true })}</strong>
-                  <span>
+                  <span className="catalog-price-dates">
                     {price.validFrom}
                     {price.validTo == null
                       ? ""

@@ -1358,10 +1358,17 @@ select {
   border-bottom: 1px solid var(--ah-color-border);
 }
 
-.catalog-prices li > :last-child {
+.catalog-prices li > .catalog-price-dates {
   margin-left: auto;
   color: var(--ah-color-text-muted);
   font-size: 0.75rem;
+}
+
+.activity-map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  margin-top: var(--ah-space-1);
 }
 
 .catalog-price-form {

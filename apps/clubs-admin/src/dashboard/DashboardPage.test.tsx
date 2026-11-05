@@ -369,7 +369,7 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
       fireEvent.click(screen.getByRole("radio", { name: "Tots" }));
       expect(screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
       // The independent risk-card fetch can start after the dashboard has painted.
-      expect(get.mock.calls.some(([path]) => path === "/dashboard")).toBe(false);
+      expect((get.mock.calls as unknown[][]).some((call) => call[0] === "/dashboard")).toBe(false);
     },
   );
 

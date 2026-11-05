@@ -1497,6 +1497,7 @@ export function ActivityPage({
                   {(form.mapsUrl.trim() !== "" && /^https:\/\//i.test(form.mapsUrl.trim())) ||
                   form.address.trim() !== "" ? (
                     <a
+                      className="activity-map-link"
                       href={
                         /^https:\/\//i.test(form.mapsUrl.trim())
                           ? form.mapsUrl.trim()
