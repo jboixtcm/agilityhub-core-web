@@ -346,8 +346,8 @@ describe("R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2)", () =>
     });
     await renderWith(createDrawer());
     // A Monday (the only day this club opens here), far enough ahead.
-    fireEvent.change(await screen.findByRole("textbox", { name: "Data" }), {
-      target: { value: "26/04/2027" },
+    fireEvent.change(await screen.findByLabelText("Data"), {
+      target: { value: "2027-04-26" },
     });
     fireEvent.click(screen.getByRole("radio", { name: "Muntanya" }));
     const select = await screen.findByRole("combobox", { name: "Recorregut previst" });
