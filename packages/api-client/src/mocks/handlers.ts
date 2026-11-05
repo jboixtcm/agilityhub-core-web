@@ -4246,6 +4246,12 @@ export const handlers = [
     );
     return HttpResponse.json(catalogResponse(plans));
   }),
+  http.get("*/api/v1/plans/:id", ({ params }) => {
+    const plan = catalogState.plans.find((item) => item.id === params.id);
+    return plan === undefined
+      ? apiError("NOT_FOUND", "Plan not found", 404)
+      : HttpResponse.json(plan);
+  }),
   http.get("*/api/v1/prices", ({ request }) => {
     const planId = new URL(request.url).searchParams.get("planId");
     const prices = catalogState.plans

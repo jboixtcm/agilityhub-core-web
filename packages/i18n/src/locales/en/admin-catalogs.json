@@ -18,7 +18,8 @@
     "save": "SAVE",
     "saving": "Saving",
     "stale": "Someone has changed this record; reload it",
-    "yes": "yes"
+    "yes": "yes",
+    "edit": "Edit"
   },
   "faq": {
     "caption": "Frequently asked questions",
@@ -155,7 +156,9 @@
       "packOption": "pack",
       "singleClass": "single class"
     },
-    "validityNote": "Prices have validity dates: changing a price does not alter receipts already issued. Packs expire after their validity period and automatically create the scheduled departure."
+    "validityNote": "Prices have validity dates: changing a price does not alter receipts already issued. Packs expire after their validity period and automatically create the scheduled departure.",
+    "editPrice": "Edit price",
+    "conditionsRequired": "Enter the terms to offer this plan during signup."
   },
   "rings": {
     "caption": "Club rings",

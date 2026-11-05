@@ -18,7 +18,6 @@ import {
   clampTime,
   clubInstant,
   formatMaskedDate,
-  maskDate,
   minutesOf,
   type OpeningHours,
   openingOf,
@@ -135,7 +134,7 @@ export function RingBlockDrawer({
 
   /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
   const changeDate = (value: string) => {
-    const next = maskDate(value);
+    const next = value === "" ? "" : formatMaskedDate(value);
     setDate(next);
     dropBookings();
     const day = parseMaskedDate(next, Number(clubToday(timeZone).slice(0, 4)));
@@ -305,13 +304,13 @@ export function RingBlockDrawer({
               aria-invalid={dateError !== undefined || undefined}
               autoComplete="off"
               id="calendar-block-date"
-              inputMode="numeric"
+              type="date"
               onChange={(event) => {
                 changeDate(event.currentTarget.value);
               }}
               placeholder={t("admin-scheduling:calendar.createForm.datePlaceholder")}
               required
-              value={date}
+              value={isoDate ?? ""}
             />
           </FormField>
           <div className="calendar-form__pair">

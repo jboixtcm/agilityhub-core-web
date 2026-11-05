@@ -57,13 +57,18 @@ async function servePlans(name: string, edit: (plan: Plan) => Plan) {
   if (data === undefined) throw new TypeError("The mock plans did not answer");
   // As PlansPage reads them (`GET /plans` with `includeInactive`: whole plans).
   const items = (data.items as Plan[]).map((plan) => (plan.name === name ? edit(plan) : plan));
-  server.use(http.get("*/api/v1/plans", () => HttpResponse.json({ ...data, items })));
+  server.use(
+    http.get("*/api/v1/plans", () => HttpResponse.json({ ...data, items })),
+    http.get("*/api/v1/plans/:id", ({ params }) =>
+      HttpResponse.json(items.find((item) => item.id === params.id)),
+    ),
+  );
 }
 
 async function openPriceForm(name: string) {
   const table = await screen.findByRole("table", { name: "Modalitats i tarifes" });
   fireEvent.click(await within(table).findByRole("button", { name: `Edita ${name}` }));
-  const dialog = screen.getByRole("dialog", { name: `Edita ${name}` });
+  const dialog = await screen.findByRole("dialog", { name: `Edita ${name}` });
   return { dialog, tax: within(dialog).getByLabelText("Impost (%)") };
 }
 
@@ -143,5 +148,88 @@ describe("E4-W16 step 8 (INC-28, S05 §12, §13-5): D8 «Nou preu» proposes the
     await servePlans("Abonat", (plan) => ({ ...plan, currentPrices: [], prices: [] }));
     await renderPlans();
     expect((await openPriceForm("Abonat")).tax).toHaveValue(0);
+  });
+});
+
+describe("Josep feedback: complete price history", () => {
+  it("loads scheduled prices from the detail and edits the selected unlocked price", async () => {
+    let sent: unknown;
+    await servePlans("Abonat", (plan) => ({
+      ...plan,
+      prices: [
+        {
+          id: "future-price",
+          planId: plan.id,
+          concept: "MONTHLY_FEE",
+          amount: { amountMinor: 5000, currency: "EUR" },
+          taxPercent: 0,
+          validFrom: "2026-12-01",
+          periodicity: "MONTHLY",
+          locked: false,
+          version: 3,
+          status: "SCHEDULED",
+        },
+      ],
+    }));
+    server.use(
+      http.patch("*/api/v1/prices/:id", async ({ request, params }) => {
+        sent = { id: params.id, body: await request.json() };
+        return HttpResponse.json({});
+      }),
+    );
+    await renderPlans();
+    const { dialog } = await openPriceForm("Abonat");
+    expect(within(dialog).getByText("2026-12-01")).toBeVisible();
+    expect(within(dialog).queryByText("Encara no hi ha preus.")).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Edita" }));
+    const input = within(dialog).getByLabelText("Import");
+    expect(input).toHaveValue(50);
+    fireEvent.change(input, { target: { value: "55" } });
+    const form = input.closest("form");
+    if (form === null) throw new Error("Missing price form");
+    fireEvent.submit(form);
+    await waitFor(() => {
+      expect(sent).toEqual({
+        id: "future-price",
+        body: {
+          amount: { amountMinor: 5500, currency: "EUR" },
+          taxPercent: 0,
+          validFrom: "2026-12-01",
+          validTo: null,
+          version: 3,
+        },
+      });
+    });
+  });
+});
+
+describe("Josep feedback: plan conditions", () => {
+  it("highlights missing signup conditions and allows an internal plan to omit them", async () => {
+    let sent: Record<string, unknown> | undefined;
+    server.use(
+      http.patch("*/api/v1/plans/:id", async ({ request }) => {
+        sent = (await request.json()) as Record<string, unknown>;
+        return HttpResponse.json({});
+      }),
+    );
+    await renderPlans();
+    const { dialog } = await openPriceForm("Abonat");
+    const conditions = within(dialog).getByLabelText("Condicions");
+    fireEvent.change(conditions, { target: { value: "" } });
+    const form = conditions.closest("form");
+    if (form === null) throw new Error("Missing plan form");
+    fireEvent.submit(form);
+    expect(
+      await within(dialog).findByText(
+        "Cal informar les condicions per mostrar la modalitat a l’alta.",
+      ),
+    ).toBeVisible();
+    expect(conditions).toHaveAttribute("aria-invalid", "true");
+    expect(sent).toBeUndefined();
+    fireEvent.click(within(dialog).getByRole("switch", { name: "Mostra a l'alta" }));
+    fireEvent.submit(form);
+    await waitFor(() => {
+      expect(sent).toMatchObject({ showOnSignup: false });
+    });
   });
 });

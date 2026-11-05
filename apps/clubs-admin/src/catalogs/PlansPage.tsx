@@ -131,6 +131,7 @@ function PlanPrice({ entryFeeMinor, plan }: { entryFeeMinor: number; plan: Plan 
 }
 
 function PriceForm({
+  existing,
   client,
   onSaved,
   plan,
@@ -138,15 +139,22 @@ function PriceForm({
   client: ApiClient;
   onSaved: () => void;
   plan: Plan;
+  existing?: Price;
 }) {
   const branding = useBranding();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(
+    existing === undefined
+      ? ""
+      : String(majorUnits(existing.amount.amountMinor, branding.currency)),
+  );
   // INC-28 (S05 §12, §13-5): the plan's current price's tax, else 0; never a country constant.
-  const [taxPercent, setTaxPercent] = useState(() => String(currentPrice(plan)?.taxPercent ?? 0));
-  const [validFrom, setValidFrom] = useState(nextMonthStart());
-  const [validTo, setValidTo] = useState("");
+  const [taxPercent, setTaxPercent] = useState(() =>
+    String(existing?.taxPercent ?? currentPrice(plan)?.taxPercent ?? 0),
+  );
+  const [validFrom, setValidFrom] = useState(existing?.validFrom ?? nextMonthStart());
+  const [validTo, setValidTo] = useState(existing?.validTo ?? "");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
 
@@ -166,7 +174,18 @@ function PriceForm({
         validFrom,
         ...(validTo === "" ? {} : { validTo }),
       };
-      await client.POST("/prices", { body });
+      if (existing === undefined) await client.POST("/prices", { body });
+      else
+        await client.PATCH("/prices/{id}", {
+          params: { path: { id: existing.id } },
+          body: {
+            amount: body.amount,
+            taxPercent: body.taxPercent,
+            validFrom,
+            validTo: validTo || null,
+            version: existing.version,
+          },
+        });
       onSaved();
     } catch (reason) {
       setError(
@@ -181,7 +200,11 @@ function PriceForm({
 
   return (
     <form className="catalog-price-form" onSubmit={(event) => void submit(event)}>
-      <h3>{t("admin-catalogs:plans.newPrice")}</h3>
+      <h3>
+        {existing === undefined
+          ? t("admin-catalogs:plans.newPrice")
+          : t("admin-catalogs:plans.editPrice")}
+      </h3>
       <div className="catalog-form__grid catalog-form__grid--four">
         <FormField id="price-amount" label={t("admin-catalogs:plans.fields.priceAmount")}>
           <Input
@@ -235,7 +258,9 @@ function PriceForm({
       </div>
       {error === undefined ? null : <p role="alert">{error}</p>}
       <Button loading={pending} loadingLabel={t("admin-catalogs:common.saving")} type="submit">
-        {t("admin-catalogs:plans.addPrice")}
+        {existing === undefined
+          ? t("admin-catalogs:plans.addPrice")
+          : t("admin-catalogs:common.save")}
       </Button>
     </form>
   );
@@ -260,6 +285,8 @@ function PlanForm({
   const { formatMinor, formatMoneyMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
+  const [priceToEdit, setPriceToEdit] = useState<Price>();
+  const [conditionsError, setConditionsError] = useState<string>();
   const [locale, setLocale] = useState(branding.defaultLocale);
   const [name, setName] = useState(
     localized(item?.nameI18n, item?.name ?? "", branding.defaultLocale),
@@ -317,11 +344,20 @@ function PlanForm({
     event.preventDefault();
     setPending(true);
     setError(undefined);
+    setConditionsError(undefined);
+    if (showOnSignup && !(conditions[branding.defaultLocale] ?? "").trim()) {
+      setLocale(branding.defaultLocale);
+      setConditionsError(t("admin-catalogs:plans.conditionsRequired"));
+      setPending(false);
+      return;
+    }
     try {
       const values = {
         active,
         code: code.toLocaleUpperCase(),
-        conditions,
+        conditions: Object.fromEntries(
+          Object.entries(conditions).filter(([, value]) => value.trim() !== ""),
+        ),
         dogsIncluded,
         entryFee: entryFee(),
         name,
@@ -563,7 +599,11 @@ function PlanForm({
             </FormField>
           </div>
         ) : null}
-        <FormField id="plan-conditions" label={t("admin-catalogs:plans.fields.conditions")}>
+        <FormField
+          id="plan-conditions"
+          label={t("admin-catalogs:plans.fields.conditions")}
+          {...(conditionsError === undefined ? {} : { error: conditionsError })}
+        >
           <Textarea
             id="plan-conditions"
             maxLength={200}
@@ -623,15 +663,31 @@ function PlanForm({
                   <strong>{formatMoneyMinor(price.amount, { compact: true })}</strong>
                   <span>
                     {price.validFrom}
-                    {price.validTo === undefined
+                    {price.validTo == null
                       ? ""
                       : t("admin-catalogs:plans.priceUntil", { date: price.validTo })}
                   </span>
+                  {!price.locked ? (
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setPriceToEdit(price);
+                      }}
+                    >
+                      {t("admin-catalogs:common.edit")}
+                    </Button>
+                  ) : null}
                 </li>
               ))}
             </ul>
           )}
-          <PriceForm client={client} onSaved={onPriceSaved} plan={item} />
+          <PriceForm
+            key={priceToEdit?.id ?? "new"}
+            client={client}
+            onSaved={onPriceSaved}
+            plan={item}
+            {...(priceToEdit === undefined ? {} : { existing: priceToEdit })}
+          />
         </section>
       ) : null}
     </div>
@@ -889,7 +945,14 @@ export function PlansPage({ client }: { client: ApiClient }) {
           setSelectedId(plan.id);
         }}
         onEdit={(plan) => {
-          setEditing({ item: plan });
+          void client.GET("/plans/{id}", { params: { path: { id: plan.id } } }).then(
+            (result) => {
+              if (result.data !== undefined) setEditing({ item: result.data });
+            },
+            () => {
+              setFeedback(t("admin-catalogs:common.loadError"));
+            },
+          );
         }}
         rowName={(plan) => plan.name}
         rows={data.items}

@@ -80,7 +80,7 @@ export function activityFields(columns: readonly string[]): string {
   const keys = columns.flatMap((column) => COLUMN_FIELDS[column] ?? []);
   return [...new Set(["id", "title", ...keys])].join(",");
 }
-const DEFAULT_FILTERS: UniversalFilter[] = [{ field: "deleted", operator: "eq", value: "false" }];
+const DEFAULT_FILTERS: UniversalFilter[] = [{ field: "upcoming", operator: "eq", value: "true" }];
 
 export const stateTone: Readonly<Record<ActivityState, Tone>> = {
   CANCELLED: "danger",
@@ -96,7 +96,12 @@ function filterValue(value: unknown): string {
 }
 
 function apiFilters(filters: readonly UniversalFilter[]): string[] {
-  return filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
+  return [
+    ...filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`),
+    ...(filters.some((filter) => filter.field === "upcoming" || filter.field === "deleted")
+      ? []
+      : ["deleted:in:true,false"]),
+  ];
 }
 
 function useListState() {
@@ -464,7 +469,7 @@ export function ActivitiesPage({
   };
 
   // With a search or a filter beyond «Mostra», the empty list keeps «clear filters» (no create).
-  const filtered = state.q !== "" || state.filters.some((filter) => filter.field !== "deleted");
+  const filtered = state.q !== "" || state.filters.some((filter) => filter.field !== "upcoming");
   const labels: UniversalListLabels<ActivityListItem> = {
     addFilter: t("census:list.addFilter"),
     clearFilters: t("census:list.clearFilters"),
@@ -622,10 +627,10 @@ export function ActivitiesPage({
         savedViews={savedViews.views}
         state={state}
         statusFilter={{
-          field: "deleted",
+          field: "upcoming",
           label: t("admin-activities:list.statusLabel"),
           options: [
-            { label: t("admin-activities:list.statuses.withoutDeleted"), value: "false" },
+            { label: t("admin-activities:list.statuses.upcoming"), value: "true" },
             { label: t("admin-activities:list.statuses.all"), value: "" },
           ],
         }}

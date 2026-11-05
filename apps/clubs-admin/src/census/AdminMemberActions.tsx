@@ -109,7 +109,15 @@ export function AdminMemberActions({
           all.push(...itemsWith(result.data.items, ["fullName"] as const));
           if (all.length >= result.data.totalItems || result.data.items.length === 0) break;
         }
-        return all.filter((item) => item.id !== member.id);
+        return all
+          .filter((item) => item.id !== member.id)
+          .sort(
+            (a, b) =>
+              a.fullName.localeCompare(b.fullName, undefined, { sensitivity: "base" }) ||
+              String(a.memberNumber ?? "").localeCompare(String(b.memberNumber ?? ""), undefined, {
+                numeric: true,
+              }),
+          );
       })().then(
         (all) => {
           if (current) setMembers(all);

@@ -181,6 +181,14 @@ function activityValues(activity: StoredActivity, field: string): string[] | und
       return activity.ringIds;
     case "levelId":
       return activity.levelIds;
+    case "upcoming":
+      return [
+        String(
+          activity.state !== "CANCELLED" &&
+            activity.date !== null &&
+            new Date(`${activity.date}T${activity.startTime ?? "00:00"}:00`).getTime() > Date.now(),
+        ),
+      ];
     case "deleted":
       return [String(activity.cancellation?.reason === "DELETED")];
     case "registrationOpen":
@@ -275,6 +283,7 @@ const ACTIVITY_FIELDS = [
   "ringId",
   "levelId",
   "deleted",
+  "upcoming",
   "registrationOpen",
 ];
 const REGISTRATION_FIELDS = ["state", "origin", "registeredAt", "memberId"];
@@ -913,10 +922,14 @@ export const activityHandlers = [
       });
     const activity = findActivity(String(params.id));
     if (activity === undefined) return notFound();
-    if (activity.state !== "DRAFT" && activity.state !== "PUBLISHED") {
+    const body = (await request.json()) as ActivityCancellationRequest;
+    if (
+      activity.state !== "DRAFT" &&
+      activity.state !== "PUBLISHED" &&
+      !(activity.state === "CANCELLED" && body.reason === "DELETED")
+    ) {
       return apiError("INVALID_STATE", "Activity cannot be cancelled", 409);
     }
-    const body = (await request.json()) as ActivityCancellationRequest;
     const live = liveRegistrations(activity.id);
     const text = (body.adminText ?? "").trim();
     if (live.length > 0 && (text === "" || text.length > 500)) {

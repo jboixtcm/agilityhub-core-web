@@ -18,8 +18,8 @@
     "open": "Obre {title}",
     "statusLabel": "Mostra",
     "statuses": {
-      "withoutDeleted": "Sense les eliminades",
-      "all": "Totes"
+      "all": "Totes",
+      "upcoming": "Només properes"
     },
     "columns": {
       "title": "Activitat",
@@ -109,7 +109,6 @@
     "invalidDate": "Escriu la data com dd/mm/aaaa.",
     "startTime": "Hora d'inici",
     "endTime": "Hora de final",
-    "noTime": "—",
     "holiday": "dia festiu",
     "closedDay": "El club està tancat aquest dia",
     "registrationFrom": "Inscripció: de",
@@ -143,11 +142,13 @@
     "registrants": "Inscrits ({count}) ›",
     "stale": "Algú altre ha modificat l'activitat: s'han carregat les dades actuals. Revisa-les i torna a desar.",
     "requiredToPublish": "Cal per publicar",
-    "levelSeparator": ", "
+    "levelSeparator": ", ",
+    "openMap": "Obre a Google Maps",
+    "mapsUrl": "Enllaç de Google Maps"
   },
   "publishDialog": {
     "confirmTitle": "Publicar l'activitat",
-    "confirmText": "Vols publicar l'activitat? Els abonats admesos rebran un avís.",
+    "confirmText": "Vols publicar l’activitat?",
     "notifyEmail": "Avisa també per correu",
     "confirm": "PUBLICA",
     "conflictsTitle": "Conflictes de pista",

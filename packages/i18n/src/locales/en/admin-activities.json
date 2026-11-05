@@ -18,8 +18,8 @@
     "open": "Open {title}",
     "statusLabel": "Show",
     "statuses": {
-      "withoutDeleted": "Without the deleted ones",
-      "all": "All"
+      "all": "All",
+      "upcoming": "Upcoming only"
     },
     "columns": {
       "title": "Activity",
@@ -109,7 +109,6 @@
     "invalidDate": "Write the date as dd/mm/yyyy.",
     "startTime": "Start time",
     "endTime": "End time",
-    "noTime": "—",
     "holiday": "public holiday",
     "closedDay": "The club is closed on this day",
     "registrationFrom": "Registration: from",
@@ -143,11 +142,13 @@
     "registrants": "Registrants ({count}) ›",
     "stale": "Someone else changed the activity: the current data has been loaded. Review it and save again.",
     "requiredToPublish": "Required to publish",
-    "levelSeparator": ", "
+    "levelSeparator": ", ",
+    "openMap": "Open in Google Maps",
+    "mapsUrl": "Google Maps link"
   },
   "publishDialog": {
     "confirmTitle": "Publish the activity",
-    "confirmText": "Do you want to publish the activity? The admitted members will get a notice.",
+    "confirmText": "Publish this activity?",
     "notifyEmail": "Also notify by email",
     "confirm": "PUBLISH",
     "conflictsTitle": "Ring conflicts",

@@ -18,8 +18,8 @@
     "open": "Abrir {title}",
     "statusLabel": "Mostrar",
     "statuses": {
-      "withoutDeleted": "Sin las eliminadas",
-      "all": "Todas"
+      "all": "Todas",
+      "upcoming": "Solo próximas"
     },
     "columns": {
       "title": "Actividad",
@@ -109,7 +109,6 @@
     "invalidDate": "Escribe la fecha como dd/mm/aaaa.",
     "startTime": "Hora de inicio",
     "endTime": "Hora de fin",
-    "noTime": "—",
     "holiday": "día festivo",
     "closedDay": "El club está cerrado este día",
     "registrationFrom": "Inscripción: del",
@@ -143,11 +142,13 @@
     "registrants": "Inscritos ({count}) ›",
     "stale": "Otra persona ha modificado la actividad: se han cargado los datos actuales. Revísalos y vuelve a guardar.",
     "requiredToPublish": "Necesario para publicar",
-    "levelSeparator": ", "
+    "levelSeparator": ", ",
+    "openMap": "Abrir en Google Maps",
+    "mapsUrl": "Enlace de Google Maps"
   },
   "publishDialog": {
     "confirmTitle": "Publicar la actividad",
-    "confirmText": "¿Quieres publicar la actividad? Los abonados admitidos recibirán un aviso.",
+    "confirmText": "¿Quieres publicar la actividad?",
     "notifyEmail": "Avisar también por correo",
     "confirm": "PUBLICAR",
     "conflictsTitle": "Conflictos de pista",

@@ -381,8 +381,22 @@ export function ActivityDetailPage({
         </li>
         {place === "" ? null : (
           <li>
-            <Icon aria-hidden="true" name="flag" />
-            {place}
+            <Icon aria-hidden="true" name="pin" />
+            {activity.location.address || activity.location.url ? (
+              <a
+                href={
+                  activity.location.url && /^https:\/\//i.test(activity.location.url)
+                    ? activity.location.url
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activity.location.address ?? place)}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {place}
+              </a>
+            ) : (
+              place
+            )}
           </li>
         )}
         <li>

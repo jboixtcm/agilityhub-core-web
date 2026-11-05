@@ -344,6 +344,25 @@ export function ClassForm({
           : t("admin-scheduling:classCard.title")}
       </h2>
       <form className="planning-class-form" noValidate onSubmit={(event) => void submit(event)}>
+        <fieldset className="planning-class-form__row">
+          <legend>{t("admin-scheduling:classCard.day")}</legend>
+          <div className="planning-chips" role="radiogroup">
+            {days.map((day) => (
+              <button
+                aria-checked={values.dayOfWeek === day}
+                aria-label={weekdayLabel(day, formatPlainDate, "weekdayLong")}
+                className="planning-chip"
+                key={day}
+                onClick={() => void change({ dayOfWeek: day }, { dayOfWeek: day })}
+                role="radio"
+                type="button"
+              >
+                {weekdayLabel(day, formatPlainDate, "weekdayShort")}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
         <FormField
           {...errorProp(errors.bandId)}
           id={`${idPrefix}-band`}
@@ -368,25 +387,6 @@ export function ClassForm({
             ))}
           </Select>
         </FormField>
-
-        <fieldset className="planning-class-form__row">
-          <legend>{t("admin-scheduling:classCard.day")}</legend>
-          <div className="planning-chips" role="radiogroup">
-            {days.map((day) => (
-              <button
-                aria-checked={values.dayOfWeek === day}
-                aria-label={weekdayLabel(day, formatPlainDate, "weekdayLong")}
-                className="planning-chip"
-                key={day}
-                onClick={() => void change({ dayOfWeek: day }, { dayOfWeek: day })}
-                role="radio"
-                type="button"
-              >
-                {weekdayLabel(day, formatPlainDate, "weekdayShort")}
-              </button>
-            ))}
-          </div>
-        </fieldset>
 
         {maxInstructors <= 1 ? (
           <FormField

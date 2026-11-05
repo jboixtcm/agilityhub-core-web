@@ -168,7 +168,7 @@
   "PLAN_NOT_PACK": "This plan is not a session pack.",
   "PLATFORM_ONLY": "This operation is only available to platform administrators.",
   "PRICE_LOCKED": "This price is locked.",
-  "PRICE_OVERLAP": "This price overlaps another one.",
+  "PRICE_OVERLAP": "The dates overlap another price for this plan. Review its prices or edit the scheduled price.",
   "PRODUCTION_REQUIRES_CONFIRMATION": "Confirm this operation before running it in production.",
   "PROFILE_NOT_AVAILABLE": "This profile is not available.",
   "PROVIDER_CONFIG_INVALID": "The provider configuration is invalid.",

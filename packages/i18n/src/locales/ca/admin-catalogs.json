@@ -18,7 +18,8 @@
     "save": "DESA",
     "saving": "Desant",
     "stale": "Algú ha modificat aquest registre; torna a carregar",
-    "yes": "sí"
+    "yes": "sí",
+    "edit": "Edita"
   },
   "faq": {
     "caption": "Preguntes freqüents",
@@ -155,7 +156,9 @@
       "packOption": "pack",
       "singleClass": "classe individual"
     },
-    "validityNote": "Les tarifes tenen vigència: canviar un preu no altera els rebuts ja emesos. Els packs caduquen per mesos de vigència i generen la baixa prevista automàtica."
+    "validityNote": "Les tarifes tenen vigència: canviar un preu no altera els rebuts ja emesos. Els packs caduquen per mesos de vigència i generen la baixa prevista automàtica.",
+    "editPrice": "Edita el preu",
+    "conditionsRequired": "Cal informar les condicions per mostrar la modalitat a l’alta."
   },
   "rings": {
     "caption": "Pistes del club",

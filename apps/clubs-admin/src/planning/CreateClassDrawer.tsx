@@ -16,8 +16,8 @@ import {
   clampTime,
   type ClassSession,
   errorCode,
+  formatMaskedDate,
   holidayDates,
-  maskDate,
   minutesOf,
   type OpeningHours,
   openingOf,
@@ -122,7 +122,24 @@ export function CreateClassDrawer({
     rangeOptions(openingOf(openingHours, day), settings.slotMinutes, settings.slotMinutes);
   const [date, setDate] = useState("");
   const isoDate = parseMaskedDate(date, Number(clubToday(timeZone).slice(0, 4)));
-  const { ends, starts } = optionsOf(isoDate ?? today);
+  const dayBands = useResource(
+    useCallback(async () => {
+      const result = await client.GET("/calendar/time-bands", {
+        params: { query: { date: isoDate ?? today } },
+      });
+      if (result.data === undefined) throw new Error("Missing daily time bands");
+      return result.data;
+    }, [client, isoDate, today]),
+  );
+  const { ends, starts: openingStarts } = optionsOf(isoDate ?? today);
+  const bands =
+    dayBands.data?.date === (isoDate ?? today) && dayBands.data.configured
+      ? dayBands.data.bands
+      : undefined;
+  const starts =
+    bands === undefined
+      ? openingStarts
+      : bands.map((band) => band.startTime).filter((time) => openingStarts.includes(time));
   /** The typed date is a day the club is closed (absent from `club.openingHours`). */
   const closedDay = isoDate !== undefined && openingOf(openingHours, isoDate) === null;
   const [startTime, setStartTime] = useState(starts[0] ?? "");
@@ -131,6 +148,17 @@ export function CreateClassDrawer({
       ? ""
       : clampTime(timeOf(minutesOf(starts[0]) + DEFAULT_LENGTH_MINUTES), ends),
   );
+
+  useEffect(() => {
+    const day = dayBands.data;
+    if (day?.date !== (isoDate ?? today) || !day.configured) return;
+    const band = day.bands.find((candidate) => candidate.startTime === startTime) ?? day.bands[0];
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrate suggested times after the daily snapshot arrives.
+    setStartTime(band?.startTime ?? "");
+    setEndTime(band?.endTime ?? "");
+    // A changed date or freshly loaded snapshot resets the suggested times once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dayBands.data, isoDate, today]);
 
   /**
    * The `RING_HAS_BOOKINGS` list belongs to the ring, date and times it was answered for: any
@@ -148,13 +176,16 @@ export function CreateClassDrawer({
         ? DEFAULT_LENGTH_MINUTES
         : Math.max(minutesOf(endTime) - minutesOf(startTime), settings.slotMinutes);
     setStartTime(nextStart);
-    setEndTime(clampTime(timeOf(minutesOf(nextStart) + length), ends));
+    setEndTime(
+      bands?.find((band) => band.startTime === nextStart)?.endTime ??
+        clampTime(timeOf(minutesOf(nextStart) + length), ends),
+    );
     dropBookings();
   };
 
   /** A new date keeps the times only inside that day's opening hours (clamped otherwise). */
   const changeDate = (value: string) => {
-    const next = maskDate(value);
+    const next = value === "" ? "" : formatMaskedDate(value);
     setDate(next);
     dropBookings();
     const day = parseMaskedDate(next, Number(clubToday(timeZone).slice(0, 4)));
@@ -203,8 +234,12 @@ export function CreateClassDrawer({
   }, [catalogs.levels, levelIds]);
   const isHoliday = isoDate !== undefined && (holidays.data ?? []).includes(isoDate);
   // A day without times (closed, or no class fits its hours) shows none, not the times kept.
-  const noTimes = starts.length === 0;
-  const startOptions = noTimes ? [] : starts.includes(startTime) ? starts : [startTime, ...starts];
+  const noTimes =
+    starts.length === 0 ||
+    dayBands.loading ||
+    dayBands.error !== undefined ||
+    dayBands.data?.date !== (isoDate ?? today);
+  const startOptions = noTimes ? [] : starts;
   const endOptions = noTimes ? [] : ends.includes(endTime) ? ends : [...ends, endTime];
   const dateError = closedDay ? t("admin-scheduling:calendar.closedDay") : errors.date;
 
@@ -289,13 +324,13 @@ export function CreateClassDrawer({
             aria-invalid={dateError !== undefined || undefined}
             autoComplete="off"
             id="calendar-create-date"
-            inputMode="numeric"
+            type="date"
             onChange={(event) => {
               changeDate(event.currentTarget.value);
             }}
             placeholder={t("admin-scheduling:calendar.createForm.datePlaceholder")}
             required
-            value={date}
+            value={isoDate ?? ""}
           />
         </FormField>
         {isHoliday ? (
@@ -306,6 +341,19 @@ export function CreateClassDrawer({
         {/* A closed day creates nothing: no «Els alumnes la veuran de seguida» under its message. */}
         {isoDate === undefined || closedDay ? null : (
           <VisibleNowNote client={client} monday={mondayOf(isoDate)} />
+        )}
+        {dayBands.error === undefined ? null : (
+          <div role="alert">
+            <p>{errorMessage(dayBands.error)}</p>
+            <Button
+              onClick={() => {
+                dayBands.reload();
+              }}
+              variant="secondary"
+            >
+              {t("admin-scheduling:common.retry")}
+            </Button>
+          </div>
         )}
         <div className="calendar-form__pair">
           <FormField

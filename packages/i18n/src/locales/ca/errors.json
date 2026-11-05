@@ -168,7 +168,7 @@
   "PLAN_NOT_PACK": "Aquest pla no és un bo de sessions.",
   "PLATFORM_ONLY": "Aquesta operació només està disponible per als administradors de plataforma.",
   "PRICE_LOCKED": "Aquest preu està bloquejat.",
-  "PRICE_OVERLAP": "Aquest preu se superposa amb un altre.",
+  "PRICE_OVERLAP": "Les dates se superposen amb un altre preu de la mateixa modalitat. Revisa les tarifes o edita el preu futur.",
   "PRODUCTION_REQUIRES_CONFIRMATION": "Confirma l'operació abans d'executar-la a producció.",
   "PROFILE_NOT_AVAILABLE": "Aquest perfil no està disponible.",
   "PROVIDER_CONFIG_INVALID": "La configuració del proveïdor no és vàlida.",

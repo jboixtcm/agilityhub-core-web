@@ -31,6 +31,7 @@ export const ICON_NAMES = [
   "mail",
   "palm",
   "paw",
+  "pin",
   "plus",
   "search",
   "send",

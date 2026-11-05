@@ -168,7 +168,7 @@
   "PLAN_NOT_PACK": "Este plan no es un bono de sesiones.",
   "PLATFORM_ONLY": "Esta operación solo está disponible para los administradores de plataforma.",
   "PRICE_LOCKED": "Este precio está bloqueado.",
-  "PRICE_OVERLAP": "Este precio se solapa con otro.",
+  "PRICE_OVERLAP": "Las fechas se solapan con otro precio de la misma modalidad. Revisa las tarifas o edita el precio futuro.",
   "PRODUCTION_REQUIRES_CONFIRMATION": "Confirma la operación antes de ejecutarla en producción.",
   "PROFILE_NOT_AVAILABLE": "Este perfil no está disponible.",
   "PROVIDER_CONFIG_INVALID": "La configuración del proveedor no es válida.",

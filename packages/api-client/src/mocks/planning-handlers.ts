@@ -420,6 +420,10 @@ const dayOffset: Readonly<Record<TemplateClass["dayOfWeek"], number>> = {
 };
 
 export const planningHandlers = [
+  http.get("*/api/v1/calendar/time-bands", ({ request }) => {
+    const date = new URL(request.url).searchParams.get("date");
+    return HttpResponse.json({ date, configured: false, bands: [] });
+  }),
   http.get("*/api/v1/week-templates", ({ request }) => {
     const url = new URL(request.url);
     const kind = url.searchParams.get("kind");

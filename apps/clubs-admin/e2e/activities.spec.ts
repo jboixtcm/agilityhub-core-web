@@ -85,10 +85,10 @@ test.describe("E4-W04 D7 activities", () => {
     await card.getByRole("switch", { name: "Al club" }).click();
     await card.getByRole("button", { name: "Muntanya" }).click();
     await card.getByRole("button", { name: "Central" }).click();
-    await card.getByLabel("Hora d'inici").selectOption("18:30");
-    await card.getByLabel("Hora de final").selectOption("20:30");
-    await card.getByLabel("Inscripció: de").fill("01/09/2026");
-    await card.getByLabel("Inscripció: al").fill("01/10/2026");
+    await card.getByLabel("Hora d'inici").fill("18:30");
+    await card.getByLabel("Hora de final").fill("20:30");
+    await card.getByLabel("Inscripció: de").fill("2026-09-01");
+    await card.getByLabel("Inscripció: al").fill("2026-10-01");
     await card.getByRole("button", { name: "DESA" }).click();
     await expect(page.getByText("Canvis desats")).toBeVisible();
     await card.getByRole("button", { name: "PUBLICA" }).click();
@@ -209,7 +209,7 @@ test.describe("T-07-29 E4-W08 D7 follow-ups", () => {
     await signIn(page, "admin");
     await page.goto(`${baseUrl}/activitats/activity-demostracio-festa-major`);
     const card = maintenance(page, "Demostració Festa Major");
-    await card.getByLabel("Hora d'inici").selectOption("06:00");
+    await card.getByLabel("Hora d'inici").fill("06:00");
     await card.getByRole("button", { name: "DESA" }).click();
     await expect(page.getByText("Canvis desats")).toBeVisible();
     await expect(card.getByLabel("Hora d'inici")).toHaveValue("06:00");
@@ -277,7 +277,7 @@ test.describe("T-07-29 E4-W10 D7 on a day the club is closed", () => {
     const message = card.getByText("El club està tancat aquest dia");
     await expect(message).toBeVisible();
     // Only «—» and the Torneig's own 18:30.
-    await expect(card.getByLabel("Hora d'inici").locator("option")).toHaveCount(2);
+    await expect(card.getByLabel("Hora d'inici")).toHaveAttribute("type", "time");
     await message.scrollIntoViewIfNeeded();
     await page.screenshot({ path: resolve(closedDayEvidence, "D7-divendres-tancat-1280.png") });
 

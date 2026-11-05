@@ -186,7 +186,7 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     const card = await maintenance("Curset d'estiu");
     expect(within(card).getByLabelText("Tipus")).toHaveValue("COURSE");
     expect(within(card).getByText("esborrany")).toBeVisible();
-    expect(await screen.findByText("Curset d'estiu")).toBeVisible();
+    expect(within(card).getByLabelText("Títol")).toHaveValue("Curset d'estiu");
   });
 
   it("shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips", async () => {
@@ -198,7 +198,7 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     );
     expect(within(card).getByText("imatge_torneig.jpg")).toBeVisible();
     expect(within(card).getByText("normativa.pdf")).toBeVisible();
-    expect(within(card).getByLabelText("Data")).toHaveValue("07/08/2026");
+    expect(within(card).getByLabelText("Data")).toHaveValue("2026-08-07");
     expect(within(card).getByText("dv 7 d’agost · 18:30–20:30")).toBeVisible();
     expect(within(card).getByLabelText("Places")).toHaveValue("40");
     expect(await within(card).findByText("Nivells: tots")).toBeVisible();
@@ -336,10 +336,8 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     const card = await maintenance("Demostració Festa Major");
     fireEvent.click(within(card).getByRole("button", { name: "PUBLICA" }));
     const confirm = await screen.findByRole("dialog", { name: "Publicar l'activitat" });
-    expect(
-      within(confirm).getByText("Vols publicar l'activitat? Els abonats admesos rebran un avís."),
-    ).toBeVisible();
-    expect(within(confirm).getByRole("switch", { name: "Avisa també per correu" })).toBeVisible();
+    expect(within(confirm).getByText("Vols publicar l’activitat?")).toBeVisible();
+    expect(within(confirm).queryByRole("switch", { name: "Avisa també per correu" })).toBeNull();
     fireEvent.click(within(confirm).getByRole("button", { name: "PUBLICA" }));
     expect(
       await screen.findByText("Falten dades per publicar l'activitat: revisa els camps marcats."),
@@ -584,7 +582,7 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     // The times are offered once the opening hours are read (E4-W14 round 2: before that the
     // change sent `endTime: null`, which a published activity with rings refuses).
     await waitFor(() => {
-      expect(optionValues(within(card).getByLabelText("Hora de final"))).toContain("20:00");
+      expect(within(card).getByLabelText("Hora de final")).toHaveAttribute("type", "time");
     });
     fireEvent.change(within(card).getByLabelText("Hora de final"), { target: { value: "20:00" } });
     fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
@@ -620,7 +618,7 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     await renderPage({ selectedId: TOURNAMENT });
     const card = await maintenance("Torneig d'Estiu 2026");
     await waitFor(() => {
-      expect(optionValues(within(card).getByLabelText("Hora de final"))).toContain("20:00");
+      expect(within(card).getByLabelText("Hora de final")).toHaveAttribute("type", "time");
     });
     fireEvent.change(within(card).getByLabelText("Hora d'inici"), { target: { value: "" } });
     fireEvent.change(within(card).getByLabelText("Hora de final"), { target: { value: "" } });
@@ -1166,11 +1164,8 @@ describe("T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
     await renderPage({ selectedId: DEMONSTRATION });
     const card = await maintenance("Demostració Festa Major");
     const start = within(card).getByLabelText("Hora d'inici");
-    await waitFor(() => {
-      expect(within(start).getByRole("option", { name: "0:00" })).toBeInTheDocument();
-    });
-    expect(within(start).getByRole("option", { name: "6:00" })).toBeInTheDocument();
-    expect(within(start).getByRole("option", { name: "23:50" })).toBeInTheDocument();
+    expect(start).toHaveAttribute("type", "time");
+    expect(start).toHaveAttribute("step", "60");
     fireEvent.change(start, { target: { value: "06:00" } });
     expect(start).toHaveValue("06:00");
     fireEvent.click(within(card).getByRole("button", { name: "DESA" }));
@@ -1182,10 +1177,7 @@ describe("T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
     await renderPage({ selectedId: TOURNAMENT });
     const club = await maintenance("Torneig d'Estiu 2026");
     const clubStart = within(club).getByLabelText("Hora d'inici");
-    await waitFor(() => {
-      expect(within(clubStart).getByRole("option", { name: "7:00" })).toBeInTheDocument();
-    });
-    expect(within(clubStart).queryByRole("option", { name: "6:00" })).toBeNull();
+    expect(clubStart).toHaveAttribute("type", "time");
   });
 
   it("R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text", async () => {
@@ -1298,10 +1290,6 @@ describe("T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review", () => {
 
 const CLOSED_DAY = "El club està tancat aquest dia";
 
-function optionValues(select: HTMLElement): string[] {
-  return [...(select as HTMLSelectElement).options].map((option) => option.value);
-}
-
 /** `club.openingHours` of the mock club through the api (R-02-09: an absent weekday is closed). */
 async function putOpeningHours(days: readonly string[]) {
   const current = await client().GET("/club/opening-hours");
@@ -1394,14 +1382,14 @@ describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => 
     const end = within(card).getByLabelText("Hora de final");
     expect(await within(card).findByText(CLOSED_DAY)).toBeVisible();
     // Only «—» and the activity's own times: nothing to choose on a closed day.
-    expect(optionValues(start)).toEqual(["", "18:30"]);
-    expect(optionValues(end)).toEqual(["", "20:30"]);
+    expect(start).toHaveValue("18:30");
+    expect(end).toHaveValue("20:30");
 
     // Saturday 8 is open: the message goes and the opening hours come back.
-    fireEvent.change(within(card).getByLabelText("Data"), { target: { value: "08082026" } });
+    fireEvent.change(within(card).getByLabelText("Data"), { target: { value: "2026-08-08" } });
     expect(within(card).queryByText(CLOSED_DAY)).toBeNull();
-    expect(optionValues(start)[1]).toBe("07:00");
-    expect(optionValues(end).at(-1)).toBe("22:00");
+    expect(start).toHaveAttribute("step", "60");
+    expect(end).toHaveAttribute("step", "60");
     cleanup();
 
     // Away from the club nothing is blocked: a closed Sunday keeps the whole day, without message.
@@ -1409,7 +1397,7 @@ describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => 
     const away = await maintenance("Demostració Festa Major");
     const awayStart = within(away).getByLabelText("Hora d'inici");
     await waitFor(() => {
-      expect(within(awayStart).getByRole("option", { name: "0:00" })).toBeInTheDocument();
+      expect(awayStart).toHaveAttribute("type", "time");
     });
     expect(within(away).queryByText(CLOSED_DAY)).toBeNull();
   });
@@ -1433,12 +1421,12 @@ describe("T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews", () => 
       "S'ha produït un error inesperat. Torna-ho a provar; si persisteix, posa't en contacte amb el club.",
     );
     // No 07:00–22:00 is assumed: only «—» and the activity's own time.
-    expect(optionValues(within(card).getByLabelText("Hora d'inici"))).toEqual(["", "18:30"]);
+    expect(within(card).getByLabelText("Hora d'inici")).toHaveValue("18:30");
 
     failOpeningHours = false;
     fireEvent.click(retry);
     await waitFor(() => {
-      expect(optionValues(within(card).getByLabelText("Hora d'inici"))[1]).toBe("07:00");
+      expect(within(card).queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
     });
     expect(within(card).queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
   });
@@ -1712,7 +1700,7 @@ describe("T-07-29 E4-W14 D7 follow-ups of the E4-W11 review", () => {
     const publish = within(card).getByRole("button", { name: "PUBLICA" });
     // An open Sunday: [PUBLICA] is offered, the saved 6:00 is kept among the options.
     await waitFor(() => {
-      expect(optionValues(within(card).getByLabelText("Hora d'inici"))).toContain("07:00");
+      expect(within(card).getByLabelText("Hora d'inici")).toHaveValue("06:00");
     });
     expect(publish).toBeEnabled();
     fireEvent.click(publish);

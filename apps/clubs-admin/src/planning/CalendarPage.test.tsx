@@ -608,7 +608,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
     // No date yet: the options of today (Wednesday 12, 7:00–22:00).
     expect(within(drawer).getByLabelText("De")).toHaveValue("07:00");
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "15082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-15" } });
 
     const from = within(drawer).getByLabelText("De");
     const to = within(drawer).getByLabelText("A");
@@ -635,11 +635,13 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
     expect(within(drawer).getByLabelText("Inici")).toHaveValue("07:00");
     expect(within(drawer).getByLabelText("Final")).toHaveValue("08:00");
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "15082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-15" } });
 
     const start = within(drawer).getByLabelText("Inici");
     const end = within(drawer).getByLabelText("Final");
-    expect(optionValues(start)[0]).toBe("09:00");
+    await waitFor(() => {
+      expect(optionValues(start)[0]).toBe("09:00");
+    });
     expect(optionValues(start).at(-1)).toBe("13:50");
     expect(optionValues(end).at(-1)).toBe("14:00");
     expect(optionValues(end).every((time) => time >= "09:10" && time <= "14:00")).toBe(true);
@@ -671,7 +673,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     fireEvent.change(within(drawer).getByLabelText("Pista"), {
       target: { value: "ring-muntanya" },
     });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-12" } });
     fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "19:00" } });
     fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "19:30" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" }));
@@ -710,7 +712,10 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
     const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-12" } });
+    await waitFor(() => {
+      expect(within(drawer).getByLabelText("Inici")).toBeEnabled();
+    });
     fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "19:00" } });
     fireEvent.click(within(drawer).getByRole("radio", { name: "Muntanya" }));
     fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
@@ -768,7 +773,10 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
     const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-12" } });
+    await waitFor(() => {
+      expect(within(drawer).getByLabelText("Inici")).toBeEnabled();
+    });
     fireEvent.change(within(drawer).getByLabelText("Inici"), { target: { value: "19:00" } });
     fireEvent.click(within(drawer).getByRole("radio", { name: "Muntanya" }));
     fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
@@ -838,7 +846,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     fireEvent.change(within(drawer).getByLabelText("Pista"), {
       target: { value: "ring-muntanya" },
     });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "12082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-12" } });
     fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "19:00" } });
     fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "19:30" } });
     fireEvent.click(within(drawer).getByRole("button", { name: /^DESA EL BLOQUEIG/u }));
@@ -1036,8 +1044,8 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
     const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
     fireEvent.change(within(drawer).getByLabelText("Pista"), { target: { value: "ring-cadells" } });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
-    expect(within(drawer).getByLabelText("Data")).toHaveValue("13/08/2026");
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-13" } });
+    expect(within(drawer).getByLabelText("Data")).toHaveValue("2026-08-13");
     fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "18:00" } });
     fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "19:00" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" }));
@@ -1141,10 +1149,12 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
     const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-13" } });
     const start = within(drawer).getByLabelText("Inici");
     const end = within(drawer).getByLabelText("Final");
-    expect(optionValues(start)[0]).toBe("07:10");
+    await waitFor(() => {
+      expect(optionValues(start)[0]).toBe("07:10");
+    });
     expect(optionValues(start).at(-1)).toBe("21:40");
     expect(optionValues(end)[0]).toBe("07:20");
     expect(optionValues(end).at(-1)).toBe("21:50");
@@ -1176,7 +1186,7 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     // No date yet: today's options (Wednesday 12).
     expect(from).toHaveValue("07:10");
     expect(to).toHaveValue("07:40");
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-13" } });
     expect(optionValues(from)[0]).toBe("07:10");
     expect(optionValues(from).at(-1)).toBe("21:20");
     expect(optionValues(to)[0]).toBe("07:40");
@@ -1333,7 +1343,7 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     const end = within(drawer).getByLabelText("Final");
     const submit = within(drawer).getByRole("button", { name: "CREA LA CLASSE" });
     fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
-    fireEvent.change(date, { target: { value: "16082026" } });
+    fireEvent.change(date, { target: { value: "2026-08-16" } });
     expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED_DAY);
     expect(date).toHaveAttribute("aria-invalid", "true");
     expect(optionValues(start)).toEqual([]);
@@ -1346,9 +1356,11 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     expect(bodies).toEqual([]);
 
     // Monday is open again: times from the opening and the form can be sent.
-    fireEvent.change(date, { target: { value: "17082026" } });
+    fireEvent.change(date, { target: { value: "2026-08-17" } });
     expect(within(drawer).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
-    expect(optionValues(start)[0]).toBe("07:00");
+    await waitFor(() => {
+      expect(optionValues(start)[0]).toBe("07:00");
+    });
     expect(start).toBeEnabled();
     expect(submit).toBeEnabled();
   });
@@ -1367,7 +1379,7 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
     const date = within(drawer).getByLabelText("Data");
     const submit = within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" });
-    fireEvent.change(date, { target: { value: "16082026" } });
+    fireEvent.change(date, { target: { value: "2026-08-16" } });
     expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED_DAY);
     expect(date).toHaveAttribute("aria-invalid", "true");
     expect(optionValues(within(drawer).getByLabelText("De"))).toEqual([]);
@@ -1377,7 +1389,7 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     await settle();
     expect(bodies).toEqual([]);
 
-    fireEvent.change(date, { target: { value: "17082026" } });
+    fireEvent.change(date, { target: { value: "2026-08-17" } });
     expect(within(drawer).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
     expect(optionValues(within(drawer).getByLabelText("De"))[0]).toBe("07:00");
     expect(submit).toBeEnabled();
@@ -1398,10 +1410,10 @@ describe("T-06-28 E4-W10 D4 follow-ups of the E4-W09 review", () => {
     const date = within(drawer).getByLabelText("Data");
 
     // Saturday 15, in the validated week: the class would be born active, and the drawer says so.
-    fireEvent.change(date, { target: { value: "15082026" } });
+    fireEvent.change(date, { target: { value: "2026-08-15" } });
     expect(await within(drawer).findByText(VISIBLE_NOW)).toBeVisible();
     // Sunday 16, same week, closed: only the closed-day message.
-    fireEvent.change(date, { target: { value: "16082026" } });
+    fireEvent.change(date, { target: { value: "2026-08-16" } });
     expect(within(drawer).getByRole("alert")).toHaveTextContent(CLOSED_DAY);
     await settle();
     expect(within(drawer).queryByText(VISIBLE_NOW)).not.toBeInTheDocument();
@@ -1794,7 +1806,7 @@ describe("T-06-32 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block 
     fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
     const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
     fireEvent.change(within(drawer).getByLabelText("Pista"), { target: { value: "ring-cadells" } });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-13" } });
     fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "16:00" } });
     fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "17:00" } });
     const save = () => within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" });
@@ -1904,7 +1916,7 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes 
     fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
     const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
     fireEvent.change(within(drawer).getByLabelText("Pista"), { target: { value: "ring-cadells" } });
-    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "2026-08-13" } });
     fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "16:00" } });
     fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "17:00" } });
     const save = () => within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" });
@@ -2029,5 +2041,47 @@ describe("R-06-13 / R-15-12 E11-W05 step 2 (INC-41 #10): the risk review's time 
     expect(
       await within(selectedCard()).findByText("Exempta de la revisió de les 8:00"),
     ).toBeVisible();
+  });
+});
+
+describe("Josep feedback: generated daily bands", () => {
+  it("offers only the selected day's band starts and defaults the end to its band", async () => {
+    server.use(
+      http.get("*/api/v1/calendar/time-bands", ({ request }) => {
+        const date = new URL(request.url).searchParams.get("date");
+        return HttpResponse.json({
+          date,
+          configured: true,
+          bands:
+            date === "2026-08-16"
+              ? []
+              : [
+                  { startTime: "17:40", endTime: "18:40" },
+                  { startTime: "18:50", endTime: "19:50" },
+                ],
+        });
+      }),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
+    const drawer = await screen.findByRole("dialog", { name: "Crear classe" });
+    const date = within(drawer).getByLabelText("Data");
+    expect(date).toHaveAttribute("type", "date");
+    fireEvent.change(date, { target: { value: "2026-08-12" } });
+    const start = within(drawer).getByLabelText("Inici");
+    const end = within(drawer).getByLabelText("Final");
+    await waitFor(() => {
+      expect(optionValues(start)).toEqual(["17:40", "18:50"]);
+    });
+    expect(start).toHaveValue("17:40");
+    expect(end).toHaveValue("18:40");
+    fireEvent.change(start, { target: { value: "18:50" } });
+    expect(end).toHaveValue("19:50");
+    fireEvent.change(date, { target: { value: "2026-08-16" } });
+    await waitFor(() => {
+      expect(optionValues(start)).toEqual([]);
+    });
+    expect(within(drawer).getByRole("button", { name: "CREA LA CLASSE" })).toBeDisabled();
   });
 });

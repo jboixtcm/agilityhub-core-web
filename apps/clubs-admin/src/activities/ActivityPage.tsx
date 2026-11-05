@@ -12,7 +12,6 @@ import {
   Modal,
   RichTextEditor,
   type RichTextEditorLabels,
-  Select,
   Skeleton,
   Switch,
   Textarea,
@@ -35,11 +34,9 @@ import { LocaleTabs } from "../catalogs/shared";
 import {
   formatMaskedDate,
   loadOpeningHours,
-  maskDate,
   type OpeningHours,
   openingOf,
   parseMaskedDate,
-  timeOptions,
 } from "../planning/calendar-shared";
 
 import { ActivityPlacementsCard } from "./ActivityPlacementsCard";
@@ -76,6 +73,7 @@ const DIALOG = "dialog";
 
 interface FormState {
   address: string;
+  mapsUrl: string;
   atClub: boolean;
   date: string;
   endTime: string;
@@ -122,8 +120,6 @@ interface ConflictDialog {
   preview: RingConflicts;
 }
 
-const WHOLE_DAY = { close: "23:59", open: "00:00" };
-
 const stateTone: Readonly<Record<Activity["state"], Tone>> = {
   CANCELLED: "danger",
   DRAFT: "neutral",
@@ -134,6 +130,7 @@ const stateTone: Readonly<Record<Activity["state"], Tone>> = {
 function formOf(activity: Activity): FormState {
   return {
     address: activity.location.address ?? "",
+    mapsUrl: activity.location.url ?? "",
     atClub: activity.location.atClub,
     date:
       activity.date === null || activity.date === undefined ? "" : formatMaskedDate(activity.date),
@@ -248,10 +245,6 @@ function fieldKey(field: string): FieldKey {
   return known.find((key) => key === field) ?? "general";
 }
 
-function time(value: string): string {
-  return value.replace(/^0(?=\d:)/u, "");
-}
-
 /** What the form changes against the loaded activity: the `PATCH` body and the invalid fields. */
 function changes(
   form: FormState,
@@ -308,10 +301,12 @@ function changes(
   if (
     form.atClub !== baseline.atClub ||
     form.locationName !== baseline.locationName ||
-    form.address !== baseline.address
+    form.address !== baseline.address ||
+    form.mapsUrl !== baseline.mapsUrl
   ) {
     body.location = {
       address: form.atClub || form.address.trim() === "" ? null : form.address.trim(),
+      url: form.atClub || form.mapsUrl.trim() === "" ? null : form.mapsUrl.trim(),
       atClub: form.atClub,
       name: form.atClub || form.locationName.trim() === "" ? null : form.locationName.trim(),
     };
@@ -373,7 +368,7 @@ export function ActivityPage({
   // a refusal included (CONVENCIONS_API §7, E74, E85).
   const publicationKeys = useSubmissionKeys();
   const cancellationKeys = useSubmissionKeys();
-  const [notifyEmail, setNotifyEmail] = useState(false);
+
   const [conflictDialog, setConflictDialog] = useState<ConflictDialog>();
   const [cancelPreview, setCancelPreview] = useState<CancellationPreview>();
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -704,7 +699,7 @@ export function ActivityPage({
     setPublishing(true);
     setPublishError(undefined);
     try {
-      await publishWith({ notifyEmail }, "confirm");
+      await publishWith({ notifyEmail: false }, "confirm");
     } catch (cause) {
       setPublishError(errorMessage(cause));
     } finally {
@@ -749,7 +744,6 @@ export function ActivityPage({
       const preview = result.data ?? { conflicts: [], trainingBookings: [] };
       publicationKeys.drop(DIALOG);
       if (preview.conflicts.length === 0 && preview.trainingBookings.length === 0) {
-        setNotifyEmail(false);
         setPublishError(undefined);
         setConfirmPublish(true);
       } else {
@@ -941,19 +935,6 @@ export function ActivityPage({
     isoDate !== undefined &&
     opening !== undefined &&
     openingOf(opening, isoDate) === null;
-  const openingWindow = !blocksRings
-    ? WHOLE_DAY
-    : opening === undefined
-      ? null
-      : isoDate === undefined
-        ? { close: "22:00", open: "07:00" }
-        : openingOf(opening, isoDate);
-  const options =
-    openingWindow === null
-      ? []
-      : timeOptions(openingWindow.open, openingWindow.close, settings.slotMinutes);
-  const withValue = (value: string) =>
-    value === "" || options.includes(value) ? options : [...options, value].sort();
   const holiday = isoDate !== undefined && settings.holidays.includes(isoDate);
   const waitlistModule = branding.modules.includes("WAITLIST");
   const title = activity.title;
@@ -1251,10 +1232,16 @@ export function ActivityPage({
                   id="activity-date"
                   inputMode="numeric"
                   onChange={(event) => {
-                    update({ date: maskDate(event.currentTarget.value) });
+                    update({
+                      date:
+                        event.currentTarget.value === ""
+                          ? ""
+                          : formatMaskedDate(event.currentTarget.value),
+                    });
                   }}
                   placeholder={t("admin-activities:form.datePlaceholder")}
-                  value={form.date}
+                  type="date"
+                  value={parseMaskedDate(form.date) ?? ""}
                 />
               </FormField>
               <FormField
@@ -1262,40 +1249,30 @@ export function ActivityPage({
                 id="activity-start"
                 label={t("admin-activities:form.startTime")}
               >
-                <Select
+                <Input
                   id="activity-start"
+                  type="time"
+                  step={60}
                   onChange={(event) => {
                     update({ startTime: event.currentTarget.value });
                   }}
                   value={form.startTime}
-                >
-                  <option value="">{t("admin-activities:form.noTime")}</option>
-                  {withValue(form.startTime).map((value) => (
-                    <option key={value} value={value}>
-                      {time(value)}
-                    </option>
-                  ))}
-                </Select>
+                />
               </FormField>
               <FormField
                 {...fieldError("endTime")}
                 id="activity-end"
                 label={t("admin-activities:form.endTime")}
               >
-                <Select
+                <Input
                   id="activity-end"
+                  type="time"
+                  step={60}
                   onChange={(event) => {
                     update({ endTime: event.currentTarget.value });
                   }}
                   value={form.endTime}
-                >
-                  <option value="">{t("admin-activities:form.noTime")}</option>
-                  {withValue(form.endTime).map((value) => (
-                    <option key={value} value={value}>
-                      {time(value)}
-                    </option>
-                  ))}
-                </Select>
+                />
               </FormField>
             </div>
             {holiday ? (
@@ -1335,10 +1312,16 @@ export function ActivityPage({
                   id="activity-registration-from"
                   inputMode="numeric"
                   onChange={(event) => {
-                    update({ registrationFrom: maskDate(event.currentTarget.value) });
+                    update({
+                      registrationFrom:
+                        event.currentTarget.value === ""
+                          ? ""
+                          : formatMaskedDate(event.currentTarget.value),
+                    });
                   }}
                   placeholder={t("admin-activities:form.datePlaceholder")}
-                  value={form.registrationFrom}
+                  type="date"
+                  value={parseMaskedDate(form.registrationFrom) ?? ""}
                 />
               </FormField>
               <FormField
@@ -1351,10 +1334,16 @@ export function ActivityPage({
                   id="activity-registration-to"
                   inputMode="numeric"
                   onChange={(event) => {
-                    update({ registrationTo: maskDate(event.currentTarget.value) });
+                    update({
+                      registrationTo:
+                        event.currentTarget.value === ""
+                          ? ""
+                          : formatMaskedDate(event.currentTarget.value),
+                    });
                   }}
                   placeholder={t("admin-activities:form.datePlaceholder")}
-                  value={form.registrationTo}
+                  type="date"
+                  value={parseMaskedDate(form.registrationTo) ?? ""}
                 />
               </FormField>
             </div>
@@ -1496,6 +1485,31 @@ export function ActivityPage({
                     value={form.address}
                   />
                 </FormField>
+                <FormField id="activity-location-map" label={t("admin-activities:form.mapsUrl")}>
+                  <Input
+                    id="activity-location-map"
+                    type="url"
+                    value={form.mapsUrl}
+                    onChange={(event) => {
+                      update({ mapsUrl: event.currentTarget.value });
+                    }}
+                  />
+                  {(form.mapsUrl.trim() !== "" && /^https:\/\//i.test(form.mapsUrl.trim())) ||
+                  form.address.trim() !== "" ? (
+                    <a
+                      href={
+                        /^https:\/\//i.test(form.mapsUrl.trim())
+                          ? form.mapsUrl.trim()
+                          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(form.address)}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon aria-hidden="true" name="pin" />
+                      {t("admin-activities:form.openMap")}
+                    </a>
+                  ) : null}
+                </FormField>
               </div>
             )}
             {activity.state === "DRAFT" &&
@@ -1585,7 +1599,9 @@ export function ActivityPage({
                 {t("admin-activities:form.cancelActivity")}
               </Button>
             ) : null}
-            {admin && activity.state === "DRAFT" ? (
+            {admin &&
+            (activity.state === "DRAFT" ||
+              (activity.state === "CANCELLED" && activity.cancellation?.reason !== "DELETED")) ? (
               <Button
                 disabled={busy}
                 onClick={() => {
@@ -1634,14 +1650,7 @@ export function ActivityPage({
           title={t("admin-activities:publishDialog.confirmTitle")}
         >
           <p>{t("admin-activities:publishDialog.confirmText")}</p>
-          <div className="activity-switch">
-            <Switch
-              checked={notifyEmail}
-              label={t("admin-activities:publishDialog.notifyEmail")}
-              onCheckedChange={setNotifyEmail}
-            />
-            <span aria-hidden="true">{t("admin-activities:publishDialog.notifyEmail")}</span>
-          </div>
+
           {publishError === undefined ? null : (
             <p className="ah-form-field__error" role="alert">
               {publishError}

@@ -152,8 +152,8 @@ test.describe("E4-W02 D4 + D4b + D4c class calendar", () => {
     await page.getByRole("button", { name: "Bloqueja pista" }).click();
     const drawer = page.getByRole("dialog", { name: "Bloqueja pista" });
     await drawer.getByLabel("Pista").selectOption({ label: "Cadells" });
-    await drawer.getByLabel("Data").fill("130826");
-    await expect(drawer.getByLabel("Data")).toHaveValue("13/08/26");
+    await drawer.getByLabel("Data").fill("2026-08-13");
+    await expect(drawer.getByLabel("Data")).toHaveValue("2026-08-13");
     await drawer.getByLabel("De", { exact: true }).selectOption("18:00");
     await drawer.getByLabel("A", { exact: true }).selectOption("19:00");
     await drawer.getByLabel("Nota").fill("Reg de la gespa");
@@ -284,7 +284,7 @@ test.describe("T-06-28 E4-W09 D4 time pickers and opening hours", () => {
 
     await page.getByRole("button", { name: "Crear classe" }).click();
     const create = page.getByRole("dialog", { name: "Crear classe" });
-    await create.getByLabel("Data").fill("1308");
+    await create.getByLabel("Data").fill("2026-08-13");
     await expect(create.getByLabel("Inici")).toHaveValue("07:10");
     await expect(create.getByLabel("Final")).toHaveValue("08:10");
     await expectIconsPainted(create);
@@ -292,7 +292,7 @@ test.describe("T-06-28 E4-W09 D4 time pickers and opening hours", () => {
       fullPage: true,
       path: resolve(followUpDirectory, "D4-crear-classe-obertura-0705-1280.png"),
     });
-    await create.getByLabel("Data").fill("16082026");
+    await create.getByLabel("Data").fill("2026-08-16");
     await expect(create.getByRole("alert")).toHaveText("El club està tancat aquest dia");
     await expect(create.getByLabel("Inici")).toBeDisabled();
     await expect(create.getByRole("button", { name: "CREA LA CLASSE" })).toBeDisabled();
@@ -304,14 +304,14 @@ test.describe("T-06-28 E4-W09 D4 time pickers and opening hours", () => {
 
     await page.getByRole("button", { name: "Bloqueja pista" }).click();
     const block = page.getByRole("dialog", { name: "Bloqueja pista" });
-    await block.getByLabel("Data").fill("16082026");
+    await block.getByLabel("Data").fill("2026-08-16");
     await expect(block.getByRole("alert")).toHaveText("El club està tancat aquest dia");
     await expect(block.getByRole("button", { name: "DESA EL BLOQUEIG" })).toBeDisabled();
     await page.screenshot({
       fullPage: true,
       path: resolve(followUpDirectory, "D4-bloqueja-pista-diumenge-tancat-1280.png"),
     });
-    await block.getByLabel("Data").fill("1308");
+    await block.getByLabel("Data").fill("2026-08-13");
     await expect(block.getByLabel("De", { exact: true })).toHaveValue("07:10");
     await expect(block.getByLabel("A", { exact: true })).toHaveValue("07:40");
     const saved = page.waitForRequest(
