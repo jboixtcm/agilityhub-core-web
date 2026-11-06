@@ -137,7 +137,6 @@
     "noPrice": "según tarifa",
     "presentationTitle": "Textos de presentación — {name} (aparecen en el alta)",
     "previewTitle": "Vista previa (como la ve quien se da de alta)",
-    "previewConditionsWithEntry": "{conditions} · entrada {entry}",
     "priceLocked": "No se puede añadir: la fecha corresponde a un periodo de precio bloqueado.",
     "priceStatus": {
       "current": "vigente",

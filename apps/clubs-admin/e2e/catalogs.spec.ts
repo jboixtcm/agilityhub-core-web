@@ -173,9 +173,12 @@ test.describe("E2-W04 club catalogs", () => {
     await expect(page.getByText(/entrada per gos \(matrícula\): 100/u)).toBeVisible();
     await expect(page.getByText(/60\s*€\/mes \+ entrada 100\s*€/u).first()).toBeVisible();
     await expect(page.getByText("(familiar)")).toBeVisible();
-    await expect(page.locator(".catalog-plan-preview")).toContainText(
-      /Fins a dues classes per setmana · entrada 100\s*€/u,
-    );
+    const preview = page.locator(".catalog-plan-preview");
+    await expect(
+      preview.getByText("Fins a dues classes per setmana", { exact: true }),
+    ).toBeVisible();
+    await expect(preview.getByText(/entrada 100\s*€/u)).toHaveCount(1);
+    await expect(preview.locator("p").filter({ hasText: /entrada/u })).toHaveCount(0);
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "D8-modalitats-1280.png"),

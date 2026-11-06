@@ -1672,6 +1672,36 @@ div.lifecycle-error p {
   gap: var(--ah-space-2);
 }
 
+.signup-upfront .signup-segment {
+  flex-wrap: wrap;
+}
+
+.signup-upfront .signup-segment button {
+  padding-inline: var(--ah-space-2);
+  font-size: 0.875rem;
+}
+
+.signup-payment__monthly,
+.signup-upfront {
+  min-width: 0;
+  padding: var(--ah-space-4);
+  border: 1px solid var(--ah-color-border);
+}
+
+.signup-payment__monthly > h2,
+.signup-upfront > h2 {
+  color: var(--ah-color-text);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.signup-success .signup-note--pending {
+  background: var(--ah-color-warning);
+  color: var(--ah-color-on-warning);
+  font-weight: 700;
+}
+
 .signup-upfront__line,
 .signup-upfront__total,
 .signup-upfront__options label {

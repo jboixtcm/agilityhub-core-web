@@ -2154,7 +2154,9 @@ export const handlers = [
     }
     submittedSignupIdentities.add(identity);
     if (body.dog.chip) submittedDogChips.add(body.dog.chip);
-    const checkoutRequired = scenario.signupStripe === true;
+    const checkoutRequired =
+      scenario.signupStripe === true &&
+      (body.payment?.initialMethod === undefined || body.payment.initialMethod === "CARD");
     const upfront = signupResultUpfront(
       submittedQuote(request, body.planId),
       body.payment?.firstMonthOption,
@@ -2235,7 +2237,12 @@ export const handlers = [
       requested ?? offer.find((plan) => plan.current === true)?.id,
     );
     const result = {
-      checkout: { memberId: "member-signup-357", required: scenario.signupStripe === true },
+      checkout: {
+        memberId: "member-signup-357",
+        required:
+          scenario.signupStripe === true &&
+          (body.initialPaymentMethod === undefined || body.initialPaymentMethod === "CARD"),
+      },
       dogId,
       ...(scenario.branding.modules.includes("BILLING")
         ? { upfront: signupResultUpfront(quote, body.additionalDogOption, { addDog: true }) }

@@ -129,10 +129,17 @@ async function renderSignup({
   // The header's title: «Apunta-t'hi», or «Afegeix un gos» on the add-dog «enviada» page (E4-W16).
   await screen.findByRole("heading", {
     level: 1,
-    name: addDog && pathname.endsWith("/enviada") ? "Afegeix un gos" : "Apunta-t'hi",
+    name:
+      requestedUrl.searchParams.get("lang") === "es"
+        ? "Apúntate"
+        : addDog && pathname.endsWith("/enviada")
+          ? "Afegeix un gos"
+          : "Apunta-t'hi",
   });
   if (!pathname.endsWith("/enviada") || requestedUrl.searchParams.get("cs") === "cancel") {
-    await screen.findByText(/Pas \d de \d/u);
+    await screen.findByText(
+      requestedUrl.searchParams.get("lang") === "es" ? /Paso \d de \d/u : /Pas \d de \d/u,
+    );
   }
   return { i18n, navigate };
 }
@@ -741,7 +748,12 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "què vol dir?" }));
     expect(screen.getByText(/publicació de fotos/u)).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    fireEvent.click(
+      within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
+        "button",
+        { name: "Efectiu" },
+      ),
+    );
     expect(screen.getByText(/períodes naturals complets/u)).toBeVisible();
     expect(screen.queryByLabelText("IBAN")).not.toBeInTheDocument();
 
@@ -766,10 +778,15 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Targeta" }));
     expect(screen.getByText(/Pagaràs amb targeta de forma segura/u)).toBeVisible();
-    expect(screen.queryByText(/abans del dia 25/u)).not.toBeInTheDocument();
+    expect(screen.getByText(/abans del dia 25/u)).toBeVisible();
     expect(screen.queryByText(/períodes naturals complets/u)).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    fireEvent.click(
+      within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
+        "button",
+        { name: "Efectiu" },
+      ),
+    );
     expect(screen.getByText(/períodes naturals complets/u)).toBeVisible();
     expect(screen.queryByText(/abans del dia 25/u)).not.toBeInTheDocument();
 
@@ -790,7 +807,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     seedDraft();
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
     expect(screen.getByRole("button", { name: "Targeta" })).toBeVisible();
-    expect(screen.getByText("El pagament es fa en enviar")).toBeVisible();
+    expect(screen.getByText(/Pagaràs amb targeta de forma segura/u)).toBeVisible();
     acceptPrivacy();
     submitSignup();
     await waitFor(() => {
@@ -862,7 +879,12 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     await waitFor(() => {
       expect(sessionStorage.getItem(DRAFT_KEY)).toContain(VALID_IBAN);
     });
-    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    fireEvent.click(
+      within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
+        "button",
+        { name: "Efectiu" },
+      ),
+    );
     await waitFor(() => {
       expect(sessionStorage.getItem(DRAFT_KEY)).not.toContain(VALID_IBAN);
     });
@@ -1192,7 +1214,9 @@ describe("E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup 
       await waitFor(() => {
         expect(field).toHaveFocus();
       });
-      expect(window.document.getElementById(field.getAttribute("aria-describedby") ?? "")).toHaveTextContent(text);
+      expect(
+        window.document.getElementById(field.getAttribute("aria-describedby") ?? ""),
+      ).toHaveTextContent(text);
     },
   );
 
@@ -1211,7 +1235,9 @@ describe("E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup 
     expect(navigate).not.toHaveBeenCalled();
     const chooser = document.querySelector<HTMLElement>(".signup-segment");
     expect(chooser).toHaveAttribute("aria-invalid", "true");
-    expect(window.document.getElementById(chooser?.getAttribute("aria-describedby") ?? "")).toHaveTextContent(text);
+    expect(
+      window.document.getElementById(chooser?.getAttribute("aria-describedby") ?? ""),
+    ).toHaveTextContent(text);
     await waitFor(() => {
       expect(chooser?.contains(document.activeElement)).toBe(true);
     });
@@ -1384,7 +1410,7 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
       );
       const navigate = vi.fn();
       const recorded = recordRequests();
-      seedDraft({wantsFamilyGroup:path === "/apuntat-hi/familia"});
+      seedDraft({ wantsFamilyGroup: path === "/apuntat-hi/familia" });
       await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
       acceptPrivacy();
       submitSignup();
@@ -1667,8 +1693,8 @@ describe("E3-W06 round 2", () => {
     expect(screen.getByLabelText("IBAN")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Titular del compte")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("NIF del titular (opcional)")).toHaveAttribute("readonly");
-    for (const method of ["Domiciliació", "Targeta", "Efectiu"]) {
-      expect(screen.getByRole("button", { name: method })).toBeDisabled();
+    for (const group of screen.getAllByRole("group")) {
+      for (const method of within(group).queryAllByRole("button")) expect(method).toBeDisabled();
     }
     // E3-W08 round 2 #3: the committed start is a frozen line, no longer a choice.
     expect(screen.queryAllByRole("radio")).toEqual([]);
@@ -1677,7 +1703,12 @@ describe("E3-W06 round 2", () => {
     expect(screen.getByLabelText("Autoritzo l'ús de la meva imatge")).toBeDisabled();
     expect(screen.queryByRole("button", { name: "ENVIA LA SOL·LICITUD" })).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    fireEvent.click(
+      within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
+        "button",
+        { name: "Efectiu" },
+      ),
+    );
     expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
     expect((savedDraft().payment as Record<string, unknown>).type).toBe("SEPA_DD");
     expect((savedDraft().payment as Record<string, unknown>).firstMonthOption).toBe("TODAY");
@@ -1713,7 +1744,12 @@ describe("E3-W06 round 2", () => {
       );
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Efectiu" }));
+    fireEvent.click(
+      within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
+        "button",
+        { name: "Efectiu" },
+      ),
+    );
     await waitFor(() => {
       expect((savedDraft().payment as Record<string, unknown>).type).toBe("MANUAL");
     });
@@ -1753,7 +1789,7 @@ describe("E3-W06 round 2", () => {
 
   it("#4 a cleared FOUND claim gives the account holder back to the applicant (R-04-10)", async () => {
     const navigate = vi.fn();
-    seedDraft({wantsFamilyGroup:true});
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Marta Roca" },
@@ -2165,7 +2201,7 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
       ),
     );
     const navigate = vi.fn();
-    seedDraft({wantsFamilyGroup:true});
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Persona desconeguda" },
@@ -2183,7 +2219,7 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
     const config = await signupConfigJson();
     expect(config.allowFamilyGroupPending).toBe(true);
     const navigate = vi.fn();
-    seedDraft({wantsFamilyGroup:true});
+    seedDraft({ wantsFamilyGroup: true });
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
     fireEvent.change(screen.getByLabelText("Nom del responsable"), {
       target: { value: "Persona desconeguda" },
@@ -2628,7 +2664,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
   });
 
   it("round 2 #2: a page restored from the back-forward cache shows its step again, with the draft the next page left", async () => {
-    seedDraft({wantsFamilyGroup:true});
+    seedDraft({ wantsFamilyGroup: true });
     const loads = stubFullPageLoads("/apuntat-hi/gos", { aborted: true });
     await renderSignup({ path: "/apuntat-hi/gos", productionNavigator: true });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
@@ -2666,7 +2702,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
   });
 
   it("round 2 #2: a pageshow that is not a bfcache restore changes nothing", async () => {
-    seedDraft({wantsFamilyGroup:true});
+    seedDraft({ wantsFamilyGroup: true });
     const loads = stubFullPageLoads("/apuntat-hi/gos", { aborted: true });
     await renderSignup({ path: "/apuntat-hi/gos", productionNavigator: true });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
@@ -2912,7 +2948,13 @@ describe("E11-W08 step 5 (S04 §2 16, §6, ruling E138): the member's add-dog on
     mockScenario("signupMemberPriceTwin");
     const response = await fetch(`${window.location.origin}/api/v1/me/dogs/signup`, {
       body: JSON.stringify({
-        dog: { birthDate: "2022-03-17", breed: "Mestís", chip: "941000099999999", name: "Kiwi", sex: "FEMALE" },
+        dog: {
+          birthDate: "2022-03-17",
+          breed: "Mestís",
+          chip: "941000099999999",
+          name: "Kiwi",
+          sex: "FEMALE",
+        },
         planIdRequested: MEMBER_PLAN,
       }),
       headers: {
@@ -2932,5 +2974,52 @@ describe("E11-W08 step 5 (S04 §2 16, §6, ruling E138): the member's add-dog on
       "priceId",
     ]);
     expect(body.details.planId).toBe(MEMBER_PLAN);
+  });
+});
+
+describe("Josep November 6 signup feedback", () => {
+  it.each(["Transferència", "Efectiu"])(
+    "keeps recurring direct debit while %s stays unpaid",
+    async (label) => {
+      seedDraft();
+      const recorded = recordRequests();
+      await renderSignup({ path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+      const monthly = screen.getByRole("group", { name: "Pagament dels rebuts mensuals" });
+      expect(within(monthly).getAllByRole("button")).toHaveLength(2);
+      expect(within(monthly).queryByRole("button", { name: "Targeta" })).not.toBeInTheDocument();
+      expect(screen.getByLabelText("Accepto la política de privacitat")).not.toBeChecked();
+      expect(screen.getByLabelText("Autoritzo l'ús de la meva imatge")).not.toBeChecked();
+      fireEvent.click(
+        within(screen.getByRole("group", { name: "Mètode del pagament inicial" })).getByRole(
+          "button",
+          { name: label },
+        ),
+      );
+      expect(screen.getByLabelText("IBAN")).toBeVisible();
+      acceptPrivacy();
+      fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+      await screen.findByText("Pagament pendent");
+      expect(requestsTo(recorded, "POST", "/checkout-sessions")).toHaveLength(0);
+      expect((await lastBody(recorded, "/signup")).payment).toMatchObject({
+        type: "SEPA_DD",
+        initialMethod: label === "Efectiu" ? "CASH" : "BANK_TRANSFER",
+      });
+    },
+  );
+  it("places vaccination guidance after its upload control", async () => {
+    seedDraft();
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const label = screen.getByText("Cartilla de vacunes");
+    const guidance = screen.getByText(/És imprescindible per començar les classes/u);
+    expect(label.compareDocumentPosition(guidance) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      guidance.compareDocumentPosition(screen.getByText(/Afegir un altre full/u)) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+  it("opens an explicit Spanish signup link", async () => {
+    await renderSignup({ path: "/apuntat-hi?lang=es" });
+    await screen.findByRole("heading", { name: "Apúntate" });
+    expect(screen.getByRole("combobox", { name: "Idioma" })).toHaveValue("es");
   });
 });

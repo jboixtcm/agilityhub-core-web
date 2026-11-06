@@ -113,7 +113,6 @@
     "initialTitle": "Initial payment",
     "entryLine": "Joining fee (1 dog)",
     "chooseStart": "Monthly fee — choose when you want to start:",
-    "stripeSubmit": "Payment is made on submission",
     "privacy": "I accept the privacy policy",
     "privacyLink": "Read it here",
     "imageUse": "I authorize use of my image",
@@ -124,7 +123,14 @@
     "reviewFooter": "The club will review the request and payment, then send your welcome message with access and the user guide.",
     "addDogReviewFooter": "The club will review the request and the payment for the new dog, and we will let you know in the app once it is approved.",
     "consentOutdated": "The policy has changed. Review it and accept it again.",
-    "cancelled": "The payment was not completed. You can retry from the email we sent you."
+    "cancelled": "The payment was not completed. You can retry from the email we sent you.",
+    "initialMethod": "Initial payment method",
+    "initialMethods": {
+      "CARD": "Card",
+      "BANK_TRANSFER": "Bank transfer",
+      "CASH": "Cash"
+    },
+    "cashInitial": "Arrange payment with the club"
   },
   "step4": {
     "firstMonth": {
@@ -143,7 +149,8 @@
     "title": "Request submitted",
     "checkout": "You will receive payment confirmation by email",
     "addDogTitle": "Add a dog",
-    "backToDogs": "BACK TO MY DOGS"
+    "backToDogs": "BACK TO MY DOGS",
+    "paymentPending": "Payment pending"
   },
   "honeypot": "Website"
 }

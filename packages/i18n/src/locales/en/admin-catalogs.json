@@ -137,7 +137,6 @@
     "noPrice": "price on request",
     "presentationTitle": "Presentation text — {name} (shown at signup)",
     "previewTitle": "Preview (as seen by the person signing up)",
-    "previewConditionsWithEntry": "{conditions} · {entry} entry fee",
     "priceLocked": "This price cannot be added because the date is in a locked price period.",
     "priceStatus": {
       "current": "current",

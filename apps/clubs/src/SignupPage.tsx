@@ -141,6 +141,7 @@ interface CountryProfile {
 
 const DRAFT_KEY = "signup.draft.v1";
 const CHECKOUT_KEY = "signup.checkout.v1";
+const PAYMENT_RESULT_KEY = "signup.payment-result.v1";
 const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const STEP_ORDER: readonly SignupStep[] = ["person", "dog", "family", "payment"];
 const PERSON_FIELDS = new Set(["birthDate", "firstName", "gender", "lastName1", "lastName2"]);
@@ -1563,11 +1564,6 @@ function DogStep({
           value={draft.dog.notesToInstructors ?? ""}
         />
       </FormField>
-      {documentRequired ? null : (
-        <aside className="signup-note signup-note--neutral">
-          {t("signup:dog.optionalDocument")}
-        </aside>
-      )}
       <div
         className={`ah-form-field signup-file-field${errors.documents === undefined ? "" : " ah-form-field--error"}`}
       >
@@ -1592,6 +1588,11 @@ function DogStep({
           </div>
         )}
       </div>
+      {documentRequired ? null : (
+        <aside className="signup-note signup-note--neutral">
+          {t("signup:dog.optionalDocument")}
+        </aside>
+      )}
       <div className="signup-upload-list">
         {files.map((file) => (
           <p className="signup-uploaded" key={file.fileKey}>
@@ -1985,6 +1986,7 @@ function withoutGroupHolder(draft: SignupDraft): SignupDraft {
 function paymentBody(payment: SignupPayment): SignupPayment {
   const base: SignupPayment = {
     type: payment.type,
+    ...(payment.initialMethod === undefined ? {} : { initialMethod: payment.initialMethod }),
     ...(payment.firstMonthOption === undefined
       ? {}
       : { firstMonthOption: payment.firstMonthOption }),
@@ -2075,7 +2077,14 @@ function PaymentStep({
   const paymentMethod = paymentMethods.find((method) => method.type === draft.payment.type);
   const billing = branding.modules.includes("BILLING");
   const needsConsents = !addDog || config.member?.consentsUpToDate === false;
-  const stripe = paymentMethods.some((method) => method.type === "CARD");
+  const recurringMethods = paymentMethods.filter((method) => method.type !== "CARD");
+  const initialMethods = config.initialPaymentMethods ?? [];
+  const initialMethod = draft.payment.initialMethod ?? initialMethods[0];
+  const initialLabels = {
+    CARD: t("signup:payment.initialMethods.CARD"),
+    BANK_TRANSFER: t("signup:payment.initialMethods.BANK_TRANSFER"),
+    CASH: t("signup:payment.initialMethods.CASH"),
+  };
   const manualInstructions = paymentMethods.find(
     (method) => method.type === "MANUAL",
   )?.instructions;
@@ -2220,6 +2229,7 @@ function PaymentStep({
         const body: AddDogSignupRequest | SignupRequest = addDog
           ? {
               additionalDogOption: startOption ?? draft.additionalDogOption,
+              ...(initialMethod === undefined ? {} : { initialPaymentMethod: initialMethod }),
               dog,
               documents: dog.documents ?? [],
               ...(draft.planId === "" ? {} : { planIdRequested: draft.planId }),
@@ -2236,8 +2246,15 @@ function PaymentStep({
                 ? {
                     payment: paymentBody(
                       startOption === undefined
-                        ? draft.payment
-                        : { ...draft.payment, firstMonthOption: startOption },
+                        ? {
+                            ...draft.payment,
+                            ...(initialMethod === undefined ? {} : { initialMethod }),
+                          }
+                        : {
+                            ...draft.payment,
+                            firstMonthOption: startOption,
+                            ...(initialMethod === undefined ? {} : { initialMethod }),
+                          },
                     ),
                   }
                 : {}),
@@ -2287,6 +2304,10 @@ function PaymentStep({
           });
           if (result.data === undefined) throw new TypeError("Missing dog-signup response");
           if (!result.data.checkout.required) {
+            safeSessionSet(
+              PAYMENT_RESULT_KEY,
+              String((result.data.upfront?.totalDue.amountMinor ?? 0) > 0),
+            );
             onContinue(paths.sent ?? "/gossos/nou/enviada");
             return;
           }
@@ -2302,6 +2323,10 @@ function PaymentStep({
           });
           if (result.data === undefined) throw new TypeError("Missing signup response");
           if (!result.data.checkout.required) {
+            safeSessionSet(
+              PAYMENT_RESULT_KEY,
+              String((result.data.upfront?.totalDue.amountMinor ?? 0) > 0),
+            );
             onContinue(paths.sent ?? "/apuntat-hi/enviada");
             return;
           }
@@ -2318,6 +2343,7 @@ function PaymentStep({
       const checkoutKey = submission.checkoutKey ?? crypto.randomUUID();
       const created: SignupSubmission = { ...submission, checkoutKey };
       onChange((current) => ({ ...current, submission: created }));
+      safeSessionRemove(PAYMENT_RESULT_KEY);
       safeSessionSet(CHECKOUT_KEY, "1");
       const origin = window.location.origin;
       const checkout = await client.POST("/checkout-sessions", {
@@ -2379,7 +2405,7 @@ function PaymentStep({
         </p>
       ) : null}
       {billing ? (
-        <section className="signup-payment__monthly">
+        <Card className="signup-payment__monthly">
           <h2>{t("signup:payment.monthlyTitle")}</h2>
           <p>{config.texts.monthlyPaymentIntro}</p>
           {addDog ? (
@@ -2410,7 +2436,7 @@ function PaymentStep({
                 role="group"
                 aria-label={t("signup:payment.monthlyTitle")}
               >
-                {paymentMethods.map((method) => (
+                {recurringMethods.map((method) => (
                   <button
                     aria-pressed={draft.payment.type === method.type}
                     disabled={locked}
@@ -2499,10 +2525,6 @@ function PaymentStep({
                     {config.texts.paymentDay}
                   </aside>
                 </>
-              ) : draft.payment.type === "CARD" ? (
-                <aside className="signup-note signup-note--neutral">
-                  {t("signup:payment.cardSecure")}
-                </aside>
               ) : (
                 <aside className="signup-note signup-note--neutral">
                   {config.texts.cashConditions}
@@ -2510,7 +2532,7 @@ function PaymentStep({
               )}
             </>
           )}
-        </section>
+        </Card>
       ) : null}
       {billing && hasUpfront ? (
         <Card className="signup-upfront">
@@ -2569,7 +2591,37 @@ function PaymentStep({
             <span>{t("signup:step4.total")}</span>
             <b>{formatMoneyMinor(totalDue)}</b>
           </p>
-          <p>{stripe ? t("signup:payment.stripeSubmit") : manualInstructions}</p>
+          {initialMethods.length === 0 ? null : (
+            <div
+              className="signup-segment"
+              role="group"
+              aria-label={t("signup:payment.initialMethod")}
+            >
+              {initialMethods.map((method) => (
+                <button
+                  key={method}
+                  type="button"
+                  disabled={locked}
+                  aria-pressed={initialMethod === method}
+                  onClick={() => {
+                    onChange((current) => ({
+                      ...current,
+                      payment: { ...current.payment, initialMethod: method },
+                    }));
+                  }}
+                >
+                  {initialLabels[method]}
+                </button>
+              ))}
+            </div>
+          )}
+          <aside className="signup-note signup-note--neutral">
+            {initialMethod === "CARD"
+              ? t("signup:payment.cardSecure")
+              : initialMethod === "CASH"
+                ? t("signup:payment.cashInitial")
+                : manualInstructions}
+          </aside>
         </Card>
       ) : null}
       {needsConsents ? (
@@ -2671,11 +2723,17 @@ function SuccessStep({
   useEffect(() => {
     safeSessionRemove(CHECKOUT_KEY);
   }, []);
+  const [paymentPending] = useState(() => sessionStorage.getItem(PAYMENT_RESULT_KEY) === "true");
   return (
     <section className="signup-success">
       <span aria-hidden="true">✓</span>
       <h2>{t("signup:success.title")}</h2>
       <p>{addDog ? t("signup:payment.addDogReviewFooter") : t("signup:payment.reviewFooter")}</p>
+      {!checkout && paymentPending ? (
+        <p className="signup-note signup-note--pending" role="status">
+          {t("signup:success.paymentPending")}
+        </p>
+      ) : null}
       {checkout ? <p>{t("signup:success.checkout")}</p> : null}
       {checkout ? (
         <CheckoutReturn
@@ -2712,6 +2770,21 @@ export function SignupPage({
   const profile = countryProfile(branding.countryProfile);
   const { i18n, t } = useTranslation(["signup", "errors"]);
   const paths = signupPaths(addDog);
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("lang");
+    if (
+      requested === null ||
+      !branding.locales.includes(requested) ||
+      requested === i18n.resolvedLanguage
+    )
+      return;
+    try {
+      localStorage.setItem(LOCALE_STORAGE_KEY, requested);
+    } catch {
+      /* Storage can be unavailable. */
+    }
+    void i18n.changeLanguage(requested);
+  }, [branding.locales, i18n]);
   // The `?cs=cancel` marker of Stripe's return is read once, when the document loads, and then
   // removed from the address (below): a reload never cancels a later attempt.
   const [cancelled] = useState(
@@ -2792,59 +2865,75 @@ export function SignupPage({
 
   useEffect(() => {
     let active = true;
-    void client.GET("/signup").then(
-      (result) => {
-        if (!active) return;
-        if (result.data === undefined) {
-          setLoadError(true);
-          return;
-        }
-        const data = result.data;
-        setConfig(data);
-        updateDraft((current) => {
-          // The signup exists: its committed choices never change (R-04-26).
-          if (current.submission?.memberId !== undefined) return current;
-          const plans = data.plans ?? [];
-          const planAvailable =
-            current.planId !== "" && plans.some((plan) => plan.id === current.planId);
-          // T-04-32, R-04-09: the add-dog keeps the member's plan, the one marked `current` (no
-          // selection on 17; D2 can change it). Without one the member chooses: nothing is
-          // preselected, and a choice already made is kept while the offer still lists it.
-          const memberPlanId = plans.find((plan) => plan.current === true)?.id;
-          const planId = addDog
-            ? (memberPlanId ?? (planAvailable ? current.planId : ""))
-            : planAvailable
-              ? current.planId
-              : (plans[0]?.id ?? "");
-          const paymentMethods = data.paymentMethods ?? [];
-          const method = paymentMethods.some((candidate) => candidate.type === current.payment.type)
-            ? current.payment.type
-            : paymentMethods[0]?.type;
-          // R-04-17: an acceptance of other legal texts is cleared and asked again.
-          const version = data.legal?.legalTextsVersion;
-          const consentOutdated =
-            version !== undefined &&
-            (current.privacyAccepted || current.imageConsent) &&
-            current.consentVersion !== version;
-          return {
-            ...current,
-            ...(consentOutdated
-              ? { consentVersion: "", imageConsent: false, privacyAccepted: false }
-              : {}),
-            payment:
-              method === undefined ? current.payment : withPaymentType(current.payment, method),
-            planId,
-          };
-        });
-      },
-      () => {
-        if (active) setLoadError(true);
-      },
-    );
+    void client
+      .GET("/signup", {
+        headers: { "Accept-Language": i18n.resolvedLanguage ?? branding.defaultLocale },
+      })
+      .then(
+        (result) => {
+          if (!active) return;
+          if (result.data === undefined) {
+            setLoadError(true);
+            return;
+          }
+          const data = result.data;
+          setConfig(data);
+          updateDraft((current) => {
+            // The signup exists: its committed choices never change (R-04-26).
+            if (current.submission?.memberId !== undefined) return current;
+            const plans = data.plans ?? [];
+            const planAvailable =
+              current.planId !== "" && plans.some((plan) => plan.id === current.planId);
+            // T-04-32, R-04-09: the add-dog keeps the member's plan, the one marked `current` (no
+            // selection on 17; D2 can change it). Without one the member chooses: nothing is
+            // preselected, and a choice already made is kept while the offer still lists it.
+            const memberPlanId = plans.find((plan) => plan.current === true)?.id;
+            const planId = addDog
+              ? (memberPlanId ?? (planAvailable ? current.planId : ""))
+              : planAvailable
+                ? current.planId
+                : (plans[0]?.id ?? "");
+            const paymentMethods = (data.paymentMethods ?? []).filter(
+              (method) => method.type !== "CARD",
+            );
+            const initialMethods = data.initialPaymentMethods ?? [];
+            const initialMethod =
+              initialMethods.find((method) => method === current.payment.initialMethod) ??
+              initialMethods[0];
+            const method = paymentMethods.some(
+              (candidate) => candidate.type === current.payment.type,
+            )
+              ? current.payment.type
+              : paymentMethods[0]?.type;
+            // R-04-17: an acceptance of other legal texts is cleared and asked again.
+            const version = data.legal?.legalTextsVersion;
+            const consentOutdated =
+              version !== undefined &&
+              (current.privacyAccepted || current.imageConsent) &&
+              current.consentVersion !== version;
+            return {
+              ...current,
+              ...(consentOutdated
+                ? { consentVersion: "", imageConsent: false, privacyAccepted: false }
+                : {}),
+              payment: {
+                ...(method === undefined
+                  ? current.payment
+                  : withPaymentType(current.payment, method)),
+                ...(initialMethod === undefined ? {} : { initialMethod }),
+              },
+              planId,
+            };
+          });
+        },
+        () => {
+          if (active) setLoadError(true);
+        },
+      );
     return () => {
       active = false;
     };
-  }, [addDog, client, i18n.resolvedLanguage, reload, updateDraft]);
+  }, [addDog, branding.defaultLocale, client, i18n.resolvedLanguage, reload, updateDraft]);
 
   const navigateTo = (nextPath: string) => {
     if (nextPath === paths.sent) {

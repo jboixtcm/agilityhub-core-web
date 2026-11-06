@@ -328,3 +328,21 @@ describe("T-05 feedback 3: price and plan removal", () => {
     });
   });
 });
+
+it("previews the selected language and shows the entry fee once", async () => {
+  await servePlans("Abonat", (plan) => ({
+    ...plan,
+    nameI18n: { ca: "Abonat", es: "Abonado" },
+    conditionsI18n: { ca: "Condicions catalanes", es: "Condiciones castellanas" },
+    conditions: "Condicions catalanes",
+  }));
+  await renderPlans();
+  await screen.findByText("Vista prèvia (com ho veu qui es dona d'alta)");
+  fireEvent.click(screen.getByRole("tab", { name: "ES" }));
+  const preview = document.querySelector<HTMLElement>(".catalog-plan-preview");
+  if (preview === null) throw new TypeError("Missing preview");
+  expect(within(preview).getByText("Abonado")).toBeVisible();
+  expect(within(preview).getByText("Condiciones castellanas")).toBeVisible();
+  expect(within(preview).queryByText("Condicions catalanes")).not.toBeInTheDocument();
+  expect(preview).toHaveAttribute("lang", "es");
+});

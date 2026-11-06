@@ -7831,6 +7831,8 @@ export interface components {
             consents?: components["schemas"]["SignupConsents"];
             documents: components["schemas"]["SignupDocument"][];
             dog: components["schemas"]["SignupDog"];
+            /** @enum {string} */
+            initialPaymentMethod?: "CARD" | "BANK_TRANSFER" | "CASH";
             /**
              * Format: uuid
              * @description R-04-09: omitted, the member's own plan. A member without a plan, or whose plan is no longer assignable (inactive or its module off; GET /signup then marks no plan current), must send one of the offered plans (400 VALIDATION_ERROR, fieldErrors planIdRequested REQUIRED), unless GET /signup offers none
@@ -15546,6 +15548,8 @@ export interface components {
             closedText?: string;
             countryProfile?: components["schemas"]["SignupCountryProfile"];
             enabled: boolean;
+            /** @description Available initial-payment methods, separate from recurring receipts; omitted without BILLING */
+            initialPaymentMethods?: ("CARD" | "BANK_TRANSFER" | "CASH")[];
             legal?: components["schemas"]["SignupLegal"];
             /** @description Only present for an authenticated MEMBER adding a dog */
             member?: components["schemas"]["SignupMember"];
@@ -15733,6 +15737,11 @@ export interface components {
             holderTaxId?: string;
             /** @example ES0000000000000000000000 */
             iban?: string;
+            /**
+             * @description Initial payment, independent of the recurring payment type. Omitted by legacy clients.
+             * @enum {string}
+             */
+            initialMethod?: "CARD" | "BANK_TRANSFER" | "CASH";
             /** @enum {string} */
             type: "SEPA_DD" | "CARD" | "MANUAL";
         };
@@ -15895,6 +15904,8 @@ export interface components {
             upfront?: components["schemas"]["SignupUpfront"];
         };
         SignupSubmission: {
+            /** @enum {string} */
+            initialPaymentMethod?: "CARD" | "BANK_TRANSFER" | "CASH";
             locale: string;
             /** Format: int32 */
             pendingDays: number;
@@ -41267,7 +41278,7 @@ export interface operations {
             };
             /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION, PRICE_OVERLAP */
             409: components["responses"]["StaleVersion"];
-            /** @description MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED */
+            /** @description PAYMENT_METHOD_NOT_AVAILABLE, MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED */
             422: {
                 headers: {
                     [name: string]: unknown;

@@ -103,7 +103,15 @@ function PriceStatus({ status }: { status: Price["status"] }) {
   return <Badge tone="neutral">{t("admin-catalogs:plans.priceStatus.expired")}</Badge>;
 }
 
-function PlanPrice({ entryFeeMinor, plan }: { entryFeeMinor: number; plan: Plan }) {
+function PlanPrice({
+  entryFeeMinor,
+  plan,
+  locale,
+}: {
+  entryFeeMinor: number;
+  plan: Plan;
+  locale?: string;
+}) {
   const { formatMinor, formatMoneyMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const price = currentPrice(plan);
@@ -116,16 +124,17 @@ function PlanPrice({ entryFeeMinor, plan }: { entryFeeMinor: number; plan: Plan 
     return (
       <strong>
         {planEntryFee === undefined
-          ? t("admin-catalogs:plans.monthlyPrice", { amount })
+          ? t("admin-catalogs:plans.monthlyPrice", { amount, lng: locale })
           : t("admin-catalogs:plans.monthlyPriceWithEntry", {
               amount,
+              lng: locale,
               entry: formatMinor(planEntryFee, { compact: true }),
             })}
       </strong>
     );
   }
   if (plan.type === "SINGLE_CLASS") {
-    return <strong>{t("admin-catalogs:plans.singleClassPrice", { amount })}</strong>;
+    return <strong>{t("admin-catalogs:plans.singleClassPrice", { amount, lng: locale })}</strong>;
   }
   return <strong>{amount}</strong>;
 }
@@ -834,7 +843,6 @@ function PlanCopyCards({
   plan: Plan;
 }) {
   const branding = useBranding();
-  const { formatMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
   const [textLocale, setTextLocale] = useState(branding.defaultLocale);
@@ -845,7 +853,18 @@ function PlanCopyCards({
     localized(plan.texts?.offerLabelI18n, plan.texts?.offerLabel ?? "", branding.defaultLocale),
   );
   const [saving, setSaving] = useState(false);
-  const previewEntryFee = entryFeeAmountMinor(plan, entryFeeMinor);
+  const previewText = (values: LocalizedText | undefined, fallback: string) =>
+    [values?.[textLocale], values?.[branding.defaultLocale], fallback].find(
+      (value) => value !== undefined && value !== "",
+    ) ?? "";
+  const previewPlan: Plan = {
+    ...plan,
+    name: previewText(plan.nameI18n, plan.name),
+    texts: {
+      ...plan.texts,
+      priceLabel: previewText(plan.texts?.priceLabelI18n, plan.texts?.priceLabel ?? ""),
+    },
+  };
 
   const save = async () => {
     setSaving(true);
@@ -913,20 +932,15 @@ function PlanCopyCards({
       </Card>
       <Card>
         <h2>{t("admin-catalogs:plans.previewTitle")}</h2>
-        <div className="catalog-plan-preview">
+        <div className="catalog-plan-preview" lang={textLocale}>
           <div className="catalog-plan-preview__title">
-            <strong>{plan.name}</strong>
-            {billingEnabled ? <PlanPrice entryFeeMinor={entryFeeMinor} plan={plan} /> : null}
+            <strong>{previewPlan.name}</strong>
+            {billingEnabled ? (
+              <PlanPrice entryFeeMinor={entryFeeMinor} plan={previewPlan} locale={textLocale} />
+            ) : null}
           </div>
           <p>{description[textLocale] ?? ""}</p>
-          <p>
-            {previewEntryFee === undefined
-              ? sentenceCase(plan.conditions ?? "")
-              : t("admin-catalogs:plans.previewConditionsWithEntry", {
-                  conditions: sentenceCase(plan.conditions ?? ""),
-                  entry: formatMinor(previewEntryFee, { compact: true }),
-                })}
-          </p>
+          <p>{sentenceCase(previewText(plan.conditionsI18n, plan.conditions ?? ""))}</p>
           <p>{offerLabel[textLocale] ?? ""}</p>
         </div>
         <p className="catalog-plan-footnote">{t("admin-catalogs:plans.validityNote")}</p>

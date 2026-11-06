@@ -113,7 +113,6 @@
     "initialTitle": "Pagament inicial",
     "entryLine": "Entrada (1 gos)",
     "chooseStart": "Quota mensual — tria quan vols començar:",
-    "stripeSubmit": "El pagament es fa en enviar",
     "privacy": "Accepto la política de privacitat",
     "privacyLink": "Pots consultar-la aquí",
     "imageUse": "Autoritzo l'ús de la meva imatge",
@@ -124,7 +123,14 @@
     "reviewFooter": "El club revisarà la sol·licitud i el pagament, i t'enviarà la benvinguda amb l'accés i la Guia de l'usuari.",
     "addDogReviewFooter": "El club revisarà la sol·licitud i el pagament del gos nou, i t'avisarem a l'app quan l'hagi validat.",
     "consentOutdated": "La política ha canviat. Revisa-la i torna a acceptar-la.",
-    "cancelled": "El pagament no s'ha completat: pots reintentar-lo des del correu que t'hem enviat."
+    "cancelled": "El pagament no s'ha completat: pots reintentar-lo des del correu que t'hem enviat.",
+    "initialMethod": "Mètode del pagament inicial",
+    "initialMethods": {
+      "CARD": "Targeta",
+      "BANK_TRANSFER": "Transferència",
+      "CASH": "Efectiu"
+    },
+    "cashInitial": "Coordini amb el club el pagament"
   },
   "step4": {
     "firstMonth": {
@@ -143,7 +149,8 @@
     "title": "Sol·licitud enviada",
     "checkout": "Rebràs la confirmació del pagament per correu",
     "addDogTitle": "Afegeix un gos",
-    "backToDogs": "TORNA ALS MEUS GOSSOS"
+    "backToDogs": "TORNA ALS MEUS GOSSOS",
+    "paymentPending": "Pagament pendent"
   },
   "honeypot": "Lloc web"
 }

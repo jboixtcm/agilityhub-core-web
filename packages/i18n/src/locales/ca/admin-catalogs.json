@@ -137,7 +137,6 @@
     "noPrice": "segons tarifa",
     "presentationTitle": "Textos de presentació — {name} (surten a l'alta)",
     "previewTitle": "Vista prèvia (com ho veu qui es dona d'alta)",
-    "previewConditionsWithEntry": "{conditions} · entrada {entry}",
     "priceLocked": "No es pot afegir: la data correspon a un període de preu bloquejat.",
     "priceStatus": {
       "current": "vigent",

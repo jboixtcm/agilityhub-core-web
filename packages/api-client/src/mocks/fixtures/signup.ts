@@ -105,7 +105,9 @@ type PaymentType = NonNullable<SignupConfig["paymentMethods"]>[number]["type"];
 export function signupPaymentLabel(type: PaymentType, acceptLanguage: string | null): string {
   const locale = localeFrom(acceptLanguage);
   if (type === "CARD") return locale === "ca" ? "Targeta" : locale === "es" ? "Tarjeta" : "Card";
-  return translatedConfig(locale).paymentMethods?.find((method) => method.type === type)?.label ?? type;
+  return (
+    translatedConfig(locale).paymentMethods?.find((method) => method.type === type)?.label ?? type
+  );
 }
 
 function translatedConfig(locale: keyof typeof content): CompleteSignupConfig {
@@ -118,7 +120,8 @@ function translatedConfig(locale: keyof typeof content): CompleteSignupConfig {
     plan.name = translated.plans[index] ?? plan.name;
     plan.conditions = translated.planConditions[index] ?? plan.conditions;
     if (plan.offerLabel !== undefined) plan.offerLabel = translated.offer;
-    if (plan.priceLabel !== undefined) plan.priceLabel = translated.planPriceLabels[index] ?? plan.priceLabel;
+    if (plan.priceLabel !== undefined)
+      plan.priceLabel = translated.planPriceLabels[index] ?? plan.priceLabel;
   });
   config.paymentMethods?.forEach((method, index) => {
     method.label = translated.paymentLabels[index] ?? method.label;
@@ -315,6 +318,9 @@ export function signupConfig({
       return copy;
     });
   } else {
+    config.initialPaymentMethods = stripe
+      ? ["CARD", "BANK_TRANSFER", "CASH"]
+      : ["BANK_TRANSFER", "CASH"];
     config.upfront = signupUpfrontConfig(config.plans, today, {
       addDog: member !== undefined,
       memberPlanId,
@@ -364,11 +370,15 @@ export function signupResultUpfront(
   chosen: SignupQuoteOption["option"] | undefined,
   { addDog = false }: { addDog?: boolean } = {},
 ): components["schemas"]["SignupUpfront"] {
-  const option = quote?.options.find((candidate) => candidate.option === chosen) ?? quote?.options[0];
+  const option =
+    quote?.options.find((candidate) => candidate.option === chosen) ?? quote?.options[0];
   const currency = quote?.totalDue.currency ?? "EUR";
   const concepts: { amount: Money; concept: UpfrontLine["concept"] }[] = [...(quote?.lines ?? [])];
   if (option !== undefined && option.amountDue.amountMinor > 0) {
-    concepts.push({ amount: option.amountDue, concept: addDog ? "ADDITIONAL_DOG_FEE" : "FIRST_MONTH" });
+    concepts.push({
+      amount: option.amountDue,
+      concept: addDog ? "ADDITIONAL_DOG_FEE" : "FIRST_MONTH",
+    });
   }
   // As the real core answers it (`signup-quote-add-dog-core.json`): each line DUE with a zero paid amount.
   const lines: UpfrontLine[] = concepts.map((line, index) => ({
@@ -380,7 +390,13 @@ export function signupResultUpfront(
   }));
   return {
     ...(addDog && option !== undefined
-      ? { additionalDog: { amountDue: option.amountDue, option: option.option, startDate: option.startDate } }
+      ? {
+          additionalDog: {
+            amountDue: option.amountDue,
+            option: option.option,
+            startDate: option.startDate,
+          },
+        }
       : {}),
     lines,
     totalDue: option?.totalDue ?? quote?.totalDue ?? money(0, currency),

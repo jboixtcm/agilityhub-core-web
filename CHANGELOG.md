@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-06 — Signup feedback
+
+- Separate monthly and upfront payment choices, show manual upfront payments as pending, and expose the requested upfront method in signup review.
+- Resolve plan preview text in the selected language, remove the duplicated entry-fee sentence, and support explicit signup language links.
+- Move vaccination guidance beneath the upload field and keep privacy/image choices affirmative and initially unchecked.
+
 ## 2026-11-04 — Invoice adjustments and remittance Excel
 
 - Schedule signed, one-off or monthly adjustments for selected members or the entire club. Preview and issue the same totals, including family billing. Download a remittance as one Excel row per bank debit.

@@ -113,7 +113,6 @@
     "initialTitle": "Pago inicial",
     "entryLine": "Entrada (1 perro)",
     "chooseStart": "Cuota mensual — elige cuándo quieres empezar:",
-    "stripeSubmit": "El pago se realiza al enviar",
     "privacy": "Acepto la política de privacidad",
     "privacyLink": "Puedes consultarla aquí",
     "imageUse": "Autorizo el uso de mi imagen",
@@ -124,7 +123,14 @@
     "reviewFooter": "El club revisará la solicitud y el pago, y te enviará la bienvenida con el acceso y la Guía del usuario.",
     "addDogReviewFooter": "El club revisará la solicitud y el pago del perro nuevo, y te avisaremos en la app cuando la haya validado.",
     "consentOutdated": "La política ha cambiado. Revísala y vuelve a aceptarla.",
-    "cancelled": "El pago no se ha completado: puedes volver a intentarlo desde el correo que te hemos enviado."
+    "cancelled": "El pago no se ha completado: puedes volver a intentarlo desde el correo que te hemos enviado.",
+    "initialMethod": "Método del pago inicial",
+    "initialMethods": {
+      "CARD": "Tarjeta",
+      "BANK_TRANSFER": "Transferencia",
+      "CASH": "Efectivo"
+    },
+    "cashInitial": "Coordine con el club el pago"
   },
   "step4": {
     "firstMonth": {
@@ -143,7 +149,8 @@
     "title": "Solicitud enviada",
     "checkout": "Recibirás la confirmación del pago por correo",
     "addDogTitle": "Añade un perro",
-    "backToDogs": "VOLVER A MIS PERROS"
+    "backToDogs": "VOLVER A MIS PERROS",
+    "paymentPending": "Pago pendiente"
   },
   "honeypot": "Sitio web"
 }

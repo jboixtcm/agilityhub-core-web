@@ -640,6 +640,12 @@
       "submitted": "Ara: {value}",
       "documentLocked": "El document d'identitat no es pot canviar durant una readmissió: per corregir-lo, rebutja la readmissió.",
       "dogLocked": "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi."
+    },
+    "initialPayment": "Mètode sol·licitat: {method}",
+    "initialMethods": {
+      "CARD": "Targeta",
+      "BANK_TRANSFER": "Transferència",
+      "CASH": "Efectiu"
     }
   },
   "values": {

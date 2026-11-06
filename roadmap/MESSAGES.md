@@ -2499,3 +2499,7 @@ Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/scr
 ## 2026-11-01 · executor → organizer · app/profile access
 
 @organizer Jordi explicitly separates the member/instructor app from administration. The app no longer offers ADMIN or hands off there automatically. Compatible remembered profiles remain valid; stale ADMIN selects the only app profile or opens the two-profile chooser. No app roles means an explicit explanation without a permission grant. This supersedes S01's old ADMIN choice/automatic handoff. Verification is recorded in `roadmap/evidence/2026-11-01-app-profile-access/VALIDATION.md`.
+
+## 2026-11-06 — Direct user request: Josep signup feedback
+
+@organizer: Implemented the November 6 feedback and the remaining November 5-2 training interval rules in an isolated source snapshot based on the November 5-3 publication checkout. User request: “hi ha feedback nou i preguntes, revisa i aplica”. No existing roadmap task or organizer verification was modified. See `roadmap/evidence/feedback-20261106/REPORT.md` for checks and limitations. New payment labels are taken from the supplied feedback with Spanish/English translations; no new error or parameter keys were invented. Deployment and club-specific transfer instructions remain separate from source changes.

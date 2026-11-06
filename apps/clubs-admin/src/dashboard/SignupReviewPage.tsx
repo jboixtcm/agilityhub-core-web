@@ -868,6 +868,11 @@ export function SignupReviewPage({
         {billing && upfront !== undefined ? (
           <div className="signup-review-upfront">
             <h2>{t("admin-census:signupReview.upfront")}</h2>
+            {signup.signup.initialPaymentMethod === undefined ? null : <p>{t("admin-census:signupReview.initialPayment", { method: {
+              CARD: t("admin-census:signupReview.initialMethods.CARD"),
+              BANK_TRANSFER: t("admin-census:signupReview.initialMethods.BANK_TRANSFER"),
+              CASH: t("admin-census:signupReview.initialMethods.CASH"),
+            }[signup.signup.initialPaymentMethod] })}</p>}
             <label>
               {t("admin-census:signupReview.actuallyPaid")}{" "}
               {stripePaid ? (
