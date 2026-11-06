@@ -17,11 +17,6 @@ jobs:
   checks:
     name: Frontend checks
     runs-on: ubuntu-latest
-    # Match the tested Playwright 1.63.0 environment and avoid installing browser
-    # system dependencies from a changing ubuntu-latest mirror on every run.
-    container:
-      image: mcr.microsoft.com/playwright@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
-      options: --init
     # Retain time for cold checks, the full browser suite and artifact gates.
     timeout-minutes: 45
     steps:
@@ -55,20 +50,14 @@ jobs:
           pnpm api:generate
           git diff --exit-code -- packages/api-client/src/generated
 
-      - name: Verify preinstalled Chromium and WebKit
-        run: |
-          node <<'NODE'
-          const assert = require('node:assert/strict');
-          const fs = require('node:fs');
-          const { chromium, webkit } = require('@playwright/test');
-          assert.equal(require('@playwright/test/package.json').version, '1.63.0');
-          for (const browser of [chromium, webkit]) {
-            assert(fs.existsSync(browser.executablePath()), `${browser.name()} is missing from the pinned image`);
-          }
-          NODE
-
-      - name: Run Playwright with MSW
-        run: pnpm turbo run e2e --concurrency=1 --log-order=stream
+      # Keep Node checks on their normal runner; only the browser suite needs
+      # the validated image with Chromium, WebKit and their system libraries.
+      - name: Run Playwright with MSW in Docker
+        env:
+          PLAYWRIGHT_IMAGE: mcr.microsoft.com/playwright@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
+          E2E_EVIDENCE_TASK: feedback-20261106 ci
+          E2E_CAPTURE_TASK: ci
+        run: pnpm e2e:docker ci --workers=2
 
       - name: Check Clubs bundle size
         run: pnpm size-limit

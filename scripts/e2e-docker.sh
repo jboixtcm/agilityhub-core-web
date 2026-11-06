@@ -5,7 +5,7 @@ set -euo pipefail
 repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 playwright_version="$(cd "$repository_root" && pnpm exec playwright --version)"
 playwright_version="${playwright_version#Version }"
-playwright_image="mcr.microsoft.com/playwright:v${playwright_version}-noble"
+playwright_image="${PLAYWRIGHT_IMAGE:-mcr.microsoft.com/playwright:v${playwright_version}-noble}"
 evidence_directory="$repository_root/roadmap/evidence"
 
 # Only the evidence of the task being worked on comes back from the container, and only the
