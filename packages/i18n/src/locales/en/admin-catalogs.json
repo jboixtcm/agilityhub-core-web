@@ -158,7 +158,13 @@
     },
     "validityNote": "Prices have validity dates: changing a price does not alter receipts already issued. Packs expire after their validity period and automatically create the scheduled departure.",
     "editPrice": "Edit price",
-    "conditionsRequired": "Enter the terms to offer this plan during signup."
+    "conditionsRequired": "Enter the terms to offer this plan during signup.",
+    "billedPrice": "This price period already has linked receipts. Only its end date can change; create a new price to change the amount.",
+    "removeTitle": "Delete plan",
+    "removeQuestion": "Delete {name} and its price periods?",
+    "removePriceQuestion": "Delete the {amount} price period starting {date}? That period will no longer have this price.",
+    "confirmRemoval": "Confirm deletion",
+    "inUse": "This plan has linked members or transactions. You can deactivate it to stop offering it and retain its history."
   },
   "rings": {
     "caption": "Club rings",

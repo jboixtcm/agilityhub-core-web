@@ -24,6 +24,7 @@
 }
 
 :root {
+  --ah-color-chart-label: #000000;
   color-scheme: light;
 
   --ah-color-primary: #1d1d1f;

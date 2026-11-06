@@ -158,7 +158,13 @@
     },
     "validityNote": "Las tarifas tienen vigencia: cambiar un precio no altera los recibos ya emitidos. Los bonos caducan por meses de vigencia y generan la baja prevista automáticamente.",
     "editPrice": "Editar el precio",
-    "conditionsRequired": "Indica las condiciones para mostrar la modalidad en el alta."
+    "conditionsRequired": "Indica las condiciones para mostrar la modalidad en el alta.",
+    "billedPrice": "Este tramo ya tiene recibos asociados. Solo se puede cambiar la fecha de fin; para cambiar el importe, crea un precio nuevo.",
+    "removeTitle": "Eliminar la modalidad",
+    "removeQuestion": "¿Eliminar la modalidad {name} y sus tramos de precio?",
+    "removePriceQuestion": "¿Eliminar el tramo de {amount} con inicio {date}? El periodo quedará sin este precio.",
+    "confirmRemoval": "Confirmar la eliminación",
+    "inUse": "Esta modalidad tiene abonados o movimientos asociados. Puedes desactivarla para dejar de ofrecerla y conservar su historial."
   },
   "rings": {
     "caption": "Pistas del club",

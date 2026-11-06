@@ -84,7 +84,9 @@
     "today": "Avui",
     "training": "Entrenaments",
     "weeklyTemplate": "Plantilla setmanal",
-    "deliveryLog": "Registre d’enviaments"
+    "deliveryLog": "Registre d’enviaments",
+    "collapse": "Plega el menú",
+    "expand": "Desplega el menú"
   },
   "placeholder": {
     "description": "Aquesta pantalla estarà disponible aviat.",

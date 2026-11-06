@@ -158,7 +158,13 @@
     },
     "validityNote": "Les tarifes tenen vigència: canviar un preu no altera els rebuts ja emesos. Els packs caduquen per mesos de vigència i generen la baixa prevista automàtica.",
     "editPrice": "Edita el preu",
-    "conditionsRequired": "Cal informar les condicions per mostrar la modalitat a l’alta."
+    "conditionsRequired": "Cal informar les condicions per mostrar la modalitat a l’alta.",
+    "billedPrice": "Aquest tram ja té rebuts associats. Només se’n pot canviar la data de fi; per canviar l’import, crea un preu nou.",
+    "removeTitle": "Elimina la modalitat",
+    "removeQuestion": "Eliminar la modalitat {name} i els seus trams de preu?",
+    "removePriceQuestion": "Eliminar el tram de {amount} amb inici {date}? El període quedarà sense aquest preu.",
+    "confirmRemoval": "Confirma l’eliminació",
+    "inUse": "Aquesta modalitat té abonats o moviments associats. Pots desactivar-la per deixar d’oferir-la i conservar-ne l’historial."
   },
   "rings": {
     "caption": "Pistes del club",

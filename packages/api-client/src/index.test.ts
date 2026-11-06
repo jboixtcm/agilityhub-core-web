@@ -661,7 +661,8 @@ describe("MSW bootstrap handlers", () => {
     // E11-W07: + E11-T15's `PUT /members/{id}/next-invoice-date` (member-billing-handlers.ts).
     // Word feedback: add-dog, merge preview and confirmed merge.
     // Daily time-band snapshots and complete plan details.
-    expect(handlers).toHaveLength(407);
+    // Price edits and confirmed price/plan deletion.
+    expect(handlers).toHaveLength(410);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

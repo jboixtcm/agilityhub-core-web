@@ -233,3 +233,98 @@ describe("Josep feedback: plan conditions", () => {
     });
   });
 });
+
+describe("T-05 feedback 3: price and plan removal", () => {
+  it("requires confirmation before deleting an unused past price", async () => {
+    let deleted: unknown;
+    await servePlans("Abonat", (plan) => ({
+      ...plan,
+      prices: [
+        {
+          id: "past-price",
+          planId: plan.id,
+          concept: "MONTHLY_FEE",
+          amount: { amountMinor: 1000, currency: "EUR" },
+          taxPercent: 0,
+          validFrom: "2020-01-01",
+          validTo: "2020-12-31",
+          periodicity: "MONTHLY",
+          locked: false,
+          version: 0,
+          status: "EXPIRED",
+        },
+      ],
+    }));
+    server.use(
+      http.delete("*/api/v1/prices/:id", ({ params }) => {
+        deleted = params.id;
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+    await renderPlans();
+    const { dialog } = await openPriceForm("Abonat");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Elimina" }));
+    expect(deleted).toBeUndefined();
+    let confirmation = within(dialog).getByRole("group", { name: "Confirma l’eliminació" });
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Cancel·la" }));
+    expect(deleted).toBeUndefined();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Elimina" }));
+    confirmation = within(dialog).getByRole("group", { name: "Confirma l’eliminació" });
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Elimina" }));
+    await waitFor(() => {
+      expect(deleted).toBe("past-price");
+    });
+  });
+
+  it("explains billed prices and allows only closing their validity", async () => {
+    await servePlans("Abonat", (plan) => ({
+      ...plan,
+      prices: [
+        {
+          id: "billed-price",
+          planId: plan.id,
+          concept: "MONTHLY_FEE",
+          amount: { amountMinor: 1000, currency: "EUR" },
+          taxPercent: 0,
+          validFrom: "2020-01-01",
+          periodicity: "MONTHLY",
+          locked: true,
+          version: 0,
+          status: "CURRENT",
+        },
+      ],
+    }));
+    await renderPlans();
+    const { dialog } = await openPriceForm("Abonat");
+    expect(within(dialog).getByRole("button", { name: "Elimina" })).toBeDisabled();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Edita" }));
+    expect(within(dialog).getByLabelText("Import")).toBeDisabled();
+    expect(within(dialog).getByLabelText("Data d'inici")).toBeDisabled();
+    expect(within(dialog).getByLabelText("Data de fi")).toBeEnabled();
+  });
+
+  it("offers deactivation when an in-use plan cannot be deleted", async () => {
+    let sent: unknown;
+    server.use(
+      http.delete("*/api/v1/plans/:id", () =>
+        HttpResponse.json(
+          { code: "PLAN_IN_USE", message: "In use", details: {}, traceId: "test" },
+          { status: 409 },
+        ),
+      ),
+      http.patch("*/api/v1/plans/:id", async ({ request }) => {
+        sent = await request.json();
+        return HttpResponse.json({});
+      }),
+    );
+    await renderPlans();
+    const { dialog } = await openPriceForm("Abonat");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Elimina la modalitat" }));
+    const confirmation = within(dialog).getByRole("group", { name: "Confirma l’eliminació" });
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Elimina" }));
+    fireEvent.click(await within(confirmation).findByRole("button", { name: "Desactiva" }));
+    await waitFor(() => {
+      expect(sent).toMatchObject({ active: false });
+    });
+  });
+});

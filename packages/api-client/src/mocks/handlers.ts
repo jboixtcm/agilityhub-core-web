@@ -4340,6 +4340,59 @@ export const handlers = [
     };
     return HttpResponse.json(replaceCatalogItem(catalogState.plans, updated));
   }),
+  http.delete("*/api/v1/plans/:id", ({ params }) => {
+    const plan = catalogState.plans.find((candidate) => candidate.id === params.id);
+    if (plan === undefined) return apiError("NOT_FOUND", "Plan not found", 404);
+    if (Object.values(plan.usage ?? {}).some((count) => count > 0))
+      return apiError("PLAN_IN_USE", "Plan is in use", 409);
+    catalogState.plans = catalogState.plans.filter((candidate) => candidate.id !== params.id);
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.delete("*/api/v1/prices/:id", ({ params }) => {
+    const plan = catalogState.plans.find((candidate) =>
+      candidate.prices?.some((price) => price.id === params.id),
+    );
+    const price = plan?.prices?.find((candidate) => candidate.id === params.id);
+    if (plan === undefined || price === undefined)
+      return apiError("NOT_FOUND", "Price not found", 404);
+    if (price.locked) return apiError("PRICE_LOCKED", "Price is in use", 409);
+    plan.prices = (plan.prices ?? []).filter((candidate) => candidate.id !== params.id);
+    plan.currentPrices = (plan.currentPrices ?? []).filter(
+      (candidate) => candidate.id !== params.id,
+    );
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.patch("*/api/v1/prices/:id", async ({ request, params }) => {
+    const plan = catalogState.plans.find((candidate) =>
+      candidate.prices?.some((price) => price.id === params.id),
+    );
+    const price = plan?.prices?.find((candidate) => candidate.id === params.id);
+    if (plan === undefined || price === undefined)
+      return apiError("NOT_FOUND", "Price not found", 404);
+    const body = (await request.json()) as components["schemas"]["PricePatch"];
+    if (body.version !== price.version)
+      return apiError("STALE_VERSION", "Stale price version", 409);
+    if (
+      price.locked &&
+      ((body.amount !== undefined &&
+        (body.amount.amountMinor !== price.amount.amountMinor ||
+          body.amount.currency !== price.amount.currency)) ||
+        (body.taxPercent !== undefined && body.taxPercent !== price.taxPercent) ||
+        (body.validFrom !== undefined && body.validFrom !== price.validFrom))
+    )
+      return apiError("PRICE_LOCKED", "Price is in use", 409);
+    const { validTo, ...patch } = body;
+    const updated: Price = { ...price, ...patch, version: price.version + 1 };
+    if (validTo === null) delete updated.validTo;
+    else if (validTo !== undefined) updated.validTo = validTo;
+    plan.prices = (plan.prices ?? []).map((candidate) =>
+      candidate.id === params.id ? updated : candidate,
+    );
+    plan.currentPrices = (plan.currentPrices ?? []).map((candidate) =>
+      candidate.id === params.id ? updated : candidate,
+    );
+    return HttpResponse.json(updated);
+  }),
   http.post("*/api/v1/prices", async ({ request }) => {
     const body = (await request.json()) as PriceCreate;
     const now = new Date();

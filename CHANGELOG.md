@@ -22,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+- Josep feedback 20261105-3: collapsible desktop navigation, transparent black chart labels, confirmed plan/price removal and billed-price explanations in the editor (ca/es/en).
+
 - Clarify the individual welcome email action on the member record and update signup forms, dashboard labels and draft-week planning.
 
 - Improve the admin sending log with recipient/subject search, safe access-email labels and recoverable delivery incidents; distinguish provider acceptance from confirmed delivery.

@@ -13,7 +13,7 @@ import {
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
-import { type SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { type SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -205,10 +205,12 @@ function PriceForm({
           ? t("admin-catalogs:plans.newPrice")
           : t("admin-catalogs:plans.editPrice")}
       </h3>
+      {existing?.locked ? <p>{t("admin-catalogs:plans.billedPrice")}</p> : null}
       <div className="catalog-form__grid catalog-form__grid--four">
         <FormField id="price-amount" label={t("admin-catalogs:plans.fields.priceAmount")}>
           <Input
             id="price-amount"
+            disabled={existing?.locked}
             min="0"
             onChange={(event) => {
               setAmount(event.currentTarget.value);
@@ -222,6 +224,7 @@ function PriceForm({
         <FormField id="price-tax" label={t("admin-catalogs:plans.fields.taxPercent")}>
           <Input
             id="price-tax"
+            disabled={existing?.locked}
             max="100"
             min="0"
             onChange={(event) => {
@@ -236,6 +239,7 @@ function PriceForm({
         <FormField id="price-from" label={t("admin-catalogs:plans.fields.validFrom")}>
           <Input
             id="price-from"
+            disabled={existing?.locked}
             onChange={(event) => {
               setValidFrom(event.currentTarget.value);
             }}
@@ -286,6 +290,46 @@ function PlanForm({
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
   const [priceToEdit, setPriceToEdit] = useState<Price>();
+  const [removing, setRemoving] = useState<Price | "plan">();
+  const removalConfirmation = useRef<HTMLElement>(null);
+  const removalTrigger = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (removing !== undefined) removalConfirmation.current?.focus();
+  }, [removing]);
+  const [removeError, setRemoveError] = useState<string>();
+  const [planInUse, setPlanInUse] = useState(false);
+  const [removingPending, setRemovingPending] = useState(false);
+  const remove = async (deactivate = false) => {
+    if (item === undefined || removing === undefined) return;
+    setRemovingPending(true);
+    setRemoveError(undefined);
+    try {
+      if (removing !== "plan") {
+        await client.DELETE("/prices/{id}", { params: { path: { id: removing.id } } });
+      } else if (deactivate) {
+        await client.PATCH("/plans/{id}", {
+          params: { path: { id: item.id } },
+          body: { active: false, version: item.version },
+        });
+      } else {
+        await client.DELETE("/plans/{id}", { params: { path: { id: item.id } } });
+      }
+      onSaved();
+      onClose();
+    } catch (reason) {
+      if (isApiError(reason, "PLAN_IN_USE")) {
+        setPlanInUse(true);
+        setRemoveError(t("admin-catalogs:plans.inUse"));
+      } else
+        setRemoveError(
+          isApiError(reason, "PRICE_LOCKED")
+            ? t("admin-catalogs:plans.billedPrice")
+            : messageForError(reason),
+        );
+    } finally {
+      setRemovingPending(false);
+    }
+  };
   const [conditionsError, setConditionsError] = useState<string>();
   const [locale, setLocale] = useState(branding.defaultLocale);
   const [name, setName] = useState(
@@ -667,7 +711,7 @@ function PlanForm({
                       ? ""
                       : t("admin-catalogs:plans.priceUntil", { date: price.validTo })}
                   </span>
-                  {!price.locked ? (
+                  <>
                     <Button
                       variant="ghost"
                       onClick={() => {
@@ -676,11 +720,26 @@ function PlanForm({
                     >
                       {t("admin-catalogs:common.edit")}
                     </Button>
-                  ) : null}
+                    <Button
+                      disabled={price.locked}
+                      variant="ghost"
+                      onClick={(event) => {
+                        removalTrigger.current = event.currentTarget;
+                        setRemoving(price);
+                        setRemoveError(undefined);
+                        setPlanInUse(false);
+                      }}
+                    >
+                      {t("admin-catalogs:common.remove")}
+                    </Button>
+                  </>
                 </li>
               ))}
             </ul>
           )}
+          {item.prices?.some((price) => price.locked) ? (
+            <p>{t("admin-catalogs:plans.billedPrice")}</p>
+          ) : null}
           <PriceForm
             key={priceToEdit?.id ?? "new"}
             client={client}
@@ -690,6 +749,71 @@ function PlanForm({
           />
         </section>
       ) : null}
+      {item === undefined ? null : (
+        <div className="catalog-form__actions">
+          <Button
+            variant="ghost"
+            onClick={(event) => {
+              removalTrigger.current = event.currentTarget;
+              setRemoving("plan");
+              setRemoveError(undefined);
+              setPlanInUse(false);
+            }}
+          >
+            {t("admin-catalogs:plans.removeTitle")}
+          </Button>
+          {priceToEdit === undefined ? null : (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setPriceToEdit(undefined);
+              }}
+            >
+              {t("admin-catalogs:plans.newPrice")}
+            </Button>
+          )}
+        </div>
+      )}
+      {removing === undefined ? null : (
+        <section
+          ref={removalConfirmation}
+          tabIndex={-1}
+          role="group"
+          aria-label={t("admin-catalogs:plans.confirmRemoval")}
+        >
+          <p>
+            {removing === "plan"
+              ? t("admin-catalogs:plans.removeQuestion", { name: item?.name })
+              : t("admin-catalogs:plans.removePriceQuestion", {
+                  amount: formatMoneyMinor(removing.amount),
+                  date: removing.validFrom,
+                })}
+          </p>
+          {removeError === undefined ? null : <p role="alert">{removeError}</p>}
+          <div className="catalog-form__actions">
+            <Button
+              variant="ghost"
+              disabled={removingPending}
+              onClick={() => {
+                setRemoving(undefined);
+                removalTrigger.current?.focus();
+              }}
+            >
+              {t("admin-catalogs:common.cancel")}
+            </Button>
+            <Button
+              loading={removingPending}
+              onClick={() => {
+                void remove(planInUse);
+              }}
+            >
+              {planInUse
+                ? t("admin-catalogs:common.deactivate")
+                : t("admin-catalogs:common.remove")}
+            </Button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

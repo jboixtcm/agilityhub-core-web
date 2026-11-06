@@ -84,7 +84,9 @@
     "today": "Today",
     "training": "Training",
     "weeklyTemplate": "Weekly template",
-    "deliveryLog": "Delivery log"
+    "deliveryLog": "Delivery log",
+    "collapse": "Collapse menu",
+    "expand": "Expand menu"
   },
   "placeholder": {
     "description": "This screen will be available soon.",

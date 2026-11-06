@@ -699,6 +699,13 @@ function AdminShell({
   const { openExports } = useExportsDrawer();
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
   const navigationToggle = useRef<HTMLButtonElement>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("admin-sidebar-collapsed") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [navigation, setNavigation] = useState({ pathname, expanded: false });
   // A route change closes the disclosure before the new page paints, including browser history.
   if (navigation.pathname !== pathname) setNavigation({ pathname, expanded: false });
@@ -752,9 +759,28 @@ function AdminShell({
   }, [client, countersAllowed, countersRequest]);
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell${sidebarCollapsed ? " admin-shell--collapsed" : ""}`}>
       <header className="admin-shell__header">
         <div className="admin-shell__brand">
+          <button
+            aria-controls="admin-navigation"
+            aria-expanded={!sidebarCollapsed}
+            aria-label={sidebarCollapsed ? t("shell:nav.expand") : t("shell:nav.collapse")}
+            title={sidebarCollapsed ? t("shell:nav.expand") : t("shell:nav.collapse")}
+            className="admin-shell__desktop-toggle"
+            type="button"
+            onClick={() => {
+              const next = !sidebarCollapsed;
+              setSidebarCollapsed(next);
+              try {
+                localStorage.setItem("admin-sidebar-collapsed", String(next));
+              } catch {
+                /* Storage is optional. */
+              }
+            }}
+          >
+            <Icon aria-hidden="true" name="chev" />
+          </button>
           <button
             aria-controls="admin-navigation"
             aria-expanded={navigationOpen}

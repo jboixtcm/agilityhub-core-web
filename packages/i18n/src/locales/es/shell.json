@@ -84,7 +84,9 @@
     "today": "Hoy",
     "training": "Entrenamientos",
     "weeklyTemplate": "Plantilla semanal",
-    "deliveryLog": "Registro de envíos"
+    "deliveryLog": "Registro de envíos",
+    "collapse": "Plegar el menú",
+    "expand": "Desplegar el menú"
   },
   "placeholder": {
     "description": "Esta pantalla estará disponible pronto.",

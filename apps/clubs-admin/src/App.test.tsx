@@ -480,8 +480,9 @@ describe("E11-W06 W4 (AGENTS rule 3, S01 R-01-06): the back office's user menu",
     const choices = within(screen.getByRole("group", { name: "Canviar de perfil" }));
     expect(choices.queryByRole("button", { name: /alumn/u })).toBeNull();
     fireEvent.click(choices.getByRole("button", { name: "Com a instructora" }));
-    await waitFor(() => { expect(assign).toHaveBeenCalledWith("https://app.example.test/entrar?handoff=test"); },
-    );
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("https://app.example.test/entrar?handoff=test");
+    });
     expect(update).toHaveBeenCalledWith("INSTRUCTOR", true);
     expect(handoff).toHaveBeenCalledWith("clubs-app");
     expect(logout).not.toHaveBeenCalled();
@@ -1139,3 +1140,28 @@ it.each(["/login", "/entrar"])(
     expect(window.location.pathname).toBe(path);
   },
 );
+
+describe("T-05 feedback 3: desktop sidebar", () => {
+  it("remembers collapse across page changes and can expand again", async () => {
+    localStorage.removeItem("admin-sidebar-collapsed");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+    fireEvent.click(await screen.findByRole("button", { name: "Plega el menú" }));
+    expect(screen.getByRole("button", { name: "Desplega el menú" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    expect(localStorage.getItem("admin-sidebar-collapsed")).toBe("true");
+    window.history.pushState(null, "", "/abonats");
+    fireEvent(window, new PopStateEvent("popstate"));
+    expect(screen.getByRole("button", { name: "Desplega el menú" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Desplega el menú" }));
+    expect(localStorage.getItem("admin-sidebar-collapsed")).toBe("false");
+    localStorage.removeItem("admin-sidebar-collapsed");
+  });
+});

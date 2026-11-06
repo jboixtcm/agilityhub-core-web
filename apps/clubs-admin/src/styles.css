@@ -160,6 +160,38 @@ select {
   display: none;
 }
 
+.admin-shell__desktop-toggle {
+  display: grid;
+  flex-shrink: 0;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  padding: var(--ah-space-2);
+  color: var(--ah-color-text);
+  background: transparent;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  cursor: pointer;
+  place-items: center;
+}
+
+.admin-shell__desktop-toggle:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.admin-shell__desktop-toggle[aria-expanded="true"] .ah-icon {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 60.001rem) {
+  .admin-shell--collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-shell--collapsed .admin-shell__navigation {
+    display: none;
+  }
+}
+
 .admin-shell__navigation > .ah-sidebar {
   width: 100%;
   min-height: 100%;
@@ -915,6 +947,9 @@ select {
 }
 
 @media (max-width: 60rem) {
+  .admin-shell__desktop-toggle {
+    display: none;
+  }
   .admin-shell {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto minmax(0, 1fr);
@@ -1354,8 +1389,14 @@ select {
 }
 
 .catalog-prices li {
+  flex-wrap: wrap;
   padding: var(--ah-space-2) 0;
   border-bottom: 1px solid var(--ah-color-border);
+}
+
+.catalog-prices li > strong,
+.catalog-prices li > .catalog-price-dates {
+  white-space: nowrap;
 }
 
 .catalog-prices li > .catalog-price-dates {
@@ -2198,8 +2239,8 @@ select {
   transform: translate(-50%, -50%);
   border-radius: var(--ah-radius-sm);
   padding: 0 0.12rem;
-  color: var(--ah-color-text);
-  background: var(--ah-color-surface);
+  color: var(--ah-color-chart-label);
+  background: transparent;
   font-size: 0.65rem;
   font-weight: 700;
 }
