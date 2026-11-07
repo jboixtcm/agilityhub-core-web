@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Ring = components["schemas"]["Ring"];
+async function loadTrainingRings(client: ApiClient): Promise<Ring[]> {
+  const result = await client.GET("/rings", { params: { query: { includeInactive: false } } });
+  return (result.data?.items ?? []).filter((ring) => ring.allowsFreeTraining);
+}
 function Capacity({
   client,
   ring,
@@ -11,7 +15,7 @@ function Capacity({
 }: {
   client: ApiClient;
   ring: Ring;
-  onSaved: () => void;
+  onSaved: () => Promise<void>;
 }) {
   const { t } = useTranslation(["admin-settings", "errors"]);
   const [value, setValue] = useState(
@@ -24,6 +28,7 @@ function Capacity({
       className="catalog-form"
       onSubmit={(event) => {
         event.preventDefault();
+        if (pending) return;
         setPending(true);
         setError(undefined);
         void client
@@ -53,6 +58,7 @@ function Capacity({
         <Input
           id={`capacity-${ring.id}`}
           value={value}
+          disabled={pending}
           type="number"
           min={1}
           max={20}
@@ -70,15 +76,14 @@ function Capacity({
 export function TrainingRingCapacities({ client }: { client: ApiClient }) {
   const { t } = useTranslation("admin-settings");
   const [rings, setRings] = useState<Ring[]>([]);
-  const [reload, setReload] = useState(0);
   const [error, setError] = useState(false);
   const [saved, setSaved] = useState(false);
   useEffect(() => {
     let current = true;
-    void client.GET("/rings", { params: { query: { includeInactive: false } } }).then(
+    void loadTrainingRings(client).then(
       (result) => {
         if (current) {
-          setRings((result.data?.items ?? []).filter((ring) => ring.allowsFreeTraining));
+          setRings(result);
           setError(false);
         }
       },
@@ -89,7 +94,7 @@ export function TrainingRingCapacities({ client }: { client: ApiClient }) {
     return () => {
       current = false;
     };
-  }, [client, reload]);
+  }, [client]);
   return (
     <details>
       <summary>{t("admin-settings:ringCapacity.title")}</summary>
@@ -100,9 +105,17 @@ export function TrainingRingCapacities({ client }: { client: ApiClient }) {
           client={client}
           key={`${ring.id}-${String(ring.version)}`}
           ring={ring}
-          onSaved={() => {
-            setSaved(true);
-            setReload((value) => value + 1);
+          onSaved={async () => {
+            setSaved(false);
+            try {
+              const updated = await loadTrainingRings(client);
+              setRings(updated);
+              setError(false);
+              setSaved(true);
+            } catch (cause) {
+              setError(true);
+              throw cause;
+            }
           }}
         />
       ))}

@@ -22,9 +22,18 @@ afterAll(() => {
 it("saves a ring limit and clears it to inherit the general capacity", async () => {
   const requests: unknown[] = [];
   let capacity: number | null = 2;
+  let reloadStarted = false;
+  let releaseReload!: () => void;
+  const reloadGate = new Promise<void>((resolve) => {
+    releaseReload = resolve;
+  });
   server.use(
-    http.get("*/api/v1/rings", () =>
-      HttpResponse.json({
+    http.get("*/api/v1/rings", async () => {
+      if (requests.length === 1) {
+        reloadStarted = true;
+        await reloadGate;
+      }
+      return HttpResponse.json({
         items: [
           {
             id: "ring-qa",
@@ -34,8 +43,8 @@ it("saves a ring limit and clears it to inherit the general capacity", async () 
             version: requests.length,
           },
         ],
-      }),
-    ),
+      });
+    }),
     http.patch("*/api/v1/rings/:id", async ({ request }) => {
       const body = (await request.json()) as { trainingCapacity: number | null };
       requests.push(body);
@@ -59,6 +68,12 @@ it("saves a ring limit and clears it to inherit the general capacity", async () 
   fireEvent.click(screen.getByText("Excepcions per pista"));
   fireEvent.change(await screen.findByLabelText("Training ring"), { target: { value: "3" } });
   fireEvent.click(screen.getByRole("button", { name: "Desa Training ring" }));
+  await waitFor(() => {
+    expect(reloadStarted).toBe(true);
+  });
+  expect(screen.queryByText("Capacitat desada.")).not.toBeInTheDocument();
+  expect(screen.getByLabelText("Training ring")).toBeDisabled();
+  releaseReload();
   await screen.findByText("Capacitat desada.");
   await waitFor(() => {
     expect(screen.getByLabelText("Training ring")).toHaveValue(3);

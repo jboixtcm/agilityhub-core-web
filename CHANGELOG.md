@@ -2,6 +2,8 @@
 
 ## 2026-11-07 — Family groups and administration feedback
 
+- Keep ring capacity editing disabled until the saved version is reloaded; announce success only after that refresh, preventing a quick follow-up edit from being replaced.
+
 - Create, edit and dissolve family groups from member Actions; select one responsible member, review members' plans and link to their records. Show family membership and holder columns in the census.
 - Group member and dog operations in Actions, keep WhatsApp and impersonation visible, and show inactive dog status in member records.
 - Require explicit pending-checkout cancellation during signup validation and retain manual-payment confirmation. Remove number spinners and outdated invoice guidance.
