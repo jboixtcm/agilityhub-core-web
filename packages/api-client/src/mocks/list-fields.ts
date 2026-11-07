@@ -33,6 +33,7 @@ export const MEMBER_LIST_FIELDS = [
   "paymentMethod",
   "nextInvoiceDate",
   "familyGroup",
+  "familyGroupHolder",
   "joinedAt",
   "leaveDate",
   "bookingBlocked",

@@ -10,7 +10,8 @@
     "retry": "Torna-ho a provar",
     "save": "Desa",
     "saving": "Desant…",
-    "invalidField": "Revisa aquest camp."
+    "invalidField": "Revisa aquest camp.",
+    "actions": "Accions"
   },
   "inactivity": {
     "title": "Inactivitat",
@@ -567,7 +568,7 @@
     "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/mes} other {}}",
     "upfront": "Pagament inicial (anticipat)",
     "actuallyPaid": "Import efectivament cobrat:",
-    "upfrontBreakdown": "{lines} · es registra el cobrament; la factura, des de comptabilitat",
+    "upfrontBreakdown": "{lines} · es registra el cobrament",
     "upfrontLines": {
       "ENTRY_FEE": "Entrada {amount}",
       "FIRST_MONTH": "{month} {amount}{portion, select, HALF { (mitja quota)} other {}}",
@@ -601,7 +602,7 @@
     "invoiceRequired": "Indica la data del proper rebut.",
     "warning": {
       "ACCOUNT_NOT_PROVIDED": "Compte no informat",
-      "CHECKOUT_PENDING": "Hi ha un pagament amb targeta en curs: la modalitat no es pot canviar fins que acabi.",
+      "CHECKOUT_PENDING": "El pagament amb targeta encara no s’ha confirmat. Pots anul·lar l’intent pendent i validar l’alta amb la modalitat i l’import realment cobrat.",
       "DOCUMENT_PENDING": "Document pendent",
       "FAMILY_HOLDER_NOT_FOUND": "No s'ha trobat el titular del grup familiar",
       "NO_IMAGE_CONSENT": "No autoritza l'ús de la seva imatge: no publiquis fotos on surti {gender, select, FEMALE {ella} OTHER {aquesta persona} other {ell}}.",
@@ -646,7 +647,8 @@
       "CARD": "Targeta",
       "BANK_TRANSFER": "Transferència",
       "CASH": "Efectiu"
-    }
+    },
+    "cancelPendingCheckout": "Anul·la l’intent de pagament amb targeta pendent en validar l’alta"
   },
   "values": {
     "empty": "—",
@@ -765,5 +767,19 @@
       "ACTIVITY_CONFLICT": "Totes dues fitxes tenen una inscripció vigent a la mateixa activitat.",
       "MEMBER_PROCESS_PENDING": "Hi ha una baixa, inactivitat o cobrament pendent de resoldre."
     }
+  },
+  "family": {
+    "title": "Grup familiar",
+    "help": "Agrupa dos o més abonats i tria un únic responsable. El rebut mensual es genera al responsable amb la seva modalitat. Tots els membres poden operar amb els gossos del grup.",
+    "add": "Afegeix un abonat",
+    "choose": "Selecciona un abonat",
+    "holder": "Responsable",
+    "remove": "Treu del grup",
+    "editPlanHelp": "Obre la fitxa d’un abonat per modificar-ne la modalitat. Després actualitza el resum abans de desar.",
+    "reload": "Actualitza el resum",
+    "dissolve": "Dissol el grup",
+    "dissolveConfirm": "Cada abonat tornarà a tenir la seva facturació i els seus gossos. Vols dissoldre el grup?",
+    "helpWithoutBilling": "Agrupa dos o més abonats i tria un únic responsable. Tots els membres poden operar amb els gossos del grup.",
+    "dissolveConfirmWithoutBilling": "Cada abonat tornarà a poder operar només amb els seus gossos. Vols dissoldre el grup?"
   }
 }

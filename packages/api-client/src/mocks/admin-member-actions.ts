@@ -87,6 +87,7 @@ export const adminMemberActionHandlers = [
       breed: dog.breed,
       freeTrainingAllowed: input.freeTrainingAllowed ?? false,
       pendingDocuments: [],
+      status: "ACTIVE",
     });
     cache().set(key, dog);
     return HttpResponse.json(dog, { status: 201 });
@@ -111,5 +112,85 @@ export const adminMemberActionHandlers = [
       version: censusRecordState.memberOverview.member.version + 1,
     };
     return HttpResponse.json(result);
+  }),
+];
+
+const familyRefusal = (request: Request) =>
+  refusal(request, censusRecordState.memberOverview.member.id);
+function familyResponse(
+  input: components["schemas"]["FamilyGroupRequest"],
+  id: string,
+  version: number,
+): components["schemas"]["FamilyGroup"] {
+  const own = censusRecordState.memberOverview.member;
+  return {
+    ...input,
+    id,
+    version,
+    status: "ACTIVE",
+    members: input.memberIds.map((memberId) => {
+      const member = memberId === own.id ? own : censusMembers.find((item) => item.id === memberId);
+      return {
+        id: memberId,
+        fullName: member?.fullName ?? memberId,
+        dogs: [],
+        ...(member?.plan == null ? {} : { plan: member.plan }),
+      };
+    }),
+  };
+}
+function saveFamily(group: components["schemas"]["FamilyGroup"]) {
+  censusRecordState.memberOverview.familyGroup = group;
+  censusRecordState.memberOverview.member.familyGroupId = group.memberIds.includes(
+    censusRecordState.memberOverview.member.id,
+  )
+    ? group.id
+    : null;
+}
+export const familyGroupHandlers = [
+  http.get("*/api/v1/family-groups/:id", ({ request, params }) => {
+    const denied = familyRefusal(request);
+    if (denied !== undefined) return denied;
+    const group = censusRecordState.memberOverview.familyGroup;
+    return group?.id === params.id
+      ? HttpResponse.json(group)
+      : apiError("NOT_FOUND", "Not found", 404);
+  }),
+  http.post("*/api/v1/family-groups", async ({ request }) => {
+    const denied = familyRefusal(request);
+    if (denied !== undefined) return denied;
+    const body = (await request.json()) as components["schemas"]["FamilyGroupRequest"];
+    if (new Set(body.memberIds).size < 2)
+      return apiError("FAMILY_GROUP_TOO_SMALL", "Too small", 422);
+    if (!body.memberIds.includes(body.holderMemberId))
+      return apiError("VALIDATION_ERROR", "Invalid holder", 400);
+    const group = familyResponse(body, crypto.randomUUID(), 0);
+    saveFamily(group);
+    return HttpResponse.json(group, { status: 201 });
+  }),
+  http.put("*/api/v1/family-groups/:id", async ({ request, params }) => {
+    const denied = familyRefusal(request);
+    if (denied !== undefined) return denied;
+    const previous = censusRecordState.memberOverview.familyGroup;
+    if (previous === undefined || previous.id !== params.id)
+      return apiError("NOT_FOUND", "Not found", 404);
+    const body = (await request.json()) as components["schemas"]["FamilyGroupUpdate"];
+    if (body.version !== previous.version) return apiError("STALE_VERSION", "Stale", 409);
+    if (new Set(body.memberIds).size < 2)
+      return apiError("FAMILY_GROUP_TOO_SMALL", "Too small", 422);
+    if (!body.memberIds.includes(body.holderMemberId))
+      return apiError("VALIDATION_ERROR", "Invalid holder", 400);
+    const group = familyResponse(body, previous.id, previous.version + 1);
+    saveFamily(group);
+    return HttpResponse.json(group);
+  }),
+  http.delete("*/api/v1/family-groups/:id", ({ request, params }) => {
+    const denied = familyRefusal(request);
+    if (denied !== undefined) return denied;
+    if (censusRecordState.memberOverview.familyGroup?.id !== params.id)
+      return apiError("NOT_FOUND", "Not found", 404);
+    delete censusRecordState.memberOverview.familyGroup;
+    censusRecordState.memberOverview.member.familyGroupId = null;
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

@@ -346,3 +346,32 @@ it("previews the selected language and shows the entry fee once", async () => {
   expect(within(preview).queryByText("Condicions catalanes")).not.toBeInTheDocument();
   expect(preview).toHaveAttribute("lang", "es");
 });
+
+it("T-05-19 reactivates an internal monthly plan and retains the saved switch after reopening", async () => {
+  const api = client();
+  const { data } = await api.GET("/plans", { params: { query: { includeInactive: true } } });
+  const plan = data?.items.find((item) => item.name === "Abonat");
+  if (plan === undefined) throw new Error("Missing fixture plan");
+  await api.PATCH("/plans/{id}", {
+    params: { path: { id: plan.id } },
+    body: { active: false, showOnSignup: false, version: plan.version },
+  });
+  await renderPlans();
+  const { dialog } = await openPriceForm("Abonat");
+  const active = within(dialog).getByRole("switch", { name: "Activa" });
+  expect(active).toHaveAttribute("aria-checked", "false");
+  fireEvent.click(active);
+  fireEvent.click(within(dialog).getByRole("button", { name: "DESA" }));
+  await waitFor(() => {
+    expect(screen.queryByRole("dialog", { name: "Edita Abonat" })).toBeNull();
+  });
+  const reopened = await openPriceForm("Abonat");
+  expect(within(reopened.dialog).getByRole("switch", { name: "Activa" })).toHaveAttribute(
+    "aria-checked",
+    "true",
+  );
+  expect(within(reopened.dialog).getByRole("switch", { name: "Mostra a l'alta" })).toHaveAttribute(
+    "aria-checked",
+    "false",
+  );
+});

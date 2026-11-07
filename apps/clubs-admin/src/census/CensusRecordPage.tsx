@@ -37,6 +37,7 @@ import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessag
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
 import { AdminMemberActions } from "./AdminMemberActions";
+import { FamilyGroupAction } from "./FamilyGroupAction";
 import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
 import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
@@ -45,6 +46,7 @@ import { MemberNextInvoice, NEXT_INVOICE_DRAWER } from "./MemberNextInvoice";
 import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
 import { MemberPlanDrawer } from "./MemberPlanDrawer";
 import { MemberDataExportButton, MemberPrivacyCard } from "./MemberPrivacyCard";
+import { RecordActions } from "./RecordActions";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
@@ -811,6 +813,14 @@ function MemberSummary({
                 )}
               </DataRow>
             ) : null}
+            {modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
+              <DataRow label={t("admin-census:member.fields.familyGroup")}>
+                <FamilyGroupAction client={client} member={member} onChanged={onReload} />
+                {overview.familyGroup.holderMemberId === member.id ? (
+                  <Badge>{t("admin-census:family.holder")}</Badge>
+                ) : null}
+              </DataRow>
+            ) : null}
             {modules.includes("BILLING") && memberPlan?.billingMode !== undefined ? (
               <DataRow label={t("admin-census:member.fields.billingMode")}>
                 {memberPlan.billingMode === "MAINTENANCE"
@@ -906,20 +916,6 @@ function MemberSummary({
                 </Button>
               )}
             </DataRow>
-            {modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
-              <DataRow label={t("admin-census:member.fields.familyGroup")}>
-                <span className="census-record__links">
-                  {overview.familyGroup.members.map((familyMember) => (
-                    <a href={`/abonats/${familyMember.id}`} key={familyMember.id}>
-                      {familyMember.fullName}
-                      {familyMember.memberNumber == null
-                        ? null
-                        : ` · ${t("admin-census:member.number", { number: familyMember.memberNumber })}`}
-                    </a>
-                  ))}
-                </span>
-              </DataRow>
-            ) : null}
           </dl>
         </Card>
 
@@ -937,7 +933,9 @@ function MemberSummary({
                     {dog.level === undefined ? null : (
                       <span className="census-level-chip">{dog.level.code}</span>
                     )}
-                    {modules.includes("FREE_TRAINING") && dog.freeTrainingAllowed ? (
+                    {dog.status === "INACTIVE" ? (
+                      <Badge tone="danger">{t("admin-census:dog.status.inactive")}</Badge>
+                    ) : modules.includes("FREE_TRAINING") && dog.freeTrainingAllowed ? (
                       <Badge tone="success">
                         <Icon aria-hidden="true" name="check" />
                         {t("admin-census:values.freeTraining")}
@@ -1530,28 +1528,6 @@ function MemberRecordContent({
           {erased ? null : (
             <>
               {supportAccess ? null : (
-                <MemberDataExportButton
-                  client={client}
-                  memberId={member.id}
-                  onErased={() => {
-                    // The button leaves with the other actions: the page says why.
-                    onErased();
-                    setFeedback({ message: t("errors:MEMBER_ERASED"), tone: "danger" });
-                  }}
-                />
-              )}
-              <Button
-                onClick={() => {
-                  setTab("summary");
-                  setMemberDialog("resend");
-                }}
-                variant="ghost"
-              >
-                {t("admin-census:member.actions.resend")}
-              </Button>
-              {/* S17 R-17-10 (ruling E151): impersonation is closed to a support access, as the
-                  personal-data export is. */}
-              {supportAccess ? null : (
                 <Button
                   onClick={() => {
                     setTab("summary");
@@ -1563,27 +1539,72 @@ function MemberRecordContent({
                   {t("admin-census:member.actions.impersonate")}
                 </Button>
               )}
-              <Button
-                onClick={() => {
-                  setEditOpen(true);
+              <AdminMemberActions
+                client={client}
+                member={member}
+                before={
+                  <>
+                    <Button
+                      onClick={() => {
+                        setEditOpen(true);
+                      }}
+                      variant="secondary"
+                    >
+                      <Icon aria-hidden="true" name="edit" />
+                      {t("admin-census:common.edit")}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setTab("summary");
+                        setMemberDialog("resend");
+                      }}
+                      variant="ghost"
+                    >
+                      {t("admin-census:member.actions.resend")}
+                    </Button>
+                  </>
+                }
+                between={
+                  branding.modules.includes("FAMILY_GROUP") ? (
+                    <FamilyGroupAction
+                      client={client}
+                      member={member}
+                      onChanged={() => { setReload((value) => value + 1); }}
+                    />
+                  ) : null
+                }
+                after={
+                  <>
+                    {supportAccess ? null : (
+                      <MemberDataExportButton
+                        client={client}
+                        memberId={member.id}
+                        onErased={() => {
+                          // The button leaves with the other actions: the page says why.
+                          onErased();
+                          setFeedback({ message: t("errors:MEMBER_ERASED"), tone: "danger" });
+                        }}
+                      />
+                    )}
+                  </>
+                }
+                onChanged={() => {
+                  setReload((value) => value + 1);
+                  refreshCounters();
                 }}
-                variant="secondary"
-              >
-                <Icon aria-hidden="true" name="edit" />
-                {t("admin-census:common.edit")}
-              </Button>
+              />
             </>
           )}
+          {erased ? (
+            <AdminMemberActions
+              client={client}
+              member={member}
+              onChanged={() => undefined}
+              readOnly
+            />
+          ) : null}
         </div>
       </header>
-      <AdminMemberActions
-        client={client}
-        member={member}
-        onChanged={() => {
-          setReload((value) => value + 1);
-          refreshCounters();
-        }}
-      />
       <Tabs
         value={tab}
         onValueChange={setTab}
@@ -2220,16 +2241,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             <Badge tone="success">{t("admin-census:values.freeTraining")}</Badge>
           ) : null}
         </div>
-        <div className="census-record__header-actions">
-          <Button
-            onClick={() => {
-              setDialog("transfer");
-            }}
-            variant="ghost"
-          >
-            <Icon aria-hidden="true" name="swap" />
-            {t("admin-census:dog.actions.transfer")}
-          </Button>
+        <RecordActions>
           <Button
             onClick={() => {
               setEditOpen(true);
@@ -2241,6 +2253,15 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
           </Button>
           <Button
             onClick={() => {
+              setDialog("transfer");
+            }}
+            variant="ghost"
+          >
+            <Icon aria-hidden="true" name="swap" />
+            {t("admin-census:dog.actions.transfer")}
+          </Button>
+          <Button
+            onClick={() => {
               setDialog(dog.status === "ACTIVE" ? "deactivate" : "reactivate");
             }}
             variant={dog.status === "ACTIVE" ? "danger" : "secondary"}
@@ -2249,7 +2270,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
               ? t("admin-census:dog.actions.deactivate")
               : t("admin-census:dog.actions.reactivate")}
           </Button>
-        </div>
+        </RecordActions>
       </header>
       <div className="census-record__grid">
         <Card>

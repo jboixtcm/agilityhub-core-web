@@ -4498,7 +4498,7 @@ export interface paths {
         put?: never;
         /**
          * Validate member signup
-         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change, or an upfrontAmountPaid above 0, while a checkout of the submission is in progress, S04 §5 E39 and R-04-16; dryRun warns CHECKOUT_PENDING whenever a line waits for a checkout). upfrontAmountPaid in another currency than the club's → 422 CURRENCY_MISMATCH with details.field = upfrontAmountPaid, before any write. Without planId and priceId, a requested plan that is no longer assignable gives a dryRun of the rows as they are (no price) and a validation 422 PLAN_NOT_AVAILABLE. With BILLING, a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, dryRun included and nothing written: the details billing answers for that plan. nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted. A member who has an account (a readmission, R-04-06/R-04-22) keeps it: no second Account, and the account's login email never changes; only a member without one is matched, or given a new one, by its primary email.
+         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change, or an upfrontAmountPaid above 0, while a checkout of the submission is in progress, S04 §5 E39 and R-04-16; dryRun warns CHECKOUT_PENDING whenever a line waits for a checkout). cancelPendingCheckout=true explicitly expires the pending checkout of this submission before validation; dryRun simulates the cancellation without writes. Provider expiry runs after commit and late payments follow refund reconciliation. upfrontAmountPaid in another currency than the club's → 422 CURRENCY_MISMATCH with details.field = upfrontAmountPaid, before any write. Without planId and priceId, a requested plan that is no longer assignable gives a dryRun of the rows as they are (no price) and a validation 422 PLAN_NOT_AVAILABLE. With BILLING, a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, dryRun included and nothing written: the details billing answers for that plan. nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted. A member who has an account (a readmission, R-04-06/R-04-22) keeps it: no second Account, and the account's login email never changes; only a member without one is matched, or given a new one, by its primary email.
          */
         post: operations["validate"];
         delete?: never;
@@ -10846,6 +10846,7 @@ export interface components {
             id: string;
             /** Format: int32 */
             memberNumber?: number | null;
+            plan?: components["schemas"]["NamedReference"] | null;
         };
         FaqCreate: {
             active?: boolean;
@@ -12842,6 +12843,7 @@ export interface components {
             displayStatus?: components["schemas"]["DisplayStatus"];
             dogs?: components["schemas"]["DogSummary"][];
             familyGroup?: components["schemas"]["NamedReference"];
+            familyGroupHolder?: boolean;
             freeTraining?: boolean;
             fullName?: string;
             /** @enum {string} */
@@ -13467,6 +13469,8 @@ export interface components {
             pendingDocuments: string[];
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
+            /** @enum {string} */
+            status: "PENDING" | "ACTIVE" | "INACTIVE";
         };
         OwnerSummary: {
             /** @description Member.firstName, a compound one whole («Joan Antoni»): «{guia}» of «{guia} + {gos}» when the dog has no handlerName (S10 R-10-00, E5-T29) */
@@ -16696,6 +16700,8 @@ export interface components {
             warnings: components["schemas"]["SignupWarning"][];
         };
         ValidationRequest: {
+            /** @description Explicitly expire an unpaid checkout before applying the validation; late provider payments follow reconciliation. */
+            cancelPendingCheckout?: boolean;
             dogs: components["schemas"]["ValidationDog"][];
             /** Format: uuid */
             familyGroupId?: string;

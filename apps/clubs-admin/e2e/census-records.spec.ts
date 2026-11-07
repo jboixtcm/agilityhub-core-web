@@ -44,6 +44,7 @@ test.describe("E2-W02 census records", () => {
       "href",
       "https://wa.me/34655100101",
     );
+    await page.getByRole("button", { name: "Accions" }).click();
     await expect(page.getByRole("button", { name: "Envia la benvinguda" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Entra com l'abonat" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Edita" }).first()).toBeVisible();
@@ -192,6 +193,7 @@ test.describe("E2-W02 census records", () => {
     ).toBeVisible();
     await expect(page.getByText("Treballar la calma a la sortida.")).toBeVisible();
     await expect(page.getByRole("button", { name: "Canvia el nivell" })).toBeVisible();
+    await page.getByRole("button", { name: "Accions" }).click();
     await expect(page.getByRole("button", { name: "Transfereix" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Dona de baixa" })).toBeVisible();
     await page.screenshot({
@@ -199,6 +201,11 @@ test.describe("E2-W02 census records", () => {
       path: resolve(evidenceDirectory, "dog-record-1280.png"),
     });
 
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("button", { name: "Accions" })).toHaveAttribute(
+      "aria-expanded",
+      "false",
+    );
     await page.getByRole("button", { name: "Canvia el nivell" }).click();
     const levelDialog = page.getByRole("dialog", { name: "Canvia el nivell" });
     await levelDialog.getByLabel("Nivell nou").selectOption("level-d");
@@ -206,11 +213,13 @@ test.describe("E2-W02 census records", () => {
     await expect(page.getByText("Nivell D", { exact: true })).toBeVisible();
     await expect(page.getByText(/reserva futura queda fora del nivell nou/u)).toHaveCount(0);
 
+    await page.getByRole("button", { name: "Accions" }).click();
     await page.getByRole("button", { name: "Dona de baixa" }).click();
     await page
       .getByRole("dialog", { name: "Dona de baixa el gos" })
       .getByRole("button", { name: "Dona de baixa" })
       .click();
+    await page.getByRole("button", { name: "Accions" }).click();
     await expect(page.getByRole("button", { name: "Reactiva" })).toBeVisible();
   });
 

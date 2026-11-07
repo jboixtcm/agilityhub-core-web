@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-07 — Family groups and administration feedback
+
+- Create, edit and dissolve family groups from member Actions; select one responsible member, review members' plans and link to their records. Show family membership and holder columns in the census.
+- Group member and dog operations in Actions, keep WhatsApp and impersonation visible, and show inactive dog status in member records.
+- Require explicit pending-checkout cancellation during signup validation and retain manual-payment confirmation. Remove number spinners and outdated invoice guidance.
+- Show signup visibility in the plan list, condition its presentation heading, and move the default entry-fee setting to the preview.
+
 ## 2026-11-06 — Signup feedback
 
 - Separate monthly and upfront payment choices, show manual upfront payments as pending, and expose the requested upfront method in signup review.

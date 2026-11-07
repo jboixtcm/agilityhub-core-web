@@ -163,7 +163,8 @@
     "removeQuestion": "Eliminar la modalitat {name} i els seus trams de preu?",
     "removePriceQuestion": "Eliminar el tram de {amount} amb inici {date}? El període quedarà sense aquest preu.",
     "confirmRemoval": "Confirma l’eliminació",
-    "inUse": "Aquesta modalitat té abonats o moviments associats. Pots desactivar-la per deixar d’oferir-la i conservar-ne l’historial."
+    "inUse": "Aquesta modalitat té abonats o moviments associats. Pots desactivar-la per deixar d’oferir-la i conservar-ne l’historial.",
+    "presentationTitlePrivate": "Textos de presentació — {name}"
   },
   "rings": {
     "caption": "Pistes del club",

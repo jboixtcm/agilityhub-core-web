@@ -79,6 +79,7 @@ for (const width of [1280, 375]) {
     await page.setViewportSize({ width, height: 900 });
     await login(page);
     await page.goto(`${baseUrl}/abonats/member-laura`);
+    await page.getByRole("button", { name: "Accions", exact: true }).click();
     await page.getByRole("button", { name: "Afegir un altre gos" }).click();
     const drawer = page.getByRole("dialog", { name: "Afegir un altre gos" });
     await drawer.getByLabel("Nom", { exact: true }).fill("Nova");
@@ -90,6 +91,7 @@ for (const width of [1280, 375]) {
     await drawer.getByRole("button", { name: "Desa" }).click();
     await expect(page.getByText("Gos afegit i actiu.")).toBeVisible();
     await expect(drawer).toHaveCount(0);
+    await page.getByRole("button", { name: "Accions", exact: true }).click();
     await page.getByRole("button", { name: "Fusiona abonats" }).click();
     const merge = page.getByRole("dialog", { name: "Fusiona abonats" });
     await expect(merge.getByRole("button", { name: "Previsualitza la fusió" })).toBeDisabled();

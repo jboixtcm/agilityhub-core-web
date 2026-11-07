@@ -10,7 +10,8 @@
     "retry": "Try again",
     "save": "Save",
     "saving": "Saving…",
-    "invalidField": "Check this field."
+    "invalidField": "Check this field.",
+    "actions": "Actions"
   },
   "inactivity": {
     "title": "Inactivity",
@@ -567,7 +568,7 @@
     "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/month} other {}}",
     "upfront": "Initial payment (advance)",
     "actuallyPaid": "Amount actually collected:",
-    "upfrontBreakdown": "{lines} · the payment is recorded; invoicing is handled in accounting",
+    "upfrontBreakdown": "{lines} · payment is recorded",
     "upfrontLines": {
       "ENTRY_FEE": "Joining fee {amount}",
       "FIRST_MONTH": "{month} {amount}{portion, select, HALF { (half fee)} other {}}",
@@ -601,7 +602,7 @@
     "invoiceRequired": "Enter the next invoice date.",
     "warning": {
       "ACCOUNT_NOT_PROVIDED": "Account not provided",
-      "CHECKOUT_PENDING": "A card payment is in progress: the plan cannot be changed until it finishes.",
+      "CHECKOUT_PENDING": "The card payment has not been confirmed. You can cancel the pending checkout and validate the signup using the selected plan and the amount actually collected.",
       "DOCUMENT_PENDING": "Document pending",
       "FAMILY_HOLDER_NOT_FOUND": "The family-group holder was not found",
       "NO_IMAGE_CONSENT": "Image use was not authorized: do not publish photos showing {gender, select, FEMALE {her} MALE {him} other {them}}.",
@@ -646,7 +647,8 @@
       "CARD": "Card",
       "BANK_TRANSFER": "Bank transfer",
       "CASH": "Cash"
-    }
+    },
+    "cancelPendingCheckout": "Cancel the pending card checkout when validating the signup"
   },
   "values": {
     "empty": "—",
@@ -765,5 +767,19 @@
       "ACTIVITY_CONFLICT": "Both records have a current registration for the same activity.",
       "MEMBER_PROCESS_PENDING": "A leave request, inactivity period or payment is pending."
     }
+  },
+  "family": {
+    "title": "Family group",
+    "help": "Group two or more members and choose one responsible member. The monthly receipt uses the responsible member’s plan. All members can manage the group’s dogs.",
+    "add": "Add a member",
+    "choose": "Select a member",
+    "holder": "Responsible member",
+    "remove": "Remove from group",
+    "editPlanHelp": "Open a member’s record to change their plan. Then refresh this summary before saving.",
+    "reload": "Refresh summary",
+    "dissolve": "Dissolve group",
+    "dissolveConfirm": "Each member will return to their own billing and dogs. Dissolve the group?",
+    "helpWithoutBilling": "Group two or more members and choose one responsible member. All members can manage the group’s dogs.",
+    "dissolveConfirmWithoutBilling": "Each member will only be able to manage their own dogs again. Dissolve the group?"
   }
 }

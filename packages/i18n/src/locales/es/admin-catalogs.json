@@ -163,7 +163,8 @@
     "removeQuestion": "¿Eliminar la modalidad {name} y sus tramos de precio?",
     "removePriceQuestion": "¿Eliminar el tramo de {amount} con inicio {date}? El periodo quedará sin este precio.",
     "confirmRemoval": "Confirmar la eliminación",
-    "inUse": "Esta modalidad tiene abonados o movimientos asociados. Puedes desactivarla para dejar de ofrecerla y conservar su historial."
+    "inUse": "Esta modalidad tiene abonados o movimientos asociados. Puedes desactivarla para dejar de ofrecerla y conservar su historial.",
+    "presentationTitlePrivate": "Textos de presentación — {name}"
   },
   "rings": {
     "caption": "Pistas del club",

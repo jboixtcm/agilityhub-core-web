@@ -43,6 +43,7 @@ test("T-14-17 D10's «Descarrega les dades (RGPD)» queues the package and downl
       response.request().method() === "POST" &&
       new URL(response.url()).pathname === "/api/v1/members/member-laura/data-export",
   );
+  await page.getByRole("button", { name: "Accions", exact: true }).click();
   await page.getByRole("button", { name: "Descarrega les dades (RGPD)" }).click();
   const answer = await queued;
   expect(answer.status()).toBe(202);

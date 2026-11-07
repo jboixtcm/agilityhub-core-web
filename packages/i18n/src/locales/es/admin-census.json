@@ -10,7 +10,8 @@
     "retry": "Volver a intentarlo",
     "save": "Guardar",
     "saving": "Guardando…",
-    "invalidField": "Revisa este campo."
+    "invalidField": "Revisa este campo.",
+    "actions": "Acciones"
   },
   "inactivity": {
     "title": "Inactividad",
@@ -567,7 +568,7 @@
     "planWithPrice": "{plan} · {price}{periodicity, select, MONTHLY {/mes} other {}}",
     "upfront": "Pago inicial (anticipado)",
     "actuallyPaid": "Importe efectivamente cobrado:",
-    "upfrontBreakdown": "{lines} · se registra el cobro; la factura, desde contabilidad",
+    "upfrontBreakdown": "{lines} · se registra el cobro",
     "upfrontLines": {
       "ENTRY_FEE": "Entrada {amount}",
       "FIRST_MONTH": "{month} {amount}{portion, select, HALF { (media cuota)} other {}}",
@@ -601,7 +602,7 @@
     "invoiceRequired": "Indica la fecha del próximo recibo.",
     "warning": {
       "ACCOUNT_NOT_PROVIDED": "Cuenta no informada",
-      "CHECKOUT_PENDING": "Hay un pago con tarjeta en curso: la modalidad no se puede cambiar hasta que termine.",
+      "CHECKOUT_PENDING": "El pago con tarjeta aún no se ha confirmado. Puedes anular el intento pendiente y validar el alta con la modalidad y el importe realmente cobrado.",
       "DOCUMENT_PENDING": "Documento pendiente",
       "FAMILY_HOLDER_NOT_FOUND": "No se ha encontrado el titular del grupo familiar",
       "NO_IMAGE_CONSENT": "No autoriza el uso de su imagen: no publiques fotos en las que aparezca {gender, select, FEMALE {ella} OTHER {esta persona} other {él}}.",
@@ -646,7 +647,8 @@
       "CARD": "Tarjeta",
       "BANK_TRANSFER": "Transferencia",
       "CASH": "Efectivo"
-    }
+    },
+    "cancelPendingCheckout": "Anular el intento de pago con tarjeta pendiente al validar el alta"
   },
   "values": {
     "empty": "—",
@@ -765,5 +767,19 @@
       "ACTIVITY_CONFLICT": "Ambas fichas tienen una inscripción vigente en la misma actividad.",
       "MEMBER_PROCESS_PENDING": "Hay una baja, inactividad o cobro pendiente de resolver."
     }
+  },
+  "family": {
+    "title": "Grupo familiar",
+    "help": "Agrupa dos o más abonados y elige un único responsable. El recibo mensual se genera al responsable con su modalidad. Todos los miembros pueden operar con los perros del grupo.",
+    "add": "Añadir un abonado",
+    "choose": "Seleccionar un abonado",
+    "holder": "Responsable",
+    "remove": "Quitar del grupo",
+    "editPlanHelp": "Abre la ficha de un abonado para modificar su modalidad. Después actualiza el resumen antes de guardar.",
+    "reload": "Actualizar el resumen",
+    "dissolve": "Disolver el grupo",
+    "dissolveConfirm": "Cada abonado volverá a tener su propia facturación y sus perros. ¿Quieres disolver el grupo?",
+    "helpWithoutBilling": "Agrupa dos o más abonados y elige un único responsable. Todos los miembros pueden operar con los perros del grupo.",
+    "dissolveConfirmWithoutBilling": "Cada abonado volverá a poder operar solo con sus perros. ¿Quieres disolver el grupo?"
   }
 }

@@ -81,6 +81,10 @@ async function renderRecord(
   };
 }
 
+function openActions() {
+  fireEvent.click(screen.getByRole("button", { name: "Accions" }));
+}
+
 describe("Assigned access roles", () => {
   it("shows the linked dog's photo in the member's Gossos block", async () => {
     const photoUrl = "/api/v1/attachments/files/example?expires=10&signature=example";
@@ -198,6 +202,7 @@ describe("T-03-39 INC-98 record navigation isolates member and dog state", () =>
       save.mockRestore();
     });
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
     const edit = screen.getAllByRole("button", { name: "Edita" }).at(0);
     if (edit === undefined) throw new TypeError("Missing member edit action");
     fireEvent.click(edit);
@@ -242,6 +247,7 @@ describe("T-03-39 INC-98 record navigation isolates member and dog state", () =>
     await screen.findByRole("heading", { name: "Duna" });
     const header = document.querySelector<HTMLElement>(".census-record__header");
     if (header === null) throw new TypeError("Missing dog record header");
+    openActions();
     fireEvent.click(within(header).getByRole("button", { name: "Edita" }));
     const drawer = screen.getByRole("dialog", { name: "Edita les dades del gos" });
     fireEvent.change(within(drawer).getByLabelText("Nom"), { target: { value: "Delayed Duna" } });
@@ -345,6 +351,7 @@ describe("T-03-39 D10 member record", () => {
     await renderRecord("member");
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
 
+    openActions();
     const editButton = screen.getAllByRole("button", { name: "Edita" }).at(0);
     if (editButton === undefined) {
       throw new Error("Expected the member edit button");
@@ -581,6 +588,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
   function headerAction(name: string) {
     const actions = document.querySelector<HTMLElement>(".census-record__header-actions");
     if (actions === null) throw new TypeError("D10 has no header actions");
+    if (name !== "Entra com l'abonat") openActions();
     fireEvent.click(within(actions).getByRole("button", { name }));
   }
 
@@ -1108,12 +1116,14 @@ describe("T-03-38 dog record", () => {
     await renderRecord("dog");
     await screen.findByRole("heading", { name: "Duna" });
 
+    openActions();
     fireEvent.click(screen.getByRole("button", { name: "Dona de baixa" }));
     const dialog = screen.getByRole("dialog", { name: "Dona de baixa el gos" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Dona de baixa" }));
     expect(await screen.findByText("El gos s'ha donat de baixa.")).toBeVisible();
     expect(screen.getByText("Baixa")).toBeVisible();
 
+    openActions();
     fireEvent.click(screen.getByRole("button", { name: "Reactiva" }));
     const reactivation = screen.getByRole("dialog", { name: "Reactiva el gos" });
     fireEvent.click(within(reactivation).getByRole("button", { name: "Reactiva" }));
@@ -1294,6 +1304,7 @@ describe("R-02-06 (E11-W02 round 2, INC-41): no «+34» typed in D10", () => {
     };
     await renderRecord("member", andorran);
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
     const editButton = screen.getAllByRole("button", { name: "Edita" }).at(0);
     if (editButton === undefined) throw new Error("Expected the member edit button");
     fireEvent.click(editButton);
@@ -1313,6 +1324,7 @@ describe("R-03-14 (E11-W02 round 2, INC-41): the dog transfer offers every activ
     expect(total).toBeGreaterThan(12);
     await renderRecord("dog");
     await screen.findByRole("heading", { name: "Duna" });
+    openActions();
     fireEvent.click(screen.getByRole("button", { name: "Transfereix" }));
     const drawer = screen.getByRole("dialog", { name: "Transfereix el gos" });
     const target = within(drawer).getByLabelText("Abonat de destí");
@@ -1351,7 +1363,8 @@ describe("Word feedback: active dog and reviewed merge", () => {
       }),
     );
     await renderRecord("member");
-    fireEvent.click(await screen.findByRole("button", { name: "Afegir un altre gos" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Accions" }));
+    fireEvent.click(screen.getByRole("button", { name: "Afegir un altre gos" }));
     const drawer = await screen.findByRole("dialog", { name: "Afegir un altre gos" });
     fireEvent.change(within(drawer).getByLabelText("Nom"), { target: { value: "Nova" } });
     fireEvent.change(within(drawer).getByLabelText("Raça"), { target: { value: "Mestissa" } });
@@ -1384,7 +1397,8 @@ describe("Word feedback: active dog and reviewed merge", () => {
       }),
     );
     await renderRecord("member");
-    fireEvent.click(await screen.findByRole("button", { name: "Fusiona abonats" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Accions" }));
+    fireEvent.click(screen.getByRole("button", { name: "Fusiona abonats" }));
     const dialog = await screen.findByRole("dialog", { name: "Fusiona abonats" });
     expect(within(dialog).getByRole("button", { name: "Previsualitza la fusió" })).toBeDisabled();
     const option = await within(dialog).findByRole("option", { name: /Marc Prats García · #/ });
@@ -1431,7 +1445,8 @@ describe("Word feedback: active dog and reviewed merge", () => {
       }),
     );
     await renderRecord("member");
-    fireEvent.click(await screen.findByRole("button", { name: "Fusiona abonats" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Accions" }));
+    fireEvent.click(screen.getByRole("button", { name: "Fusiona abonats" }));
     const dialog = screen.getByRole("dialog", { name: "Fusiona abonats" });
     const option = await within(dialog).findByRole("option", { name: /Marc Prats García · #/ });
     fireEvent.change(within(dialog).getByLabelText("Abonat que es conserva"), {
@@ -1481,6 +1496,7 @@ describe("Word feedback: active dog and reviewed merge", () => {
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
     const header = document.querySelector(".census-record__header");
     if (header === null) throw new Error("No header");
+    openActions();
     fireEvent.click(within(header as HTMLElement).getByRole("button", { name: "Edita" }));
     const drawer = screen.getByRole("dialog", { name: "Edita l'abonat" });
     fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
@@ -1489,5 +1505,142 @@ describe("Word feedback: active dog and reviewed merge", () => {
     });
     expect((sent?.contactEmails as Record<string, unknown>[])[0]).not.toHaveProperty("bounced");
     expect(await within(drawer).findAllByText("Revisa aquest camp.")).not.toHaveLength(0);
+  });
+});
+
+describe("T-03-28 manual family management", () => {
+  it("opens the family editor from Actions, changes the holder and preserves the selected members", async () => {
+    const { client } = await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const header = document.querySelector<HTMLElement>(".census-record__header-actions");
+    if (header === null) throw new Error("No header");
+    expect(within(header).queryByRole("button", { name: "Fusiona abonats" })).toBeNull();
+    openActions();
+    const actionLabels = Array.from(
+      header.querySelectorAll(".census-record-actions__items button"),
+      (item) => item.textContent,
+    );
+    expect(actionLabels).toEqual([
+      "Edita",
+      "Envia la benvinguda",
+      "Afegir un altre gos",
+      "Grup familiar",
+      "Fusiona abonats",
+      "Descarrega les dades (RGPD)",
+    ]);
+    fireEvent.click(within(header).getByRole("button", { name: "Grup familiar" }));
+    const dialog = await screen.findByRole("dialog", { name: "Grup familiar" });
+    const joan = (await within(dialog).findByRole("link", { name: "Joan Antoni Serra" })).closest(
+      "li",
+    );
+    if (joan === null) throw new Error("No member row");
+    await waitFor(() => expect(within(joan).getByRole("radio")).toBeEnabled());
+    fireEvent.click(within(joan).getByRole("radio"));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Grup familiar" })).toBeNull();
+    });
+    const result = await client.GET("/family-groups/{id}", {
+      params: { path: { id: "family-laura" } },
+    });
+    expect(result.data).toMatchObject({
+      holderMemberId: "member-joan",
+      memberIds: ["member-laura", "member-joan"],
+      version: 2,
+    });
+  });
+
+  it("requires two members, creates a group and dissolves it only after confirmation", async () => {
+    const { client } = await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    // Start with an ungrouped member, using the same public operations as the screen.
+    await client.DELETE("/family-groups/{id}", { params: { path: { id: "family-laura" } } });
+    cleanup();
+    await renderRecord("member");
+    fireEvent.click(await screen.findByRole("button", { name: "Accions" }));
+    fireEvent.click(screen.getByRole("button", { name: "Grup familiar" }));
+    let dialog = screen.getByRole("dialog", { name: "Grup familiar" });
+    const select = within(dialog).getByRole("combobox");
+    await waitFor(() => expect(select).toBeEnabled());
+    expect(within(dialog).getByRole("button", { name: "Desa" })).toBeDisabled();
+    fireEvent.change(select, { target: { value: "member-marc" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Afegeix un abonat" }));
+    expect(within(dialog).getByRole("link", { name: "Marc Prats García" })).toHaveAttribute(
+      "href",
+      "/abonats/member-marc",
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Grup familiar" })).toBeNull();
+    });
+    openActions();
+    const header = document.querySelector<HTMLElement>(".census-record__header-actions");
+    if (header === null) throw new Error("No header");
+    fireEvent.click(within(header).getByRole("button", { name: "Grup familiar" }));
+    dialog = screen.getByRole("dialog", { name: "Grup familiar" });
+    await waitFor(() => expect(within(dialog).getByRole("button", { name: "Desa" })).toBeEnabled());
+    fireEvent.click(within(dialog).getByRole("button", { name: "Dissol el grup" }));
+    expect(within(dialog).getByRole("alert")).toBeVisible();
+    fireEvent.click(
+      within(within(dialog).getByRole("alert")).getByRole("button", { name: "Dissol el grup" }),
+    );
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Grup familiar" })).toBeNull();
+    });
+    const overview = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    expect(overview.data?.member.familyGroupId).toBeNull();
+  });
+
+  it("edits a family without requesting or showing billing fields when billing is disabled", async () => {
+    const requestedFields: string[] = [];
+    server.use(
+      http.get("*/api/v1/members", async ({ request }) => {
+        requestedFields.push(new URL(request.url).searchParams.get("fields") ?? "");
+        return getResponse(handlers, request);
+      }),
+    );
+    await renderRecord("member", {
+      ...branding,
+      modules: branding.modules.filter((module) => module !== "BILLING"),
+    });
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
+    const header = document.querySelector<HTMLElement>(".census-record__header-actions");
+    if (header === null) throw new Error("No header");
+    fireEvent.click(within(header).getByRole("button", { name: "Grup familiar" }));
+    const dialog = screen.getByRole("dialog", { name: "Grup familiar" });
+    await waitFor(() => expect(within(dialog).getByRole("button", { name: "Desa" })).toBeEnabled());
+    expect(requestedFields).toEqual(["fullName,familyGroup"]);
+    expect(dialog).not.toHaveTextContent("rebut mensual");
+    expect(within(dialog).queryByText("Abonat", { exact: true })).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Dissol el grup" }));
+    expect(within(dialog).getByRole("alert")).not.toHaveTextContent("facturació");
+  });
+
+  it("shows an inactive dog status instead of its free-training badge", async () => {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const response = await getResponse(handlers, request);
+        const overview = (await response?.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({
+          ...overview,
+          dogs: overview.dogs.map((dog) => ({
+            ...dog,
+            status: "INACTIVE",
+            freeTrainingAllowed: true,
+          })),
+        });
+      }),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const dogs = document.querySelectorAll(".census-record__dog-list li");
+    expect(dogs.length).toBeGreaterThan(0);
+    for (const dog of dogs) {
+      expect(dog).toHaveTextContent("Baixa");
+      expect(dog).not.toHaveTextContent("Entrenament lliure");
+    }
   });
 });

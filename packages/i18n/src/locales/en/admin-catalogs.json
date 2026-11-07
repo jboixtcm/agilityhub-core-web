@@ -163,7 +163,8 @@
     "removeQuestion": "Delete {name} and its price periods?",
     "removePriceQuestion": "Delete the {amount} price period starting {date}? That period will no longer have this price.",
     "confirmRemoval": "Confirm deletion",
-    "inUse": "This plan has linked members or transactions. You can deactivate it to stop offering it and retain its history."
+    "inUse": "This plan has linked members or transactions. You can deactivate it to stop offering it and retain its history.",
+    "presentationTitlePrivate": "Presentation text — {name}"
   },
   "rings": {
     "caption": "Club rings",

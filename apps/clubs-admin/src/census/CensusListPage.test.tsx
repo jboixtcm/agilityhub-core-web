@@ -190,7 +190,7 @@ describe("T-03-38 D5 universal member list", () => {
 
     expect(screen.queryByRole("columnheader", { name: "Modalitat" })).not.toBeInTheDocument();
     expect(new URLSearchParams(window.location.search).get("fields")).toBe(
-      "fullName,dogs,displayStatus",
+      "fullName,dogs,displayStatus,familyGroup,familyGroupHolder",
     );
   });
 

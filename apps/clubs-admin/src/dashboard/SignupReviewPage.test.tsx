@@ -12,7 +12,10 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 import { CountersRefreshContext } from "./counters";
 import { SignupReviewPage } from "./SignupReviewPage";
 
-const canic: Branding = { ...brandingCanicFixture, theme: { ...brandingCanicFixture.theme, mode: "dark" } };
+const canic: Branding = {
+  ...brandingCanicFixture,
+  theme: { ...brandingCanicFixture.theme, mode: "dark" },
+};
 const memberId = "42000000-0000-4000-8000-000000000001";
 const kiwiId = "44000000-0000-4000-8000-000000000001";
 const pack6 = "10000000-0000-4000-8000-000000000002|20000000-0000-4000-8000-000000000002";
@@ -21,16 +24,30 @@ const abonat = "10000000-0000-4000-8000-000000000001|20000000-0000-4000-8000-000
 // The i18n instance of the last render, so a test can switch the language.
 let reviewI18n: Awaited<ReturnType<typeof createI18n>> | undefined;
 
-beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
-afterEach(() => { cleanup(); server.resetHandlers(); resetDashboardMockState(); mockScenario("admin"); });
-afterAll(() => { server.close(); });
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+});
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+  resetDashboardMockState();
+  mockScenario("admin");
+});
+afterAll(() => {
+  server.close();
+});
 
 type SignupBody = Record<string, unknown> & {
   dogs: (Record<string, unknown> & { id: string })[];
   member: Record<string, unknown> & { paymentMethod?: Record<string, unknown> | null };
   proposals: Record<string, unknown>;
   signup: Record<string, unknown>;
-  upfront?: (Record<string, unknown> & { firstMonth?: Record<string, unknown>; lines: Record<string, unknown>[] }) | null;
+  upfront?:
+    | (Record<string, unknown> & {
+        firstMonth?: Record<string, unknown>;
+        lines: Record<string, unknown>[];
+      })
+    | null;
 };
 
 interface Recorded {
@@ -53,8 +70,14 @@ function recordingFetch(
   const recording: typeof fetch = async (input, init) => {
     const request = input instanceof Request ? input : new Request(input, init);
     const url = new URL(request.url);
-    const text = request.method === "GET" || request.method === "DELETE" ? "" : await request.clone().text();
-    requests.push({ body: text === "" ? undefined : JSON.parse(text), method: request.method, path: url.pathname, query: url.search });
+    const text =
+      request.method === "GET" || request.method === "DELETE" ? "" : await request.clone().text();
+    requests.push({
+      body: text === "" ? undefined : JSON.parse(text),
+      method: request.method,
+      path: url.pathname,
+      query: url.search,
+    });
     const response = await fetch(input, init);
     if (request.method !== "GET" || !response.ok) return response;
     if (mutate !== undefined && url.pathname.endsWith(`/members/${memberId}/signup`)) {
@@ -77,7 +100,12 @@ function recordingFetch(
   return { fetch: recording, requests };
 }
 
-function sent(requests: readonly Recorded[], method: string, suffix: string, dryRun?: boolean): Recorded[] {
+function sent(
+  requests: readonly Recorded[],
+  method: string,
+  suffix: string,
+  dryRun?: boolean,
+): Recorded[] {
   return requests.filter(
     (request) =>
       request.method === method &&
@@ -121,9 +149,17 @@ async function renderReview({
   refreshCounters?: () => void;
 } = {}) {
   window.history.pushState(null, "", `/preinscripcions/${memberId}`);
-  const i18n = await createI18n({ branding, browserLanguages: [language], initialNamespaces: ["admin-census"], storage: undefined });
+  const i18n = await createI18n({
+    branding,
+    browserLanguages: [language],
+    initialNamespaces: ["admin-census"],
+    storage: undefined,
+  });
   reviewI18n = i18n;
-  const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1`, ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }) });
+  const client = createApiClient({
+    baseUrl: `${window.location.origin}/api/v1`,
+    ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }),
+  });
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
@@ -135,14 +171,17 @@ async function renderReview({
   );
   if (language === "ca") {
     // «#» written as #: the colour lint reads «#1042» in a string as a hex colour.
-    await screen.findByRole("heading", { name: new RegExp(`Preinscripció \\u00231042 — Marta Roca Pujol \\+ ${dogs}`, "u") });
+    await screen.findByRole("heading", {
+      name: new RegExp(`Preinscripció \\u00231042 — Marta Roca Pujol \\+ ${dogs}`, "u"),
+    });
   }
   return onNavigate;
 }
 
 /** A `<dd>` whose whole text (with the bold name) matches. */
 function dataRow(pattern: RegExp) {
-  return (_content: string, element: Element | null) => element?.tagName === "DD" && pattern.test(element.textContent);
+  return (_content: string, element: Element | null) =>
+    element?.tagName === "DD" && pattern.test(element.textContent);
 }
 
 function openDrawer() {
@@ -166,21 +205,32 @@ describe("T-04-33 D2 signup validation", () => {
     expect(whatsapp).toHaveClass("ah-badge");
     expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi")).toBeVisible();
     expect(screen.getByText("tarifa familiar en validar")).toBeVisible();
-    expect(screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa")).toBeVisible();
-    expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toHaveAttribute("href", "https://files.example.test/cartilla_Kiwi_1.jpg");
+    expect(
+      screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa"),
+    ).toBeVisible();
+    expect(screen.getByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toHaveAttribute(
+      "href",
+      "https://files.example.test/cartilla_Kiwi_1.jpg",
+    );
     // S04 §3 and §13 #1: the signup notes have no attachments; the documents are not counted again.
     expect(screen.getByText("Iniciar-nos a l'agility i socialitzar")).toBeVisible();
     expect(screen.queryByText(/\badjunts?\b/u)).not.toBeInTheDocument();
     expect(screen.getByText(dataRow(/^Kiwi · Femella · Whippet · /u))).toBeVisible();
     expect(screen.getByText(/no publiquis fotos on surti ella/u)).toBeVisible();
-    expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000001");
+    expect(screen.getByLabelText("Nivell inicial")).toHaveValue(
+      "43000000-0000-4000-8000-000000000001",
+    );
     expect(screen.getByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
-    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Abonat · 60,00 €/mes");
+    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue(
+      "Abonat · 60,00 €/mes",
+    );
     expect(screen.getByDisplayValue(/130,00/u)).toBeVisible();
     expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € \(mitja quota\)/u)).toBeVisible();
     expect(screen.getByText("cobrat")).toBeVisible();
     // The mockup's neutral outline button.
-    expect(screen.getByRole("button", { name: "REBUTJA (amb motiu)" })).toHaveClass("ah-button--ghost");
+    expect(screen.getByRole("button", { name: "REBUTJA (amb motiu)" })).toHaveClass(
+      "ah-button--ghost",
+    );
   });
 
   it("E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip", async () => {
@@ -211,34 +261,46 @@ describe("T-04-33 D2 signup validation", () => {
     ["es", "DNI", "47123456K", "Documento de identidad"],
     ["en", "NIE", "X1234567L", "ID document"],
     ["en", "DNI", "47123456K", "ID document"],
-  ] as const)("E4-W12 step 2 / E11-W05 step 4: in %s the identity row of a %s is labelled by its type", async (language, type, number, label) => {
-    await renderReview({
-      branding: { ...canic, locales: ["ca", "es", "en"] },
-      fetchOverride: recordingFetch((body) => { body.member.idDocument = { number, type }; }).fetch,
-      language,
-    });
+  ] as const)(
+    "E4-W12 step 2 / E11-W05 step 4: in %s the identity row of a %s is labelled by its type",
+    async (language, type, number, label) => {
+      await renderReview({
+        branding: { ...canic, locales: ["ca", "es", "en"] },
+        fetchOverride: recordingFetch((body) => {
+          body.member.idDocument = { number, type };
+        }).fetch,
+        language,
+      });
 
-    const value = await screen.findByText(number);
-    const term = value.closest("dd")?.previousElementSibling;
-    expect(term?.tagName).toBe("DT");
-    expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
-  });
+      const value = await screen.findByText(number);
+      const term = value.closest("dd")?.previousElementSibling;
+      expect(term?.tagName).toBe("DT");
+      expect(term).toHaveTextContent(new RegExp(`^${label}$`, "u"));
+    },
+  );
 
   it.each([
     ["ca", "No autoritza l'ús de la seva imatge: no publiquis fotos on surti aquesta persona."],
     ["es", "No autoriza el uso de su imagen: no publiques fotos en las que aparezca esta persona."],
-  ] as const)("E11-W05 step 4 (A40.3): in %s the NO_IMAGE_CONSENT warning of a person whose gender is OTHER is neutral", async (language, warning) => {
-    await renderReview({
-      branding: { ...canic, locales: ["ca", "es", "en"] },
-      fetchOverride: recordingFetch((body) => { body.member.gender = "OTHER"; }).fetch,
-      language,
-    });
-    expect(await screen.findByText(warning)).toBeVisible();
-  });
+  ] as const)(
+    "E11-W05 step 4 (A40.3): in %s the NO_IMAGE_CONSENT warning of a person whose gender is OTHER is neutral",
+    async (language, warning) => {
+      await renderReview({
+        branding: { ...canic, locales: ["ca", "es", "en"] },
+        fetchOverride: recordingFetch((body) => {
+          body.member.gender = "OTHER";
+        }).fetch,
+        language,
+      });
+      expect(await screen.findByText(warning)).toBeVisible();
+    },
+  );
 
   it("E4-W12 step 2: the edit drawer labels a passport «Passaport» too", async () => {
     await renderReview({
-      fetchOverride: recordingFetch((body) => { body.member.idDocument = { number: "PA1234567", type: "PASSPORT" }; }).fetch,
+      fetchOverride: recordingFetch((body) => {
+        body.member.idDocument = { number: "PA1234567", type: "PASSPORT" };
+      }).fetch,
     });
     const drawer = openDrawer();
     expect(within(drawer).getByLabelText("Passaport")).toHaveValue("PA1234567");
@@ -251,7 +313,9 @@ describe("T-04-33 D2 signup validation", () => {
     expect(await screen.findByLabelText("Data del proper rebut")).toHaveValue("01/09/2026");
     expect(screen.getByText("obligatori")).toBeVisible();
     // R-03-27: the single-group form the core sends today is shown in the one masked-IBAN format.
-    expect(screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa")).toBeVisible();
+    expect(
+      screen.getByText("Domiciliació · ···· ···· ···· ···· 7719 · titular: la mateixa"),
+    ).toBeVisible();
   });
 
   it.each([
@@ -259,17 +323,27 @@ describe("T-04-33 D2 signup validation", () => {
     [1, "pendent des de fa 1 dia"],
     [5, "pendent des de fa 5 dies"],
   ])("shows the pending badge as an ICU plural for %i days", async (days, text) => {
-    await renderReview({ fetchOverride: recordingFetch((body) => { body.signup.pendingDays = days; }).fetch });
+    await renderReview({
+      fetchOverride: recordingFetch((body) => {
+        body.signup.pendingDays = days;
+      }).fetch,
+    });
     expect(screen.getByText(text)).toHaveClass("ah-badge");
   });
 
   it("R-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view", async () => {
-    const { fetch: over, requests } = recordingFetch((body) => { body.signup.pendingDays = 3; });
+    const { fetch: over, requests } = recordingFetch((body) => {
+      body.signup.pendingDays = 3;
+    });
     await renderReview({ fetchOverride: over });
     expect(screen.getByText("pendent des de fa 3 dies")).toHaveClass("ah-tone--warning");
     cleanup();
 
-    await renderReview({ fetchOverride: recordingFetch((body) => { body.signup.pendingDays = 2; }).fetch });
+    await renderReview({
+      fetchOverride: recordingFetch((body) => {
+        body.signup.pendingDays = 2;
+      }).fetch,
+    });
     expect(screen.getByText("pendent des de fa 2 dies")).toHaveClass("ah-tone--neutral");
     // M11: D2 never asks the dashboard for warnDays.
     expect(requests.some((request) => request.path.includes("/dashboard"))).toBe(false);
@@ -277,13 +351,17 @@ describe("T-04-33 D2 signup validation", () => {
 
   it("step 0 renders each review warning by its code, so a new api value needs only its key", async () => {
     await renderReview({
-      fetchOverride: recordingFetch((body) => { body.warnings = ["DOCUMENT_PENDING", "PAID_EXCEEDS_QUOTE"]; }).fetch,
+      fetchOverride: recordingFetch((body) => {
+        body.warnings = ["DOCUMENT_PENDING", "PAID_EXCEEDS_QUOTE"];
+      }).fetch,
     });
     const header = screen.getByRole("heading", { name: /Preinscripció #1042/u }).closest("header");
     expect(header).not.toBeNull();
     if (header === null) return;
     expect(within(header).getByText("Document pendent")).toHaveClass("ah-badge");
-    expect(within(header).getByText(/El que s'ha cobrat supera el nou import/u)).toHaveClass("ah-badge");
+    expect(within(header).getByText(/El que s'ha cobrat supera el nou import/u)).toHaveClass(
+      "ah-badge",
+    );
   });
 
   it("tolerates null optional fields (INC-08) and never sends null back", async () => {
@@ -292,27 +370,40 @@ describe("T-04-33 D2 signup validation", () => {
       (body) => {
         body.member.plan = null;
         body.member.maskedAccount = null;
-        body.member.paymentMethod = { channel: null, holderName: "Marta Roca Pujol", maskedAccount: null, type: "SEPA_DD" };
+        body.member.paymentMethod = {
+          channel: null,
+          holderName: "Marta Roca Pujol",
+          maskedAccount: null,
+          type: "SEPA_DD",
+        };
         body.upfront = null;
       },
-      (holder) => { holder.familyGroupId = null; },
+      (holder) => {
+        holder.familyGroupId = null;
+      },
     );
     await renderReview({ fetchOverride: over, onNavigate });
     expect(screen.getByText("Domiciliació · — · titular: la mateixa")).toBeVisible();
     expect(screen.queryByText("Import efectivament cobrat:")).toBeNull();
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
     const [validation] = sent(requests, "POST", "/validation", false);
     expect(hasNull(validation?.body)).toBe(false);
   });
 
   it("T-04-16 validates a FOUND claim whose holder has no group yet without familyGroupId (the api creates the group)", async () => {
     const onNavigate = vi.fn();
-    const { fetch: over, requests } = recordingFetch((body) => { delete body.proposals.familyGroupId; });
+    const { fetch: over, requests } = recordingFetch((body) => {
+      delete body.proposals.familyGroupId;
+    });
     await renderReview({ fetchOverride: over, onNavigate });
     expect(screen.getByText("Sí — titular: Marta Roca + gos Kiwi")).toBeVisible();
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
     const [validation] = sent(requests, "POST", "/validation", false);
     expect(validation?.body).toBeDefined();
     expect(validation?.body).not.toHaveProperty("familyGroupId");
@@ -329,7 +420,9 @@ describe("T-04-33 D2 signup validation", () => {
     await renderReview({ fetchOverride: over, onNavigate });
     expect(screen.getAllByText("—").length).toBeGreaterThan(0);
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
     const validation = sent(requests, "POST", "/validation", false).at(-1)?.body;
     expect(validation).toBeDefined();
     expect(hasNull(validation)).toBe(false);
@@ -357,7 +450,9 @@ describe("T-04-33 D2 signup validation", () => {
 
     fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
   });
 });
 
@@ -366,13 +461,23 @@ describe("E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)"
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
-    fireEvent.change(within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"), { target: { value: "Mariona" } });
-    fireEvent.change(within(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).getByLabelText("Raça"), { target: { value: "Llebrer" } });
+    fireEvent.change(
+      within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"),
+      { target: { value: "Mariona" } },
+    );
+    fireEvent.change(
+      within(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).getByLabelText("Raça"),
+      { target: { value: "Llebrer" } },
+    );
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
-    expect(sent(requests, "PATCH", `/members/${memberId}`).map((request) => request.body)).toEqual([{ firstName: "Mariona", version: 3 }]);
-    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([{ breed: "Llebrer", version: 1 }]);
+    expect(sent(requests, "PATCH", `/members/${memberId}`).map((request) => request.body)).toEqual([
+      { firstName: "Mariona", version: 3 },
+    ]);
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([
+      { breed: "Llebrer", version: 1 },
+    ]);
     expect(await screen.findByText(dataRow(/^Kiwi · Femella · Llebrer · /u))).toBeVisible();
   });
 
@@ -385,14 +490,22 @@ describe("E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)"
     expect(within(drawer).getByRole("group", { name: "Persona" })).toBeDisabled();
     const dogGroup = within(drawer).getByRole("group", { name: "Gos (1 de 1)" });
     expect(dogGroup).toBeEnabled();
-    fireEvent.change(within(dogGroup).getByLabelText("Xip"), { target: { value: "941000031415927" } });
+    fireEvent.change(within(dogGroup).getByLabelText("Xip"), {
+      target: { value: "941000031415927" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
-    expect(requests.filter((request) => request.method === "PATCH" && request.path.includes("/members/"))).toEqual([]);
-    expect(sent(requests, "PATCH", "/dogs/44000000-0000-4000-8000-000000000009").map((request) => request.body)).toEqual([
-      { chip: "941000031415927", version: 0 },
-    ]);
+    expect(
+      requests.filter(
+        (request) => request.method === "PATCH" && request.path.includes("/members/"),
+      ),
+    ).toEqual([]);
+    expect(
+      sent(requests, "PATCH", "/dogs/44000000-0000-4000-8000-000000000009").map(
+        (request) => request.body,
+      ),
+    ).toEqual([{ chip: "941000031415927", version: 0 }]);
   });
 
   it("after a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog", async () => {
@@ -400,13 +513,23 @@ describe("E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19)"
     await renderReview({ fetchOverride: over });
     server.use(http.patch("*/api/v1/dogs/:id", () => apiErrorResponse("CHIP_ALREADY_EXISTS", 409)));
     const drawer = openDrawer();
-    fireEvent.change(within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"), { target: { value: "Mariona" } });
-    fireEvent.change(within(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).getByLabelText("Xip"), { target: { value: "941000024681358" } });
+    fireEvent.change(
+      within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"),
+      { target: { value: "Mariona" } },
+    );
+    fireEvent.change(
+      within(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).getByLabelText("Xip"),
+      { target: { value: "941000024681358" } },
+    );
     const loadsBefore = sent(requests, "GET", `/members/${memberId}/signup`).length;
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
-    expect(await within(drawer).findByRole("alert")).toHaveTextContent("Aquest número de xip ja està registrat.");
-    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBe(loadsBefore + 1); });
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent(
+      "Aquest número de xip ja està registrat.",
+    );
+    await waitFor(() => {
+      expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBe(loadsBefore + 1);
+    });
 
     server.resetHandlers();
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
@@ -424,15 +547,22 @@ describe("E3-W07 async drawer: nothing typed during a save is lost", () => {
     let release: () => void = () => undefined;
     server.use(
       http.patch("*/api/v1/members/:id", async () => {
-        await new Promise<void>((resolve) => { release = resolve; });
+        await new Promise<void>((resolve) => {
+          release = resolve;
+        });
         return undefined;
       }),
     );
     await renderReview();
     const drawer = openDrawer();
-    fireEvent.change(within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"), { target: { value: "Mariona" } });
+    fireEvent.change(
+      within(within(drawer).getByRole("group", { name: "Persona" })).getByLabelText("Nom"),
+      { target: { value: "Mariona" } },
+    );
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
-    await waitFor(() => { expect(within(drawer).getByRole("group", { name: "Persona" })).toBeDisabled(); });
+    await waitFor(() => {
+      expect(within(drawer).getByRole("group", { name: "Persona" })).toBeDisabled();
+    });
     expect(within(drawer).getByRole("group", { name: "Gos (1 de 1)" })).toBeDisabled();
     release();
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
@@ -446,33 +576,66 @@ describe("E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)", () => {
     ["LEVEL_REQUIRED", 422, {}, levelError, "Selecciona el nivell inicial."],
     ["LEVEL_NOT_ACTIVE", 422, {}, levelError, "Aquest nivell no està actiu."],
     ["NEXT_INVOICE_DATE_REQUIRED", 422, {}, dateError, "Indica la data del proper rebut."],
-    ["VALIDATION_ERROR", 400, { fieldErrors: [{ code: "INVALID_DATE", field: "nextInvoiceDate" }] }, dateError, "La data del proper rebut no és vàlida."],
-    ["UPFRONT_AMOUNT_EXCEEDS_DUE", 422, {}, "signup-upfront-error", "L'import inicial supera l'import pendent."],
+    [
+      "VALIDATION_ERROR",
+      400,
+      { fieldErrors: [{ code: "INVALID_DATE", field: "nextInvoiceDate" }] },
+      dateError,
+      "La data del proper rebut no és vàlida.",
+    ],
+    [
+      "UPFRONT_AMOUNT_EXCEEDS_DUE",
+      422,
+      {},
+      "signup-upfront-error",
+      "L'import inicial supera l'import pendent.",
+    ],
     ["PLAN_NOT_AVAILABLE", 422, {}, "signup-plan-error", "Aquest pla no està disponible."],
-    ["INVALID_STATE", 409, { reason: "CHECKOUT_PENDING" }, "signup-plan-error", "Hi ha un pagament amb targeta en curs: la modalitat no es pot canviar fins que acabi."],
+    [
+      "INVALID_STATE",
+      409,
+      { reason: "CHECKOUT_PENDING" },
+      "signup-plan-error",
+      "El pagament amb targeta encara no s’ha confirmat. Pots anul·lar l’intent pendent i validar l’alta amb la modalitat i l’import realment cobrat.",
+    ],
     ["MEMBERSHIP_EXISTS", 409, {}, "banner", "Aquest abonament ja existeix."],
-    ["MEMBER_ERASED", 409, {}, "banner", "Aquest abonat ha estat suprimit i ja no es pot modificar."],
-  ] as const)("%s (%i, bare as the api sends it) is shown on its field", async (code, status, details, target, text) => {
-    mockScenario("adminSignupReviewManual");
-    const onNavigate = await renderReview();
-    server.use(
-      http.post("*/api/v1/members/:id/validation", ({ request }) =>
-        new URL(request.url).searchParams.get("dryRun") === "true" ? undefined : apiErrorResponse(code, status, details),
-      ),
-    );
-    fireEvent.change(screen.getByLabelText("Import efectivament cobrat:"), { target: { value: "200" } });
-    validate();
+    [
+      "MEMBER_ERASED",
+      409,
+      {},
+      "banner",
+      "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    ],
+  ] as const)(
+    "%s (%i, bare as the api sends it) is shown on its field",
+    async (code, status, details, target, text) => {
+      mockScenario("adminSignupReviewManual");
+      const onNavigate = await renderReview();
+      server.use(
+        http.post("*/api/v1/members/:id/validation", ({ request }) =>
+          new URL(request.url).searchParams.get("dryRun") === "true"
+            ? undefined
+            : apiErrorResponse(code, status, details),
+        ),
+      );
+      fireEvent.change(screen.getByLabelText("Import efectivament cobrat:"), {
+        target: { value: "200" },
+      });
+      validate();
 
-    if (target === "banner") {
-      const banner = await screen.findByText(text);
-      expect(banner.closest(".signup-review-error")).toHaveAttribute("role", "alert");
-    } else {
-      await waitFor(() => { expect(document.getElementById(target)).toHaveTextContent(text); });
-      const field = document.querySelector(`[aria-describedby="${target}"]`);
-      expect(field).toHaveAttribute("aria-invalid", "true");
-    }
-    expect(onNavigate).not.toHaveBeenCalled();
-  });
+      if (target === "banner") {
+        const banner = await screen.findByText(text);
+        expect(banner.closest(".signup-review-error")).toHaveAttribute("role", "alert");
+      } else {
+        await waitFor(() => {
+          expect(document.getElementById(target)).toHaveTextContent(text);
+        });
+        const field = document.querySelector(`[aria-describedby="${target}"]`);
+        expect(field).toHaveAttribute("aria-invalid", "true");
+      }
+      expect(onNavigate).not.toHaveBeenCalled();
+    },
+  );
 
   it("caps the amount input at the amount due", async () => {
     mockScenario("adminSignupReviewManual");
@@ -486,7 +649,9 @@ describe("E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)", () => {
     validate();
     expect(await screen.findByText("Selecciona el nivell inicial.")).toBeVisible();
 
-    fireEvent.change(screen.getByLabelText("Nivell inicial"), { target: { value: "43000000-0000-4000-8000-000000000001" } });
+    fireEvent.change(screen.getByLabelText("Nivell inicial"), {
+      target: { value: "43000000-0000-4000-8000-000000000001" },
+    });
     fireEvent.change(screen.getByLabelText("Data del proper rebut"), { target: { value: "" } });
     validate();
     expect(await screen.findByText("Indica la data del proper rebut.")).toBeVisible();
@@ -530,7 +695,9 @@ describe("E11-W06 W11 (S04 R-04-19, R-04-16): the adopted contract's null propos
           : apiErrorResponse("CURRENCY_MISMATCH", 422, { field: "upfrontAmountPaid" }),
       ),
     );
-    fireEvent.change(screen.getByLabelText("Import efectivament cobrat:"), { target: { value: "200" } });
+    fireEvent.change(screen.getByLabelText("Import efectivament cobrat:"), {
+      target: { value: "200" },
+    });
     validate();
 
     await waitFor(() => {
@@ -560,8 +727,12 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
     });
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
-    expect(within(drawer).getByLabelText("Segon correu electrònic")).toHaveValue("marta.feina@example.test");
-    fireEvent.change(within(drawer).getByLabelText("Correu electrònic"), { target: { value: "marta.r@example.test" } });
+    expect(within(drawer).getByLabelText("Segon correu electrònic")).toHaveValue(
+      "marta.feina@example.test",
+    );
+    fireEvent.change(within(drawer).getByLabelText("Correu electrònic"), {
+      target: { value: "marta.r@example.test" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
@@ -596,25 +767,42 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     const gender = within(drawer).getByLabelText("Gènere");
-    expect(within(gender).getAllByRole("option").map((option) => option.textContent)).toEqual(["Femení", "Masculí", "Altres / No binari"]);
+    expect(
+      within(gender)
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual(["Femení", "Masculí", "Altres / No binari"]);
     expect(within(drawer).getByLabelText("Modalitat sol·licitada")).toHaveAttribute("readonly");
     expect(within(drawer).getByLabelText("Modalitat sol·licitada")).toHaveValue("Abonat");
     fireEvent.change(gender, { target: { value: "OTHER" } });
-    fireEvent.change(within(drawer).getByLabelText("NIF del titular"), { target: { value: "47123456K" } });
-    fireEvent.change(within(drawer).getByLabelText("IBAN"), { target: { value: "ES00 0000 0000 0000 0000 0000" } });
-    fireEvent.change(within(drawer).getByLabelText("Notes als instructors"), { target: { value: "Poruga amb els sorolls" } });
+    fireEvent.change(within(drawer).getByLabelText("NIF del titular"), {
+      target: { value: "47123456K" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("IBAN"), {
+      target: { value: "ES00 0000 0000 0000 0000 0000" },
+    });
+    fireEvent.change(within(drawer).getByLabelText("Notes als instructors"), {
+      target: { value: "Poruga amb els sorolls" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
     expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
       gender: "OTHER",
       paymentMethod: {
-        sepa: { holderName: "Marta Roca Pujol", holderTaxId: "47123456K", iban: "ES0000000000000000000000" },
+        sepa: {
+          holderName: "Marta Roca Pujol",
+          holderTaxId: "47123456K",
+          iban: "ES0000000000000000000000",
+        },
         type: "SEPA_DD",
       },
       version: 3,
     });
-    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({ notesToInstructors: "Poruga amb els sorolls", version: 1 });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
+      notesToInstructors: "Poruga amb els sorolls",
+      version: 1,
+    });
   });
 
   it("adds a dog document forwarding the signed upload headers, and removes one", async () => {
@@ -629,28 +817,42 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     expect(await within(drawer).findAllByRole("button", { name: "Retira" })).toHaveLength(3);
-    fireEvent.change(within(drawer).getByLabelText("Tipus de document"), { target: { value: "INSURANCE" } });
+    fireEvent.change(within(drawer).getByLabelText("Tipus de document"), {
+      target: { value: "INSURANCE" },
+    });
     fireEvent.change(within(drawer).getByLabelText("Fitxer"), {
       target: { files: [new File(["pdf"], "assegurança_2026.pdf", { type: "application/pdf" })] },
     });
     fireEvent.click(within(drawer).getByRole("button", { name: "Puja el document" }));
 
-    expect(await within(drawer).findByRole("link", { name: /assegurança_2026.pdf/u })).toBeVisible();
+    expect(
+      await within(drawer).findByRole("link", { name: /assegurança_2026.pdf/u }),
+    ).toBeVisible();
     // R-04-08: every signed header goes to the storage unchanged.
-    expect(putHeaders).toEqual([expect.objectContaining({ "content-type": "application/pdf", "if-none-match": "*" })]);
+    expect(putHeaders).toEqual([
+      expect.objectContaining({ "content-type": "application/pdf", "if-none-match": "*" }),
+    ]);
     expect(sent(requests, "POST", `/dogs/${kiwiId}/documents`)[0]?.body).toEqual({
       fileKey: "mock-dog_document-assegurança_2026.pdf",
       name: "assegurança_2026.pdf",
       type: "INSURANCE",
     });
     // The page reloads the view, so D2 lists the new file too.
-    await waitFor(() => { expect(screen.getAllByRole("link", { name: /assegurança_2026.pdf/u })).toHaveLength(2); });
+    await waitFor(() => {
+      expect(screen.getAllByRole("link", { name: /assegurança_2026.pdf/u })).toHaveLength(2);
+    });
 
     const [firstRemove] = within(drawer).getAllByRole("button", { name: "Retira" });
     if (firstRemove === undefined) throw new TypeError("No remove button");
     fireEvent.click(firstRemove);
-    await waitFor(() => { expect(sent(requests, "DELETE", "/files/48000000-0000-4000-8000-000001000000")).toHaveLength(1); });
-    await waitFor(() => { expect(within(drawer).queryByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toBeNull(); });
+    await waitFor(() => {
+      expect(sent(requests, "DELETE", "/files/48000000-0000-4000-8000-000001000000")).toHaveLength(
+        1,
+      );
+    });
+    await waitFor(() => {
+      expect(within(drawer).queryByRole("link", { name: /cartilla_Kiwi_1.jpg/u })).toBeNull();
+    });
   });
 });
 
@@ -661,7 +863,11 @@ describe("E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)"
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over, onNavigate });
     const select = screen.getByRole("combobox", { name: "Modalitat i tarifa" });
-    expect(within(select).getAllByRole("option").map((option) => option.textContent)).toEqual([
+    expect(
+      within(select)
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual([
       "Abonat · 60,00 €/mes",
       "Abonat familiar · 30,00 €/mes",
       "Pack 6 · 135,00 €",
@@ -683,7 +889,9 @@ describe("E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)"
 
     fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
     const [validation] = sent(requests, "POST", "/validation", false);
     expect(validation?.body).toMatchObject({
       planId: "10000000-0000-4000-8000-000000000002",
@@ -695,10 +903,18 @@ describe("E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)"
   it("renders the dry run's warnings on the plan card (PAID_EXCEEDS_QUOTE on a cheaper plan)", async () => {
     await renderReview();
     fireEvent.change(screen.getByRole("combobox", { name: "Modalitat i tarifa" }), {
-      target: { value: "10000000-0000-4000-8000-000000000004|20000000-0000-4000-8000-000000000004" },
+      target: {
+        value: "10000000-0000-4000-8000-000000000004|20000000-0000-4000-8000-000000000004",
+      },
     });
-    expect(await screen.findByText("El que s'ha cobrat supera el nou import: caldrà retornar la diferència des de Facturació.")).toBeVisible();
-    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Teràpia · 10,00 €/mes");
+    expect(
+      await screen.findByText(
+        "El que s'ha cobrat supera el nou import: caldrà retornar la diferència des de Facturació.",
+      ),
+    ).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue(
+      "Teràpia · 10,00 €/mes",
+    );
   });
 
   it("a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group", async () => {
@@ -713,14 +929,26 @@ describe("E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)"
     expect(sent(requests, "POST", "/validation", false)).toEqual([]);
 
     fireEvent.change(screen.getByLabelText("Cerca el titular"), { target: { value: "Serra" } });
-    fireEvent.click(await screen.findByRole("button", { name: "Afegeix al grup de Laura Serra Vidal" }, { timeout: 3_000 }));
+    fireEvent.click(
+      await screen.findByRole(
+        "button",
+        { name: "Afegeix al grup de Laura Serra Vidal" },
+        { timeout: 3_000 },
+      ),
+    );
     expect(screen.getByText("Grup de Laura Serra Vidal")).toBeVisible();
     const search = sent(requests, "GET", "/members").at(-1);
-    expect(decodeURIComponent(search?.query ?? "")).toContain("fields=id,fullName,dogs,familyGroup");
+    expect(decodeURIComponent(search?.query ?? "")).toContain(
+      "fields=id,fullName,dogs,familyGroup",
+    );
 
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
-    expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({ familyGroupId: "family-laura" });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
+    expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({
+      familyGroupId: "family-laura",
+    });
   });
 
   it("a NOT_FOUND_PENDING claim is resolved with an explicit «Sense grup»: no familyGroupId", async () => {
@@ -731,8 +959,12 @@ describe("E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33)"
     fireEvent.click(screen.getByRole("button", { name: "Sense grup" }));
     expect(screen.getByText("Sense grup")).toHaveClass("ah-badge");
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
-    expect(sent(requests, "POST", "/validation", false)[0]?.body).not.toHaveProperty("familyGroupId");
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
+    expect(sent(requests, "POST", "/validation", false)[0]?.body).not.toHaveProperty(
+      "familyGroupId",
+    );
   });
 });
 
@@ -741,16 +973,36 @@ describe("E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01)", () => {
     const refreshCounters = vi.fn();
     const onNavigate = await renderReview({ refreshCounters });
     validate();
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
     expect(refreshCounters).toHaveBeenCalledTimes(1);
   });
 
   it("a signup with nothing pending (409 INVALID_STATE NOT_PENDING) says it is resolved and links to D10", async () => {
     const onNavigate = vi.fn();
-    server.use(http.get("*/api/v1/members/:id/signup", () => apiErrorResponse("INVALID_STATE", 409, { reason: "NOT_PENDING" })));
+    server.use(
+      http.get("*/api/v1/members/:id/signup", () =>
+        apiErrorResponse("INVALID_STATE", 409, { reason: "NOT_PENDING" }),
+      ),
+    );
     window.history.pushState(null, "", `/preinscripcions/${memberId}`);
-    const i18n = await createI18n({ branding: canic, browserLanguages: ["ca"], initialNamespaces: ["admin-census"], storage: undefined });
-    render(<I18nextProvider i18n={i18n}><BrandingProvider branding={canic}><SignupReviewPage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} onNavigate={onNavigate} /></BrandingProvider></I18nextProvider>);
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-census"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <SignupReviewPage
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            onNavigate={onNavigate}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
 
     expect(await screen.findByText("Aquesta preinscripció ja s'ha resolt")).toBeVisible();
     const link = screen.getByRole("link", { name: "Obre la fitxa de l'abonat" });
@@ -761,7 +1013,11 @@ describe("E3-W07 step 5 · M11 D1 fresh after a decision (R-14-01)", () => {
 
   it("a VALIDA on a signup another admin already resolved shows the resolved state", async () => {
     await renderReview();
-    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("INVALID_STATE", 409, { reason: "NOT_PENDING" })));
+    server.use(
+      http.post("*/api/v1/members/:id/validation", () =>
+        apiErrorResponse("INVALID_STATE", 409, { reason: "NOT_PENDING" }),
+      ),
+    );
     validate();
     expect(await screen.findByText("Aquesta preinscripció ja s'ha resolt")).toBeVisible();
   });
@@ -773,11 +1029,17 @@ describe("E3-W07 step 7 · the refund warning (R-04-23)", () => {
     const onNavigate = await renderReview({ refreshCounters });
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
-    expect(within(modal).getByText("Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació")).toBeVisible();
+    expect(
+      within(modal).getByText("Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació"),
+    ).toBeVisible();
     expect(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" })).toBeDisabled();
-    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), { target: { value: "Documentació incorrecta" } });
+    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), {
+      target: { value: "Documentació incorrecta" },
+    });
     fireEvent.click(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" }));
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=rejected-refund"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=rejected-refund");
+    });
     expect(refreshCounters).toHaveBeenCalledTimes(1);
   });
 
@@ -787,9 +1049,13 @@ describe("E3-W07 step 7 · the refund warning (R-04-23)", () => {
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
     expect(within(modal).queryByText(/Hi ha un pagament cobrat/u)).toBeNull();
-    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), { target: { value: "Documentació incorrecta" } });
+    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), {
+      target: { value: "Documentació incorrecta" },
+    });
     fireEvent.click(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" }));
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler"); });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler");
+    });
   });
 });
 
@@ -797,26 +1063,40 @@ describe("E3-W07 step 8 · the D2 minors", () => {
   it("STALE_VERSION offers a reload that keeps the admin's own choices", async () => {
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
-    fireEvent.change(screen.getByLabelText("Nivell inicial"), { target: { value: "43000000-0000-4000-8000-000000000002" } });
-    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)));
+    fireEvent.change(screen.getByLabelText("Nivell inicial"), {
+      target: { value: "43000000-0000-4000-8000-000000000002" },
+    });
+    server.use(
+      http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)),
+    );
     validate();
     const alert = await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.");
     const loads = sent(requests, "GET", `/members/${memberId}/signup`).length;
     const banner = alert.closest<HTMLElement>(".signup-review-error");
     if (banner === null) throw new TypeError("No error banner");
     fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
-    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBe(loads + 1); });
-    expect(screen.getByLabelText("Nivell inicial")).toHaveValue("43000000-0000-4000-8000-000000000002");
+    await waitFor(() => {
+      expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBe(loads + 1);
+    });
+    expect(screen.getByLabelText("Nivell inicial")).toHaveValue(
+      "43000000-0000-4000-8000-000000000002",
+    );
   });
 
   it("shows a rejection error inside the modal, with the reload action", async () => {
     await renderReview();
-    server.use(http.post("*/api/v1/members/:id/rejection", () => apiErrorResponse("STALE_VERSION", 409)));
+    server.use(
+      http.post("*/api/v1/members/:id/rejection", () => apiErrorResponse("STALE_VERSION", 409)),
+    );
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
-    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), { target: { value: "Documentació incorrecta" } });
+    fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), {
+      target: { value: "Documentació incorrecta" },
+    });
     fireEvent.click(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" }));
-    expect(await within(modal).findByRole("alert")).toHaveTextContent("La preinscripció ha canviat. Torna-la a carregar.");
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "La preinscripció ha canviat. Torna-la a carregar.",
+    );
     expect(within(modal).getByRole("button", { name: "Torna a carregar" })).toBeVisible();
   });
 
@@ -824,7 +1104,12 @@ describe("E3-W07 step 8 · the D2 minors", () => {
     await renderReview({
       fetchOverride: recordingFetch((body) => {
         if (body.upfront == null) return;
-        body.upfront.firstMonth = { amountDue: { amountMinor: 6000, currency: "EUR" }, option: "ALTERNATIVE", portion: "FULL", startDate: "2026-09-01" };
+        body.upfront.firstMonth = {
+          amountDue: { amountMinor: 6000, currency: "EUR" },
+          option: "ALTERNATIVE",
+          portion: "FULL",
+          startDate: "2026-09-01",
+        };
         const line = body.upfront.lines[1];
         if (line !== undefined) line.amount = { amountMinor: 6000, currency: "EUR" };
       }).fetch,
@@ -837,7 +1122,12 @@ describe("E3-W07 step 8 · the D2 minors", () => {
     await renderReview({
       fetchOverride: recordingFetch((body) => {
         if (body.upfront == null) return;
-        body.upfront.firstMonth = { amountDue: { amountMinor: 3000, currency: "EUR" }, option: "TODAY", portion: null, startDate: "2026-08-17" };
+        body.upfront.firstMonth = {
+          amountDue: { amountMinor: 3000, currency: "EUR" },
+          option: "TODAY",
+          portion: null,
+          startDate: "2026-08-17",
+        };
       }).fetch,
     });
     expect(screen.getByText(/Entrada 100,00 € \+ agost 30,00 € · es registra/u)).toBeVisible();
@@ -849,14 +1139,23 @@ describe("E3-W07 step 8 · the D2 minors", () => {
     window.history.pushState(null, "", `/preinscripcions/${memberId}`);
     await renderReview({
       branding,
-      fetchOverride: recordingFetch((body) => { body.member.gender = "OTHER"; }).fetch,
+      fetchOverride: recordingFetch((body) => {
+        body.member.gender = "OTHER";
+      }).fetch,
       language: "en",
     });
     expect(await screen.findByText(/do not publish photos showing them\./u)).toBeVisible();
   });
 
   it("gates the plan, payment and upfront blocks on BILLING and the group row on FAMILY_GROUP", async () => {
-    await renderReview({ branding: { ...canic, modules: canic.modules.filter((module) => module !== "BILLING" && module !== "FAMILY_GROUP") } });
+    await renderReview({
+      branding: {
+        ...canic,
+        modules: canic.modules.filter(
+          (module) => module !== "BILLING" && module !== "FAMILY_GROUP",
+        ),
+      },
+    });
     expect(screen.queryByText("Pagament")).toBeNull();
     expect(screen.queryByText("Grup familiar")).toBeNull();
     expect(screen.queryByRole("combobox", { name: "Modalitat i tarifa" })).toBeNull();
@@ -870,15 +1169,27 @@ describe("E3-W07 round 2 · 1 the invoice date is canonical (R-04-15, S04 §10)"
   it("10/11/2026 typed in ca still sends 2026-11-10 after a switch to en, shown in the en format", async () => {
     const onNavigate = vi.fn();
     const { fetch: over, requests } = recordingFetch();
-    await renderReview({ branding: { ...canic, locales: ["ca", "es", "en"] }, fetchOverride: over, onNavigate });
-    fireEvent.change(screen.getByLabelText("Data del proper rebut"), { target: { value: "10/11/2026" } });
+    await renderReview({
+      branding: { ...canic, locales: ["ca", "es", "en"] },
+      fetchOverride: over,
+      onNavigate,
+    });
+    fireEvent.change(screen.getByLabelText("Data del proper rebut"), {
+      target: { value: "10/11/2026" },
+    });
 
-    await act(async () => { await reviewI18n?.changeLanguage("en"); });
+    await act(async () => {
+      await reviewI18n?.changeLanguage("en");
+    });
     expect(await screen.findByLabelText("Next invoice date")).toHaveValue("11/10/2026");
     fireEvent.click(screen.getByRole("button", { name: "VALIDATE SIGNUP" }));
 
-    await waitFor(() => { expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated"); });
-    expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({ nextInvoiceDate: "2026-11-10" });
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith("/tauler?signup=validated");
+    });
+    expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({
+      nextInvoiceDate: "2026-11-10",
+    });
   });
 });
 
@@ -891,10 +1202,18 @@ describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup vers
     expect(await screen.findByText(/^Pack 135,00 € · es registra/u)).toBeVisible();
     expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "135.00");
 
-    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("PLAN_NOT_AVAILABLE", 422)));
+    server.use(
+      http.post("*/api/v1/members/:id/validation", () =>
+        apiErrorResponse("PLAN_NOT_AVAILABLE", 422),
+      ),
+    );
     fireEvent.change(select, { target: { value: pack10 } });
 
-    await waitFor(() => { expect(document.getElementById("signup-plan-error")).toHaveTextContent("Aquest pla no està disponible."); });
+    await waitFor(() => {
+      expect(document.getElementById("signup-plan-error")).toHaveTextContent(
+        "Aquest pla no està disponible.",
+      );
+    });
     expect(screen.queryByText(/^Pack 135,00 €/u)).toBeNull();
     expect(screen.queryByLabelText("Import efectivament cobrat:")).toBeNull();
     expect(document.querySelector("input[max]")).toBeNull();
@@ -924,19 +1243,25 @@ describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup vers
     mockScenario("admin");
     server.use(
       http.post("*/api/v1/members/:id/validation", ({ request }) =>
-        new URL(request.url).searchParams.get("dryRun") === "true" ? undefined : apiErrorResponse("STALE_VERSION", 409),
+        new URL(request.url).searchParams.get("dryRun") === "true"
+          ? undefined
+          : apiErrorResponse("STALE_VERSION", 409),
       ),
     );
     fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
     validate();
-    const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
+    const banner = (
+      await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")
+    ).closest<HTMLElement>(".signup-review-error");
     if (banner === null) throw new TypeError("No error banner");
     const dryRuns = sent(requests, "POST", "/validation", true).length;
     fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
 
     expect(await screen.findByText("cobrat")).toBeVisible();
     expect(screen.queryByRole("spinbutton")).toBeNull();
-    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue("Abonat · 60,00 €/mes");
+    expect(screen.getByRole("combobox", { name: "Modalitat i tarifa" })).toHaveDisplayValue(
+      "Abonat · 60,00 €/mes",
+    );
     // The admin's plan is quoted again on the fresh view.
     expect(sent(requests, "POST", "/validation", true)).toHaveLength(dryRuns + 1);
   });
@@ -949,7 +1274,9 @@ describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup vers
       http.post("*/api/v1/members/:id/validation", async ({ request }) => {
         const body = (await request.clone().json()) as { planId?: string };
         if (body.planId === pack6.split("|")[0]) {
-          await new Promise<void>((resolve) => { releasePack6 = resolve; });
+          await new Promise<void>((resolve) => {
+            releasePack6 = resolve;
+          });
           pack6Answered = true;
         }
         return undefined;
@@ -962,8 +1289,12 @@ describe("E3-W07 round 2 · 2 a quote belongs to its plan, price and signup vers
     expect(await screen.findByText(/^Pack 180,00 € · es registra/u)).toBeVisible();
 
     releasePack6();
-    await waitFor(() => { expect(pack6Answered).toBe(true); });
-    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 50)); });
+    await waitFor(() => {
+      expect(pack6Answered).toBe(true);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
     expect(screen.getByText(/^Pack 180,00 € · es registra/u)).toBeVisible();
     expect(screen.queryByText(/^Pack 135,00 €/u)).toBeNull();
     expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute("max", "180.00");
@@ -974,7 +1305,9 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
   /** A gate a handler waits on, so a test can look at the page while the request is pending. */
   function gate() {
     let open: () => void = () => undefined;
-    const opened = new Promise<void>((resolve) => { open = resolve; });
+    const opened = new Promise<void>((resolve) => {
+      open = resolve;
+    });
     return { open, opened };
   }
 
@@ -986,7 +1319,9 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
     mockScenario("adminSignupReviewManual");
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
-    fireEvent.change(screen.getByRole("combobox", { name: "Modalitat i tarifa" }), { target: { value: pack6 } });
+    fireEvent.change(screen.getByRole("combobox", { name: "Modalitat i tarifa" }), {
+      target: { value: pack6 },
+    });
     expect(await screen.findByText(/^Pack 135,00 € · es registra/u)).toBeVisible();
     fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
 
@@ -995,7 +1330,8 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
     let stale = true;
     server.use(
       http.post("*/api/v1/members/:id/validation", async ({ request }) => {
-        if (new URL(request.url).searchParams.get("dryRun") !== "true") return stale ? apiErrorResponse("STALE_VERSION", 409) : undefined;
+        if (new URL(request.url).searchParams.get("dryRun") !== "true")
+          return stale ? apiErrorResponse("STALE_VERSION", 409) : undefined;
         if (!stale) await requote.opened;
         return undefined;
       }),
@@ -1005,7 +1341,9 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
       }),
     );
     validate();
-    const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
+    const banner = (
+      await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")
+    ).closest<HTMLElement>(".signup-review-error");
     if (banner === null) throw new TypeError("No error banner");
     stale = false;
     fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
@@ -1019,7 +1357,9 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
     // The view lands; the new quote of Pack 6 is still pending: VALIDA still waits.
     const dryRuns = sent(requests, "POST", "/validation", true).length;
     reload.open();
-    await waitFor(() => { expect(sent(requests, "POST", "/validation", true)).toHaveLength(dryRuns + 1); });
+    await waitFor(() => {
+      expect(sent(requests, "POST", "/validation", true)).toHaveLength(dryRuns + 1);
+    });
     expect(upfrontBlock()).toBeNull();
     expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
 
@@ -1035,14 +1375,22 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
     const proposed = screen.getByLabelText("Data del proper rebut");
     const proposedText = (proposed as HTMLInputElement).value;
     expect(proposedText).not.toBe("");
-    server.use(http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)));
+    server.use(
+      http.post("*/api/v1/members/:id/validation", () => apiErrorResponse("STALE_VERSION", 409)),
+    );
     validate();
-    const banner = (await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")).closest<HTMLElement>(".signup-review-error");
+    const banner = (
+      await screen.findByText("La preinscripció ha canviat. Torna-la a carregar.")
+    ).closest<HTMLElement>(".signup-review-error");
     if (banner === null) throw new TypeError("No error banner");
-    server.use(http.get("*/api/v1/members/:id/signup", () => apiErrorResponse("INTERNAL_ERROR", 500)));
+    server.use(
+      http.get("*/api/v1/members/:id/signup", () => apiErrorResponse("INTERNAL_ERROR", 500)),
+    );
     fireEvent.click(within(banner).getByRole("button", { name: "Torna a carregar" }));
 
-    const failure = (await screen.findByText("No s'ha pogut carregar la preinscripció.")).closest<HTMLElement>("[role=alert]");
+    const failure = (
+      await screen.findByText("No s'ha pogut carregar la preinscripció.")
+    ).closest<HTMLElement>("[role=alert]");
     if (failure === null) throw new TypeError("No reload error");
     expect(upfrontBlock()).toBeNull();
     expect(screen.queryByText("cobrat")).toBeNull();
@@ -1053,7 +1401,9 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
     server.resetHandlers();
     const loads = sent(requests, "GET", `/members/${memberId}/signup`).length;
     fireEvent.click(within(failure).getByRole("button", { name: "Torna-ho a provar" }));
-    expect(await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" })).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" }),
+    ).toBeVisible();
     expect(sent(requests, "GET", `/members/${memberId}/signup`)).toHaveLength(loads + 1);
     expect(screen.queryByText("No s'ha pogut carregar la preinscripció.")).toBeNull();
     expect(screen.getByLabelText("Data del proper rebut")).toHaveValue(proposedText);
@@ -1073,10 +1423,14 @@ describe("T-04-33 E3-W11 step 1 · a reload drops the quote at once (review #1, 
     const drawer = openDrawer();
     fireEvent.change(within(drawer).getByLabelText("Població"), { target: { value: "Mataró" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
-    await waitFor(() => { expect(upfrontBlock()).toBeNull(); });
+    await waitFor(() => {
+      expect(upfrontBlock()).toBeNull();
+    });
     expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeDisabled();
     reload.open();
-    expect(await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" })).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { name: "Pagament inicial (anticipat)" }),
+    ).toBeVisible();
     expect(screen.getByRole("button", { name: "VALIDA L'ALTA" })).toBeEnabled();
   });
 });
@@ -1096,12 +1450,19 @@ describe("T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods 
   it("a view without the card offers no «Targeta», even with Stripe listed (disabled) on /club, and keeps the applicant's method", async () => {
     // The review's probe: STRIPE {enabled: false, configured: false} on GET /club.
     const { fetch: over, requests } = recordingFetch(undefined, undefined, (club) => {
-      club.paymentProviders = { ...(club.paymentProviders as Record<string, unknown>), STRIPE: { configured: false, enabled: false } };
+      club.paymentProviders = {
+        ...(club.paymentProviders as Record<string, unknown>),
+        STRIPE: { configured: false, enabled: false },
+      };
     });
     await renderReview({ fetchOverride: over });
     const method = methodSelect();
     await waitFor(() => {
-      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Efectiu"]);
+      expect(
+        within(method)
+          .getAllByRole("option")
+          .map((option) => option.textContent),
+      ).toEqual(["Domiciliació", "Efectiu"]);
     });
     expect(method).toHaveValue("SEPA_DD");
     expect(sent(requests, "GET", "/club")).toEqual([]);
@@ -1121,8 +1482,13 @@ describe("T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods 
     const method = methodSelect();
     expect(method).toHaveValue("CARD");
     const choosable = () =>
-      within(method).getAllByRole<HTMLOptionElement>("option").filter((option) => !option.disabled).map((option) => option.textContent);
-    await waitFor(() => { expect(choosable()).toEqual(["Domiciliació", "Efectiu"]); });
+      within(method)
+        .getAllByRole<HTMLOptionElement>("option")
+        .filter((option) => !option.disabled)
+        .map((option) => option.textContent);
+    await waitFor(() => {
+      expect(choosable()).toEqual(["Domiciliació", "Efectiu"]);
+    });
     expect(within(method).getByRole("option", { name: "Targeta" })).toBeDisabled();
 
     // Saving another field keeps the card: no payment method is sent.
@@ -1130,7 +1496,9 @@ describe("T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods 
     fireEvent.change(within(drawer).getByLabelText("Població"), { target: { value: "Mataró" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
-    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).not.toHaveProperty("paymentMethod");
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).not.toHaveProperty(
+      "paymentMethod",
+    );
   });
 
   it("the preselected method is the view's `current` one (a readmission's submitted method)", async () => {
@@ -1146,7 +1514,9 @@ describe("T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods 
 
   it("a PENDING applicant with no assignable method sees the current one read-only", async () => {
     const { fetch: over } = recordingFetch((body) => {
-      body.paymentMethods = [{ assignable: false, current: true, label: "Domiciliació", type: "SEPA_DD" }] satisfies Option[];
+      body.paymentMethods = [
+        { assignable: false, current: true, label: "Domiciliació", type: "SEPA_DD" },
+      ] satisfies Option[];
     });
     await renderReview({ fetchOverride: over });
     const method = methodSelect();
@@ -1199,7 +1569,11 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     const drawer = openDrawer();
     const method = within(drawer).getByLabelText("Mètode de pagament");
     await waitFor(() => {
-      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Efectiu"]);
+      expect(
+        within(method)
+          .getAllByRole("option")
+          .map((option) => option.textContent),
+      ).toEqual(["Domiciliació", "Efectiu"]);
     });
     expect(method).toHaveValue("MANUAL");
     expect(within(drawer).queryByLabelText("IBAN")).toBeNull();
@@ -1207,17 +1581,24 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     fireEvent.change(method, { target: { value: "SEPA_DD" } });
     // R-04-10: the holder is pre-filled with the applicant's full name.
     expect(within(drawer).getByLabelText("Titular del compte")).toHaveValue("Marta Roca Pujol");
-    fireEvent.change(within(drawer).getByLabelText("IBAN"), { target: { value: "ES91 2100 0418 4502 0005 1332" } });
+    fireEvent.change(within(drawer).getByLabelText("IBAN"), {
+      target: { value: "ES91 2100 0418 4502 0005 1332" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
     expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
-      paymentMethod: { sepa: { holderName: "Marta Roca Pujol", iban: "ES9121000418450200051332" }, type: "SEPA_DD" },
+      paymentMethod: {
+        sepa: { holderName: "Marta Roca Pujol", iban: "ES9121000418450200051332" },
+        type: "SEPA_DD",
+      },
       version: 3,
     });
     // E3-W11: the methods are the view's, so the club's providers are never read.
     expect(sent(requests, "GET", "/club")).toEqual([]);
-    expect(await screen.findByText("Domiciliació · ···· ···· ···· ···· 1332 · titular: la mateixa")).toBeVisible();
+    expect(
+      await screen.findByText("Domiciliació · ···· ···· ···· ···· 1332 · titular: la mateixa"),
+    ).toBeVisible();
   });
 
   it("moves a direct-debit applicant to cash: only the type is sent, and D2 reads «Efectiu»", async () => {
@@ -1225,14 +1606,19 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     const method = within(drawer).getByLabelText("Mètode de pagament");
-    await waitFor(() => { expect(within(method).getAllByRole("option")).toHaveLength(2); });
+    await waitFor(() => {
+      expect(within(method).getAllByRole("option")).toHaveLength(2);
+    });
     expect(method).toHaveValue("SEPA_DD");
     fireEvent.change(method, { target: { value: "MANUAL" } });
     expect(within(drawer).queryByLabelText("IBAN")).toBeNull();
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
     expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
-    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({ paymentMethod: { type: "MANUAL" }, version: 3 });
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
+      paymentMethod: { type: "MANUAL" },
+      version: 3,
+    });
     expect(await screen.findByText(dataRow(/^Efectiu$/u))).toBeVisible();
   });
 
@@ -1241,13 +1627,20 @@ describe("E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19,
     await renderReview();
     const method = within(openDrawer()).getByLabelText("Mètode de pagament");
     await waitFor(() => {
-      expect(within(method).getAllByRole("option").map((option) => option.textContent)).toEqual(["Domiciliació", "Targeta", "Efectiu"]);
+      expect(
+        within(method)
+          .getAllByRole("option")
+          .map((option) => option.textContent),
+      ).toEqual(["Domiciliació", "Targeta", "Efectiu"]);
     });
   });
 
   it("without BILLING the drawer has no payment method", async () => {
     const { fetch: over, requests } = recordingFetch();
-    await renderReview({ branding: { ...canic, modules: canic.modules.filter((module) => module !== "BILLING") }, fetchOverride: over });
+    await renderReview({
+      branding: { ...canic, modules: canic.modules.filter((module) => module !== "BILLING") },
+      fetchOverride: over,
+    });
     const drawer = openDrawer();
     expect(within(drawer).queryByLabelText("Mètode de pagament")).toBeNull();
     expect(sent(requests, "GET", "/club")).toEqual([]);
@@ -1260,14 +1653,18 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     await renderReview();
     expect(screen.getByText("Readmissió", { selector: ".ah-badge" })).toBeVisible();
     const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
-    const rows = within(block).getAllByRole("term").map((term) => term.textContent);
+    const rows = within(block)
+      .getAllByRole("term")
+      .map((term) => term.textContent);
     expect(rows).toEqual(["Correus electrònics", "Telèfons", "Adreça", "Mètode de pagament"]);
     expect(within(block).getByText("Abans: marta.antic@example.test")).toBeVisible();
     expect(within(block).getByText("Ara: marta.roca@example.test")).toBeVisible();
     expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
     expect(within(block).getByText("Ara: +34 655123123")).toBeVisible();
     expect(within(block).getByText("Abans: Carrer del Mar, 7, 08349 Cabrera de Mar")).toBeVisible();
-    expect(within(block).getByText("Ara: Carrer de la Riera, 12, 08349 Cabrera de Mar")).toBeVisible();
+    expect(
+      within(block).getByText("Ara: Carrer de la Riera, 12, 08349 Cabrera de Mar"),
+    ).toBeVisible();
     expect(within(block).getByText("Abans: Efectiu")).toBeVisible();
     expect(within(block).getByText("Ara: Domiciliació · ···· ···· ···· ···· 7719")).toBeVisible();
     // Unchanged fields (the name, the birth date) are not repeated.
@@ -1278,11 +1675,16 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     mockScenario("adminSignupReviewReadmission");
     await renderReview();
     const drawer = openDrawer();
-    fireEvent.change(within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone1Number" }), {
-      target: { value: "655999888" },
-    });
+    fireEvent.change(
+      within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone1Number" }),
+      {
+        target: { value: "655999888" },
+      },
+    );
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
-    const block = await screen.findByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+    const block = await screen.findByRole("region", {
+      name: "Canvis respecte de la fitxa de baixa",
+    });
     expect(await within(block).findByText("Ara: +34 655999888")).toBeVisible();
     expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
   });
@@ -1292,11 +1694,18 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     await renderReview();
     // `member` is the LEFT record (marta.antic@…, 655000111); the card shows what the validation applies.
     expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34 655123123/u))).toBeVisible();
-    expect(screen.getByRole("link", { name: /WhatsApp/u })).toHaveAttribute("href", "https://wa.me/34655123123");
+    expect(screen.getByRole("link", { name: /WhatsApp/u })).toHaveAttribute(
+      "href",
+      "https://wa.me/34655123123",
+    );
     expect(screen.getByText(dataRow(/^Domiciliació · ···· ···· ···· ···· 7719/u))).toBeVisible();
     const drawer = openDrawer();
-    expect(within(drawer).getByLabelText("Correu electrònic")).toHaveValue("marta.roca@example.test");
-    expect(within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone1Number" })).toHaveValue("655123123");
+    expect(within(drawer).getByLabelText("Correu electrònic")).toHaveValue(
+      "marta.roca@example.test",
+    );
+    expect(
+      within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone1Number" }),
+    ).toHaveValue("655123123");
     expect(within(drawer).getByLabelText("Adreça")).toHaveValue("Carrer de la Riera, 12");
     expect(within(drawer).getByLabelText("Mètode de pagament")).toHaveValue("SEPA_DD");
   });
@@ -1306,12 +1715,19 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     const { fetch: over } = recordingFetch((body) => {
       const block = body.readmission as { submitted: Record<string, unknown> } | undefined;
       if (block !== undefined) {
-        block.submitted.paymentMethod = { channel: null, holderName: "Marta Roca Pujol", maskedAccount: null, type: "SEPA_DD" };
+        block.submitted.paymentMethod = {
+          channel: null,
+          holderName: "Marta Roca Pujol",
+          maskedAccount: null,
+          type: "SEPA_DD",
+        };
       }
     });
     await renderReview({ fetchOverride: over });
     expect(screen.getByText(dataRow(/^Domiciliació · — · titular: la mateixa$/u))).toBeVisible();
-    expect(screen.getByText("Compte no informat", { selector: ".signup-review-warning" })).toBeVisible();
+    expect(
+      screen.getByText("Compte no informat", { selector: ".signup-review-warning" }),
+    ).toBeVisible();
   });
 
   it("round 2 #1: during a readmission, editing phone 2 keeps the submitted phone 1 in the PATCH", async () => {
@@ -1319,9 +1735,12 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
-    fireEvent.change(within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone2Number" }), {
-      target: { value: "655444333" },
-    });
+    fireEvent.change(
+      within(drawer).getByLabelText("Telèfon", { selector: "#signup-edit-phone2Number" }),
+      {
+        target: { value: "655444333" },
+      },
+    );
     fireEvent.change(within(drawer).getByLabelText("Descripció"), { target: { value: "Feina" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
     await waitFor(() => {
@@ -1334,7 +1753,9 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
       ],
       version: 3,
     });
-    const block = await screen.findByRole("region", { name: "Canvis respecte de la fitxa de baixa" });
+    const block = await screen.findByRole("region", {
+      name: "Canvis respecte de la fitxa de baixa",
+    });
     expect(await within(block).findByText("Ara: +34 655123123 · +34 655444333")).toBeVisible();
     expect(within(block).getByText("Abans: +34 655000111")).toBeVisible();
   });
@@ -1359,7 +1780,9 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
     await waitFor(() => {
       expect(sent(requests, "PATCH", `/members/${memberId}`)).toHaveLength(1);
     });
-    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).not.toHaveProperty("idDocument");
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).not.toHaveProperty(
+      "idDocument",
+    );
   });
 
   it("a 409 INVALID_STATE READMISSION_PENDING shows «rebutja la readmissió» inside the drawer", async () => {
@@ -1383,7 +1806,9 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
 
   it("a signup that is not a readmission has no readmission block and an editable ID document", async () => {
     await renderReview();
-    expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
+    expect(
+      screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" }),
+    ).toBeNull();
     expect(within(openDrawer()).getByLabelText("Document d'identitat")).not.toHaveAttribute(
       "readonly",
     );
@@ -1394,7 +1819,9 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
       (body as Record<string, unknown>).readmission = null;
     });
     await renderReview({ fetchOverride: over });
-    expect(screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).toBeNull();
+    expect(
+      screen.queryByRole("region", { name: "Canvis respecte de la fitxa de baixa" }),
+    ).toBeNull();
     expect(screen.getByText(dataRow(/^marta\.roca@example\.test · \+34 655123123/u))).toBeVisible();
     expect(within(openDrawer()).getByLabelText("Document d'identitat")).not.toHaveAttribute(
       "readonly",
@@ -1403,8 +1830,12 @@ describe("E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38)", () => {
 });
 
 describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19)", () => {
-  const DOG_LOCKED = "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.";
-  const card2 = { fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg", name: "cartilla_Kiwi_2.jpg" };
+  const DOG_LOCKED =
+    "La readmissió està pendent: la fitxa del gos no es pot canviar fins que es validi o es rebutgi.";
+  const card2 = {
+    fileKey: "signup-uploads/42000000/cartilla_Kiwi_2.jpg",
+    name: "cartilla_Kiwi_2.jpg",
+  };
   const insurance = { fileKey: "signup-uploads/42000000/asseguranca.pdf", name: "Assegurança.pdf" };
 
   /** The drawer row of one of the reused dog's files. */
@@ -1418,14 +1849,20 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
   async function kiwiChanges(terms: readonly string[]): Promise<HTMLElement> {
     const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
     await waitFor(() => {
-      expect(within(block).getAllByRole("term").map((term) => term.textContent)).toEqual(terms);
+      expect(
+        within(block)
+          .getAllByRole("term")
+          .map((term) => term.textContent),
+      ).toEqual(terms);
     });
     return block;
   }
 
   /** The «Abans» and «Ara» lines of one term of a readmission block. */
   function linesOf(block: HTMLElement, term: string): string[] {
-    const dt = within(block).getAllByRole("term").find((candidate) => candidate.textContent === term);
+    const dt = within(block)
+      .getAllByRole("term")
+      .find((candidate) => candidate.textContent === term);
     const dd = dt?.nextElementSibling;
     if (dd == null) throw new TypeError(`Missing the ${term} line`);
     return [...dd.children].map((child) => child.textContent);
@@ -1458,7 +1895,9 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     expect(linesOf(block, "Assegurança")).toEqual(["Abans: —", "Ara: Assegurança.pdf"]);
     // Unchanged fields (sex, birth month, notes) are not repeated; the member keeps its own block.
     expect(within(block).queryByText(/Femella|Whippet · /u)).toBeNull();
-    expect(screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).not.toBe(block);
+    expect(screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa" })).not.toBe(
+      block,
+    );
   });
 
   it("E4-W17 step 4 (AGENTS rule 1): when census.dogDocumentTypes cannot be read, each per-type row keeps «Documents», never a raw code", async () => {
@@ -1487,7 +1926,9 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
       for (const dog of body.dogs) dog.readmission = null;
     });
     await renderReview({ fetchOverride: over });
-    expect(screen.queryByRole("region", { name: /Canvis respecte de la fitxa de baixa/u })).toBeNull();
+    expect(
+      screen.queryByRole("region", { name: /Canvis respecte de la fitxa de baixa/u }),
+    ).toBeNull();
   });
 
   it("step 2: removing one of the reused dog's files sends the kept fileKeys with PATCH /dogs/{id}, never a frozen route, then re-reads the view", async () => {
@@ -1496,14 +1937,20 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     const reads = sent(requests, "GET", `/members/${memberId}/signup`).length;
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1); });
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1);
+    });
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
       documents: [{ files: [card2], type: "VACCINATION_CARD" }],
       version: 1,
     });
     // The PATCH answers the dog record: D2 reads the view again for the submitted documents.
-    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads); });
+    await waitFor(() => {
+      expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads);
+    });
     const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
     expect(await within(block).findByText("Ara: cartilla_Kiwi_2.jpg")).toBeVisible();
     expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull();
@@ -1516,19 +1963,36 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     expect(within(drawer).queryByLabelText("Nom del document")).toBeNull();
-    fireEvent.change(await within(drawer).findByLabelText("Tipus de document"), { target: { value: "INSURANCE" } });
+    fireEvent.change(await within(drawer).findByLabelText("Tipus de document"), {
+      target: { value: "INSURANCE" },
+    });
     fireEvent.change(within(drawer).getByLabelText("Fitxer"), {
       target: { files: [new File(["pdf"], "polissa_2026.pdf", { type: "application/pdf" })] },
     });
     fireEvent.click(within(drawer).getByRole("button", { name: "Puja el document" }));
-    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1); });
-    expect(sent(requests, "POST", "/attachments/upload-url")[0]?.body).toMatchObject({ fileName: "polissa_2026.pdf", purpose: "DOG_DOCUMENT" });
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1);
+    });
+    expect(sent(requests, "POST", "/attachments/upload-url")[0]?.body).toMatchObject({
+      fileName: "polissa_2026.pdf",
+      purpose: "DOG_DOCUMENT",
+    });
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
-      documents: [{ files: [insurance, { fileKey: "mock-dog_document-polissa_2026.pdf", name: "polissa_2026.pdf" }], type: "INSURANCE" }],
+      documents: [
+        {
+          files: [
+            insurance,
+            { fileKey: "mock-dog_document-polissa_2026.pdf", name: "polissa_2026.pdf" },
+          ],
+          type: "INSURANCE",
+        },
+      ],
       version: 1,
     });
     // The sent file shows at once, then as a link once the view read again lands (re-queried).
-    await waitFor(() => { expect(within(drawer).getByText("polissa_2026.pdf")).toBeVisible(); });
+    await waitFor(() => {
+      expect(within(drawer).getByText("polissa_2026.pdf")).toBeVisible();
+    });
     const block = screen.getByRole("region", { name: "Canvis respecte de la fitxa de baixa Kiwi" });
     expect(await within(block).findByText("Ara: Assegurança.pdf · polissa_2026.pdf")).toBeVisible();
     expect(frozenCalls(requests)).toEqual([]);
@@ -1538,7 +2002,9 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     mockScenario("adminSignupReviewReadmission");
     let holdReads = false;
     let release: () => void = () => undefined;
-    const held = new Promise<void>((resolve) => { release = resolve; });
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
     server.use(
       http.get(`*/api/v1/members/${memberId}/signup`, async () => {
         if (holdReads) await held;
@@ -1549,11 +2015,19 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     holdReads = true;
-    fireEvent.click(within(fileRow(drawer, "Assegurança.pdf")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(within(drawer).queryByText("Assegurança.pdf")).toBeNull(); });
+    fireEvent.click(
+      within(fileRow(drawer, "Assegurança.pdf")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(within(drawer).queryByText("Assegurança.pdf")).toBeNull();
+    });
     // The view reload is still on its way: the next removal builds on the first one's answer.
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2); });
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2);
+    });
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([
       { documents: [{ files: [], type: "INSURANCE" }], version: 1 },
       { documents: [{ files: [card2], type: "VACCINATION_CARD" }], version: 2 },
@@ -1565,14 +2039,29 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
 
   it("step 2: a 409 READMISSION_PENDING that still arrives shows the new literal inside the drawer, for a field save and for a file", async () => {
     mockScenario("adminSignupReviewReadmission");
-    server.use(http.patch(`*/api/v1/dogs/${kiwiId}`, () => apiErrorResponse("INVALID_STATE", 409, { reason: "READMISSION_PENDING" })));
+    server.use(
+      http.patch(`*/api/v1/dogs/${kiwiId}`, () =>
+        apiErrorResponse("INVALID_STATE", 409, { reason: "READMISSION_PENDING" }),
+      ),
+    );
     await renderReview();
     const drawer = openDrawer();
-    fireEvent.change(within(drawer).getByLabelText("Nom", { selector: "#signup-edit-dog-0-name" }), { target: { value: "Kiwi Blanca" } });
+    fireEvent.change(
+      within(drawer).getByLabelText("Nom", { selector: "#signup-edit-dog-0-name" }),
+      { target: { value: "Kiwi Blanca" } },
+    );
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
-    expect(await within(drawer).findByText(DOG_LOCKED, { selector: "[role=alert] *" })).toBeVisible();
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(within(drawer).getAllByText(DOG_LOCKED, { selector: "[role=alert], [role=alert] *" })).toHaveLength(2); });
+    expect(
+      await within(drawer).findByText(DOG_LOCKED, { selector: "[role=alert] *" }),
+    ).toBeVisible();
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(
+        within(drawer).getAllByText(DOG_LOCKED, { selector: "[role=alert], [role=alert] *" }),
+      ).toHaveLength(2);
+    });
     // The file stays: nothing changed.
     expect(within(drawer).getByText("cartilla_Kiwi_2.jpg")).toBeVisible();
   });
@@ -1581,15 +2070,21 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     mockScenario("adminSignupReviewReadmission");
     let refuse = true;
     server.use(
-      http.patch(`*/api/v1/dogs/${kiwiId}`, () => (refuse ? apiErrorResponse("FILE_NOT_FOUND", 400) : undefined)),
+      http.patch(`*/api/v1/dogs/${kiwiId}`, () =>
+        refuse ? apiErrorResponse("FILE_NOT_FOUND", 400) : undefined,
+      ),
     );
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
     const reads = sent(requests, "GET", `/members/${memberId}/signup`).length;
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }),
+    );
     expect(await within(drawer).findByText("No s'ha trobat el fitxer.")).toBeVisible();
-    await waitFor(() => { expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads); });
+    await waitFor(() => {
+      expect(sent(requests, "GET", `/members/${memberId}/signup`).length).toBeGreaterThan(reads);
+    });
     refuse = false;
     expect(within(drawer).getByText("cartilla_Kiwi_1.jpg")).toBeVisible();
   });
@@ -1602,12 +2097,22 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     const chip = within(drawer).getByLabelText("Xip");
     expect(chip).toHaveAttribute("readonly");
     expect(chip).toHaveValue("941000024681357");
-    expect(window.document.getElementById(chip.getAttribute("aria-describedby") ?? "")).toHaveTextContent(DOG_LOCKED);
+    expect(
+      window.document.getElementById(chip.getAttribute("aria-describedby") ?? ""),
+    ).toHaveTextContent(DOG_LOCKED);
     fireEvent.change(chip, { target: { value: "941000099999999" } });
-    fireEvent.change(within(drawer).getByLabelText("Nom", { selector: "#signup-edit-dog-0-name" }), { target: { value: "Kiwi Blanca" } });
+    fireEvent.change(
+      within(drawer).getByLabelText("Nom", { selector: "#signup-edit-dog-0-name" }),
+      { target: { value: "Kiwi Blanca" } },
+    );
     fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
-    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1); });
-    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({ name: "Kiwi Blanca", version: 1 });
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(1);
+    });
+    expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
+      name: "Kiwi Blanca",
+      version: 1,
+    });
   });
 
   it("step 3: an ordinary signup's chip stays editable", async () => {
@@ -1622,11 +2127,19 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     const { fetch: over, requests } = recordingFetch();
     await renderReview({ fetchOverride: over });
     const drawer = openDrawer();
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull(); });
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull();
+    });
     // The last submitted file of the card withdraws the type (`files: []`).
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2); });
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2);
+    });
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[1]?.body).toEqual({
       documents: [{ files: [], type: "VACCINATION_CARD" }],
       version: 2,
@@ -1634,7 +2147,9 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     // The record's own 2025 card shows again (R-04-06: «un tipus … enviat sense fitxers conserva el
     // del gos»), in the drawer and on the card, and it is no longer a change.
     const recordCard = await within(drawer).findByText("cartilla_Kivi_2025.pdf");
-    expect(within(fileRow(drawer, "cartilla_Kivi_2025.pdf")).queryByRole("button", { name: "Retira" })).toBeNull();
+    expect(
+      within(fileRow(drawer, "cartilla_Kivi_2025.pdf")).queryByRole("button", { name: "Retira" }),
+    ).toBeNull();
     expect(recordCard).toBeVisible();
     await waitFor(() => {
       const onCard = screen
@@ -1646,7 +2161,9 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     expect(within(block).queryByText(/cartilla_/u)).toBeNull();
 
     // The insurance (the record has none) withdrawn too: no documents change is left.
-    fireEvent.click(within(fileRow(drawer, "Assegurança.pdf")).getByRole("button", { name: "Retira" }));
+    fireEvent.click(
+      within(fileRow(drawer, "Assegurança.pdf")).getByRole("button", { name: "Retira" }),
+    );
     await kiwiChanges(["Nom", "Raça"]);
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`).map((request) => request.body)).toEqual([
       { documents: [{ files: [card2], type: "VACCINATION_CARD" }], version: 1 },
@@ -1664,10 +2181,18 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     if (header === null) throw new TypeError("Missing D2's header");
     expect(within(header).queryByText("Document pendent")).toBeNull();
     const drawer = openDrawer();
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull(); });
-    fireEvent.click(within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }));
-    await waitFor(() => { expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2); });
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_1.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(within(drawer).queryByText("cartilla_Kiwi_1.jpg")).toBeNull();
+    });
+    fireEvent.click(
+      within(fileRow(drawer, "cartilla_Kiwi_2.jpg")).getByRole("button", { name: "Retira" }),
+    );
+    await waitFor(() => {
+      expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)).toHaveLength(2);
+    });
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[1]?.body).toEqual({
       documents: [{ files: [], type: "VACCINATION_CARD" }],
       version: 2,
@@ -1682,7 +2207,8 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
     mockScenario("adminSignupReviewReadmission");
     // The record's card was never received (a PENDING row without files, as the core keeps it).
     const { fetch: over } = recordingFetch((body) => {
-      const reused = body.dogs[0]?.readmission as { current?: Record<string, unknown> } | null | undefined;
+      const reused = body.dogs[0]?.readmission as
+        { current?: Record<string, unknown> } | null | undefined;
       if (reused?.current != null) {
         reused.current.documents = [{ files: [], state: "PENDING", type: "VACCINATION_CARD" }];
       }
@@ -1693,5 +2219,29 @@ describe("T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-
       "Abans: pendent",
       "Ara: cartilla_Kiwi_1.jpg · cartilla_Kiwi_2.jpg",
     ]);
+  });
+});
+
+it("T-04-22 requires explicit cancellation of a pending card checkout before validation", async () => {
+  const { fetch: recording, requests } = recordingFetch((body) => {
+    if (body.upfront == null) throw new Error("Missing upfront fixture");
+    body.upfront.totalPaid = { amountMinor: 0, currency: "EUR" };
+    for (const line of body.upfront.lines) {
+      line.status = "CHECKOUT_PENDING";
+      line.paidAmount = { amountMinor: 0, currency: "EUR" };
+    }
+  });
+  await renderReview({ fetchOverride: recording });
+  validate();
+  expect(sent(requests, "POST", "/validation", false)).toHaveLength(0);
+  expect(
+    await screen.findByText(/El pagament amb targeta encara no s’ha confirmat/u),
+  ).toBeVisible();
+  fireEvent.click(screen.getByRole("checkbox", { name: /Anul·la l’intent de pagament/u }));
+  fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
+  validate();
+  await waitFor(() => { expect(sent(requests, "POST", "/validation", false)).toHaveLength(1); });
+  expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({
+    cancelPendingCheckout: true,
   });
 });

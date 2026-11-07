@@ -23,6 +23,7 @@ const dogs = [
     id: "dog-duna",
     name: "Duna",
     pendingDocuments: [],
+    status: "ACTIVE" as const,
   },
   {
     breed: "mestís",
@@ -30,6 +31,7 @@ const dogs = [
     id: "dog-rock",
     name: "Rock",
     pendingDocuments: [],
+    status: "ACTIVE" as const,
   },
 ];
 
@@ -170,7 +172,9 @@ describe("D10 member billing block", () => {
     expect(requests).not.toContain("/api/v1/pack-balances");
     expect(screen.queryByRole("heading", { name: "Packs" })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Registra un pagament" }));
-    expect(within(screen.getByLabelText("Concepte")).queryByRole("option", { name: "Pack" })).toBeNull();
+    expect(
+      within(screen.getByLabelText("Concepte")).queryByRole("option", { name: "Pack" }),
+    ).toBeNull();
   });
 
   it("maps adjustment field errors and shows an alert for an unclassified failure", async () => {
@@ -278,9 +282,7 @@ describe("D10 member billing block", () => {
       const section = (await screen.findByRole("heading", { name })).closest("section");
       if (section === null) throw new Error(`Missing ${name} section`);
       expect(await within(section).findByRole("alert")).toBeVisible();
-      expect(
-        within(section).getByRole("button", { name: "Torna-ho a provar" }),
-      ).toBeVisible();
+      expect(within(section).getByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
     }
 
     server.resetHandlers();

@@ -81,7 +81,8 @@
       "pendingDocuments": "Documents pendents",
       "plan": "Modalitat",
       "postalCode": "CP",
-      "roles": "Rols"
+      "roles": "Rols",
+      "familyGroupHolder": "Responsable"
     },
     "emptyDescription": "Canvieu la cerca o els filtres per veure més resultats.",
     "emptyTitle": "Cap abonat amb aquests criteris",

@@ -133,7 +133,9 @@ test.describe("E2-W01 census universal lists", () => {
     expect(response.status()).toBe(200);
     const exportUrl = new URL(response.url());
     expect(exportUrl.searchParams.get("format")).toBe("xlsx");
-    expect(exportUrl.searchParams.get("columns")).toBe("fullName,dogs,plan,displayStatus");
+    expect(exportUrl.searchParams.get("columns")).toBe(
+      "fullName,dogs,plan,displayStatus,familyGroup,familyGroupHolder",
+    );
     // E4-W07: the inline `200` is saved as the api's file, byte for byte (R-14-12).
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/^canic_members_\d{8}-\d{4}\.xlsx$/u);

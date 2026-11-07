@@ -173,6 +173,7 @@ test("T-02-14 mobile review: census actions and settings remain usable", async (
     await capture(page, `page-${route}-${browserName}-375.png`);
   }
   await page.goto(`${baseUrl}/abonats/member-laura`);
+  await page.getByRole("button", { name: "Accions", exact: true }).click();
   await page.getByRole("button", { name: "Afegir un altre gos", exact: true }).click();
   const dog = page.getByRole("dialog", { name: "Afegir un altre gos" });
   await expect(dog.getByLabel("El guia és l’abonat")).toBeChecked();
@@ -184,6 +185,7 @@ test("T-02-14 mobile review: census actions and settings remain usable", async (
   await capture(page, `add-dog-bottom-${browserName}-375.png`);
   await page.keyboard.press("Escape");
   await expect(dog).toHaveCount(0);
+  await page.getByRole("button", { name: "Accions", exact: true }).click();
   await page.getByRole("button", { name: "Fusiona abonats", exact: true }).click();
   const merge = page.getByRole("dialog", { name: "Fusiona abonats" });
   await expect(merge.getByRole("button", { name: "Previsualitza la fusió" })).toBeDisabled();

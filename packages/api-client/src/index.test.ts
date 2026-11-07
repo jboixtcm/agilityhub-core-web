@@ -662,7 +662,8 @@ describe("MSW bootstrap handlers", () => {
     // Word feedback: add-dog, merge preview and confirmed merge.
     // Daily time-band snapshots and complete plan details.
     // Price edits and confirmed price/plan deletion.
-    expect(handlers).toHaveLength(410);
+    // Administrative family group creation, updates, lookup and dissolution.
+    expect(handlers).toHaveLength(414);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

@@ -78,6 +78,7 @@ const memberOverviewFixture: MemberOverview = {
       level: levelAt(2),
       name: "Duna",
       pendingDocuments: [],
+      status: "ACTIVE",
     },
     {
       breed: "mestís",
@@ -92,6 +93,7 @@ const memberOverviewFixture: MemberOverview = {
         total: 10,
       },
       pendingDocuments: [],
+      status: "ACTIVE",
     },
   ],
   familyGroup: {
@@ -158,6 +160,7 @@ const memberOverviewFixture: MemberOverview = {
       maskedAccount: "···· ···· ···· ···· 2231",
       type: "SEPA_DD",
     },
+    familyGroupId: "family-laura",
     planId: "plan-family",
     phones: [
       { label: "Laura", number: "655100101", prefix: "+34" },
@@ -471,6 +474,7 @@ const featuredMembers = [
       { id: "dog-rock", levelCode: "D", name: "Rock" },
     ],
     familyGroup: { id: "family-laura", name: "Laura Serra Vidal" },
+    familyGroupHolder: true,
     firstName: "Laura",
     freeTrainingAllowed: true,
     fullName: "Laura Serra Vidal",
@@ -699,7 +703,7 @@ function memberListItem(input: MemberFixtureInput): MemberListItem {
       phones: [{ number: phone.replaceAll(" ", ""), prefix: "+34" }],
     },
     displayStatus: input.displayStatus,
-    ...("familyGroup" in input ? { familyGroup: input.familyGroup } : {}),
+    ...("familyGroup" in input ? { familyGroup: input.familyGroup, familyGroupHolder: true } : {}),
     dogs: input.dogs.map((dog) => ({
       id: dog.id,
       level: {

@@ -75,7 +75,8 @@ interface FamilyCandidate {
 }
 
 /** The admin's family decision for a `NOT_FOUND_PENDING` claim (R-04-13). */
-type FamilyDecision = { familyGroupId: string; holderName: string; kind: "group" } | { kind: "none" };
+type FamilyDecision =
+  { familyGroupId: string; holderName: string; kind: "group" } | { kind: "none" };
 
 interface PlanChoice {
   planId: string;
@@ -123,7 +124,12 @@ function isoDateFromInput(value: string, locale: Locale): string | undefined {
   const day = locale === "en" ? second : first;
   const month = locale === "en" ? first : second;
   const candidate = new Date(Date.UTC(year, month - 1, day));
-  if (candidate.getUTCFullYear() !== year || candidate.getUTCMonth() !== month - 1 || candidate.getUTCDate() !== day) return undefined;
+  if (
+    candidate.getUTCFullYear() !== year ||
+    candidate.getUTCMonth() !== month - 1 ||
+    candidate.getUTCDate() !== day
+  )
+    return undefined;
   return `${String(year).padStart(4, "0")}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
@@ -137,19 +143,25 @@ function planChoiceOf(value: string): PlanChoice {
 }
 
 function isDryRun(value: unknown): value is ValidationDryRun {
-  return typeof value === "object" && value !== null && !("memberId" in value) && "warnings" in value;
+  return (
+    typeof value === "object" && value !== null && !("memberId" in value) && "warnings" in value
+  );
 }
 
 // R-04-23: a collected payment stays recorded after a rejection and must be refunded (S12).
 function hasCollectedPayment(upfront: Upfront | null | undefined): boolean {
   return (upfront?.lines ?? []).some(
-    (line) => line.status === "PAID" || (line.status === "PARTIAL" && (line.paidAmount?.amountMinor ?? 0) > 0),
+    (line) =>
+      line.status === "PAID" ||
+      (line.status === "PARTIAL" && (line.paidAmount?.amountMinor ?? 0) > 0),
   );
 }
 
 export function SignupReviewPage({
   client,
-  onNavigate = (path) => { window.location.assign(path); },
+  onNavigate = (path) => {
+    window.location.assign(path);
+  },
 }: {
   client: ApiClient;
   onNavigate?: (path: string) => void;
@@ -175,6 +187,7 @@ export function SignupReviewPage({
   const [typedDate, setTypedDate] = useState<TypedDate>();
   const [manualPaid, setManualPaid] = useState("0");
   const [confirmZero, setConfirmZero] = useState(false);
+  const [cancelPendingCheckout, setCancelPendingCheckout] = useState(false);
   const [quote, setQuote] = useState<Quote>();
   const [quoteRetry, setQuoteRetry] = useState(0);
   const [familyDecision, setFamilyDecision] = useState<FamilyDecision>();
@@ -188,7 +201,10 @@ export function SignupReviewPage({
     client.GET("/members/{id}/signup", { params: { path: { id: memberId } } }).then(
       (result) => {
         if (seq !== loadSeq.current) return;
-        if (result.data === undefined) { setLoadState("error"); return; }
+        if (result.data === undefined) {
+          setLoadState("error");
+          return;
+        }
         setSignup(result.data);
         setLoadState("ready");
       },
@@ -200,12 +216,16 @@ export function SignupReviewPage({
     );
   }, [client, memberId]);
 
-  useEffect(() => { load(); }, [load, reload]);
+  useEffect(() => {
+    load();
+  }, [load, reload]);
 
   // R-04-06 (E38): the reused dog's «Abans / Ara» names each document type after the club's list
   // (`undefined` while it loads; a failed read is an empty map).
   const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>();
-  const documentsChanged = signup?.dogs.some((dog) => dog.readmission?.changedFields.includes("documents") === true) === true;
+  const documentsChanged =
+    signup?.dogs.some((dog) => dog.readmission?.changedFields.includes("documents") === true) ===
+    true;
   const labelLanguage = i18n.resolvedLanguage ?? i18n.language;
   useEffect(() => {
     if (!documentsChanged) return;
@@ -241,35 +261,54 @@ export function SignupReviewPage({
   const quoteKey =
     signup === undefined || planChoice === undefined
       ? undefined
-      : `${planValue(planChoice.planId, planChoice.priceId)}|${String(signup.version)}`;
+      : `${planValue(planChoice.planId, planChoice.priceId)}|${String(signup.version)}|${String(cancelPendingCheckout)}`;
 
   // The dry run carries the admin's other choices as they are when it is asked (levels, group).
-  const requestQuote = useEffectEvent((view: SignupView, plan: PlanChoice, key: string, isActive: () => boolean) => {
-    const dogs = view.dogs.map((dog) => ({ id: dog.id, levelId: levelChoice[dog.id] ?? dog.levelId ?? "" }));
-    const groupId = familyGroupFor(view);
-    const body: ValidationRequest = {
-      dogs: dogs.map((dog) => ({ dogId: dog.id, ...(dog.levelId === "" ? {} : { levelId: dog.levelId }) })),
-      ...(groupId === undefined ? {} : { familyGroupId: groupId }),
-      planId: plan.planId,
-      ...(plan.priceId === undefined ? {} : { priceId: plan.priceId }),
-      version: view.version,
-    };
-    client.POST("/members/{id}/validation", { body, params: { path: { id: memberId }, query: { dryRun: true } } }).then(
-      (result) => {
-        if (!isActive()) return;
-        setQuote(isDryRun(result.data) ? { key, result: result.data, view } : { error: { code: "UNKNOWN", kind: "general" }, key, view });
-      },
-      (cause: unknown) => {
-        if (!isActive()) return;
-        const error = classifySignupReviewError(cause, dogs);
-        if (error.kind === "resolved") setLoadState("resolved");
-        setQuote({ error, key, view });
-      },
-    );
-  });
+  const requestQuote = useEffectEvent(
+    (view: SignupView, plan: PlanChoice, key: string, isActive: () => boolean) => {
+      const dogs = view.dogs.map((dog) => ({
+        id: dog.id,
+        levelId: levelChoice[dog.id] ?? dog.levelId ?? "",
+      }));
+      const groupId = familyGroupFor(view);
+      const body: ValidationRequest = {
+        dogs: dogs.map((dog) => ({
+          dogId: dog.id,
+          ...(dog.levelId === "" ? {} : { levelId: dog.levelId }),
+        })),
+        ...(groupId === undefined ? {} : { familyGroupId: groupId }),
+        planId: plan.planId,
+        ...(plan.priceId === undefined ? {} : { priceId: plan.priceId }),
+        ...(cancelPendingCheckout ? { cancelPendingCheckout: true } : {}),
+        version: view.version,
+      };
+      client
+        .POST("/members/{id}/validation", {
+          body,
+          params: { path: { id: memberId }, query: { dryRun: true } },
+        })
+        .then(
+          (result) => {
+            if (!isActive()) return;
+            setQuote(
+              isDryRun(result.data)
+                ? { key, result: result.data, view }
+                : { error: { code: "UNKNOWN", kind: "general" }, key, view },
+            );
+          },
+          (cause: unknown) => {
+            if (!isActive()) return;
+            const error = classifySignupReviewError(cause, dogs);
+            if (error.kind === "resolved") setLoadState("resolved");
+            setQuote({ error, key, view });
+          },
+        );
+    },
+  );
 
   useEffect(() => {
-    if (!viewCurrent || signup === undefined || planChoice === undefined || quoteKey === undefined) return undefined;
+    if (!viewCurrent || signup === undefined || planChoice === undefined || quoteKey === undefined)
+      return undefined;
     let active = true;
     requestQuote(signup, planChoice, quoteKey, () => active);
     // A reload that starts meanwhile drops this answer too.
@@ -288,7 +327,14 @@ export function SignupReviewPage({
         .GET("/members", {
           // `familyGroup` is not a default column of D5: ask for it (S03 §6 `fields`). A member
           // without a group has no `familyGroup` key; the name and the dogs are always sent.
-          params: { query: { fields: listFields([...FAMILY_SEARCH_FIELDS, "familyGroup"]), filter: ["status:eq:ACTIVE"], q: query, size: 20 } },
+          params: {
+            query: {
+              fields: listFields([...FAMILY_SEARCH_FIELDS, "familyGroup"]),
+              filter: ["status:eq:ACTIVE"],
+              q: query,
+              size: 20,
+            },
+          },
         })
         .then((result) => itemsWith(result.data?.items ?? [], FAMILY_SEARCH_FIELDS))
         .then(
@@ -320,12 +366,20 @@ export function SignupReviewPage({
     };
   }, [client, familyQuery, memberId, pendingClaim]);
 
-  if (loadState === "loading" && signup === undefined) return <Skeleton label={t("admin-census:signupReview.loading")} />;
+  if (loadState === "loading" && signup === undefined)
+    return <Skeleton label={t("admin-census:signupReview.loading")} />;
   if (loadState === "resolved") {
     return (
       <section className="signup-review-page">
         <Toast tone="info">{t("admin-census:signupReview.resolved")}</Toast>
-        <a className="ah-button ah-button--ghost signup-review-page__record" href={`/abonats/${memberId}`} onClick={(event) => { event.preventDefault(); onNavigate(`/abonats/${memberId}`); }}>
+        <a
+          className="ah-button ah-button--ghost signup-review-page__record"
+          href={`/abonats/${memberId}`}
+          onClick={(event) => {
+            event.preventDefault();
+            onNavigate(`/abonats/${memberId}`);
+          }}
+        >
           {t("admin-census:signupReview.resolvedLink")}
         </a>
       </section>
@@ -353,19 +407,29 @@ export function SignupReviewPage({
   const levelOf = (dog: Dog) => levelChoice[dog.id] ?? dog.levelId ?? "";
   // R-04-19 (INC-39): a requested plan no longer assignable comes as `planId`/`priceId` null —
   // no proposal, so no option and nothing sent until the admin chooses one.
-  const selectedPlan = planChoice ?? (signup.proposals.planId == null ? undefined : {
-    planId: signup.proposals.planId,
-    ...(signup.proposals.priceId == null ? {} : { priceId: signup.proposals.priceId }),
-  });
-  const selectedOption: PlanOption | undefined = signup.planOptions.find((plan) => plan.planId === selectedPlan?.planId);
-  const selectedPrice = selectedOption?.prices.find((price) => price.priceId === selectedPlan?.priceId);
+  const selectedPlan =
+    planChoice ??
+    (signup.proposals.planId == null
+      ? undefined
+      : {
+          planId: signup.proposals.planId,
+          ...(signup.proposals.priceId == null ? {} : { priceId: signup.proposals.priceId }),
+        });
+  const selectedOption: PlanOption | undefined = signup.planOptions.find(
+    (plan) => plan.planId === selectedPlan?.planId,
+  );
+  const selectedPrice = selectedOption?.prices.find(
+    (price) => price.priceId === selectedPlan?.priceId,
+  );
   const planType = selectedOption?.type ?? member.plan?.type;
   const monthly = planType === "MONTHLY";
   // Without a plan change the view is the api's own quote; after one, only its current answer counts.
-  const currentQuote = viewCurrent && quote?.view === signup && quote.key === quoteKey ? quote : undefined;
+  const currentQuote =
+    viewCurrent && quote?.view === signup && quote.key === quoteKey ? quote : undefined;
   const quoteResult = currentQuote?.result;
   const quoteError = currentQuote?.error;
-  const quotePending = loadState === "loading" || (quoteKey !== undefined && currentQuote === undefined);
+  const quotePending =
+    loadState === "loading" || (quoteKey !== undefined && currentQuote === undefined);
   const quoteReady = viewCurrent && (quoteKey === undefined || quoteResult !== undefined);
   // Part of the quote (R-04-15): dropped with it while the view is not current.
   const proposedDate = !viewCurrent
@@ -376,18 +440,31 @@ export function SignupReviewPage({
   const nextInvoiceDate = typedDate === undefined ? (proposedDate ?? "") : (typedDate.iso ?? "");
   const nextInvoiceText =
     typedDate === undefined
-      ? proposedDate === undefined ? "" : formatPlainDate(proposedDate, "short")
-      : typedDate.locale === locale || typedDate.iso === undefined ? typedDate.text : formatPlainDate(typedDate.iso, "short");
+      ? proposedDate === undefined
+        ? ""
+        : formatPlainDate(proposedDate, "short")
+      : typedDate.locale === locale || typedDate.iso === undefined
+        ? typedDate.text
+        : formatPlainDate(typedDate.iso, "short");
   const upfront: Upfront | undefined = !viewCurrent
     ? undefined
     : quoteKey === undefined
       ? (signup.upfront ?? undefined)
       : quoteResult?.upfront;
-  const liveLines = (upfront?.lines ?? []).filter((line) => line.status !== "CANCELLED" && line.status !== "REFUNDED");
-  const stripePaid = (upfront?.totalPaid.amountMinor ?? 0) > 0 && liveLines.every((line) => line.provider === "STRIPE" && line.status === "PAID");
+  const liveLines = (upfront?.lines ?? []).filter(
+    (line) => line.status !== "CANCELLED" && line.status !== "REFUNDED",
+  );
+  const stripePaid =
+    (upfront?.totalPaid.amountMinor ?? 0) > 0 &&
+    liveLines.every((line) => line.provider === "STRIPE" && line.status === "PAID");
   // Only an upfront block without a Stripe payment asks for the amount collected (null = no upfront, INC-08).
+  const hasPendingCheckout =
+    signup.upfront?.lines.some((line) => line.status === "CHECKOUT_PENDING") === true;
   const manualUpfront = billing && upfront !== undefined && !stripePaid;
-  const amountDue = Math.max(0, (upfront?.totalDue.amountMinor ?? 0) - (upfront?.totalPaid.amountMinor ?? 0));
+  const amountDue = Math.max(
+    0,
+    (upfront?.totalDue.amountMinor ?? 0) - (upfront?.totalPaid.amountMinor ?? 0),
+  );
   // The typed amount in the club currency's own minor units (EUR 2 digits, JPY 0), never a fixed 100.
   const paidDigits = currencyDigits(branding.currency);
   const readmission = signup.signup.readmission || signup.warnings.includes("READMISSION");
@@ -395,24 +472,47 @@ export function SignupReviewPage({
   const validationBody = (): ValidationRequest => {
     const groupId = familyGroupFor(signup);
     return {
-      dogs: signup.dogs.map((dog) => ({ dogId: dog.id, ...(levelOf(dog) === "" ? {} : { levelId: levelOf(dog) }) })),
+      dogs: signup.dogs.map((dog) => ({
+        dogId: dog.id,
+        ...(levelOf(dog) === "" ? {} : { levelId: levelOf(dog) }),
+      })),
       ...(billing && monthly && nextInvoiceDate !== "" ? { nextInvoiceDate } : {}),
-      ...(selectedPlan === undefined ? {} : { planId: selectedPlan.planId, ...(selectedPlan.priceId === undefined ? {} : { priceId: selectedPlan.priceId }) }),
+      ...(selectedPlan === undefined
+        ? {}
+        : {
+            planId: selectedPlan.planId,
+            ...(selectedPlan.priceId === undefined ? {} : { priceId: selectedPlan.priceId }),
+          }),
       ...(groupId === undefined ? {} : { familyGroupId: groupId }),
-      ...(manualUpfront ? { upfrontAmountPaid: { amountMinor: minorFromMajor(Number(manualPaid), branding.currency), currency: branding.currency } } : {}),
+      ...(manualUpfront
+        ? {
+            upfrontAmountPaid: {
+              amountMinor: minorFromMajor(Number(manualPaid), branding.currency),
+              currency: branding.currency,
+            },
+          }
+        : {}),
+      ...(cancelPendingCheckout ? { cancelPendingCheckout: true } : {}),
       version: signup.version,
     };
   };
 
   const classify = (cause: unknown) =>
-    classifySignupReviewError(cause, signup.dogs.map((dog) => ({ id: dog.id, levelId: levelOf(dog) })));
+    classifySignupReviewError(
+      cause,
+      signup.dogs.map((dog) => ({ id: dog.id, levelId: levelOf(dog) })),
+    );
 
   const errorText = (error: SignupReviewError): string => {
     switch (error.kind) {
       case "level":
-        return error.code === "LEVEL_REQUIRED" ? t("admin-census:signupReview.levelRequired") : t(`errors:${error.code}`);
+        return error.code === "LEVEL_REQUIRED"
+          ? t("admin-census:signupReview.levelRequired")
+          : t(`errors:${error.code}`);
       case "nextInvoiceDate":
-        return error.code === "NEXT_INVOICE_DATE_REQUIRED" ? t("admin-census:signupReview.invoiceRequired") : t("admin-census:signupReview.invoiceInvalid");
+        return error.code === "NEXT_INVOICE_DATE_REQUIRED"
+          ? t("admin-census:signupReview.invoiceRequired")
+          : t("admin-census:signupReview.invoiceInvalid");
       case "planCard":
         return t("admin-census:signupReview.warning.CHECKOUT_PENDING");
       case "stale":
@@ -422,9 +522,13 @@ export function SignupReviewPage({
       case "general":
         return error.code === "INVALID_STATE"
           ? t("admin-census:signupReview.invalidState")
-          : t(`errors:${error.code}`, { defaultValue: t("admin-census:signupReview.genericError") });
+          : t(`errors:${error.code}`, {
+              defaultValue: t("admin-census:signupReview.genericError"),
+            });
       default:
-        return t(`errors:${error.code}`, { defaultValue: t("admin-census:signupReview.genericError") });
+        return t(`errors:${error.code}`, {
+          defaultValue: t("admin-census:signupReview.genericError"),
+        });
     }
   };
 
@@ -438,6 +542,10 @@ export function SignupReviewPage({
   const validate = async () => {
     // [VALIDA] waits for the quote of the current plan and price (S04 §2 D2).
     if (!quoteReady) return;
+    if (hasPendingCheckout && !cancelPendingCheckout) {
+      setDecisionError({ kind: "planCard", code: "CHECKOUT_PENDING" });
+      return;
+    }
     if (manualUpfront && Number(manualPaid) === 0 && !confirmZero) {
       setDecisionError({ code: "CONFIRM_NOTHING_PAID", kind: "upfront" });
       return;
@@ -446,9 +554,13 @@ export function SignupReviewPage({
       setDecisionError({ code: "FAMILY_DECISION_REQUIRED", kind: "family" });
       return;
     }
-    setWorking(true); setDecisionError(undefined);
+    setWorking(true);
+    setDecisionError(undefined);
     try {
-      await client.POST("/members/{id}/validation", { body: validationBody(), params: { path: { id: memberId }, query: { dryRun: false } } });
+      await client.POST("/members/{id}/validation", {
+        body: validationBody(),
+        params: { path: { id: memberId }, query: { dryRun: false } },
+      });
       refreshCounters();
       onNavigate("/tauler?signup=validated");
     } catch (cause) {
@@ -461,11 +573,19 @@ export function SignupReviewPage({
 
   const reject = async () => {
     if (rejectReason.trim().length < 3 || rejectReason.length > 500) return;
-    setWorking(true); setRejectError(undefined);
+    setWorking(true);
+    setRejectError(undefined);
     try {
-      const result = await client.POST("/members/{id}/rejection", { body: { reason: rejectReason.trim(), version: signup.version }, params: { path: { id: memberId } } });
+      const result = await client.POST("/members/{id}/rejection", {
+        body: { reason: rejectReason.trim(), version: signup.version },
+        params: { path: { id: memberId } },
+      });
       refreshCounters();
-      onNavigate(result.data?.paidPaymentRequiresRefund === true ? "/tauler?signup=rejected-refund" : "/tauler");
+      onNavigate(
+        result.data?.paidPaymentRequiresRefund === true
+          ? "/tauler?signup=rejected-refund"
+          : "/tauler",
+      );
     } catch (cause) {
       const error = classify(cause);
       if (error.kind === "resolved") setLoadState("resolved");
@@ -475,8 +595,11 @@ export function SignupReviewPage({
   };
 
   const levelError = (dog: Dog) =>
-    decisionError?.kind === "level" && decisionError.dogIds.includes(dog.id) ? errorText(decisionError) : undefined;
-  const dateError = decisionError?.kind === "nextInvoiceDate" ? errorText(decisionError) : undefined;
+    decisionError?.kind === "level" && decisionError.dogIds.includes(dog.id)
+      ? errorText(decisionError)
+      : undefined;
+  const dateError =
+    decisionError?.kind === "nextInvoiceDate" ? errorText(decisionError) : undefined;
   const upfrontError =
     decisionError?.kind !== "upfront"
       ? undefined
@@ -497,18 +620,23 @@ export function SignupReviewPage({
         ? t("admin-census:signupReview.familyDecisionRequired")
         : errorText(decisionError);
   const decisionMessage =
-    decisionError === undefined || ["level", "nextInvoiceDate", "upfront", "plan", "planCard", "family"].includes(decisionError.kind)
+    decisionError === undefined ||
+    ["level", "nextInvoiceDate", "upfront", "plan", "planCard", "family"].includes(
+      decisionError.kind,
+    )
       ? undefined
       : decisionError;
 
   const dogNames = signup.dogs.map((dog) => dog.name).join(", ");
   const payment = member.paymentMethod;
-  const signupMonth = (value: string) => formatMonth(value).replace(/\s+(?:d(?:e|el)\s+)?\d{4}$/u, "");
+  const signupMonth = (value: string) =>
+    formatMonth(value).replace(/\s+(?:d(?:e|el)\s+)?\d{4}$/u, "");
   const firstMonth = upfront?.firstMonth;
   const upfrontBreakdown = liveLines
     .map((line) => {
       const amount = formatMoneyMinor(line.amount);
-      if (line.concept !== "FIRST_MONTH") return t(`admin-census:signupReview.upfrontLines.${line.concept}`, { amount });
+      if (line.concept !== "FIRST_MONTH")
+        return t(`admin-census:signupReview.upfrontLines.${line.concept}`, { amount });
       // The FIRST_MONTH line names its month and portion from `upfront.firstMonth` (R-04-15).
       return firstMonth === undefined
         ? t("admin-census:signupReview.upfrontLines.FIRST_MONTH_UNKNOWN", { amount })
@@ -532,14 +660,25 @@ export function SignupReviewPage({
   const planOptions = signup.planOptions.flatMap((plan) =>
     plan.prices.length === 0
       ? [{ label: planLabel(plan, undefined), value: planValue(plan.planId, undefined) }]
-      : plan.prices.map((price) => ({ label: planLabel(plan, price), value: planValue(plan.planId, price.priceId) })),
+      : plan.prices.map((price) => ({
+          label: planLabel(plan, price),
+          value: planValue(plan.planId, price.priceId),
+        })),
   );
-  const selectedValue = planValue(selectedPlan?.planId, selectedPrice?.priceId ?? selectedPlan?.priceId);
+  const selectedValue = planValue(
+    selectedPlan?.planId,
+    selectedPrice?.priceId ?? selectedPlan?.priceId,
+  );
   if (selectedPlan !== undefined && !planOptions.some((option) => option.value === selectedValue)) {
-    planOptions.unshift({ label: selectedOption?.name ?? member.plan?.name ?? t("admin-census:values.empty"), value: selectedValue });
+    planOptions.unshift({
+      label: selectedOption?.name ?? member.plan?.name ?? t("admin-census:values.empty"),
+      value: selectedValue,
+    });
   }
   // The warnings a plan change brings (PAID_EXCEEDS_QUOTE, CHECKOUT_PENDING…) show on the plan card.
-  const quoteWarnings = (quoteResult?.warnings ?? []).filter((warning) => !signup.warnings.includes(warning));
+  const quoteWarnings = (quoteResult?.warnings ?? []).filter(
+    (warning) => !signup.warnings.includes(warning),
+  );
   const headerWarnings = signup.warnings.filter(
     (warning) =>
       !INLINE_WARNINGS.includes(warning) &&
@@ -554,7 +693,9 @@ export function SignupReviewPage({
   const holderGroupName = familyDecision?.kind === "group" ? familyDecision.holderName : undefined;
   // R-04-06 (E38): each changed field with the LEFT record's value and the submitted one.
   const readmissionBlock = signup.readmission;
-  const readmissionChanges = READMISSION_FIELDS.filter((field) => readmissionBlock?.changedFields.includes(field) === true);
+  const readmissionChanges = READMISSION_FIELDS.filter(
+    (field) => readmissionBlock?.changedFields.includes(field) === true,
+  );
   const readmissionValue = (values: ReadmissionValues, field: ReadmissionField): string => {
     const text = (() => {
       switch (field) {
@@ -564,7 +705,9 @@ export function SignupReviewPage({
         case "lastName2":
           return values.lastName2 ?? "";
         case "gender":
-          return values.gender === undefined ? "" : t(`admin-census:signupReview.gender.${values.gender}`);
+          return values.gender === undefined
+            ? ""
+            : t(`admin-census:signupReview.gender.${values.gender}`);
         case "birthDate":
           return values.birthDate === undefined ? "" : formatPlainDate(values.birthDate, "short");
         case "contactEmails":
@@ -574,12 +717,15 @@ export function SignupReviewPage({
         case "address":
           return values.address === undefined
             ? ""
-            : [values.address.street, `${values.address.postalCode} ${values.address.city}`].join(", ");
+            : [values.address.street, `${values.address.postalCode} ${values.address.city}`].join(
+                ", ",
+              );
         case "paymentMethod": {
           const method = values.paymentMethod;
           if (method === undefined) return "";
           const label = t(`admin-census:signupReview.paymentMethod.${method.type}`);
-          const account = method.type === "SEPA_DD" ? fmtMaskedIban(method.maskedAccount) : undefined;
+          const account =
+            method.type === "SEPA_DD" ? fmtMaskedIban(method.maskedAccount) : undefined;
           return account == null ? label : `${label} · ${account}`;
         }
       }
@@ -605,11 +751,17 @@ export function SignupReviewPage({
         case "breed":
           return values.breed ?? "";
         case "birthMonth":
-          return values.birthDate ? formatPlainDate(values.birthDate, "short") : values.birthMonth === undefined ? "" : formatPlainDate(`${values.birthMonth}-01`, "monthYear");
+          return values.birthDate
+            ? formatPlainDate(values.birthDate, "short")
+            : values.birthMonth === undefined
+              ? ""
+              : formatPlainDate(`${values.birthMonth}-01`, "monthYear");
         case "notesToInstructors":
           return values.notesToInstructors ?? "";
         case "documents":
-          return values.documents.flatMap((document) => document.files.map((file) => file.name)).join(" · ");
+          return values.documents
+            .flatMap((document) => document.files.map((file) => file.name))
+            .join(" · ");
       }
     })();
     return text.trim() === "" ? t("admin-census:values.empty") : text;
@@ -624,7 +776,8 @@ export function SignupReviewPage({
       .filter(
         (document) =>
           document.files.length > 0 &&
-          fileKeys(document) !== fileKeys(record.documents.find((own) => own.type === document.type)),
+          fileKeys(document) !==
+            fileKeys(record.documents.find((own) => own.type === document.type)),
       )
       .map((document) => document.type);
   const documentRowText = (documents: readonly SignupDocumentView[], type: string): string => {
@@ -643,23 +796,46 @@ export function SignupReviewPage({
     <section className="signup-review-page">
       {saved ? <Toast tone="success">{t("admin-census:signupReview.saved")}</Toast> : null}
       <header className="signup-review-page__header">
-        <h1>{t("admin-census:signupReview.header", { number: member.memberNumber ?? shortId(member.id), name: member.fullName, dogs: dogNames })}</h1>
+        <h1>
+          {t("admin-census:signupReview.header", {
+            number: member.memberNumber ?? shortId(member.id),
+            name: member.fullName,
+            dogs: dogNames,
+          })}
+        </h1>
         {/* R-04-24: the age warning shows when pendingDays > dashboard.pendingSignupAgeWarnDays. */}
-        <Badge tone={signup.signup.pendingDays > signup.warnDays ? "warning" : "neutral"}>{t("admin-census:signupReview.pending", { count: signup.signup.pendingDays })}</Badge>
+        <Badge tone={signup.signup.pendingDays > signup.warnDays ? "warning" : "neutral"}>
+          {t("admin-census:signupReview.pending", { count: signup.signup.pendingDays })}
+        </Badge>
         {readmission ? <Badge>{t("admin-census:signupReview.warning.READMISSION")}</Badge> : null}
-        {headerWarnings.map((warning) => <Badge key={warning} tone="warning">{t(`admin-census:signupReview.warning.${warning}`)}</Badge>)}
+        {headerWarnings.map((warning) => (
+          <Badge key={warning} tone="warning">
+            {t(`admin-census:signupReview.warning.${warning}`)}
+          </Badge>
+        ))}
       </header>
       <div className="signup-review-grid">
         <Card>
           <h2>{t("admin-census:signupReview.person")}</h2>
           <dl className="signup-review-data">
-            <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong>{member.fullName}</strong></dd>
-            <dt>{idDocumentLabel(member.idDocument?.type, t)}</dt><dd><strong>{member.idDocument?.number ?? t("admin-census:values.empty")}</strong></dd>
+            <dt>{t("admin-census:signupReview.fields.name")}</dt>
+            <dd>
+              <strong>{member.fullName}</strong>
+            </dd>
+            <dt>{idDocumentLabel(member.idDocument?.type, t)}</dt>
+            <dd>
+              <strong>{member.idDocument?.number ?? t("admin-census:values.empty")}</strong>
+            </dd>
             <dt>{t("admin-census:signupReview.fields.contact")}</dt>
             <dd>
               <span>{contact === "" ? t("admin-census:values.empty") : contact}</span>
               {whatsapp === undefined ? null : (
-                <a className="ah-badge ah-tone--neutral signup-review-whatsapp" href={`https://wa.me/${whatsapp.prefix.replaceAll(/\D/gu, "")}${whatsapp.number.replaceAll(/\D/gu, "")}`} rel="noreferrer" target="_blank">
+                <a
+                  className="ah-badge ah-tone--neutral signup-review-whatsapp"
+                  href={`https://wa.me/${whatsapp.prefix.replaceAll(/\D/gu, "")}${whatsapp.number.replaceAll(/\D/gu, "")}`}
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   <Icon aria-hidden="true" name="wa" /> {t("admin-census:signupReview.whatsapp")}
                 </a>
               )}
@@ -670,18 +846,48 @@ export function SignupReviewPage({
                 <dd className="signup-review-family">
                   {claim?.status === "FOUND" ? (
                     <>
-                      <span>{t("admin-census:signupReview.familyFound", { dog: claim.dogName ?? t("admin-census:values.empty"), holder: claim.holderName ?? claim.holder?.fullName ?? t("admin-census:values.empty") })}</span>
+                      <span>
+                        {t("admin-census:signupReview.familyFound", {
+                          dog: claim.dogName ?? t("admin-census:values.empty"),
+                          holder:
+                            claim.holderName ??
+                            claim.holder?.fullName ??
+                            t("admin-census:values.empty"),
+                        })}
+                      </span>
                       <Badge>{t("admin-census:signupReview.familyFare")}</Badge>
                     </>
                   ) : claim?.status === "NOT_FOUND_PENDING" ? (
                     <>
-                      <span>{t("admin-census:signupReview.familyPending", { dog: claim.dogName ?? t("admin-census:values.empty"), holder: claim.holderName ?? t("admin-census:values.empty") })}</span>
+                      <span>
+                        {t("admin-census:signupReview.familyPending", {
+                          dog: claim.dogName ?? t("admin-census:values.empty"),
+                          holder: claim.holderName ?? t("admin-census:values.empty"),
+                        })}
+                      </span>
                       {familyDecision === undefined ? (
                         <div className="signup-review-family__search">
-                          <FormField {...(familyError === undefined ? {} : { error: familyError })} id="signup-family-search" label={t("admin-census:signupReview.familySearch")}>
-                            <Input aria-busy={familySearching || undefined} aria-describedby={familyError === undefined ? undefined : "signup-family-search-error"} aria-invalid={familyError !== undefined || undefined} id="signup-family-search" onChange={(event) => { setFamilyQuery(event.currentTarget.value); }} type="search" value={familyQuery} />
+                          <FormField
+                            {...(familyError === undefined ? {} : { error: familyError })}
+                            id="signup-family-search"
+                            label={t("admin-census:signupReview.familySearch")}
+                          >
+                            <Input
+                              aria-busy={familySearching || undefined}
+                              aria-describedby={
+                                familyError === undefined ? undefined : "signup-family-search-error"
+                              }
+                              aria-invalid={familyError !== undefined || undefined}
+                              id="signup-family-search"
+                              onChange={(event) => {
+                                setFamilyQuery(event.currentTarget.value);
+                              }}
+                              type="search"
+                              value={familyQuery}
+                            />
                           </FormField>
-                          {familyResults === undefined || familyQuery.trim().length < 2 ? null : familyResults.length === 0 ? (
+                          {familyResults === undefined ||
+                          familyQuery.trim().length < 2 ? null : familyResults.length === 0 ? (
                             <p>{t("admin-census:signupReview.familyNoResults")}</p>
                           ) : (
                             <ul className="signup-review-family__results">
@@ -689,12 +895,35 @@ export function SignupReviewPage({
                                 const group = candidate.familyGroup;
                                 return (
                                   <li key={candidate.id}>
-                                    <span>{candidate.dogs.length === 0 ? candidate.fullName : t("admin-census:signupReview.familyCandidate", { dogs: candidate.dogs.join(", "), name: candidate.fullName })}</span>
+                                    <span>
+                                      {candidate.dogs.length === 0
+                                        ? candidate.fullName
+                                        : t("admin-census:signupReview.familyCandidate", {
+                                            dogs: candidate.dogs.join(", "),
+                                            name: candidate.fullName,
+                                          })}
+                                    </span>
                                     {group === undefined ? (
-                                      <small>{t("admin-census:signupReview.familyNoGroup", { name: candidate.fullName })}</small>
+                                      <small>
+                                        {t("admin-census:signupReview.familyNoGroup", {
+                                          name: candidate.fullName,
+                                        })}
+                                      </small>
                                     ) : (
-                                      <Button onClick={() => { setFamilyDecision({ familyGroupId: group.id, holderName: candidate.fullName, kind: "group" }); setDecisionError(undefined); }} variant="ghost">
-                                        {t("admin-census:signupReview.familyAttach", { name: candidate.fullName })}
+                                      <Button
+                                        onClick={() => {
+                                          setFamilyDecision({
+                                            familyGroupId: group.id,
+                                            holderName: candidate.fullName,
+                                            kind: "group",
+                                          });
+                                          setDecisionError(undefined);
+                                        }}
+                                        variant="ghost"
+                                      >
+                                        {t("admin-census:signupReview.familyAttach", {
+                                          name: candidate.fullName,
+                                        })}
                                       </Button>
                                     )}
                                   </li>
@@ -702,12 +931,33 @@ export function SignupReviewPage({
                               })}
                             </ul>
                           )}
-                          <Button onClick={() => { setFamilyDecision({ kind: "none" }); setDecisionError(undefined); }} variant="ghost">{t("admin-census:signupReview.familyNone")}</Button>
+                          <Button
+                            onClick={() => {
+                              setFamilyDecision({ kind: "none" });
+                              setDecisionError(undefined);
+                            }}
+                            variant="ghost"
+                          >
+                            {t("admin-census:signupReview.familyNone")}
+                          </Button>
                         </div>
                       ) : (
                         <span className="signup-review-family__decision">
-                          <Badge>{holderGroupName === undefined ? t("admin-census:signupReview.familyNone") : t("admin-census:signupReview.familyChosen", { name: holderGroupName })}</Badge>
-                          <Button onClick={() => { setFamilyDecision(undefined); }} variant="ghost">{t("admin-census:signupReview.familyChange")}</Button>
+                          <Badge>
+                            {holderGroupName === undefined
+                              ? t("admin-census:signupReview.familyNone")
+                              : t("admin-census:signupReview.familyChosen", {
+                                  name: holderGroupName,
+                                })}
+                          </Badge>
+                          <Button
+                            onClick={() => {
+                              setFamilyDecision(undefined);
+                            }}
+                            variant="ghost"
+                          >
+                            {t("admin-census:signupReview.familyChange")}
+                          </Button>
                         </span>
                       )}
                     </>
@@ -715,8 +965,11 @@ export function SignupReviewPage({
                     t("admin-census:values.no")
                   )}
                   {/* The search field carries its own error; any other family error shows here. */}
-                  {familyError === undefined || (pendingClaim && familyDecision === undefined) ? null : (
-                    <p className="ah-form-field__error" role="alert">{familyError}</p>
+                  {familyError === undefined ||
+                  (pendingClaim && familyDecision === undefined) ? null : (
+                    <p className="ah-form-field__error" role="alert">
+                      {familyError}
+                    </p>
                   )}
                 </dd>
               </>
@@ -730,8 +983,13 @@ export function SignupReviewPage({
                     : payment.type !== "SEPA_DD"
                       ? t(`admin-census:signupReview.paymentMethod.${payment.type}`)
                       : t("admin-census:signupReview.paymentSummary", {
-                          account: fmtMaskedIban(payment.maskedAccount ?? member.maskedAccount) ?? t("admin-census:values.empty"),
-                          holder: payment.holderName === member.fullName ? t("admin-census:signupReview.sameHolder") : (payment.holderName ?? t("admin-census:values.empty")),
+                          account:
+                            fmtMaskedIban(payment.maskedAccount ?? member.maskedAccount) ??
+                            t("admin-census:values.empty"),
+                          holder:
+                            payment.holderName === member.fullName
+                              ? t("admin-census:signupReview.sameHolder")
+                              : (payment.holderName ?? t("admin-census:values.empty")),
                           method: t(`admin-census:signupReview.paymentMethod.${payment.type}`),
                         })}
                 </dd>
@@ -739,18 +997,27 @@ export function SignupReviewPage({
             ) : null}
           </dl>
           {readmissionBlock === undefined || readmissionChanges.length === 0 ? null : (
-            <section aria-labelledby="signup-readmission-title" className="signup-review-readmission">
-              <h3 id="signup-readmission-title">{t("admin-census:signupReview.readmission.title")}</h3>
+            <section
+              aria-labelledby="signup-readmission-title"
+              className="signup-review-readmission"
+            >
+              <h3 id="signup-readmission-title">
+                {t("admin-census:signupReview.readmission.title")}
+              </h3>
               <dl className="signup-review-data">
                 {readmissionChanges.map((field) => (
                   <Fragment key={field}>
                     <dt>{t(`admin-census:signupReview.fields.${field}`)}</dt>
                     <dd>
                       <span className="signup-review-readmission__previous">
-                        {t("admin-census:signupReview.readmission.previous", { value: readmissionValue(readmissionBlock.current, field) })}
+                        {t("admin-census:signupReview.readmission.previous", {
+                          value: readmissionValue(readmissionBlock.current, field),
+                        })}
                       </span>
                       <strong className="signup-review-readmission__submitted">
-                        {t("admin-census:signupReview.readmission.submitted", { value: readmissionValue(readmissionBlock.submitted, field) })}
+                        {t("admin-census:signupReview.readmission.submitted", {
+                          value: readmissionValue(readmissionBlock.submitted, field),
+                        })}
                       </strong>
                     </dd>
                   </Fragment>
@@ -758,8 +1025,17 @@ export function SignupReviewPage({
               </dl>
             </section>
           )}
-          {signup.warnings.includes("NO_IMAGE_CONSENT") ? <p className="signup-review-warning signup-review-warning--image"><Icon aria-hidden="true" name="warn" /> {t("admin-census:signupReview.warning.NO_IMAGE_CONSENT", { gender: member.gender })}</p> : null}
-          {billing && member.accountMissing === true ? <p className="signup-review-warning signup-review-warning--danger">{t("admin-census:signupReview.warning.ACCOUNT_NOT_PROVIDED")}</p> : null}
+          {signup.warnings.includes("NO_IMAGE_CONSENT") ? (
+            <p className="signup-review-warning signup-review-warning--image">
+              <Icon aria-hidden="true" name="warn" />{" "}
+              {t("admin-census:signupReview.warning.NO_IMAGE_CONSENT", { gender: member.gender })}
+            </p>
+          ) : null}
+          {billing && member.accountMissing === true ? (
+            <p className="signup-review-warning signup-review-warning--danger">
+              {t("admin-census:signupReview.warning.ACCOUNT_NOT_PROVIDED")}
+            </p>
+          ) : null}
         </Card>
         {signup.dogs.map((dog, index) => {
           const files = dog.documents.flatMap((document) => document.files);
@@ -768,22 +1044,58 @@ export function SignupReviewPage({
           const dogRecord = dog.readmission?.current;
           return (
             <Card key={dog.id}>
-              <h2>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })} {signup.signup.source === "APP_ADD_DOG" && dog.status === "PENDING" ? <Badge>{t("admin-census:signupReview.newDog")}</Badge> : null}</h2>
+              <h2>
+                {t("admin-census:signupReview.dog", {
+                  current: index + 1,
+                  total: signup.dogs.length,
+                })}{" "}
+                {signup.signup.source === "APP_ADD_DOG" && dog.status === "PENDING" ? (
+                  <Badge>{t("admin-census:signupReview.newDog")}</Badge>
+                ) : null}
+              </h2>
               <dl className="signup-review-data">
-                <dt>{t("admin-census:signupReview.fields.name")}</dt><dd><strong id={`signup-dog-name-${dog.id}`}>{dog.name}</strong> · {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} · {dogValue(dog, "birthMonth")}</dd>
-                <dt>{t("admin-census:signupReview.fields.chip")}</dt><dd>{dog.chip}</dd>
-                <dt>{t("admin-census:signupReview.fields.documents")}</dt><dd>{files.map((file) => <a href={file.downloadUrl} key={file.downloadUrl} rel="noreferrer" target="_blank"><Icon aria-hidden="true" name="doc" /> {file.name}</a>)}</dd>
+                <dt>{t("admin-census:signupReview.fields.name")}</dt>
+                <dd>
+                  <strong id={`signup-dog-name-${dog.id}`}>{dog.name}</strong> ·{" "}
+                  {t(`admin-census:signupReview.sex.${dog.sex}`)} · {dog.breed} ·{" "}
+                  {dogValue(dog, "birthMonth")}
+                </dd>
+                <dt>{t("admin-census:signupReview.fields.chip")}</dt>
+                <dd>{dog.chip}</dd>
+                <dt>{t("admin-census:signupReview.fields.documents")}</dt>
+                <dd>
+                  {files.map((file) => (
+                    <a
+                      href={file.downloadUrl}
+                      key={file.downloadUrl}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      <Icon aria-hidden="true" name="doc" /> {file.name}
+                    </a>
+                  ))}
+                </dd>
                 {/* S04 §3 and §13 #1: the signup notes carry no attachments (those come from 13). */}
                 <dt>{t("admin-census:signupReview.fields.notes")}</dt>
-                <dd>{dog.notesToInstructors == null || dog.notesToInstructors.trim() === "" ? t("admin-census:values.empty") : dog.notesToInstructors}</dd>
+                <dd>
+                  {dog.notesToInstructors == null || dog.notesToInstructors.trim() === ""
+                    ? t("admin-census:values.empty")
+                    : dog.notesToInstructors}
+                </dd>
               </dl>
               {/* R-04-06 (E38): the reused dog's own record beside what the readmission submitted; named after the dog, apart from the person's block. */}
               {dogRecord === undefined || changes.length === 0 ? null : (
-                <section aria-labelledby={`signup-dog-readmission-${dog.id} signup-dog-name-${dog.id}`} className="signup-review-readmission">
-                  <h3 id={`signup-dog-readmission-${dog.id}`}>{t("admin-census:signupReview.readmission.title")}</h3>
+                <section
+                  aria-labelledby={`signup-dog-readmission-${dog.id} signup-dog-name-${dog.id}`}
+                  className="signup-review-readmission"
+                >
+                  <h3 id={`signup-dog-readmission-${dog.id}`}>
+                    {t("admin-census:signupReview.readmission.title")}
+                  </h3>
                   <dl className="signup-review-data">
                     {changes.flatMap((field) => {
-                      const documentTypes = field === "documents" ? changedDocumentTypes(dog, dogRecord) : [];
+                      const documentTypes =
+                        field === "documents" ? changedDocumentTypes(dog, dogRecord) : [];
                       // One line per changed document type, named after it («Cartilla de vacunes»).
                       if (documentTypes.length > 0) {
                         return documentTypes.map((type) => (
@@ -791,10 +1103,14 @@ export function SignupReviewPage({
                             <dt>{documentTypeLabel(type)}</dt>
                             <dd>
                               <span className="signup-review-readmission__previous">
-                                {t("admin-census:signupReview.readmission.previous", { value: documentRowText(dogRecord.documents, type) })}
+                                {t("admin-census:signupReview.readmission.previous", {
+                                  value: documentRowText(dogRecord.documents, type),
+                                })}
                               </span>
                               <strong className="signup-review-readmission__submitted">
-                                {t("admin-census:signupReview.readmission.submitted", { value: documentRowText(dog.documents, type) })}
+                                {t("admin-census:signupReview.readmission.submitted", {
+                                  value: documentRowText(dog.documents, type),
+                                })}
                               </strong>
                             </dd>
                           </Fragment>
@@ -802,13 +1118,19 @@ export function SignupReviewPage({
                       }
                       return [
                         <Fragment key={field}>
-                          <dt>{t(`admin-census:signupReview.fields.${DOG_READMISSION_FIELDS[field]}`)}</dt>
+                          <dt>
+                            {t(`admin-census:signupReview.fields.${DOG_READMISSION_FIELDS[field]}`)}
+                          </dt>
                           <dd>
                             <span className="signup-review-readmission__previous">
-                              {t("admin-census:signupReview.readmission.previous", { value: dogValue(dogRecord, field) })}
+                              {t("admin-census:signupReview.readmission.previous", {
+                                value: dogValue(dogRecord, field),
+                              })}
                             </span>
                             <strong className="signup-review-readmission__submitted">
-                              {t("admin-census:signupReview.readmission.submitted", { value: dogValue(dog, field) })}
+                              {t("admin-census:signupReview.readmission.submitted", {
+                                value: dogValue(dog, field),
+                              })}
                             </strong>
                           </dd>
                         </Fragment>,
@@ -819,16 +1141,57 @@ export function SignupReviewPage({
               )}
               <div className="signup-review-dog-decision">
                 {signup.proposals.levels.length === 0 ? null : (
-                  <FormField {...(error === undefined ? {} : { error })} id={`signup-level-${dog.id}`} label={t("admin-census:signupReview.fields.level")}>
-                    <Select aria-describedby={error === undefined ? undefined : `signup-level-${dog.id}-error`} aria-invalid={error !== undefined || undefined} id={`signup-level-${dog.id}`} onChange={(event) => { const input = event.currentTarget.value; setLevelChoice((value) => ({ ...value, [dog.id]: input })); if (error !== undefined) setDecisionError(undefined); }} value={levelOf(dog)}>
+                  <FormField
+                    {...(error === undefined ? {} : { error })}
+                    id={`signup-level-${dog.id}`}
+                    label={t("admin-census:signupReview.fields.level")}
+                  >
+                    <Select
+                      aria-describedby={
+                        error === undefined ? undefined : `signup-level-${dog.id}-error`
+                      }
+                      aria-invalid={error !== undefined || undefined}
+                      id={`signup-level-${dog.id}`}
+                      onChange={(event) => {
+                        const input = event.currentTarget.value;
+                        setLevelChoice((value) => ({ ...value, [dog.id]: input }));
+                        if (error !== undefined) setDecisionError(undefined);
+                      }}
+                      value={levelOf(dog)}
+                    >
                       <option value="">{t("admin-census:values.empty")}</option>
-                      {signup.proposals.levels.map((level) => <option key={level.id} value={level.id}>{level.name}</option>)}
+                      {signup.proposals.levels.map((level) => (
+                        <option key={level.id} value={level.id}>
+                          {level.name}
+                        </option>
+                      ))}
                     </Select>
                   </FormField>
                 )}
                 {billing && monthly && index === 0 ? (
-                  <FormField {...(dateError === undefined ? {} : { error: dateError })} id={`signup-invoice-${dog.id}`} label={t("admin-census:signupReview.fields.nextInvoice")}>
-                    <Input aria-describedby={dateError === undefined ? undefined : `signup-invoice-${dog.id}-error`} aria-invalid={dateError !== undefined || undefined} id={`signup-invoice-${dog.id}`} inputMode="numeric" maxLength={10} onChange={(event) => { const text = event.currentTarget.value; setTypedDate({ iso: isoDateFromInput(text, locale), locale, text }); if (dateError !== undefined) setDecisionError(undefined); }} placeholder={t("admin-census:signupReview.datePlaceholder")} required type="text" value={nextInvoiceText} />
+                  <FormField
+                    {...(dateError === undefined ? {} : { error: dateError })}
+                    id={`signup-invoice-${dog.id}`}
+                    label={t("admin-census:signupReview.fields.nextInvoice")}
+                  >
+                    <Input
+                      aria-describedby={
+                        dateError === undefined ? undefined : `signup-invoice-${dog.id}-error`
+                      }
+                      aria-invalid={dateError !== undefined || undefined}
+                      id={`signup-invoice-${dog.id}`}
+                      inputMode="numeric"
+                      maxLength={10}
+                      onChange={(event) => {
+                        const text = event.currentTarget.value;
+                        setTypedDate({ iso: isoDateFromInput(text, locale), locale, text });
+                        if (dateError !== undefined) setDecisionError(undefined);
+                      }}
+                      placeholder={t("admin-census:signupReview.datePlaceholder")}
+                      required
+                      type="text"
+                      value={nextInvoiceText}
+                    />
                     <Badge tone="danger">{t("admin-census:signupReview.required")}</Badge>
                   </FormField>
                 ) : null}
@@ -839,28 +1202,67 @@ export function SignupReviewPage({
       </div>
       <Card className="signup-review-decision">
         <div aria-busy={quotePending || undefined} className="signup-review-plan">
-          <h2 id="signup-plan-title">{billing ? t("admin-census:signupReview.plan") : t("admin-census:signupReview.fields.planName")}</h2>
+          <h2 id="signup-plan-title">
+            {billing
+              ? t("admin-census:signupReview.plan")
+              : t("admin-census:signupReview.fields.planName")}
+          </h2>
           {billing && planOptions.length > 0 ? (
-            <Select aria-describedby={planError === undefined ? undefined : "signup-plan-error"} aria-invalid={planError !== undefined || undefined} aria-label={t("admin-census:signupReview.plan")} disabled={working} onChange={(event) => { changePlan(event.currentTarget.value); }} value={selectedValue}>
-              {selectedPlan === undefined ? <option value="">{t("admin-census:values.empty")}</option> : null}
-              {planOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            <Select
+              aria-describedby={planError === undefined ? undefined : "signup-plan-error"}
+              aria-invalid={planError !== undefined || undefined}
+              aria-label={t("admin-census:signupReview.plan")}
+              disabled={working}
+              onChange={(event) => {
+                changePlan(event.currentTarget.value);
+              }}
+              value={selectedValue}
+            >
+              {selectedPlan === undefined ? (
+                <option value="">{t("admin-census:values.empty")}</option>
+              ) : null}
+              {planOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </Select>
           ) : (
             <p>{selectedOption?.name ?? member.plan?.name ?? t("admin-census:values.empty")}</p>
           )}
-          {planError === undefined ? null : <p className="ah-form-field__error" id="signup-plan-error" role="alert">{planError}</p>}
-          {quoteError === undefined ? null : quoteError.kind === "stale" ? (
-            <Button onClick={reloadView} variant="ghost">{t("admin-census:signupReview.actions.reload")}</Button>
-          ) : (
-            <Button onClick={() => { setQuote(undefined); setQuoteRetry((value) => value + 1); }} variant="ghost">{t("admin-census:signupReview.retry")}</Button>
+          {planError === undefined ? null : (
+            <p className="ah-form-field__error" id="signup-plan-error" role="alert">
+              {planError}
+            </p>
           )}
-          {quoteWarnings.map((warning) => <p className="signup-review-warning" key={warning}>{t(`admin-census:signupReview.warning.${warning}`)}</p>)}
+          {quoteError === undefined ? null : quoteError.kind === "stale" ? (
+            <Button onClick={reloadView} variant="ghost">
+              {t("admin-census:signupReview.actions.reload")}
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                setQuote(undefined);
+                setQuoteRetry((value) => value + 1);
+              }}
+              variant="ghost"
+            >
+              {t("admin-census:signupReview.retry")}
+            </Button>
+          )}
+          {quoteWarnings.map((warning) => (
+            <p className="signup-review-warning" key={warning}>
+              {t(`admin-census:signupReview.warning.${warning}`)}
+            </p>
+          ))}
         </div>
         {/* A failed reload never brings the old quote back: its error and a retry take its place. */}
         {loadState === "error" ? (
           <div className="signup-review-error" role="alert">
             <span>{t("admin-census:signupReview.loadError")}</span>
-            <Button onClick={reloadView} variant="ghost">{t("admin-census:signupReview.retry")}</Button>
+            <Button onClick={reloadView} variant="ghost">
+              {t("admin-census:signupReview.retry")}
+            </Button>
           </div>
         ) : billing && loadState === "loading" ? (
           <Skeleton height="4.5rem" label={t("admin-census:signupReview.loading")} />
@@ -868,48 +1270,181 @@ export function SignupReviewPage({
         {billing && upfront !== undefined ? (
           <div className="signup-review-upfront">
             <h2>{t("admin-census:signupReview.upfront")}</h2>
-            {signup.signup.initialPaymentMethod === undefined ? null : <p>{t("admin-census:signupReview.initialPayment", { method: {
-              CARD: t("admin-census:signupReview.initialMethods.CARD"),
-              BANK_TRANSFER: t("admin-census:signupReview.initialMethods.BANK_TRANSFER"),
-              CASH: t("admin-census:signupReview.initialMethods.CASH"),
-            }[signup.signup.initialPaymentMethod] })}</p>}
+            {signup.signup.initialPaymentMethod === undefined ? null : (
+              <p>
+                {t("admin-census:signupReview.initialPayment", {
+                  method: {
+                    CARD: t("admin-census:signupReview.initialMethods.CARD"),
+                    BANK_TRANSFER: t("admin-census:signupReview.initialMethods.BANK_TRANSFER"),
+                    CASH: t("admin-census:signupReview.initialMethods.CASH"),
+                  }[signup.signup.initialPaymentMethod],
+                })}
+              </p>
+            )}
             <label>
               {t("admin-census:signupReview.actuallyPaid")}{" "}
               {stripePaid ? (
-                <><Input readOnly value={formatMoneyMinor(upfront.totalPaid)} /><Badge tone="success">{t("admin-census:signupReview.paid")}</Badge></>
+                <>
+                  <Input readOnly value={formatMoneyMinor(upfront.totalPaid)} />
+                  <Badge tone="success">{t("admin-census:signupReview.paid")}</Badge>
+                </>
               ) : (
-                <Input aria-describedby={upfrontError === undefined ? undefined : "signup-upfront-error"} aria-invalid={upfrontError !== undefined || undefined} max={majorUnits(amountDue, branding.currency).toFixed(paidDigits)} min="0" onChange={(event) => { setManualPaid(event.currentTarget.value); if (upfrontError !== undefined) setDecisionError(undefined); }} step={String(10 ** -paidDigits)} type="number" value={manualPaid} />
+                <Input
+                  className="signup-review-paid-input"
+                  aria-describedby={upfrontError === undefined ? undefined : "signup-upfront-error"}
+                  aria-invalid={upfrontError !== undefined || undefined}
+                  max={majorUnits(amountDue, branding.currency).toFixed(paidDigits)}
+                  min="0"
+                  onChange={(event) => {
+                    setManualPaid(event.currentTarget.value);
+                    if (upfrontError !== undefined) setDecisionError(undefined);
+                  }}
+                  step={String(10 ** -paidDigits)}
+                  type="number"
+                  value={manualPaid}
+                />
               )}
             </label>
-            {upfrontError === undefined ? null : <p className="ah-form-field__error" id="signup-upfront-error" role="alert">{upfrontError}</p>}
-            {upfrontBreakdown === "" ? null : <small className="signup-review-upfront-breakdown">{t("admin-census:signupReview.upfrontBreakdown", { lines: upfrontBreakdown })}</small>}
-            {stripePaid ? null : <label><Checkbox checked={confirmZero} onChange={(event) => { setConfirmZero(event.currentTarget.checked); }} /> {t("admin-census:signupReview.nothingPaid")}</label>}
+            {hasPendingCheckout ? (
+              <label className="census-record__check-row">
+                <Checkbox
+                  checked={cancelPendingCheckout}
+                  onChange={(event) => {
+                    setCancelPendingCheckout(event.currentTarget.checked);
+                    setDecisionError(undefined);
+                  }}
+                />
+                {t("admin-census:signupReview.cancelPendingCheckout")}
+              </label>
+            ) : null}
+            {upfrontError === undefined ? null : (
+              <p className="ah-form-field__error" id="signup-upfront-error" role="alert">
+                {upfrontError}
+              </p>
+            )}
+            {upfrontBreakdown === "" ? null : (
+              <small className="signup-review-upfront-breakdown">
+                {t("admin-census:signupReview.upfrontBreakdown", { lines: upfrontBreakdown })}
+              </small>
+            )}
+            {stripePaid ? null : (
+              <label>
+                <Checkbox
+                  checked={confirmZero}
+                  onChange={(event) => {
+                    setConfirmZero(event.currentTarget.checked);
+                  }}
+                />{" "}
+                {t("admin-census:signupReview.nothingPaid")}
+              </label>
+            )}
           </div>
         ) : null}
         {decisionMessage === undefined ? null : (
           <div className="signup-review-error" role="alert">
             <span>{errorText(decisionMessage)}</span>
-            {decisionMessage.kind === "stale" ? <Button onClick={() => { setDecisionError(undefined); reloadView(); }} variant="ghost">{t("admin-census:signupReview.actions.reload")}</Button> : null}
+            {decisionMessage.kind === "stale" ? (
+              <Button
+                onClick={() => {
+                  setDecisionError(undefined);
+                  reloadView();
+                }}
+                variant="ghost"
+              >
+                {t("admin-census:signupReview.actions.reload")}
+              </Button>
+            ) : null}
           </div>
         )}
         <footer>
-          <Button disabled={working} onClick={() => { setSaved(false); setEditOpen(true); }} variant="ghost"><Icon aria-hidden="true" name="edit" />{t("admin-census:signupReview.actions.edit")}</Button>
-          <Button disabled={working} onClick={() => { setRejectError(undefined); setRejectOpen(true); }} variant="ghost">{t("admin-census:signupReview.actions.reject")}</Button>
-          <Button disabled={!quoteReady} loading={working} onClick={() => void validate()}><Icon aria-hidden="true" name="check" />{t("admin-census:signupReview.actions.validate")}</Button>
+          <Button
+            disabled={working}
+            onClick={() => {
+              setSaved(false);
+              setEditOpen(true);
+            }}
+            variant="ghost"
+          >
+            <Icon aria-hidden="true" name="edit" />
+            {t("admin-census:signupReview.actions.edit")}
+          </Button>
+          <Button
+            disabled={working}
+            onClick={() => {
+              setRejectError(undefined);
+              setRejectOpen(true);
+            }}
+            variant="ghost"
+          >
+            {t("admin-census:signupReview.actions.reject")}
+          </Button>
+          <Button disabled={!quoteReady} loading={working} onClick={() => void validate()}>
+            <Icon aria-hidden="true" name="check" />
+            {t("admin-census:signupReview.actions.validate")}
+          </Button>
         </footer>
       </Card>
-      <SignupEditDrawer client={client} onClose={() => { setEditOpen(false); }} onReload={reloadView} onSaved={() => { setEditOpen(false); setSaved(true); reloadView(); }} open={editOpen} signup={signup} />
-      <Modal closeLabel={t("admin-census:signupReview.cancel")} onClose={() => { setRejectOpen(false); }} open={rejectOpen} title={t("admin-census:signupReview.rejectTitle")}>
-        <FormField id="signup-reject-reason" label={t("admin-census:signupReview.rejectReason")}><Textarea id="signup-reject-reason" maxLength={500} minLength={3} onChange={(event) => { setRejectReason(event.currentTarget.value); }} value={rejectReason} /></FormField>
+      <SignupEditDrawer
+        client={client}
+        onClose={() => {
+          setEditOpen(false);
+        }}
+        onReload={reloadView}
+        onSaved={() => {
+          setEditOpen(false);
+          setSaved(true);
+          reloadView();
+        }}
+        open={editOpen}
+        signup={signup}
+      />
+      <Modal
+        closeLabel={t("admin-census:signupReview.cancel")}
+        onClose={() => {
+          setRejectOpen(false);
+        }}
+        open={rejectOpen}
+        title={t("admin-census:signupReview.rejectTitle")}
+      >
+        <FormField id="signup-reject-reason" label={t("admin-census:signupReview.rejectReason")}>
+          <Textarea
+            id="signup-reject-reason"
+            maxLength={500}
+            minLength={3}
+            onChange={(event) => {
+              setRejectReason(event.currentTarget.value);
+            }}
+            value={rejectReason}
+          />
+        </FormField>
         <p>{t("admin-census:signupReview.rejectHelp")}</p>
-        {hasCollectedPayment(signup.upfront) ? <p className="signup-review-warning">{t("admin-census:signupReview.refundWarning")}</p> : null}
+        {hasCollectedPayment(signup.upfront) ? (
+          <p className="signup-review-warning">{t("admin-census:signupReview.refundWarning")}</p>
+        ) : null}
         {rejectError === undefined ? null : (
           <div className="signup-review-error" role="alert">
             <span>{errorText(rejectError)}</span>
-            {rejectError.kind === "stale" ? <Button onClick={() => { setRejectError(undefined); reloadView(); }} variant="ghost">{t("admin-census:signupReview.actions.reload")}</Button> : null}
+            {rejectError.kind === "stale" ? (
+              <Button
+                onClick={() => {
+                  setRejectError(undefined);
+                  reloadView();
+                }}
+                variant="ghost"
+              >
+                {t("admin-census:signupReview.actions.reload")}
+              </Button>
+            ) : null}
           </div>
         )}
-        <Button disabled={rejectReason.trim().length < 3} loading={working} onClick={() => void reject()} variant="danger">{t("admin-census:signupReview.actions.reject")}</Button>
+        <Button
+          disabled={rejectReason.trim().length < 3}
+          loading={working}
+          onClick={() => void reject()}
+          variant="danger"
+        >
+          {t("admin-census:signupReview.actions.reject")}
+        </Button>
       </Modal>
     </section>
   );

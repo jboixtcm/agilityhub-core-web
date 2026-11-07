@@ -77,7 +77,14 @@ const DOG_ROW_FIELDS = ["name"] as const;
 /** A column that shows another key than its own: the dogs' «Guia» shows `handlerName`. */
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = { handler: ["handlerName"] };
 
-const MEMBER_DEFAULT_COLUMNS = ["fullName", "dogs", "plan", "displayStatus"];
+const MEMBER_DEFAULT_COLUMNS = [
+  "fullName",
+  "dogs",
+  "plan",
+  "displayStatus",
+  "familyGroup",
+  "familyGroupHolder",
+];
 const DOG_DEFAULT_COLUMNS = [
   "name",
   "breed",
@@ -352,7 +359,9 @@ function useSyncedListState(kind: CensusKind, modules: readonly string[]) {
     kind === "members"
       ? {
           columns: MEMBER_DEFAULT_COLUMNS.filter(
-            (column) => column !== "plan" || modules.includes("BILLING"),
+            (column) =>
+              (column !== "plan" || modules.includes("BILLING")) &&
+              (!column.startsWith("familyGroup") || modules.includes("FAMILY_GROUP")),
           ),
           filters: MEMBER_DEFAULT_FILTERS,
           size: 50 as const,
@@ -697,7 +706,18 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "familyGroup",
                 label: t("census:members.columns.familyGroup"),
-                render: (item: MemberRow) => item.familyGroup?.name ?? t("census:values.empty"),
+                render: (item: MemberRow) =>
+                  item.familyGroup == null
+                    ? t("census:values.empty")
+                    : t("census:members.columns.familyGroup"),
+              },
+              {
+                key: "familyGroupHolder",
+                label: t("census:members.columns.familyGroupHolder"),
+                render: (item: MemberRow) =>
+                  item.familyGroupHolder
+                    ? t("census:members.columns.familyGroupHolder")
+                    : t("census:values.empty"),
               },
             ]
           : []),

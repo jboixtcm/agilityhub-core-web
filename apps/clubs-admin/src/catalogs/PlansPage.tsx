@@ -842,6 +842,7 @@ function PlanCopyCards({
   onSaved: () => void;
   plan: Plan;
 }) {
+  const { formatMinor } = useClubFormats();
   const branding = useBranding();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
@@ -892,7 +893,11 @@ function PlanCopyCards({
   return (
     <div className="catalog-plan-copy-grid">
       <Card>
-        <h2>{t("admin-catalogs:plans.presentationTitle", { name: plan.name })}</h2>
+        <h2>
+          {plan.showOnSignup
+            ? t("admin-catalogs:plans.presentationTitle", { name: plan.name })
+            : t("admin-catalogs:plans.presentationTitlePrivate", { name: plan.name })}
+        </h2>
         <LocaleTabs locale={textLocale} locales={branding.locales} onChange={setTextLocale} />
         <FormField id="plan-description" label={t("admin-catalogs:plans.fields.description")}>
           <Textarea
@@ -932,6 +937,14 @@ function PlanCopyCards({
       </Card>
       <Card>
         <h2>{t("admin-catalogs:plans.previewTitle")}</h2>
+        {billingEnabled ? (
+          <a className="catalog-page__parameter-link" href="/parametres">
+            {t("admin-catalogs:plans.entryFeeSummary", {
+              amount: formatMinor(entryFeeMinor, { compact: true }),
+            })}
+          </a>
+        ) : null}
+
         <div className="catalog-plan-preview" lang={textLocale}>
           <div className="catalog-plan-preview__title">
             <strong>{previewPlan.name}</strong>
@@ -951,7 +964,6 @@ function PlanCopyCards({
 
 export function PlansPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
-  const { formatMinor } = useClubFormats();
   const { t } = useTranslation("admin-catalogs");
   const load = useCallback(async () => {
     const result = await client.GET("/plans", { params: { query: { includeInactive: true } } });
@@ -1011,13 +1023,6 @@ export function PlansPage({ client }: { client: ApiClient }) {
       <CatalogPageHeader
         action={
           <div className="catalog-page__heading-actions">
-            {billingEnabled ? (
-              <a className="catalog-page__parameter-link" href="/parametres">
-                {t("admin-catalogs:plans.entryFeeSummary", {
-                  amount: formatMinor(entryFeeMinor, { compact: true }),
-                })}
-              </a>
-            ) : null}
             <Button
               onClick={() => {
                 setEditing({});
@@ -1075,6 +1080,11 @@ export function PlansPage({ client }: { client: ApiClient }) {
             header: t("admin-catalogs:plans.columns.active"),
             key: "active",
             render: (plan) => <YesNoBadge value={plan.active} />,
+          },
+          {
+            header: t("admin-catalogs:plans.fields.showOnSignup"),
+            key: "showOnSignup",
+            render: (plan) => <YesNoBadge value={plan.showOnSignup} />,
           },
         ]}
         empty={t("admin-catalogs:plans.empty")}

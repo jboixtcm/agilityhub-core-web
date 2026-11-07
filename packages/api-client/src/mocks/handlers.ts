@@ -4,7 +4,7 @@ import type { components } from "../generated/schema";
 import type { ListItemWith } from "../list-fields";
 
 import { activityExportRows, activityHandlers, registrationExportRows } from "./activity-handlers";
-import { adminMemberActionHandlers } from "./admin-member-actions";
+import { adminMemberActionHandlers, familyGroupHandlers } from "./admin-member-actions";
 import { attendanceHandlers, resetAttendanceMockState } from "./attendance-handlers";
 import {
   backofficeHandlers,
@@ -1594,6 +1594,7 @@ function clubMemberPreferences(): NotificationPreferences {
 
 export const handlers = [
   ...adminMemberActionHandlers,
+  ...familyGroupHandlers,
   // S17 D19 (E10-W01): the platform console's `/platform/*` world.
   ...consoleHandlers,
   // E6-W04 step 0b: screen 13's checkbox (S10 R-10-10, §6) completes a task of `GET /me/dogs` for

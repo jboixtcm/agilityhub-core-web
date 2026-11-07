@@ -81,7 +81,8 @@
       "pendingDocuments": "Documentos pendientes",
       "plan": "Modalidad",
       "postalCode": "CP",
-      "roles": "Roles"
+      "roles": "Roles",
+      "familyGroupHolder": "Responsable"
     },
     "emptyDescription": "Cambie la búsqueda o los filtros para ver más resultados.",
     "emptyTitle": "Ningún abonado con estos criterios",

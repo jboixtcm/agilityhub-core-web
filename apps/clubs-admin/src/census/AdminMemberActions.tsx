@@ -8,7 +8,6 @@ import {
 } from "@agilityhub/api-client";
 import {
   Button,
-  Card,
   Checkbox,
   Drawer,
   FormField,
@@ -17,8 +16,10 @@ import {
   Select,
   useBranding,
 } from "@agilityhub/ui";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { RecordActions } from "./RecordActions";
 
 type Member = components["schemas"]["Member"];
 type NewDog = components["schemas"]["AdminDogCreate"];
@@ -38,10 +39,18 @@ export function AdminMemberActions({
   client,
   member,
   onChanged,
+  before,
+  between,
+  after,
+  readOnly = false,
 }: {
   client: ApiClient;
   member: Member;
   onChanged: () => void;
+  before?: ReactNode;
+  between?: ReactNode;
+  after?: ReactNode;
+  readOnly?: boolean;
 }) {
   const { t } = useTranslation(["admin-census", "errors", "enums"]);
   const branding = useBranding();
@@ -134,7 +143,7 @@ export function AdminMemberActions({
 
   const merged = member.mergedIntoMemberId != null;
   return (
-    <Card className="census-record__admin-actions">
+    <>
       {merged ? (
         <p>
           {t("admin-census:merge.merged")}{" "}
@@ -142,8 +151,9 @@ export function AdminMemberActions({
             {t("admin-census:merge.openTarget")}
           </a>
         </p>
-      ) : member.erasedAt == null ? (
-        <div className="census-record__dialog-actions">
+      ) : !readOnly && member.erasedAt == null ? (
+        <RecordActions>
+          {before}
           {member.status === "ACTIVE" ? (
             <Button
               onClick={() => {
@@ -165,6 +175,7 @@ export function AdminMemberActions({
               {t("admin-census:addDog.title")}
             </Button>
           ) : null}
+          {between}
           <Button
             onClick={() => {
               setTarget("");
@@ -177,7 +188,8 @@ export function AdminMemberActions({
           >
             {t("admin-census:merge.title")}
           </Button>
-        </div>
+          {after}
+        </RecordActions>
       ) : null}
       {saved ? <p role="status">{t("admin-census:addDog.saved")}</p> : null}
       {(member.mergedMembers?.length ?? 0) > 0 ? (
@@ -440,6 +452,6 @@ export function AdminMemberActions({
         )}
         {failure === undefined ? null : <p role="alert">{errorText}</p>}
       </Modal>
-    </Card>
+    </>
   );
 }

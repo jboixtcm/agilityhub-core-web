@@ -81,7 +81,8 @@
       "pendingDocuments": "Pending documents",
       "plan": "Plan",
       "postalCode": "Postcode",
-      "roles": "Roles"
+      "roles": "Roles",
+      "familyGroupHolder": "Responsible member"
     },
     "emptyDescription": "Change the search or filters to see more results.",
     "emptyTitle": "No members match these criteria",
