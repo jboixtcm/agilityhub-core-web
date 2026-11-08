@@ -14,6 +14,7 @@ import {
 import type { PlatformRole, Role } from "@agilityhub/auth";
 import {
   AppearanceSelector,
+  ListPreferencesProvider,
   Button,
   Card,
   EmptyState,
@@ -249,14 +250,14 @@ export function AdminNavigation({
         {
           // Screen D12 (S10 §2); E5-W03 moved the old `training` entry to `/entrenaments`.
           href: "/agenda",
-          icon: "cal",
+          icon: "clock",
           id: "weekly-agenda",
           label: t("shell:nav.weeklyAgenda"),
         },
         {
           // «Alumnes», the student search that opens D13.
           href: "/alumnes",
-          icon: "paw",
+          icon: "graduate",
           id: "students",
           label: t("shell:nav.students"),
         },
@@ -271,7 +272,7 @@ export function AdminNavigation({
             ? {}
             : { count: counters.pendingSignups }),
           href: "/tauler",
-          icon: "user",
+          icon: "user-plus",
           id: "pre-registrations",
           label: t("shell:nav.preRegistrations"),
         },
@@ -291,7 +292,7 @@ export function AdminNavigation({
             ? {}
             : { count: unreadFollowUp }),
           href: "/seguiment",
-          icon: "list",
+          icon: "clipboard",
           id: "student-follow-up",
           label: t("shell:nav.studentFollowUp"),
           // S10 §2 row D14: instructors too; the group renders for them with this entry only.
@@ -304,7 +305,7 @@ export function AdminNavigation({
       entries: [
         {
           href: "/plantilles",
-          icon: "cal",
+          icon: "layers",
           id: "weekly-template",
           label: t("shell:nav.weeklyTemplate"),
           roles: ["INSTRUCTOR", "ADMIN"],
@@ -332,7 +333,7 @@ export function AdminNavigation({
         },
         {
           href: "/recorreguts",
-          icon: "grid",
+          icon: "route",
           id: "courses",
           label: t("shell:nav.courses"),
           roles: ["INSTRUCTOR", "ADMIN"],
@@ -351,19 +352,19 @@ export function AdminNavigation({
         },
         {
           href: "/modalitats",
-          icon: "list",
+          icon: "tag",
           id: "modalities",
           label: t("shell:nav.modalities"),
         },
         {
           href: "/comunicats",
-          icon: "mail",
+          icon: "send",
           id: "announcements",
           label: t("shell:nav.announcements"),
         },
         {
           href: "/notificacions",
-          icon: "mail",
+          icon: "bell",
           id: "delivery-log",
           label: t("shell:nav.deliveryLog"),
         },
@@ -373,8 +374,8 @@ export function AdminNavigation({
       label: t("shell:nav.configuration"),
       roles: ["ADMIN"],
       entries: [
-        { href: "/pistes", icon: "grid", id: "rings", label: t("shell:nav.rings") },
-        { href: "/equip", icon: "user", id: "team", label: t("shell:nav.team") },
+        { href: "/pistes", icon: "pin", id: "rings", label: t("shell:nav.rings") },
+        { href: "/equip", icon: "users", id: "team", label: t("shell:nav.team") },
         {
           href: "/parametres",
           icon: "edit",
@@ -383,7 +384,7 @@ export function AdminNavigation({
         },
         {
           href: "/auditoria",
-          icon: "list",
+          icon: "search",
           id: "audit",
           label: t("shell:nav.audit"),
           roles: ["ADMIN"],
@@ -849,7 +850,22 @@ function AdminShell({
         <FollowUpReadFailureNotice unread={unreadFollowUp} />
         <CountersRefreshContext.Provider value={refreshCounters}>
           <UnreadFollowUpContext.Provider value={unreadFollowUp}>
-            {children}
+            <ListPreferencesProvider
+              key={JSON.stringify([
+                session.me?.account.id,
+                session.me?.membership?.clubId ?? branding.club.slug,
+              ])}
+              scope={
+                session.me == null
+                  ? undefined
+                  : JSON.stringify([
+                      session.me.account.id,
+                      session.me.membership?.clubId ?? branding.club.slug,
+                    ])
+              }
+            >
+              {children}
+            </ListPreferencesProvider>
           </UnreadFollowUpContext.Provider>
         </CountersRefreshContext.Provider>
       </main>

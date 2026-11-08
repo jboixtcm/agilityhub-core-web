@@ -224,17 +224,6 @@ export function BillingPage({
   // The receipts [Marcar cobrat (selecció)] was opened with: one payload, one key, until it closes.
   const [markPaidIds, setMarkPaidIds] = useState<string[]>([]);
 
-  // The month, the list and the open receipt live in the address (a reload keeps them). A bare
-  // `/facturacio` is left bare until something changes, so a saved default view can still apply.
-  const urlWritten = useRef(window.location.search !== "");
-  useEffect(() => {
-    if (!urlWritten.current) {
-      urlWritten.current = true;
-      return;
-    }
-    writeUrl(period, state, invoiceId, memberHistory);
-  }, [invoiceId, memberHistory, period, state]);
-
   const say = useCallback((text: ReactNode, tone: Tone = "success") => {
     const id = nextFeedback.current;
     nextFeedback.current += 1;
@@ -440,6 +429,13 @@ export function BillingPage({
     }));
   }, []);
   const savedViews = useSavedViews(client, "invoices", applySavedView);
+  // Restore the page size without turning a bare route into an explicit view before defaults load.
+  const explicitListState = useRef(window.location.search !== "");
+  useEffect(() => {
+    if (!explicitListState.current && !savedViews.resolved) return;
+    writeUrl(period, state, invoiceId, memberHistory);
+  }, [invoiceId, memberHistory, period, savedViews.resolved, state]);
+
 
   const changePeriod = (next: string) => {
     setPeriod(next);

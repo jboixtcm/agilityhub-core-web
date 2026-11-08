@@ -265,9 +265,11 @@ function useAuditState(memberId: string | undefined) {
   const [state, setState] = useState(() =>
     readUniversalListState(window.location.search, defaults),
   );
-  const update = useCallback((next: UniversalListState) => {
-    const parameters = universalListSearchParams(next);
-    window.history.replaceState(null, "", `${window.location.pathname}?${parameters.toString()}`);
+  const update = useCallback((next: UniversalListState, origin?: "preference") => {
+    if (origin !== "preference") {
+      const parameters = universalListSearchParams(next);
+      window.history.replaceState(null, "", `${window.location.pathname}?${parameters.toString()}`);
+    }
     setState(next);
   }, []);
   const applySavedView = useCallback((view: UniversalListSavedView) => {

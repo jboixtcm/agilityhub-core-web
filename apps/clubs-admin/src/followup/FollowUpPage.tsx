@@ -117,12 +117,14 @@ function useUrlListState() {
       ? read
       : { ...read, size: 50 as const };
   });
-  const update = useCallback((next: UniversalListState) => {
-    window.history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}?${universalListSearchParams(next).toString()}`,
-    );
+  const update = useCallback((next: UniversalListState, origin?: "preference") => {
+    if (origin !== "preference") {
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${universalListSearchParams(next).toString()}`,
+      );
+    }
     setState(next);
   }, []);
   const applySavedView = useCallback((view: UniversalListSavedView) => {

@@ -650,10 +650,11 @@ export function Sidebar({ groups, label }: { groups: SidebarGroup[]; label: stri
                 aria-current={entry.active === true ? "page" : undefined}
                 className="ah-sidebar__entry"
                 href={entry.href}
+                title={entry.label}
                 key={entry.href}
               >
                 <Icon aria-hidden="true" name={entry.icon} />
-                <span>{entry.label}</span>
+                <span className="ah-sidebar__label">{entry.label}</span>
                 {entry.count === undefined ? null : (
                   <Badge className="ah-sidebar__count">{entry.count}</Badge>
                 )}

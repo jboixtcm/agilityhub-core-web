@@ -240,7 +240,8 @@
       "title": "Canvia el nivell"
     },
     "license": {
-      "number": "llicència {number}"
+      "number": "llicència {number}",
+      "category": "Categoria {organisation}: {category}"
     },
     "photo": {
       "alt": "Foto de {name}",

@@ -1,6 +1,8 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { ListPreferencesProvider } from "./list-preferences";
 import {
   parseUniversalFilter,
   readUniversalListState,
@@ -619,5 +621,104 @@ describe("R-14-11 (E11-W02 round 2, INC-41): `between` is offered only where it 
       .map((option) => (option as HTMLOptionElement).value);
     expect(offered).not.toContain("between");
     expect(offered).toContain("gte");
+  });
+});
+
+describe("T-03-38 per-account list page-size defaults", () => {
+  function PreferredList({
+    scope,
+    listKey = "members",
+    sizes = [20, 50, 200, 1000],
+  }: {
+    scope: string;
+    listKey?: string;
+    sizes?: UniversalListState["size"][];
+  }) {
+    const [state, setState] = useState<UniversalListState>({
+      columns: ["id"],
+      filters: [],
+      page: 3,
+      q: "",
+      size: 50,
+      sort: [],
+    });
+    return (
+      <ListPreferencesProvider scope={scope}>
+        <UniversalList<Row>
+          appliedFilters={[]}
+          caption="Members"
+          columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+          filterColumns={[]}
+          labels={listLabels}
+          listKey={listKey}
+          loadFilterValues={() => Promise.resolve([])}
+          onStateChange={setState}
+          onExport={() => undefined}
+          onRetry={() => undefined}
+          pageSizes={sizes}
+          rowKey={(row) => row.id}
+          rows={[{ id: "one" }]}
+          state={state}
+          totalPages={10}
+        />
+      </ListPreferencesProvider>
+    );
+  }
+  afterEach(() => {
+    localStorage.clear();
+    window.history.replaceState(null, "", "/");
+  });
+  it("restores explicit choices only for the same account, club and list, resetting the page", () => {
+    window.history.replaceState(null, "", "/members");
+    const first = render(<PreferredList scope="club-a:user-a" />);
+    fireEvent.change(screen.getByRole("combobox", { name: "Files" }), { target: { value: "200" } });
+    expect(screen.getByText("1 de 10")).toBeInTheDocument();
+    first.unmount();
+    const same = render(<PreferredList scope="club-a:user-a" />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("200");
+    same.unmount();
+    const other = render(<PreferredList scope="club-a:user-b" />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("50");
+    other.unmount();
+    const dogs = render(<PreferredList scope="club-a:user-a" listKey="dogs" />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("50");
+    dogs.unmount();
+    render(<PreferredList scope="club-b:user-a" />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("50");
+  });
+  it("honors explicit URL sizes and ignores unavailable, malformed or inaccessible storage", () => {
+    window.history.replaceState(null, "", "/members");
+    const first = render(<PreferredList scope="club-a:user-a" />);
+    fireEvent.change(screen.getByRole("combobox", { name: "Files" }), { target: { value: "200" } });
+    first.unmount();
+    window.history.replaceState(null, "", "/members?size=50");
+    const explicit = render(<PreferredList scope="club-a:user-a" />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("50");
+    explicit.unmount();
+    window.history.replaceState(null, "", "/members");
+    const restricted = render(<PreferredList scope="club-a:user-a" sizes={[20, 50]} />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("50");
+    restricted.unmount();
+    const key = Object.keys(localStorage).find((key) =>
+      key.startsWith("agilityhub.list.pageSize."),
+    );
+    expect(key).toBeDefined();
+    if (key === undefined) throw new Error("Expected page-size preference");
+    localStorage.setItem(key, "invalid");
+    const malformed = render(<PreferredList scope="club-a:user-a" />);
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("50");
+    malformed.unmount();
+    const read = vi.spyOn(Storage.prototype, "getItem").mockImplementation((key) => {
+      if (key.includes("pageSize")) throw new Error("unavailable");
+      return null;
+    });
+    const write = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new Error("unavailable");
+    });
+    render(<PreferredList scope="club-a:user-a" />);
+    fireEvent.change(screen.getByRole("combobox", { name: "Files" }), { target: { value: "200" } });
+    expect(screen.getByRole("combobox", { name: "Files" })).toHaveValue("200");
+    read.mockRestore();
+    write.mockRestore();
   });
 });

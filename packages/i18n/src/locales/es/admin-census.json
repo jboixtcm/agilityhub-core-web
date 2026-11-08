@@ -240,7 +240,8 @@
       "title": "Cambiar el nivel"
     },
     "license": {
-      "number": "licencia {number}"
+      "number": "licencia {number}",
+      "category": "Categoría {organisation}: {category}"
     },
     "photo": {
       "alt": "Foto de {name}",

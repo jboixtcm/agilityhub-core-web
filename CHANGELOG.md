@@ -37,6 +37,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Josep feedback 8 November 2026
+
+- Keep collapsed desktop navigation usable with distinct icons and labels, expose license editing, federation-specific categories and administrator leave actions, and highlight family-member links.
+- Remember pagination size per account, tenant and list in browser storage; explicit URL pagination takes precedence and saved default views remain usable.
+
 - Josep feedback 20261105-3: collapsible desktop navigation, transparent black chart labels, confirmed plan/price removal and billed-price explanations in the editor (ca/es/en).
 
 - Clarify the individual welcome email action on the member record and update signup forms, dashboard labels and draft-week planning.

@@ -1526,6 +1526,7 @@ describe("T-03-28 manual family management", () => {
       "Afegir un altre gos",
       "Grup familiar",
       "Fusiona abonats",
+      "Baixa (amb data)",
       "Descarrega les dades (RGPD)",
     ]);
     fireEvent.click(within(header).getByRole("button", { name: "Grup familiar" }));
@@ -1642,5 +1643,27 @@ describe("T-03-28 manual family management", () => {
       expect(dog).toHaveTextContent("Baixa");
       expect(dog).not.toHaveTextContent("Entrenament lliure");
     }
+  });
+});
+
+describe("T-03 feedback 8: visible lifecycle and license actions", () => {
+  it("opens the existing administrator leave flow from member actions", async () => {
+    await renderRecord("member");
+    await screen.findByRole("heading", { level: 1 });
+    openActions();
+    const menu = screen.getByRole("group", { name: "Accions" });
+    fireEvent.click(within(menu).getByRole("button", { name: "Baixa (amb data)" }));
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+  });
+  it("opens license editing directly from the licenses block", async () => {
+    await renderRecord("dog");
+    const heading = await screen.findByRole("heading", { name: "Llicències" });
+    const block = heading.closest(".ah-card");
+    expect(block).not.toBeNull();
+    fireEvent.click(within(block as HTMLElement).getByRole("button", { name: "Edita" }));
+    const drawer = await screen.findByRole("dialog", { name: "Edita les dades del gos" });
+    expect(
+      within(drawer).getByRole("textbox", { name: "Categoria de la llicència 1" }),
+    ).toBeInTheDocument();
   });
 });

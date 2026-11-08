@@ -3,7 +3,7 @@ import { handlers, mockScenario } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
-import { type Branding, BrandingProvider } from "@agilityhub/ui";
+import { type Branding, BrandingProvider, ListPreferencesProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
@@ -31,7 +31,7 @@ afterAll(() => {
   server.close();
 });
 
-async function renderPage(kind: "dogs" | "members") {
+async function renderPage(kind: "dogs" | "members", preferenceScope?: string) {
   server.use(
     http.get("*/api/v1/dashboard/counters", () => HttpResponse.json({ pendingSignups: 0 })),
   );
@@ -45,13 +45,29 @@ async function renderPage(kind: "dogs" | "members") {
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
-        {kind === "members" ? <MembersPage client={client} /> : <DogsPage client={client} />}
+        <ListPreferencesProvider scope={preferenceScope}>
+          {kind === "members" ? <MembersPage client={client} /> : <DogsPage client={client} />}
+        </ListPreferencesProvider>
       </BrandingProvider>
     </I18nextProvider>,
   );
 }
 
 describe("T-03-38 D5 universal member list", () => {
+  it("restores page size alongside the default saved view", async () => {
+    window.history.pushState(null, "", "/abonats");
+    localStorage.setItem('agilityhub.list.pageSize.["account-club","members"]', "200");
+    localStorage.setItem("agilityhub.list.defaultView.members", "view-members-leave");
+    await renderPage("members", "account-club");
+    expect(await screen.findByText("Filtre (1): Estat visible = «baixa prevista»")).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "files per pàgina" })).toHaveValue("200");
+    expect(new URLSearchParams(window.location.search).get("size")).toBe("200");
+    fireEvent.change(screen.getByRole("combobox", { name: "files per pàgina" }), {
+      target: { value: "20" },
+    });
+    expect(new URLSearchParams(window.location.search).get("size")).toBe("20");
+  });
+
   it("requests and shows the photo beside a dog in the census list", async () => {
     const photoUrl = "/api/v1/attachments/files/example?expires=10&signature=example";
     server.use(

@@ -1,0 +1,80 @@
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:1745) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+·FF···
+
+  1) [chromium] › e2e/feedback-20261108.spec.ts:67:3 › T-03-32 license editing and member leave at 1280px 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.ah-card').filter({ has: getByRole('heading', { name: 'Llicències' }) }).getByText('Categoria FCAG: L')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.ah-card').filter({ has: getByRole('heading', { name: 'Llicències' }) }).getByText('Categoria FCAG: L') with timeout 5000ms
+      - waiting for locator('.ah-card').filter({ has: getByRole('heading', { name: 'Llicències' }) }).getByText('Categoria FCAG: L')
+
+
+      78 |     await drawer.getByRole("button", { name: "Desa", exact: true }).click();
+      79 |     await expect(drawer).toBeHidden();
+    > 80 |     await expect(licenses.getByText("Categoria FCAG: L", { exact: false })).toBeVisible();
+         |                                                                             ^
+      81 |     await page.screenshot({
+      82 |       path: resolve(evidence, `licenses-${String(width)}.png`),
+      83 |       fullPage: true,
+        at /work/apps/clubs-admin/e2e/feedback-20261108.spec.ts:80:77
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261108-T-03-32--cc8f9--and-member-leave-at-1280px-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261108-T-03-32--cc8f9--and-member-leave-at-1280px-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261108-T-03-32--cc8f9--and-member-leave-at-1280px-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/feedback-20261108.spec.ts:67:3 › T-03-32 license editing and member leave at 375px 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.ah-card').filter({ has: getByRole('heading', { name: 'Llicències' }) }).getByText('Categoria FCAG: L')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.ah-card').filter({ has: getByRole('heading', { name: 'Llicències' }) }).getByText('Categoria FCAG: L') with timeout 5000ms
+      - waiting for locator('.ah-card').filter({ has: getByRole('heading', { name: 'Llicències' }) }).getByText('Categoria FCAG: L')
+
+
+      78 |     await drawer.getByRole("button", { name: "Desa", exact: true }).click();
+      79 |     await expect(drawer).toBeHidden();
+    > 80 |     await expect(licenses.getByText("Categoria FCAG: L", { exact: false })).toBeVisible();
+         |                                                                             ^
+      81 |     await page.screenshot({
+      82 |       path: resolve(evidence, `licenses-${String(width)}.png`),
+      83 |       fullPage: true,
+        at /work/apps/clubs-admin/e2e/feedback-20261108.spec.ts:80:77
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261108-T-03-32--74241-g-and-member-leave-at-375px-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261108-T-03-32--74241-g-and-member-leave-at-375px-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261108-T-03-32--74241-g-and-member-leave-at-375px-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [chromium] › e2e/feedback-20261108.spec.ts:67:3 › T-03-32 license editing and member leave at 1280px 
+    [chromium] › e2e/feedback-20261108.spec.ts:67:3 › T-03-32 license editing and member leave at 375px 
+  4 passed (37.1s)
+undefined
+/work/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: playwright test feedback-20261108.spec.ts feedback-prices-20261105.spec.ts --workers=1

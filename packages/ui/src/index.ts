@@ -31,5 +31,6 @@ export * from "./schedule-grid";
 export * from "./slot-grid";
 export * from "./tasks-panel";
 export * from "./universal-list";
+export { ListPreferencesProvider } from "./list-preferences";
 
 export const UI_PACKAGE_NAME = "@agilityhub/ui" as const;

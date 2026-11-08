@@ -185,10 +185,40 @@ select {
 
 @media (min-width: 60.001rem) {
   .admin-shell--collapsed {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 4.5rem minmax(0, 1fr);
   }
-  .admin-shell--collapsed .admin-shell__navigation {
-    display: none;
+  .admin-shell--collapsed .ah-sidebar {
+    padding: var(--ah-space-3) var(--ah-space-2);
+  }
+  .admin-shell--collapsed .ah-sidebar__group {
+    padding-bottom: var(--ah-space-2);
+    margin-bottom: var(--ah-space-2);
+    border-bottom: 1px solid var(--ah-color-border);
+  }
+  .admin-shell--collapsed .ah-sidebar__group h2,
+  .admin-shell--collapsed .ah-sidebar__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .admin-shell--collapsed .ah-sidebar__entry {
+    position: relative;
+    min-height: 2.75rem;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: var(--ah-space-2);
+  }
+  .admin-shell--collapsed .ah-sidebar__count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 1rem;
+    padding: 0 var(--ah-space-1);
+    font-size: 0.625rem;
   }
 }
 
@@ -2806,4 +2836,10 @@ select {
 
 .census-record-actions__items[hidden] {
   display: none;
+}
+
+.census-family-members a {
+  color: var(--ah-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }

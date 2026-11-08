@@ -79,8 +79,8 @@ export function useUrlListState(
     [extraKey],
   );
   const update = useCallback(
-    (next: UniversalListState) => {
-      write(next);
+    (next: UniversalListState, origin?: "preference") => {
+      if (origin !== "preference") write(next);
       setState(next);
     },
     [write],

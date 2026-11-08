@@ -2508,3 +2508,8 @@ Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/scr
 ## 2026-11-07 — Direct user request: family groups and Josep feedback
 
 @organizer: Completed the November 6–7 feedback from the supplied Word documents and resumed the interrupted validation. The family editor, shared dog access, record actions, pending-checkout cancellation and maintenance support are ready locally. See `roadmap/evidence/feedback-20261107/REPORT.md` and `verification.json`. All recorded local checks pass. Publish API, web and operations together; the web requests the new family-holder list field. No existing roadmap task or organizer verification was modified. The specific census member is deferred until Jordi identifies it; the reported plan reactivation issue is not reproduced. No production records, credentials or delivery settings were changed, and no release was deployed.
+
+
+## 2026-11-08 — Direct user request: further Josep feedback
+
+@organizer: Implemented and locally validated the new November 8 Word feedback (`202608-1_Josep.docx`, source kept in SOFTWARE_CANIC). Existing November 6–7 items were already published. No existing roadmap task or organizer verification was changed. Validation and release status are recorded in `roadmap/evidence/feedback-20261108/REPORT.md`. No production records or messaging settings were changed.

@@ -116,8 +116,8 @@ function useListState() {
       },
     ),
   );
-  const update = useCallback((next: UniversalListState) => {
-    if (window.location.pathname === "/activitats") {
+  const update = useCallback((next: UniversalListState, origin?: "preference") => {
+    if (origin !== "preference" && window.location.pathname === "/activitats") {
       window.history.replaceState(
         null,
         "",

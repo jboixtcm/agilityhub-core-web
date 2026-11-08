@@ -1569,12 +1569,26 @@ function MemberRecordContent({
                     <FamilyGroupAction
                       client={client}
                       member={member}
-                      onChanged={() => { setReload((value) => value + 1); }}
+                      onChanged={() => {
+                        setReload((value) => value + 1);
+                      }}
                     />
                   ) : null
                 }
                 after={
                   <>
+                    <Button
+                      onClick={() => {
+                        setTab("summary");
+                        setMemberDialog("leave");
+                      }}
+                      variant="ghost"
+                    >
+                      <Icon aria-hidden="true" name={member.status === "LEFT" ? "undo" : "ban"} />
+                      {member.status === "LEFT"
+                        ? t("admin-census:reactivation.action")
+                        : t("admin-census:member.actions.leave")}
+                    </Button>
                     {supportAccess ? null : (
                       <MemberDataExportButton
                         client={client}
@@ -2367,7 +2381,18 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
           </Card>
         ) : null}
         <Card>
-          <SectionTitle>{t("admin-census:dog.sections.licenses")}</SectionTitle>
+          <div className="census-record__section-heading">
+            <SectionTitle>{t("admin-census:dog.sections.licenses")}</SectionTitle>
+            <Button
+              onClick={() => {
+                setEditOpen(true);
+              }}
+              variant="ghost"
+            >
+              <Icon aria-hidden="true" name="edit" />
+              {t("admin-census:common.edit")}
+            </Button>
+          </div>
           {dog.licenses.length === 0 ? (
             <p>{t("admin-census:values.empty")}</p>
           ) : (
@@ -2376,7 +2401,10 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
                 <li key={license.organisation}>
                   {license.organisation} ·{" "}
                   {t("admin-census:dog.license.number", { number: license.number })}
-                  {[license.category, license.grade, license.division]
+                  {license.category
+                    ? ` · ${t("admin-census:dog.license.category", { organisation: license.organisation, category: license.category })}`
+                    : ""}
+                  {[license.grade, license.division]
                     .filter((value): value is string => typeof value === "string" && value !== "")
                     .map((value) => ` · ${value}`)}
                 </li>

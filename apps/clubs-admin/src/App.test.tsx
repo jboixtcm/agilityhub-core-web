@@ -1154,6 +1154,14 @@ describe("T-05 feedback 3: desktop sidebar", () => {
       "false",
     );
     expect(localStorage.getItem("admin-sidebar-collapsed")).toBe("true");
+    const navigation = screen.getByRole("navigation", { name: "Navegació d’administració" });
+    const links = within(navigation).getAllByRole("link");
+    const icons = links.map((link) => link.querySelector("use")?.getAttribute("href"));
+    expect(new Set(icons).size).toBe(links.length);
+    expect(within(navigation).getByRole("link", { name: "Abonats" })).toHaveAttribute(
+      "title",
+      "Abonats",
+    );
     window.history.pushState(null, "", "/abonats");
     fireEvent(window, new PopStateEvent("popstate"));
     expect(screen.getByRole("button", { name: "Desplega el menú" })).toHaveAttribute(

@@ -1,0 +1,263 @@
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:15828) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 725 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+dist/index.html                                             2.93 kB │ gzip:   1.00 kB
+dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+dist/obstacle-models/wall.fbx                              25.43 kB
+dist/obstacle-models/seesaw.fbx                            30.17 kB
+dist/obstacle-models/dogwalk.fbx                           41.45 kB
+dist/obstacle-models/aframe.fbx                            52.09 kB
+dist/obstacle-models/jump_double.fbx                      102.10 kB
+dist/obstacle-models/long_jump.fbx                        114.12 kB
+dist/obstacle-models/jump_single.fbx                      137.14 kB
+dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+dist/obstacle-models/tire.fbx                           1,907.21 kB
+dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+dist/assets/training-DwvPe4AS.css                          14.97 kB │ gzip:   3.08 kB
+dist/assets/screens-DYgQjjni.css                           21.33 kB │ gzip:   3.54 kB
+dist/assets/shared-BB5ABZcy.css                            42.43 kB │ gzip:   7.11 kB
+dist/assets/index-DwiIgcKA.css                             72.18 kB │ gzip:  13.05 kB
+dist/assets/notifications-DG2SbZmy.js                       0.84 kB │ gzip:   0.52 kB
+dist/assets/notifications-Bly76mJQ.js                       0.85 kB │ gzip:   0.47 kB
+dist/assets/notifications-LMXNAlXR.js                       0.86 kB │ gzip:   0.52 kB
+dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+dist/assets/history-B74qC1t-.js                             1.28 kB │ gzip:   0.66 kB
+dist/assets/history-BWrkQfFW.js                             1.34 kB │ gzip:   0.69 kB
+dist/assets/history-BPTgb4_w.js                             1.37 kB │ gzip:   0.70 kB
+dist/assets/home-CiD_uZx5.js                                1.52 kB │ gzip:   0.76 kB
+dist/assets/home-DuPmgVRC.js                                1.58 kB │ gzip:   0.82 kB
+dist/assets/home-DUEt_q5U.js                                1.60 kB │ gzip:   0.82 kB
+dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+dist/assets/inactivity-x72vHJv9.js                          2.03 kB │ gzip:   0.99 kB
+dist/assets/training-C5U_DqNB.js                            2.08 kB │ gzip:   0.99 kB
+dist/assets/inactivity-BJp8fZBZ.js                          2.13 kB │ gzip:   1.08 kB
+dist/assets/inactivity-BwqNBSeQ.js                          2.15 kB │ gzip:   1.07 kB
+dist/assets/training-ChM_Sijs.js                            2.25 kB │ gzip:   1.12 kB
+dist/assets/training-B5utM-gP.js                            2.25 kB │ gzip:   1.11 kB
+dist/assets/training-CoIlT-Yq.js                            2.91 kB │ gzip:   1.41 kB
+dist/assets/courses-TACQmmua.js                             3.82 kB │ gzip:   1.71 kB
+dist/assets/courses-Cjf27sNl.js                             4.10 kB │ gzip:   1.86 kB
+dist/assets/courses-CfAin0Ix.js                             4.12 kB │ gzip:   1.89 kB
+dist/assets/booking-DH_WiG0r.js                             5.50 kB │ gzip:   2.10 kB
+dist/assets/signup-DNZyi-h9.js                              5.82 kB │ gzip:   2.63 kB
+dist/assets/booking-RMW2TMgB.js                             5.89 kB │ gzip:   2.31 kB
+dist/assets/booking-DAKYXyyD.js                             5.92 kB │ gzip:   2.31 kB
+dist/assets/signup-B6RbcHkM.js                              6.10 kB │ gzip:   2.91 kB
+dist/assets/signup-BUO0rr5S.js                              6.19 kB │ gzip:   2.92 kB
+dist/assets/auth-D9Qzf55B.js                                6.41 kB │ gzip:   2.61 kB
+dist/assets/census-DWhcPpt5.js                              6.93 kB │ gzip:   2.73 kB
+dist/assets/auth-NUbE8V8e.js                                7.25 kB │ gzip:   2.93 kB
+dist/assets/auth-g9jicIDi.js                                7.32 kB │ gzip:   2.92 kB
+dist/assets/census-B_I8vGjk.js                              7.32 kB │ gzip:   3.00 kB
+dist/assets/census-C3olQWQ_.js                              7.54 kB │ gzip:   3.05 kB
+dist/assets/jsx-runtime-Cltr0gcK.js                         8.43 kB │ gzip:   3.21 kB
+dist/assets/instructor-Da0qXAqn.js                         10.08 kB │ gzip:   3.63 kB
+dist/assets/enums-813HU53N.js                              10.53 kB │ gzip:   4.36 kB
+dist/assets/instructor-BGzUK1YL.js                         10.65 kB │ gzip:   3.92 kB
+dist/assets/instructor-Cbhr5K-u.js                         10.81 kB │ gzip:   3.93 kB
+dist/assets/enums-Ctorthy-.js                              10.90 kB │ gzip:   4.57 kB
+dist/assets/enums-D1zpLN_i.js                              10.95 kB │ gzip:   4.57 kB
+dist/assets/errors-BD0o9-MR.js                             22.04 kB │ gzip:   7.20 kB
+dist/assets/errors-J4nrc9kO.js                             23.31 kB │ gzip:   7.58 kB
+dist/assets/errors-B1L438oL.js                             23.35 kB │ gzip:   7.57 kB
+dist/assets/CoursesRoute-DZ7MTp1U.js                       61.68 kB │ gzip:  17.28 kB
+dist/assets/src-rCRvmPO9.js                                72.59 kB │ gzip:  20.53 kB
+dist/assets/screens-DNFYORU6.js                           230.47 kB │ gzip:  58.73 kB
+dist/assets/shared-D67jn2N5.js                            249.38 kB │ gzip:  76.43 kB
+dist/assets/index-CrY4cZEb.js                             261.78 kB │ gzip:  79.19 kB
+dist/assets/CourseViewer3D-BHyZFPT0.js                    582.82 kB │ gzip: 151.70 kB
+dist/assets/browser-CTsn0S_P.js                         1,207.70 kB │ gzip: 470.46 kB
+
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 454ms[39m
+
+PWA v1.3.0
+Building src/sw.ts service worker ("es" format)...
+[36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+[warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+transforming...
+✓ 60 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/sw.mjs  17.95 kB │ gzip: 6.02 kB
+
+[32m✓ built in 40ms[39m
+
+PWA v1.3.0
+mode      injectManifest
+format:   es
+precache  61 entries (1275.82 KiB)
+files generated
+  dist/sw.js
+warnings
+  One of the glob patterns doesn't match any files. Please remove or fix the following: {
+  "globDirectory": "/work/apps/clubs/dist",
+  "globPattern": "pwa/*.{png,webmanifest}",
+  "globIgnores": [
+    "**/browser-*.js",
+    "**/mockServiceWorker.js",
+    "**/CourseViewer3D-*.js",
+    "sw.js",
+    "sw.js"
+  ]
+}
+
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:15924) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 781 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+dist/index.html                                             2.96 kB │ gzip:   1.02 kB
+dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+dist/obstacle-models/wall.fbx                              25.43 kB
+dist/obstacle-models/seesaw.fbx                            30.17 kB
+dist/obstacle-models/dogwalk.fbx                           41.45 kB
+dist/obstacle-models/aframe.fbx                            52.09 kB
+dist/obstacle-models/jump_double.fbx                      102.10 kB
+dist/obstacle-models/long_jump.fbx                        114.12 kB
+dist/obstacle-models/jump_single.fbx                      137.14 kB
+dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+dist/obstacle-models/tire.fbx                           1,907.21 kB
+dist/assets/CoursesRoute-B4BC4Pxa.css                       5.83 kB │ gzip:   1.27 kB
+dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+dist/assets/list-helpers-2x9x65Cp.css                      40.76 kB │ gzip:   6.83 kB
+dist/assets/index-DJOhHTo1.css                            131.81 kB │ gzip:  20.61 kB
+dist/assets/notifications-CTFBjKqK.js                       0.77 kB │ gzip:   0.49 kB
+dist/assets/notifications-D1bhCr71.js                       0.78 kB │ gzip:   0.44 kB
+dist/assets/notifications-CgaA8i4S.js                       0.79 kB │ gzip:   0.49 kB
+dist/assets/billing-D0DpjAoT.js                             0.89 kB │ gzip:   0.48 kB
+dist/assets/billing-JPzod3xQ.js                             0.99 kB │ gzip:   0.55 kB
+dist/assets/billing-CsyKuIJF.js                             1.01 kB │ gzip:   0.56 kB
+dist/assets/history-CyWOebF4.js                             1.08 kB │ gzip:   0.56 kB
+dist/assets/history-BD6K1kyE.js                             1.14 kB │ gzip:   0.59 kB
+dist/assets/history-Ppbt825V.js                             1.17 kB │ gzip:   0.60 kB
+dist/assets/admin-training-CfIJ9hYi.js                      1.27 kB │ gzip:   0.59 kB
+dist/assets/admin-training-MNB6KQg6.js                      1.34 kB │ gzip:   0.65 kB
+dist/assets/admin-training-C_wBsuRB.js                      1.37 kB │ gzip:   0.66 kB
+dist/assets/home-DCkpKyl2.js                                1.40 kB │ gzip:   0.71 kB
+dist/assets/home--3f0I326.js                                1.46 kB │ gzip:   0.77 kB
+dist/assets/home-CG5hHMef.js                                1.48 kB │ gzip:   0.77 kB
+dist/assets/leave-NRVcHjHo.js                               1.51 kB │ gzip:   0.76 kB
+dist/assets/leave-B679LHaT.js                               1.63 kB │ gzip:   0.88 kB
+dist/assets/leave-DgZBMqxx.js                               1.63 kB │ gzip:   0.88 kB
+dist/assets/activities-BVJEFa1Z.js                          1.73 kB │ gzip:   0.80 kB
+dist/assets/activities-BSuc--ol.js                          1.81 kB │ gzip:   0.88 kB
+dist/assets/activities-BULXahB-.js                          1.82 kB │ gzip:   0.89 kB
+dist/assets/training-CvomnQeC.js                            1.84 kB │ gzip:   0.87 kB
+dist/assets/inactivity-BQCkwWJA.js                          1.86 kB │ gzip:   0.91 kB
+dist/assets/inactivity-CA5-KbpM.js                          1.97 kB │ gzip:   1.00 kB
+dist/assets/inactivity-D3rOgEi7.js                          1.99 kB │ gzip:   1.00 kB
+dist/assets/training-DSG9lMt4.js                            2.01 kB │ gzip:   1.00 kB
+dist/assets/training-Cz1fEZ_C.js                            2.02 kB │ gzip:   0.99 kB
+dist/assets/admin-dashboard-CENq28el.js                     2.26 kB │ gzip:   1.07 kB
+dist/assets/admin-dashboard-GbAqwGUj.js                     2.35 kB │ gzip:   1.17 kB
+dist/assets/admin-dashboard---QUhfnl.js                     2.39 kB │ gzip:   1.17 kB
+dist/assets/id-7zoZXjAu.js                                  2.77 kB │ gzip:   1.24 kB
+dist/assets/id-BDAVovp0.js                                  2.94 kB │ gzip:   1.38 kB
+dist/assets/id-DFjpo2fA.js                                  3.01 kB │ gzip:   1.38 kB
+dist/assets/courses-ChbZtx3h.js                             3.57 kB │ gzip:   1.57 kB
+dist/assets/courses-Ba2mqEKG.js                             3.84 kB │ gzip:   1.74 kB
+dist/assets/courses-Cq2xuPj7.js                             3.87 kB │ gzip:   1.77 kB
+dist/assets/admin-messaging-B6QSCdoM.js                     5.26 kB │ gzip:   2.18 kB
+dist/assets/booking-OqrUqZcS.js                             5.36 kB │ gzip:   2.02 kB
+dist/assets/admin-messaging-DSAdJLlb.js                     5.53 kB │ gzip:   2.37 kB
+dist/assets/admin-messaging-Dbkml13R.js                     5.62 kB │ gzip:   2.39 kB
+dist/assets/signup-B_ai_m-a.js                              5.67 kB │ gzip:   2.56 kB
+dist/assets/booking-DEhUehoN.js                             5.75 kB │ gzip:   2.23 kB
+dist/assets/booking-DUhAtE8z.js                             5.77 kB │ gzip:   2.23 kB
+dist/assets/signup-BF_dvKgh.js                              5.95 kB │ gzip:   2.84 kB
+dist/assets/signup-DA7zw3H9.js                              6.05 kB │ gzip:   2.84 kB
+dist/assets/admin-catalogs-DLGc4CHh.js                      6.22 kB │ gzip:   2.32 kB
+dist/assets/auth-Cf8W_Ok_.js                                6.28 kB │ gzip:   2.56 kB
+dist/assets/admin-audit-B4p3_IMm.js                         6.30 kB │ gzip:   2.57 kB
+dist/assets/admin-activities-DdDTTUVV.js                    6.43 kB │ gzip:   2.57 kB
+dist/assets/admin-catalogs-DhYH2pt3.js                      6.58 kB │ gzip:   2.57 kB
+dist/assets/admin-activities-0hs2_bUV.js                    6.72 kB │ gzip:   2.79 kB
+dist/assets/admin-catalogs-DHtHPZzl.js                      6.78 kB │ gzip:   2.56 kB
+dist/assets/census-C03rKdFx.js                              6.81 kB │ gzip:   2.68 kB
+dist/assets/admin-activities-CNydvyXM.js                    6.91 kB │ gzip:   2.84 kB
+dist/assets/admin-audit-Bq6mgAji.js                         6.95 kB │ gzip:   2.87 kB
+dist/assets/admin-audit-BjbkAYHp.js                         7.09 kB │ gzip:   2.89 kB
+dist/assets/auth-C7dUOpBm.js                                7.12 kB │ gzip:   2.88 kB
+dist/assets/auth-C8yGs5Rf.js                                7.19 kB │ gzip:   2.86 kB
+dist/assets/census-CfePOKb-.js                              7.21 kB │ gzip:   2.95 kB
+dist/assets/census-BDWO-SXE.js                              7.42 kB │ gzip:   2.99 kB
+dist/assets/jsx-runtime-Cltr0gcK.js                         8.43 kB │ gzip:   3.21 kB
+dist/assets/admin-scheduling-CI0aIRfM.js                    9.29 kB │ gzip:   3.30 kB
+dist/assets/enums-5tmQZ5iM.js                               9.59 kB │ gzip:   3.74 kB
+dist/assets/admin-scheduling-mRAezlio.js                    9.79 kB │ gzip:   3.56 kB
+dist/assets/admin-scheduling-C8jxBiIA.js                    9.82 kB │ gzip:   3.56 kB
+dist/assets/enums-D7UN6K9f.js                               9.96 kB │ gzip:   3.98 kB
+dist/assets/enums-DBZptYCs.js                              10.02 kB │ gzip:   3.97 kB
+dist/assets/instructor-Cy-kNWH7.js                         10.54 kB │ gzip:   3.61 kB
+dist/assets/instructor-ZnADTepI.js                         11.12 kB │ gzip:   3.90 kB
+dist/assets/instructor-BYvTK6fc.js                         11.27 kB │ gzip:   3.90 kB
+dist/assets/admin-billing-B_9zsbB1.js                      11.55 kB │ gzip:   3.94 kB
+dist/assets/admin-billing-CEiHb28m.js                      11.81 kB │ gzip:   4.27 kB
+dist/assets/admin-billing-CQpvVvFH.js                      12.05 kB │ gzip:   4.33 kB
+dist/assets/admin-courses-CZecHWtL.js                      13.27 kB │ gzip:   4.81 kB
+dist/assets/admin-courses-ppXzK63q.js                      14.15 kB │ gzip:   5.16 kB
+dist/assets/admin-courses-BAo-G3ig.js                      14.47 kB │ gzip:   5.17 kB
+dist/assets/errors-BJsGxbPj.js                             14.91 kB │ gzip:   5.02 kB
+dist/assets/errors-DJZXerLt.js                             16.18 kB │ gzip:   5.36 kB
+dist/assets/errors-BoPU6Kvb.js                             16.22 kB │ gzip:   5.35 kB
+dist/assets/console-C3kIcMmm.js                            20.89 kB │ gzip:   7.77 kB
+dist/assets/console-D5exOSZl.js                            22.11 kB │ gzip:   8.46 kB
+dist/assets/console-DyFH_iOR.js                            22.79 kB │ gzip:   8.55 kB
+dist/assets/admin-census-D_th4xDg.js                       24.11 kB │ gzip:   8.34 kB
+dist/assets/admin-census-KET95ZTH.js                       25.64 kB │ gzip:   9.07 kB
+dist/assets/admin-census-XNo5nLu2.js                       26.12 kB │ gzip:   9.09 kB
+dist/assets/admin-settings-C5PIG77M.js                     27.90 kB │ gzip:   9.13 kB
+dist/assets/admin-settings-pb4_v07S.js                     30.12 kB │ gzip:   9.88 kB
+dist/assets/admin-settings-PQ2A-aKY.js                     30.70 kB │ gzip:   9.91 kB
+dist/assets/src-DgZgIURo.js                                91.64 kB │ gzip:  25.74 kB
+dist/assets/ConsolePage-CQhNJZw0.js                       116.99 kB │ gzip:  27.87 kB
+dist/assets/CoursesRoute-BqBvQFaC.js                      139.79 kB │ gzip:  38.76 kB
+dist/assets/list-helpers-B3oxAsqc.js                      233.00 kB │ gzip:  72.62 kB
+dist/assets/CourseViewer3D-B57JyCZM.js                    582.83 kB │ gzip: 151.71 kB
+dist/assets/browser-Djajw40I.js                         1,019.20 kB │ gzip: 327.51 kB
+dist/assets/index-BXT0yhwZ.js                           1,148.45 kB │ gzip: 385.66 kB
+
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 413ms[39m

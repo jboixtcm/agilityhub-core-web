@@ -51,11 +51,13 @@ test("T-05 feedback 3: desktop collapse, persistence and transparent chart label
     .locator(".dashboard-chart")
     .screenshot({ path: resolve(evidence, "chart-labels.png") });
   await page.getByRole("button", { name: "Plega el menú", exact: true }).click();
-  await expect(page.locator("#admin-navigation")).toBeHidden();
+  await expect(page.locator("#admin-navigation")).toBeVisible();
+  await expect(page.locator(".admin-shell")).toHaveClass(/admin-shell--collapsed/u);
   expect((await content.boundingBox())?.width).toBeGreaterThan(expanded?.width ?? 0);
   await page.screenshot({ path: resolve(evidence, "dashboard-collapsed.png") });
   await page.reload();
-  await expect(page.locator("#admin-navigation")).toBeHidden();
+  await expect(page.locator("#admin-navigation")).toBeVisible();
+  await expect(page.locator(".admin-shell")).toHaveClass(/admin-shell--collapsed/u);
   await page.getByRole("button", { name: "Desplega el menú", exact: true }).click();
   await expect(page.locator("#admin-navigation")).toBeVisible();
 });

@@ -11,6 +11,7 @@ import {
 
 import { Button, Checkbox, EmptyState, Skeleton, Toast } from "./components";
 import { Icon } from "./icons/Icon";
+import { useListPageSizePreference } from "./list-preferences";
 
 export const UNIVERSAL_LIST_PAGE_SIZES = [20, 50, 200, 1000] as const;
 
@@ -202,7 +203,8 @@ export interface UniversalListProps<Row> {
   onRenameView?: (view: UniversalListSavedView, name: string) => Promise<UniversalListSavedView>;
   onRetry: () => void;
   onRowActivate?: (row: Row) => void;
-  onStateChange: (state: UniversalListState) => void;
+  /** Preference restoration must keep bare URLs eligible for the default saved view. */
+  onStateChange: (state: UniversalListState, origin?: "preference") => void;
   /** A row's extra class (D14 highlights the unread rows). */
   rowClassName?: (row: Row) => string | undefined;
   /**
@@ -384,6 +386,23 @@ export function UniversalList<Row>({
   statusFilter,
   totalPages,
 }: UniversalListProps<Row>) {
+  const pageSizePreference = useListPageSizePreference(listKey);
+  const restoredPreference = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    if (
+      pageSizePreference.key === undefined ||
+      restoredPreference.current === pageSizePreference.key
+    )
+      return;
+    restoredPreference.current = pageSizePreference.key;
+    // Shared links and explicit URL pagination take precedence over the local default.
+    const explicitSize = Number(new URLSearchParams(window.location.search).get("size"));
+    if (isPageSize(explicitSize) && pageSizes.includes(explicitSize)) return;
+    const size = pageSizePreference.read();
+    if (size !== undefined && isPageSize(size) && pageSizes.includes(size) && size !== state.size) {
+      onStateChange({ ...state, page: 0, size }, "preference");
+    }
+  }, [onStateChange, pageSizePreference, pageSizes, state]);
   const statusField = statusFilter?.field;
   const universalFilters = appliedFilters.filter((filter) => filter.field !== statusField);
   const firstFilterColumn = filterColumns[0];
@@ -1177,6 +1196,7 @@ export function UniversalList<Row>({
               onChange={(event) => {
                 const size = Number(event.currentTarget.value);
                 if (isPageSize(size) && pageSizes.includes(size)) {
+                  pageSizePreference.save(size);
                   onStateChange({ ...state, page: 0, size });
                 }
               }}
