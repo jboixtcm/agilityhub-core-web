@@ -2513,3 +2513,8 @@ Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/scr
 ## 2026-11-08 — Direct user request: further Josep feedback
 
 @organizer: Implemented and locally validated the new November 8 Word feedback (`202608-1_Josep.docx`, source kept in SOFTWARE_CANIC). Existing November 6–7 items were already published. No existing roadmap task or organizer verification was changed. Validation and release status are recorded in `roadmap/evidence/feedback-20261108/REPORT.md`. No production records or messaging settings were changed.
+
+
+## 2026-11-09 — Direct user request: Josep feedback
+
+@organizer: Implemented the November 9 request and Word feedback. See `roadmap/evidence/feedback-20261109/REPORT.md` for scope, validation and release handoff. No existing task or organizer verification was changed. Club settings, sender and icon deployment are managed separately in SOFTWARE_CANIC operations evidence.

@@ -229,7 +229,6 @@
     },
     "freeTraining": {
       "byLevel": "El derecho viene del nivel.",
-      "manual": "Decisión manual del club.",
       "notAllowed": "No puede entrenar solo",
       "title": "Entrenamiento libre"
     },

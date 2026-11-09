@@ -374,3 +374,8 @@ Ordre: A → (B ∥ C) → (D ∥ E ∥ F) → G. Tres fils típics: fil 1 = A +
 ## Canvis 8 de novembre de 2026
 
 Feedback de Josep: la categoria FCAG és independent de la RSCE. Quan manca, s’inicialitza amb la categoria RSCE del mateix gos; una categoria FCAG informada, inclòs un valor buit desat expressament, no es reemplaça en reiniciar ni en reimportar el cens. La fitxa mostra la categoria al costat de la llicència i ofereix accés directe a l’edició. La baixa amb data també és accessible des d’Accions de l’abonat.
+
+
+### Revisió del 09-11-2026 — fitxes incompletes
+
+Petició directa de Jordi a partir del document de Josep: D10 mostra sempre la modalitat amb BILLING, encara que planId sigui nul o no resolgui cap catàleg; la fila conserva Edita. Les notes internes són visibles i editables en un bloc de D10 i no es projecten als endpoints de membre, inclosa la impersonació. Es retira el text «Decisió manual del club.» del dret d’entrenament del gos.

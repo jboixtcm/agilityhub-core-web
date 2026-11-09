@@ -1,0 +1,20 @@
+{
+  "apps/clubs-admin/src/census/CensusRecordPage.test.tsx": "27142e6b3edca0b7b870e7569f37a05bd10983bdfa09741b8513f2194eda161a",
+  "apps/clubs-admin/src/census/CensusRecordPage.tsx": "8d84e64e6141a90fb793f6009e6854f7be9401df622d3ae626a2c3bd5aa3ac82",
+  "apps/clubs-admin/src/dashboard/DogLevelsChart.tsx": "b5af5279a5bb638f021f916cf0034d8cd96c74ed98310022a5c7a8751fefda6d",
+  "apps/clubs-admin/src/styles.css": "17fb2fc49476855519d8cfb63d77e5c5484345fe6880a10a31928a5a116e79bf",
+  "apps/clubs/e2e/word-feedback.spec.ts": "dc20a4d19a25a47ef49b1a0d88774977fdd7666ada5cda359c044491a6b19c89",
+  "apps/clubs/src/App.tsx": "4fbe48fc38a46be4661bd9c9bad9cee9a4c98ccb25dd3f45c8ced0b561cb61fc",
+  "apps/clubs/src/SignupPage.tsx": "6547f244c62b7b315ce01a1fbc9717bdf8d849ee4f0993dd76a2de51a84239a8",
+  "apps/clubs/src/booking/HomePage.tsx": "4d80ee20dc7ba741d13f07ab24bd4ace7c2d613c613fc859a8d0dd711ae73105",
+  "apps/clubs/src/styles.css": "984f5cf855c6fa200fc61e776f4e1d99badf9cf72ffb718fbfe6ea62b9df6634",
+  "packages/i18n/src/locales/ca/admin-census.json": "6b9e2e29f023e89d15e744c9a70a6a0fcd7da2f82b17cb90012880418aaa070f",
+  "packages/i18n/src/locales/ca/admin-dashboard.json": "82fa9623b7e2803edcdbebc04435135a8648ca3d2c3f8cd2470f8ffef09c16f9",
+  "packages/i18n/src/locales/en/admin-census.json": "428e2ea8b927f6d9c53d4cf14c706040939f746efe7d19f3b89cb00658372cac",
+  "packages/i18n/src/locales/en/admin-dashboard.json": "c746d39774ba44166ac127b4b463473c3e2879a1563e67e18a8495e1b7f0251e",
+  "packages/i18n/src/locales/es/admin-census.json": "a0ea23a70facf11dce7880e315407e3c5b0f75d98e6d8225229d1f4c76a1b10a",
+  "packages/i18n/src/locales/es/admin-dashboard.json": "260c9e57e48ce645ee6b2c2feee2e62bf012d55441a86114a3816bb7226ace22",
+  "apps/clubs-admin/e2e/feedback-20261109.spec.ts": "1919f257333574817f18310c38d6f0225b9849ec97c04b4daec55396a9e28c4a",
+  "apps/clubs/src/ClubLogoImage.test.tsx": "36e214298ba68864e587649c71b48c6f073be53b037d8b96fef733e8b1ab880c",
+  "apps/clubs/src/ClubLogoImage.tsx": "ba082738d90f6554f732dcb9b6cfc149edea391172f3346e5ad94fb7d3299516"
+}

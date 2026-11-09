@@ -39,6 +39,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ClubLogoImage } from "./ClubLogoImage";
 import { CHECKOUT_RETURN_KEY, CheckoutReturn } from "./payments/CheckoutReturn";
 import { PublicFooter } from "./PublicFooter";
 import { clubToday } from "./today/useDayGrid";
@@ -704,7 +705,12 @@ function Layout({ children, title }: { children: ReactNode; title?: string }) {
             {branding.club.name.charAt(0)}
           </span>
         ) : (
-          <img alt="" className="signup-header__logo" src={logo.src} />
+          <ClubLogoImage
+            alt=""
+            className="signup-header__logo"
+            name={branding.club.name}
+            src={logo.src}
+          />
         )}
         <h1>{title ?? t("signup:common.title")}</h1>
         <label className="signup-language">

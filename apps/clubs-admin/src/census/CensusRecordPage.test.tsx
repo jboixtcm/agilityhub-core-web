@@ -1667,3 +1667,50 @@ describe("T-03 feedback 8: visible lifecycle and license actions", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("T-03-39 November feedback: incomplete member records", () => {
+  it.each([null, "missing-plan"])("keeps the plan editor available for %s", async (planId) => {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({
+          ...overview,
+          member: { ...overview.member, planId, plan: null, priceId: null },
+        });
+      }),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const label = screen.getByText("Modalitat", { selector: "dt" });
+    const row = label.parentElement;
+    if (row === null) throw new Error("Expected plan row");
+    expect(row).toHaveTextContent("—");
+    fireEvent.click(within(row).getByRole("button", { name: "Edita" }));
+    const dialog = await screen.findByRole("dialog", { name: "Modalitat" });
+    expect(await within(dialog).findByRole("option", { name: "Abonat" })).toBeInTheDocument();
+  });
+
+  it("shows private notes and opens their existing editor from the note block", async () => {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({
+          ...overview,
+          member: { ...overview.member, internalNotes: "Staff note for this member" },
+        });
+      }),
+    );
+    await renderRecord("member");
+    const note = await screen.findByText("Staff note for this member", { selector: "p" });
+    const card = note.parentElement;
+    if (card === null) throw new Error("Expected note card");
+    fireEvent.click(within(card).getByRole("button", { name: "Edita" }));
+    expect(await screen.findByLabelText("Notes internes")).toHaveValue(
+      "Staff note for this member",
+    );
+  });
+});

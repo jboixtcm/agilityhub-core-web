@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-09 — Incomplete census records and member app feedback
+
+- Keep the plan editor visible for members without a plan; show editable private notes; simplify the member home and free-training copy; recover failed club-logo loads with a bounded retry and accessible fallback.
+
 ## 2026-11-07 — Family groups and administration feedback
 
 - Keep ring capacity editing disabled until the saved version is reloaded; announce success only after that refresh, preventing a quick follow-up edit from being replaced.

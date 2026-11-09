@@ -58,6 +58,7 @@ import {
 } from "./access-profiles";
 import { safeDecode } from "./activities/shared";
 import { navigateInApp } from "./booking/shared";
+import { ClubLogoImage } from "./ClubLogoImage";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
 import { NotificationAttention } from "./notifications/NotificationAttention";
 import { logoutWithPush } from "./notifications/push";
@@ -404,7 +405,8 @@ function LogoMark({ compact = false }: { compact?: boolean }) {
           {branding.club.name.charAt(0)}
         </span>
       ) : (
-        <img
+        <ClubLogoImage
+          name={branding.club.name}
           alt={logo.kind === "full" ? branding.club.name : ""}
           className={logo.kind === "full" ? "auth-logo__full" : "auth-logo__mark"}
           src={logo.src}
@@ -680,7 +682,12 @@ function MobileShell({
               {branding.club.name.charAt(0)}
             </span>
           ) : (
-            <img alt="" className="clubs-shell__logo" src={logo.src} />
+            <ClubLogoImage
+              alt=""
+              className="clubs-shell__logo"
+              name={branding.club.name}
+              src={logo.src}
+            />
           )}
           <span>{branding.club.name}</span>
         </a>

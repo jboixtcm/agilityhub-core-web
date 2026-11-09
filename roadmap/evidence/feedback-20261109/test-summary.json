@@ -1,0 +1,36 @@
+{
+  "exitCode": 0,
+  "turboTasks": 38,
+  "vitest": {
+    "@agilityhub/ui": 207,
+    "@agilityhub/course-core": 378,
+    "@agilityhub/i18n": 162,
+    "@agilityhub/shared-types": 38,
+    "@agilityhub/course-ui": 56,
+    "@agilityhub/api-client": 801,
+    "@agilityhub/auth": 129,
+    "id": 20,
+    "clubs": 790,
+    "clubs-admin": 1146
+  },
+  "nodeTests": {
+    "@agilityhub/i18n": 10,
+    "clubs": 10
+  },
+  "vitestTotal": 3727,
+  "nodeTotal": 20,
+  "playwright": {
+    "clubs": 157,
+    "clubs-admin": 224,
+    "id": 1,
+    "course-ui": 4,
+    "total": 386,
+    "allLatestWorkspaceRunsPassed": true,
+    "priorFullRun": {
+      "exitCode": 1,
+      "failure": "WebKit text-size reload timeout; no HTTP or console errors",
+      "passed": 385
+    },
+    "memberFullRecheckExitCode": 0
+  }
+}

@@ -15,8 +15,8 @@ import { useTranslation } from "react-i18next";
 
 import { ActivityReservationRow } from "../activities/ActivityReservationRow";
 import { useMeActivities } from "../activities/shared";
+import { ClubLogoImage } from "../ClubLogoImage";
 import { readAllNotifications, readAllPending, useUnreadCount } from "../notifications/unread";
-import { HomeTrainingSummary } from "../training/HomeTrainingSummary";
 
 import "./booking.css";
 import { DogChips } from "./DogChips";
@@ -93,7 +93,12 @@ export function HomePage({ client }: { client: ApiClient }) {
           {branding.club.name.charAt(0)}
         </span>
       ) : (
-        <img alt={branding.club.name} className="home-header__logo" src={logo.src} />
+        <ClubLogoImage
+          alt={branding.club.name}
+          className="home-header__logo"
+          name={branding.club.name}
+          src={logo.src}
+        />
       )}
       <h1>{firstName === undefined ? null : t("home:greeting", { firstName })}</h1>
       <a
@@ -188,7 +193,6 @@ export function HomePage({ client }: { client: ApiClient }) {
               {t("home:limits.nextWeek", { count: data.limits.nextWeek.count })}
             </span>
           </p>
-          <HomeTrainingSummary client={client} dogId={dogId} />
         </Card>
         <section
           aria-busy={busy || undefined}

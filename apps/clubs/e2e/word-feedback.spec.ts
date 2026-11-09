@@ -72,13 +72,19 @@ for (const width of [375, 1512]) {
     await page.getByLabel("Correu electrònic").fill("laura@example.test");
     await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
-    await expect(page.getByRole("region", { name: "Entrenaments aquesta setmana" })).toBeVisible();
-    await expect(page.getByText(/entrenaments fets o reservats/u).first()).toBeVisible();
+    await page.waitForURL("**/inici");
+    await expect(page.getByRole("heading", { name: /Laura/u })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Entrenaments aquesta setmana" })).toHaveCount(0);
+    await expect(page.getByText(/entrenaments fets o reservats/u)).toHaveCount(0);
     mkdirSync(evidence, { recursive: true });
     await page.screenshot({
       path: resolve(evidence, `word-home-${browserName}-${String(width)}.png`),
       fullPage: true,
     });
+
+    await page.getByRole("link", { name: "Entrenaments" }).click();
+    await page.waitForURL("**/entrenaments");
+    await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
 
     await page.goto("http://127.0.0.1:4173/gossos");
     await expect(page.getByRole("button", { name: "Veure condicions" }).first()).toBeVisible();

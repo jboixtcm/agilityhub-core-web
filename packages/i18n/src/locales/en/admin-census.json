@@ -229,7 +229,6 @@
     },
     "freeTraining": {
       "byLevel": "Permission comes from the level.",
-      "manual": "Manual club decision.",
       "notAllowed": "Cannot train independently",
       "title": "Free training"
     },

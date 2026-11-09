@@ -659,6 +659,7 @@ function MemberSummary({
   erased,
   overview,
   onChange,
+  onEdit,
   onErased,
   onFeedback,
   onReload,
@@ -669,6 +670,7 @@ function MemberSummary({
   /** The member is erased (S14 §5): no change is offered, and an open dialog sends nothing more. */
   erased: boolean;
   onChange: (overview: MemberOverview) => void;
+  onEdit: () => void;
   onErased: () => void;
   onFeedback: (feedback: Feedback) => void;
   onReload: () => void;
@@ -789,6 +791,7 @@ function MemberSummary({
   ].join(" · ");
   const memberPlan = plan?.id === member.planId ? plan : undefined;
   const maskedIban = fmtMaskedIban(member.paymentMethod?.maskedAccount);
+  const internalNotes = member.internalNotes?.trim() ?? "";
 
   return (
     <>
@@ -797,9 +800,11 @@ function MemberSummary({
           <SectionTitle>{t("admin-census:member.sections.dataPayment")}</SectionTitle>
           <dl className="census-record__data-list">
             <DataRow label={t("admin-census:member.fields.contact")}>{contact}</DataRow>
-            {modules.includes("BILLING") && memberPlan !== undefined ? (
+            {modules.includes("BILLING") ? (
               <DataRow label={t("admin-census:member.fields.plan")}>
-                <strong>{memberPlan.name}</strong>{" "}
+                <strong>
+                  {memberPlan?.name ?? member.plan?.name ?? t("admin-census:values.empty")}
+                </strong>{" "}
                 {erased ? null : (
                   <Button
                     className="census-record__inline-action"
@@ -917,6 +922,20 @@ function MemberSummary({
               )}
             </DataRow>
           </dl>
+        </Card>
+
+        <Card>
+          <div className="census-record__section-heading">
+            <SectionTitle>{t("admin-census:member.fields.internalNotes")}</SectionTitle>
+            {erased ? null : (
+              <Button onClick={onEdit} variant="ghost">
+                {t("admin-census:common.edit")}
+              </Button>
+            )}
+          </div>
+          <p className="census-record__internal-notes">
+            {internalNotes === "" ? t("admin-census:values.empty") : member.internalNotes}
+          </p>
         </Card>
 
         <Card>
@@ -1630,6 +1649,9 @@ function MemberRecordContent({
                 dialog={memberDialog}
                 erased={erased}
                 onChange={setOverview}
+                onEdit={() => {
+                  setEditOpen(true);
+                }}
                 onErased={onErased}
                 onFeedback={setFeedback}
                 onReload={() => {
@@ -2373,11 +2395,9 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
                 ? t("admin-census:values.freeTraining")
                 : t("admin-census:dog.freeTraining.notAllowed")}
             </Badge>
-            <p className="census-record__muted">
-              {dog.freeTraining.source === "LEVEL"
-                ? t("admin-census:dog.freeTraining.byLevel")
-                : t("admin-census:dog.freeTraining.manual")}
-            </p>
+            {dog.freeTraining.source === "LEVEL" ? (
+              <p className="census-record__muted">{t("admin-census:dog.freeTraining.byLevel")}</p>
+            ) : null}
           </Card>
         ) : null}
         <Card>

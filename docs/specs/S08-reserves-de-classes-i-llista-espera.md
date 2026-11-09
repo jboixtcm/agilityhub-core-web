@@ -457,3 +457,8 @@ Ordre: A → (B ∥ C ∥ E/F) → D → G. Tres fils de back en paral·lel: B, 
 - 18-10-2026 · E11-T10 (INC-40, decisió E109): §3, `seat_locks` porta `lockedAt` i un TTL de 7 dies (`seat_lock_ttl`): un bloqueig que cap escriptura ha tocat en 7 dies s'esborra i el següent el recrea; abans la col·lecció creixia sense límit. P9 n'informa com a `ttlPendingSeatLocks` (S15 R-15-19).
 - 18-10-2026 · E11-T10 (INC-40, revisió, decisió E109): R-08-14, la cua guanya: el claim d'una oferta FIFO oberta no compta els holds d'altres gossos presos fins al seu `notifiedAt` ni les ofertes posteriors (`notifiedAt`, `position`); abans un hold pres just abans de l'oferta i l'oferta es bloquejaven mútuament fins que el hold caducava. R-08-15, el claim sense plaça respon `SEAT_TAKEN` també a la confirmació.
 - 21-10-2026 · E11-T17 (verificació d'E11-T10, decisió E151): §3, els `seat_locks` escrits abans de `lockedAt` el reben en arrencar l'API (a tots els clubs, idempotent), perquè el TTL els esborri i P9 els compti (S15 R-15-19).
+
+
+### Revisió del 09-11-2026 — inici de l’abonat
+
+Petició directa de Jordi: la pantalla Inici deixa de repetir els comptadors d’entrenament lliure per gos; continuen disponibles a Entrenaments. Els logotips de l’app reintenten una vegada la càrrega del recurs públic del club i, si continua fallant, mostren la inicial del club sense icona d’imatge trencada.

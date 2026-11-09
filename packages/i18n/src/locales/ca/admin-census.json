@@ -229,7 +229,6 @@
     },
     "freeTraining": {
       "byLevel": "El dret ve del nivell.",
-      "manual": "Decisió manual del club.",
       "notAllowed": "No pot entrenar sol",
       "title": "Entrenament lliure"
     },

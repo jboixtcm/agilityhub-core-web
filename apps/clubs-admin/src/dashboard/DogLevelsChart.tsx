@@ -8,7 +8,7 @@ export function DogLevelsChart({ data }: { data: components["schemas"]["DogsByLe
   const [filter, setFilter] = useState("all");
   const descriptionId = useId();
   const recent = filter === "recent";
-  // R-14-07: only progression levels participate; `others` is deliberately excluded.
+  // Every active catalog level participates; unassigned/inactive levels remain outside the chart.
   const values = data.levels.map((level) => (recent ? level.withRecentBooking : level.total));
   const total = values.reduce((sum, value) => sum + value, 0);
   const title = recent

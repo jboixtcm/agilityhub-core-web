@@ -2611,3 +2611,12 @@ div.lifecycle-error p {
   color: var(--ah-color-text);
   text-decoration: underline;
 }
+
+.club-logo-fallback {
+  display: inline-grid;
+  color: var(--ah-color-primary-fg);
+  font-weight: 800;
+  background: var(--ah-color-primary);
+  border-radius: var(--ah-radius-md);
+  place-items: center;
+}
