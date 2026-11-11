@@ -21,7 +21,7 @@ const branding: unknown = JSON.parse(
 async function expectReadable(card: Locator) {
   const layout = await card.evaluate((element) => {
     const cardBounds = element.getBoundingClientRect();
-    const clipped = [...element.querySelectorAll<HTMLElement>("a, strong, span, p, h2")]
+    const clipped = [...element.querySelectorAll<HTMLElement>("a, strong, span, p, h2, time")]
       .filter((child) => {
         const box = child.getBoundingClientRect();
         return (
@@ -33,11 +33,13 @@ async function expectReadable(card: Locator) {
       })
       .map((child) => child.textContent);
     const overlapping = [...element.querySelectorAll(".dashboard-risk__row")].some((row) => {
-      const title = row.querySelector("a")?.getBoundingClientRect();
-      const count = row.querySelector(".dashboard-risk__booked")?.getBoundingClientRect();
-      const status = row.querySelector(".dashboard-risk__status")?.getBoundingClientRect();
-      if (!title || !count || !status) throw new Error("Missing risk row content");
-      return title.right > count.left || status.top < Math.max(title.bottom, count.bottom);
+      const date = row.querySelector("time")?.getBoundingClientRect();
+      const title = row.querySelector(".class-notices__class")?.getBoundingClientRect();
+      const status = row.querySelector(".ah-badge")?.getBoundingClientRect();
+      if (!date || !title || !status) throw new Error("Missing notice row content");
+      return (
+        title.right > status.left + 1 && title.top < status.bottom && status.top < title.bottom
+      );
     });
     return { clipped, overlapping };
   });
@@ -65,11 +67,10 @@ for (const mode of ["dark", "light"] as const) {
     await page.getByRole("combobox", { name: /Aparença/u }).selectOption(mode);
     const card = page.locator(".dashboard-risk");
     await expect(
-      card.getByRole("heading", { name: "Revisió de classes en risc", exact: true }),
+      card.getByRole("heading", { name: "Avisos de classes", exact: true }),
     ).toBeVisible();
     await expect(card.locator(".dashboard-risk__row")).toHaveCount(4);
-    await expect(card.getByText("avisada Clara + Trevi")).toBeVisible();
-    await expect(card.getByText("s'anul·larà dc a les 7:30")).toBeVisible();
+    await expect(card.getByText("4 avisos d’avui")).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
     mkdirSync(evidence, { recursive: true });
     for (const width of [375, 768, 1280, 1920]) {
@@ -83,11 +84,11 @@ for (const mode of ["dark", "light"] as const) {
     // Typography stress: replace only rendered fixture copy; statuses and navigation are
     // covered against the actual mock response in e5-backoffice and the component tests.
     await card.evaluate((element) => {
-      const title = element.querySelector(".dashboard-risk__class strong");
-      const notified = element.querySelector(".dashboard-risk__notified");
+      const title = element.querySelector(".class-notices__class strong");
+      const notified = element.querySelector(".class-notices__class span");
       if (!title || !notified) throw new Error("Missing fixture copy");
       title.textContent = "Revisió per selectives i preparació de competicions amb grup avançat";
-      notified.textContent = "avisada Clara Serra Vidal + Trevi, Dani Soler Puig + Rayo";
+      notified.textContent = "dimecres 12 de novembre · 18:50 · Pista Central del club";
     });
     for (const width of [320, 375, 1280]) {
       await page.setViewportSize({ width, height: 1000 });
@@ -99,6 +100,17 @@ for (const mode of ["dark", "light"] as const) {
     await firstClass.focus();
     await expect(firstClass).toBeFocused();
     await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/calendari\?.*estat=anul%C2%B7lades/u);
+    await expect(page).toHaveURL(/\/avisos-classes$/u);
+    await expect(page.locator(".class-notices__row")).toHaveCount(20);
+    await page.screenshot({
+      path: resolve(evidence, `history-${browserName}-${mode}-375.png`),
+      fullPage: true,
+    });
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await expectReadable(page.locator(".class-notices-page > .ah-card"));
+    await page.screenshot({
+      path: resolve(evidence, `history-${browserName}-${mode}-1280.png`),
+      fullPage: true,
+    });
   });
 }

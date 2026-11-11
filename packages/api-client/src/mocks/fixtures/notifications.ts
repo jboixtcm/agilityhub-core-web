@@ -232,7 +232,7 @@ function olderItems(): StoredFeedItem[] {
       title: "S'ha alliberat una plaça!",
     },
     {
-      action: { params: { dogId: FEED_IDS.duna, taskId: "task-duna-slalom" }, type: "OPEN_TASKS" },
+      action: { params: { dogId: FEED_IDS.duna, taskId: "task-duna-weave" }, type: "OPEN_TASKS" },
       body: "Tens una tasca nova per a la Duna: practicar l'entrada de l'eslàlom.",
       category: "PERSONAL",
       channels: ["APP"],

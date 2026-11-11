@@ -1958,6 +1958,13 @@ div.lifecycle-error p {
   gap: var(--ah-space-2);
 }
 
+.dog-task > div {
+  display: grid;
+  min-width: 0;
+  gap: var(--ah-space-1);
+  justify-items: start;
+}
+
 /* R-03-18: the check mark and the strike-through mark a done task; its text keeps full contrast. */
 .dog-task[data-done] p {
   text-decoration: line-through;
@@ -2619,4 +2626,14 @@ div.lifecycle-error p {
   background: var(--ah-color-primary);
   border-radius: var(--ah-radius-md);
   place-items: center;
+}
+
+.dog-card[id],
+.dog-task[id] {
+  scroll-margin-block: var(--ah-space-4);
+}
+.dog-card[id]:focus,
+.dog-task[id]:focus {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 3px;
 }

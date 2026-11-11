@@ -290,6 +290,7 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
               week: hold.limit.week,
             })}
           </p>
+          <WeeklyLimitClasses details={hold.limit} />
           {hold.limit.swappable.length > 0 ? (
             <>
               <h2 className="booking-section__title confirm-swap__title" id="confirm-swap-title">
@@ -326,37 +327,9 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
                     </button>
                   );
                 })}
-                {hold.limit.notSelectable.map((option) => (
-                  <div
-                    aria-disabled="true"
-                    className="ah-card confirm-option confirm-option--inert"
-                    key={option.bookingId}
-                  >
-                    <span aria-hidden="true" className="confirm-option__check">
-                      <Icon name="ban" />
-                    </span>
-                    <span className="confirm-option__text">
-                      {option.startsAtLocal === null ||
-                      option.startsAtLocal === undefined ? null : (
-                        <strong>{dayTime(option.startsAtLocal)}</strong>
-                      )}
-                      <small>
-                        {option.reason === "DONE"
-                          ? t("booking:confirm.notSelectableDONE", {
-                              description: option.description ?? "",
-                            })
-                          : t("booking:confirm.notSelectableLATE_WINDOW", {
-                              description: option.description ?? "",
-                            })}
-                      </small>
-                    </span>
-                  </div>
-                ))}
               </div>
             </>
-          ) : (
-            <WeeklyLimitClasses details={hold.limit} />
-          )}
+          ) : null}
         </>
       ) : null}
       {hold.payment?.mode === "CHARGE_ON_ATTENDANCE" && price !== undefined ? (

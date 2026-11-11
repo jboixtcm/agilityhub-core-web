@@ -140,8 +140,8 @@ test.describe("T-03-40 mobile own dogs", () => {
     const tasks = duna.getByRole("region", { name: "Tasques" });
     await expect(tasks.getByText("2 pendents · 1 feta")).toBeVisible();
     await expect(tasks.getByRole("listitem")).toHaveText([
-      "Treballar l'entrada al balancí10-08 · Laura",
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
+      "Treballar l'entrada al balancí10-08 · LauraMarca com a completada",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjuntMarca com a completada",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
     await expect(

@@ -219,7 +219,8 @@
     "title": "Els meus gossos",
     "uploadDocument": "PUJA EL DOCUMENT",
     "choosingFile": "Selecciona un fitxer a la finestra que s’ha obert.",
-    "selectedFile": "Fitxer seleccionat: {name}"
+    "selectedFile": "Fitxer seleccionat: {name}",
+    "completeTask": "Marca com a completada"
   },
   "myData": {
     "address": "Adreça",

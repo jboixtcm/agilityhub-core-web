@@ -37,10 +37,12 @@ export function feedActionHref(action: FeedAction, reader: FeedReader): string |
       }
       return "/reservar";
     case "OPEN_DOG":
-      return "/gossos";
+      return dogActionHref(params);
     case "OPEN_TASKS":
       // A member's tasks live on 13 (S03 R-03-18); staff open the student's screen 26.
-      return reader.staff ? gated("/instructor/alumnes/:dogId/tasques", params.dogId) : "/gossos";
+      return reader.staff
+        ? gated("/instructor/alumnes/:dogId/tasques", params.dogId)
+        : dogActionHref(params);
     case "OPEN_INVOICES":
       return "/perfil";
     case "OPEN_ACTIVITY":
@@ -62,4 +64,13 @@ export function changeClassHref(action: FeedAction): string {
   return dogId === undefined || dogId === ""
     ? "/reservar"
     : `/reservar?dogId=${encodeURIComponent(dogId)}`;
+}
+
+/** Keep the subject of a member notice when opening a household's dog list. */
+function dogActionHref(params: FeedAction["params"]): string {
+  const query = new URLSearchParams();
+  for (const key of ["dogId", "taskId"] as const) {
+    if (params[key]) query.set(key, params[key]);
+  }
+  return `/gossos${query.size > 0 ? `?${query.toString()}` : ""}`;
 }

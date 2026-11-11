@@ -58,7 +58,7 @@ const content = {
       "The monthly fee is normally collected on day 1. Packs do not generate a recurring charge.",
     paymentDay:
       "If you stop attending the club or take a break, tell us before day 25 so the following month's direct debit can be changed.",
-    cash: "Payments cover complete calendar periods. Contact the club to arrange them.",
+    cash: "Cash payments always cover full quarters. Arrange the amount and payment method with the club.",
     image:
       "I authorize publication of photographs of me and my dog in connection with club activities.",
   },
@@ -88,7 +88,7 @@ const content = {
       "La cuota mensual se cobrará normalmente el día 1. Los bonos no generan cargos periódicos.",
     paymentDay:
       "Si dejas de venir al club o haces una pausa, avísanos antes del día 25 para modificar el recibo del mes siguiente.",
-    cash: "Los pagos cubren períodos naturales completos. Contacta con el club para coordinarlos.",
+    cash: "El pago en efectivo se hace siempre por trimestres completos. Coordina con el club el importe y la forma de pago.",
     image:
       "Autorizo la publicación de fotografías mías y de mi perro en el ámbito de las actividades del club.",
   },

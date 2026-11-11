@@ -583,6 +583,8 @@ function codeMessage(code: string, t: Translate, fallback: string): string {
       return t("signup:common.invalidPhone");
     case "PRICE_OVERLAP":
       return t("signup:dog.priceOverlap");
+    case "MEMBER_ALREADY_EXISTS":
+      return t("signup:person.alreadyMember");
     case "SIGNUP_ALREADY_PENDING":
       return t("signup:person.alreadyPending");
     case "NOT_BLANK":
@@ -1269,22 +1271,14 @@ function PersonStep({
           )}
         </FormField>
       </div>
-      <aside className="signup-note signup-note--neutral signup-note--info">
-        <Icon aria-hidden="true" name="info" />
-        <span>{t("signup:person.existingDogNote")}</span>
-      </aside>
-      {recognition?.result === "VERIFICATION_SENT" ? (
+      {recognition?.result === "MEMBER_ALREADY_EXISTS" ||
+      recognition?.result === "VERIFICATION_SENT" ? (
         <section className="signup-recognition" role="status">
-          <h2>{t("signup:person.reviewEmailTitle")}</h2>
-          <p>{t("signup:person.reviewEmail", { email: recognition.maskedEmail ?? "" })}</p>
-          <Button
-            disabled={working}
-            onClick={() => void checkIdentity()}
-            type="button"
-            variant="secondary"
-          >
-            {t("signup:person.resend")}
-          </Button>
+          <h2>{t("signup:person.alreadyMemberTitle")}</h2>
+          <p>{t("signup:person.alreadyMember")}</p>
+          <a className="self-button-link" href="/entrar">
+            {t("signup:person.signIn")}
+          </a>
         </section>
       ) : recognition?.result === "SIGNUP_ALREADY_PENDING" ? (
         <p className="signup-message signup-message--error" role="alert">

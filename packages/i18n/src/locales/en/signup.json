@@ -53,12 +53,11 @@
     "street": "Street and number",
     "postalCode": "Postcode",
     "town": "Town (suggested from postcode)",
-    "existingDogNote": "Already a member and want to add another dog? Use the same form: we will recognize you from your identity document or email (verified by email) and only register the new dog.",
-    "reviewEmailTitle": "Check your email",
-    "reviewEmail": "We sent a verification link to {email}.",
-    "resend": "Send it again",
     "alreadyPending": "We already have a pending request with these details; the club will review it soon.",
-    "contactClub": "You are already registered with the club without digital access. Contact the club for help adding your dog."
+    "contactClub": "You are already registered with the club without digital access. Contact the club for help adding your dog.",
+    "alreadyMemberTitle": "You are already registered",
+    "alreadyMember": "You are already registered with the club. Sign in to view or update your details and manage your dogs. To register another dog, go to “My dogs” and select “+ Add a dog”.",
+    "signIn": "Sign in to your account"
   },
   "dog": {
     "name": "Dog's name",

@@ -381,7 +381,9 @@ function DogTasks({
               <li
                 className="dog-task"
                 data-done={doneAt === undefined ? undefined : ""}
+                id={`dog-task-row-${task.id}`}
                 key={task.id}
+                tabIndex={-1}
               >
                 <button
                   aria-busy={busy ? true : undefined}
@@ -415,6 +417,11 @@ function DogTasks({
                       </>
                     ) : null}
                   </small>
+                  {doneAt === undefined ? (
+                    <Button disabled={busy} onClick={() => void complete(task.id)} variant="ghost">
+                      {t("census:myDogs.completeTask")}
+                    </Button>
+                  ) : null}
                 </div>
               </li>
             );
@@ -583,7 +590,7 @@ function DogCard({
     pack === undefined || pack.sessionsTotal === 0 ? 0 : pack.consumed / pack.sessionsTotal;
 
   return (
-    <Card className="dog-card">
+    <Card className="dog-card" id={`dog-card-${dog.id}`} tabIndex={-1}>
       <div className="dog-card__identity">
         <DogPhoto
           client={client}
@@ -833,6 +840,9 @@ function DocumentModal({
 }
 
 export function MyDogsPage({ client }: { client: ApiClient }) {
+  const params = new URLSearchParams(window.location.search);
+  const selectedDogId = params.get("dogId");
+  const selectedTaskId = params.get("taskId");
   const branding = useBranding();
   const { t } = useTranslation(["census", "training"]);
   const packsEnabled = branding.modules.includes("PACKS") && branding.modules.includes("BILLING");
@@ -845,6 +855,17 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
   const [message, setMessage] = useState<{ error?: boolean; text: string }>();
   const [documentUpload, setDocumentUpload] = useState<DocumentUpload | null>(null);
   const [reload, setReload] = useState(0);
+
+  useEffect(() => {
+    const dog = data?.dogs.find((item) => item.id === selectedDogId);
+    if (dog === undefined) return;
+    const task = dog.tasks?.items.find((item) => item.id === selectedTaskId);
+    const target = document.getElementById(
+      task === undefined ? `dog-card-${dog.id}` : `dog-task-row-${task.id}`,
+    );
+    if (typeof target?.scrollIntoView === "function") target.scrollIntoView({ block: "center" });
+    target?.focus({ preventScroll: true });
+  }, [data, selectedDogId, selectedTaskId]);
 
   // S03 §6 (25-09): everything 13 shows comes from GET /me/dogs; a MEMBER cannot read /parameters.
   useEffect(() => {

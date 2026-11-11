@@ -55,8 +55,6 @@
     "limitNote": "{unit, select, DOG {Ja tens {count, plural, one {# classe} other {# classes}} {week, select, NEXT {la setmana vinent} other {aquesta setmana}} amb {dogArticle}{dogName} (límit per gos).} other {Ja tens {count, plural, one {# classe} other {# classes}} {week, select, NEXT {la setmana vinent} other {aquesta setmana}} (límit per persona).}}",
     "swapTitle": "Tria quina anul·les per fer-li lloc",
     "swappable": "{ring, select, none {Classe {description} · anul·lable dins termini} other {Classe {description} · {ring} · anul·lable dins termini}}",
-    "notSelectableDONE": "Classe {description} · ja feta — no es pot seleccionar",
-    "notSelectableLATE_WINDOW": "Classe {description} · fora de termini — no es pot seleccionar",
     "overrideWeeklyLimit": "Supera el límit i confirma sense anul·lar cap classe",
     "swapButton": "ANUL·LA {oldDay} A LES {oldTime} I CONFIRMA {newDay} A LES {newTime}",
     "cancelNew": "CANCEL·LAR LA NOVA RESERVA",

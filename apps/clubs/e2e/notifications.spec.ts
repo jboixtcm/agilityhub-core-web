@@ -401,3 +401,51 @@ test("E7-W02 step 10 the e-mail unsubscribe link turns the club's announcements 
   await page.goto(`${baseUrl}/comunicats/baixa?t=mock-unsubscribe-expired`);
   await expect(page.getByText("Aquest enllaç ja no és vàlid.")).toBeVisible();
 });
+
+for (const width of [375, 1280]) {
+  test(`T-10-10 notification opens the correct dog's task and completes it at ${String(width)}`, async ({
+    page,
+    browserName,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    // Put the notified dog second to reproduce the reported household case.
+    await page.addInitScript(() => {
+      const original = window.fetch.bind(window);
+      window.fetch = async (...args) => {
+        const response = await original(...args);
+        if (!new URL(response.url).pathname.endsWith("/me/dogs") || !response.ok) return response;
+        const data = (await response.clone().json()) as { dogs: unknown[] };
+        return new Response(JSON.stringify({ ...data, dogs: [...data.dogs].reverse() }), {
+          status: response.status,
+          headers: response.headers,
+        });
+      };
+    });
+    await login(page);
+    await openFeed(page);
+    await page.getByRole("link", { name: "Nova tasca", exact: true }).first().click();
+    await expect(page).toHaveURL(/\/gossos\?dogId=dog-duna&taskId=task-duna-weave$/u);
+    const target = page.locator("#dog-task-row-task-duna-weave");
+    await expect(target).toBeFocused();
+    await expect(target).toBeInViewport();
+    await expect(page.locator(".dog-card").nth(1)).toContainText("Duna");
+    const evidence = resolve(
+      import.meta.dirname,
+      "../../../roadmap/evidence",
+      process.env.E2E_CAPTURE_TASK ?? "feedback-20261111",
+    );
+    mkdirSync(evidence, { recursive: true });
+    await page.screenshot({
+      path: resolve(evidence, `task-focus-${browserName}-${String(width)}.png`),
+    });
+    await target.getByRole("button", { name: "Marca com a completada" }).click();
+    await expect(target.getByRole("checkbox")).toBeChecked();
+    await expect(target.getByRole("button", { name: "Marca com a completada" })).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      width,
+    );
+    // The same URL shape is used by the email link; a direct reload keeps the subject.
+    await page.reload();
+    await expect(target).toBeFocused();
+  });
+}

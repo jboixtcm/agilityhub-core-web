@@ -237,11 +237,12 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
       "Dilluns 3 · 18:50Classe B+C · Central · anul·lable dins termini",
     ]);
     expect(options.map((option) => option.getAttribute("aria-checked"))).toEqual(["true"]);
-    const done = within(group)
-      .getByText("Classe B+C · ja feta — no es pot seleccionar")
-      .closest(".confirm-option");
-    expect(done).toHaveAttribute("aria-disabled", "true");
-    expect(done?.tagName).toBe("DIV");
+    const counted = screen.getByRole("region", {
+      name: "Classes que compten en el límit setmanal",
+    });
+    expect(within(counted).getByText("B+C")).toBeVisible();
+    expect(within(counted).queryByRole("radio")).toBeNull();
+    expect(counted.compareDocumentPosition(group) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(
       screen.getByRole("button", {
         name: "ANUL·LA DILLUNS 3 A LES 18:50 I CONFIRMA DISSABTE 8 A LES 09:00",

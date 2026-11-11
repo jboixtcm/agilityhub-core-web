@@ -293,7 +293,7 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
   it("an informative card opens its route on tap, without a button; one without an action is inert", async () => {
     await openFeed();
     const level = screen.getByRole("link", { name: "En Rock puja de nivell!" });
-    expect(level).toHaveAttribute("href", "/gossos");
+    expect(level).toHaveAttribute("href", "/gossos?dogId=dog-rock");
     expect(newest("link", "Reserva confirmada")).toHaveAttribute(
       "href",
       "/entrenaments/training-rock-tue4",

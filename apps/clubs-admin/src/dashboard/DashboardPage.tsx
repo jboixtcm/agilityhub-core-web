@@ -111,8 +111,7 @@ export function DashboardPage({
       </div>
 
       <div className="dashboard-grid">
-        {/* S14 decides whether the block exists (`riskReview: null`); its rows are S15's form A
-            (`GET /risk-review`, R-14-06 single source), rendered by the card S14 reuses (E5-W03). */}
+        {/* S14 controls visibility; the notice history supplies today's sent occurrences. */}
         {dashboard.riskReview === null ? null : <RiskReviewCard client={client} onNavigate={onNavigate} />}
 
         {dashboard.pendingSignups === null ? null : (

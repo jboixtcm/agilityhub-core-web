@@ -19,17 +19,10 @@
     "older": "{count} de hace más de {days, plural, one {# día} other {# días}}"
   },
   "risk": {
-    "title": "Revisión de clases en riesgo",
-    "schedule": "{time}, hoy y {days} días vista",
-    "alerts": "{count, plural, one {# aviso} other {# avisos}}",
-    "empty": "Ninguna clase en riesgo",
-    "booked": "{count, plural, one {# inscrito} other {# inscritos}}",
-    "more": "+{count} más",
     "day": {
       "TODAY": "hoy",
       "TOMORROW": "mañana"
     },
-    "name": "{member} + {dog}",
     "status": {
       "AUTO_CANCELLED": "anulada",
       "AT_RISK": "en riesgo",
@@ -39,9 +32,7 @@
     "notified": {
       "AUTO_CANCELLED": "avisada {names}",
       "AT_RISK": "avisados {names}"
-    },
-    "loading": "Cargando la revisión de clases en riesgo…",
-    "error": "No se ha podido cargar la revisión de clases en riesgo."
+    }
   },
   "signups": {
     "title": "Preinscripciones pendientes",
@@ -73,5 +64,22 @@
     "share": "Porcentaje",
     "emptyAll": "No hay perros activos en estos niveles.",
     "emptyRecent": "No hay perros con reservas en este período."
+  },
+  "classNotices": {
+    "title": "Avisos de clases",
+    "today": "{count, plural, one {# aviso de hoy} other {# avisos de hoy}}",
+    "more": "Ver más",
+    "emptyToday": "Hoy no se ha enviado ningún aviso de clases.",
+    "empty": "Todavía no se ha enviado ningún aviso de clases.",
+    "description": "Anulaciones y avisos de riesgo enviados a administración, del más reciente al más antiguo.",
+    "back": "Volver a Inicio",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {page} de {total}",
+    "cancelled": "Anulada",
+    "risk": "En riesgo",
+    "below": "Falta de alumnos",
+    "loading": "Cargando los avisos de clases…",
+    "error": "No se han podido cargar los avisos de clases."
   }
 }

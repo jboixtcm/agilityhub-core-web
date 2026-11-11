@@ -248,40 +248,20 @@ test.describe("E5-W03 D11 · «Processos automàtics» (S15 §2, no mockup)", ()
   });
 });
 
-test.describe("E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A)", () => {
-  test("T-15-33 renders the four statuses and opens D4 on the class", async ({ page }) => {
+test.describe("T-11-26 D1 class notice history", () => {
+  test("opens the full history with the latest notices first", async ({ page }) => {
     await signIn(page, "admin", jobsNow);
     const card = page.locator(".dashboard-risk");
-    // E5-W05 round 3 #4: a D dog in «Nivell D» and an F one in «F i G» (S08 R-08-04), where mockup
-    // D1 names Laura + Duna («C») and Pau + Blat («B»).
-    await expect(card.getByText("avisada Clara + Trevi")).toBeVisible();
-    await expect(card.getByText("avisats Dani + Rayo")).toBeVisible();
-    await expect(card.getByText("s'anul·larà dc a les 7:30")).toBeVisible();
+    await expect(card.getByText("4 avisos d’avui")).toBeVisible();
+    await expect(card.locator(".class-notices__row")).toHaveCount(4);
     await expectIconsPainted(card);
     await card.screenshot({ path: resolve(evidenceDirectory, "D1-risc-1280.png") });
-    const row = card.getByRole("link", { name: "Cadells dc 9:30 · Cadells" });
-    await expect(row).toHaveAttribute(
-      "href",
-      "/calendari?classe=cls-2026-08-12-0930-0&estat=actives&setmana=2026-08-10",
-    );
-    await row.click();
-    // The admin app navigates in place (`history.pushState`): D4 opens on the class's week with
-    // that class selected (on the example day the calendar world holds the review's classes).
-    await expect(page).toHaveURL(/\/calendari\?.*setmana=2026-08-10/u);
-    const selected = page.getByRole("region", { name: /^Classe seleccionada/u });
-    await expect(selected).toContainText("dc 12 · 9:30 · Cadells");
-
-    // A class the review cancelled opens under «Anul·lades», selected too.
-    await page.goto(`${baseUrl}/tauler`);
-    await page
-      .locator(".dashboard-risk")
-      .getByRole("link", { name: "Nivell D avui 17:40 · Petita" })
-      .click();
-    await expect(page.getByRole("button", { name: "Anul·lades" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    await expect(selected).toContainText("dl 10 · 17:40 · Nivell D");
-    await expect(selected).toContainText("Clara + Trevi");
+    await card.getByRole("link", { name: "Veure més" }).click();
+    await expect(page).toHaveURL(/\/avisos-classes$/u);
+    await expect(page.locator(".class-notices__row")).toHaveCount(20);
+    await expect(page.getByText("Pàgina 1 de 2")).toBeVisible();
+    await page.getByRole("button", { name: "Següent" }).click();
+    await expect(page.getByText("Pàgina 2 de 2")).toBeVisible();
+    await expect(page.locator(".class-notices__row")).toHaveCount(9);
   });
 });

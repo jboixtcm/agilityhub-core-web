@@ -17,7 +17,7 @@ export function DogLevelsChart({ data }: { data: components["schemas"]["DogsByLe
   const number = new Intl.NumberFormat(i18n.language);
   const percent = new Intl.NumberFormat(i18n.language, {
     style: "percent",
-    maximumFractionDigits: 1,
+    maximumFractionDigits: 0,
   });
   const segments = [];
   let offset = 0;

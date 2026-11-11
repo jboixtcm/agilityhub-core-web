@@ -219,7 +219,8 @@
     "title": "Mis perros",
     "uploadDocument": "SUBIR EL DOCUMENTO",
     "choosingFile": "Selecciona un archivo en la ventana que se ha abierto.",
-    "selectedFile": "Archivo seleccionado: {name}"
+    "selectedFile": "Archivo seleccionado: {name}",
+    "completeTask": "Marcar como completada"
   },
   "myData": {
     "address": "Dirección",

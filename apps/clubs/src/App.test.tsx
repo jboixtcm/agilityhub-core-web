@@ -2421,8 +2421,8 @@ describe("T-03-40 mobile own dogs", () => {
     expect(within(tasks).getByText("2 pendents · 1 feta")).toBeVisible();
     const rows = within(tasks).getAllByRole("listitem");
     expect(rows.map((row) => row.textContent)).toEqual([
-      "Treballar l'entrada al balancí10-08 · Laura",
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
+      "Treballar l'entrada al balancí10-08 · LauraMarca com a completada",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjuntMarca com a completada",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
     const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
@@ -2582,6 +2582,45 @@ describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /ta
     vi.useRealTimers();
   });
 
+  it("opens the notified task even when its dog is second, and completes it with the visible action", async () => {
+    mockScenario("member");
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    const { data } = await createApiClient({
+      baseUrl: `${window.location.origin}/api/v1`,
+      getAccessToken: () => client.getAccessToken(),
+    }).GET("/me/dogs");
+    if (data === undefined) throw new TypeError("Missing dogs");
+    server.use(
+      http.get("*/api/v1/me/dogs", () =>
+        HttpResponse.json({ ...data, dogs: [...data.dogs].reverse() }),
+      ),
+    );
+    window.history.pushState(null, "", "/gossos?dogId=dog-duna&taskId=task-duna-weave");
+    await renderApplication(client);
+    await screen.findByRole("heading", { name: "Duna" });
+    const target = document.getElementById("dog-task-row-task-duna-weave");
+    if (target === null) throw new TypeError("Missing task");
+    await waitFor(() => expect(target).toHaveFocus());
+    expect(document.querySelectorAll(".dog-card")[1]).toContainElement(target);
+    fireEvent.click(within(target).getByRole("button", { name: "Marca com a completada" }));
+    await waitFor(() => expect(target).toHaveAttribute("data-done"));
+    expect(within(target).getByRole("checkbox")).toBeChecked();
+    expect(within(target).queryByRole("button", { name: "Marca com a completada" })).toBeNull();
+  });
+
+  it("does not focus another dog's task when the notification subject is inconsistent", async () => {
+    mockScenario("member");
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    const rock = "31000000-0000-4000-8000-000000000002";
+    window.history.pushState(null, "", `/gossos?dogId=${rock}&taskId=task-duna-weave`);
+    await renderApplication(client);
+    await screen.findByRole("heading", { name: "Rock" });
+    await waitFor(() => expect(document.getElementById(`dog-card-${rock}`)).toHaveFocus());
+    expect(document.getElementById("dog-task-row-task-duna-weave")).not.toHaveFocus();
+  });
+
   it("E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done", async () => {
     const { completions, lines } = recordFlow();
     let release: () => void = () => undefined;
@@ -2615,7 +2654,7 @@ describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /ta
     const rows = within(tasks).getAllByRole("listitem");
     expect(rows.map((row) => row.textContent)).toEqual([
       "Treballar l'entrada al balancí10-08 · Laura · feta per en Biel el 14-08",
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjuntMarca com a completada",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
     expect(rows[0]).toHaveAttribute("data-done");

@@ -69,10 +69,12 @@ const dashboardFetch = (mutate: (body: DashboardBody) => void) =>
   rewriteFetch("/dashboard", (body) => {
     mutate(body as DashboardBody);
   });
-// The card's rows are S15's form A (`GET /risk-review`, E5-W03).
+// The card's rows are S15's form A (`GET /class-notices`, E5-W03).
 const riskFetch = (mutate: (body: RiskBody) => void) =>
-  rewriteFetch("/risk-review", (body) => {
+  rewriteFetch("/class-notices", (body) => {
     mutate(body as RiskBody);
+    (body as RiskBody).totalItems = (body as RiskBody).items.length;
+    (body as RiskBody).items = (body as RiskBody).items.slice(0, 6);
   });
 
 async function renderDashboard(
@@ -118,18 +120,15 @@ describe("T-14-25 D1 dashboard", () => {
     expect(screen.getByText("56")).toBeVisible();
     expect(screen.getByText(/142\/163 places/u)).toBeVisible();
     expect(screen.getByText("1 de fa més de 2 dies")).toBeVisible();
-    // The mockup's literals (form A carries no gender, E5-W03): «avisada» / «avisats». The dogs
-    // have a level their class allows (E5-W05 round 3 #4, S08 R-08-04).
-    expect(await screen.findByText(/avisada Clara \+ Trevi/u)).toBeVisible();
-    expect(screen.getByText(/avisats Dani \+ Rayo/u)).toBeVisible();
-    expect(screen.getAllByText("1 inscrit").length).toBeGreaterThan(0);
+    expect(await screen.findByText("4 avisos d’avui")).toBeVisible();
+    expect(document.querySelectorAll(".class-notices__row")).toHaveLength(4);
     expect(screen.getByText("Compte no informat")).toBeVisible();
 
     const chart = screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" });
     expect(
       within(chart).getByRole("table", { name: "Gossos per nivell — 242 actius" }),
     ).toBeInTheDocument();
-    expect(within(chart).getByRole("row", { name: /CAD 24 9,9/u })).toBeInTheDocument();
+    expect(within(chart).getByRole("row", { name: /CAD 24 10/u })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "VALIDA: Marta R. + Kiwi (whippet)" }));
     expect(navigate).toHaveBeenCalledWith("/preinscripcions/42000000-0000-4000-8000-000000000001");
@@ -148,7 +147,7 @@ describe("T-14-25 D1 dashboard", () => {
     expect(screen.queryByText("Entrenaments reservats")).not.toBeInTheDocument();
     expect(screen.queryByRole("figure")).not.toBeInTheDocument();
     await waitFor(() => {
-      expect(calls("/risk-review")).toBe(1);
+      expect(calls("/class-notices")).toBe(1);
     });
 
     fireEvent.focus(window);
@@ -156,11 +155,11 @@ describe("T-14-25 D1 dashboard", () => {
       expect(calls("/dashboard")).toBe(2);
     });
     await waitFor(() => {
-      expect(calls("/risk-review")).toBe(2);
+      expect(calls("/class-notices")).toBe(2);
     });
   });
 
-  it("S14 R-14-06: a null `riskReview` block shows no risk card and never asks for GET /risk-review", async () => {
+  it("S14 R-14-06: a null `riskReview` block shows no risk card and never asks for GET /class-notices", async () => {
     const client = createApiClient({
       baseUrl: `${window.location.origin}/api/v1`,
       fetch: dashboardFetch((body) => {
@@ -170,8 +169,10 @@ describe("T-14-25 D1 dashboard", () => {
     const get = vi.spyOn(client, "GET");
     await renderDashboard(vi.fn(), undefined, client);
     expect(await screen.findByText("184")).toBeVisible();
-    expect(screen.queryByRole("heading", { name: /Revisió de classes en risc/u })).toBeNull();
-    expect((get.mock.calls as unknown[][]).some((call) => call[0] === "/risk-review")).toBe(false);
+    expect(screen.queryByRole("heading", { name: /Avisos de classes/u })).toBeNull();
+    expect((get.mock.calls as unknown[][]).some((call) => call[0] === "/class-notices")).toBe(
+      false,
+    );
   });
 
   it("uses the same ICU day plural as D2 in the pending signups card", async () => {
@@ -263,8 +264,8 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
   });
 
   it.each([
-    [1, "1 avís"],
-    [4, "4 avisos"],
+    [1, "1 avís d’avui"],
+    [4, "4 avisos d’avui"],
   ])("counts %i risk alert(s) with an ICU plural", async (count, text) => {
     await renderDashboard(
       vi.fn(),
@@ -275,49 +276,31 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     expect(await screen.findByText(text)).toHaveClass("ah-badge");
   });
 
-  it("writes times as «7:30» and links each risk row to D4 on its class", async () => {
+  it("shows today's notices and opens their history", async () => {
     const { navigate } = await renderDashboard();
-    expect(
-      await screen.findByRole("heading", {
-        name: "Revisió de classes en risc",
-      }),
-    ).toBeVisible();
-    expect(screen.getByText(/s'anul·larà dc a les 7:30/u)).toBeVisible();
-    expect(screen.getByText("7:30, avui i 2 dies vista")).toBeVisible();
-    const row = screen.getByRole("link", { name: "Cadells avui 9:30 · Cadells" });
-    const expected =
-      "/calendari?classe=cls-2026-08-10-0930-7&estat=anul%C2%B7lades&setmana=2026-08-10";
-    expect(row).toHaveAttribute("href", expected);
-    fireEvent.click(row);
-    expect(navigate).toHaveBeenCalledWith(expected);
+    expect(await screen.findByRole("heading", { name: "Avisos de classes" })).toBeVisible();
+    expect(await screen.findByText("4 avisos d’avui")).toBeVisible();
+    expect(document.querySelectorAll(".dashboard-risk__row")).toHaveLength(4);
+    fireEvent.click(screen.getByRole("link", { name: "Veure més" }));
+    expect(navigate).toHaveBeenCalledWith("/avisos-classes");
   });
 
-  it("shows at most 6 risk rows, then «+{n} més» to D4 on the first hidden one", async () => {
-    const { navigate } = await renderDashboard(
+  it("shows at most six notices while retaining today's total", async () => {
+    await renderDashboard(
       vi.fn(),
       riskFetch((body) => {
-        const template = body.items[2];
+        const template = body.items[0];
         if (template === undefined) return;
         body.items = Array.from({ length: 8 }, (_, index) => ({
           ...template,
-          classId: `41000000-0000-4000-8000-0000000001${String(index).padStart(2, "0")}`,
-          date: "2026-08-11",
-          displayDescription: `Classe ${String(index + 1)}`,
+          id: `notice-${String(index)}`,
+          classId: `class-${String(index)}`,
         }));
       }),
     );
-    await screen.findByRole("link", { name: "+2 més" });
+    expect(await screen.findByText("8 avisos d’avui")).toBeVisible();
     expect(document.querySelectorAll(".dashboard-risk__row")).toHaveLength(6);
-    const more = screen.getByRole("link", { name: "+2 més" });
-    fireEvent.click(more);
-    expect(navigate).toHaveBeenCalledWith(
-      "/calendari?classe=41000000-0000-4000-8000-000000000106&estat=actives&setmana=2026-08-10",
-    );
-  });
-
-  it("puts the warning icon on the risk card title", async () => {
-    await renderDashboard();
-    const title = await screen.findByRole("heading", { name: /Revisió de classes en risc/u });
+    const title = screen.getByRole("heading", { name: "Avisos de classes" });
     expect(title.querySelector(".ah-icon")).not.toBeNull();
   });
 
@@ -330,7 +313,7 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
       }),
     );
     const chart = screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" });
-    expect(within(chart).getByRole("row", { name: /CAD 24 9,9/u })).toHaveAttribute(
+    expect(within(chart).getByRole("row", { name: /CAD 24 10/u })).toHaveAttribute(
       "title",
       "Cadells",
     );
@@ -342,36 +325,50 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     [1, "amb reserva (setm. en curs)"],
     [2, "amb reserva (setm. en curs o anterior)"],
     [3, "amb reserva (setm. en curs o les 2 anteriors)"],
-  ])("follows coverage.activeDogWeeks = %i in the selected booking population", async (weeks, text) => {
-    const { client } = await renderDashboard(
-      vi.fn(),
-      dashboardFetch((body) => {
-        body.dogsByLevel.activeDogWeeks = weeks;
-      }),
-    );
-    const get = vi.spyOn(client, "GET");
-    const colors = [...document.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")]
-      .map((swatch) => swatch.style.getPropertyValue("--ah-level-color"));
-    fireEvent.click(screen.getByRole("radio", { name: "Amb reserves" }));
-    expect(screen.getByRole("radio", { name: "Amb reserves" })).toBeChecked();
-    expect(document.querySelector(".dashboard-chart__description")).toHaveTextContent(text);
-    const chart = screen.getByRole("figure", { name: "Gossos per nivell — 179 amb reserves" });
-    expect(within(chart).getByRole("row", { name: /CAD 19 10,6/u })).toBeVisible();
-    expect(chart.querySelector(".dashboard-chart__center strong")).toHaveTextContent("179");
-    expect([...chart.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")]
-      .map((swatch) => swatch.style.getPropertyValue("--ah-level-color"))).toEqual(colors);
-    fireEvent.click(screen.getByRole("radio", { name: "Tots" }));
-    expect(screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
-    // The independent risk-card fetch can start after the dashboard has painted.
-    expect((get.mock.calls as unknown[][]).some((call) => call[0] === "/dashboard")).toBe(false);
-  });
+  ])(
+    "follows coverage.activeDogWeeks = %i in the selected booking population",
+    async (weeks, text) => {
+      const { client } = await renderDashboard(
+        vi.fn(),
+        dashboardFetch((body) => {
+          body.dogsByLevel.activeDogWeeks = weeks;
+        }),
+      );
+      const get = vi.spyOn(client, "GET");
+      const colors = [...document.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")].map(
+        (swatch) => swatch.style.getPropertyValue("--ah-level-color"),
+      );
+      fireEvent.click(screen.getByRole("radio", { name: "Amb reserves" }));
+      expect(screen.getByRole("radio", { name: "Amb reserves" })).toBeChecked();
+      expect(document.querySelector(".dashboard-chart__description")).toHaveTextContent(text);
+      const chart = screen.getByRole("figure", { name: "Gossos per nivell — 179 amb reserves" });
+      expect(within(chart).getByRole("row", { name: /CAD 19 11/u })).toBeVisible();
+      expect(chart.querySelector(".dashboard-chart__center strong")).toHaveTextContent("179");
+      expect(
+        [...chart.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")].map((swatch) =>
+          swatch.style.getPropertyValue("--ah-level-color"),
+        ),
+      ).toEqual(colors);
+      fireEvent.click(screen.getByRole("radio", { name: "Tots" }));
+      expect(screen.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
+      // The independent risk-card fetch can start after the dashboard has painted.
+      expect((get.mock.calls as unknown[][]).some((call) => call[0] === "/dashboard")).toBe(false);
+    },
+  );
 
   it("T-14-25 shows an empty booking population and recovers the active dogs", async () => {
-    await renderDashboard(vi.fn(), dashboardFetch((body) => {
-      body.dogsByLevel.levels.forEach((level) => { level.withRecentBooking = 0; });
-    }));
+    await renderDashboard(
+      vi.fn(),
+      dashboardFetch((body) => {
+        body.dogsByLevel.levels.forEach((level) => {
+          level.withRecentBooking = 0;
+        });
+      }),
+    );
     fireEvent.click(screen.getByRole("radio", { name: "Amb reserves" }));
-    expect(within(screen.getByRole("figure")).getByRole("status")).toHaveTextContent("No hi ha gossos amb reserves en aquest període.");
+    expect(within(screen.getByRole("figure")).getByRole("status")).toHaveTextContent(
+      "No hi ha gossos amb reserves en aquest període.",
+    );
     const chart = screen.getByRole("figure", { name: "Gossos per nivell — 0 amb reserves" });
     expect(within(chart).getByRole("row", { name: "CAD 0 —" })).toBeVisible();
     expect(chart.querySelector<HTMLElement>(".dashboard-chart__donut")?.style.background).toBe("");
@@ -381,11 +378,16 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
   });
 
   it("T-14-25 handles no progression levels without invalid percentages", async () => {
-    await renderDashboard(vi.fn(), dashboardFetch((body) => {
-      body.dogsByLevel.levels = [];
-      body.dogsByLevel.totalActiveDogs = 0;
-    }));
-    expect(within(screen.getByRole("figure")).getByRole("status")).toHaveTextContent("No hi ha gossos actius en aquests nivells.");
+    await renderDashboard(
+      vi.fn(),
+      dashboardFetch((body) => {
+        body.dogsByLevel.levels = [];
+        body.dogsByLevel.totalActiveDogs = 0;
+      }),
+    );
+    expect(within(screen.getByRole("figure")).getByRole("status")).toHaveTextContent(
+      "No hi ha gossos actius en aquests nivells.",
+    );
     expect(screen.getByRole("figure")).not.toHaveTextContent(/NaN|Infinity/u);
   });
 

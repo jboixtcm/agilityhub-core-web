@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-11 — Class notices, signup and member tasks
+
+- Show today's class notices (up to six) and open the complete paginated history with View more. Display whole-number dog-level percentages.
+- Direct existing members to their account to add a dog; keep privacy and image consents unchecked. Update the configured cash-payment fixture.
+- Show counted classes before swappable bookings. Preserve dog/task notification subjects, focus the matching card or task and offer a visible completion action.
+
 ## 2026-11-09 — Incomplete census records and member app feedback
 
 - Keep the plan editor visible for members without a plan; show editable private notes; simplify the member home and free-training copy; recover failed club-logo loads with a bounded retry and accessible fallback.

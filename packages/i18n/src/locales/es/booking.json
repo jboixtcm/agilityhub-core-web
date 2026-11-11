@@ -55,8 +55,6 @@
     "limitNote": "{unit, select, DOG {Ya tienes {count, plural, one {# clase} other {# clases}} {week, select, NEXT {la semana que viene} other {esta semana}} con {dogArticle}{dogName} (límite por perro).} other {Ya tienes {count, plural, one {# clase} other {# clases}} {week, select, NEXT {la semana que viene} other {esta semana}} (límite por persona).}}",
     "swapTitle": "Elige cuál anulas para hacerle sitio",
     "swappable": "{ring, select, none {Clase {description} · anulable dentro de plazo} other {Clase {description} · {ring} · anulable dentro de plazo}}",
-    "notSelectableDONE": "Clase {description} · ya hecha — no se puede seleccionar",
-    "notSelectableLATE_WINDOW": "Clase {description} · fuera de plazo — no se puede seleccionar",
     "overrideWeeklyLimit": "Superar el límite y confirmar sin anular ninguna clase",
     "swapButton": "ANULAR {oldDay} A LAS {oldTime} Y CONFIRMAR {newDay} A LAS {newTime}",
     "cancelNew": "CANCELAR LA NUEVA RESERVA",

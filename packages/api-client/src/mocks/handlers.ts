@@ -2045,8 +2045,7 @@ export const handlers = [
     }
     if (email === "existing@example.test") {
       return HttpResponse.json({
-        maskedEmail: "e••••••g@e••••••.test",
-        result: "VERIFICATION_SENT",
+        result: "MEMBER_ALREADY_EXISTS",
       });
     }
     if (email === "pending@example.test") {

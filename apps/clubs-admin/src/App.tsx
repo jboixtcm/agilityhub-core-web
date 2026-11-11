@@ -59,6 +59,7 @@ import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { InactivityLeavePage } from "./census/InactivityLeavePage";
 import { ChunkBoundary } from "./ChunkBoundary";
 import { ConsoleForbidden } from "./console/ConsoleForbidden";
+import { ClassNoticesPage } from "./dashboard/ClassNoticesPage";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
@@ -99,6 +100,7 @@ interface AdminRouteDefinition {
 export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screen D1.
   { path: "/tauler", roles: ["ADMIN"] },
+  { path: "/avisos-classes", roles: ["ADMIN"] },
   // Screen D2.
   { path: "/preinscripcions/:id", roles: ["ADMIN"] },
   // Screens D3 and D3b (INSTRUCTOR reads them without actions, S06 §13-10).
@@ -601,6 +603,9 @@ function routeContent(
     // D13 (S10 §2): INSTRUCTOR and ADMIN, never an impersonation (an admin session never is one).
     const dogId = decodeURIComponent(pathname.split("/")[2] ?? "");
     return <StudentRecordRoute client={client} dogId={dogId} key={pathname} />;
+  }
+  if (route.path === "/avisos-classes") {
+    return <ClassNoticesPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/tauler") {
     return <DashboardPage client={client} onNavigate={onNavigate} />;

@@ -19,17 +19,10 @@
     "older": "{count} older than {days, plural, one {# day} other {# days}}"
   },
   "risk": {
-    "title": "At-risk class review",
-    "schedule": "{time}, today and {days} days ahead",
-    "alerts": "{count, plural, one {# alert} other {# alerts}}",
-    "empty": "No classes at risk",
-    "booked": "{count, plural, one {# booked} other {# booked}}",
-    "more": "+{count} more",
     "day": {
       "TODAY": "today",
       "TOMORROW": "tomorrow"
     },
-    "name": "{member} + {dog}",
     "status": {
       "AUTO_CANCELLED": "cancelled",
       "AT_RISK": "at risk",
@@ -39,9 +32,7 @@
     "notified": {
       "AUTO_CANCELLED": "notified {names}",
       "AT_RISK": "notified {names}"
-    },
-    "loading": "Loading the at-risk class review…",
-    "error": "The at-risk class review could not be loaded."
+    }
   },
   "signups": {
     "title": "Pending signups",
@@ -73,5 +64,22 @@
     "share": "Percentage",
     "emptyAll": "There are no active dogs in these levels.",
     "emptyRecent": "There are no dogs with bookings in this period."
+  },
+  "classNotices": {
+    "title": "Class notices",
+    "today": "{count, plural, one {# notice today} other {# notices today}}",
+    "more": "View more",
+    "emptyToday": "No class notices have been sent today.",
+    "empty": "No class notices have been sent yet.",
+    "description": "Cancellations and risk notices sent to administrators, newest first.",
+    "back": "Back to Home",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page} of {total}",
+    "cancelled": "Cancelled",
+    "risk": "At risk",
+    "below": "Below minimum",
+    "loading": "Loading class notices…",
+    "error": "Class notices could not be loaded."
   }
 }

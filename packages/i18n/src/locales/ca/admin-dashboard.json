@@ -19,17 +19,10 @@
     "older": "{count} de fa més de {days, plural, one {# dia} other {# dies}}"
   },
   "risk": {
-    "title": "Revisió de classes en risc",
-    "schedule": "{time}, avui i {days} dies vista",
-    "alerts": "{count, plural, one {# avís} other {# avisos}}",
-    "empty": "Cap classe en risc",
-    "booked": "{count, plural, one {# inscrit} other {# inscrits}}",
-    "more": "+{count} més",
     "day": {
       "TODAY": "avui",
       "TOMORROW": "demà"
     },
-    "name": "{member} + {dog}",
     "status": {
       "AUTO_CANCELLED": "anul·lada",
       "AT_RISK": "en risc",
@@ -39,9 +32,7 @@
     "notified": {
       "AUTO_CANCELLED": "avisada {names}",
       "AT_RISK": "avisats {names}"
-    },
-    "loading": "Carregant la revisió de classes en risc…",
-    "error": "No s'ha pogut carregar la revisió de classes en risc."
+    }
   },
   "signups": {
     "title": "Preinscripcions pendents",
@@ -73,5 +64,22 @@
     "share": "Percentatge",
     "emptyAll": "No hi ha gossos actius en aquests nivells.",
     "emptyRecent": "No hi ha gossos amb reserves en aquest període."
+  },
+  "classNotices": {
+    "title": "Avisos de classes",
+    "today": "{count, plural, one {# avís d’avui} other {# avisos d’avui}}",
+    "more": "Veure més",
+    "emptyToday": "Avui no s’ha enviat cap avís de classes.",
+    "empty": "Encara no s’ha enviat cap avís de classes.",
+    "description": "Anul·lacions i avisos de risc enviats a administració, del més recent al més antic.",
+    "back": "Torna a Inici",
+    "previous": "Anterior",
+    "next": "Següent",
+    "page": "Pàgina {page} de {total}",
+    "cancelled": "Anul·lada",
+    "risk": "En risc",
+    "below": "Manca d’alumnes",
+    "loading": "Carregant els avisos de classes…",
+    "error": "No s’han pogut carregar els avisos de classes."
   }
 }

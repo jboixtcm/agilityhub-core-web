@@ -704,6 +704,46 @@ function parameterValue<Value extends boolean | number | string>(
 }
 
 export const backofficeHandlers = [
+  http.get("*/api/v1/class-notices", ({ request }) => {
+    const scenario = currentMockScenario();
+    const denied = refuse(scenario, ["ADMIN"]);
+    if (denied !== undefined) return denied;
+    const params = new URL(request.url).searchParams;
+    const page = Number(params.get("page") ?? 0);
+    const size = Number(params.get("size") ?? 20);
+    if (!Number.isInteger(page) || page < 0 || !Number.isInteger(size) || size < 1 || size > 100)
+      return apiError("VALIDATION_ERROR", "Invalid page", 400);
+    const today = params.get("today") === "true";
+    const all: components["schemas"]["ClassNoticeItem"][] =
+      !callerClubOwnsTheWorld(scenario) || currentMockScenarioName() === "riskReviewEmpty"
+        ? []
+        : Array.from({ length: 29 }, (_, index) => {
+            const at = new Date(nowMs() - (index < 4 ? index * 60000 : (index - 3) * 86400000));
+            const date = clubLocalDate(at);
+            return {
+              id: `class-notice-${String(index)}`,
+              createdAt: at.toISOString(),
+              code: index < 2 ? "N-17" : "N-16",
+              classId: `notice-class-${String(index)}`,
+              classDate: date.split("-").reverse().join("/"),
+              classTime: "18:50",
+              classDescription: ["Cadells", "Nivell D", "F i G", "B+C"][index % 4] ?? "B+C",
+              ringName: "Central",
+              title: "Avís de classe",
+              body: "La classe no ha arribat al mínim d’alumnes.",
+            };
+          });
+    const filtered = today
+      ? all.filter((item) => clubLocalDate(new Date(item.createdAt)) === clubToday())
+      : all;
+    return HttpResponse.json({
+      items: filtered.slice(page * size, (page + 1) * size),
+      page,
+      size,
+      totalItems: filtered.length,
+    });
+  }),
+
   // S08 §6: every booking of the class, any state (INSTRUCTOR and ADMIN).
   http.get("*/api/v1/class-sessions/:id/bookings", ({ params }) => {
     const scenario = currentMockScenario();

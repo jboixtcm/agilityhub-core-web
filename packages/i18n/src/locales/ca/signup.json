@@ -53,12 +53,11 @@
     "street": "Carrer i número",
     "postalCode": "CP",
     "town": "Població (proposada pel CP)",
-    "existingDogNote": "Ja ets soci i vols afegir un altre gos? Fes servir el mateix formulari: et reconeixerem pel document d'identitat o l'email (verificació per correu) i només registrarem el gos nou.",
-    "reviewEmailTitle": "Revisa el correu",
-    "reviewEmail": "T'hem enviat un enllaç de verificació a {email}.",
-    "resend": "Torna-m'ho a enviar",
     "alreadyPending": "Ja tenim una sol·licitud pendent amb aquestes dades; el club la revisarà aviat.",
-    "contactClub": "Ja constes al club sense accés digital. Contacta amb el club perquè t'ajudi a afegir el gos."
+    "contactClub": "Ja constes al club sense accés digital. Contacta amb el club perquè t'ajudi a afegir el gos.",
+    "alreadyMemberTitle": "Ja estàs registrat",
+    "alreadyMember": "Ja estàs registrat al club. Entra al teu compte per consultar o modificar les teves dades i gestionar els teus gossos. Per donar d’alta un altre gos, ves a «Els meus gossos» i selecciona «+ Afegeix un gos».",
+    "signIn": "Entra al teu compte"
   },
   "dog": {
     "name": "Nom del gos",

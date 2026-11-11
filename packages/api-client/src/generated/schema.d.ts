@@ -1235,6 +1235,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/class-notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * classNotices
+         * @description Roles: ADMIN, never impersonation. Class cancellation and risk notices delivered to administrators, one per event, code and class across recipients. Newest first with stable paging; today uses the club timezone and notification creation date. Frozen class labels preserve the sent content; no recipient details are exposed. Size 1–100. Tenant comes from the JWT.
+         */
+        get: operations["classNotices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/class-sessions": {
         parameters: {
             query?: never;
@@ -6490,7 +6510,7 @@ export interface paths {
         put?: never;
         /**
          * Check signup identity
-         * @description R-04-05. ANON; 10/hour (signup.rateLimit). Reveals only result and maskedEmail («m•••a@e•••.cat», the account's access address, where N-39 goes); recognition queues a verification link through the outbox, at most signup.rateLimit.notificationsPerRecipientPerHour (3) per recipient and hour. A pending readmission is also matched on the primary address it submitted (R-04-06): SIGNUP_ALREADY_PENDING. idDocument.value ≤ 30 and emails ≤ 254 characters → 400 VALIDATION_ERROR. signup.enabled = false or a club not ACTIVE → 422 SIGNUP_CLOSED. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforced by E3-T03.
+         * @description R-04-05. ANON; 10/hour (signup.rateLimit). Reveals only the outcome. Existing active members receive MEMBER_ALREADY_EXISTS and must sign in to manage their details or add a dog. No verification email or recognition event is generated. A pending readmission is also matched on the primary address it submitted (R-04-06): SIGNUP_ALREADY_PENDING. idDocument.value ≤ 30 and emails ≤ 254 characters → 400 VALIDATION_ERROR. signup.enabled = false or a club not ACTIVE → 422 SIGNUP_CLOSED. Tenant by host. No cookies or CSRF. R-04-20 limits are per club and client IP from proxy-injected X-Forwarded-For; enforced by E3-T03.
          */
         post: operations["identityCheck"];
         delete?: never;
@@ -9308,6 +9328,28 @@ export interface components {
         ClassFullDetails: {
             heldOnly: boolean;
         };
+        ClassNoticeItem: {
+            body: string;
+            classDate: string;
+            classDescription: string;
+            classId: string;
+            classTime: string;
+            code: string;
+            /** Format: date-time */
+            createdAt: string;
+            id: string;
+            ringName: string;
+            title: string;
+        };
+        ClassNoticePage: {
+            items: components["schemas"]["ClassNoticeItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+        };
         ClassOccupancyKpi: {
             /** Format: int32 */
             booked: number;
@@ -11201,7 +11243,7 @@ export interface components {
         IdentityCheckResult: {
             maskedEmail?: string;
             /** @enum {string} */
-            result: "NEW" | "VERIFICATION_SENT" | "SIGNUP_ALREADY_PENDING" | "CONTACT_CLUB";
+            result: "NEW" | "VERIFICATION_SENT" | "SIGNUP_ALREADY_PENDING" | "CONTACT_CLUB" | "MEMBER_ALREADY_EXISTS";
         };
         ImageRights: {
             /** Format: date-time */
@@ -25680,6 +25722,131 @@ export interface operations {
                 };
             };
             /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    classNotices: {
+        parameters: {
+            query?: {
+                today?: boolean;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description ClassNoticePage */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassNoticePage"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
             404: {
                 headers: {
                     [name: string]: unknown;

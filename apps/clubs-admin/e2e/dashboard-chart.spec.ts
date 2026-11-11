@@ -53,7 +53,7 @@ for (const width of [375, 1280]) {
       await expect(
         card.getByRole("figure", { name: "Gossos per nivell — 179 amb reserves" }),
       ).toBeVisible();
-      await expect(card.getByRole("row", { name: /CAD 19 10,6/u })).toBeVisible();
+      await expect(card.getByRole("row", { name: /CAD 19 11/u })).toBeVisible();
       await expect(card.locator(".dashboard-chart__description")).toHaveText(
         "amb reserva (setm. en curs o anterior)",
       );

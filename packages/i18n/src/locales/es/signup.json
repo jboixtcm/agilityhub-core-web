@@ -53,12 +53,11 @@
     "street": "Calle y número",
     "postalCode": "CP",
     "town": "Población (propuesta por el CP)",
-    "existingDogNote": "¿Ya eres socio y quieres añadir otro perro? Usa el mismo formulario: te reconoceremos por el documento de identidad o el email (verificación por correo) y solo registraremos el perro nuevo.",
-    "reviewEmailTitle": "Revisa el correo",
-    "reviewEmail": "Te hemos enviado un enlace de verificación a {email}.",
-    "resend": "Volver a enviar",
     "alreadyPending": "Ya tenemos una solicitud pendiente con estos datos; el club la revisará pronto.",
-    "contactClub": "Ya constas en el club sin acceso digital. Contacta con el club para que te ayude a añadir el perro."
+    "contactClub": "Ya constas en el club sin acceso digital. Contacta con el club para que te ayude a añadir el perro.",
+    "alreadyMemberTitle": "Ya estás registrado",
+    "alreadyMember": "Ya estás registrado en el club. Entrar en tu cuenta para consultar o modificar tus datos y gestionar tus perros. Para dar de alta otro perro, ve a «Mis perros» y selecciona «+ Añade un perro».",
+    "signIn": "Entrar en tu cuenta"
   },
   "dog": {
     "name": "Nombre del perro",

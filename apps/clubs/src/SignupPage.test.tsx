@@ -330,9 +330,12 @@ describe("T-04-29 signup person and draft", () => {
       target: { value: "existing@example.test" },
     });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(await screen.findByRole("heading", { name: "Revisa el correu" })).toBeVisible();
-    expect(screen.getByText(/e••••••g@e••••••\.test/u)).toBeVisible();
-    expect(screen.getByRole("button", { name: "Torna-m'ho a enviar" })).toBeEnabled();
+    expect(await screen.findByRole("heading", { name: "Ja estàs registrat" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Entra al teu compte" })).toHaveAttribute(
+      "href",
+      "/entrar",
+    );
+    expect(screen.queryByText(/enllaç de verificació/u)).not.toBeInTheDocument();
 
     cleanup();
     await renderSignup({ path: "/apuntat-hi" });
@@ -739,8 +742,9 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     expect(screen.getByText(/Alta l.1 de setembre \(mes complet\)/u)).toBeVisible();
     expect(screen.getByText(/emetre rebuts sobre aquest compte/u)).toBeVisible();
     expect(screen.getByText(/abans del dia 25/u)).toBeVisible();
-    expect(screen.queryByText(/períodes naturals complets/u)).not.toBeInTheDocument();
+    expect(screen.queryByText(/trimestres complets/u)).not.toBeInTheDocument();
     expect(submit).toBeDisabled();
+    for (const consent of screen.getAllByRole("checkbox")) expect(consent).not.toBeChecked();
     expect(screen.getByRole("link", { name: "Pots consultar-la aquí" })).toHaveAttribute(
       "target",
       "_blank",
@@ -754,7 +758,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
         { name: "Efectiu" },
       ),
     );
-    expect(screen.getByText(/períodes naturals complets/u)).toBeVisible();
+    expect(screen.getByText(/trimestres complets/u)).toBeVisible();
     expect(screen.queryByLabelText("IBAN")).not.toBeInTheDocument();
 
     acceptPrivacy();
@@ -774,12 +778,12 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     await renderSignup({ path: "/apuntat-hi/pagament", scenario: "signupStripe" });
     expect(screen.getByText(/emetre rebuts sobre aquest compte/u)).toBeVisible();
     expect(screen.getByText(/abans del dia 25/u)).toBeVisible();
-    expect(screen.queryByText(/períodes naturals complets/u)).not.toBeInTheDocument();
+    expect(screen.queryByText(/trimestres complets/u)).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Targeta" }));
     expect(screen.getByText(/Pagaràs amb targeta de forma segura/u)).toBeVisible();
     expect(screen.getByText(/abans del dia 25/u)).toBeVisible();
-    expect(screen.queryByText(/períodes naturals complets/u)).not.toBeInTheDocument();
+    expect(screen.queryByText(/trimestres complets/u)).not.toBeInTheDocument();
 
     fireEvent.click(
       within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
@@ -787,7 +791,7 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
         { name: "Efectiu" },
       ),
     );
-    expect(screen.getByText(/períodes naturals complets/u)).toBeVisible();
+    expect(screen.getByText(/trimestres complets/u)).toBeVisible();
     expect(screen.queryByText(/abans del dia 25/u)).not.toBeInTheDocument();
 
     cleanup();
@@ -1330,7 +1334,7 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
       code: "MEMBER_ALREADY_EXISTS",
       path: "/apuntat-hi",
       status: 409,
-      text: "Aquest abonat ja existeix.",
+      text: "Ja estàs registrat al club. Entra al teu compte per consultar o modificar les teves dades i gestionar els teus gossos. Per donar d’alta un altre gos, ves a «Els meus gossos» i selecciona «+ Afegeix un gos».",
     },
     {
       code: "SIGNUP_ALREADY_PENDING",
@@ -2490,10 +2494,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     expect(select).toHaveValue("Poble Antic");
   });
 
-  it("16: the «Ja ets soci…» card carries its ⓘ icon; the language selector its globe", async () => {
+  it("16: public signup does not offer a second-dog registration; the language selector retains its globe", async () => {
     await renderSignup({ path: "/apuntat-hi" });
-    const note = screen.getByText(/Ja ets soci i vols afegir un altre gos/u).closest("aside");
-    expect(note?.querySelector("svg.ah-icon")).not.toBeNull();
+    expect(screen.queryByText(/Ja ets soci i vols afegir un altre gos/u)).toBeNull();
     const language = screen.getByLabelText("Idioma").closest("label");
     expect(language?.querySelector("svg.ah-icon")).not.toBeNull();
   });

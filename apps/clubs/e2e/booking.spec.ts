@@ -192,6 +192,31 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await expect(page.getByRole("heading", { name: "Classes" })).toBeVisible();
   });
 
+  test("T-08-38 counted classes precede the remaining swap option", async ({
+    page,
+    browserName,
+  }) => {
+    await login(page, "bookingLimitDone");
+    await openReserve(page);
+    await tapRow(page, "ds 8 · 9:00");
+    const counted = page.getByRole("region", { name: "Classes que compten en el límit setmanal" });
+    const swaps = page.getByRole("radiogroup", { name: "Tria quina anul·les per fer-li lloc" });
+    await expect(counted.getByRole("listitem")).toHaveCount(1);
+    await expect(counted).toContainText("Compta com a feta");
+    await expect(swaps.getByRole("radio")).toHaveCount(1);
+    for (const width of [375, 1280]) {
+      await page.setViewportSize({ width, height: 1000 });
+      const before = await counted.boundingBox();
+      const after = await swaps.boundingBox();
+      if (!before || !after) throw new Error("Missing weekly-limit blocks");
+      expect(before.y + before.height).toBeLessThan(after.y);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+        width,
+      );
+      await shot(page, `counted-before-swap-${browserName}-${String(width)}.png`);
+    }
+  });
+
   test("T-08-38 06: the week's limit proposes the swap; the chosen booking is cancelled in the same step", async ({
     page,
   }) => {
