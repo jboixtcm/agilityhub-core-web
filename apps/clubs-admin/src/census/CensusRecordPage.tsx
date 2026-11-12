@@ -35,6 +35,7 @@ import { useRefreshCounters } from "../dashboard/counters";
 import { isReadmissionPending, loadDogDocumentTypes } from "../dashboard/readmission";
 import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
+import { whatsAppUrl } from "../whatsapp";
 
 import { AdminMemberActions } from "./AdminMemberActions";
 import { FamilyGroupAction } from "./FamilyGroupAction";
@@ -1536,7 +1537,7 @@ function MemberRecordContent({
           {primaryPhone === undefined ? null : (
             <a
               className="census-record__action-link"
-              href={`https://wa.me/${primaryPhone.prefix.replace("+", "")}${primaryPhone.number}`}
+              href={whatsAppUrl(primaryPhone)}
               rel="noreferrer"
               target="_blank"
             >
