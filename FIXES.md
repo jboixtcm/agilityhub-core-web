@@ -23,6 +23,11 @@ Review note: classification confirmed, nothing here could be fixed without a cho
 
 ## web-02-web-quality
 
+### WEB-03 — NEEDS-DECISION
+
+No code changed. Verified: the reminder selector is drawn for every member (`apps/clubs/src/profile/NoticesCard.tsx:219`), while the push row depends on `pushRow` (`:164`), and `askForPush` returns at once without it (`:172-173`). N-13 goes to APP + PUSH, plus e-mail only when `emailByCategory.OPERATIONAL` is on, which is off by default (S11 R-11-16, R-11-04). S11 §2 draws the «Recordatori de classe» row on 12 unconditionally.
+Question: what should a member without push on this device be told or given? Options: (a) hide the selector without a push subscription (this also hides a working in-app reminder and goes against S11 §2); (b) add a line under it saying where the reminder appears (new copy, no mockup literal); (c) send N-13 by e-mail when the member has no active push subscription (a change to the R-11-16 channels; OTHER-REPO: the api's N-13 channel rule).
+
 ### WEB-04 — FIXED
 
 `useLoader` (`apps/clubs/src/booking/shared.ts`) takes a fourth `onFocus` flag: the request is read again quietly on focus, `visibilitychange` (visible) and `online`, reusing `useWindowFocus` from the training screen. `useMeHome`, `useBookableClasses`, `useBooking` and `useWaitlistEntry` turn it on; the other screens that share `useLoader` are unchanged.
@@ -33,7 +38,22 @@ Tests: `apps/clubs/src/booking/loader.test.tsx` (new, 3 cases; checked to fail w
 
 `DogPhoto` (`packages/ui/src/dog-photo.tsx`) renders its image with `loading="lazy"` and `decoding="async"`, so the admin dog list, the census rows and the instructor's student search fetch a photo only when its row nears the viewport. Its box already has a fixed size (`dog-photo.css`: 2.5 rem, 5 rem large), so no width/height attributes were needed to avoid layout shift.
 Test: a new case in `packages/ui/src/dog-photo.test.tsx` (run, passing); the admin census list and instructor suites run and pass.
-Left, needs a decision: downscaling before upload in `apps/clubs/src/SelfServicePages.tsx` (`changePhoto`) and in the admin photo upload. Choose the maximum edge (the audit suggests about 1024 px), the format and quality (JPEG vs WebP; PNG transparency), whether EXIF is stripped (it also removes GPS data) and whether the original is kept. Server-side renditions are OTHER-REPO: the api would store a thumbnail next to the original (`AttachmentService`) and expose its URL for list rows.
+Left, needs a decision: downscaling before upload in `apps/clubs/src/SelfServicePages.tsx` (`changePhoto`) and in the admin photo upload (`apps/clubs-admin/src/census/CensusRecordPage.tsx:2789`). Choose the maximum edge (the audit suggests about 1024 px), the format and quality (JPEG vs WebP; PNG transparency), whether EXIF is stripped (it also removes GPS data) and whether the original is kept. Server-side renditions are OTHER-REPO: the api would store a thumbnail next to the original (`AttachmentService`) and expose its URL for list rows.
+
+### WEB-06 — NEEDS-DECISION
+
+No code changed. Verified: «Restableix el valor de producte» calls `DELETE /parameters/{key}` directly (`apps/clubs-admin/src/catalogs/ParameterSettings.tsx:750-766`, button at `:799`). The operation accepts only `scopeRef` (`resetParameter` in `packages/api-client/openapi/openapi.json`; S02 §2 and its API table prescribe this direct reset), so the web cannot send the version or a reason. JSON/list parameters without a dedicated form are parsed from a textarea (`:680`).
+To decide: (a) a confirmation dialog showing "current value -> default value" (new copy outside the D11 mockup; `Parameter.default` is already in the response) and whether to hide the button when `isOverride` is false; (b) stale-version protection and a reason on reset, OTHER-REPO: `DELETE /parameters/{key}` would take `version` (409 `STALE_VERSION`) and an optional `reason` recorded in the history; (c) which club-editable JSON/list parameters get typed controls, and their design.
+
+### WEB-07 — NEEDS-DECISION
+
+No code changed. Verified: the IBAN input is `type="password"` with the masked account as placeholder and goes out as typed (`apps/clubs-admin/src/census/MemberPaymentMethodDrawer.tsx:96-100`, `:130-131`). S03 R-03-07 forbids reading the IBAN back but does not ask for blind entry. The api validates the check digits (`400 INVALID_IBAN`, which the drawer already shows through `errors:INVALID_IBAN`).
+To decide: (a) show the IBAN in clear while it is typed (privacy at the admin's desk vs. checking it by eye; a password field also makes browsers offer to save the IBAN as a password, since `autoComplete="off"` is ignored there); (b) a confirmation step "holder + ···· last four" before saving (new copy). A client-side mod-97 check alone was not added: it repeats the api's `INVALID_IBAN` with the same message and does not catch a valid IBAN entered on the wrong member.
+Not code: before L2, export the last-four-digit list and reconcile it against the old system's bank data.
+
+### WEB-08 — NOT-CODE
+
+Before launch, run `pnpm e2e:core` once against a staging copy of the exact release pair (web 256fd5f, api ef8caf0) with the api's test clock available, keep the report, and treat the (c)/(d)/(h) skips (`e2e/core/e7-core.spec.ts:1663`, `:1822`, `:2595`) as failures. Add a manual device matrix (iPhone Safari, installed iPhone PWA, Android Chrome) for login, book, cancel, waitlist, receipts and push. A CI job against a real api needs a staging stack and image access, which is an infrastructure choice.
 
 ### WEB-09 — PARTIAL
 
@@ -53,3 +73,8 @@ Not code: confirm the reload behaviour on staging with an open tab during a depl
 The back arrows of 07 and the course viewer (`.booking-screen__back`, `apps/clubs/src/booking/booking.css`) and of the self-service pages (`.self-page__header a`, `apps/clubs/src/styles.css`) keep their 32 px look. An invisible `::before` adds 0.375 rem on each side, so they take taps on a 44 px area. Nothing else that can be tapped sits next to them.
 Test: a new case in `apps/clubs/src/polish-styles.test.ts`, which can now read `booking.css` too (run, passing).
 Left, needs a decision: the 36 × 20 px switch (`.ah-switch`, `packages/ui/src/components.css`). On screen 12 the rows of switches are about 2 rem apart (`.profile-notices` gap 0.75 rem), so a 44 px invisible area would cover the gap. A tap just below one switch would then toggle the next one. Options: more space between the rows of 12 (moves away from the mockup), a larger switch track, or a smaller non-overlapping area (about 32 px tall).
+
+### WEB-12 — NEEDS-DECISION
+
+No code changed. Verified: `/estadistiques` and `/estadistiques/lliga` are routed to the placeholder and marked "Screens 27 and 27b (reserved for R2)" (`apps/clubs/src/App.tsx:212-214`), with no link to them. The receipts list shows only the `billing:empty` title (`apps/clubs/src/billing/InvoicesPage.tsx:336-337`).
+To decide: keep the two reserved routes or remove them until R2; whether the empty receipts state gets a sentence saying that earlier receipts stay in the previous system (new copy in ca/es/en, no mockup literal). INC-11, INC-41, INC-76 and INC-80 stay for after launch, as the audit recommends.
