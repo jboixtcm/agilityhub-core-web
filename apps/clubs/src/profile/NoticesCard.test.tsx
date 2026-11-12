@@ -825,6 +825,26 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(screen.getAllByRole("switch")).toHaveLength(4);
   });
 
+  it("COMM-02 no push toggle while the club publishes no VAPID key, PUSH on and the browser able", async () => {
+    const { requestPermission } = browserWithPush("granted");
+    await openProfile({ branding: { ...canic, pushPublicKey: null } });
+    expect(screen.queryByRole("switch", { name: /Vull rebre notificacions al mòbil/u })).toBeNull();
+    expect(screen.getAllByRole("switch")).toHaveLength(4);
+    // The reminder stays (it also arrives in the app) and asks the browser for nothing.
+    fireEvent.change(screen.getByLabelText("Recordatori de classe"), { target: { value: "60" } });
+    await waitFor(() => {
+      expect(puts().at(-1)).toEqual({ reminderMinutesBefore: 60 });
+    });
+    expect(requestPermission).not.toHaveBeenCalled();
+    cleanup();
+
+    browserWithPush("granted");
+    await openProfile();
+    expect(
+      screen.getByRole("switch", { name: /Vull rebre notificacions al mòbil/u }),
+    ).toBeVisible();
+  });
+
   it("«Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK", async () => {
     await openProfile();
     const learn = screen.getByRole("link", { name: "Formació" });

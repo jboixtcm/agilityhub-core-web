@@ -161,7 +161,13 @@ export function NoticesCard({ client }: { client: ApiClient }) {
   }
 
   const saving = saverState.inFlight !== undefined || saverState.waiting;
-  const pushRow = shown.modules.push && support !== "unsupported";
+  // COMM-02: without the club's published VAPID key nothing can subscribe (`subscribeToPush`
+  // answers «unavailable»), so the switch would do nothing: it is hidden as with PUSH off.
+  const pushRow =
+    shown.modules.push &&
+    support !== "unsupported" &&
+    typeof branding.pushPublicKey === "string" &&
+    branding.pushPublicKey !== "";
 
   const change = (edits: Edits) => {
     setFailure(undefined);

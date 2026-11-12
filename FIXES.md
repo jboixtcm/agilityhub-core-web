@@ -144,3 +144,8 @@ Tests: 3 new cases in `CalendarPage.test.tsx` (restore flow, no button for a del
 
 Web part of the api's AUTH-06 (the api's own part, revoking unused links on a password change, is in the api repository). `ActivationPage` (`apps/clubs/src/App.tsx`) reads the link's token once and removes `token` and `t` from the address with `history.replaceState` before `exchangeMagicLink`, keeping `purpose` (and the rest of the query and the hash), as the handoff effect already did; `apps/clubs-admin` and `apps/id` already dropped it.
 Test: a new case in `apps/clubs/src/App.test.tsx` (the address the redemption sees and the one left afterwards; checked to fail without the change); the whole file runs and passes (100 tests).
+
+### COMM-02 — FIXED
+
+Web part of the api's COMM-02 (the api part, e-mail for N-15 and the SMS fallback, is a decision logged there). Screen 12's push switch (`apps/clubs/src/profile/NoticesCard.tsx`, `pushRow`) now also needs a non-empty `branding.pushPublicKey`: with PUSH on but no published VAPID key nothing can subscribe (`subscribeToPush` answered «unavailable» silently), so the switch is hidden as R-11-17 hides it with PUSH off. The reminder selector stays (the reminder also arrives in the app, and by e-mail with OPERATIONAL e-mail on); without the key it asks the browser for nothing, as before.
+Test: a new case in `NoticesCard.test.tsx` (checked to fail without the change); the profile and notifications suites run and pass (91 tests).
