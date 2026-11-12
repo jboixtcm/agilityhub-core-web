@@ -53,7 +53,7 @@
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,tsx}": [
-      "eslint --max-warnings 0 --config eslint.config.mjs",
+      "eslint --max-warnings 0 --no-warn-ignored --config eslint.config.mjs",
       "prettier --write"
     ],
     "*.css": [

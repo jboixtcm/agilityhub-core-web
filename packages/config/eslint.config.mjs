@@ -83,6 +83,9 @@ export default tseslint.config(
       "**/coverage/**",
       "docs/**",
       "roadmap/**",
+      // Written by `pnpm api:generate` (CI regenerates and diffs it); the package's own lint and
+      // .prettierignore leave it out too, so the pre-commit hook does not lint it either.
+      "packages/api-client/src/generated/**",
     ],
   },
   {

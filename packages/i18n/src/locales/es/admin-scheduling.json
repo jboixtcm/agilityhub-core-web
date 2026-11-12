@@ -159,6 +159,7 @@
     "saved": "Cambios guardados",
     "cancelled": "Clase anulada",
     "deleted": "Clase eliminada",
+    "restored": "Clase restaurada",
     "closedDay": "El club está cerrado este día",
     "selected": {
       "title": "Clase seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
@@ -171,6 +172,7 @@
       "cancel": "ANULAR LA CLASE",
       "delete": "ELIMINAR",
       "deleteDraft": "Eliminar",
+      "restore": "RESTAURAR LA CLASE",
       "close": "Cerrar"
     },
     "ringBookings": {
@@ -254,6 +256,11 @@
     "confirmWaitlist": "ANULAR Y AVISAR A LA LISTA DE ESPERA",
     "simpleCancel": "¿Quieres anular la clase?",
     "simpleDelete": "¿Quieres eliminar la clase?"
+  },
+  "restoreModal": {
+    "title": "Restaurar la clase — {day} · {time} · {description} · {ring} · {instructors}",
+    "text": "La clase volverá a estar activa. Las reservas y la lista de espera que tenía cuando se anuló no se recuperan, y no se avisa a nadie.",
+    "conflict": "Ya hay otra clase en esta pista a la misma hora."
   },
   "registrants": {
     "title": "Inscritos ({booked}/{capacity})",

@@ -936,6 +936,56 @@ export const calendarHandlers = [
       }),
     );
   }),
+  // SCH-01: a CANCELLED class not yet started and not deleted becomes ACTIVE again, with nothing
+  // it lost (bookings, waiting list) and only if its ring is still free; nobody is notified.
+  http.post("*/api/v1/class-sessions/:id/restoration", ({ params }) => {
+    const current = ownSession(String(params.id));
+    if (current === undefined) return apiError("NOT_FOUND", "Class not found", 404);
+    if (
+      current.state !== "CANCELLED" ||
+      current.cancellation === null ||
+      current.cancellation === undefined ||
+      current.cancellation.reason === "DELETED" ||
+      Date.parse(current.startsAt) <= Date.now()
+    ) {
+      return apiError("INVALID_STATE", "The class cannot be restored", 409);
+    }
+    const ringId = current.ringId ?? null;
+    if (ringId !== null) {
+      const taken = planningState.sessions.some(
+        (session) =>
+          session.id !== current.id &&
+          (session.state === "DRAFT" || session.state === "ACTIVE") &&
+          session.ringId === ringId &&
+          session.date === current.date &&
+          overlaps(
+            { end: current.endTime, start: current.startTime },
+            { end: session.endTime, start: session.startTime },
+          ),
+      );
+      if (taken) return apiError("CLASS_CONFLICT", "Another class holds the ring", 409);
+      if (blockOnRing(ringId, current.date, current.startTime, current.endTime) !== undefined) {
+        return apiError("RING_BLOCKED", "The ring is blocked at that time", 422);
+      }
+      const bookings = ringBookingsProblem(
+        ringId,
+        current.date,
+        current.startTime,
+        current.endTime,
+        false,
+      );
+      if (bookings !== undefined) return bookings;
+    }
+    return HttpResponse.json(
+      replaceSession({
+        ...current,
+        cancellation: null,
+        counters: { booked: 0, waiting: 0 },
+        state: "ACTIVE",
+        version: current.version + 1,
+      }),
+    );
+  }),
   http.post("*/api/v1/class-sessions/:id/risk-exemption", async ({ params, request }) => {
     const current = ownSession(String(params.id));
     if (current === undefined) return apiError("NOT_FOUND", "Class not found", 404);

@@ -1367,6 +1367,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/class-sessions/{id}/restoration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * restoreClass
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. SCH-01: a CANCELLED class whose start is still ahead and whose cancellation.reason is not DELETED becomes ACTIVE again, with cancellation null; anything else is 409 INVALID_STATE (a repeat included). The bookings, waiting-list entries and holds the cancellation removed are not restored and nobody is notified: counters stay {booked: 0, waiting: 0}. The ring must still be free: another DRAFT/ACTIVE class of the ring at that time is 409 CLASS_CONFLICT, an ACTIVE ring block 422 RING_BLOCKED, a live training booking 422 RING_HAS_BOOKINGS {bookings[]} (never cancelled). Audited as CLASS_RESTORED.
+         */
+        post: operations["restoreClass"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/class-sessions/{id}/risk-exemption": {
         parameters: {
             query?: never;
@@ -2416,7 +2436,7 @@ export interface paths {
         };
         /**
          * health
-         * @description ANON, global (no tenant, no locale, no data; an Authorization header is never read). 200 {status: UP} only when a Mongo ping answers within 1 s; otherwise 503 with the same envelope and status DOWN. version and builtAt come from the build.
+         * @description ANON, global (no tenant, no locale, no data; an Authorization header is never read). 200 {status: UP} only when a Mongo ping answers within 1 s; otherwise 503 with the same envelope and status DOWN. version, builtAt and commit come from the build.
          */
         get: operations["health"];
         put?: never;
@@ -5882,7 +5902,7 @@ export interface paths {
         put?: never;
         /**
          * subscribePush
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (its hash; one ACTIVE subscription per endpoint and club), ACTIVE again if it had expired. A subscription never changes owner (E76): when another account's is active on this browser it ends (EXPIRED, PushUnsubscribed for that account) and the caller gets a subscription of its own, a new id. deviceLabel from the User-Agent when absent («iPhone · Safari»); PushSubscribed{accountId, endpoint = its SHA-256} when something changed. An endpoint that is no https URL, or keys that are not base64url of a point on P-256 (65 bytes, uncompressed) and a 16-byte secret → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Tenant comes from the JWT.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (its hash; one ACTIVE subscription per endpoint and club), ACTIVE again if it had expired. A subscription never changes owner (E76): when another account's is active on this browser it ends (EXPIRED, PushUnsubscribed for that account) and the caller gets a subscription of its own, a new id. deviceLabel from the User-Agent when absent («iPhone · Safari»); PushSubscribed{accountId, endpoint = its SHA-256} when something changed. An endpoint that is no https URL of a DNS name of two labels or more on the HTTPS port (an IP literal, localhost or another port is refused), or keys that are not base64url of a point on P-256 (65 bytes, uncompressed) and a 16-byte secret → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Tenant comes from the JWT.
          */
         post: operations["subscribePush"];
         delete?: never;
@@ -8089,7 +8109,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -11078,6 +11098,8 @@ export interface components {
         HealthResponse: {
             /** Format: date-time */
             builtAt: string;
+            /** @description REL-02: the git commit the running build was made from (the image build records it); null when the build did not record one. */
+            commit: string | null;
             /** @enum {string} */
             status: "UP" | "DOWN";
             version: string;
@@ -26818,6 +26840,133 @@ export interface operations {
                 };
             };
             /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    restoreClass: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmptyRequest"];
+            };
+        };
+        responses: {
+            /** @description ClassSession */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassSession"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, CLASS_CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RING_BLOCKED, RING_HAS_BOOKINGS */
             422: {
                 headers: {
                     [name: string]: unknown;

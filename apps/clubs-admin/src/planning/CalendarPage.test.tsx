@@ -2085,3 +2085,147 @@ describe("Josep feedback: generated daily bands", () => {
     expect(within(drawer).getByRole("button", { name: "CREA LA CLASSE" })).toBeDisabled();
   });
 });
+
+describe("SCH-01 D4: an ADMIN restores a cancelled class that has not started yet", () => {
+  /** Another admin's cancellation (or an earlier one), straight to the mock api. */
+  async function cancelOnApi(id: string, reason: "CLUB_MANUAL" | "DELETED") {
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    await api.POST("/class-sessions/{id}/cancellation", {
+      body: { adminText: "Plou massa.", reason },
+      params: { header: { "Idempotency-Key": `cancel-${id}` }, path: { id } },
+    });
+  }
+
+  /** A future class of the mock week other than the Wednesday 18:50 (Thursday 13). */
+  function thursdayClass(): string {
+    const session = planningState.sessions.find(
+      (item) => item.date === "2026-08-13" && item.state === "ACTIVE" && item.ringId !== null,
+    );
+    if (session === undefined) throw new TypeError("Missing a Thursday class");
+    return session.id;
+  }
+
+  async function openCancelled() {
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Anul·lades" }));
+    return grid(/del 10 al 16 d.agost$/u);
+  }
+
+  it("[RESTAURA LA CLASSE] asks first, sends {} and shows the class active and selected under «Actives»", async () => {
+    await cancelOnApi(WEDNESDAY_1850, "CLUB_MANUAL");
+    const bodies = captureBodies("POST", "/restoration");
+    await renderCalendar();
+    const cancelled = await openCancelled();
+    fireEvent.click(
+      await within(cancelled).findByRole("button", {
+        name: /^dc 12 18:50 · B\+C · 0\/5 · anul·lada · pel club/u,
+      }),
+    );
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "RESTAURA LA CLASSE" }));
+
+    const dialog = await screen.findByRole("dialog", {
+      name: "Restaurar la classe — dc 12 · 18:50 · B+C · Central · Marc",
+    });
+    expect(dialog).toHaveTextContent(
+      "La classe tornarà a estar activa. Les reserves i la llista d'espera que tenia quan es va anul·lar no es recuperen, i no s'avisa ningú.",
+    );
+    expect(bodies).toEqual([]);
+    fireEvent.click(within(dialog).getByRole("button", { name: "RESTAURA LA CLASSE" }));
+
+    expect(await screen.findByText("Classe restaurada")).toBeVisible();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(bodies).toEqual([{}]);
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Actives" })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    });
+    await waitFor(() => {
+      expect(selectedCard()).toHaveTextContent(
+        "Classe seleccionada — dc 12 · 18:50 · B+C · Central · Marcactiva0/5",
+      );
+    });
+    expect(
+      within(selectedCard()).queryByRole("button", { name: "RESTAURA LA CLASSE" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("offers no restore for a deleted class, a class that has started, or an INSTRUCTOR", async () => {
+    const thursday = thursdayClass();
+    await cancelOnApi(thursday, "DELETED");
+    await cancelOnApi(WEDNESDAY_1850, "CLUB_MANUAL");
+    await renderCalendar();
+    const cancelled = await openCancelled();
+
+    // The review cancelled the Wednesday 9:30 class, which started at 9:30 (now 10:00 local).
+    fireEvent.click(await within(cancelled).findByRole("button", { name: /^dc 12 9:30/u }));
+    expect(selectedCard()).toHaveTextContent(/^Classe seleccionada — dc 12 · 9:30/u);
+    expect(
+      within(selectedCard()).queryByRole("button", { name: "RESTAURA LA CLASSE" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(
+      within(cancelled).getByRole("button", { name: /^dj 13 .*anul·lada · eliminada/u }),
+    );
+    expect(selectedCard()).toHaveTextContent(/^Classe seleccionada — dj 13/u);
+    expect(
+      within(selectedCard()).queryByRole("button", { name: "RESTAURA LA CLASSE" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(within(cancelled).getByRole("button", { name: /^dc 12 18:50/u }));
+    expect(
+      within(selectedCard()).getByRole("button", { name: "RESTAURA LA CLASSE" }),
+    ).toBeVisible();
+
+    cleanup();
+    mockScenario("instructor");
+    await renderCalendar({ readOnly: true });
+    const readOnly = await openCancelled();
+    fireEvent.click(await within(readOnly).findByRole("button", { name: /^dc 12 18:50/u }));
+    expect(
+      within(selectedCard()).queryByRole("button", { name: "RESTAURA LA CLASSE" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("says why the api refuses: another class on the ring (CLASS_CONFLICT) and a blocked ring", async () => {
+    await cancelOnApi(WEDNESDAY_1850, "CLUB_MANUAL");
+    const api = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const cancelledClass = planningState.sessions.find((item) => item.id === WEDNESDAY_1850);
+    await api.POST("/class-sessions", {
+      body: {
+        date: "2026-08-12",
+        endTime: cancelledClass?.endTime ?? "",
+        instructorIds: ["instructor-marc"],
+        levelIds: ["level-b"],
+        ringId: cancelledClass?.ringId ?? null,
+        startTime: cancelledClass?.startTime ?? "",
+      },
+    });
+    await renderCalendar();
+    const cancelled = await openCancelled();
+    fireEvent.click(await within(cancelled).findByRole("button", { name: /^dc 12 18:50/u }));
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "RESTAURA LA CLASSE" }));
+    const dialog = await screen.findByRole("dialog", { name: /^Restaurar la classe/u });
+    fireEvent.click(within(dialog).getByRole("button", { name: "RESTAURA LA CLASSE" }));
+
+    expect(
+      await within(dialog).findByText(
+        "Ja hi ha una altra classe a aquesta pista a la mateixa hora.",
+      ),
+    ).toBeVisible();
+
+    server.use(
+      http.post("*/api/v1/class-sessions/:id/restoration", () =>
+        HttpResponse.json(
+          { code: "RING_BLOCKED", details: null, message: "Ring blocked", traceId: "trace-1" },
+          { status: 422 },
+        ),
+      ),
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "RESTAURA LA CLASSE" }));
+    expect(await within(dialog).findByText("Aquesta pista està bloquejada.")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Anul·lades" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+});

@@ -159,6 +159,7 @@
     "saved": "Canvis desats",
     "cancelled": "Classe anul·lada",
     "deleted": "Classe eliminada",
+    "restored": "Classe restaurada",
     "closedDay": "El club està tancat aquest dia",
     "selected": {
       "title": "Classe seleccionada — {day} · {time} · {description} · {ring} · {instructors}",
@@ -171,6 +172,7 @@
       "cancel": "ANUL·LA LA CLASSE",
       "delete": "ELIMINA",
       "deleteDraft": "Elimina",
+      "restore": "RESTAURA LA CLASSE",
       "close": "Tanca"
     },
     "ringBookings": {
@@ -254,6 +256,11 @@
     "confirmWaitlist": "ANUL·LA I AVISA LA LLISTA D'ESPERA",
     "simpleCancel": "Vols anul·lar la classe?",
     "simpleDelete": "Vols eliminar la classe?"
+  },
+  "restoreModal": {
+    "title": "Restaurar la classe — {day} · {time} · {description} · {ring} · {instructors}",
+    "text": "La classe tornarà a estar activa. Les reserves i la llista d'espera que tenia quan es va anul·lar no es recuperen, i no s'avisa ningú.",
+    "conflict": "Ja hi ha una altra classe a aquesta pista a la mateixa hora."
   },
   "registrants": {
     "title": "Inscrits ({booked}/{capacity})",

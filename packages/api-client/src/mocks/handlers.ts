@@ -4769,6 +4769,8 @@ export const handlers = [
       status: "UP",
       version: "0.0.0-mock",
       builtAt: "2026-09-05T00:00:00Z",
+      // REL-02 (api): required since the adopted snapshot; a mock build records no commit.
+      commit: null,
     }),
   ),
 ];
