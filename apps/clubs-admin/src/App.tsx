@@ -34,6 +34,7 @@ import {
 import {
   lazy,
   type ReactNode,
+  Suspense,
   type SyntheticEvent,
   useCallback,
   useContext,
@@ -62,7 +63,6 @@ import { ConsoleForbidden } from "./console/ConsoleForbidden";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
-import { Gallery } from "./dev/gallery";
 import { FollowUpPage } from "./followup/FollowUpPage";
 import {
   FollowUpReadFailureNotice,
@@ -89,6 +89,11 @@ import { UserMenu } from "./UserMenu";
 const ConsolePage = lazy(() => import("./console/ConsolePage"));
 // D18 and D16 «Geometria» (S16, E9-W03): the course planner's chunk.
 const CoursesRoute = lazy(() => import("./courses/CoursesRoute"));
+// The UI gallery exists in development only: loaded on demand, so neither it nor its mock branding
+// fixture reaches a production build (FE-05).
+const Gallery = import.meta.env.DEV
+  ? lazy(() => import("./dev/gallery").then((module) => ({ default: module.Gallery })))
+  : undefined;
 
 interface AdminRouteDefinition {
   path: string;
@@ -1275,8 +1280,12 @@ export function App({ authClient }: { authClient: AuthClient }) {
     if (strayTarget !== undefined) window.history.replaceState(null, "", strayTarget);
   }, [strayTarget]);
 
-  if (import.meta.env.DEV && pathname === "/_gallery") {
-    return <Gallery />;
+  if (import.meta.env.DEV && Gallery !== undefined && pathname === "/_gallery") {
+    return (
+      <Suspense fallback={null}>
+        <Gallery />
+      </Suspense>
+    );
   }
   if (pathname === "/acces") {
     window.location.replace("/entrar");

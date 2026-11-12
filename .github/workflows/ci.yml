@@ -38,6 +38,10 @@ jobs:
       - name: Lint, typecheck, test, and build
         run: pnpm turbo run lint typecheck test build --concurrency=2
 
+      # FE-05: the three production builds above carry no mock world (MSW, its fixtures).
+      - name: Check production bundles for mock data
+        run: node scripts/check-production-bundles.mjs
+
       # E11-W03: the real-core specs are no workspace package, so turbo never typechecked them.
       - name: Typecheck the real-core specs
         run: pnpm typecheck:e2e-core

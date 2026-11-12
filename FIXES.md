@@ -82,3 +82,11 @@ Left, needs a decision: the 36 × 20 px switch (`.ah-switch`, `packages/ui/src/c
 
 No code changed. Verified: `/estadistiques` and `/estadistiques/lliga` are routed to the placeholder and marked "Screens 27 and 27b (reserved for R2)" (`apps/clubs/src/App.tsx:212-214`), with no link to them. The receipts list shows only the `billing:empty` title (`apps/clubs/src/billing/InvoicesPage.tsx:336-337`).
 To decide: keep the two reserved routes or remove them until R2; whether the empty receipts state gets a sentence saying that earlier receipts stay in the previous system (new copy in ca/es/en, no mockup literal). INC-11, INC-41, INC-76 and INC-80 stay for after launch, as the audit recommends.
+
+## web-03-web-security
+
+### FE-05 — FIXED
+
+The back office loads its UI gallery with `import()` only when `import.meta.env.DEV` (`apps/clubs-admin/src/App.tsx`), so neither the gallery nor the MSW branding fixture it imports reaches a production build. The entry chunk went from 1,148 kB to 960 kB (gzip 386 → 242 kB) and no longer holds `canic.example.test`. `/_gallery` on the dev server works as before.
+New check `scripts/check-production-bundles.mjs`: it searches every text file of `apps/clubs/dist`, `apps/clubs-admin/dist` and `apps/id/dist` for `mockServiceWorker`, `agilityhub.mockScenario` and `example.test`, and refuses MSW's worker file. CI runs it right after the build (step "Check production bundles for mock data"). It failed on the back-office build made before the fix and passes on the three builds after it.
+Tests: `scripts/check-production-bundles.test.mjs` (new, 5 cases, node:test; added to the clubs `test:bundle-check` and to turbo's `clubs#test` inputs), run and passing. The back office's `App.test.tsx` and `lazy-chunks.test.tsx` run and pass.
