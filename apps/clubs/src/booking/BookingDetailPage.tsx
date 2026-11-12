@@ -11,10 +11,11 @@ import {
   Skeleton,
   type Tone,
 } from "@agilityhub/ui";
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BookingCourseLines } from "../courses/blocks";
+import { useWindowFocus } from "../training/shared";
 
 import "./booking.css";
 import { type Booking, errorText, localParts, type Translate, useBooking } from "./shared";
@@ -110,6 +111,14 @@ export function BookingDetailPage({
       window.clearTimeout(timer);
     };
   }, [inTimeUntil, openInTime]);
+  // A phone that slept with the dialog open runs that timer late: the app coming back checks too.
+  useWindowFocus(
+    useCallback(() => {
+      if (Date.now() > inTimeUntil) {
+        setDialog((current) => (current?.late === false ? { late: true } : current));
+      }
+    }, [inTimeUntil]),
+  );
 
   if (booking.status === "loading") {
     return (

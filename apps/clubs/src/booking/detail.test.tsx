@@ -1,6 +1,6 @@
 import { bookingState, catalogState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
@@ -286,6 +286,32 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
         undefined,
         { timeout: 5000 },
       ),
+    ).toBeVisible();
+    expect(within(dialog).queryByText(/Si anul·les ara, la classe no comptarà/u)).toBeNull();
+  });
+
+  it("WEB-09 (R-08-10): a dialog opened in time on a phone that then slept past `cancellableInTimeUntil` warns when the app comes back, without waiting for the timer", async () => {
+    // The api's instant one hour after the dialog opens; the timer set for it never runs here.
+    const inTimeUntil = new Date(Date.now() + 3_600_000).toISOString();
+    rewrite("/bookings/:id", (body) => {
+      body.cancellableInTimeUntil = inTimeUntil;
+    });
+    await openBooking();
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText(/Si anul·les ara, la classe no comptarà/u)).toBeVisible();
+    // Still in time, coming back changes nothing.
+    act(() => {
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    expect(within(dialog).queryByText(/^Falten menys de 4 hores/u)).toBeNull();
+
+    vi.setSystemTime(new Date(Date.now() + 7_200_000));
+    act(() => {
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    expect(
+      within(dialog).getByText("Falten menys de 4 hores: la sessió comptarà com a feta."),
     ).toBeVisible();
     expect(within(dialog).queryByText(/Si anul·les ara, la classe no comptarà/u)).toBeNull();
   });

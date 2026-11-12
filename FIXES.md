@@ -60,6 +60,7 @@ Before launch, run `pnpm e2e:core` once against a staging copy of the exact rele
 
 `BookingDetailPage` (`apps/clubs/src/booking/BookingDetailPage.tsx`): a cancel dialog opened in time now switches to the late warning when `cancellableInTimeUntil` passes while it is still open. A timer is set for that instant and cleared when the dialog closes; delays beyond `setTimeout`'s 24.8-day range are skipped. Before this, the dialog kept the value it computed when it opened.
 Test: a new case in `apps/clubs/src/booking/detail.test.tsx` (checked to fail without the timer); the whole file runs and passes (28 tests).
+Review correction: a timer does not count the time a phone spends asleep, so a dialog left open on a locked phone would have warned late. The dialog is now also checked when the app comes back (`useWindowFocus`: focus, visible again, online). One more case in `detail.test.tsx` (checked to fail without the correction); the whole file runs and passes (29 tests).
 Left: the decision still uses the device clock. Correcting it needs the server's time with the booking, as the seat hold has it. OTHER-REPO: add `serverNow` (date-time) to the `Booking` response of `GET /bookings/{id}`, as `SeatHoldResponse` does; the web would then apply the offset as `useCountdown` does. Rewording the in-time text to "if you cancel before HH:MM" is new copy for 07 (no mockup literal), so it needs a decision.
 
 ### WEB-10 — PARTIAL
