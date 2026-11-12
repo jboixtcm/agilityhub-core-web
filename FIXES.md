@@ -47,3 +47,9 @@ The i18n loader backend (`packages/i18n/src/backend.ts`, used by clubs, clubs-ad
 Test: `packages/i18n/src/backend.test.ts` (new, 3 cases); the whole i18n vitest suite runs and passes.
 Left, needs a decision: the reload after a deploy (`sw.ts` `skipWaiting` + `clients.claim`, `registerType: "autoUpdate"` in `apps/clubs/vite.config.ts`). Options: keep it and release outside booking peaks; switch to `registerType: "prompt"` with an "update available" notice (new copy); or defer the reload until the page is hidden. A client/API version handshake is a separate choice. Showing a screen error state instead of raw keys after the retry also fails is new UI, so it needs a decision too.
 Not code: confirm the reload behaviour on staging with an open tab during a deploy, and schedule releases away from the weekly booking opening.
+
+### WEB-11 — PARTIAL
+
+The back arrows of 07 and the course viewer (`.booking-screen__back`, `apps/clubs/src/booking/booking.css`) and of the self-service pages (`.self-page__header a`, `apps/clubs/src/styles.css`) keep their 32 px look. An invisible `::before` adds 0.375 rem on each side, so they take taps on a 44 px area. Nothing else that can be tapped sits next to them.
+Test: a new case in `apps/clubs/src/polish-styles.test.ts`, which can now read `booking.css` too (run, passing).
+Left, needs a decision: the 36 × 20 px switch (`.ah-switch`, `packages/ui/src/components.css`). On screen 12 the rows of switches are about 2 rem apart (`.profile-notices` gap 0.75 rem), so a 44 px invisible area would cover the gap. A tap just below one switch would then toggle the next one. Options: more space between the rows of 12 (moves away from the mockup), a larger switch track, or a smaller non-overlapping area (about 32 px tall).
