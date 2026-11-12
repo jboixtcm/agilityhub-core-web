@@ -11,7 +11,7 @@ import {
   Skeleton,
   type Tone,
 } from "@agilityhub/ui";
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BookingCourseLines } from "../courses/blocks";
@@ -93,6 +93,23 @@ export function BookingDetailPage({
   // The answer of this page's own cancellation: only it says «dins el termini» or «tard» (step 6).
   // A booking cancelled elsewhere (a swap, the system, an old one) shows just its state chip.
   const [cancelled, setCancelled] = useState<{ late: boolean }>();
+  // WEB-09 (R-08-10): a dialog opened in time and still open when `cancellableInTimeUntil` passes
+  // warns before the member confirms.
+  const inTimeUntil =
+    booking.status === "ready" ? Date.parse(booking.data.cancellableInTimeUntil) : Number.NaN;
+  const openInTime = dialog?.late === false;
+  useEffect(() => {
+    if (!openInTime || !Number.isFinite(inTimeUntil)) return undefined;
+    const wait = Math.max(inTimeUntil + 1 - Date.now(), 0);
+    // `setTimeout` holds at most 2^31 − 1 ms (~24.8 days); no dialog stays open that long.
+    if (wait > 2_147_483_647) return undefined;
+    const timer = window.setTimeout(() => {
+      setDialog((current) => (current === undefined ? current : { late: true }));
+    }, wait);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [inTimeUntil, openInTime]);
 
   if (booking.status === "loading") {
     return (

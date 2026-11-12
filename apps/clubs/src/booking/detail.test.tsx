@@ -271,6 +271,25 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     },
   );
 
+  it("WEB-09 (R-08-10): a dialog opened in time and left open across `cancellableInTimeUntil` warns before the member confirms", async () => {
+    // The api's instant two seconds after it answers (the faked clock moves on with real time).
+    rewrite("/bookings/:id", (body) => {
+      body.cancellableInTimeUntil = new Date(Date.now() + 2000).toISOString();
+    });
+    await openBooking();
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).queryByText(/^Falten menys de 4 hores/u)).toBeNull();
+    expect(
+      await within(dialog).findByText(
+        "Falten menys de 4 hores: la sessió comptarà com a feta.",
+        undefined,
+        { timeout: 5000 },
+      ),
+    ).toBeVisible();
+    expect(within(dialog).queryByText(/Si anul·les ara, la classe no comptarà/u)).toBeNull();
+  });
+
   it("E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note", async () => {
     let reads = 0;
     let failing = true;
