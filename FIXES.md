@@ -132,6 +132,8 @@ Question: should leaving an impersonation or a support access keep the actor sig
 
 ## cross-repo
 
+The api fix log's `OTHER-REPO:` items for this repository, done here or left with their question. The items this repository logged for the api are in the api's `## cross-repo` section.
+
 ### SCH-01 — FIXED
 
 D4 (`apps/clubs-admin/src/planning`): the selected-class card of a CANCELLED class whose `cancellation.reason` is not DELETED and whose `startsAt` is still ahead offers [RESTAURA LA CLASSE] to ADMIN only (`isRestorable` in the new `RestoreClassModal.tsx`; INSTRUCTOR's read-only card has none). Its confirmation says the bookings and the waiting list are not recovered and nobody is notified; it sends `POST /class-sessions/{id}/restoration` with `{}` (no Idempotency-Key) and then shows the restored class selected under «Actives». Refusals show inside the dialog: `CLASS_CONFLICT` with its own text («another class on this ring at the same time»; the shared `errors:CLASS_CONFLICT` speaks of a booking), `INVALID_STATE`, `RING_BLOCKED` and `RING_HAS_BOOKINGS` with their `errors:` messages; `INVALID_STATE` also reloads the calendar. New copy in ca/es/en (`calendar.selected.restore`, `calendar.restored`, `restoreModal.*`; es in the infinitive) and the `CLASS_RESTORED` audit label (`admin-audit:actions`).
@@ -139,28 +141,66 @@ Contract: the api branch's `docs/openapi/openapi.json` was copied byte for byte 
 Tooling: the pre-commit hook (lint-staged) ran eslint on the regenerated `src/generated/schema.d.ts`, which the package's lint script, CI and `.prettierignore` all leave out, so no regeneration could be committed with the hook on. The shared eslint config now ignores that folder and the hook's eslint call passes `--no-warn-ignored` (`packages/config/eslint.config.mjs`, root `package.json`). The hook's `prettier --write` also reformatted the copied snapshot in that commit (same JSON, other bytes); a second commit restores the api's bytes and lists the file in `.prettierignore`, as the generated types already are.
 MSW: new `POST /class-sessions/:id/restoration` handler in `calendar-handlers.ts` with the api's refusals (handler count 414 → 415 in `index.test.ts`).
 Tests: 3 new cases in `CalendarPage.test.tsx` (restore flow, no button for a deleted, a started class or an INSTRUCTOR, refusal messages; the second fails without the DELETED guard) and 1 in `calendar-handlers.test.ts`; the whole clubs-admin (1151) and api-client (802) suites, `pnpm i18n:check`, the typechecks of api-client, clubs-admin, clubs, id and e2e/core ran and pass. Playwright not run.
+Other-repo part done in 68d2ed3 and bead82d.
 
 ### AUTH-06 — FIXED
 
 Web part of the api's AUTH-06 (the api's own part, revoking unused links on a password change, is in the api repository). `ActivationPage` (`apps/clubs/src/App.tsx`) reads the link's token once and removes `token` and `t` from the address with `history.replaceState` before `exchangeMagicLink`, keeping `purpose` (and the rest of the query and the hash), as the handoff effect already did; `apps/clubs-admin` and `apps/id` already dropped it.
 Test: a new case in `apps/clubs/src/App.test.tsx` (the address the redemption sees and the one left afterwards; checked to fail without the change); the whole file runs and passes (100 tests).
+Other-repo part done in 6d13798.
 
 ### COMM-02 — FIXED
 
 Web part of the api's COMM-02 (the api part, e-mail for N-15 and the SMS fallback, is a decision logged there). Screen 12's push switch (`apps/clubs/src/profile/NoticesCard.tsx`, `pushRow`) now also needs a non-empty `branding.pushPublicKey`: with PUSH on but no published VAPID key nothing can subscribe (`subscribeToPush` answered «unavailable» silently), so the switch is hidden as R-11-17 hides it with PUSH off. The reminder selector stays (the reminder also arrives in the app, and by e-mail with OPERATIONAL e-mail on); without the key it asks the browser for nothing, as before.
 Test: a new case in `NoticesCard.test.tsx` (checked to fail without the change); the profile and notifications suites run and pass (91 tests).
+Other-repo part done in 93bb651.
 
 ### REL-08 — FIXED
 
 Web part of the api's REL-08 (the api entry stays a decision on a scheduled real-core workflow). (1) The contract copy: `packages/api-client/openapi/openapi.json` now equals the api branch's `docs/openapi/openapi.json` byte for byte and `src/generated/schema.d.ts` is regenerated, done with SCH-01 (see that entry; it brings `familyGroupHolder`, `CLASS_RESTORED`, the restoration route, `HealthResponse.commit` and COMM-05's description). (2) `scripts/e2e-core.sh` no longer defaults `CORE_IMAGE` to `ghcr.io/…/agilityhub-core-api:main`: without `CORE_IMAGE` it stops (exit 2) and asks for the api commit's `sha-<commit>` image, and a `:main` or `:latest` tag is refused; a local image under review (its id or an own tag) still runs. `scripts/core-stack/docker-compose.yml` keeps its `:main` fallback, used only when Compose is run by hand.
 Checked: `bash -n`, and the three cases run by hand (unset and `:main` stop with the message; a `sha-` tag goes on to the image check). The real-core suite was not run (no Docker here). Left: the CI check that the copy equals the api snapshot of the paired commit (needs read access to the api repository; the api's REL-08 decision).
+Other-repo part done in 1e88729 (script) and 68d2ed3/bead82d (contract copy).
 
 ### REL-03 — PARTIAL
 
 Web part of the api's REL-03, item (1): `.github/workflows/ci.yml` no longer cancels runs on `main`. The concurrency group is the ref only for a pull request and the run id for a push, and `cancel-in-progress` is true only for pull requests, as in the api's CI, so every pushed commit keeps a completed run. Checked by parsing the YAML; the workflow did not run here.
-Left, to decide: (2) running `scripts/check-production-bundles.mjs` on the build the operator deploys, either a release script (`pnpm build` + the check) the runbook names, or each app's `build` when `VITE_MOCK` is not `1` (the script checks all three dists, so per-app it needs a path argument); this goes with the api's REL-03 decision on CI-built release artifacts. (3) A Playwright smoke against `vite preview` of the clubs build (service worker registration and update, a push subscription): not written here, since Playwright cannot run in this environment and a push subscription needs a decision on what stands in for the push service.
+Left, to decide: (2) running `scripts/check-production-bundles.mjs` on the build the operator deploys, either a release script (`pnpm build` + the check) the runbook names, or each app's `build` when `VITE_MOCK` is not `1` (the script already takes the dist folders as arguments); this goes with the api's REL-03 decision on CI-built release artifacts. (3) A Playwright smoke against `vite preview` of the clubs build (service worker registration and update, a push subscription): not written here, since Playwright cannot run in this environment and a push subscription needs a decision on what stands in for the push service.
+Other-repo part done in 1644ae3 (its message lacks the `fix(<scope>)` prefix: `ci: keep every run on main…`).
 
 ### REL-07 — PARTIAL
 
 Web part of the api's REL-07: `.github/dependabot.yml` also watches the `github-actions` ecosystem weekly, as the api repository does, so the workflow actions get update pull requests. Checked by parsing the YAML.
 Not done here: pinning `actions/checkout`, `pnpm/action-setup`, `actions/setup-node` and `actions/upload-artifact` (all `@v4`) by commit SHA needs the v4 SHAs looked up on GitHub (no access here; the api pins v7 releases, so copying its SHAs would be an upgrade); once pinned, Dependabot keeps the SHAs current (FE-08 (d)). A gitleaks job like the api's (`gitleaks/gitleaks-action` pinned by SHA) also needs the `GITLEAKS_LICENSE` secret in this repository (NOT-CODE) and a first full-history scan reviewed before it gates `main`. The level that fails `pnpm audit --prod` is the owner's (FE-08 (c)).
+Other-repo part done in 72e2524.
+
+### PRIV-01 — NEEDS-DECISION
+
+No code changed. The api entry's option (a), a `/privacy` route in `apps/id`, needs the reviewed platform policy text first. Question: where the policy lives, (a) that route (new page and copy in ca/es/en) or (b) a static page that `PLATFORM_PRIVACY_POLICY_URL` points at (no web change); and its version string.
+
+### AUTH-05 — NEEDS-DECISION
+
+No code changed. The CSP is the api entry's option (c), still open: a header in Caddy or a `<meta http-equiv>` written by each app's build, enforced or report-only first. Only once the build is chosen does the web write the policy (`default-src 'self'`, the inline branding script's hash, the API, Stripe and image origins) and check it on staging in the three SPAs. Same question as CFG-04.
+
+### SEPA-05 — NEEDS-DECISION
+
+No code changed. A collection-date field in D6's generate dialog (`apps/clubs-admin/src/billing/BillingModals.tsx`) depends on the api entry's R-12-12 choice: roll a non-TARGET day forward, refuse it with a 422 that proposes the next business day, or keep it. Until then D6 sends `collectionDate` only after the admin accepts a 422's `earliest`, as today.
+
+### PRIV-05 — NEEDS-DECISION
+
+No code changed. `packages/auth/src/onboarding.tsx:132,176` (the image box's initial state from `GET /me/onboarding`, `imageConsent` sent only when changed) waits for the api entry's choice (2): whose stored IMAGE_USE entries count as the member's own, and whether the api returns the value only for those or adds its source. Once chosen, the box starts unticked otherwise and `imageConsent` is sent on every save.
+
+### CFG-04 — NEEDS-DECISION
+
+No code changed. `apps/clubs/index.html:8-58` and `apps/clubs-admin/index.html:8-58` each carry the inline cached-branding script. Question (with AUTH-05 (c)): emit its sha256 at build time, or move it to a file (it must run before the first paint, so a file means one more blocking request); and whether the policy itself is a `<meta>` from the build or a Caddy header.
+
+### CFG-05 — NEEDS-DECISION
+
+No code changed. Question: whether the hosts publish a `robots.txt` (`Disallow: /` everywhere, or indexing allowed for a club's public pages). Once chosen, each `apps/*/vite.config.ts` emits it explicitly as it emits `favicon.svg` (`public/` is copied only in mock builds).
+
+### COMM-08 — NEEDS-DECISION
+
+No code changed. `apps/clubs/src/UnsubscribePage.tsx:39-45` sends the token on load, as R-11-08 describes the page («que envia el token a `POST /email-unsubscribes`»). Sending it only on a button press stops link scanners and forwarded copies, but adds a tap and new copy in ca/es/en (the page has no mockup); the api left the same choice open for the activation link (AUTH-06, «redeem the link on a button press»). Options: (a) a confirmation button; (b) keep sending on load (the effect is limited to CLUB_NEWS e-mail and the member can turn it back on in 12). It also goes with the RFC 8058 one-click choice of the api entry.
+
+### REL-02 — NEEDS-DECISION
+
+No code changed. Embedding the build's commit in each SPA has more than one form: (a) a `<meta>` in `index.html` from `GITHUB_SHA` or `git rev-parse HEAD` (marking a dirty tree or not); (b) a `version.json` beside it, which FE-07's open option (a), a "new version" notice comparing build ids, could also read. Which one, and where the release build runs (the api's REL-03 decision on CI-built artifacts), decide where the commit comes from.
