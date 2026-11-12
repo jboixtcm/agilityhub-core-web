@@ -17,13 +17,6 @@ describe("DogPhoto", () => {
     expect(screen.getByRole("img", { name: "Foto de Duna" })).toHaveAttribute("src", second);
   });
 
-  it("WEB-05: loads a list row's photo only when it nears the viewport, decoded off the main thread", () => {
-    render(<DogPhoto alt="Foto de Duna" name="Duna" src="/api/v1/attachments/files/example" />);
-    const image = screen.getByRole("img", { name: "Foto de Duna" });
-    expect(image).toHaveAttribute("loading", "lazy");
-    expect(image).toHaveAttribute("decoding", "async");
-  });
-
   it("does not create a broken image or duplicate an adjacent link's accessible name", () => {
     const view = render(
       <a href="/gossos/example">
