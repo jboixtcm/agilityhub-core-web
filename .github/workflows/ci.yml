@@ -9,9 +9,11 @@ on:
 permissions:
   contents: read
 
+# REL-03: only a pull request's older run is cancelled; every push to main keeps its own group,
+# so each deployed commit has a completed run (as the api's CI does).
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   checks:
