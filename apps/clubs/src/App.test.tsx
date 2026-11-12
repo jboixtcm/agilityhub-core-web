@@ -1049,6 +1049,28 @@ describe("T-01-19 activation screen", () => {
   });
 });
 
+describe("AUTH-06 (pre-production audit): the activation link's token leaves the address", () => {
+  it("drops `token` and `t` from the address before redeeming the link and keeps `purpose`", async () => {
+    mockScenario("activationReset");
+    const client = authClient();
+    const addresses: string[] = [];
+    const exchange = client.exchangeMagicLink.bind(client);
+    const spy = vi.spyOn(client, "exchangeMagicLink").mockImplementation((token) => {
+      addresses.push(`${window.location.pathname}${window.location.search}`);
+      return exchange(token);
+    });
+    window.history.pushState(null, "", "/activacio?token=valid&t=valid&purpose=RESET#form");
+    await renderApplication(client);
+
+    expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
+    expect(addresses).toEqual(["/activacio?purpose=RESET"]);
+    expect(spy).toHaveBeenCalledWith("valid");
+    expect(`${window.location.pathname}${window.location.search}${window.location.hash}`).toBe(
+      "/activacio?purpose=RESET#form",
+    );
+  });
+});
+
 describe("T-01-20 profile choice", () => {
   it("shows cards for every available role and sends the remember choice", async () => {
     mockScenario("multiProfile");

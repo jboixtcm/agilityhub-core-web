@@ -1093,7 +1093,8 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation(["auth", "errors"]);
   const parameters = new URLSearchParams(window.location.search);
   const purpose = parameters.get("purpose")?.toUpperCase();
-  const token = parameters.get("token") ?? parameters.get("t");
+  // Read once: the effect below takes the token out of the address before redeeming it.
+  const [token] = useState(() => parameters.get("token") ?? parameters.get("t"));
   const started = useRef(false);
   const [me, setMe] = useState<CurrentMe>();
   const [invalid, setInvalid] = useState(token === null || token === "");
@@ -1109,6 +1110,18 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
       return;
     }
     started.current = true;
+    // AUTH-06: the one-time token leaves the address bar (and the history, a shared screen, a
+    // copied address) before it is redeemed, as the handoff code does; `purpose` stays.
+    const address = new URL(window.location.href);
+    if (address.searchParams.has("token") || address.searchParams.has("t")) {
+      address.searchParams.delete("token");
+      address.searchParams.delete("t");
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${address.pathname}${address.search}${address.hash}`,
+      );
+    }
     if (token === null || token === "") {
       return;
     }
