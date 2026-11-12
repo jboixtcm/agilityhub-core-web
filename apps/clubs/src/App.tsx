@@ -1309,9 +1309,11 @@ function hasAdminPortal(me: CurrentMe) {
 
 function ProfileChoicePage({
   authClient,
+  client,
   navigate,
 }: {
   authClient: AuthClient;
+  client: ApiClient;
   navigate: (path: string) => void;
 }) {
   const { me } = useSession();
@@ -1329,7 +1331,13 @@ function ProfileChoicePage({
   const gender = icuGender(me.membership.gender);
 
   if (roles.length === 0) {
-    return <NoAppProfilePage authClient={authClient} />;
+    return (
+      <NoAppProfilePage
+        authClient={authClient}
+        client={client}
+        impersonated={me.impersonation !== undefined}
+      />
+    );
   }
 
   const selectProfile = async (role: Role) => {
@@ -1400,7 +1408,15 @@ function ProfileChoicePage({
   );
 }
 
-function NoAppProfilePage({ authClient }: { authClient: AuthClient }) {
+function NoAppProfilePage({
+  authClient,
+  client,
+  impersonated,
+}: {
+  authClient: AuthClient;
+  client: ApiClient;
+  impersonated: boolean;
+}) {
   const { t } = useTranslation("auth");
   const [working, setWorking] = useState(false);
   return (
@@ -1413,8 +1429,10 @@ function NoAppProfilePage({ authClient }: { authClient: AuthClient }) {
           disabled={working}
           onClick={() => {
             setWorking(true);
-            void authClient
-              .logout()
+            const logout = () => authClient.logout();
+            // R-11-07, as on 12 (FE-06): this device's push subscription goes first. An impersonated
+            // session never subscribed: the stored id is the admin's own device's and stays.
+            void (impersonated ? logout() : logoutWithPush(client, logout))
               .catch(() => undefined)
               .finally(() => {
                 setWorking(false);
@@ -1972,6 +1990,7 @@ function AppContent({
         <RequireAuth>
           <ProfileChoicePage
             authClient={authClient}
+            client={apiClient}
             navigate={(path) => {
               navigate(path, false);
             }}

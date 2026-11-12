@@ -221,19 +221,32 @@ async function subscribe(
   }
 }
 
-/** Logout of this device (R-11-07): `DELETE` of the stored subscription, best-effort. */
+/**
+ * Logout of this device (R-11-07): `DELETE` of the stored subscription, best-effort. Without an id
+ * to delete, or when the DELETE fails, the browser's own subscription is unsubscribed instead, as
+ * for a subscription that lands after its session left (FE-06): a lost DELETE never leaves this
+ * device receiving the notifications of a session that logged out.
+ */
 export async function unsubscribeFromPush(client: ApiClient): Promise<void> {
   const id = storedSubscriptionId();
-  if (id === undefined) return;
-  try {
-    localStorage.removeItem(PUSH_SUBSCRIPTION_STORAGE_KEY);
-  } catch {
-    // Nothing stored to forget.
+  if (id !== undefined) {
+    try {
+      localStorage.removeItem(PUSH_SUBSCRIPTION_STORAGE_KEY);
+    } catch {
+      // Nothing stored to forget.
+    }
+    try {
+      await client.DELETE("/push-subscriptions/{id}", { params: { path: { id } } });
+      return;
+    } catch {
+      // Lost or refused: the browser side goes instead.
+    }
   }
   try {
-    await client.DELETE("/push-subscriptions/{id}", { params: { path: { id } } });
+    const subscription = await pushRegistration?.pushManager.getSubscription();
+    await subscription?.unsubscribe();
   } catch {
-    // Best-effort: a lost DELETE leaves the subscription to the api's expiry (404/410 → EXPIRED).
+    // Nothing more to do: the api expires a subscription the push service refuses (404/410).
   }
 }
 

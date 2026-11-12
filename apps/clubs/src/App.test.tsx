@@ -29,6 +29,7 @@ import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App, MOBILE_ROUTES, MobileNavigation } from "./App";
+import { PUSH_SUBSCRIPTION_STORAGE_KEY } from "./notifications/push";
 import { isCountryFieldValid } from "./SelfServicePages";
 
 const canicBranding: Branding = {
@@ -841,6 +842,25 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     expect(
       recorded.requests.some((request) => /auth\/handoff|me\/home|instructor/u.test(request)),
     ).toBe(false);
+  });
+
+  it("FE-06 (R-11-07): the logout of an account without an app profile sends this device's push DELETE first, as 12's does", async () => {
+    mockScenario("admin");
+    await overrideMembership({ profiles: ["ADMIN"], roles: ["ADMIN"] });
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-7" }));
+    const logout = vi.spyOn(client, "logout");
+    window.history.pushState(null, "", "/perfil-acces");
+    await renderApplication(client);
+    const recorded = recordApiRequests();
+    fireEvent.click(await screen.findByRole("button", { name: "Tanca la sessió" }));
+    await waitFor(() => {
+      expect(logout).toHaveBeenCalledTimes(1);
+    });
+    recorded.stop();
+    expect(recorded.requests).toContain("DELETE /api/v1/push-subscriptions/push-7");
+    expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNull();
   });
 
   it("2026-11-01: a removed remembered member profile falls back to the remaining instructor profile", async () => {
