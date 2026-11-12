@@ -35,11 +35,12 @@ A read started by the app coming back keeps the rows on screen if it fails (a ph
 Tests: `apps/clubs/src/booking/loader.test.tsx` (new, 3 cases; checked to fail without the keep-rows guard), plus the existing booking, history, instructor, courses, training, App and notifications suites, all run and passing.
 Review correction: a read started by the app coming back replaces the read in flight. When that one was an explicit read still unanswered (07's reload after a cancellation, 04's after a join) and the new read failed, the old rows stayed on screen: «confirmada» after a cancellation, which E7-W06 step 3 rules out. Such a read now shows its error, as the read it replaced would have. One more case in `loader.test.tsx` (checked to fail without the correction); the whole clubs vitest suite runs and passes (797 tests).
 
-### WEB-05 — PARTIAL
+### WEB-05 — REVERTED-BY-REVIEW
 
 `DogPhoto` (`packages/ui/src/dog-photo.tsx`) renders its image with `loading="lazy"` and `decoding="async"`, so the admin dog list, the census rows and the instructor's student search fetch a photo only when its row nears the viewport. Its box already has a fixed size (`dog-photo.css`: 2.5 rem, 5 rem large), so no width/height attributes were needed to avoid layout shift.
 Test: a new case in `packages/ui/src/dog-photo.test.tsx` (run, passing); the admin census list and instructor suites run and pass.
 Left, needs a decision: downscaling before upload in `apps/clubs/src/SelfServicePages.tsx` (`changePhoto`) and in the admin photo upload (`apps/clubs-admin/src/census/CensusRecordPage.tsx:2789`). Choose the maximum edge (the audit suggests about 1024 px), the format and quality (JPEG vs WebP; PNG transparency), whether EXIF is stripped (it also removes GPS data) and whether the original is kept. Server-side renditions are OTHER-REPO: the api would store a thumbnail next to the original (`AttachmentService`) and expose its URL for list rows.
+Reverted by review: the photo URLs the api hands out are signed for five minutes (`AttachmentService.url`, `plusSeconds(300)`; `CensusResponses` "Short-lived signed dog photo URL"). With `loading="lazy"` a row scrolled into view more than five minutes after the list was read asks for an expired URL, gets 403 and falls back to the initial for good (`DogPhoto` keeps the failed `src`), while today every photo is fetched at render and stays cached. Lazy loading needs a decision on the URL lifetime (OTHER-REPO: longer-lived or unsigned thumbnail URLs) or on re-reading the list's URLs before they expire; it can come back together with the downscaling decision above.
 
 ### WEB-06 — NEEDS-DECISION
 
@@ -69,6 +70,7 @@ The i18n loader backend (`packages/i18n/src/backend.ts`, used by clubs, clubs-ad
 Test: `packages/i18n/src/backend.test.ts` (new, 3 cases); the whole i18n vitest suite runs and passes.
 Left, needs a decision: the reload after a deploy (`sw.ts` `skipWaiting` + `clients.claim`, `registerType: "autoUpdate"` in `apps/clubs/vite.config.ts`). Options: keep it and release outside booking peaks; switch to `registerType: "prompt"` with an "update available" notice (new copy); or defer the reload until the page is hidden. A client/API version handshake is a separate choice. Showing a screen error state instead of raw keys after the retry also fails is new UI, so it needs a decision too.
 Not code: confirm the reload behaviour on staging with an open tab during a deploy, and schedule releases away from the weekly booking opening.
+Review note: the retry is immediate and asks for the same chunk URL. Browsers that keep a failed dynamic `import()` in their module map (Chromium and WebKit have done so) answer the second call with the same failure without going to the network, so the gain may be limited to Firefox and to failures the browser does not cache. Harmless either way; check it on staging with a throttled first visit before counting on it.
 
 ### WEB-11 — PARTIAL
 
