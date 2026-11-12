@@ -3,3 +3,19 @@
 Branch `fix/pre-production-audit`, based on the production commit. One entry per audit finding. Statuses: FIXED, PARTIAL, NEEDS-DECISION (no code touched; question and options stated), NOT-CODE (operational, data or process), INVALID, REVERTED-BY-REVIEW. `OTHER-REPO:` marks a change still needed in the other repository. Finding IDs refer to `PRE_PRODUCTION_AUDIT_2026-11-11.md`.
 
 Integration tests (`*IT`) need MongoDB and were not run in the environment where these fixes were written; run the full CI before merging.
+
+## web-01-high
+
+### WEB-01 — NEEDS-DECISION
+
+No code changed. Verified: the login door depends on build flags (`apps/clubs/src/App.tsx:801-803`, `:1019-1045`, cases tested in `App.test.tsx:3025-3057`), the sign-up link is the only call to action below the form (`App.tsx:1062-1069`), and the admin fallback is the one-member access-resend dialog (`apps/clubs-admin/src/census/CensusRecordPage.tsx:1165`).
+Question: how do imported members who never set a password get in the first time? Options: (a) passwordless LOGIN link (build without `VITE_EMAIL_LOGIN_ENABLED=false`, server general e-mail delivery on); (b) recovery only (`VITE_EMAIL_RECOVERY_ENABLED=true` plus server `EMAIL_RECOVERY_ENABLED`), with copy telling first-time members to use it; (c) admin-staged access, which needs a new bulk "send access" action from a census selection (screen design, and the api's 60/hour per-IP magic-link limit would need its own decision: OTHER-REPO).
+Also to decide: the first-time copy on /entrar (no mockup literal exists) and whether the "Encara no hi ets? Apunta-t'hi" link is hidden or reworded during onboarding.
+Operational check before L1 (not code): confirm the flags of the live bundle on /entrar and the server delivery settings (`EMAIL_PUBLIC_DELIVERY_ENABLED`, hosted-demo allow-list), then test with one real imported, never-activated account.
+
+### WEB-02 — NEEDS-DECISION
+
+No code changed. Verified: the switch shows the account preference (`apps/clubs/src/profile/NoticesCard.tsx:244`), `subscribeToPush` is reached only from the switch and the reminder (`:172-181`, `:227`, `:249`), `unavailable` and `failed` show nothing by design (`apps/clubs/src/notifications/push.ts:81-86`), and the worker has no `pushsubscriptionchange` handler (`apps/clubs/src/sw.ts:75-92`).
+Each remedy needs a choice: a "turn on notifications on this device" button (new UI and copy outside the mockup), or re-registering an existing browser subscription when 12 opens (R-11-07 only allows the POST when the member turns the switch or a reminder on, and on a shared device it would subscribe a second account that never asked); messages for `unavailable`/`failed` (new copy); an inert switch on iOS outside the app (the switch also holds the account-wide preference, and `NoticesCard.test.tsx:795-814` codifies today's behaviour).
+`pushsubscriptionchange` has no single answer either: the worker has no bearer and the logout DELETE uses the id kept in page storage, so it means relaying to an open tab or a new api endpoint (OTHER-REPO).
+Before L3 (not code): test on an installed iPhone PWA and an Android phone, including a second device, reinstall and logout/login.
