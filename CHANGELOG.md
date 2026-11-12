@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-12 — Browser regression stability
+
+- Wait for the authenticated home screen before testing profile text-size preferences, avoiding a WebKit navigation race while preserving all preference assertions.
+
 ## 2026-11-11 — Class notices, signup and member tasks
 
 - Show today's class notices (up to six) and open the complete paginated history with View more. Display whole-number dog-level percentages.

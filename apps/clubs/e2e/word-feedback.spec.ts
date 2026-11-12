@@ -154,7 +154,8 @@ test("text size is remembered separately on a phone and a desktop", async ({ pag
   await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: "ENTRA", exact: true }).click();
   await page.waitForURL("**/inici");
-  await page.goto("http://127.0.0.1:4173/perfil");
+  await expect(page.getByRole("heading", { name: /Laura/u })).toBeVisible();
+  await page.getByRole("link", { name: "Perfil", exact: true }).click();
   const selector = page.getByLabel("Mida del text");
   const root = page.locator("html");
   await selector.selectOption("large");

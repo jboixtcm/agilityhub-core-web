@@ -259,3 +259,55 @@ The earlier release handoff records the local implementation stage. Jordi subseq
 The two requested club texts are now applied through the supported `club:apply` CLI, using a partial definition without accounts, catalogues, templates, pages or domains. The preview and apply each reported exactly two changes: MANUAL payment instructions and `signup.text.cashConditions`. A fresh encrypted backup passed isolated restore verification and off-host checksum verification before applying. Comparing complete club exports before and after confirmed that only those two values changed; payment provider order and enabled states were preserved. Authenticated parameter readback and public signup responses passed for Catalan, Spanish and the configured Catalan fallback for unsupported English. No passwords or roles changed, and no messages were sent or replayed. The user does not need platform-console credentials for this completed configuration update.
 
 Operational evidence is kept privately under the 2026-11-11 feedback release directory; the shareable status belongs in `SOFTWARE_CANIC/ops/evidence/2026-11-11-josep-feedback/`. The current application release remains the November 9 release until the coordinated API/web deployment passes its gates.
+
+
+## CI browser synchronization follow-up — 2026-11-12
+
+CI run 43103355792 passed lint, types, unit tests, build, translations and generated contracts. The browser stage failed in the existing WebKit text-size preference test: it started a hard navigation to `/perfil` before the login redirect to `/inici` had finished. The test now waits for the authenticated home heading and uses the visible Perfil link. All font-size, reload-persistence and viewport-specific assertions remain unchanged; no sleep, retry, skip or product behavior was added.
+
+Validation: `HEAVY_WAIT_MIN=120 heavy.sh docker run --rm --ipc=host --cpus=4 --memory=6g --env CI=1 --volume "$WEB_REPO:/src:ro" --volume "$PRIVATE_EVIDENCE:/evidence" --workdir /work mcr.microsoft.com/playwright:v1.63.0-noble sh /evidence/e2e-navigation-race.sh` — exit 0. The recipe installs the frozen dependencies, builds the workspaces, then runs `pnpm --filter clubs e2e e2e/word-feedback.spec.ts --grep 'text size is remembered' --repeat-each=10 --workers=2`: **20/20 passed**, ten each in Chromium and WebKit. Full log: `e2e-navigation-race.log`; recipe: `e2e-navigation-race.sh`. The next CI run will execute the complete regression suite.
+
+Last 40 lines:
+
+```text
+clubs-admin:build: dist/assets/errors-BoPU6Kvb.js                             16.22 kB │ gzip:   5.35 kB
+clubs-admin:build: dist/assets/console-C3kIcMmm.js                            20.89 kB │ gzip:   7.77 kB
+clubs-admin:build: dist/assets/console-D5exOSZl.js                            22.11 kB │ gzip:   8.46 kB
+clubs-admin:build: dist/assets/console-DyFH_iOR.js                            22.79 kB │ gzip:   8.55 kB
+clubs-admin:build: dist/assets/admin-census-By4Nkfr8.js                       24.07 kB │ gzip:   8.32 kB
+clubs-admin:build: dist/assets/admin-census-djDoAN-y.js                       25.60 kB │ gzip:   9.06 kB
+clubs-admin:build: dist/assets/admin-census-CIqEZMAw.js                       26.09 kB │ gzip:   9.08 kB
+clubs-admin:build: dist/assets/admin-settings-C5PIG77M.js                     27.90 kB │ gzip:   9.13 kB
+clubs-admin:build: dist/assets/admin-settings-pb4_v07S.js                     30.12 kB │ gzip:   9.88 kB
+clubs-admin:build: dist/assets/admin-settings-PQ2A-aKY.js                     30.70 kB │ gzip:   9.91 kB
+clubs-admin:build: dist/assets/ConsolePage-EpltgTmx.js                       116.99 kB │ gzip:  27.87 kB
+clubs-admin:build: dist/assets/CoursesRoute-CbfshHnw.js                      231.56 kB │ gzip:  64.13 kB
+clubs-admin:build: dist/assets/list-helpers-DabuOHTt.js                      233.00 kB │ gzip:  72.62 kB
+clubs-admin:build: dist/assets/CourseViewer3D-BgvZzyf3.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-TbycBTbp.js                           1,148.98 kB │ gzip: 385.59 kB
+clubs-admin:build:
+clubs-admin:build: ✓ built in 309ms
+clubs-admin:build: [plugin builtin:vite-reporter]
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+ Tasks:    6 successful, 6 total
+Cached:    0 cached, 6 total
+  Time:    17.351s
+
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:404) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+> clubs@0.0.0 e2e /work/apps/clubs
+> playwright test e2e/word-feedback.spec.ts --grep 'text size is remembered' --repeat-each\=10 --workers\=2
+
+[WebServer] (node:480) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 20 tests using 2 workers
+····················
+  20 passed (38.5s)
+```
