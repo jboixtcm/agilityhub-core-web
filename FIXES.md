@@ -33,6 +33,7 @@ Question: what should a member without push on this device be told or given? Opt
 `useLoader` (`apps/clubs/src/booking/shared.ts`) takes a fourth `onFocus` flag: the request is read again quietly on focus, `visibilitychange` (visible) and `online`, reusing `useWindowFocus` from the training screen. `useMeHome`, `useBookableClasses`, `useBooking` and `useWaitlistEntry` turn it on; the other screens that share `useLoader` are unchanged.
 A read started by the app coming back keeps the rows on screen if it fails (a phone waking up without network yet), instead of replacing them with the error card; explicit quiet reads (04's join, 07's cancellation) still show their error as before.
 Tests: `apps/clubs/src/booking/loader.test.tsx` (new, 3 cases; checked to fail without the keep-rows guard), plus the existing booking, history, instructor, courses, training, App and notifications suites, all run and passing.
+Review correction: a read started by the app coming back replaces the read in flight. When that one was an explicit read still unanswered (07's reload after a cancellation, 04's after a join) and the new read failed, the old rows stayed on screen: «confirmada» after a cancellation, which E7-W06 step 3 rules out. Such a read now shows its error, as the read it replaced would have. One more case in `loader.test.tsx` (checked to fail without the correction); the whole clubs vitest suite runs and passes (797 tests).
 
 ### WEB-05 — PARTIAL
 

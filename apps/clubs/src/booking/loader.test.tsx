@@ -71,6 +71,46 @@ describe("WEB-04: 03, 04, 07 and the waiting entry are read again when the app c
     });
   });
 
+  it("a read on coming back that replaces an explicit read still unanswered shows its error (E7-W06 step 3: never the old card after 07's cancellation)", async () => {
+    const load = vi.fn<() => Promise<string>>().mockResolvedValueOnce("confirmed");
+    const { result } = renderHook(() => useLoader(load, undefined, false, true));
+    await waitFor(() => {
+      expect(result.current.data).toBe("confirmed");
+    });
+    // 07's cancellation reads the booking again, and the answer is still on its way.
+    load.mockReturnValueOnce(new Promise<string>(() => undefined));
+    act(() => {
+      result.current.refetch(true);
+    });
+    await waitFor(() => {
+      expect(load).toHaveBeenCalledTimes(2);
+    });
+    load.mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    comeBack();
+    await waitFor(() => {
+      expect(result.current.status).toBe("error");
+    });
+    expect(load).toHaveBeenCalledTimes(3);
+
+    // Once a read has answered, coming back keeps the rows again.
+    load.mockResolvedValueOnce("cancelled");
+    act(() => {
+      result.current.refetch();
+    });
+    await waitFor(() => {
+      expect(result.current.data).toBe("cancelled");
+    });
+    load.mockRejectedValueOnce(new TypeError("Failed to fetch"));
+    comeBack();
+    await waitFor(() => {
+      expect(load).toHaveBeenCalledTimes(5);
+    });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(result.current).toMatchObject({ data: "cancelled", status: "ready" });
+  });
+
   it("a hidden page reads nothing, and a loader without `onFocus` never reads on coming back", async () => {
     const load = vi.fn(() => Promise.resolve("rows"));
     const other = vi.fn(() => Promise.resolve("rows"));

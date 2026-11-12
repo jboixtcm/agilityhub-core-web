@@ -105,7 +105,8 @@ export function errorText(t: Translate, cause: unknown): string {
  * rows then, for its `refresh` and `pageshow` reads (E7-W02 review #3, E7-W06 step 3). Another
  * request (another dog) always shows its own error. With `onFocus` (03, 04, 07 and the waiting
  * entry), the request is read again quietly when the app comes back (focus, visible again, back
- * online), as 08 does (`useWindowFocus`); that read keeps the rows on screen if it fails (WEB-04).
+ * online), as 08 does (`useWindowFocus`); that read keeps the rows on screen if it fails (WEB-04),
+ * unless it replaced a read that had not answered yet and would have shown its error.
  */
 export function useLoader<Data>(
   load: () => Promise<Data>,
@@ -119,18 +120,24 @@ export function useLoader<Data>(
   const shownBy = useRef<() => Promise<Data>>(undefined);
   // The next read was asked by the app coming back: it keeps the rows if it fails.
   const focusRead = useRef(false);
+  // A read that shows its error (any other read) has not answered yet. The read that replaces it
+  // shows its error too: coming back during 07's reload never keeps the old «confirmada» card.
+  const owed = useRef(false);
   useEffect(() => {
     let current = true;
-    const keep = keepRows || focusRead.current;
+    if (!focusRead.current) owed.current = true;
     focusRead.current = false;
+    const keep = keepRows || !owed.current;
     load().then(
       (data) => {
         if (!current) return;
+        owed.current = false;
         shownBy.current = load;
         setState({ data, status: "ready" });
       },
       (error: unknown) => {
         if (!current) return;
+        owed.current = false;
         setState((previous) =>
           keep && previous.status === "ready" && shownBy.current === load
             ? previous
