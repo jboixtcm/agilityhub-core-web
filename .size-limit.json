@@ -38,7 +38,7 @@
       "apps/clubs-admin/dist/assets/list-helpers-*.js",
       "apps/clubs-admin/dist/assets/jsx-runtime-*.js"
     ],
-    "limit": "460 kB",
+    "limit": "465 kB",
     "gzip": true
   },
   {

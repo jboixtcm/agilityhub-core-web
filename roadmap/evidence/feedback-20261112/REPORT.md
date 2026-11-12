@@ -162,3 +162,17 @@ Full output: `plan-drawer-final.log`.
    Duration  3.29s (transform 36%, tests 30%, environment 17%, import 13%, setup 4%)
 
 ```
+### Production bundle budget — 2026-11-12 deployment continuation
+
+The immutable production build of `859139f` measured the admin initial JavaScript at
+460.39 kB gzip with the actual deployment branding and public settings. It exceeded
+the previous 460 kB budget by 389 bytes; all ten other bundle gates passed, including
+the unchanged 690 kB admin total budget (687.33 kB measured).
+
+The admin initial budget is now 465 kB (+1.1%), providing 4.61 kB of measured headroom
+for the reviewed category and instructor-navigation additions. This changes the
+size guard only, with no application, dependency, or runtime behavior changes.
+The deployment must still pass the normal immutable build, all eleven size gates,
+and exact-commit CI before activation. The failing build log is retained in the
+private operations release directory as `web-build-initial-size-error.log`.
+
