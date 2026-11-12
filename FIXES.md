@@ -40,3 +40,10 @@ Left, needs a decision: downscaling before upload in `apps/clubs/src/SelfService
 `BookingDetailPage` (`apps/clubs/src/booking/BookingDetailPage.tsx`): a cancel dialog opened in time now switches to the late warning when `cancellableInTimeUntil` passes while it is still open. A timer is set for that instant and cleared when the dialog closes; delays beyond `setTimeout`'s 24.8-day range are skipped. Before this, the dialog kept the value it computed when it opened.
 Test: a new case in `apps/clubs/src/booking/detail.test.tsx` (checked to fail without the timer); the whole file runs and passes (28 tests).
 Left: the decision still uses the device clock. Correcting it needs the server's time with the booking, as the seat hold has it. OTHER-REPO: add `serverNow` (date-time) to the `Booking` response of `GET /bookings/{id}`, as `SeatHoldResponse` does; the web would then apply the offset as `useCountdown` does. Rewording the in-time text to "if you cancel before HH:MM" is new copy for 07 (no mockup literal), so it needs a decision.
+
+### WEB-10 — PARTIAL
+
+The i18n loader backend (`packages/i18n/src/backend.ts`, used by clubs, clubs-admin and id) asks a failed locale chunk once more before reporting the error. A dropped connection on a first visit no longer leaves raw keys after a single failure. Unknown namespaces are still refused without loading.
+Test: `packages/i18n/src/backend.test.ts` (new, 3 cases); the whole i18n vitest suite runs and passes.
+Left, needs a decision: the reload after a deploy (`sw.ts` `skipWaiting` + `clients.claim`, `registerType: "autoUpdate"` in `apps/clubs/vite.config.ts`). Options: keep it and release outside booking peaks; switch to `registerType: "prompt"` with an "update available" notice (new copy); or defer the reload until the page is hidden. A client/API version handshake is a separate choice. Showing a screen error state instead of raw keys after the retry also fails is new UI, so it needs a decision too.
+Not code: confirm the reload behaviour on staging with an open tab during a deploy, and schedule releases away from the weekly booking opening.
