@@ -85,6 +85,17 @@ To decide: keep the two reserved routes or remove them until R2; whether the emp
 
 ## web-03-web-security
 
+### FE-02 — NEEDS-DECISION
+
+No code changed. Verified: every change of the sign-up form writes the whole draft, IBAN and ID number included, to `sessionStorage` (`signup.draft.v1`), kept 24 h (`apps/clubs/src/SignupPage.tsx:146`, `:2862-2870`, `:2944-2949`). S04 §2 prescribes exactly this ("descartat als 24 h o en enviar") and T-04-29 asks the draft to survive a reload. The steps are separate page loads (`navigateTo`, `:2944`), so the ID number typed on 16 only reaches the `POST` on 19 through that storage, and a Stripe return needs the committed member's `signupToken` from it.
+Question: how much of a sign-up may wait in the browser, and for how long? Options: (a) keep the IBAN out of the draft (asked again after a reload, or after an error that sends the member to another step); the ID number cannot leave it unless the steps move to in-app navigation; (b) an idle window of 30–60 min instead of 24 h, long enough for a Stripe checkout; (c) a visible «clear the form» action (new copy in ca/es/en, no mockup literal); (d) clear the draft on `pagehide`, which first needs the flow to tell a step change, a reload and the Stripe redirect from leaving the form. (a), (b) and (d) change S04 §2 and T-04-29.
+
+### FE-03 — NEEDS-DECISION
+
+No code changed. Verified: the member app redeems any `?handoff=` on load without asking (`apps/clubs/src/App.tsx:840-850`), and a non-impersonation code replaces the host's session (`packages/auth/src/auth-client.ts:1313-1356`). The web asks only for clubs-app → clubs-admin codes (`App.tsx:1350`, 03b's portal) and clubs-admin → clubs-app ones (`apps/clubs-admin/src/UserMenu.tsx:144`, the profile switch, also used by instructors); it never asks for a clubs-app → clubs-app code.
+Question: what happens when a handoff link is opened on a host that already holds another account's session? Options: (a) a confirmation screen ("signed in as X; continue as Y?") before redeeming (new screen and copy, no mockup); (b) refuse the code, keep the current session and say why (new copy); (c) no web change, rely on the api restriction below.
+OTHER-REPO: `HandoffService.create`/`eligible` should refuse a code whose source and target are both `clubs-app` (no client asks for one). Requiring ADMIN for clubs-admin → clubs-app, as the audit suggests, would take the profile switch away from instructors, so it is part of the decision; so is binding a code to the browser that asked for it (a verifier sent at redemption: api and web).
+
 ### FE-05 — FIXED
 
 The back office loads its UI gallery with `import()` only when `import.meta.env.DEV` (`apps/clubs-admin/src/App.tsx`), so neither the gallery nor the MSW branding fixture it imports reaches a production build. The entry chunk went from 1,148 kB to 960 kB (gzip 386 → 242 kB) and no longer holds `canic.example.test`. `/_gallery` on the dev server works as before.
@@ -98,8 +109,23 @@ Tests: 3 new cases in `apps/clubs/src/notifications/push.test.ts` and 1 in `apps
 Left, needs a decision: a session that ends without a logout (refused refresh, revoked from another device, cleared cookies: `handleRefreshFailure` in `packages/auth/src/auth-client.ts`). Unsubscribing the device then also stops push for a member whose session simply expired on their own phone, while 12 still shows the switch on (WEB-02). Options: (a) unsubscribe on every session that ends; (b) only when the session was revoked, which the web cannot tell today; (c) keep the subscription and rely on the api replacing it when another account subscribes on that browser (E76).
 OTHER-REPO (server side of the recommendation, and needed for (b)): push subscriptions are not bound to a session; expiring them when their session is revoked needs the session id stored on the subscription and a hook in the session revocation.
 
+### FE-07 — NEEDS-DECISION
+
+No code changed. Verified: the member app's worker takes over at once (`apps/clubs/src/sw.ts:51-57`, `registerType: "autoUpdate"` in `apps/clubs/vite.config.ts:113-115`), nothing calls `registration.update()`, the back office has no worker, no build id is exchanged with the api, and the only recovery is one reload on a missing chunk (`packages/ui/src/chunk-reload.ts`). Calling `update()` when the app comes back would, with autoUpdate, reload the page under the member more often, so it depends on WEB-10's open choice (keep autoUpdate, `registerType: "prompt"` with a notice, or defer the reload until the page is hidden).
+Question: how are members and admins told that a new version is out? Options: (a) a build id (a `/branding` field or a response header: OTHER-REPO) compared by both apps, showing a "new version, reload" notice at a safe moment (new copy, no mockup literal); (b) `registration.update()` on focus, together with WEB-10's prompt mode; (c) leave it to the release procedure (a deploy already takes the service down) plus today's chunk reload.
+
+### FE-08 — NEEDS-DECISION
+
+No code changed. `pnpm audit` re-run today: production has 1 high, zod 3.25.76 (GHSA-mrhx-c7xc-m3w5), pinned in `packages/course-core/package.json:14` and `packages/shared-types/package.json:14`; the fix exists only in zod >= 4.6.6 (no fixed 3.x release). Tooling: 19 high, 24 moderate, 6 low; fixed releases exist in the same majors for vite (8.2.4), @vitest/mocker (5.0.3), undici (7.30.1 / 8.12.2), js-yaml, source-map-js, brace-expansion, fast-uri and serialize-javascript; glob and minimatch need new majors and deepmerge has no fix.
+To decide: (a) zod: migrate course-core and shared-types to zod 4 (a major with API changes; `zod-to-json-schema` must be checked too), or cap array sizes in the course schemas (the caps on obstacles, numbers or zones per course have business meaning), or accept the self-inflicted tab DoS until then; (b) when to take the tooling bumps, which change the build tool right before launch; (c) a CI step `pnpm audit --prod --audit-level high` fails today because of zod: blocking with a list of accepted advisories, or report-only until (a); (d) pinning the GitHub actions by commit SHA needs the SHAs looked up on GitHub and an update routine (Dependabot or Renovate).
+
 ### FE-09 — FIXED
 
 `navigate()` (`apps/clubs/src/router.ts`) now opens only `http:`/`https:` addresses: a `javascript:`, `data:` or any other scheme does nothing, so no future caller can turn it into a script sink. Every current caller passes app paths or the back office's https handoff URL.
 Both WhatsApp links of the back office (member record, `apps/clubs-admin/src/census/CensusRecordPage.tsx`; sign-up review, `apps/clubs-admin/src/dashboard/SignupReviewPage.tsx`) are built by one helper, `whatsAppUrl` (`apps/clubs-admin/src/whatsapp.ts`), which keeps only the digits of the prefix and the number. The member record used to keep everything but the first «+».
 Tests: a new case in `apps/clubs/src/router.test.ts` (checked to fail without the guard) and `apps/clubs-admin/src/whatsapp.test.ts` (new, 2 cases); the router, member record and sign-up review suites run and pass, and so does the whole clubs vitest suite (802 tests).
+
+### FE-10 — NEEDS-DECISION
+
+No code changed. Verified: «Surt» revokes the impersonation or support token with `credentials: "include"` (`packages/auth/src/auth-client.ts:919-938`, `:978-993`), and the api answers every token revoke except a bookings-only one with the Set-Cookie that clears `ah_refresh` (`api/.../OAuthController.java:163-171`), although neither kind of session uses that cookie (`apps/clubs-admin/src/support/SupportPages.tsx:36`).
+Question: should leaving an impersonation or a support access keep the actor signed in on that host? Options: (a) keep today's behaviour: the actor is signed out there, and a tab left open after «Surt» can only come back anonymous; (b) OTHER-REPO: clear the cookie only on the revoke of a cookie session (never for an `imp` token), and on the web make sure such a tab never restores the actor's own session on reload. Dropping the credentials on the web side alone would keep the cookie but lose that guarantee.
