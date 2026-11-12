@@ -20,3 +20,11 @@ Each remedy needs a choice: a "turn on notifications on this device" button (new
 `pushsubscriptionchange` has no single answer either: the worker has no bearer and the logout DELETE uses the id kept in page storage, so it means relaying to an open tab or a new api endpoint (OTHER-REPO).
 Before L3 (not code): test on an installed iPhone PWA and an Android phone, including a second device, reinstall and logout/login.
 Review note: classification confirmed, nothing here could be fixed without a choice. An interim lever needs no code: PUSH is an admin self-service module (`apps/clubs-admin/src/catalogs/ParameterSettings.tsx:869`; on in the club's preset, api `Module.java:20`). While it is off, 12 shows no push switch (`NoticesCard.tsx:164`, test at `NoticesCard.test.tsx:815`) and in-app and e-mail notices are unchanged (R-11-17). While it is on, `pushClubNews` defaults to `true` (S11 §3), so every member sees the switch ON on a device that has no subscription. Whether the module stays on until these decisions are made is the club's call.
+
+## web-02-web-quality
+
+### WEB-04 — FIXED
+
+`useLoader` (`apps/clubs/src/booking/shared.ts`) takes a fourth `onFocus` flag: the request is read again quietly on focus, `visibilitychange` (visible) and `online`, reusing `useWindowFocus` from the training screen. `useMeHome`, `useBookableClasses`, `useBooking` and `useWaitlistEntry` turn it on; the other screens that share `useLoader` are unchanged.
+A read started by the app coming back keeps the rows on screen if it fails (a phone waking up without network yet), instead of replacing them with the error card; explicit quiet reads (04's join, 07's cancellation) still show their error as before.
+Tests: `apps/clubs/src/booking/loader.test.tsx` (new, 3 cases; checked to fail without the keep-rows guard), plus the existing booking, history, instructor, courses, training, App and notifications suites, all run and passing.
