@@ -28,3 +28,9 @@ Review note: classification confirmed, nothing here could be fixed without a cho
 `useLoader` (`apps/clubs/src/booking/shared.ts`) takes a fourth `onFocus` flag: the request is read again quietly on focus, `visibilitychange` (visible) and `online`, reusing `useWindowFocus` from the training screen. `useMeHome`, `useBookableClasses`, `useBooking` and `useWaitlistEntry` turn it on; the other screens that share `useLoader` are unchanged.
 A read started by the app coming back keeps the rows on screen if it fails (a phone waking up without network yet), instead of replacing them with the error card; explicit quiet reads (04's join, 07's cancellation) still show their error as before.
 Tests: `apps/clubs/src/booking/loader.test.tsx` (new, 3 cases; checked to fail without the keep-rows guard), plus the existing booking, history, instructor, courses, training, App and notifications suites, all run and passing.
+
+### WEB-05 — PARTIAL
+
+`DogPhoto` (`packages/ui/src/dog-photo.tsx`) renders its image with `loading="lazy"` and `decoding="async"`, so the admin dog list, the census rows and the instructor's student search fetch a photo only when its row nears the viewport. Its box already has a fixed size (`dog-photo.css`: 2.5 rem, 5 rem large), so no width/height attributes were needed to avoid layout shift.
+Test: a new case in `packages/ui/src/dog-photo.test.tsx` (run, passing); the admin census list and instructor suites run and pass.
+Left, needs a decision: downscaling before upload in `apps/clubs/src/SelfServicePages.tsx` (`changePhoto`) and in the admin photo upload. Choose the maximum edge (the audit suggests about 1024 px), the format and quality (JPEG vs WebP; PNG transparency), whether EXIF is stripped (it also removes GPS data) and whether the original is kept. Server-side renditions are OTHER-REPO: the api would store a thumbnail next to the original (`AttachmentService`) and expose its URL for list rows.
