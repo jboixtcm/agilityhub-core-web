@@ -141,7 +141,8 @@
       "pack": "Pack",
       "pendingDocuments": "Pending documents",
       "registeredAt": "Registration date",
-      "sex": "Sex"
+      "sex": "Sex",
+      "birthDate": "Date of birth"
     },
     "emptyDescription": "Change the search or filters to see more results.",
     "emptyTitle": "No dogs match these criteria",

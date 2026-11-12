@@ -105,6 +105,35 @@ describe("T-02-14 clubs-admin shell", () => {
     expect(screen.getByText(brandingCanicFixture.club.name)).toBeVisible();
   });
 
+  it("T-02-14 recovers a failed public mark on the dog list using a retry and the configured logo", async () => {
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client, {
+      ...branding,
+      theme: {
+        ...branding.theme,
+        markUrl: "/api/v1/public/example/theme/mark",
+        logoDarkUrl: "/api/v1/public/example/theme/logo-dark",
+      },
+    });
+    await screen.findByRole("heading", { name: /Gossos/u, level: 1 });
+    const image = () => {
+      const element = document.querySelector(".admin-shell__brand img");
+      if (!(element instanceof HTMLImageElement)) throw new Error("Expected club image");
+      return element;
+    };
+    expect(image()).toHaveAttribute("src", "/api/v1/public/example/theme/mark");
+    fireEvent.error(image());
+    expect(image()).toHaveAttribute("src", "/api/v1/public/example/theme/mark?imageRetry=1");
+    fireEvent.error(image());
+    expect(image()).toHaveAttribute("src", "/api/v1/public/example/theme/logo-dark");
+    fireEvent.error(image());
+    fireEvent.error(image());
+    expect(document.querySelector(".admin-shell__brand img")).toBeNull();
+    expect(document.querySelector(".admin-shell__mark")).toHaveTextContent("C");
+  });
+
   it("hides the Configuració group from instructors", async () => {
     await renderNavigation(["INSTRUCTOR"]);
 

@@ -21,11 +21,12 @@ import {
   type Tone,
   useBranding,
 } from "@agilityhub/ui";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { noticeText, pageNotice, type PageNotice } from "../booking/shared";
 import { useSetupColumnAction } from "../courses/blocks";
+import { StudentLink } from "../instructor/StudentLink";
 
 import "./today.css";
 import {
@@ -117,6 +118,7 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
             guide === "" ? dog : t("instructor:overview.registrants.name", { dog, member: guide });
           return {
             id: entry.id,
+            dogId: entry.dogId,
             label:
               entry.position === null || entry.position === undefined
                 ? name
@@ -146,10 +148,14 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
           ? registrants.bookings.map((item) => ({
               id: item.id,
               level: item.levelCode ?? undefined,
-              name: t("instructor:overview.registrants.name", {
-                dog: item.dogName,
-                member: item.memberName,
-              }),
+              name: (
+                <StudentLink dogId={item.dogId}>
+                  {t("instructor:overview.registrants.name", {
+                    dog: item.dogName,
+                    member: item.memberName,
+                  })}
+                </StudentLink>
+              ),
               state: {
                 label: t(`enums:bookingState.${item.displayState}`),
                 tone: BOOKING_DISPLAY_STATE_TONES[item.displayState],
@@ -165,9 +171,17 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
         ? {
             waiting: {
               entries,
-              text: t("instructor:overview.registrants.waiting", {
-                names: entries.map((entry) => entry.label).join(" · "),
-              }),
+              text: (
+                <>
+                  {t("instructor:overview.registrants.waiting", { names: "" }).trimEnd()}{" "}
+                  {entries.map((entry, index) => (
+                    <Fragment key={entry.id}>
+                      {index === 0 ? "" : " · "}
+                      <StudentLink dogId={entry.dogId}>{entry.label}</StudentLink>
+                    </Fragment>
+                  ))}
+                </>
+              ),
             },
           }
         : {})}

@@ -141,7 +141,8 @@
       "pack": "Pack",
       "pendingDocuments": "Documents pendents",
       "registeredAt": "Data d'alta",
-      "sex": "Sexe"
+      "sex": "Sexe",
+      "birthDate": "Data de naixement"
     },
     "emptyDescription": "Canvieu la cerca o els filtres per veure més resultats.",
     "emptyTitle": "Cap gos amb aquests criteris",

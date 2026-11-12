@@ -25,6 +25,7 @@ import { shortTime } from "../training/shared";
 
 import "./instructor.css";
 import { bareWeekday, readErrorText, studentName } from "./shared";
+import { StudentLink } from "./StudentLink";
 import { type AttendanceRow, type SheetNotice, useAttendanceSheet } from "./useAttendanceSheet";
 
 const STATES: readonly AttendanceState[] = ["PENDING", "PRESENT", "NOTIFIED", "NO_SHOW"];
@@ -173,7 +174,9 @@ function SheetRow({
           </button>
         )}
         <span className="instructor-sheet__who">
-          <strong>{name}</strong>
+          <StudentLink dogId={row.dogId}>
+            <strong>{name}</strong>
+          </StudentLink>
           {row.memberFullName === undefined ? null : (
             <span className="instructor-sheet__owner">
               {t("instructor:student.owner", { name: row.memberFullName })}
@@ -394,7 +397,9 @@ export function AttendancePage({ classId, client }: { classId: string; client: A
                     return (
                       <li key={entry.entryId}>
                         <Icon aria-hidden="true" className="instructor-sheet__clock" name="clock" />
-                        <strong>{studentName(t, entry)}</strong>
+                        <StudentLink dogId={entry.dogId}>
+                          <strong>{studentName(t, entry)}</strong>
+                        </StudentLink>
                         {entry.levelCode == null ? null : (
                           <Chip className="instructor-level">{entry.levelCode}</Chip>
                         )}

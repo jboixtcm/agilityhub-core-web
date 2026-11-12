@@ -11,8 +11,10 @@ import {
   Skeleton,
   Toast,
 } from "@agilityhub/ui";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+
+import { StudentLink } from "../instructor/StudentLink";
 
 import { addDays, type DayGridApiCell, type DayGridResponse, weekChipDates } from "./useDayGrid";
 
@@ -176,6 +178,19 @@ export function mapDayGrid(
         ringId: cell.ringId ?? null,
         title: cell.title,
         who: cell.who,
+        ...(grid.view !== "INSTRUCTOR" || cell.kind !== "TRAINING"
+          ? {}
+          : {
+              whoContent: cell.who?.map((name, personIndex) => {
+                const dogId = cell.trainingDogIds?.[personIndex];
+                return (
+                  <Fragment key={`${id}-${String(personIndex)}`}>
+                    {personIndex === 0 ? "" : "\n"}
+                    {dogId === undefined ? name : <StudentLink dogId={dogId}>{name}</StudentLink>}
+                  </Fragment>
+                );
+              }),
+            }),
       };
     }),
     time: row.time,

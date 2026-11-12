@@ -298,7 +298,7 @@
     "NO_PLAN": "sense modalitat assignada",
     "CARD_INVALID": "targeta no vàlida",
     "CURRENCY_MISMATCH": "moneda diferent de la del club",
-    "PROVIDER_DISABLED": "proveïdor de pagament desactivat",
+    "PROVIDER_DISABLED": "proveïdor de pagament desactivat o amb configuració incompleta",
     "NO_NEXT_INVOICE_DATE": "sense data del proper rebut",
     "NO_PAYMENT_METHOD": "sense mètode de pagament",
     "MANDATE_PENDING": "mandat SEPA pendent"

@@ -30,6 +30,9 @@ async function login(page: Page) {
   await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { name: "ENTRA", exact: true }).click();
   await page.waitForURL("**/tauler");
+  await expect(
+    page.getByRole("heading", { name: "Preinscripcions pendents", exact: true }),
+  ).toBeVisible();
 }
 async function capture(page: Page, name: string) {
   mkdirSync(evidence, { recursive: true });
@@ -119,7 +122,11 @@ for (const width of [320, 375, 390, 1280]) {
   }) => {
     await page.setViewportSize({ width, height: 812 });
     await login(page);
-    await page.goto(`${baseUrl}/parametres`);
+    if (width < 960) {
+      await page.getByRole("button", { name: "Navegació d’administració", exact: true }).click();
+    }
+    await page.getByRole("link", { name: "Paràmetres", exact: true }).click();
+    await expect(page.getByRole("heading", { name: "Paràmetres", exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Edita Horari d'obertura", exact: true }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();

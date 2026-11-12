@@ -39,6 +39,21 @@ function cell(name: string): HTMLElement {
   return within(group("Hores de la franja")).getByRole("button", { name });
 }
 
+it("T-10-08 opens the student from an occupied training slot without enabling booking", async () => {
+  const requests = recordRequests();
+  await openRingBlock("ring-central");
+  await pick("2026-08-03", "morning");
+  const link = await screen.findByRole("link", { name: "Sergio + Thai" });
+  expect(link).toHaveAttribute("href", "/instructor/alumnes/dog-thai");
+  expect(link.closest("button")).toBeNull();
+  expect(cell("8:30, entrenament")).toBeDisabled();
+  fireEvent.click(link);
+  await waitFor(() => {
+    expect(window.location.pathname).toBe("/instructor/alumnes/dog-thai");
+  });
+  expect(requests.bodies.get("/ring-blocks")).toBeUndefined();
+});
+
 describe("screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11)", () => {
   it("«Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two", async () => {
     await openRingBlock();

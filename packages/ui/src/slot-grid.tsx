@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { dayGridTimeLabel } from "./day-grid";
 
@@ -21,6 +21,8 @@ export interface SlotCellModel {
   classTime?: string | null;
   /** Instructor projection: who trains («Pau + Blat»), the block's reason or the class. */
   detail?: string | null;
+  /** Optional navigation shown beside, never inside, the disabled selection control. */
+  detailContent?: ReactNode;
   /** Marked after a `409 RING_BLOCK_CONFLICT` (R-09-11). */
   conflict?: boolean;
 }
@@ -191,7 +193,7 @@ export function SlotGrid({
       .filter(Boolean)
       .join(" ");
     const pressable = pressableHere(cell);
-    return (
+    const control = (
       <button
         aria-label={labels.cell(time, state)}
         // A chosen cell says so even when it can no longer be pressed (its column disabled), as
@@ -213,10 +215,21 @@ export function SlotGrid({
       >
         <span className="ah-slot__time">{text}</span>
         {unavailable ? <span className="ah-slot__detail">{labels.unavailable}</span> : null}
-        {cell.detail === null || cell.detail === undefined || cell.detail === "" ? null : (
+        {cell.detailContent != null ||
+        cell.detail === null ||
+        cell.detail === undefined ||
+        cell.detail === "" ? null : (
           <span className="ah-slot__detail">{cell.detail}</span>
         )}
       </button>
+    );
+    return cell.detailContent == null ? (
+      control
+    ) : (
+      <div className="ah-slot-linked" key={cell.id}>
+        {control}
+        <div className="ah-slot-linked__detail">{cell.detailContent}</div>
+      </div>
     );
   };
 

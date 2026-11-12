@@ -948,6 +948,78 @@ describe("T-12-25 the receipt drawer: the actions each state allows (R-12-16…R
   });
 });
 
+describe("R-12-07: provider incidents identify club configuration rather than member records", () => {
+  const title = "Configuració de pagaments del club";
+  const incomplete =
+    "La domiciliació SEPA està activada, però falten les dades del creditor del club. Cal completar el nom, l’identificador de creditor, l’IBAN i el sufix.";
+  const disabled = "La domiciliació SEPA està desactivada per al club.";
+
+  it.each([
+    { enabled: true, configured: false, message: incomplete },
+    { enabled: false, configured: false, message: disabled },
+    // The legacy configured flag does not prove the stored creditor details are valid.
+    { enabled: true, configured: true, message: null },
+  ])(
+    "R-12-07: enabled=$enabled/configured=$configured uses the club summary without assuming validity",
+    async ({ enabled, configured, message }) => {
+      server.use(
+        http.get("*/api/v1/club", () =>
+          HttpResponse.json({
+            paymentProviders: {
+              SEPA_XML: { enabled, configured },
+              MANUAL: { enabled: true, configured: true },
+            },
+          }),
+        ),
+      );
+      billingState.world.simulations.get("2026-09")?.simulation.incidents.push({
+        memberId: "provider-incident-member",
+        memberName: "Marta Puig",
+        code: "PROVIDER_DISABLED",
+      });
+      await renderPage();
+      const notice = await screen.findByRole("note", { name: title });
+      if (message === null) {
+        expect(within(notice).queryByText(incomplete)).toBeNull();
+        expect(within(notice).queryByText(disabled)).toBeNull();
+      } else {
+        expect(await within(notice).findByText(message)).toBeVisible();
+      }
+      expect(notice).toHaveTextContent(
+        "Demana a l’administrador de la plataforma que la revisi i torna a simular el mes.",
+      );
+      const row = screen.getByRole("row", { name: /Marta Puigproveïdor|Marta Puig proveïdor/u });
+      expect(row).toHaveTextContent(
+        "proveïdor de pagament desactivat o amb configuració incompleta",
+      );
+      expect(within(row).queryByRole("link", { name: "Obre fitxa de Marta Puig" })).toBeNull();
+      expect(screen.getAllByRole("link", { name: "Obre fitxa de Joan Vila" })[0]).toBeVisible();
+      expect(sent.filter((request) => request.method !== "GET")).toHaveLength(0);
+    },
+  );
+
+  it("R-12-07: a failed club read keeps a generic provider explanation without guessing that SEPA is disabled", async () => {
+    server.use(http.get("*/api/v1/club", () => HttpResponse.error()));
+    billingState.world.simulations.get("2026-09")?.simulation.incidents.push({
+      memberId: "provider-incident-member",
+      memberName: "Marta Puig",
+      code: "PROVIDER_DISABLED",
+    });
+    await renderPage();
+    const notice = await screen.findByRole("note", { name: title });
+    expect(within(notice).queryByText(incomplete)).toBeNull();
+    expect(within(notice).queryByText(disabled)).toBeNull();
+    expect(notice).toHaveTextContent("Demana a l’administrador de la plataforma");
+    expect(screen.queryByRole("link", { name: "Obre fitxa de Marta Puig" })).toBeNull();
+  });
+
+  it("R-12-07: member-only incidents keep their record links and have no club configuration notice", async () => {
+    await renderPage();
+    expect(screen.queryByRole("note", { name: title })).toBeNull();
+    expect(screen.getByRole("link", { name: "Obre fitxa de Pau Riera" })).toBeVisible();
+  });
+});
+
 describe("T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28)", () => {
   it("T-12-32: SEPA_XML + MANUAL (the Cànic) → «2 · GENERA REMESA SEPA (XML)», no card KPI nor [COBRA LES TARGETES]", async () => {
     await renderPage();

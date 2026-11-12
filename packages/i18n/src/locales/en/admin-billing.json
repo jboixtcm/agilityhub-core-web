@@ -69,7 +69,11 @@
     "incidentsFootnote": "Members with an issue are left out of the generation.",
     "cashTitle": "Active members paying cash",
     "plannedLeave": "planned leave date:",
-    "skippedTitle": "Left out of the generation"
+    "skippedTitle": "Left out of the generation",
+    "providerConfigurationTitle": "Club payment configuration",
+    "providerConfigurationHelp": "These issues are resolved in the club’s payment configuration. Ask the platform administrator to review it, then simulate the month again.",
+    "sepaNotConfigured": "SEPA direct debit is enabled, but the club’s creditor details are missing. Complete the creditor name, creditor identifier, IBAN and suffix.",
+    "sepaDisabled": "SEPA direct debit is disabled for the club."
   },
   "empty": {
     "noSimulation": "There is no simulation for this month yet",

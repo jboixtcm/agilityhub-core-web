@@ -1,0 +1,7 @@
+
+/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin/src/App.tsx
+  56:1  error  `./ClubMark` import should occur after import of `./ChunkBoundary`  import/order
+
+✖ 1 problem (1 error, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

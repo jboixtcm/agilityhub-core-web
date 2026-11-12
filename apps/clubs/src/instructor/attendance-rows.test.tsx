@@ -73,6 +73,18 @@ const attributes = () =>
     row.getAttribute("data-attendance-state"),
   ]);
 
+it("T-10-08 opens each enrolled and waiting student's card from their name", async () => {
+  await renderSheet();
+  const enrolled = screen.getByRole("link", { name: "Laura + Duna" });
+  expect(enrolled).toHaveAttribute("href", "/instructor/alumnes/dog-duna");
+  expect(screen.getByRole("link", { name: "Pau + Blat" })).toHaveAttribute(
+    "href",
+    "/instructor/alumnes/dog-blat",
+  );
+  fireEvent.click(enrolled);
+  expect(window.location.pathname).toBe("/instructor/alumnes/dog-duna");
+});
+
 describe("T-10-27 E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on screen 21's rows", () => {
   it("E7-W06 step 5: each attendance row carries its booking's id and the state it shows (data-booking-id, data-attendance-state); a tap changes the state, and the saved list keeps it", async () => {
     await renderSheet();

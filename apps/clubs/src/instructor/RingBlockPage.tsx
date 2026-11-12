@@ -46,6 +46,9 @@ import {
   shortTime,
 } from "../training/shared";
 
+import { StudentLink } from "./StudentLink";
+import "./instructor.css";
+
 const NOTE_MAX_LENGTH = 200;
 
 function kindLabel(t: Translate, kind: RingBlockKind): string {
@@ -195,6 +198,18 @@ export function RingBlockPage({
       overlapsConflict(slot, date, branding.timeZone, conflict),
     ),
     detail: slotDetail(t, slot),
+    ...((slot.cell?.occupants?.length ?? 0) === 0
+      ? {}
+      : {
+          detailContent: slot.cell?.occupants?.map((occupant) => (
+            <StudentLink key={occupant.bookingId} dogId={occupant.dogId}>
+              {t("instructor:ringBlock.occupant", {
+                dog: occupant.dogName,
+                member: occupant.memberName,
+              })}
+            </StudentLink>
+          )),
+        }),
     id: `${ringKey}_${slot.startsAt}`,
     reason: slot.cell?.reason ?? null,
     state: slot.cell?.state ?? "BOOKED",

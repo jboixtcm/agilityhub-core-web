@@ -88,6 +88,11 @@ describe("T-06-29 screen 23 «Visió global»", () => {
       );
     }
     expect(within(grid).getAllByText("Entren.")).toHaveLength(3);
+    expect(within(grid).getByRole("link", { name: "Pau + Blat" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes/dog-blat",
+    );
+    expect(within(grid).getByRole("link", { name: "Pau + Blat" }).closest("button")).toBeNull();
     expect(within(grid).getByText("Bloq.").closest(".ah-schedule-cell")).toHaveClass(
       "ah-schedule-cell--dashed",
     );
@@ -138,7 +143,17 @@ describe("T-06-29 screen 23 «Visió global»", () => {
       "Sergio + ThaiEanul·lada tard",
     ]);
     // E5-W05 step 2 (mockup D12): «{guia} + {gos}», the guide being the entry's first name.
-    expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
+    expect(panel.querySelector(".ah-registrants__waiting p")).toHaveTextContent(
+      "En espera: Júlia + Kira · Roser + Lluna",
+    );
+    expect(within(panel).getByRole("link", { name: "Laura + Duna" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes/dog-duna",
+    );
+    expect(within(panel).getByRole("link", { name: "Júlia + Kira" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes/dog-kira",
+    );
     // The removal is D4's (ADMIN); attendance is screen 21's (S10).
     expect(within(panel).queryByRole("button")).toBeNull();
   });
@@ -273,9 +288,9 @@ describe("T-06-29 screen 23 «Visió global»", () => {
         .map((item) => item.textContent),
     ).toEqual(["Laura + DunaCfeta", "Marc + Chun-lino presentat"]);
     expect(within(panel).getByText("no presentat")).toHaveClass("ah-tone--danger");
-    expect(
-      within(panel).getByText("En espera: 1. Júlia + Kira · 2. Gina Soler + Llamp"),
-    ).toBeVisible();
+    expect(panel.querySelector(".ah-registrants__waiting p")).toHaveTextContent(
+      "En espera: 1. Júlia + Kira · 2. Gina Soler + Llamp",
+    );
   });
 
   it("opens the class drawer with the instructor projection of the tapped class", async () => {

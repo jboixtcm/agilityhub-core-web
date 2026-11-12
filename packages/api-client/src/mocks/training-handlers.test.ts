@@ -261,7 +261,14 @@ describe("E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATAL
     const slots = slotsOf(monday.body, "2026-08-03");
     expect(
       slots.find((slot) => slot.startsAtLocal === "08:30")?.rings["ring-central"]?.occupants,
-    ).toEqual([{ bookingId: "tb-2026-08-03-0830-central", dogName: "Thai", memberName: "Sergio" }]);
+    ).toEqual([
+      {
+        bookingId: "tb-2026-08-03-0830-central",
+        dogId: "dog-thai",
+        dogName: "Thai",
+        memberName: "Sergio",
+      },
+    ]);
     expect(
       slots.find((slot) => slot.startsAtLocal === "18:30")?.rings["ring-central"]?.classSession,
     ).toEqual({ description: "B+C", id: "class-2026-08-03-1850-central" });

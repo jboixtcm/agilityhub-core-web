@@ -1,0 +1,10 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/packages/ui
+
+Not implemented: navigation to another Document
+
+ Test Files  2 passed (2)
+      Tests  22 passed (22)
+   Start at  09:03:49
+   Duration  618ms (environment 57%, tests 21%, setup 13%, transform 9%, import 1%)
+

@@ -2523,3 +2523,13 @@ Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/scr
 ## 2026-11-11 — Direct user request: Josep feedback
 
 @organizer: Implemented the two November 11 Word documents under Jordi's explicit request to apply all changes, retain unchecked consents and run the necessary tests. Scope, verification results and release handoff are recorded in `roadmap/evidence/feedback-20261111/REPORT.md`. Existing administrator delivery was verified in SOFTWARE_CANIC operations evidence; no recipient restriction or resend was added. No existing task or organizer verification was modified. Source changes and seed updates are local; no deployment or production configuration change has occurred in this task.
+
+
+## 2026-11-12 — Direct user request: Josep feedback
+
+@organizer: Applied the new November 12 document and the screenshot's billing-diagnosis feedback. Student navigation now includes instructor class and training views; dashboard levels open complete filtered dog lists with full dates; administrator branding has bounded recovery. The matching API additions and local validation are recorded in `roadmap/evidence/feedback-20261112/REPORT.md`. No existing roadmap task or organizer verification was modified. Publishing and verified creditor configuration belong to the operations handoff, not this source edit.
+
+
+## 2026-11-12 — Feedback continuation validation completed
+
+@organizer: Completed the interrupted November 12 validation. Final host checks: 38/38 tasks and 3,733 tests; complete browser suite: 391 passed, followed by eight affected Chromium/WebKit checks after a theme-preserving native select contrast correction. Stabilized the existing plan-change test by waiting for the intended async price option; its nine tests and the final full host pass are green. See `roadmap/evidence/feedback-20261112/REPORT.md` and `continuation-validation.json`. No roadmap status or organizer verification changed. Source remains unpublished/undeployed. The separate SOFTWARE_CANIC operations continuation configured the previously verified SEPA creditor and confirmed a zero-incident production simulation without generating invoices or a remittance.

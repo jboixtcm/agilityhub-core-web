@@ -1,0 +1,19 @@
+apps/clubs-admin/src/ClubMark.tsx 31ms
+apps/clubs-admin/src/App.tsx 82ms (unchanged)
+apps/clubs-admin/src/App.test.tsx 63ms
+apps/clubs-admin/src/census/CensusListPage.tsx 56ms (unchanged)
+apps/clubs-admin/src/census/CensusListPage.test.tsx 19ms
+apps/clubs-admin/src/dashboard/DashboardPage.tsx 12ms
+apps/clubs-admin/src/dashboard/DashboardPage.test.tsx 17ms
+apps/clubs-admin/src/dashboard/DogLevelsChart.tsx 7ms
+apps/clubs/src/instructor/StudentLink.tsx 2ms
+apps/clubs/src/instructor/AttendancePage.tsx 19ms
+apps/clubs/src/instructor/TasksPage.tsx 3ms
+apps/clubs/src/instructor/attendance-rows.test.tsx 4ms
+apps/clubs/src/today/OverviewPage.tsx 14ms
+apps/clubs/src/today/OverviewPage.test.tsx 20ms
+packages/api-client/src/mocks/fixtures/census.ts 20ms (unchanged)
+packages/api-client/src/mocks/fixtures/dashboard.json 8ms
+packages/api-client/src/mocks/fixtures/attendance.ts 28ms (unchanged)
+packages/api-client/src/mocks/fixtures/agenda.ts 8ms (unchanged)
+packages/api-client/src/mocks/list-fields.ts 4ms (unchanged)

@@ -16,6 +16,7 @@ import { navigateInApp } from "../booking/shared";
 
 import "./instructor.css";
 import { readErrorText, studentName } from "./shared";
+import { StudentLink } from "./StudentLink";
 
 /**
  * Screen 26 «Tasques i notes» (`/instructor/alumnes/:dogId/tasques`, S10 §2, R-10-10…R-10-12):
@@ -57,7 +58,11 @@ export function TasksPage({ client, dogId }: { client: ApiClient; dogId: string 
             onClick={back}
           />
         }
-        title={<h1>{title}</h1>}
+        title={
+          <h1>
+            {card.status === "ready" ? <StudentLink dogId={dogId}>{title}</StudentLink> : title}
+          </h1>
+        }
       />
       {card.status === "loading" ? (
         <Skeleton

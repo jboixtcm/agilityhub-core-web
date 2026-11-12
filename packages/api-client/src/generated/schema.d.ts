@@ -10454,7 +10454,7 @@ export interface components {
             /** @enum {string} */
             view: "MEMBER" | "INSTRUCTOR";
         };
-        /** @description MEMBER: CLASS/OCCUPIED/ACTIVITY only; no occupancy, who, trainingBookingIds, note, createdByName or blockId. Instructor name follows R-06-12. INSTRUCTOR/ADMIN: all cell kinds, counts and names. ACTIVITY carries activityId/title in both views. */
+        /** @description MEMBER: CLASS/OCCUPIED/ACTIVITY only; no occupancy, who, trainingBookingIds, trainingDogIds, note, createdByName or blockId. Instructor name follows R-06-12. INSTRUCTOR/ADMIN: all cell kinds, counts and names. ACTIVITY carries activityId/title in both views. */
         DayGridCell: {
             activityId?: string;
             atRisk?: boolean;
@@ -10481,6 +10481,8 @@ export interface components {
             state?: "DRAFT" | "ACTIVE" | "FINISHED" | "CANCELLED";
             title?: string;
             trainingBookingIds?: string[];
+            /** @description Staff TRAINING cells only: dog identifiers aligned with who */
+            trainingDogIds?: string[];
             who?: string[];
         };
         DayGridColumn: {
@@ -10643,6 +10645,8 @@ export interface components {
         DogListItem: {
             /** Format: double */
             age?: number;
+            /** Format: date */
+            birthDate?: string;
             breed?: string;
             chip?: string;
             displayStatus?: components["schemas"]["DisplayStatus"];
@@ -15566,6 +15570,7 @@ export interface components {
             mode: "ALL_AT_ONCE" | "FIFO";
         };
         SheetWaitlistEntry: {
+            dogId: string;
             dogName: string;
             entryId: string;
             /** @description Dog.handlerName: «{guia} + {gos}» = handlerName ?? memberFirstName (R-10-00) */
@@ -16070,6 +16075,7 @@ export interface components {
         };
         SlotOccupant: {
             bookingId: string;
+            dogId: string;
             dogName: string;
             memberName: string;
         };

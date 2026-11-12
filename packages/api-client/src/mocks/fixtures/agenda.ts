@@ -121,6 +121,7 @@ function row(
 
 function waiting(entryId: string, member: string, dog: string, level: string): SheetWaitlistEntry {
   return {
+    dogId: `dog-${dog.toLocaleLowerCase()}`,
     dogName: dog,
     entryId,
     handlerName: null,

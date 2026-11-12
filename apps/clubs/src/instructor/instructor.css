@@ -653,3 +653,14 @@
 .instructor-tasks .instructor-screen__bar h1 {
   font-size: 1.05rem;
 }
+
+.instructor-student-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.instructor-student-link:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 3px;
+}

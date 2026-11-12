@@ -126,6 +126,7 @@ function entry(
   joinedAt: string,
 ): SheetWaitlistEntry {
   return {
+    dogId: `dog-${dogName.toLocaleLowerCase()}`,
     dogName,
     entryId,
     handlerName: null,

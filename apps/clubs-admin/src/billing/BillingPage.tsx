@@ -51,6 +51,7 @@ import { isPriceOverlap, PriceOverlapMessage } from "./PriceOverlapMessage";
 import {
   type BillingPeriod,
   type BillingProvider,
+  type BillingProviderSettings,
   type BillingRun,
   errorFields,
   clubToday,
@@ -64,7 +65,7 @@ import {
   shiftPeriod,
   useBillingErrorMessage,
   useBillingLocale,
-  useClubProviders,
+  useClubProviderSettings,
 } from "./shared";
 import "./billing.css";
 
@@ -202,7 +203,6 @@ export function BillingPage({
   const formats = useClubFormats();
   const locale = useBillingLocale();
   const errorMessage = useBillingErrorMessage();
-  const providers = useClubProviders(client);
   const listExport = useListExport(client);
   // One Idempotency-Key per payload for every write of the page and its drawer (E79, E85).
   const keys = useSubmissionKeys();
@@ -215,6 +215,13 @@ export function BillingPage({
     () => new URLSearchParams(window.location.search).get("rebut") ?? undefined,
   );
   const [reload, setReload] = useState(0);
+  const providerSettings = useClubProviderSettings(client, reload);
+  const providers =
+    providerSettings == null
+      ? providerSettings
+      : (["SEPA_XML", "STRIPE", "MANUAL"] as const).filter(
+          (provider) => providerSettings[provider]?.enabled === true,
+        );
   const [modal, setModal] = useState<ModalState>();
   const [rollbackKeyword, setRollbackKeyword] = useState<RollbackKeyword>("RETROCEDIR");
   const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set());
@@ -435,7 +442,6 @@ export function BillingPage({
     if (!explicitListState.current && !savedViews.resolved) return;
     writeUrl(period, state, invoiceId, memberHistory);
   }, [invoiceId, memberHistory, period, savedViews.resolved, state]);
-
 
   const changePeriod = (next: string) => {
     setPeriod(next);
@@ -1059,6 +1065,7 @@ export function BillingPage({
           <SimulationCard
             onNavigate={onNavigate}
             onOpenInvoice={setInvoiceId}
+            providerSettings={providerSettings}
             simulation={simulation}
             skipped={skipped}
           />
@@ -1471,18 +1478,20 @@ function MemberRows({
             <th scope="row">{item.memberName}</th>
             <td>{text(index)}</td>
             <td className="billing-members__action">
-              <a
-                aria-label={t("admin-billing:simulation.openRecordOf", { name: item.memberName })}
-                className="ah-button ah-button--ghost billing-open"
-                href={recordPath(item.memberId, item.code)}
-                onClick={(event) => {
-                  if (event.button !== 0 || event.metaKey || event.ctrlKey) return;
-                  event.preventDefault();
-                  onNavigate(recordPath(item.memberId, item.code));
-                }}
-              >
-                {t("admin-billing:simulation.openRecord")}
-              </a>
+              {item.code === "PROVIDER_DISABLED" ? null : (
+                <a
+                  aria-label={t("admin-billing:simulation.openRecordOf", { name: item.memberName })}
+                  className="ah-button ah-button--ghost billing-open"
+                  href={recordPath(item.memberId, item.code)}
+                  onClick={(event) => {
+                    if (event.button !== 0 || event.metaKey || event.ctrlKey) return;
+                    event.preventDefault();
+                    onNavigate(recordPath(item.memberId, item.code));
+                  }}
+                >
+                  {t("admin-billing:simulation.openRecord")}
+                </a>
+              )}
             </td>
           </tr>
         ))}
@@ -1499,11 +1508,13 @@ function MemberRows({
 function SimulationCard({
   onNavigate,
   onOpenInvoice,
+  providerSettings,
   simulation,
   skipped,
 }: {
   onNavigate: (path: string) => void;
   onOpenInvoice: (invoiceId: string) => void;
+  providerSettings: BillingProviderSettings | null | undefined;
   simulation: PeriodSimulation;
   skipped: readonly BillingIncident[];
 }) {
@@ -1537,6 +1548,10 @@ function SimulationCard({
         (incident) => incident.memberId === item.memberId && incident.code === item.code,
       ),
   );
+  const hasProviderIncident = [...simulation.incidents, ...others].some(
+    (incident) => incident.code === "PROVIDER_DISABLED",
+  );
+  const sepa = providerSettings?.SEPA_XML;
   return (
     <Card className="billing-simulation">
       <div className="billing-simulation__head">
@@ -1549,6 +1564,19 @@ function SimulationCard({
           </span>
         </Badge>
       </div>
+      {hasProviderIncident ? (
+        <div aria-label={t("admin-billing:simulation.providerConfigurationTitle")} role="note">
+          <strong>{t("admin-billing:simulation.providerConfigurationTitle")}</strong>
+          {sepa?.enabled === true && !sepa.configured ? (
+            <p>{t("admin-billing:simulation.sepaNotConfigured")}</p>
+          ) : sepa?.enabled === false ? (
+            <p>{t("admin-billing:simulation.sepaDisabled")}</p>
+          ) : null}
+          <p className="billing-simulation__footnote">
+            {t("admin-billing:simulation.providerConfigurationHelp")}
+          </p>
+        </div>
+      ) : null}
       {simulation.incidents.length === 0 ? (
         <p className="billing-simulation__none">{t("admin-billing:simulation.noIncidents")}</p>
       ) : (

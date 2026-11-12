@@ -5,7 +5,7 @@ import { Badge, Button, Chip, Skeleton, type Tone } from "./components";
 export interface RegistrantsPanelRow {
   id: string;
   /** «Laura + Duna». */
-  name: string;
+  name: ReactNode;
   /** The dog's level code (mockup D12's chip after the name); absent: no chip. */
   level?: string | undefined;
   state: { label: string; tone: Tone };
@@ -30,7 +30,7 @@ export interface RegistrantsPanelProps {
   waiting?: {
     entries: RegistrantsPanelWaiting[];
     /** «En espera: Júlia + Kira · Roser + Lluna». */
-    text: string;
+    text: ReactNode;
   };
   /** ADMIN only (R-08-16): one [Treu de la llista] per waiting entry. Absent: read-only. */
   removal?: {

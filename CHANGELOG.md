@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-12 — Student links, dog category lists and billing diagnosis
+
+- Link instructor attendance, waiting lists, class registrants, training occupants and task headers to the corresponding student card.
+- Open active dogs from each dashboard level with photo, breed, level, owner, assignment date, birth date and status; preserve date ordering, full years and pagination.
+- Preserve themed status-filter contrast in WebKit, including light and dark category lists.
+- Retry transient administrator club-mark failures and fall back to the configured logo before the club initial.
+- Explain incomplete SEPA creditor configuration separately from a disabled provider in receipt simulation; keep club-level setup problems out of member-record actions.
+
 ## 2026-11-12 — Browser regression stability
 
 - Wait for the authenticated home screen before testing profile text-size preferences, avoiding a WebKit navigation race while preserving all preference assertions.

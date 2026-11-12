@@ -69,7 +69,11 @@
     "incidentsFootnote": "Los abonados con incidencia se omiten de la generación.",
     "cashTitle": "Activos con pago en efectivo",
     "plannedLeave": "fecha de baja prevista:",
-    "skippedTitle": "Omitidos de la generación"
+    "skippedTitle": "Omitidos de la generación",
+    "providerConfigurationTitle": "Configuración de pagos del club",
+    "providerConfigurationHelp": "Estas incidencias se resuelven en la configuración de pagos del club. Pide al administrador de la plataforma que la revise y vuelve a simular el mes.",
+    "sepaNotConfigured": "La domiciliación SEPA está activada, pero faltan los datos del acreedor del club. Hay que completar el nombre, el identificador de acreedor, el IBAN y el sufijo.",
+    "sepaDisabled": "La domiciliación SEPA está desactivada para el club."
   },
   "empty": {
     "noSimulation": "Todavía no hay ninguna simulación de este mes",

@@ -141,7 +141,8 @@
       "pack": "Bono",
       "pendingDocuments": "Documentos pendientes",
       "registeredAt": "Fecha de alta",
-      "sex": "Sexo"
+      "sex": "Sexo",
+      "birthDate": "Fecha de nacimiento"
     },
     "emptyDescription": "Cambie la búsqueda o los filtros para ver más resultados.",
     "emptyTitle": "Ningún perro con estos criterios",

@@ -24,7 +24,6 @@ import {
   PasswordInput,
   isModuleUiItemEnabled,
   requiredModulesForUiItem,
-  resolveBrandingLogo,
   Sidebar,
   type SidebarEntry,
   type SidebarGroup,
@@ -58,6 +57,7 @@ import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { InactivityLeavePage } from "./census/InactivityLeavePage";
 import { ChunkBoundary } from "./ChunkBoundary";
+import { ClubMark } from "./ClubMark";
 import { ConsoleForbidden } from "./console/ConsoleForbidden";
 import { ClassNoticesPage } from "./dashboard/ClassNoticesPage";
 import { CountersRefreshContext } from "./dashboard/counters";
@@ -703,7 +703,6 @@ function AdminShell({
   const session = useSession();
   const { t } = useTranslation(["shell", "admin-audit"]);
   const { openExports } = useExportsDrawer();
-  const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
   const navigationToggle = useRef<HTMLButtonElement>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     try {
@@ -800,13 +799,7 @@ function AdminShell({
           >
             <Icon aria-hidden="true" name={navigationOpen ? "x" : "list"} />
           </button>
-          {logo.kind === "initial" ? (
-            <span aria-hidden="true" className="admin-shell__mark">
-              {branding.club.name.charAt(0)}
-            </span>
-          ) : (
-            <img alt="" src={logo.src} />
-          )}
+          <ClubMark />
           <strong>{branding.club.name}</strong>
         </div>
         <div className="admin-shell__actions">

@@ -903,6 +903,7 @@ type DogFixtureInput = (typeof featuredDogs)[number] | ReturnType<typeof generat
 function dogListItem(input: DogFixtureInput): DogListItem {
   return {
     age: input.ageYears,
+    birthDate: input.birthDate,
     breed: input.breed,
     chip: input.chip,
     displayStatus: input.displayStatus,

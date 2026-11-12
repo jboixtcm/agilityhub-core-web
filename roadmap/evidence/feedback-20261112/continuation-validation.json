@@ -1,0 +1,82 @@
+{
+  "fullWebCommand": "pnpm turbo run lint typecheck test build --concurrency=2",
+  "fullWebExitCode": 0,
+  "tasks": {
+    "successful": 38,
+    "total": 38,
+    "cached": 34
+  },
+  "testCounts": {
+    "@agilityhub/ui": 208,
+    "@agilityhub/course-core": 378,
+    "@agilityhub/i18n": 162,
+    "@agilityhub/shared-types": 38,
+    "@agilityhub/course-ui": 56,
+    "@agilityhub/api-client": 801,
+    "@agilityhub/auth": 129,
+    "id": 20,
+    "clubs": 794,
+    "clubs-admin": 1147
+  },
+  "testsPassed": 3733,
+  "sizeLimitExitCode": 0,
+  "realCoreTypesExitCode": 0,
+  "i18nLog": "i18n-final.log",
+  "browserValidation": "passed",
+  "productionDeployment": false,
+  "visualReview": {
+    "reviewed": [
+      "attendance-links-375.png",
+      "training-student-links-375.png",
+      "billing-provider-chromium-375.png",
+      "billing-provider-chromium-1280.png",
+      "category-list-chromium-light-1280.png",
+      "category-list-chromium-dark-375.png",
+      "category-list-webkit-light-375.png",
+      "category-list-webkit-dark-1280.png"
+    ],
+    "result": "Links readable at 375px; training names sit outside disabled booking buttons; no clipping in changed controls.",
+    "billing": "Club-level creditor notice wraps without overflow; member-account record action remains, provider row has no misleading member action.",
+    "categories": "Correct active-level filter, configured logo, requested columns and full-year dates; desktop table fits, mobile table uses its existing internal horizontal scrolling.",
+    "finalCss": "Native WebKit status-select contrast corrected using theme colors; light/dark screenshots checked after all eight Chromium/WebKit category tests passed."
+  },
+  "browserResults": {
+    "clubs": {
+      "passed": 160,
+      "failed": 0
+    },
+    "clubs-admin": {
+      "passed": 226,
+      "failed": 0
+    },
+    "id": {
+      "passed": 1,
+      "failed": 0
+    },
+    "course-ui": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "at": "2026-11-12T14:18:08.232485+00:00",
+  "fullWebLog": "web-final-complete.log",
+  "browserTotalPassed": 391,
+  "finalCssBrowserRetest": {
+    "passed": 8,
+    "failed": 0,
+    "log": "select-browser-final.log"
+  },
+  "planDrawerRetest": {
+    "passed": 9,
+    "failed": 0,
+    "log": "plan-drawer-final.log"
+  },
+  "finalFailureResolved": {
+    "log": "web-final-after-visual.log",
+    "reason": "Existing plan-change test selected a price before its async options loaded; wait for the intended option before selecting it. No application behavior changed."
+  },
+  "hostNode": "22.23.2",
+  "browserImageNode": "24.20.0",
+  "browserImage": "mcr.microsoft.com/playwright:v1.63.0-noble",
+  "browserScopeNote": "The complete 391-case suite passed before the final CSS-only contrast fix. All eight affected category flows were rerun afterward. The later test-only async wait does not change application behavior."
+}

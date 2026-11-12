@@ -67,9 +67,25 @@
 }
 
 .ah-universal-list__status {
+  appearance: none;
+  padding-inline-end: var(--ah-space-6);
   color: var(--ah-color-primary-fg);
   background: var(--ah-color-primary);
+  /* Native WebKit select chrome otherwise replaces the themed background. */
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ah-color-primary-fg) 50%),
+    linear-gradient(135deg, var(--ah-color-primary-fg) 50%, transparent 50%);
+  background-position:
+    right 0.75rem center,
+    right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 0.25rem 0.25rem;
   border-color: var(--ah-color-primary);
+}
+
+.ah-universal-list__status option {
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
 }
 
 .ah-universal-list__menu {

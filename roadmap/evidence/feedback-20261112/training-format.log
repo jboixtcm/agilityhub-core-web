@@ -1,0 +1,13 @@
+packages/ui/src/slot-grid.tsx 56ms
+packages/ui/src/slot-grid.test.tsx 25ms
+packages/ui/src/slot-grid.css 21ms (unchanged)
+packages/ui/src/day-grid.tsx 16ms
+packages/ui/src/schedule-grid.tsx 9ms (unchanged)
+apps/clubs/src/instructor/StudentLink.tsx 1ms (unchanged)
+apps/clubs/src/instructor/RingBlockPage.tsx 19ms
+apps/clubs/src/instructor/RingBlockPage.test.tsx 17ms (unchanged)
+apps/clubs/src/today/shared.tsx 7ms
+apps/clubs/src/today/OverviewPage.test.tsx 14ms
+packages/api-client/src/mocks/fixtures/training.ts 32ms (unchanged)
+packages/api-client/src/mocks/fixtures/day-grid.ts 16ms
+packages/api-client/src/mocks/training-handlers.test.ts 18ms

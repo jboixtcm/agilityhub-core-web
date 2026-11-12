@@ -208,7 +208,7 @@ export interface ScheduleCellProps {
   selected?: boolean;
   /** Cancelled class: struck-through text (with `muted`). */
   struck?: boolean;
-  subtitle?: string | undefined;
+  subtitle?: ReactNode;
   warning?: boolean;
 }
 

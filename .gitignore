@@ -101,3 +101,7 @@ __pycache__/
 
 # November 12 browser synchronization verification.
 !roadmap/evidence/feedback-20261111/e2e-navigation-race.log
+
+# Direct user feedback validation, November 12.
+!roadmap/evidence/feedback-20261112/*.log
+!roadmap/evidence/feedback-20261112-receipts/*.log

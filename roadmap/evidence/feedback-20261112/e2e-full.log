@@ -1,0 +1,1 @@
+heavy.sh: 14:52 waiting for the host lock, held by: 14:52 agilityhub-core-web: sh -c pnpm turbo run lint typecheck test build && pnpm size && pnpm typecheck:e2e-core

@@ -1,0 +1,595 @@
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/attendance-rows.test.tsx (2 tests | 1 failed) 306ms
+   × T-10-08 opens each enrolled and waiting student's card from their name 226ms
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/attendance-rows.test.tsx > T-10-08 opens each enrolled and waiting student's card from their name
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "Júlia + Kira"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Torna":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Mostra la foto de Duna a pantalla completa":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Mostra la foto de Duna a pantalla completa"[39m
+    [33mclass[39m=[32m"instructor-sheet__photo"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Desa":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "dl 3 · 8:30 · A+B · Central":
+  [36m<h1 />[39m
+
+  Name "Llista d'espera (1)":
+  [36m<h2[39m
+    [33mclass[39m=[32m"instructor-screen__section"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"instructor-sheet__rows"[39m
+  [36m/>[39m
+
+  Name "Llegenda d’assistència":
+  [36m<ul[39m
+    [33maria-label[39m=[32m"Llegenda d’assistència"[39m
+    [33mclass[39m=[32m"instructor-sheet__legend"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<ul />[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"instructor-sheet__row"[39m
+    [33mdata-attendance-state[39m=[32m"PRESENT"[39m
+    [33mdata-booking-id[39m=[32m"b1"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"instructor-sheet__row"[39m
+    [33mdata-attendance-state[39m=[32m"PENDING"[39m
+    [33mdata-booking-id[39m=[32m"b2"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"instructor-sheet__row"[39m
+    [33mdata-attendance-state[39m=[32m"NOTIFIED"[39m
+    [33mdata-booking-id[39m=[32m"b3"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"instructor-sheet__row"[39m
+    [33mdata-attendance-state[39m=[32m"NO_SHOW"[39m
+    [33mdata-booking-id[39m=[32m"b4"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  [36m<img[39m
+    [33malt[39m=[32m""[39m
+    [33msrc[39m=[32m"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20120%20120'%3E%3Crect%20width%3D'120'%20height%3D'120'%20fill%3D'tan'%2F%3E%3Ccircle%20cx%3D'60'%20cy%3D'58'%20r%3D'30'%20fill%3D'saddlebrown'%2F%3E%3Ccircle%20cx%3D'50'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Ccircle%20cx%3D'70'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Cellipse%20cx%3D'60'%20cy%3D'66'%20rx%3D'7'%20ry%3D'5'%20fill%3D'black'%2F%3E%3C%2Fsvg%3E"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Laura + Duna":
+  [36m<a[39m
+    [33mclass[39m=[32m"instructor-student-link"[39m
+    [33mhref[39m=[32m"/instructor/alumnes/dog-duna"[39m
+  [36m/>[39m
+
+  Name "Marc + Chun-li":
+  [36m<a[39m
+    [33mclass[39m=[32m"instructor-student-link"[39m
+    [33mhref[39m=[32m"/instructor/alumnes/dog-chun-li"[39m
+  [36m/>[39m
+
+  Name "Anna + Nass":
+  [36m<a[39m
+    [33mclass[39m=[32m"instructor-student-link"[39m
+    [33mhref[39m=[32m"/instructor/alumnes/dog-nass"[39m
+  [36m/>[39m
+
+  Name "Eva + Fish":
+  [36m<a[39m
+    [33mclass[39m=[32m"instructor-student-link"[39m
+    [33mhref[39m=[32m"/instructor/alumnes/dog-fish"[39m
+  [36m/>[39m
+
+  Name "Pau + Blat":
+  [36m<a[39m
+    [33mclass[39m=[32m"instructor-student-link"[39m
+    [33mhref[39m=[32m"/instructor/alumnes/dog-blat"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  radiogroup:
+
+  Name "Assistència de Laura + Duna":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Assistència de Laura + Duna"[39m
+    [33mclass[39m=[32m"ah-attendance"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Assistència de Marc + Chun-li":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Assistència de Marc + Chun-li"[39m
+    [33mclass[39m=[32m"ah-attendance"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Assistència de Anna + Nass":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Assistència de Anna + Nass"[39m
+    [33mclass[39m=[32m"ah-attendance"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  Name "Assistència de Eva + Fish":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Assistència de Eva + Fish"[39m
+    [33mclass[39m=[32m"ah-attendance"[39m
+    [33mrole[39m=[32m"radiogroup"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  radio:
+
+  Name "pendent":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"pendent"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "present":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"present"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--present"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"0"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ha avisat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"ha avisat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--notified"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "no presentat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"no presentat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--no-show"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "pendent":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"pendent"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"0"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "present":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"present"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--present"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ha avisat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"ha avisat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--notified"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "no presentat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"no presentat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--no-show"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "pendent":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"pendent"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "present":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"present"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--present"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ha avisat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"ha avisat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--notified"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"0"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "no presentat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"no presentat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--no-show"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "pendent":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"pendent"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "present":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"present"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--present"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "ha avisat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"false"[39m
+    [33maria-label[39m=[32m"ha avisat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--notified"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"-1"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "no presentat":
+  [36m<button[39m
+    [33maria-checked[39m=[32m"true"[39m
+    [33maria-label[39m=[32m"no presentat"[39m
+    [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--no-show"[39m
+    [33mrole[39m=[32m"radio"[39m
+    [33mtabindex[39m=[32m"0"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"instructor-sheet__status"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"instructor-sheet__status instructor-day__notes"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"instructor-sheet__status instructor-day__notes"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  img:
+
+  Name "Chun-li":
+  [36m<span[39m
+    [33maria-label[39m=[32m"Chun-li"[39m
+    [33mclass[39m=[32m"ah-avatar ah-avatar--dog"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Nass":
+  [36m<span[39m
+    [33maria-label[39m=[32m"Nass"[39m
+    [33mclass[39m=[32m"ah-avatar ah-avatar--dog"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  Name "Fish":
+  [36m<span[39m
+    [33maria-label[39m=[32m"Fish"[39m
+    [33mclass[39m=[32m"ah-avatar ah-avatar--dog"[39m
+    [33mrole[39m=[32m"img"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-sheet"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Torna"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mdl 3 · 8:30 · A+B · Central[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"instructor-sheet__meta"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+        [36m>[39m
+          [0m3/5[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning instructor-sheet__waiting"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-hour"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m [0m
+          [0m1 en espera[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"instructor-sheet__instructor"[39m
+        [36m>[39m
+          [0mEstel[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-sheet__card"[39m
+      [36m>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"instructor-sheet__rows"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mclass[39m=[32m"instructor-sheet__row"[39m
+            [33mdata-attendance-state[39m=[32m"PRESENT"[39m
+            [33mdata-booking-id[39m=[32m"b1"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"instructor-sheet__main"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra la foto de Duna a pantalla completa"[39m
+                [33mclass[39m=[32m"instructor-sheet__photo"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<img[39m
+                  [33malt[39m=[32m""[39m
+                  [33msrc[39m=[32m"data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20120%20120'%3E%3Crect%20width%3D'120'%20height%3D'120'%20fill%3D'tan'%2F%3E%3Ccircle%20cx%3D'60'%20cy%3D'58'%20r%3D'30'%20fill%3D'saddlebrown'%2F%3E%3Ccircle%20cx%3D'50'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Ccircle%20cx%3D'70'%20cy%3D'52'%20r%3D'4'%20fill%3D'black'%2F%3E%3Cellipse%20cx%3D'60'%20cy%3D'66'%20rx%3D'7'%20ry%3D'5'%20fill%3D'black'%2F%3E%3C%2Fsvg%3E"[39m
+                [36m/>[39m
+              [36m</button>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"instructor-sheet__who"[39m
+              [36m>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"instructor-student-link"[39m
+                  [33mhref[39m=[32m"/instructor/alumnes/dog-duna"[39m
+                [36m>[39m
+                  [36m<strong>[39m
+                    [0mLaura + Duna[0m
+                  [36m</strong>[39m
+                [36m</a>[39m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-chip ah-tone--neutral instructor-level"[39m
+              [36m>[39m
+                [0mC[0m
+              [36m</span>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Assistència de Laura + Duna"[39m
+                [33mclass[39m=[32m"ah-attendance"[39m
+                [33mrole[39m=[32m"radiogroup"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-checked[39m=[32m"false"[39m
+                  [33maria-label[39m=[32m"pendent"[39m
+                  [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--pending"[39m
+                  [33mrole[39m=[32m"radio"[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m/>[39m
+                [36m<button[39m
+                  [33maria-checked[39m=[32m"true"[39m
+                  [33maria-label[39m=[32m"present"[39m
+                  [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--present"[39m
+                  [33mrole[39m=[32m"radio"[39m
+                  [33mtabindex[39m=[32m"0"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-checked[39m=[32m"false"[39m
+                  [33maria-label[39m=[32m"ha avisat"[39m
+                  [33mclass[39m=[32m"ah-attendance__circle ah-attendance__circle--notified"[39m
+                  [33mrole[39m=[32m"radio"[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                   ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/attendance-rows.test.tsx:80:17
+     78|   const enrolled = screen.getByRole("link", { name: "Laura + Duna" });
+     79|   expect(enrolled).toHaveAttribute("href", "/instructor/alumnes/dog-du…
+     80|   expect(screen.getByRole("link", { name: "Júlia + Kira" })).toHaveAtt…
+       |                 ^
+     81|   fireEvent.click(enrolled);
+     82|   expect(window.location.pathname).toBe("/instructor/alumnes/dog-duna"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 57 passed (58)
+   Start at  08:55:42
+   Duration  7.14s (tests 51%, transform 22%, environment 14%, import 9%, setup 3%)
+
+undefined
+/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/attendance-rows.test.tsx src/instructor/instructor.test.tsx src/today/OverviewPage.test.tsx

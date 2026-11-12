@@ -9,6 +9,8 @@ import { getResponse, HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
+import { dogLevelListPath } from "../dashboard/DogLevelsChart";
+
 import { DogsPage, MembersPage } from "./CensusListPage";
 
 const branding: Branding = {
@@ -52,6 +54,30 @@ async function renderPage(kind: "dogs" | "members", preferenceScope?: string) {
     </I18nextProvider>,
   );
 }
+
+it("T-03-38 renders a dashboard level selection with birth dates and paginated active dogs", async () => {
+  const requests: URL[] = [];
+  server.use(
+    http.get("*/api/v1/dogs", async ({ request }) => {
+      requests.push(new URL(request.url));
+      return await getResponse(handlers, request);
+    }),
+  );
+  window.history.pushState(null, "", dogLevelListPath("level-c"));
+  await renderPage("dogs");
+  expect(await screen.findByText("Duna")).toBeVisible();
+  expect(screen.getByRole("columnheader", { name: /Data de naixement/u })).toBeVisible();
+  expect(screen.getByRole("columnheader", { name: /Al nivell des de/u })).toBeVisible();
+  expect(screen.getByText("12/03/2022")).toBeVisible();
+  const request = requests.find((url) => url.searchParams.has("fields"));
+  expect(request?.searchParams.getAll("filter")).toEqual([
+    "status:eq:ACTIVE",
+    "levelId:eq:level-c",
+  ]);
+  expect(request?.searchParams.getAll("sort")).toEqual(["levelAssignedAt,asc", "name,asc"]);
+  expect(request?.searchParams.get("fields")?.split(",")).toContain("photoUrl");
+  expect(screen.queryByText("Rock")).not.toBeInTheDocument();
+});
 
 describe("T-03-38 D5 universal member list", () => {
   it("restores page size alongside the default saved view", async () => {
@@ -392,7 +418,7 @@ describe("T-03-42 / R-03-32, R-03-29 (E11-W02 round 2, INC-41): D5 and D15 show 
     showColumn("Data d'alta");
     const duna = (await screen.findAllByText("Duna"))[0]?.closest("tr");
     if (duna === null || duna === undefined) throw new Error("Expected Duna's row");
-    expect(await within(duna).findByText("01/02")).toBeVisible();
+    expect(await within(duna).findByText("01/02/2025")).toBeVisible();
     expect(within(duna).getByText("03/02")).toBeVisible();
   });
 });

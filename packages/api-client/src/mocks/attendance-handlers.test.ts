@@ -256,6 +256,7 @@ describe("E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-0
     expect(data?.waitlist).toEqual({
       entries: [
         {
+          dogId: "dog-blat",
           dogName: "Blat",
           entryId: "w1",
           handlerName: null,

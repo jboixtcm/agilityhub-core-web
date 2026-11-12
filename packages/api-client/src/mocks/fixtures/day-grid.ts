@@ -420,6 +420,9 @@ export function dayGridFixture(
                 ringId: item.ring,
                 trainingBookingIds: [`dg-tb-${date}-${compactTime(item.start)}-${item.ring}`],
                 who: [item.who],
+                trainingDogIds: [
+                  `dog-${item.who.split(" + ").at(-1)?.toLocaleLowerCase() ?? "unknown"}`,
+                ],
               },
         );
         break;

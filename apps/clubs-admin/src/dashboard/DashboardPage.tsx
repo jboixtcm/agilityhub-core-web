@@ -14,7 +14,15 @@ function sentenceCase(value: string): string {
   return `${value.charAt(0).toLocaleUpperCase()}${value.slice(1)}`;
 }
 
-function KpiCard({ detail, label, value }: { detail: string; label: string; value: string | number }) {
+function KpiCard({
+  detail,
+  label,
+  value,
+}: {
+  detail: string;
+  label: string;
+  value: string | number;
+}) {
   return (
     <Card className="dashboard-kpi">
       <strong>{value}</strong>
@@ -26,7 +34,9 @@ function KpiCard({ detail, label, value }: { detail: string; label: string; valu
 
 export function DashboardPage({
   client,
-  onNavigate = (path) => { window.location.assign(path); },
+  onNavigate = (path) => {
+    window.location.assign(path);
+  },
 }: {
   client: ApiClient;
   onNavigate?: (path: string) => void;
@@ -47,22 +57,32 @@ export function DashboardPage({
         setError(undefined);
         setDashboard(result.data);
       },
-      (cause: unknown) => { setError(cause); },
+      (cause: unknown) => {
+        setError(cause);
+      },
     );
   }, [client]);
 
   useEffect(() => {
     load();
-    const refetch = () => { load(); };
+    const refetch = () => {
+      load();
+    };
     window.addEventListener("focus", refetch);
-    return () => { window.removeEventListener("focus", refetch); };
+    return () => {
+      window.removeEventListener("focus", refetch);
+    };
   }, [load, request]);
 
   if (dashboard === undefined && error === undefined) {
     return (
       <section aria-label={t("admin-dashboard:common.loading")} className="dashboard-page">
         <div className="dashboard-skeletons">
-          {[0, 1, 2, 3].map((key) => <Card key={key}><Skeleton label={t("admin-dashboard:common.loading")} /></Card>)}
+          {[0, 1, 2, 3].map((key) => (
+            <Card key={key}>
+              <Skeleton label={t("admin-dashboard:common.loading")} />
+            </Card>
+          ))}
         </div>
       </section>
     );
@@ -71,8 +91,19 @@ export function DashboardPage({
   if (dashboard === undefined) {
     return (
       <section className="dashboard-page">
-        <Toast tone="danger">{isApiError(error) ? t(`errors:${error.code}`, { defaultValue: t("admin-dashboard:common.error") }) : t("admin-dashboard:common.error")}</Toast>
-        <Button onClick={() => { setError(undefined); setRequest((value) => value + 1); }}>{t("admin-dashboard:common.retry")}</Button>
+        <Toast tone="danger">
+          {isApiError(error)
+            ? t(`errors:${error.code}`, { defaultValue: t("admin-dashboard:common.error") })
+            : t("admin-dashboard:common.error")}
+        </Toast>
+        <Button
+          onClick={() => {
+            setError(undefined);
+            setRequest((value) => value + 1);
+          }}
+        >
+          {t("admin-dashboard:common.retry")}
+        </Button>
       </section>
     );
   }
@@ -84,68 +115,151 @@ export function DashboardPage({
   const warnDays = dashboard.kpis.pendingSignups?.warnDays;
   const signupResult = new URLSearchParams(window.location.search).get("signup");
   // «Dilluns 10 d'agost»: no comma after the weekday (mockup D1).
-  const today = sentenceCase(formatPlainDate(dashboard.today, "weekday").replace(/^([^\s,]+),/u, "$1"));
+  const today = sentenceCase(
+    formatPlainDate(dashboard.today, "weekday").replace(/^([^\s,]+),/u, "$1"),
+  );
 
   return (
     <section className="dashboard-page">
-      {signupResult === "validated" ? <Toast tone="success">{t("admin-dashboard:signups.validated")}</Toast> : null}
+      {signupResult === "validated" ? (
+        <Toast tone="success">{t("admin-dashboard:signups.validated")}</Toast>
+      ) : null}
       {/* R-04-23: a rejected signup with a collected payment still needs a refund from billing. */}
-      {signupResult === "rejected-refund" ? <Toast tone="warning">{t("admin-dashboard:signups.refundRequired")}</Toast> : null}
-      {error === undefined ? null : <Toast tone="danger">{isApiError(error) ? t(`errors:${error.code}`, { defaultValue: t("admin-dashboard:common.error") }) : t("admin-dashboard:common.error")}</Toast>}
+      {signupResult === "rejected-refund" ? (
+        <Toast tone="warning">{t("admin-dashboard:signups.refundRequired")}</Toast>
+      ) : null}
+      {error === undefined ? null : (
+        <Toast tone="danger">
+          {isApiError(error)
+            ? t(`errors:${error.code}`, { defaultValue: t("admin-dashboard:common.error") })
+            : t("admin-dashboard:common.error")}
+        </Toast>
+      )}
       <h1>{t("admin-dashboard:greeting", { date: today, period })}</h1>
       {/* INC-11 (mockup D1): the period goes with the label («Ocupació classes · aquesta setmana»),
           the figures under it («142/163 places»). */}
       <div className="dashboard-kpis">
         {dashboard.kpis.activeMembers === null ? null : (
-          <KpiCard detail={t("admin-dashboard:kpi.thisMonth", { count: Math.abs(delta), sign: delta > 0 ? "plus" : delta < 0 ? "minus" : "zero" })} label={t("admin-dashboard:kpi.activeMembers")} value={dashboard.kpis.activeMembers.value} />
+          <KpiCard
+            detail={t("admin-dashboard:kpi.thisMonth", {
+              count: Math.abs(delta),
+              sign: delta > 0 ? "plus" : delta < 0 ? "minus" : "zero",
+            })}
+            label={t("admin-dashboard:kpi.activeMembers")}
+            value={dashboard.kpis.activeMembers.value}
+          />
         )}
         {occupancy === null ? null : (
-          <KpiCard detail={t("admin-dashboard:kpi.places", { booked: occupancy.booked, capacity: occupancy.capacity })} label={`${t("admin-dashboard:kpi.occupancy")} · ${t("admin-dashboard:kpi.thisWeek")}`} value={occupancy.percent === null ? t("admin-dashboard:common.empty") : `${String(occupancy.percent)}%`} />
+          <KpiCard
+            detail={t("admin-dashboard:kpi.places", {
+              booked: occupancy.booked,
+              capacity: occupancy.capacity,
+            })}
+            label={`${t("admin-dashboard:kpi.occupancy")} · ${t("admin-dashboard:kpi.thisWeek")}`}
+            value={
+              occupancy.percent === null
+                ? t("admin-dashboard:common.empty")
+                : `${String(occupancy.percent)}%`
+            }
+          />
         )}
         {dashboard.kpis.trainingBookings === null ? null : (
-          <KpiCard detail={t("admin-dashboard:kpi.distinctMembers", { count: dashboard.kpis.trainingBookings.distinctMembers })} label={`${t("admin-dashboard:kpi.training")} · ${t("admin-dashboard:kpi.week")}`} value={dashboard.kpis.trainingBookings.value} />
+          <KpiCard
+            detail={t("admin-dashboard:kpi.distinctMembers", {
+              count: dashboard.kpis.trainingBookings.distinctMembers,
+            })}
+            label={`${t("admin-dashboard:kpi.training")} · ${t("admin-dashboard:kpi.week")}`}
+            value={dashboard.kpis.trainingBookings.value}
+          />
         )}
         {dashboard.kpis.pendingSignups === null ? null : (
-          <KpiCard detail={t("admin-dashboard:kpi.older", { count: dashboard.kpis.pendingSignups.olderThanWarn, days: dashboard.kpis.pendingSignups.warnDays })} label={t("admin-dashboard:kpi.pending")} value={dashboard.kpis.pendingSignups.value} />
+          <KpiCard
+            detail={t("admin-dashboard:kpi.older", {
+              count: dashboard.kpis.pendingSignups.olderThanWarn,
+              days: dashboard.kpis.pendingSignups.warnDays,
+            })}
+            label={t("admin-dashboard:kpi.pending")}
+            value={dashboard.kpis.pendingSignups.value}
+          />
         )}
       </div>
 
       <div className="dashboard-grid">
         {/* S14 controls visibility; the notice history supplies today's sent occurrences. */}
-        {dashboard.riskReview === null ? null : <RiskReviewCard client={client} onNavigate={onNavigate} />}
+        {dashboard.riskReview === null ? null : (
+          <RiskReviewCard client={client} onNavigate={onNavigate} />
+        )}
 
         {dashboard.pendingSignups === null ? null : (
           <Card className="dashboard-signups">
-            <header><h2>{t("admin-dashboard:signups.title")}</h2><Badge>{dashboard.pendingSignups.count}</Badge></header>
-            {dashboard.pendingSignups.items.length === 0 ? <p>{t("admin-dashboard:signups.empty")}</p> : dashboard.pendingSignups.items.map((signup) => {
-              const dogs = signup.dogs.map((dog) => t("admin-dashboard:signups.dog", { breed: dog.breed, isAddDog: String(dog.isAddDog), name: dog.name })).join(", ");
-              const title = `${signup.shortName} + ${dogs}`;
-              const plan = `${signup.planName}${signup.paymentMethodType === undefined ? "" : ` · ${t(`admin-dashboard:signups.payment.${signup.paymentMethodType}`)}`}`;
-              const overdue = warnDays !== undefined && signup.pendingDays > warnDays;
-              return (
-                <article className="dashboard-signups__row" key={signup.memberId}>
-                  <div>
-                    {/* INC-11 (mockup D1): «**Marta R.** + Kiwi (whippet)» and the plan on one line,
+            <header>
+              <h2>{t("admin-dashboard:signups.title")}</h2>
+              <Badge>{dashboard.pendingSignups.count}</Badge>
+            </header>
+            {dashboard.pendingSignups.items.length === 0 ? (
+              <p>{t("admin-dashboard:signups.empty")}</p>
+            ) : (
+              dashboard.pendingSignups.items.map((signup) => {
+                const dogs = signup.dogs
+                  .map((dog) =>
+                    t("admin-dashboard:signups.dog", {
+                      breed: dog.breed,
+                      isAddDog: String(dog.isAddDog),
+                      name: dog.name,
+                    }),
+                  )
+                  .join(", ");
+                const title = `${signup.shortName} + ${dogs}`;
+                const plan = `${signup.planName}${signup.paymentMethodType === undefined ? "" : ` · ${t(`admin-dashboard:signups.payment.${signup.paymentMethodType}`)}`}`;
+                const overdue = warnDays !== undefined && signup.pendingDays > warnDays;
+                return (
+                  <article className="dashboard-signups__row" key={signup.memberId}>
+                    <div>
+                      {/* INC-11 (mockup D1): «**Marta R.** + Kiwi (whippet)» and the plan on one line,
                         «Compte no informat» after the plan. */}
-                    <p className="dashboard-signups__line">
-                      <span><strong>{signup.shortName}</strong> + {dogs}</span>
-                      <small>{plan}</small>
-                      {(signup.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED") ? <Badge tone="danger">{t("admin-dashboard:signups.accountNotProvided")}</Badge> : null}
-                    </p>
-                    {/* R-14-05: the submission date turns red past dashboard.pendingSignupAgeWarnDays. */}
-                    <small className={overdue ? "dashboard-signups__date dashboard-signups__date--overdue" : "dashboard-signups__date"}>
-                      {t("admin-dashboard:signups.submitted", { date: formatDate(signup.submittedAt, "short") })}
-                    </small>
-                  </div>
-                  <Button aria-label={t("admin-dashboard:signups.validateLabel", { name: title })} onClick={() => { onNavigate(`/preinscripcions/${signup.memberId}`); }}>{t("admin-dashboard:signups.validate")}</Button>
-                </article>
-              );
-            })}
+                      <p className="dashboard-signups__line">
+                        <span>
+                          <strong>{signup.shortName}</strong> + {dogs}
+                        </span>
+                        <small>{plan}</small>
+                        {(signup.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED") ? (
+                          <Badge tone="danger">
+                            {t("admin-dashboard:signups.accountNotProvided")}
+                          </Badge>
+                        ) : null}
+                      </p>
+                      {/* R-14-05: the submission date turns red past dashboard.pendingSignupAgeWarnDays. */}
+                      <small
+                        className={
+                          overdue
+                            ? "dashboard-signups__date dashboard-signups__date--overdue"
+                            : "dashboard-signups__date"
+                        }
+                      >
+                        {t("admin-dashboard:signups.submitted", {
+                          date: formatDate(signup.submittedAt, "short"),
+                        })}
+                      </small>
+                    </div>
+                    <Button
+                      aria-label={t("admin-dashboard:signups.validateLabel", { name: title })}
+                      onClick={() => {
+                        onNavigate(`/preinscripcions/${signup.memberId}`);
+                      }}
+                    >
+                      {t("admin-dashboard:signups.validate")}
+                    </Button>
+                  </article>
+                );
+              })
+            )}
           </Card>
         )}
       </div>
 
-      {dashboard.dogsByLevel === null ? null : <DogLevelsChart data={dashboard.dogsByLevel} />}
+      {dashboard.dogsByLevel === null ? null : (
+        <DogLevelsChart data={dashboard.dogsByLevel} onNavigate={onNavigate} />
+      )}
     </section>
   );
 }

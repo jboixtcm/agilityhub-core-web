@@ -58,6 +58,7 @@ describe("E8-W03 round 2 member plan change", () => {
     const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
     await within(drawer).findByRole("option", { name: "Abonat" });
     fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
+    await within(drawer).findByRole("option", { name: /60,00.*€/u });
     fireEvent.change(await within(drawer).findByLabelText("Tarifa"), { target: { value: "price-member" } });
     fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
     expect(await within(drawer).findByRole("alert")).toHaveTextContent("L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.");

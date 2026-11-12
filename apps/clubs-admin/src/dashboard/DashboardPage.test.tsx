@@ -108,6 +108,23 @@ function signupRow(name: RegExp): HTMLElement {
   return row;
 }
 
+it("T-14-25 opens every active dog in a level with assignment-date order and the requested columns", async () => {
+  const { navigate } = await renderDashboard();
+  const link = screen.getByRole("link", { name: "CAD" });
+  fireEvent.click(link);
+  const path = navigate.mock.calls[0]?.[0] as string;
+  const url = new URL(path, window.location.origin);
+  expect(url.pathname).toBe("/gossos");
+  expect(url.searchParams.getAll("filter")).toEqual([
+    "status:eq:ACTIVE",
+    "levelId:eq:43000000-0000-4000-8000-000000000001",
+  ]);
+  expect(url.searchParams.getAll("sort")).toEqual(["levelAssignedAt,asc", "name,asc"]);
+  expect(url.searchParams.get("fields")).toBe(
+    "name,breed,level,owner,levelAssignedAt,birthDate,displayStatus",
+  );
+});
+
 describe("T-14-25 D1 dashboard", () => {
   it("renders the server aggregate, all risk rows, pending signups, and accessible chart", async () => {
     const { navigate } = await renderDashboard();

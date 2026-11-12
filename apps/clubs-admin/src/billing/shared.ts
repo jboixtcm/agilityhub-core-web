@@ -29,6 +29,7 @@ export type RemittanceListItem = components["schemas"]["RemittanceListItem"];
 export type RollbackBlocker = components["schemas"]["RollbackBlocker"];
 
 export type BillingProvider = "MANUAL" | "SEPA_XML" | "STRIPE";
+export type BillingProviderSettings = components["schemas"]["ClubSettings"]["paymentProviders"];
 
 export const MANUAL_CHANNELS: readonly ManualChannel[] = ["CASH", "TRANSFER", "BIZUM"];
 
@@ -187,22 +188,20 @@ export function useBillingErrorMessage() {
 }
 
 /**
- * The payment providers the club has enabled (`GET /club`, `paymentProviders`, as E2 reads it):
+ * The club payment providers and their configuration flags (`GET /club`, as E2 reads it):
  * `undefined` while it is read, `null` when the read failed.
  */
-export function useClubProviders(client: ApiClient): readonly BillingProvider[] | null | undefined {
-  const [providers, setProviders] = useState<readonly BillingProvider[] | null>();
+export function useClubProviderSettings(
+  client: ApiClient,
+  refreshKey: number,
+): BillingProviderSettings | null | undefined {
+  const [providers, setProviders] = useState<BillingProviderSettings | null>();
   useEffect(() => {
     let current = true;
     void client.GET("/club", {}).then(
       (result) => {
         if (!current) return;
-        const configured = result.data?.paymentProviders ?? {};
-        setProviders(
-          (["SEPA_XML", "STRIPE", "MANUAL"] as const).filter(
-            (provider) => configured[provider]?.enabled === true,
-          ),
-        );
+        setProviders(result.data?.paymentProviders ?? {});
       },
       () => {
         if (current) setProviders(null);
@@ -211,7 +210,7 @@ export function useClubProviders(client: ApiClient): readonly BillingProvider[] 
     return () => {
       current = false;
     };
-  }, [client]);
+  }, [client, refreshKey]);
   return providers;
 }
 

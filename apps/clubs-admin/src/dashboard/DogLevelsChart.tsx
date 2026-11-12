@@ -3,7 +3,23 @@ import { Card, RadioGroup } from "@agilityhub/ui";
 import { type CSSProperties, useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export function DogLevelsChart({ data }: { data: components["schemas"]["DogsByLevel"] }) {
+export function dogLevelListPath(levelId: string): string {
+  const search = new URLSearchParams();
+  search.append("filter", "status:eq:ACTIVE");
+  search.append("filter", `levelId:eq:${levelId}`);
+  search.append("sort", "levelAssignedAt,asc");
+  search.append("sort", "name,asc");
+  search.set("fields", "name,breed,level,owner,levelAssignedAt,birthDate,displayStatus");
+  return `/gossos?${search.toString()}`;
+}
+
+export function DogLevelsChart({
+  data,
+  onNavigate,
+}: {
+  data: components["schemas"]["DogsByLevel"];
+  onNavigate: (path: string) => void;
+}) {
   const { t, i18n } = useTranslation("admin-dashboard");
   const [filter, setFilter] = useState("all");
   const descriptionId = useId();
@@ -107,14 +123,29 @@ export function DogLevelsChart({ data }: { data: components["schemas"]["DogsByLe
               return (
                 <tr key={level.levelId} title={level.name}>
                   <th scope="row">
-                    <span className="dashboard-chart__level">
+                    <a
+                      className="dashboard-chart__level"
+                      href={dogLevelListPath(level.levelId)}
+                      onClick={(event) => {
+                        if (
+                          event.button !== 0 ||
+                          event.metaKey ||
+                          event.ctrlKey ||
+                          event.shiftKey ||
+                          event.altKey
+                        )
+                          return;
+                        event.preventDefault();
+                        onNavigate(dogLevelListPath(level.levelId));
+                      }}
+                    >
                       <i
                         aria-hidden="true"
                         className="dashboard-chart__swatch"
                         style={{ "--ah-level-color": level.color } as CSSProperties}
                       />
                       {level.code}
-                    </span>
+                    </a>
                   </th>
                   <td>{number.format(value)}</td>
                   <td>

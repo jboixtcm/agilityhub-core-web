@@ -576,6 +576,7 @@ function cellOf(
         ? {
             occupants: trainings.map((item) => ({
               bookingId: item.bookingId,
+              dogId: item.dogId,
               dogName: item.dogName,
               memberName: item.memberName,
             })),

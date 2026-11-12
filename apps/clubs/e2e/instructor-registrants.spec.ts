@@ -51,6 +51,10 @@ test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (
     await page.goto(`${baseUrl}/instructor/avui?date=2026-08-03`);
 
     const grid = page.getByRole("table", { name: "Quadre del dia" });
+    await expect(grid.getByRole("link", { name: "Pau + Blat" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes/dog-blat",
+    );
     await grid.getByRole("button", { name: /B\+C/u }).click();
     const drawer = page.getByRole("dialog", { name: "B+C" });
     const panel = drawer.getByRole("region", { name: "Inscrits (5/5)" });
@@ -62,5 +66,35 @@ test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (
     await expect(panel.getByRole("button")).toHaveCount(0);
     await panel.scrollIntoViewIfNeeded();
     await page.screenshot({ path: resolve(evidenceDirectory, "23-classe-inscrits-375.png") });
+    await expect(panel.getByRole("link", { name: "Júlia + Kira" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes/dog-kira",
+    );
+    await panel.getByRole("link", { name: "Laura + Duna" }).click();
+    await expect(page).toHaveURL(/\/instructor\/alumnes\/dog-duna$/u);
+    await expect(page.getByRole("heading", { name: "Laura + Duna", exact: true })).toBeVisible();
+    await page.goto(`${baseUrl}/instructor/classes/c1`);
+    await expect(page.getByRole("link", { name: "Laura + Duna" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Pau + Blat" })).toHaveAttribute(
+      "href",
+      "/instructor/alumnes/dog-blat",
+    );
+    await page.screenshot({
+      path: resolve(evidenceDirectory, "attendance-links-375.png"),
+      fullPage: true,
+    });
+    await page.getByRole("link", { name: "Laura + Duna" }).click();
+    await expect(page).toHaveURL(/\/instructor\/alumnes\/dog-duna$/u);
+    await page.goto(`${baseUrl}/instructor/pistes/ring-central/reservar`);
+    await page.getByRole("combobox", { name: "Dia" }).selectOption("2026-08-03");
+    await page.getByRole("combobox", { name: "Franja" }).selectOption("morning");
+    const trainingLink = page.getByRole("link", { name: "Sergio + Thai" });
+    await expect(trainingLink).toBeVisible();
+    await expect(trainingLink).toHaveAttribute("href", "/instructor/alumnes/dog-thai");
+    expect(await trainingLink.evaluate((element) => element.closest("button") === null)).toBe(true);
+    await page.screenshot({
+      path: resolve(evidenceDirectory, "training-student-links-375.png"),
+      fullPage: true,
+    });
   });
 });

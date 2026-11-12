@@ -69,7 +69,11 @@
     "incidentsFootnote": "Els abonats amb incidència s'ometen de la generació.",
     "cashTitle": "Actius amb pagament en efectiu",
     "plannedLeave": "data de baixa prevista:",
-    "skippedTitle": "Omesos de la generació"
+    "skippedTitle": "Omesos de la generació",
+    "providerConfigurationTitle": "Configuració de pagaments del club",
+    "providerConfigurationHelp": "Aquestes incidències es resolen a la configuració de pagaments del club. Demana a l’administrador de la plataforma que la revisi i torna a simular el mes.",
+    "sepaNotConfigured": "La domiciliació SEPA està activada, però falten les dades del creditor del club. Cal completar el nom, l’identificador de creditor, l’IBAN i el sufix.",
+    "sepaDisabled": "La domiciliació SEPA està desactivada per al club."
   },
   "empty": {
     "noSimulation": "Encara no hi ha cap simulació d'aquest mes",

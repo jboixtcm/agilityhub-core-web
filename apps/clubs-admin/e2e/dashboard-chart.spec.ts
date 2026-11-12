@@ -26,6 +26,24 @@ for (const width of [375, 1280]) {
         localStorage.setItem("agilityhub.locale", "ca");
         localStorage.setItem("agilityhub.mockScenario", "admin");
         localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cached));
+        // The dashboard and census predate this navigation and use separate fixture IDs.
+        // Align only the read-only dashboard response with the census world for this flow.
+        const originalFetch = window.fetch.bind(window);
+        window.fetch = async (input, init) => {
+          const response = await originalFetch(input, init);
+          const url = new URL(
+            input instanceof Request ? input.url : String(input),
+            location.origin,
+          );
+          if (url.pathname !== "/api/v1/dashboard") return response;
+          const body = (await response.json()) as {
+            dogsByLevel: { levels: { code: string; levelId: string }[] };
+          };
+          for (const level of body.dogsByLevel.levels) {
+            if (level.code === "C") level.levelId = "level-c";
+          }
+          return Response.json(body, { status: response.status });
+        };
       }, branding);
       await page.goto("http://127.0.0.1:4174/entrar");
       await page.getByLabel("Correu electrònic").fill("admin@example.test");
@@ -78,6 +96,31 @@ for (const width of [375, 1280]) {
       expect(layout).toBe(true);
       await page.keyboard.press("ArrowLeft");
       await expect(card.getByRole("radio", { name: "Tots" })).toBeChecked();
+
+      await card.getByRole("link", { name: "C", exact: true }).click();
+      await page.waitForURL((url) => url.pathname === "/gossos");
+      const selected = new URL(page.url());
+      expect(selected.searchParams.getAll("filter")).toEqual([
+        "status:eq:ACTIVE",
+        "levelId:eq:level-c",
+      ]);
+      expect(selected.searchParams.getAll("sort")).toEqual(["levelAssignedAt,asc", "name,asc"]);
+      await expect(
+        page.getByRole("columnheader", { name: "Data de naixement", exact: true }),
+      ).toBeVisible();
+      await expect(page.getByRole("columnheader", { name: /Al nivell des de/u })).toBeVisible();
+      await expect(page.getByText("Duna", { exact: true })).toBeVisible();
+      await expect(page.getByText("12/03/2022", { exact: true })).toBeVisible();
+      await expect(page.locator(".admin-shell__brand img")).toBeVisible();
+      expect(
+        await page
+          .locator(".admin-shell__brand img")
+          .evaluate((image) => (image as HTMLImageElement).naturalWidth),
+      ).toBeGreaterThan(0);
+      await page.screenshot({
+        path: resolve(evidence, `category-list-${browserName}-${theme}-${String(width)}.png`),
+        fullPage: true,
+      });
     });
   }
 }

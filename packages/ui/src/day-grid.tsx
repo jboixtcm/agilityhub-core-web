@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, useEffect } from "react";
+import { type CSSProperties, type MouseEvent, type ReactNode, useEffect } from "react";
 
 import { Icon } from "./icons/Icon";
 import type { IconName } from "./icons/names";
@@ -56,6 +56,8 @@ export interface DayGridCellModel {
   pressable?: boolean | undefined;
   title?: string | undefined;
   who?: readonly string[] | undefined;
+  /** Staff-only student navigation for an inert training cell. */
+  whoContent?: ReactNode;
 }
 
 export interface DayGridRowModel {
@@ -280,7 +282,14 @@ export function DayGrid({
                       }
                       plain={text.plain === true}
                       selected={cell.id === selectedCellId}
-                      subtitle={text.lines.filter((line) => line !== "").join("\n")}
+                      subtitle={
+                        view === "instructor" &&
+                        cell.kind === "TRAINING" &&
+                        cell.pressable !== true &&
+                        cell.whoContent != null
+                          ? cell.whoContent
+                          : text.lines.filter((line) => line !== "").join("\n")
+                      }
                       title={text.title}
                       warning={text.warning === true}
                     />

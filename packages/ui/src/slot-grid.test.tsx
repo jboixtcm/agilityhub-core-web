@@ -30,6 +30,30 @@ function row(time: string, overrides: Partial<SlotCellModel> = {}): SlotGridRow 
 
 const columns = [{ id: "ring-mun", label: "Muntanya" }];
 
+it("keeps student links outside the disabled slot-selection button", () => {
+  const onCellPress = vi.fn();
+  render(
+    <SlotGrid
+      columns={columns}
+      labels={labels}
+      mode="single"
+      onCellPress={onCellPress}
+      rows={[
+        row("08:00", {
+          state: "BOOKED",
+          detail: "Example dog",
+          detailContent: <a href="/student">Example dog</a>,
+        }),
+      ]}
+    />,
+  );
+  const link = screen.getByRole("link", { name: "Example dog" });
+  expect(link.closest("button")).toBeNull();
+  expect(screen.getByRole("button", { name: "8:00, ocupada" })).toBeDisabled();
+  fireEvent.click(link);
+  expect(onCellPress).not.toHaveBeenCalled();
+});
+
 describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
   it("distinguishes an unavailable free slot from an occupied ring without allowing either to book", () => {
     const onCellPress = vi.fn();

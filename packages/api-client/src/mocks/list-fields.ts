@@ -79,6 +79,7 @@ export const DOG_LIST_FIELDS = [
   "displayStatus",
   "sex",
   "age",
+  "birthDate",
   "chip",
   "pendingDocuments",
   "levelAssignedAt",

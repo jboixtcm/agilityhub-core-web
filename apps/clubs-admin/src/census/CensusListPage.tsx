@@ -913,6 +913,14 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
             item.sex === "FEMALE" ? t("census:values.female") : t("census:values.male"),
         },
         {
+          key: "birthDate",
+          label: t("census:dogs.columns.birthDate"),
+          render: (item) =>
+            item.birthDate == null
+              ? t("census:values.empty")
+              : formatDate(item.birthDate, locale, timeZone, true),
+        },
+        {
           key: "age",
           label: t("census:dogs.columns.age"),
           render: (item) => t("census:values.years", { count: item.age }),
@@ -933,7 +941,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) =>
             item.levelAssignedAt === undefined
               ? t("census:values.empty")
-              : formatDate(item.levelAssignedAt, locale, timeZone),
+              : formatDate(item.levelAssignedAt, locale, timeZone, true),
           sortKey: "levelAssignedAt",
         },
         ...(modules.includes("PACKS")
@@ -1066,7 +1074,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
       type: "boolean",
     },
     { key: "sex", label: t("census:dogs.columns.sex"), type: "enum" },
-    { key: "birthDate", label: t("census:members.columns.birthDate"), type: "date" },
+    { key: "birthDate", label: t("census:dogs.columns.birthDate"), type: "date" },
     { key: "chip", label: t("census:dogs.columns.chip"), type: "text" },
     { key: "registeredAt", label: t("census:dogs.columns.registeredAt"), type: "date" },
     { key: "levelAssignedAt", label: t("census:dogs.columns.levelAssignedAt"), type: "date" },
