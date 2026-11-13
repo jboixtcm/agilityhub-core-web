@@ -1069,3 +1069,52 @@ describe("WEB-02 (R-11-07): push on for the account, and this device's own subsc
     expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
   });
 });
+
+describe("WEB-03 (R-11-07, R-11-16): under the reminder, how it arrives", () => {
+  const appOnly = "Els recordatoris arriben a l'app.";
+  const appAndPush = "Els recordatoris arriben a l'app i com a notificació en aquest dispositiu.";
+  const held = { endpoint: "https://push.example.test/send/laura-phone" };
+
+  it("in the app only on a device without push, and the line describes the selector", async () => {
+    await openProfile();
+    expect(screen.getByText(appOnly)).toBeVisible();
+    expect(screen.queryByText(appAndPush)).toBeNull();
+    expect(reminderSelect()).toHaveAccessibleDescription(appOnly);
+  });
+
+  it("by push too once this device holds its subscription, and not before", async () => {
+    browserWithPush("granted");
+    await openProfile();
+    expect(screen.getByText(appOnly)).toBeVisible();
+    fireEvent.click(await screen.findByRole("button", { name: THIS_DEVICE }));
+    expect(await screen.findByText(appAndPush)).toBeVisible();
+    expect(reminderSelect()).toHaveAccessibleDescription(appAndPush);
+    cleanup();
+
+    browserWithPush("granted", held);
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-1" }));
+    await openProfile();
+    expect(await screen.findByText(appAndPush)).toBeVisible();
+  });
+
+  it("in the app only in a club without PUSH or in an impersonated session, whatever this browser holds", async () => {
+    browserWithPush("granted", held);
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-1" }));
+    await openProfile({
+      branding: { ...canic, modules: without("PUSH"), pushPublicKey: null },
+      scenario: "memberNoPush",
+    });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.getByText(appOnly)).toBeVisible();
+    cleanup();
+
+    browserWithPush("granted", held);
+    await openProfile({ scenario: "impersonated" });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.getByText(appOnly)).toBeVisible();
+  });
+});

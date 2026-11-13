@@ -57,6 +57,7 @@ export function NoticesCard({ client }: { client: ApiClient }) {
   const [pushProblem, setPushProblem] = useState<"failed" | "unavailable">();
   const [subscribing, setSubscribing] = useState(0);
   const iosNoteId = useId();
+  const reminderChannelId = useId();
   const mounted = useRef(true);
   // The account and club a change belongs to (a change kept across a reload is sent again for them
   // only, E7-W02 round 2 #1); each visit owns its own entry (E7-W02 review #4).
@@ -240,6 +241,8 @@ export function NoticesCard({ client }: { client: ApiClient }) {
       : t("auth:profile.reminder.minutes", { minutes });
   const reminder = shown.reminderMinutesBefore ?? null;
   const pushWanted = shown.pushClubNews || reminder !== null;
+  // WEB-03: a reminder reaches this device by push only when it holds its subscription (WEB-02).
+  const pushHere = pushRow && support === "supported" && !impersonated && device === "subscribed";
 
   return (
     <Card aria-busy={saving || undefined} className="profile-notices" id="avisos">
@@ -269,6 +272,7 @@ export function NoticesCard({ client }: { client: ApiClient }) {
       <div className="profile-notices__reminder">
         <label htmlFor="profile-reminder">{t("auth:profile.classReminder")}</label>
         <Select
+          aria-describedby={reminderChannelId}
           id="profile-reminder"
           onChange={(event) => {
             const value = event.currentTarget.value;
@@ -286,6 +290,11 @@ export function NoticesCard({ client }: { client: ApiClient }) {
           ))}
         </Select>
       </div>
+      <p className="profile-notices__note profile-notices__reminder-channel" id={reminderChannelId}>
+        {pushHere
+          ? t("auth:profile.reminderChannelAppAndPush")
+          : t("auth:profile.reminderChannelApp")}
+      </p>
       {pushRow ? (
         <div className="profile-notices__mobile">
           <div className="profile-notices__mobile-row">

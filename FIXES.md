@@ -33,10 +33,17 @@ SPEC-CHANGE: docs/specs/S11-comunicacions.md T-11-35: covers the button, the mes
 
 ## web-02-web-quality
 
-### WEB-03 — NEEDS-DECISION
+### WEB-03 — FIXED
 
 No code changed. Verified: the reminder selector is drawn for every member (`apps/clubs/src/profile/NoticesCard.tsx:219`), while the push row depends on `pushRow` (`:164`), and `askForPush` returns at once without it (`:172-173`). N-13 goes to APP + PUSH, plus e-mail only when `emailByCategory.OPERATIONAL` is on, which is off by default (S11 R-11-16, R-11-04). S11 §2 draws the «Recordatori de classe» row on 12 unconditionally.
 Question: what should a member without push on this device be told or given? Options: (a) hide the selector without a push subscription (this also hides a working in-app reminder and goes against S11 §2); (b) add a line under it saying where the reminder appears (new copy, no mockup literal); (c) send N-13 by e-mail when the member has no active push subscription (a change to the R-11-16 channels; OTHER-REPO: the api's N-13 channel rule).
+
+Pass 2 (owner decision of 13 Nov 2026): under the class-reminder selector, one line says how the reminder will arrive (in the app, and by push only if this device is subscribed).
+Changed: `apps/clubs/src/profile/NoticesCard.tsx` draws a `.profile-notices__note` line right under the reminder row (`aria-describedby` of the select): `auth:profile.reminderChannelApp` («Els recordatoris arriben a l'app.») or, when this device holds its push subscription as WEB-02 reads it (push row shown, browser able, not impersonated), `auth:profile.reminderChannelAppAndPush` («Els recordatoris arriben a l'app i com a notificació en aquest dispositiu.»). It changes at once when the button, the switch or a reminder subscribes the device. `.profile-notices__reminder-channel` pulls it 0.5 rem closer to the select (`apps/clubs/src/styles.css`). New copy in ca/es/en, no mockup literal (written into S11 §2 row 12 for the club's review).
+Tests: 3 new cases in `apps/clubs/src/profile/NoticesCard.test.tsx` (app only on a device without push, and the select's accessible description; app and push once the button subscribes or with a held subscription; app only with PUSH off or impersonated whatever the browser holds), checked to fail without the change. Run: the whole `src/profile` folder (47), `pnpm --filter clubs typecheck`, `pnpm i18n:check`, eslint on the changed files, all passing.
+Assumption: the line follows the decision's two channels only. N-13 also goes by e-mail when «Operativa» e-mail is on (R-11-16; off by default), which the line does not mention; it reads as a general statement, so it also stands while «Mai» is selected and is always shown.
+SPEC-CHANGE: docs/specs/S11-comunicacions.md §2 row 12: the line under «Recordatori de classe» and its two literals.
+SPEC-CHANGE: docs/specs/S11-comunicacions.md T-11-35: covers the line (plus a «Canvis» line of 13-11-2026).
 
 ### WEB-04 — FIXED
 

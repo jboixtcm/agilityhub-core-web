@@ -632,6 +632,11 @@ select {
   font-size: 0.75rem;
 }
 
+/* WEB-03: how the reminder arrives, right under its selector. */
+.profile-notices__reminder-channel {
+  margin-top: calc(var(--ah-space-2) * -1);
+}
+
 .profile-notices__mobile {
   display: grid;
   gap: var(--ah-space-2);
