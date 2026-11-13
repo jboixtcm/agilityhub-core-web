@@ -60,6 +60,12 @@ lint, typecheck, unit tests, build, translations, generated API types, Chromium 
 and the Clubs bundle-size budget. Playwright screenshots are retained as a workflow artifact for
 14 days.
 
+On a push to `main`, once every check has passed, the «Production bundles» job builds the three
+SPAs from the release configuration in `release/` and publishes them as the run's artifact; a
+deploy takes the bundles only from such a green run (`docs/DEPLOYMENT.md`).
+`.github/workflows/real-core.yml` runs the critical real-core flows on a schedule against the
+deployed api image.
+
 Jordi must enable a `main` branch protection ruleset in GitHub that requires the `Frontend checks`
 status check, requires pull requests and resolved review conversations, and prevents bypassing the
 required check before merging.

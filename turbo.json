@@ -26,6 +26,7 @@
         "$TURBO_ROOT$/scripts/check-production-bundles*.mjs",
         "$TURBO_ROOT$/scripts/bundle-files*.mjs",
         "$TURBO_ROOT$/scripts/check-bundle-files.mjs",
+        "$TURBO_ROOT$/scripts/build-release-bundles*.mjs",
         "$TURBO_ROOT$/e2e/core/e9-core-helpers.ts"
       ],
       "outputs": []

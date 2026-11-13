@@ -1,0 +1,64 @@
+name: Real-core critical flows
+
+# REL-03 / REL-08: the critical real-core e2e suite (the five flows of PLA_FRONTEND §8, tagged
+# `@critical-*`) runs on a schedule against the api image that is deployed. That image is the
+# repository variable DEPLOYED_CORE_IMAGE (`ghcr.io/<owner>/agilityhub-core-api:sha-<commit>`),
+# updated at every api release (docs/DEPLOYMENT.md). The run starts the disposable local stack of
+# `scripts/e2e-core.sh` (fictional seed, `local` profile) from that image; it never calls a
+# deployed host.
+on:
+  schedule:
+    # Monday to Saturday at 03:17 UTC: «muntatge» cannot run on a Sunday (INC-72).
+    - cron: "17 3 * * 1-6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: real-core-critical
+  cancel-in-progress: false
+
+jobs:
+  critical:
+    name: Critical flows against the deployed api image
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      CORE_IMAGE: ${{ vars.DEPLOYED_CORE_IMAGE }}
+      CORE_PNPM_STORE_DIRECTORY: ${{ runner.temp }}/pnpm-store
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check the deployed api image is named
+        run: |
+          if [[ ! "$CORE_IMAGE" =~ ^ghcr\.io/[a-z0-9._/-]+:sha-[0-9a-f]{40}$ ]]; then
+            echo "::error::Set the repository variable DEPLOYED_CORE_IMAGE to the deployed api image, ghcr.io/<owner>/agilityhub-core-api:sha-<commit>"
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pull the deployed api image
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+          docker pull "$CORE_IMAGE"
+
+      - name: Run the critical flows
+        run: bash scripts/e2e-core.sh real-core-critical critical
+
+      - name: Upload the run's evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-core-critical
+          path: roadmap/evidence/real-core-critical/
+          if-no-files-found: warn
+          retention-days: 14
