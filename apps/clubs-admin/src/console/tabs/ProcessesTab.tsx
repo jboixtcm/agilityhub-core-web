@@ -3,6 +3,7 @@ import { Badge, Button, DataTable, Modal, Skeleton, type Tone } from "@agilityhu
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CONFIRMED_RUN_PROCESS, PlannedCounts, runConfirmation } from "../../catalogs/JobsCard";
 import { useCatalogData } from "../../catalogs/shared";
 import type { ConsoleTabProps } from "../ClubRecordPage";
 import {
@@ -28,7 +29,9 @@ function healthTone(health: JobCell["health"]): Tone {
 
 /**
  * S17 §2 «Processos» (S15): the club's row of `GET /platform/jobs/overview?clubId=`, and [Executa
- * ara] with its simulation (`POST /platform/clubs/{clubId}/jobs/{name}/trigger {dryRun}`).
+ * ara] with its simulation (`POST /platform/clubs/{clubId}/jobs/{name}/trigger {dryRun}`). PRIV-02:
+ * [Executa ara] of `retention-sweep` simulates first, asks with the plan's counts and sends them as
+ * the run's `confirmation` (S15 R-15-09).
  */
 export function ProcessesTab({ client, club }: ConsoleTabProps) {
   const { i18n, t } = useTranslation(["console", "admin-settings", "enums", "errors", "common"]);
@@ -42,17 +45,21 @@ export function ProcessesTab({ client, club }: ConsoleTabProps) {
   }, [client, club.id]);
   const jobs = useCatalogData(load, club.id);
   const write = useWriteState();
-  const [confirming, setConfirming] = useState<JobCell>();
+  // PRIV-02: `plan` is the dry run a run of the confirmed process confirms.
+  const [confirming, setConfirming] = useState<{ cell: JobCell; plan?: JobRun }>();
   const [run, setRun] = useState<{ name: string; run: JobRun }>();
   const label = (name: string) =>
     t(`admin-settings:jobs.name.${jobKey(name)}`, { defaultValue: name });
 
-  const trigger = async (cell: JobCell, dryRun: boolean) => {
+  const trigger = async (cell: JobCell, dryRun: boolean, confirmed?: JobRun) => {
     setConfirming(undefined);
     setRun(undefined);
     const result = await write.run(async () => {
       const response = await client.POST("/platform/clubs/{clubId}/jobs/{name}/trigger", {
-        body: { dryRun },
+        body: {
+          dryRun,
+          ...(confirmed === undefined ? {} : { confirmation: runConfirmation(confirmed) }),
+        },
         params: { path: { clubId: club.id, name: cell.name } },
       });
       if (response.data === undefined) throw new TypeError("Job run without data");
@@ -62,6 +69,26 @@ export function ProcessesTab({ client, club }: ConsoleTabProps) {
       setRun({ name: cell.name, run: result });
       if (!dryRun) jobs.reload();
     }
+  };
+
+  /**
+   * PRIV-02: the confirmed process's dry run before its confirmation; one that did not succeed
+   * shows as [Simula]'s and offers no run. A `409 SIMULATION_STALE` of the run shows below the
+   * table, and [Executa ara] simulates again.
+   */
+  const planRun = async (cell: JobCell) => {
+    setRun(undefined);
+    const result = await write.run(async () => {
+      const response = await client.POST("/platform/clubs/{clubId}/jobs/{name}/trigger", {
+        body: { dryRun: true },
+        params: { path: { clubId: club.id, name: cell.name } },
+      });
+      if (response.data === undefined) throw new TypeError("Job run without data");
+      return response.data;
+    });
+    if (result === undefined) return;
+    if (result.status === "SUCCEEDED") setConfirming({ cell, plan: result });
+    else setRun({ name: cell.name, run: result });
   };
 
   const counters = (values: Record<string, number> | undefined) =>
@@ -138,7 +165,8 @@ export function ProcessesTab({ client, club }: ConsoleTabProps) {
                     aria-label={t("admin-settings:jobs.runLabel", { name: label(cell.name) })}
                     disabled={write.pending}
                     onClick={() => {
-                      setConfirming(cell);
+                      if (cell.name === CONFIRMED_RUN_PROCESS) void planRun(cell);
+                      else setConfirming({ cell });
                     }}
                   >
                     {t("admin-settings:jobs.run")}
@@ -183,10 +211,13 @@ export function ProcessesTab({ client, club }: ConsoleTabProps) {
         }}
         open={confirming !== undefined}
         title={t("admin-settings:jobs.runTitle", {
-          name: confirming === undefined ? "" : label(confirming.name),
+          name: confirming === undefined ? "" : label(confirming.cell.name),
         })}
       >
         <p>{t("admin-settings:jobs.runConfirm")}</p>
+        {confirming?.plan === undefined ? null : (
+          <PlannedCounts counters={confirming.plan.effects.counters} />
+        )}
         <div className="console-actions">
           <Button
             onClick={() => {
@@ -198,7 +229,7 @@ export function ProcessesTab({ client, club }: ConsoleTabProps) {
           </Button>
           <Button
             onClick={() => {
-              if (confirming !== undefined) void trigger(confirming, false);
+              if (confirming !== undefined) void trigger(confirming.cell, false, confirming.plan);
             }}
           >
             {t("admin-settings:jobs.run")}

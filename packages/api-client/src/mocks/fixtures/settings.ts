@@ -385,15 +385,16 @@ const initialParameters: Parameters = {
     },
     {
       key: "privacy",
+      // PRIV-02 (owner decision of 13 Nov 2026): the catalogue's floors, editable above them.
       rows: [
         parameter("audit.retentionYears", "privacy", "int", 6, {
-          constraints: { min: 1 },
+          constraints: { min: 6 },
         }),
         parameter("rgpd.retentionYearsAfterLeave", "privacy", "int", 6, {
           constraints: { min: 1 },
         }),
         parameter("rgpd.erasureMinDaysAfterLeave", "privacy", "int", 30, {
-          constraints: { min: 0 },
+          constraints: { min: 30 },
         }),
       ],
       title: "admin-settings:block.privacy.title",

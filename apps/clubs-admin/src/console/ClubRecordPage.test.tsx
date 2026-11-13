@@ -838,3 +838,116 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(await screen.findByRole("button", { name: "Reactiva el club" })).toBeEnabled();
   });
 });
+
+describe("PRIV-02 (owner decision of 13 Nov 2026) · «Processos»: [Executa ara] of «Retenció de dades» confirms a dry run's counts (S15 R-15-09)", () => {
+  /** A dry run's counters as the api sends them (zeros and the one PURGE_AUDIT item included). */
+  const plan = {
+    WOULD_ERASE_REJECTED_SIGNUP: 1,
+    WOULD_PURGE_AUDIT: 1,
+    WOULD_PURGE_AUDIT_ENTRIES: 12,
+  };
+
+  /** The Cànic's row with the retention sweep, and the console's trigger as the api answers it. */
+  function retentionSweepApi(stale: boolean) {
+    server.use(
+      http.get("*/api/v1/platform/jobs/overview", () =>
+        HttpResponse.json({
+          clubs: [
+            {
+              clubId: CANIC,
+              jobs: [{ enabled: true, health: "OK", lastRun: null, name: "retention-sweep" }],
+              name: stored(CANIC).name,
+              timeZone: "Europe/Madrid",
+            },
+          ],
+        }),
+      ),
+      http.post(
+        "*/api/v1/platform/clubs/:clubId/jobs/retention-sweep/trigger",
+        async ({ request }) => {
+          const body = (await request.json()) as {
+            confirmation?: { counters: Record<string, number>; dryRunId: string };
+            dryRun: boolean;
+          };
+          if (!body.dryRun && (stale || body.confirmation?.dryRunId !== "run-dry")) {
+            return HttpResponse.json(
+              {
+                code: "SIMULATION_STALE",
+                details: { reason: "PLAN_CHANGED" },
+                message: "Stale",
+                traceId: "t-stale",
+              },
+              { status: 409 },
+            );
+          }
+          return HttpResponse.json({
+            actorAccountId: null,
+            dryRun: body.dryRun,
+            durationMs: 840,
+            effects: {
+              counters: body.dryRun ? plan : { auditEntriesPurged: 12, rejectedSignupsErased: 1 },
+              items: [],
+            },
+            errors: [],
+            finishedAt: "2026-10-15T09:00:01Z",
+            job: "RETENTION_SWEEP",
+            parametersSnapshot: {},
+            runId: body.dryRun ? "run-dry" : "run-real",
+            scheduledFor: "2026-10-15T09:00:00Z",
+            scheduledForLocal: "2026-10-15T11:00",
+            skipReason: null,
+            startedAt: "2026-10-15T09:00:00Z",
+            status: "SUCCEEDED",
+            timeZone: "Europe/Madrid",
+            trigger: "MANUAL",
+          });
+        },
+      ),
+    );
+  }
+
+  it("simulates first, asks with the plan's counts and sends them back as the run's confirmation", async () => {
+    retentionSweepApi(false);
+    const triggers = captureRequests(
+      (method, url) => method === "POST" && url.pathname.includes("/jobs/"),
+    );
+    await openTab(CANIC, "processos");
+    fireEvent.click(await screen.findByRole("button", { name: "Executa ara Retenció de dades" }));
+    const dialog = await screen.findByRole("dialog", { name: "Executar «Retenció de dades» ara" });
+    expect(triggers.map((trigger) => trigger.body)).toEqual([{ dryRun: true }]);
+    expect(within(dialog).getByText("La simulació que s'acaba de fer preveu:")).toBeVisible();
+    expect(
+      within(dialog)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual(["1 alta rebutjada a suprimir", "12 entrades d'auditoria a esborrar"]);
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    await waitFor(() => {
+      expect(triggers[1]?.body).toEqual({
+        confirmation: { counters: plan, dryRunId: "run-dry" },
+        dryRun: false,
+      });
+    });
+    expect(await screen.findByText(/^Retenció de dades: /u)).toBeInTheDocument();
+  });
+
+  it("a plan that changed runs nothing: the tab says to simulate again", async () => {
+    retentionSweepApi(true);
+    const triggers = captureRequests(
+      (method, url) => method === "POST" && url.pathname.includes("/jobs/"),
+    );
+    await openTab(CANIC, "processos");
+    fireEvent.click(await screen.findByRole("button", { name: "Executa ara Retenció de dades" }));
+    const dialog = await screen.findByRole("dialog", { name: "Executar «Retenció de dades» ara" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(
+      await screen.findByText("La simulació no està actualitzada. Torna-la a executar."),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Executar «Retenció de dades» ara" })).toBeNull();
+    expect(triggers.map((trigger) => trigger.body)).toEqual([
+      { dryRun: true },
+      { confirmation: { counters: plan, dryRunId: "run-dry" }, dryRun: false },
+    ]);
+  });
+});

@@ -323,3 +323,44 @@ describe("T-02-13 D11 «Restableix el valor de producte» (WEB-06, decision of 1
     expect(screen.getByRole("dialog", { name: label })).toBeVisible();
   });
 });
+
+describe("PRIV-02 (owner decision of 13 Nov 2026) · D11 «Privacitat i auditoria»: the retention floors of the catalogue", () => {
+  it.each([
+    ["Conservació de l'auditoria", 6],
+    ["Conservació després de la baixa", 1],
+    ["Espera mínima abans de l'esborrat", 30],
+  ])(
+    "«%s» takes the floor %i as its minimum: below it the field is invalid, at it valid",
+    async (label, floor) => {
+      const i18n = await createI18n({
+        branding,
+        browserLanguages: ["ca"],
+        initialNamespaces: ["admin-settings"],
+        storage: undefined,
+      });
+      render(
+        <I18nextProvider i18n={i18n}>
+          <BrandingProvider branding={branding}>
+            <ParameterSettings
+              client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+              levels={[]}
+              modules={branding.modules}
+              onModulesChange={() => undefined}
+              plans={[]}
+            />
+          </BrandingProvider>
+        </I18nextProvider>,
+      );
+
+      fireEvent.click(await screen.findByRole("button", { name: `Edita ${label}` }));
+      const drawer = screen.getByRole("dialog", { name: label });
+      const input = within(drawer).getByRole("spinbutton");
+      if (!(input instanceof HTMLInputElement)) throw new TypeError("No number field");
+      expect(input).toHaveAttribute("min", String(floor));
+      fireEvent.change(input, { target: { value: String(floor - 1) } });
+      expect(input.validity.rangeUnderflow).toBe(true);
+      fireEvent.change(input, { target: { value: String(floor) } });
+      expect(input.validity.valid).toBe(true);
+    },
+  );
+});
