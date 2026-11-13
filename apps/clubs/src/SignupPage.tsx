@@ -143,7 +143,12 @@ interface CountryProfile {
 const DRAFT_KEY = "signup.draft.v1";
 const CHECKOUT_KEY = "signup.checkout.v1";
 const PAYMENT_RESULT_KEY = "signup.payment-result.v1";
-const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+/**
+ * FE-02 (pre-production audit, decision of 13 Nov 2026): the draft expires after 60 minutes
+ * without activity. `savedAt` is the last activity: every change of the form and every step
+ * writes the draft again with the current time.
+ */
+const DRAFT_MAX_AGE_MS = 60 * 60 * 1000;
 const STEP_ORDER: readonly SignupStep[] = ["person", "dog", "family", "payment"];
 const PERSON_FIELDS = new Set(["birthDate", "firstName", "gender", "lastName1", "lastName2"]);
 const DOG_FIELDS = new Set([
@@ -260,6 +265,22 @@ function validChip(value: string, profileCode: string): boolean {
 
 function normaliseIban(value: string): string {
   return value.replaceAll(/\s/gu, "").toUpperCase();
+}
+
+/**
+ * FE-02 (decision of 13 Nov 2026): the session draft never keeps the IBAN. It stays in the page's
+ * memory while 19 is open and is asked again after a reload or another step's page.
+ */
+function withoutIban(payment: SignupPayment): SignupPayment {
+  if (payment.iban === undefined) return payment;
+  const next: SignupPayment = { ...payment };
+  delete next.iban;
+  return next;
+}
+
+/** The draft as the session keeps it: without the IBAN, stamped with this activity's time. */
+function serializedDraft(draft: SignupDraft): string {
+  return JSON.stringify({ ...draft, payment: withoutIban(draft.payment), savedAt: Date.now() });
 }
 
 /** The payment of another method: the SEPA-only fields never stay in the session draft. */
@@ -499,6 +520,8 @@ function readDraft(addDog: boolean, profile: CountryProfile): SignupDraft {
         const consentKnown = consentVersion !== "";
         return {
           ...candidate,
+          // A draft an older build saved may still hold the IBAN: it is never read back (FE-02).
+          payment: withoutIban(candidate.payment),
           additionalDogOption: candidate.additionalDogOption ?? "TODAY",
           consentVersion,
           dog: {
@@ -2467,22 +2490,30 @@ function PaymentStep({
               )}
               {draft.payment.type === "SEPA_DD" ? (
                 <>
-                  <FormField error={errors.iban} id="signup-iban" label={t("signup:payment.iban")}>
-                    <Input
-                      {...invalidProps("signup-iban", errors.iban)}
-                      autoComplete="off"
+                  {/* FE-02: a sent signup reloaded no longer knows its IBAN (the draft never keeps
+                      it), so 19 does not show an empty one as if none had been given. */}
+                  {committed && (draft.payment.iban ?? "") === "" ? null : (
+                    <FormField
+                      error={errors.iban}
                       id="signup-iban"
-                      readOnly={locked}
-                      onChange={(event) => {
-                        const iban = event.currentTarget.value;
-                        onChange((current) => ({
-                          ...current,
-                          payment: { ...current.payment, iban },
-                        }));
-                      }}
-                      value={draft.payment.iban ?? ""}
-                    />
-                  </FormField>
+                      label={t("signup:payment.iban")}
+                    >
+                      <Input
+                        {...invalidProps("signup-iban", errors.iban)}
+                        autoComplete="off"
+                        id="signup-iban"
+                        readOnly={locked}
+                        onChange={(event) => {
+                          const iban = event.currentTarget.value;
+                          onChange((current) => ({
+                            ...current,
+                            payment: { ...current.payment, iban },
+                          }));
+                        }}
+                        value={draft.payment.iban ?? ""}
+                      />
+                    </FormField>
+                  )}
                   <FormField
                     error={errors.accountHolder}
                     id="signup-account-holder"
@@ -2866,7 +2897,7 @@ export function SignupPage({
       if (!committed) safeSessionRemove(DRAFT_KEY);
       return;
     }
-    safeSessionSet(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() }));
+    safeSessionSet(DRAFT_KEY, serializedDraft(draft));
   }, [committed, draft, sent]);
 
   useEffect(() => {
@@ -2945,7 +2976,7 @@ export function SignupPage({
     if (nextPath === paths.sent) {
       safeSessionRemove(DRAFT_KEY);
     } else {
-      safeSessionSet(DRAFT_KEY, JSON.stringify({ ...draftRef.current, savedAt: Date.now() }));
+      safeSessionSet(DRAFT_KEY, serializedDraft(draftRef.current));
     }
     const target = new URL(nextPath, window.location.href);
     onNavigate(nextPath);

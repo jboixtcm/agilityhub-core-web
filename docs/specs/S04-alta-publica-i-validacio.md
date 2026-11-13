@@ -20,7 +20,7 @@ Resol l'entrada d'una persona i el seu gos al club sense intervenció prèvia de
 
 ## 2. Pantalles i rutes
 
-Apps: `apps/clubs` (PWA, ruta pública `/apuntat-hi/*`, PLA_FRONTEND §3) i `apps/clubs-admin` (`/preinscripcions/:memberId`). L'esborrany del formulari viu **només al client** (`sessionStorage`, clau `signup.draft.v1`, descartat als 24 h o en enviar); el servidor no coneix res fins a `POST /signup`. Capçalera comuna: títol «Apunta-t'hi», selector d'idioma «CAT ▾» (anònim → `localStorage`, refetch de `GET /signup` amb `Accept-Language`), punts de progrés («Pas n de N»: N = 4 amb `FAMILY_GROUP`, 3 sense).
+Apps: `apps/clubs` (PWA, ruta pública `/apuntat-hi/*`, PLA_FRONTEND §3) i `apps/clubs-admin` (`/preinscripcions/:memberId`). L'esborrany del formulari viu **només al client** (`sessionStorage`, clau `signup.draft.v1`, descartat després de **60 minuts sense activitat** —cada canvi del formulari i cada pas el tornen a desar amb l'hora— o en enviar); **mai no hi desa l'IBAN**: l'IBAN viu només a la pàgina de 19 mentre és oberta i es torna a demanar després d'una recàrrega o d'una altra pàgina del formulari (un esborrany d'una versió anterior que encara el porti no el torna a llegir), i una sol·licitud ja enviada que es torna a obrir (retorn de Stripe) no el mostra. El servidor no coneix res fins a `POST /signup`. Capçalera comuna: títol «Apunta-t'hi», selector d'idioma «CAT ▾» (anònim → `localStorage`, refetch de `GET /signup` amb `Accept-Language`), punts de progrés («Pas n de N»: N = 4 amb `FAMILY_GROUP`, 3 sense).
 
 | Mockup | App | Ruta | Rol | Notes de comportament |
 |---|---|---|---|---|
@@ -321,7 +321,7 @@ Cap notificació s'envia des dels services (CONVENCIONS_API §8); el correu de N
 - T-04-28 (R-04-20) 6a `POST /signup` en una hora des de la mateixa IP → `429` amb `Retry-After`; `website` ple → `202` i cap document; cos de 65 KB → 400; 11 fitxers → 400.
 
 **Front (component i E2E)**
-- T-04-29 Stepper: l'esborrany sobreviu a una recàrrega i es descarta als 24 h; `steps` = 4 o 3 segons `FAMILY_GROUP`; `fieldErrors` del 400 es mapegen al camp; estat «Revisa el correu» amb `maskedEmail`; canviar l'idioma refà `GET /signup` i conserva l'esborrany.
+- T-04-29 Stepper: l'esborrany sobreviu a una recàrrega sense l'IBAN (19 el torna a demanar) i es descarta després de 60 minuts sense activitat; `steps` = 4 o 3 segons `FAMILY_GROUP`; `fieldErrors` del 400 es mapegen al camp; estat «Revisa el correu» amb `maskedEmail`; canviar l'idioma refà `GET /signup` i conserva l'esborrany.
 - T-04-30 Pas 17: pujada contra mock d'URL signada amb nom `cartilla_Kiwi_1.jpg` i «＋ Afegir un altre full»; targetes sense imports amb `BILLING` off; «Ofertes si es porta més d'un gos per família» absent sense `FAMILY_GROUP`.
 - T-04-31 Pas 18: estat «Grup trobat: Marta R. …»; error inline amb «Deixa-ho pendent i continua ›» només si `allowFamilyGroupPending`; camps buits → continua sense reclamació; «‹» conserva el gos.
 - T-04-32 Pas 19: segment amb els mètodes rebuts; mandat i text del dia 25 només a «Domiciliació»; `cashConditions` només a «Efectiu»; dues opcions de quota amb les dates rebudes i «Total a pagar al club»; [ENVIA LA SOL·LICITUD] inactiu fins a marcar la privacitat; «Pots consultar-la aquí» obre pestanya nova sense abandonar el pas; «què vol dir?» desplega el text; amb `checkout.required` es redirigeix a `checkoutUrl`.
@@ -397,6 +397,7 @@ Fils en paral·lel: **A** = WP-1 → WP-2 → WP-3 · **B** = WP-4 (des que WP-1
 - 22-10-2026 · ronda 2 d'E11-T13 (decisió E138, E109): cap import que vegi l'abonat no surt d'un bessó de preu. R-04-09: `texts.familyGroupIntro` a `null` amb la tarifa familiar bessona; en mode afegir gos, el pla propi bessó compta com un pla que ja no es pot assignar, i no hi ha opcions ni pressupostos que llegeixin un bessó; §6, `POST /me/dogs/signup` → `409 PRICE_OVERLAP` sense escriure res, i la validació de D2 respon aquest 409 abans de comparar el `priceId`; §2, files 18 i 13 → 17/19.
 - 22-10-2026 · ronda 2 d'E11-T19 (decisions E138, E161 i E109): R-04-09, `POST /me/dogs/signup` sense pla amb l'oferta buida i el pla propi bessó → `409 PRICE_OVERLAP`; §6, la validació de D2 (`dryRun` inclòs) comprova els bessons avui i al dia de la sol·licitud de cada gos.
 - 22-10-2026 · E11-T15 ronda 2 (decisió E156, E109): §3 i R-04-15, quan la validació cobra el primer mes la data del proper rebut és com a mínim l'1 del mes següent al seu `startDate` (`400 VALIDATION_ERROR` si no).
+- 13-11-2026 · auditoria de preproducció, FE-02 (decisió del propietari del 13-11-2026): §2 i T-04-29, l'esborrany de `sessionStorage` no desa mai l'IBAN (es torna a demanar a 19 després d'una recàrrega; la sol·licitud enviada que es torna a obrir no el mostra) i caduca després de 60 minuts sense activitat en lloc de 24 h.
 
 ### Ajust del 06-11-2026 — feedback d’alta
 
