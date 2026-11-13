@@ -114,6 +114,8 @@
     "reviewPaymentDay": "Si cambias este valor, revisa también el texto del día de pago del alta.",
     "removeHoliday": "Eliminar el festivo {index}",
     "reset": "Restablecer el valor de producto",
+    "resetChange": "Valor actual: {current} → valor de producto: {productValue}",
+    "resetConfirm": "Este parámetro volverá al valor de producto. Se aplica a partir de ahora.",
     "time": "Hora"
   },
   "enum": {

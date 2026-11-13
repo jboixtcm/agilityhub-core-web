@@ -114,6 +114,8 @@
     "reviewPaymentDay": "Si canvies aquest valor, revisa també el text del dia de pagament de l'alta.",
     "removeHoliday": "Elimina el festiu {index}",
     "reset": "Restableix el valor de producte",
+    "resetChange": "Valor actual: {current} → valor de producte: {productValue}",
+    "resetConfirm": "Aquest paràmetre tornarà al valor de producte. S'aplica a partir d'ara.",
     "time": "Hora"
   },
   "enum": {

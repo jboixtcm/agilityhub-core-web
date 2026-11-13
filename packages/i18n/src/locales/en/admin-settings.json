@@ -114,6 +114,8 @@
     "reviewPaymentDay": "If you change this value, also review the signup payment-day text.",
     "removeHoliday": "Remove holiday {index}",
     "reset": "Restore product default",
+    "resetChange": "Current value: {current} → product default: {productValue}",
+    "resetConfirm": "This setting will go back to the product default. It applies from now on.",
     "time": "Time"
   },
   "enum": {

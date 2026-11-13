@@ -1,9 +1,11 @@
 import { createApiClient } from "@agilityhub/api-client";
+import { resetSettingsState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -12,7 +14,7 @@ import { ParameterSettings } from "./ParameterSettings";
 const branding: Branding = { ...brandingCanicFixture, theme: { ...brandingCanicFixture.theme, mode: "dark" } };
 
 beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
-afterEach(() => { cleanup(); server.resetHandlers(); });
+afterEach(() => { cleanup(); server.resetHandlers(); resetSettingsState(); });
 afterAll(() => { server.close(); });
 
 // The real core serialises a module-less parameter as `module: null` instead of omitting it.
@@ -100,5 +102,153 @@ describe("T-02-13 D11 parameter rows", () => {
     const rows = [...document.querySelectorAll(".settings-parameter")].map((row) => row.textContent);
     expect(rows.length).toBeGreaterThan(10);
     expect(rows.filter((row) => /Learn|learn\./u.test(row))).toEqual([]);
+  });
+});
+
+describe("T-02-13 D11 «Restableix el valor de producte» (WEB-06, decision of 13 Nov 2026)", () => {
+  const key = "bookings.lateCancelThresholdMinutes";
+  const label = "Llindar d'anul·lació tardana («classe feta»)";
+
+  /**
+   * The mock club with `key` customised to 120 min (product value 240) until a DELETE resets it,
+   * and every request it sees.
+   */
+  function customisedFetch() {
+    const requests: { method: string; path: string }[] = [];
+    let reset = false;
+    const fetchOverride: typeof fetch = async (input, init) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      const path = new URL(request.url).pathname;
+      requests.push({ method: request.method, path });
+      const response = await fetch(input, init);
+      if (request.method === "DELETE" && response.ok) reset = true;
+      if (request.method !== "GET" || !path.endsWith("/parameters") || reset) return response;
+      const body = (await response.json()) as {
+        blocks: {
+          rows: { default: unknown; isOverride: boolean; key: string; value: unknown }[];
+        }[];
+      };
+      for (const row of body.blocks.flatMap((block) => block.rows)) {
+        if (row.key === key) {
+          row.default = 240;
+          row.isOverride = true;
+          row.value = 120;
+        }
+      }
+      return Response.json(body, { status: response.status });
+    };
+    return { fetchOverride, requests };
+  }
+
+  async function renderSettings(fetchOverride?: typeof fetch) {
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ParameterSettings
+            client={createApiClient({
+              baseUrl: `${window.location.origin}/api/v1`,
+              ...(fetchOverride === undefined ? {} : { fetch: fetchOverride }),
+            })}
+            levels={[]}
+            modules={branding.modules}
+            onModulesChange={() => undefined}
+            plans={[]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+  }
+
+  async function openEditor(): Promise<HTMLElement> {
+    fireEvent.click(await screen.findByRole("button", { name: `Edita ${label}` }));
+    return screen.getByRole("dialog", { name: label });
+  }
+
+  it("shows no reset for a parameter the club has not customised", async () => {
+    await renderSettings();
+    const drawer = await openEditor();
+
+    expect(within(drawer).getByRole("button", { name: "DESA" })).toBeVisible();
+    expect(
+      within(drawer).queryByRole("button", { name: "Restableix el valor de producte" }),
+    ).toBeNull();
+  });
+
+  it("asks before resetting, showing «current → product value»; Cancel sends nothing", async () => {
+    const { fetchOverride, requests } = customisedFetch();
+    await renderSettings(fetchOverride);
+    expect(await screen.findByRole("button", { name: `${label}2 h abans` })).toBeVisible();
+    const drawer = await openEditor();
+
+    fireEvent.click(
+      within(drawer).getByRole("button", { name: "Restableix el valor de producte" }),
+    );
+    const confirmation = screen.getByRole("dialog", { name: "Restableix el valor de producte" });
+    expect(confirmation).toHaveTextContent(
+      "Aquest paràmetre tornarà al valor de producte. S'aplica a partir d'ara.",
+    );
+    expect(confirmation).toHaveTextContent(
+      "Valor actual: 2 h abans → valor de producte: 4 h abans",
+    );
+    expect(requests.filter((request) => request.method === "DELETE")).toEqual([]);
+
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Cancel·la" }));
+    expect(screen.queryByRole("dialog", { name: "Restableix el valor de producte" })).toBeNull();
+    expect(screen.getByRole("dialog", { name: label })).toBeVisible();
+    expect(requests.filter((request) => request.method === "DELETE")).toEqual([]);
+  });
+
+  it("resets on the confirmation's button: one DELETE, the drawer closes and the row shows the product value", async () => {
+    const { fetchOverride, requests } = customisedFetch();
+    await renderSettings(fetchOverride);
+    const drawer = await openEditor();
+    fireEvent.click(
+      within(drawer).getByRole("button", { name: "Restableix el valor de producte" }),
+    );
+    const confirmation = screen.getByRole("dialog", { name: "Restableix el valor de producte" });
+
+    fireEvent.click(
+      within(confirmation).getByRole("button", { name: "Restableix el valor de producte" }),
+    );
+
+    expect(await screen.findByRole("button", { name: `${label}4 h abans` })).toBeVisible();
+    expect(screen.queryByRole("dialog", { name: label })).toBeNull();
+    expect(requests.filter((request) => request.method === "DELETE")).toEqual([
+      { method: "DELETE", path: `/api/v1/parameters/${key}` },
+    ]);
+  });
+
+  it("keeps the confirmation open with the api's error when the reset fails", async () => {
+    server.use(
+      http.delete("*/api/v1/parameters/:key", () =>
+        HttpResponse.json(
+          { code: "MODULE_DISABLED", details: {}, message: "Module disabled", traceId: "test" },
+          { status: 404 },
+        ),
+      ),
+    );
+    const { fetchOverride } = customisedFetch();
+    await renderSettings(fetchOverride);
+    const drawer = await openEditor();
+    fireEvent.click(
+      within(drawer).getByRole("button", { name: "Restableix el valor de producte" }),
+    );
+    const confirmation = screen.getByRole("dialog", { name: "Restableix el valor de producte" });
+
+    fireEvent.click(
+      within(confirmation).getByRole("button", { name: "Restableix el valor de producte" }),
+    );
+
+    expect(await within(confirmation).findByRole("alert")).toHaveTextContent(
+      "Aquest mòdul està desactivat.",
+    );
+    expect(screen.getByRole("dialog", { name: "Restableix el valor de producte" })).toBeVisible();
+    expect(screen.getByRole("dialog", { name: label })).toBeVisible();
   });
 });
