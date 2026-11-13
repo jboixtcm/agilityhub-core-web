@@ -38,6 +38,7 @@ import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessag
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 import { whatsAppUrl } from "../whatsapp";
 
+import { accessRequestError } from "./access-errors";
 import { AdminMemberActions } from "./AdminMemberActions";
 import { FamilyGroupAction } from "./FamilyGroupAction";
 import { LoginEmailDrawer, LoginEmailMark } from "./LoginEmailDrawer";
@@ -770,7 +771,11 @@ function MemberSummary({
    * erased after the record was read, S14 §5) is final: the record stops offering changes and the
    * dialog cannot send the request again (E7-W07 step 3).
    */
-  const run = async (action: () => Promise<void>, failureOn: "dialog" | "page" = "dialog") => {
+  const run = async (
+    action: () => Promise<void>,
+    failureOn: "dialog" | "page" = "dialog",
+    describe: (error: unknown) => ReactNode = (error) => memberErrorText(error, t, member.id),
+  ) => {
     setPending(true);
     setFailure(undefined);
     try {
@@ -778,7 +783,7 @@ function MemberSummary({
       setDialog(null);
     } catch (error) {
       if (isApiError(error, "MEMBER_ERASED")) onErased();
-      const message = memberErrorText(error, t, member.id);
+      const message = describe(error);
       if (failureOn === "page") onFeedback({ message, tone: "danger" });
       else setFailure(message);
     } finally {
@@ -1188,20 +1193,29 @@ function MemberSummary({
             <Button
               loading={pending}
               onClick={() =>
-                void run(async () => {
-                  const result = await client.POST("/members/{id}/access-resend", {
-                    params: { path: { id: member.id } },
-                  });
-                  if (result.data === undefined) {
-                    throw new TypeError("Access response did not contain data");
-                  }
-                  onFeedback({
-                    message: t("admin-census:member.feedback.accessSent", {
-                      email: result.data.sentTo,
-                    }),
-                    tone: "success",
-                  });
-                })
+                void run(
+                  async () => {
+                    const result = await client.POST("/members/{id}/access-resend", {
+                      params: { path: { id: member.id } },
+                    });
+                    if (result.data === undefined) {
+                      throw new TypeError("Access response did not contain data");
+                    }
+                    onFeedback({
+                      message: t("admin-census:member.feedback.accessSent", {
+                        email: result.data.sentTo,
+                      }),
+                      tone: "success",
+                    });
+                  },
+                  "dialog",
+                  // WEB-01 (decision of 13 Nov 2026): the welcome is limited per club; a refused
+                  // rate says in how many minutes to try again.
+                  (error) =>
+                    isApiError(error, "RATE_LIMITED")
+                      ? accessRequestError(error, t)
+                      : memberErrorText(error, t, member.id),
+                )
               }
             >
               {t("admin-census:member.actions.resend")}

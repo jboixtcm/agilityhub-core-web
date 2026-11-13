@@ -802,9 +802,8 @@ export function AccessPage({
   // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused the code because this
   // device already holds another account's session here, which stays; the page says why.
   const [handoffRefused, setHandoffRefused] = useState(false);
-  const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
-  const emailRecoveryEnabled =
-    emailLoginEnabled || import.meta.env.VITE_EMAIL_RECOVERY_ENABLED === "true";
+  // WEB-01 (pre-production audit, decision of 13 Nov 2026): the sign-in link is the members' first
+  // access, so it and the recovery are part of every build of this app (no build flag hides them).
   const countdown = useCountdown();
 
   // E11-W06 W1: 01 opened with `?next=` keeps it for the steps that leave this address (the magic
@@ -1055,33 +1054,31 @@ export function AccessPage({
           >
             {t("auth:access.enter")}
           </Button>
-          {emailLoginEnabled ? (
-            <Button
-              disabled={pending !== null || countdown.seconds > 0}
-              loading={pending === "magic"}
-              onClick={() => void requestLink("LOGIN")}
-              type="button"
-              variant="secondary"
-            >
-              <Icon aria-hidden="true" name="mail" />
-              {t("auth:access.passwordlessLink")}
-            </Button>
-          ) : null}
-          {emailRecoveryEnabled ? (
-            <button
-              className="auth-text-action"
-              disabled={pending !== null || countdown.seconds > 0}
-              onClick={() => void requestLink("RESET")}
-              type="button"
-            >
-              {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
-              {t("auth:access.forgot.question")}{" "}
-              <span className="auth-link">{t("auth:access.forgot.action")}</span>
-            </button>
-          ) : null}
-          {!emailRecoveryEnabled ? (
-            <p className="auth-support">{t("auth:access.manualSupport")}</p>
-          ) : null}
+          {/* WEB-01: the first-access door said in plain words, right above the link it names. */}
+          <p className="auth-support" id="access-first-time">
+            {t("auth:access.firstTime")}
+          </p>
+          <Button
+            aria-describedby="access-first-time"
+            disabled={pending !== null || countdown.seconds > 0}
+            loading={pending === "magic"}
+            onClick={() => void requestLink("LOGIN")}
+            type="button"
+            variant="secondary"
+          >
+            <Icon aria-hidden="true" name="mail" />
+            {t("auth:access.passwordlessLink")}
+          </Button>
+          <button
+            className="auth-text-action"
+            disabled={pending !== null || countdown.seconds > 0}
+            onClick={() => void requestLink("RESET")}
+            type="button"
+          >
+            {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
+            {t("auth:access.forgot.question")}{" "}
+            <span className="auth-link">{t("auth:access.forgot.action")}</span>
+          </button>
           {countdown.seconds > 0 ? (
             <p className="auth-message auth-message--error" role="alert">
               {t("auth:access.countdown", { seconds: countdown.seconds })}
@@ -1283,56 +1280,63 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
         >
           {t("auth:activation.continue")}
         </Button>
-        <form className="activation-password" onSubmit={(event) => void savePassword(event)}>
-          <h2>{t("auth:activation.passwordPrompt")}</h2>
-          <label className="ah-sr-only" htmlFor="activation-password">
-            {t("auth:activation.newPassword")}
-          </label>
-          <PasswordInput
-            autoComplete="new-password"
-            id="activation-password"
-            onChange={(event) => {
-              setNewPassword(event.currentTarget.value);
-            }}
-            placeholder={t("auth:activation.newPassword")}
-            required
-            showLabel={t("common:password.show")}
-            hideLabel={t("common:password.hide")}
-            value={newPassword}
-          />
-          <label className="ah-sr-only" htmlFor="activation-password-repeat">
-            {t("auth:activation.repeatPassword")}
-          </label>
-          <PasswordInput
-            autoComplete="new-password"
-            id="activation-password-repeat"
-            onChange={(event) => {
-              setRepeatPassword(event.currentTarget.value);
-            }}
-            placeholder={t("auth:activation.repeatPassword")}
-            required
-            showLabel={t("common:password.show")}
-            hideLabel={t("common:password.hide")}
-            value={repeatPassword}
-          />
-          <Button
-            loading={passwordPending}
-            loadingLabel={t("auth:activation.savingPassword")}
-            type="submit"
-            variant="secondary"
-          >
-            {t("auth:activation.savePassword")}
-          </Button>
-          {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
-          {resetLinkUsed ? (
-            <p role="alert">
-              {t("auth:activation.resetLinkUsed")}{" "}
-              <a href="/entrar">{t("auth:activation.recover")}</a>
-            </p>
-          ) : null}
-          {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
-        </form>
-        <p className="activation-panel__footnote">{t("auth:activation.optionalPassword")}</p>
+        {/* WEB-01: after entering by a link, an account without a password is invited (never
+            obliged) to choose one; a RESET link sets the new one. An account that already has a
+            password is not offered a form its LOGIN session could not save (R-01-05). */}
+        {purpose === "RESET" || !me.account.hasPassword ? (
+          <>
+            <form className="activation-password" onSubmit={(event) => void savePassword(event)}>
+              <h2>{t("auth:activation.passwordPrompt")}</h2>
+              <label className="ah-sr-only" htmlFor="activation-password">
+                {t("auth:activation.newPassword")}
+              </label>
+              <PasswordInput
+                autoComplete="new-password"
+                id="activation-password"
+                onChange={(event) => {
+                  setNewPassword(event.currentTarget.value);
+                }}
+                placeholder={t("auth:activation.newPassword")}
+                required
+                showLabel={t("common:password.show")}
+                hideLabel={t("common:password.hide")}
+                value={newPassword}
+              />
+              <label className="ah-sr-only" htmlFor="activation-password-repeat">
+                {t("auth:activation.repeatPassword")}
+              </label>
+              <PasswordInput
+                autoComplete="new-password"
+                id="activation-password-repeat"
+                onChange={(event) => {
+                  setRepeatPassword(event.currentTarget.value);
+                }}
+                placeholder={t("auth:activation.repeatPassword")}
+                required
+                showLabel={t("common:password.show")}
+                hideLabel={t("common:password.hide")}
+                value={repeatPassword}
+              />
+              <Button
+                loading={passwordPending}
+                loadingLabel={t("auth:activation.savingPassword")}
+                type="submit"
+                variant="secondary"
+              >
+                {t("auth:activation.savePassword")}
+              </Button>
+              {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
+              {resetLinkUsed ? (
+                <p role="alert">
+                  {t("auth:activation.resetLinkUsed")}{" "}
+                  <a href="/entrar">{t("auth:activation.recover")}</a>
+                </p>
+              ) : null}
+              {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
+            </form>
+            <p className="activation-panel__footnote">{t("auth:activation.optionalPassword")}</p>
+          </>
+        ) : null}
       </section>
     </main>
   );

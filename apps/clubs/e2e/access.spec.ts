@@ -84,7 +84,14 @@ test.describe("T-01-18 access screen", () => {
     await expect(
       page.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    // WEB-01 (decision of 13 Nov 2026): the first-access line, and a sign-up link a member does not
+    // take for the way in.
+    await expect(
+      page.getByText("Primer cop? Escriu el teu correu i t'enviarem un enllaç per entrar."),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "No ets soci del club? Fes-te'n soci →" }),
+    ).toBeVisible();
     // E3-W12 step 5 (S02 R-02-02): the public footer and, below it, the registered office.
     await expect(page.locator(".auth-footer .public-footer__line")).toHaveText([
       "Club Agility Cànic · G63189617 · Cabrera de Mar",
@@ -127,7 +134,7 @@ test.describe("T-01-18 access screen", () => {
   test("hides signup when the club has disabled it", async ({ page }) => {
     await prepareScenario(page, "minimal", brandingMinim);
     await page.goto(`${baseUrl}/entrar`);
-    await expect(page.getByRole("link", { name: /Apunta-t'hi/u })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Fes-te'n soci/u })).toHaveCount(0);
   });
 });
 

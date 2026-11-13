@@ -933,14 +933,17 @@ describe("T-01-18 access screen", () => {
     expect(
       screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    // WEB-01 (decision of 13 Nov 2026): reworded so an existing member does not take it for the way in.
+    expect(
+      screen.getByRole("link", { name: "No ets soci del club? Fes-te'n soci →" }),
+    ).toBeVisible();
     // INC-11 (mockup 01): the question in grey, the action as a link in the club's colour.
     const forgot = screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" });
     expect(within(forgot).getByText("Recupera-la")).toHaveClass("auth-link");
     expect(within(forgot).getByText("Has oblidat la contrasenya?")).not.toHaveClass("auth-link");
-    const join = screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" });
-    expect(within(join).getByText("Apunta-t'hi →")).toHaveClass("auth-link");
-    expect(within(join).getByText("Encara no hi ets?")).not.toHaveClass("auth-link");
+    const join = screen.getByRole("link", { name: "No ets soci del club? Fes-te'n soci →" });
+    expect(within(join).getByText("Fes-te'n soci →")).toHaveClass("auth-link");
+    expect(within(join).getByText("No ets soci del club?")).not.toHaveClass("auth-link");
     // E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the public footer and the registered office below it.
     // The Cànic fixture carries the club's real legal identity, as the seed does (S02 R-02-10).
     expect(screen.getByText("Club Agility Cànic · G63189617 · Cabrera de Mar")).toBeVisible();
@@ -979,7 +982,7 @@ describe("T-01-18 access screen", () => {
     window.history.pushState(null, "", "/entrar");
     mockScenario("minimal");
     await renderApplication(authClient(), minimalBranding);
-    expect(screen.queryByRole("link", { name: /Apunta-t'hi/u })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Fes-te'n soci/u })).not.toBeInTheDocument();
     expect(screen.getByText("Club Mínim", { selector: ".auth-logo__name" })).toBeVisible();
     expect(screen.getByRole("contentinfo")).toHaveTextContent("Club Mínim");
     expect(screen.getByRole("contentinfo")).not.toHaveTextContent("·");
@@ -1050,6 +1053,52 @@ describe("T-01-19 activation screen", () => {
       await screen.findByRole("heading", { name: "Aquest enllaç ja no és vàlid" }),
     ).toBeVisible();
     expect(screen.getByRole("button", { name: "Envia-me'n un de nou" })).toBeVisible();
+  });
+});
+
+describe("WEB-01 (pre-production audit, decision of 13 Nov 2026): the members' first access", () => {
+  it("01 says in plain words that a first-time member enters by the link, and describes the link's button with it", async () => {
+    window.history.pushState(null, "", "/entrar");
+    await renderApplication(authClient());
+    const line = screen.getByText(
+      "Primer cop? Escriu el teu correu i t'enviarem un enllaç per entrar.",
+    );
+    expect(line).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" }),
+    ).toHaveAccessibleDescription(line.textContent);
+  });
+
+  it("02 invites an account without a password to choose one after entering by a link, and lets it continue without", async () => {
+    mockScenario("activationMale");
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("heading", { name: "Benvingut, Marc!" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Si vols, tria una contrasenya per a futurs accessos" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        "La contrasenya és opcional: sempre pots entrar amb l'enllaç del correu. La sessió queda oberta en aquest dispositiu.",
+      ),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "CONTINUAR" })).toBeEnabled();
+  });
+
+  it("02 offers no password form to an account that already has one when it enters by a LOGIN link", async () => {
+    mockScenario("member");
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("button", { name: "CONTINUAR" })).toBeVisible();
+    expect(
+      screen.queryByRole("heading", {
+        name: "Si vols, tria una contrasenya per a futurs accessos",
+      }),
+    ).toBeNull();
+    expect(screen.queryByLabelText("nova contrasenya")).toBeNull();
+    expect(screen.queryByText(/La contrasenya és opcional/u)).toBeNull();
   });
 });
 
@@ -3218,22 +3267,31 @@ describe("T-03-41 mobile own data", () => {
   });
 });
 
+// WEB-01 (pre-production audit, decision of 13 Nov 2026): the members' first access is the sign-in
+// link, in every build. These two cases asserted the build flags that hid it (the internal access
+// of 26-10 and the recovery-only build); they now assert that the flags no longer change 01.
 it.each(["/login", "/entrar"])(
-  "Internal access %s: the club app keeps password entry on its own page without email actions",
+  "WEB-01: %s keeps password entry on its own page and, whatever the build flags, the first-access line, the sign-in link and the recovery",
   async (path) => {
     vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
     window.history.pushState(null, "", path);
     await renderApplication(authClient());
     expect(screen.getByLabelText("Contrasenya")).toBeVisible();
     expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
-    expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
-    expect(screen.queryByRole("button", { name: /Has oblidat la contrasenya/u })).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Primer cop? Escriu el teu correu i t'enviarem un enllaç per entrar."),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: /Has oblidat la contrasenya/u })).toBeVisible();
+    expect(screen.queryByText(/demana ajuda a l’administració/u)).toBeNull();
     expect(document.body.textContent).not.toMatch(/AgilityHub/u);
     expect(window.location.pathname).toBe(path);
   },
 );
 
-it("T-01-08 recovery-only login sends RESET without exposing passwordless login", async () => {
+it("T-01-08 WEB-01: with the old recovery-only flags, 01 sends RESET from the recovery and LOGIN from the sign-in link", async () => {
   vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
   vi.stubEnv("VITE_EMAIL_RECOVERY_ENABLED", "true");
   window.history.pushState(null, "", "/entrar");
@@ -3241,7 +3299,6 @@ it("T-01-08 recovery-only login sends RESET without exposing passwordless login"
   const request = vi.spyOn(client, "requestMagicLink").mockResolvedValue(undefined);
   await renderApplication(client);
   expect(screen.getByLabelText("Contrasenya")).toBeVisible();
-  expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
   expect(screen.queryByText(/demana ajuda a l’administració/u)).toBeNull();
   fireEvent.change(screen.getByLabelText("Correu electrònic"), {
     target: { value: "laura@example.test" },
@@ -3249,4 +3306,10 @@ it("T-01-08 recovery-only login sends RESET without exposing passwordless login"
   fireEvent.click(screen.getByRole("button", { name: /Has oblidat la contrasenya/u }));
   expect(request).toHaveBeenCalledWith("laura@example.test", "RESET");
   expect(await screen.findByRole("status")).toHaveTextContent(/Si el correu/u);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" }),
+  );
+  await waitFor(() => {
+    expect(request).toHaveBeenCalledWith("laura@example.test", "LOGIN");
+  });
 });

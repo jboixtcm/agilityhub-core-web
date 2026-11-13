@@ -2008,3 +2008,58 @@ describe("AUTH-02 (S03 R-03-06b, decision of 13 Nov 2026): D10's login e-mail an
     expect(screen.queryByRole("button", { name: "Canvia l'adreça d'accés" })).toBeNull();
   });
 });
+
+describe("WEB-01 (decision of 13 Nov 2026): D10's welcome e-mail, manual only and limited per club", () => {
+  function recordWelcomes() {
+    const sent: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "POST" && request.url.endsWith("/access-resend"))
+        sent.push(request.url);
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return sent;
+  }
+
+  it("sends nothing until the ADMIN confirms «Envia la benvinguda», then one request for this member", async () => {
+    const sent = recordWelcomes();
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Envia la benvinguda" }));
+    let dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(sent).toEqual([]);
+
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Envia la benvinguda" }));
+    dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Envia la benvinguda" }));
+    expect(await screen.findByText(/S’ha sol·licitat la benvinguda per a/u)).toBeVisible();
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toMatch(/\/members\/member-laura\/access-resend$/u);
+  });
+
+  it("says in how many minutes to try again when the club's welcome limit is reached (429 RATE_LIMITED)", async () => {
+    server.use(
+      http.post("*/api/v1/members/:id/access-resend", () =>
+        HttpResponse.json(
+          { code: "RATE_LIMITED", details: { retryAfter: 61 }, message: "Limited", traceId: "t" },
+          { headers: { "Retry-After": "61" }, status: 429 },
+        ),
+      ),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Envia la benvinguda" }));
+    const dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Envia la benvinguda" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Massa enviaments seguits. Torna-ho a provar d'aquí a 2 minuts.",
+    );
+    expect(screen.queryByText(/S’ha sol·licitat la benvinguda per a/u)).toBeNull();
+  });
+});
