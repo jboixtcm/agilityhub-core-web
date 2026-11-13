@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { isReadmissionPending } from "../dashboard/readmission";
 import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 
+import { validIban } from "./iban";
+
 type Payment = components["schemas"]["PaymentMethodView"];
 type PaymentType = components["schemas"]["PaymentMethodType"];
 
@@ -31,6 +33,7 @@ export function MemberPaymentMethodDrawer({
   const [type, setType] = useState<PaymentType>(paymentMethod?.type ?? "SEPA_DD");
   const [holderName, setHolderName] = useState(paymentMethod?.holderName ?? "");
   const [iban, setIban] = useState("");
+  const [ibanError, setIbanError] = useState<string>();
   const [channel, setChannel] = useState(paymentMethod?.channel ?? "CASH");
   const [checkoutUrl, setCheckoutUrl] = useState<string>();
   const [pending, setPending] = useState(false);
@@ -45,6 +48,7 @@ export function MemberPaymentMethodDrawer({
     setType(paymentMethod?.type ?? "SEPA_DD");
     setHolderName(paymentMethod?.holderName ?? "");
     setIban("");
+    setIbanError(undefined);
     setChannel(paymentMethod?.channel ?? "CASH");
     setCheckoutUrl(undefined);
     setFailure(undefined);
@@ -95,6 +99,12 @@ export function MemberPaymentMethodDrawer({
       {erased ? <><p role="alert">{t("errors:MEMBER_ERASED")}</p><Button onClick={close} variant="ghost">{t("admin-census:common.cancel")}</Button></> : <form className="census-record__form" onSubmit={(event) => {
         event.preventDefault();
         if (type === "CARD") return;
+        // WEB-07 (decision of 13 Nov 2026): the IBAN's length and check digits before it is sent.
+        if (type === "SEPA_DD" && iban !== "" && !validIban(iban)) {
+          setIbanError(t("errors:INVALID_IBAN"));
+          document.getElementById("payment-iban")?.focus();
+          return;
+        }
         const body: components["schemas"]["PaymentMethodPatch"] = type === "SEPA_DD"
           ? { type, sepa: { holderName, ...(iban === "" ? {} : { iban }) } }
           : { type, manual: { channel } };
@@ -127,8 +137,9 @@ export function MemberPaymentMethodDrawer({
             <FormField id="payment-holder" label={t("admin-census:member.payment.holder") }>
               <Input id="payment-holder" onChange={(event) => { setHolderName(event.currentTarget.value); }} required value={holderName} />
             </FormField>
-            <FormField help={t("admin-census:member.payment.ibanHelp")} id="payment-iban" label={t("admin-census:member.payment.iban") }>
-              <Input autoComplete="off" id="payment-iban" onChange={(event) => { setIban(event.currentTarget.value); }} placeholder={paymentMethod?.maskedAccount ?? ""} type="password" value={iban} />
+            {/* WEB-07: visible while it is typed (never a password field), checked before saving. */}
+            <FormField {...(ibanError === undefined ? {} : { error: ibanError })} help={t("admin-census:member.payment.ibanHelp")} id="payment-iban" label={t("admin-census:member.payment.iban") }>
+              <Input autoComplete="off" id="payment-iban" onChange={(event) => { setIban(event.currentTarget.value); setIbanError(undefined); }} placeholder={paymentMethod?.maskedAccount ?? ""} spellCheck={false} value={iban} />
             </FormField>
           </>
         ) : type === "MANUAL" ? (

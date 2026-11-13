@@ -399,7 +399,7 @@
       "adminOnly": "admin only",
       "holder": "Account holder",
       "iban": "New IBAN",
-      "ibanHelp": "The full number is hidden and is not shown again.",
+      "ibanHelp": "You can see it while you type it. Once saved, it is hidden and never shown again.",
       "sepa": "Direct debit",
       "title": "Payment method"
     },

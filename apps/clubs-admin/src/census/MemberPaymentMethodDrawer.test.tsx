@@ -7,7 +7,7 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, beforeEach, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from "vitest";
 
 import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
 
@@ -118,4 +118,76 @@ it("E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the payment method points t
     expect(alert).toHaveTextContent("Aquest abonat té una readmissió pendent");
   });
   expect(within(alert).getByRole("link", { name: "Preinscripcions pendents" })).toHaveAttribute("href", "/preinscripcions/member-laura");
+});
+
+it("WEB-07 (decision of 13 Nov 2026): the new IBAN is visible while typed and its length and check digits are checked before saving", async () => {
+  const current = await paymentMethod();
+  const patches: unknown[] = [];
+  const recording: typeof fetch = async (input, init) => {
+    const request = input instanceof Request ? input : new Request(input, init);
+    if (request.method === "PATCH") patches.push(await request.clone().json());
+    return fetch(input, init);
+  };
+  const onChanged = vi.fn();
+  const i18n = await createI18n({
+    branding,
+    browserLanguages: ["ca"],
+    initialNamespaces: ["admin-census", "common", "enums", "errors"],
+    storage: undefined,
+  });
+  render(
+    <I18nextProvider i18n={i18n}>
+      <BrandingProvider branding={branding}>
+        <MemberPaymentMethodDrawer
+          client={createApiClient({
+            baseUrl: `${window.location.origin}/api/v1`,
+            fetch: recording,
+          })}
+          memberId="member-laura"
+          onChanged={onChanged}
+          onClose={() => undefined}
+          onErased={() => undefined}
+          open
+          paymentMethod={current}
+        />
+      </BrandingProvider>
+    </I18nextProvider>,
+  );
+  const drawer = await screen.findByRole("dialog", { name: "Mètode de pagament" });
+  const iban = within(drawer).getByLabelText("IBAN nou");
+  expect(iban).toHaveProperty("type", "text");
+  expect(iban).toHaveAttribute("spellcheck", "false");
+  expect(
+    within(drawer).getByText(
+      "Es veu mentre l'escrius. Un cop desat, queda ocult i no es torna a mostrar.",
+    ),
+  ).toBeVisible();
+
+  // Wrong check digits, then a Spanish IBAN of 25 characters whose check digits are right.
+  for (const typed of ["ES91 2100 0418 4502 0005 1333", "ES55 0000 0000 0000 0000 0000 1"]) {
+    fireEvent.change(iban, { target: { value: typed } });
+    expect(iban).toHaveValue(typed);
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+
+    expect(within(drawer).getByRole("alert")).toHaveTextContent(
+      "El número de compte bancari no és vàlid.",
+    );
+    expect(iban).toHaveAttribute("aria-invalid", "true");
+    expect(iban).toHaveFocus();
+  }
+  expect(patches).toEqual([]);
+
+  fireEvent.change(iban, { target: { value: "ES91 2100 0418 4502 0005 1332" } });
+  expect(within(drawer).queryByRole("alert")).toBeNull();
+  fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+
+  await waitFor(() => {
+    expect(onChanged).toHaveBeenCalledTimes(1);
+  });
+  expect(patches).toEqual([
+    {
+      sepa: { holderName: current.holderName, iban: "ES91 2100 0418 4502 0005 1332" },
+      type: "SEPA_DD",
+    },
+  ]);
 });

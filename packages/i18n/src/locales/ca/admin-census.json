@@ -399,7 +399,7 @@
       "adminOnly": "canvi només admin",
       "holder": "Titular del compte",
       "iban": "IBAN nou",
-      "ibanHelp": "El número complet queda ocult i no es torna a mostrar.",
+      "ibanHelp": "Es veu mentre l'escrius. Un cop desat, queda ocult i no es torna a mostrar.",
       "sepa": "Domiciliació",
       "title": "Mètode de pagament"
     },

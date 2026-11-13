@@ -399,7 +399,7 @@
       "adminOnly": "cambio solo admin",
       "holder": "Titular de la cuenta",
       "iban": "IBAN nuevo",
-      "ibanHelp": "El número completo queda oculto y no se vuelve a mostrar.",
+      "ibanHelp": "Se ve mientras lo escribes. Una vez guardado, queda oculto y no se vuelve a mostrar.",
       "sepa": "Domiciliación",
       "title": "Método de pago"
     },
