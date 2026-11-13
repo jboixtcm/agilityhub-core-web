@@ -99,11 +99,17 @@ Left, needs a decision: the reload after a deploy (`sw.ts` `skipWaiting` + `clie
 Not code: confirm the reload behaviour on staging with an open tab during a deploy, and schedule releases away from the weekly booking opening.
 Review note: the retry is immediate and asks for the same chunk URL. Browsers that keep a failed dynamic `import()` in their module map (Chromium and WebKit have done so) answer the second call with the same failure without going to the network, so the gain may be limited to Firefox and to failures the browser does not cache. Harmless either way; check it on staging with a throttled first visit before counting on it.
 
-### WEB-11 — PARTIAL
+### WEB-11 — FIXED
 
 The back arrows of 07 and the course viewer (`.booking-screen__back`, `apps/clubs/src/booking/booking.css`) and of the self-service pages (`.self-page__header a`, `apps/clubs/src/styles.css`) keep their 32 px look. An invisible `::before` adds 0.375 rem on each side, so they take taps on a 44 px area. Nothing else that can be tapped sits next to them.
 Test: a new case in `apps/clubs/src/polish-styles.test.ts`, which can now read `booking.css` too (run, passing).
 Left, needs a decision: the 36 × 20 px switch (`.ah-switch`, `packages/ui/src/components.css`). On screen 12 the rows of switches are about 2 rem apart (`.profile-notices` gap 0.75 rem), so a 44 px invisible area would cover the gap. A tap just below one switch would then toggle the next one. Options: more space between the rows of 12 (moves away from the mockup), a larger switch track, or a smaller non-overlapping area (about 32 px tall).
+
+Pass 2 (owner decision of 13 Nov 2026): more space between the rows of switches on screen 12, so that each switch has a 44 px touch area without overlapping its neighbour.
+Changed (`apps/clubs/src/styles.css`, screen 12 only; the kit's `.ah-switch` keeps its 36 × 20 px look elsewhere): `.profile-notices__switch::before` gives each switch of 12 a 44 × 44 px invisible area (`inset: -0.75rem -0.25rem`, as wide as the e-mail column it sits in); `.profile-notices__row` and `.profile-notices__mobile-row` are at least 2rem tall (the single-line rows were about 1.25rem). A 2.75rem area centred in a 2rem row reaches 0.375rem beyond it: two neighbouring e-mail rows meet at most in the middle of their 0.75rem gap, and the push switch stays clear of WEB-02's button, 0.5rem below.
+Tests: 2 new cases in `apps/clubs/src/polish-styles.test.ts`, which now also reads `packages/ui/src/components.css` (the switch's size) and `tokens.css` (the gaps): the area is 2.75rem × 2.75rem around the switch, and the rows' least height and gaps keep the areas apart; both checked to fail without the change. Run: `polish-styles.test.ts` (6) and `NoticesCard.test.tsx`, passing; `pnpm --filter clubs typecheck` and eslint on the changed files pass. No screenshot taken (Playwright not run).
+Assumption: the spacing comes from the rows' least height, not from a larger card gap, so the header, the reminder and the push block keep their spacing and the mockup moves as little as possible; a label that wraps makes its row taller and only adds space.
+SPEC-CHANGE: docs/specs/S11-comunicacions.md §2 row 12: each switch takes taps on 44 × 44 px and the switch rows are spaced so their areas never overlap (more space than the mockup), plus a «Canvis» line of 13-11-2026.
 
 ### WEB-12 — NEEDS-DECISION
 
