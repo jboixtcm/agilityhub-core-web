@@ -286,7 +286,8 @@
       "leave": "Leave (with date)",
       "resend": "Send welcome email",
       "unblock": "Unblock bookings",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "changeLogin": "Change login email"
     },
     "activeSince": "active since {year}",
     "billingMode": {
@@ -317,7 +318,8 @@
       "preferences": "Notification preferences were saved.",
       "roles": "Access roles were updated.",
       "saved": "The member details were saved.",
-      "unblocked": "Bookings were unblocked."
+      "unblocked": "Bookings were unblocked.",
+      "loginEmailSent": "Confirmation link requested for {email}. The login email will change when the member opens it."
     },
     "fields": {
       "address": "Address",
@@ -348,7 +350,8 @@
       "remarks": "Visible remarks",
       "roles": "Access roles",
       "street": "Street and number",
-      "monthlyAmount": "Monthly amount"
+      "monthlyAmount": "Monthly amount",
+      "login": "Login email"
     },
     "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} OTHER {Does not authorise use of their image: do not publish photos showing them.} other {Does not authorise use of his image: do not publish photos showing him.}}",
     "readmissionPending": "This member has a pending readmission: validate or reject it from the dashboard before changing the record.",
@@ -501,7 +504,14 @@
     "reactivate": "Reactivate member",
     "leftSince": "Left on {date}",
     "joinedOn": "(joined: {date})",
-    "left": "Left"
+    "left": "Left",
+    "login": {
+      "bounced": "bounce",
+      "complained": "complaint",
+      "bouncedHelp": "This address bounces or does not exist: sign-in links, password recovery and the welcome email do not reach it.",
+      "complainedHelp": "A club email was marked as spam from this address: sign-in links, password recovery and the welcome email do not reach it."
+    },
+    "rateLimited": "Too many emails in a row. Try again in {minutes, plural, one {# minute} other {# minutes}}."
   },
   "roles": {
     "admin": "administrator",
@@ -781,5 +791,17 @@
     "dissolveConfirm": "Each member will return to their own billing and dogs. Dissolve the group?",
     "helpWithoutBilling": "Group two or more members and choose one responsible member. All members can manage the group’s dogs.",
     "dissolveConfirmWithoutBilling": "Each member will only be able to manage their own dogs again. Dissolve the group?"
+  },
+  "loginEmail": {
+    "current": "Current address",
+    "new": "New address",
+    "help": "We will send a confirmation link there. The login email changes when the member opens it; no notice is sent to the current address.",
+    "submit": "Send confirmation link",
+    "change": "Current address: {current} → new address: {next}",
+    "confirmDescription": "A link will be sent to {next}. Until the member opens it, the login email does not change.",
+    "send": "Send link",
+    "unchanged": "This is already the current login email.",
+    "invalid": "Enter a valid email address.",
+    "forbidden": "This account is also used outside the club: its login email cannot be changed from here."
   }
 }

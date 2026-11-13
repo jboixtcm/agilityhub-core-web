@@ -83,7 +83,8 @@
     "TRAINING_BOOKED_BY_CLUB": "Entrenament reservat pel club",
     "TRAINING_CANCELLED_BY_CLUB": "Entrenament cancel·lat pel club",
     "UPFRONT_PAYMENT_RECORDED": "Pagament inicial registrat",
-    "WEEK_VALIDATED": "Setmana validada"
+    "WEEK_VALIDATED": "Setmana validada",
+    "ACCOUNT_EMAIL_CHANGED": "Adreça d'accés canviada"
   },
   "asMember": "com l'abonat: {name}",
   "caption": "Entrades d'auditoria",

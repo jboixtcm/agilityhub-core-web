@@ -40,6 +40,7 @@ import { whatsAppUrl } from "../whatsapp";
 
 import { AdminMemberActions } from "./AdminMemberActions";
 import { FamilyGroupAction } from "./FamilyGroupAction";
+import { LoginEmailDrawer, LoginEmailMark } from "./LoginEmailDrawer";
 import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
 import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
@@ -113,7 +114,16 @@ type DogDocument = components["schemas"]["DogDocument"];
 type Plan = components["schemas"]["Plan"];
 type Role = "ADMIN" | "INSTRUCTOR" | "MEMBER";
 type MemberDialog =
-  "block" | "impersonate" | "inactivity" | "leave" | "payment" | "plan" | "resend" | "roles" | null;
+  | "block"
+  | "impersonate"
+  | "inactivity"
+  | "leave"
+  | "loginEmail"
+  | "payment"
+  | "plan"
+  | "resend"
+  | "roles"
+  | null;
 
 interface Feedback {
   message: ReactNode;
@@ -801,6 +811,21 @@ function MemberSummary({
         <Card>
           <SectionTitle>{t("admin-census:member.sections.dataPayment")}</SectionTitle>
           <dl className="census-record__data-list">
+            {/* S03 R-03-06b (AUTH-02): the account's login e-mail and, when mail no longer reaches
+                it, its «rebot» / «queixa» mark with what that means. None without an account. */}
+            {member.login == null ? null : (
+              <DataRow label={t("admin-census:member.fields.login")}>
+                {member.login.email} <LoginEmailMark status={member.login.emailStatus} />
+                {member.login.emailStatus === "BOUNCED" ||
+                member.login.emailStatus === "COMPLAINED" ? (
+                  <span className="census-record__login-note">
+                    {member.login.emailStatus === "BOUNCED"
+                      ? t("admin-census:member.login.bouncedHelp")
+                      : t("admin-census:member.login.complainedHelp")}
+                  </span>
+                ) : null}
+              </DataRow>
+            )}
             <DataRow label={t("admin-census:member.fields.contact")}>{contact}</DataRow>
             {modules.includes("BILLING") ? (
               <DataRow label={t("admin-census:member.fields.plan")}>
@@ -1184,6 +1209,27 @@ function MemberSummary({
           )}
         </div>
       </Modal>
+
+      {/* Kept while open once the member is found erased: it says so as final (E7-W07 step 3). */}
+      {member.login == null || (erased && dialog !== "loginEmail") ? null : (
+        <LoginEmailDrawer
+          client={client}
+          login={member.login}
+          memberId={member.id}
+          onClose={() => {
+            setDialog(null);
+          }}
+          onErased={onErased}
+          onSent={(sentTo) => {
+            setDialog(null);
+            onFeedback({
+              message: t("admin-census:member.feedback.loginEmailSent", { email: sentTo }),
+              tone: "success",
+            });
+          }}
+          open={dialog === "loginEmail"}
+        />
+      )}
 
       <Modal
         closeLabel={t("admin-census:common.close")}
@@ -1583,6 +1629,18 @@ function MemberRecordContent({
                     >
                       {t("admin-census:member.actions.resend")}
                     </Button>
+                    {/* S03 R-03-06b (AUTH-02): closed to a support access (S17 R-17-10). */}
+                    {member.login == null || supportAccess ? null : (
+                      <Button
+                        onClick={() => {
+                          setTab("summary");
+                          setMemberDialog("loginEmail");
+                        }}
+                        variant="ghost"
+                      >
+                        {t("admin-census:member.actions.changeLogin")}
+                      </Button>
+                    )}
                   </>
                 }
                 between={

@@ -83,7 +83,8 @@
     "TRAINING_BOOKED_BY_CLUB": "Entrenamiento reservado por el club",
     "TRAINING_CANCELLED_BY_CLUB": "Entrenamiento cancelado por el club",
     "UPFRONT_PAYMENT_RECORDED": "Pago inicial registrado",
-    "WEEK_VALIDATED": "Semana validada"
+    "WEEK_VALIDATED": "Semana validada",
+    "ACCOUNT_EMAIL_CHANGED": "Dirección de acceso cambiada"
   },
   "asMember": "como el abonado: {name}",
   "caption": "Entradas de auditoría",

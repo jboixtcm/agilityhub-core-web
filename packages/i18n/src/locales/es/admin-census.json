@@ -286,7 +286,8 @@
       "leave": "Baja (con fecha)",
       "resend": "Enviar bienvenida",
       "unblock": "Desbloquear las reservas",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "changeLogin": "Cambiar la dirección de acceso"
     },
     "activeSince": "de alta desde {year}",
     "billingMode": {
@@ -317,7 +318,8 @@
       "preferences": "Las preferencias de avisos se han guardado.",
       "roles": "Los roles de acceso se han actualizado.",
       "saved": "Los datos del abonado se han guardado.",
-      "unblocked": "Las reservas se han desbloqueado."
+      "unblocked": "Las reservas se han desbloqueado.",
+      "loginEmailSent": "Se ha solicitado el enlace de confirmación para {email}. La dirección de acceso cambiará cuando el abonado lo abra."
     },
     "fields": {
       "address": "Dirección",
@@ -348,7 +350,8 @@
       "remarks": "Observaciones visibles",
       "roles": "Roles de acceso",
       "street": "Calle y número",
-      "monthlyAmount": "Importe mensual"
+      "monthlyAmount": "Importe mensual",
+      "login": "Dirección de acceso"
     },
     "imageNotice": "No autoriza el uso de su imagen: no publiques fotos en las que aparezca {gender, select, FEMALE {ella} OTHER {esta persona} other {él}}.",
     "readmissionPending": "Este abonado tiene una readmisión pendiente: valídala o recházala desde el panel antes de cambiar la ficha.",
@@ -501,7 +504,14 @@
     "reactivate": "Reactivar al abonado",
     "leftSince": "Baja desde el {date}",
     "joinedOn": "(alta: {date})",
-    "left": "Baja"
+    "left": "Baja",
+    "login": {
+      "bounced": "rebote",
+      "complained": "queja",
+      "bouncedHelp": "Esta dirección rebota o no existe: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida.",
+      "complainedHelp": "Desde esta dirección se ha marcado un correo del club como correo no deseado: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida."
+    },
+    "rateLimited": "Demasiados envíos seguidos. Vuelve a intentarlo dentro de {minutes, plural, one {# minuto} other {# minutos}}."
   },
   "roles": {
     "admin": "administrador",
@@ -781,5 +791,17 @@
     "dissolveConfirm": "Cada abonado volverá a tener su propia facturación y sus perros. ¿Quieres disolver el grupo?",
     "helpWithoutBilling": "Agrupa dos o más abonados y elige un único responsable. Todos los miembros pueden operar con los perros del grupo.",
     "dissolveConfirmWithoutBilling": "Cada abonado volverá a poder operar solo con sus perros. ¿Quieres disolver el grupo?"
+  },
+  "loginEmail": {
+    "current": "Dirección actual",
+    "new": "Dirección nueva",
+    "help": "Le enviaremos un enlace de confirmación. La dirección de acceso cambiará cuando el abonado lo abra; a la dirección actual no se envía ningún aviso.",
+    "submit": "Enviar el enlace de confirmación",
+    "change": "Dirección actual: {current} → dirección nueva: {next}",
+    "confirmDescription": "Se enviará un enlace a {next}. Hasta que el abonado no lo abra, la dirección de acceso no cambia.",
+    "send": "Enviar el enlace",
+    "unchanged": "Esta ya es la dirección de acceso actual.",
+    "invalid": "La dirección de correo no es válida.",
+    "forbidden": "Esta cuenta también se usa fuera del club: su dirección de acceso no se puede cambiar desde aquí."
   }
 }

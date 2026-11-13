@@ -83,7 +83,8 @@
     "TRAINING_BOOKED_BY_CLUB": "Training booked by the club",
     "TRAINING_CANCELLED_BY_CLUB": "Training cancelled by the club",
     "UPFRONT_PAYMENT_RECORDED": "Initial payment recorded",
-    "WEEK_VALIDATED": "Week validated"
+    "WEEK_VALIDATED": "Week validated",
+    "ACCOUNT_EMAIL_CHANGED": "Login email changed"
   },
   "asMember": "as member: {name}",
   "caption": "Audit entries",

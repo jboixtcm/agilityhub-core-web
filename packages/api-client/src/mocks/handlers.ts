@@ -3393,6 +3393,31 @@ export const handlers = [
     }
     return HttpResponse.json({ sentTo: member.contactEmails[0]?.email ?? "" }, { status: 202 });
   }),
+  // S03 R-03-06b (AUTH-02): the link goes to the new address; nothing changes until it is used.
+  http.post("*/api/v1/members/:id/login-email", async ({ params, request }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
+    const member = censusRecordState.memberOverview.member;
+    if (String(params.id) !== member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    if (member.status !== "ACTIVE" || member.accountId == null || member.login == null) {
+      return apiError("MEMBER_NOT_ACTIVE", "Member not active", 422);
+    }
+    const body = (await request.json()) as { email?: unknown };
+    const email = typeof body.email === "string" ? body.email.trim() : "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(email)) {
+      return apiErrorWithDetails("VALIDATION_ERROR", "Invalid email", 400, {
+        fieldErrors: [{ code: "EMAIL", field: "email" }],
+      });
+    }
+    if (email.toLowerCase() === member.login.email.toLowerCase()) {
+      return apiErrorWithDetails("VALIDATION_ERROR", "Unchanged email", 400, {
+        fieldErrors: [{ code: "UNCHANGED", field: "email" }],
+      });
+    }
+    return HttpResponse.json({ sentTo: email }, { status: 202 });
+  }),
   http.post("*/api/v1/members/:id/impersonation-token", async ({ params, request }) => {
     // S01 R-01-09 and the snapshot: an impersonation token is 403, an erased member 409 MEMBER_ERASED.
     const body = (await request.json()) as { bookingsOnly?: boolean };
