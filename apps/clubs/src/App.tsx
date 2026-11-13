@@ -1,6 +1,7 @@
 import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agilityhub/api-client";
 import {
   type AuthClient,
+  HANDOFF_SESSION_CONFLICT,
   keepReturnPath,
   type Me,
   OnboardingExperience,
@@ -798,6 +799,9 @@ export function AccessPage({
   // The code was redeemed but `/me` keeps failing: the tab holds that session (never another
   // one) and offers a retry (E47).
   const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
+  // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused the code because this
+  // device already holds another account's session here, which stays; the page says why.
+  const [handoffRefused, setHandoffRefused] = useState(false);
   const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
   const emailRecoveryEnabled =
     emailLoginEnabled || import.meta.env.VITE_EMAIL_RECOVERY_ENABLED === "true";
@@ -822,7 +826,10 @@ export function AccessPage({
   );
   const failHandoff = useCallback(
     (cause: unknown) => {
-      if (authClient.hasPendingHandoff()) {
+      if (isApiError(cause, HANDOFF_SESSION_CONFLICT)) {
+        setHandoffUnconfirmed(false);
+        setHandoffRefused(true);
+      } else if (authClient.hasPendingHandoff()) {
         setHandoffUnconfirmed(true);
       } else if (isApiError(cause) && (cause.status === 0 || cause.status >= 500)) {
         // E4-W18 step 1: the code went unanswered (5xx, offline): the tab stays anonymous (no
@@ -872,6 +879,38 @@ export function AccessPage({
     return (
       <main className="auth-page auth-page--loading">
         <p role="status">{t("auth:activation.loading")}</p>
+      </main>
+    );
+  }
+
+  if (handoffRefused) {
+    return (
+      <main className="auth-page auth-page--loading">
+        <p role="alert">{t("auth:access.handoffOtherSession")}</p>
+        <Button
+          onClick={() => {
+            setPending("handoff");
+            // The session this device kept (its cookie, read by the usual restore).
+            void (async () => {
+              let kept: Me | null = authClient.getMe();
+              try {
+                kept ??= await authClient.restoreSession();
+              } catch {
+                kept = null;
+              }
+              if (kept === null) {
+                // It ended meanwhile: 01 as usual.
+                setHandoffRefused(false);
+                setPending(null);
+                return;
+              }
+              await enterHandoff(kept);
+            })();
+          }}
+          type="button"
+        >
+          {t("auth:activation.continue")}
+        </Button>
       </main>
     );
   }

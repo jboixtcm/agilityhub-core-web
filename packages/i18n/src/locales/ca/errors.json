@@ -76,6 +76,7 @@
   "FORBIDDEN": "No tens permís per fer aquesta acció.",
   "GEOMETRY_INVALID": "La geometria no és vàlida.",
   "HANDOFF_INVALID": "Aquest traspàs d'accés no és vàlid o ha caducat.",
+  "HANDOFF_SESSION_CONFLICT": "En aquest dispositiu ja hi ha una sessió iniciada d'un altre compte.",
   "HOST_ALREADY_USED": "Aquest domini ja està en ús.",
   "HOST_NOT_VERIFIED": "Aquest domini no s'ha verificat.",
   "HOST_RESERVED": "Aquest domini està reservat.",

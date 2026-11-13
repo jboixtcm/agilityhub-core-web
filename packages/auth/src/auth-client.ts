@@ -19,6 +19,11 @@ const FOCUS_REFRESH_SLACK_MS = 30_000;
 const RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000, 60_000] as const;
 /** `/me` after a handoff: the first try and two retries (2 s, 5 s) before the page offers a retry. */
 const HANDOFF_ME_ATTEMPTS = 3;
+/**
+ * FE-03 (S01 R-01-13): `409` of a handoff code opened on a host whose refresh cookie holds another
+ * account's session. The code is left unused and the cookie untouched: the app keeps that session.
+ */
+export const HANDOFF_SESSION_CONFLICT = "HANDOFF_SESSION_CONFLICT";
 /** Cookie writers share one queue per identity origin, including different client IDs. */
 const COOKIE_LOCK_PREFIX = "agilityhub.session-cookie:";
 const cookieQueues = new Map<string, Promise<void>>();
@@ -1322,6 +1327,14 @@ export class AuthClient extends EventTarget {
       this.requireSessionGeneration(generation);
     } catch (error) {
       this.requireSessionGeneration(generation);
+      if (handoff && isApiError(error, HANDOFF_SESSION_CONFLICT)) {
+        // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused an account's code
+        // because this host's refresh cookie holds another account's session. It is not an
+        // «Entra com l'abonat» code (those are never refused so) and the cookie is untouched:
+        // that session stays, and the usual restore reads it.
+        this.leaveImpersonation();
+        throw error;
+      }
       // E47 (E4-W18 step 1): an «Entra com l'abonat» code tried in this tab and refused, or left
       // unanswered (5xx, offline), leaves the tab anonymous until someone signs in on 01 — never
       // the refresh cookie, which may be the admin's own session.

@@ -2,6 +2,7 @@ import { type components, isApiError } from "@agilityhub/api-client";
 import {
   type AuthClient,
   createAuthenticatedApiClient,
+  HANDOFF_SESSION_CONFLICT,
   keepReturnPath,
   OnboardingExperience,
   RequireModule,
@@ -1042,6 +1043,9 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   // E4-W18 step 2: the code or its `/me` went unanswered (5xx, offline): a retry, never «no és
   // vàlid o ha caducat».
   const [handoffUnanswered, setHandoffUnanswered] = useState(false);
+  // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused the code because this
+  // device already holds another account's session here, which stays; the page says why.
+  const [handoffRefused, setHandoffRefused] = useState(false);
 
   // E11-W06 W1 (S11 R-11-11): 01 opened with `?next=` keeps it for a sign-in that leaves this
   // address (the magic link, 03b's handoff from the members' app).
@@ -1054,6 +1058,12 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   }, [authClient]);
   const failHandoff = useCallback(
     async (cause: unknown) => {
+      if (isApiError(cause, HANDOFF_SESSION_CONFLICT)) {
+        setHandoffUnanswered(false);
+        setHandoffRefused(true);
+        setPending(null);
+        return;
+      }
       const transient =
         authClient.hasPendingHandoff() ||
         (isApiError(cause) && (cause.status === 0 || cause.status >= 500));
@@ -1096,6 +1106,42 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
       authClient.removeEventListener("signedIn", signedIn);
     };
   }, [authClient, enterHandoff, handoffUnanswered]);
+
+  if (handoffRefused) {
+    return (
+      <main className="access-page">
+        <Card className="access-card">
+          <h1>{t("auth:admin.title")}</h1>
+          <p role="alert">{t("auth:access.handoffOtherSession")}</p>
+          <Button
+            disabled={pending !== null}
+            onClick={() => {
+              setPending("handoff");
+              // The session this device kept (its cookie, read by the usual restore).
+              void authClient.restoreSession().then(
+                (kept) => {
+                  if (kept === null) {
+                    // It ended meanwhile: 01 as usual.
+                    setHandoffRefused(false);
+                    setPending(null);
+                    return;
+                  }
+                  enterHandoff();
+                },
+                () => {
+                  setHandoffRefused(false);
+                  setPending(null);
+                },
+              );
+            }}
+            type="button"
+          >
+            {t("auth:activation.continue")}
+          </Button>
+        </Card>
+      </main>
+    );
+  }
 
   if (handoffUnanswered) {
     return (

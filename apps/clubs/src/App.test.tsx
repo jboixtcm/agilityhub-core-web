@@ -1809,6 +1809,61 @@ describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat
   });
 });
 
+describe("FE-03 (pre-production audit, decision of 13 Nov 2026): a handoff link for another account on a device that already holds a session", () => {
+  afterEach(() => {
+    sessionStorage.clear();
+    resetAuthMockState();
+    window.history.pushState(null, "", "/");
+  });
+
+  it("is refused by the api (409 HANDOFF_SESSION_CONFLICT): the device's session stays, the page says why and «CONTINUAR» enters that session", async () => {
+    const token = recordTokenGrants();
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === "urn:agilityhub:grant:handoff"
+          ? HttpResponse.json(
+              {
+                code: "HANDOFF_SESSION_CONFLICT",
+                details: {},
+                message: "Another account holds this host's session",
+                traceId: "t",
+              },
+              { status: 409 },
+            )
+          : undefined;
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-other-account-code");
+    const client = authClient();
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Aquest enllaç obre un altre compte i en aquest dispositiu ja tens una sessió iniciada, que mantenim. Si vols entrar amb un altre compte, tanca primer la sessió.",
+    );
+    expect(screen.queryByText("Aquest enllaç ja no és vàlid")).toBeNull();
+    expect(window.location.search).toBe("");
+    // The tab is not ended as a refused «Entra com l'abonat» code would be (E47): the code was an
+    // account's, so the device's own session (its cookie) is read and kept.
+    await waitFor(() => {
+      expect(client.getMe()?.account.email).toBe(currentMockScenario().me.account.email);
+    });
+    expect(client.isImpersonated()).toBe(false);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+    expect(navigate).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUAR" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalled();
+    });
+    expect(String(navigate.mock.calls[0]?.[0])).not.toBe("/entrar");
+    expect(client.getMe()?.account.email).toBe(currentMockScenario().me.account.email);
+    expect(token.grants).toEqual(["urn:agilityhub:grant:handoff", "refresh_token"]);
+    token.stop();
+  });
+});
+
 describe("T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link", () => {
   afterEach(() => {
     resetAuthMockState();

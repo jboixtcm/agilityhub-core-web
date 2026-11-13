@@ -76,6 +76,7 @@
   "FORBIDDEN": "No tienes permiso para realizar esta acción.",
   "GEOMETRY_INVALID": "La geometría no es válida.",
   "HANDOFF_INVALID": "Este traspaso de acceso no es válido o ha caducado.",
+  "HANDOFF_SESSION_CONFLICT": "En este dispositivo ya hay una sesión iniciada de otra cuenta.",
   "HOST_ALREADY_USED": "Este dominio ya está en uso.",
   "HOST_NOT_VERIFIED": "Este dominio no se ha verificado.",
   "HOST_RESERVED": "Este dominio está reservado.",

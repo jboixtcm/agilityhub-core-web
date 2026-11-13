@@ -1026,6 +1026,44 @@ describe("E4-W18 step 2 (review #3): the back office's handoff is the caller's o
     expect(window.location.search).toBe("");
     expect(assign).not.toHaveBeenCalled();
   });
+
+  it("FE-03 (decision of 13 Nov 2026): a code the api refuses because this device holds another account's session (409 HANDOFF_SESSION_CONFLICT) keeps that session, says why and «CONTINUAR» opens it", async () => {
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === HANDOFF_GRANT
+          ? HttpResponse.json(
+              {
+                code: "HANDOFF_SESSION_CONFLICT",
+                details: {},
+                message: "Another account holds this host's session",
+                traceId: "t",
+              },
+              { status: 409 },
+            )
+          : undefined;
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-other-account-code");
+    const assign = stubPageLoads();
+    const client = authClient();
+    await renderApplication(client);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Aquest enllaç obre un altre compte i en aquest dispositiu ja tens una sessió iniciada, que mantenim. Si vols entrar amb un altre compte, tanca primer la sessió.",
+    );
+    expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(window.location.search).toBe("");
+    expect(assign).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUAR" }));
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/tauler");
+    });
+    expect(client.getMe()?.account.email).toBe("aina.serra@example.test");
+    expect(client.isImpersonated()).toBe(false);
+  });
 });
 
 describe("T-01-26 clubs-admin onboarding", () => {
