@@ -667,7 +667,8 @@ describe("MSW bootstrap handlers", () => {
     // AUTH-02: + D10's `POST /members/{id}/login-email` (handlers.ts).
     // SEPA-04: + `POST /remittances/{id}/submission-undo` and `POST /remittances/{id}/returns`
     // (billing-handlers.ts).
-    expect(handlers).toHaveLength(418);
+    // PAY-02: + `GET /billing/stripe-events` (billing-handlers.ts).
+    expect(handlers).toHaveLength(419);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

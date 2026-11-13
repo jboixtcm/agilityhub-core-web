@@ -6,7 +6,8 @@
     "next": "month ›",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
-    "remittances": "Remittances ›"
+    "remittances": "Remittances ›",
+    "stripeEvents": "Failed Stripe events ›"
   },
   "actions": {
     "simulate": "1 · SIMULATE THE MONTH",
@@ -291,6 +292,27 @@
     "creditorBic": "BIC",
     "submitted": "Remittance marked as sent to the bank.",
     "submissionUndone": "The remittance is generated again: it no longer reads as sent to the bank."
+  },
+  "stripeEvents": {
+    "title": "Failed Stripe events",
+    "caption": "Stripe events that could not be processed",
+    "help": "Events Stripe sent that could not be processed. They are retried automatically for about 24 hours; a stopped event is processed again by resending it from the Stripe dashboard.",
+    "columns": {
+      "id": "Event",
+      "type": "Type",
+      "receivedAt": "Received",
+      "attempts": "Attempts",
+      "state": "Status"
+    },
+    "retrying": "next attempt on {date}",
+    "stopped": "stopped on {date}",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyId": "Copy the id {id}",
+    "copiedId": "Copied the id {id}",
+    "emptyTitle": "No failed events",
+    "emptyDescription": "Every Stripe event has been processed.",
+    "loadError": "The Stripe events could not be loaded."
   },
   "errors": {
     "loadRun": "The card charge status could not be refreshed.",

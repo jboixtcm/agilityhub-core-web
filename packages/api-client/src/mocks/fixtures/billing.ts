@@ -27,6 +27,7 @@ type Remittance = components["schemas"]["Remittance"];
 type RemittanceListItem = components["schemas"]["RemittanceListItem"];
 type RollbackBlocker = components["schemas"]["RollbackBlocker"];
 type SimulationKpis = components["schemas"]["SimulationKpis"];
+type StripeEventListItem = components["schemas"]["StripeEventListItem"];
 
 export type BillingProvider = "MANUAL" | "SEPA_XML" | "STRIPE";
 
@@ -1088,6 +1089,35 @@ export const BILLING_INCIDENT_CODES: readonly BillingIncidentCode[] = [
   "CARD_INVALID",
   "CURRENCY_MISMATCH",
   "PROVIDER_DISABLED",
+];
+
+/**
+ * PAY-02 (R-12-21): the club's Stripe events whose processing failed (`GET /billing/stripe-events`),
+ * newest first — one still retried after three attempts, one an outage put back without spending
+ * any, and one stopped after its ten attempts. Fictional `evt_` ids.
+ */
+export const FAILED_STRIPE_EVENTS: readonly StripeEventListItem[] = [
+  {
+    attempts: 0,
+    id: "evt_mock_refund_outage",
+    nextAttemptAt: "2026-08-26T08:05:00Z",
+    receivedAt: "2026-08-26T07:55:00Z",
+    type: "charge.refunded",
+  },
+  {
+    attempts: 3,
+    id: "evt_mock_checkout_retrying",
+    nextAttemptAt: "2026-08-26T08:25:00Z",
+    receivedAt: "2026-08-26T07:40:00Z",
+    type: "checkout.session.completed",
+  },
+  {
+    attempts: 10,
+    id: "evt_mock_setup_stopped",
+    processedAt: "2026-08-25T09:03:00Z",
+    receivedAt: "2026-08-24T09:12:00Z",
+    type: "setup_intent.succeeded",
+  },
 ];
 
 export { ADMIN_ACCOUNT_ID as BILLING_ADMIN_ACCOUNT_ID, displayNumber, uuid as billingUuid };

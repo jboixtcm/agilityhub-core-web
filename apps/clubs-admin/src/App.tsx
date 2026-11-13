@@ -52,6 +52,7 @@ import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
 import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
 import { BillingPage } from "./billing/BillingPage";
 import { RemittancesPage } from "./billing/RemittancesPage";
+import { StripeEventsPage } from "./billing/StripeEventsPage";
 import { PlansPage } from "./catalogs/PlansPage";
 import { RingsPage } from "./catalogs/RingsPage";
 import { SettingsPage } from "./catalogs/SettingsPage";
@@ -123,6 +124,8 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screen D6.
   { path: "/facturacio", roles: ["ADMIN"] },
   { path: "/facturacio/remeses", roles: ["ADMIN"] },
+  // PAY-02: the failed Stripe events (S12 §2, no mockup), reached from D6.
+  { path: "/facturacio/esdeveniments-stripe", roles: ["ADMIN"] },
   // Screen D7 + registrants (INSTRUCTOR reads them without actions nor internal notes, S07 §2).
   { path: "/activitats", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/activitats/:id", roles: ["INSTRUCTOR", "ADMIN"] },
@@ -433,7 +436,9 @@ export function AdminNavigation({
             (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")) ||
             // The notification log belongs to «Comunicats» (S11 §2).
             // The remittances page belongs to «Facturació» (S12 §2).
-            (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")) ||
+            (entry.id === "billing" &&
+              (matchesPath(pathname, "/facturacio/remeses") ||
+                matchesPath(pathname, "/facturacio/esdeveniments-stripe"))) ||
             // A course and its placement editor belong to «Recorreguts»; a ring's geometry to
             // «Pistes» (S16 §2).
             (entry.id === "courses" &&
@@ -658,6 +663,9 @@ function routeContent(
   }
   if (route.path === "/facturacio/remeses") {
     return <RemittancesPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/facturacio/esdeveniments-stripe") {
+    return <StripeEventsPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/auditoria") {
     return <AuditPage client={client} />;

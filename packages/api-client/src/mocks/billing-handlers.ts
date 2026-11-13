@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
-import { refuse, selectItems, type ListSpec } from "./backoffice-handlers";
+import { listResponse, refuse, selectItems, type ListSpec } from "./backoffice-handlers";
 import {
   BILLING_ADMIN_ACCOUNT_ID,
   appliesInPeriod,
@@ -11,6 +11,7 @@ import {
   buildSimulation,
   displayNumber,
   eur,
+  FAILED_STRIPE_EVENTS,
   generateRun,
   isPeriod,
   listItem,
@@ -57,6 +58,7 @@ type RemittanceReturnsRequest = components["schemas"]["RemittanceReturnsRequest"
 type RollbackRequest = components["schemas"]["RollbackRequest"];
 type SimulationRequest = components["schemas"]["SimulationRequest"];
 type SubmissionRequest = components["schemas"]["SubmissionRequest"];
+type StripeEventListItem = components["schemas"]["StripeEventListItem"];
 type SubmissionUndoRequest = components["schemas"]["SubmissionUndoRequest"];
 
 /** `billing.stripeMaxAttempts` (S12 §13 proposal, 3). */
@@ -520,6 +522,18 @@ function remittanceList(request: Request) {
   });
 }
 
+/**
+ * `GET /billing/stripe-events` (PAY-02): the club's FAILED events, newest `receivedAt` first; no
+ * filter and no `q` (`400 INVALID_FILTER`), sortable by `receivedAt` only.
+ */
+const STRIPE_EVENT_SPEC: ListSpec<StripeEventListItem> = {
+  fields: ["id", "type", "receivedAt", "attempts", "nextAttemptAt", "processedAt"],
+  filterable: [],
+  sortable: ["receivedAt"],
+  values: (event, field) =>
+    field === "receivedAt" && event.receivedAt !== undefined ? [event.receivedAt] : [],
+};
+
 /** D6's month (`GET /billing/periods/{period}`): an empty month for any other club or month. */
 function billingPeriod(period: string): BillingPeriod {
   const target = world();
@@ -859,6 +873,15 @@ export const billingHandlers = [
       }
       return { body: rollBackRun(target, stored, now(), payload.reason), status: 200 };
     });
+  }),
+  http.get("*/api/v1/billing/stripe-events", ({ request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    return listResponse(
+      request,
+      callerClubOwnsTheWorld() ? FAILED_STRIPE_EVENTS : [],
+      STRIPE_EVENT_SPEC,
+    );
   }),
   http.get("*/api/v1/remittances", ({ request }) => {
     const denied = refused();

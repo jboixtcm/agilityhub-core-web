@@ -1004,6 +1004,19 @@ export function BillingPage({
         >
           {t("admin-billing:concepts.title")}
         </Button>
+        {/* PAY-02: the failed Stripe events (no mockup, no sidebar entry), for a card club. */}
+        {clubProviders?.includes("STRIPE") === true ? (
+          <a
+            className="billing-header__link"
+            href="/facturacio/esdeveniments-stripe"
+            onClick={(event) => {
+              event.preventDefault();
+              onNavigate("/facturacio/esdeveniments-stripe");
+            }}
+          >
+            {t("admin-billing:header.stripeEvents")}
+          </a>
+        ) : null}
         {/* The discreet [＋ Rebut manual] of step 6 (not in the mockup): its name is its label. It
             sits with the month's actions: the receipts toolbar fills the 1280 px row already. */}
         <IconButton

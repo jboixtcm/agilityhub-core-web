@@ -301,7 +301,7 @@ describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING
     );
   }
 
-  it("E8-W01: both routes are ADMIN only and need BILLING; an INSTRUCTOR has no «Facturació» entry", async () => {
+  it("E8-W01, PAY-02: the billing routes are ADMIN only and need BILLING; an INSTRUCTOR has no «Facturació» entry", async () => {
     expect(
       ADMIN_ROUTES.filter((route) => route.path.startsWith("/facturacio")).map((route) => [
         route.path,
@@ -311,6 +311,7 @@ describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING
     ).toEqual([
       ["/facturacio", ["ADMIN"], ["BILLING"]],
       ["/facturacio/remeses", ["ADMIN"], ["BILLING"]],
+      ["/facturacio/esdeveniments-stripe", ["ADMIN"], ["BILLING"]],
     ]);
     await renderBillingNavigation(["INSTRUCTOR"], branding.modules, "/agenda");
     expect(screen.queryByRole("link", { name: "Facturació" })).toBeNull();
@@ -325,6 +326,13 @@ describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING
     expect(screen.queryByRole("link", { name: "Facturació" })).toBeNull();
     cleanup();
     await renderBillingNavigation(["ADMIN"], branding.modules, "/facturacio/remeses");
+    expect(screen.getByRole("link", { name: "Facturació" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    // PAY-02: the failed Stripe events belong to «Facturació» too.
+    cleanup();
+    await renderBillingNavigation(["ADMIN"], branding.modules, "/facturacio/esdeveniments-stripe");
     expect(screen.getByRole("link", { name: "Facturació" })).toHaveAttribute(
       "aria-current",
       "page",

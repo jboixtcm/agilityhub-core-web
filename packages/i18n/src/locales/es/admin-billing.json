@@ -6,7 +6,8 @@
     "next": "mes ›",
     "previousMonth": "Mes anterior",
     "nextMonth": "Mes siguiente",
-    "remittances": "Remesas ›"
+    "remittances": "Remesas ›",
+    "stripeEvents": "Eventos de Stripe fallidos ›"
   },
   "actions": {
     "simulate": "1 · SIMULAR EL MES",
@@ -291,6 +292,27 @@
     "creditorBic": "BIC",
     "submitted": "Remesa marcada como enviada al banco.",
     "submissionUndone": "La remesa vuelve a estar generada: ya no consta como enviada al banco."
+  },
+  "stripeEvents": {
+    "title": "Eventos de Stripe fallidos",
+    "caption": "Eventos de Stripe que no se han podido procesar",
+    "help": "Eventos que Stripe ha enviado y que no se han podido procesar. Se vuelven a intentar solos durante unas 24 horas; un evento detenido se vuelve a procesar reenviándolo desde el panel de Stripe.",
+    "columns": {
+      "id": "Evento",
+      "type": "Tipo",
+      "receivedAt": "Recibido el",
+      "attempts": "Intentos",
+      "state": "Estado"
+    },
+    "retrying": "se volverá a intentar el {date}",
+    "stopped": "detenido el {date}",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copyId": "Copiar el identificador {id}",
+    "copiedId": "Identificador {id} copiado",
+    "emptyTitle": "Ningún evento fallido",
+    "emptyDescription": "Todos los eventos de Stripe se han procesado.",
+    "loadError": "No se han podido cargar los eventos de Stripe."
   },
   "errors": {
     "loadRun": "No se ha podido actualizar el estado de los cobros.",

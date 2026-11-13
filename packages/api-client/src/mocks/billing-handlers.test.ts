@@ -1599,3 +1599,47 @@ describe("SEPA-04 (owner decision of 13 Nov 2026) · undo «sent to the bank» a
     });
   });
 });
+
+describe("PAY-02 (owner decision of 13 Nov 2026) · GET /billing/stripe-events", () => {
+  const events = (query: { fields?: string; filter?: string[]; sort?: string[] } = {}) =>
+    client.GET("/billing/stripe-events", { params: { query } });
+
+  it("lists the club's FAILED events newest first as the snapshot's page; `fields` and the receivedAt sort apply; a filter or a q is 400 INVALID_FILTER", async () => {
+    const page = await events();
+    expectValid("StripeEventPage", page.data);
+    expect(page.data?.items.map((item) => item.id)).toEqual([
+      "evt_mock_refund_outage",
+      "evt_mock_checkout_retrying",
+      "evt_mock_setup_stopped",
+    ]);
+    expect(page.data?.items[2]).toMatchObject({
+      attempts: 10,
+      processedAt: "2026-08-25T09:03:00Z",
+    });
+    const ascending = await events({ fields: "id,receivedAt", sort: ["receivedAt,asc"] });
+    expect(ascending.data?.items[0]).toEqual({
+      id: "evt_mock_setup_stopped",
+      receivedAt: "2026-08-24T09:12:00Z",
+    });
+    expect(await failure(events({ filter: ["type:eq:charge.refunded"] }))).toMatchObject({
+      code: "INVALID_FILTER",
+      status: 400,
+    });
+    expect(
+      await failure(
+        client.GET("/billing/stripe-events", {
+          params: { query: { q: "evt" } as unknown as { fields?: string } },
+        }),
+      ),
+    ).toMatchObject({ code: "INVALID_FILTER", status: 400 });
+  });
+
+  it("is ADMIN only: a MEMBER gets 403, BILLING off 404 MODULE_DISABLED, another club's admin an empty list", async () => {
+    use("member");
+    expect((await failure(events())).status).toBe(403);
+    use("adminNoBilling");
+    expect(await failure(events())).toMatchObject({ code: "MODULE_DISABLED", status: 404 });
+    use("billingOtherClub");
+    expect((await events()).data?.items).toEqual([]);
+  });
+});
