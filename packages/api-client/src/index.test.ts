@@ -665,8 +665,9 @@ describe("MSW bootstrap handlers", () => {
     // Administrative family group creation, updates, lookup and dissolution.
     // SCH-01: + `POST /class-sessions/{id}/restoration` (calendar-handlers.ts).
     // AUTH-02: + D10's `POST /members/{id}/login-email` (handlers.ts).
-    // SEPA-04: + `POST /remittances/{id}/submission-undo` (billing-handlers.ts).
-    expect(handlers).toHaveLength(417);
+    // SEPA-04: + `POST /remittances/{id}/submission-undo` and `POST /remittances/{id}/returns`
+    // (billing-handlers.ts).
+    expect(handlers).toHaveLength(418);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

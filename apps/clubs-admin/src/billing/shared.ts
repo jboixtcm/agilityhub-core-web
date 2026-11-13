@@ -159,6 +159,34 @@ export function isPayable(item: Pick<InvoiceListItem, "paymentMethodType" | "sta
   );
 }
 
+/**
+ * SEPA-04 (b), R-12-17: [Marca impagats (selecció)] takes a direct debit of a remittance, remitted
+ * (COLLECTING) or collected (PAID: a later return). Whether its last SEPA attempt is that
+ * remittance's is the api's check (`400 VALIDATION_ERROR {invoiceIds}`).
+ */
+export function isReturnable(
+  item: Pick<InvoiceListItem, "paymentMethodType" | "remittanceId" | "status">,
+): boolean {
+  return (
+    item.paymentMethodType === "SEPA_DD" &&
+    typeof item.remittanceId === "string" &&
+    (item.status === "COLLECTING" || item.status === "PAID")
+  );
+}
+
+/**
+ * The remittance a selection of receipts can be marked returned in (SEPA-04 (b)): every receipt
+ * returnable and of the same remittance, else `undefined`.
+ */
+export function returnsRemittance(
+  items: readonly Pick<InvoiceListItem, "paymentMethodType" | "remittanceId" | "status">[],
+): string | undefined {
+  const [first] = items;
+  if (first === undefined || !items.every(isReturnable)) return undefined;
+  const remittanceId = first.remittanceId ?? undefined;
+  return items.every((item) => item.remittanceId === remittanceId) ? remittanceId : undefined;
+}
+
 export function errorDetails(error: unknown): Record<string, unknown> {
   return isApiError(error) && typeof error.details === "object" && error.details !== null
     ? (error.details as Record<string, unknown>)

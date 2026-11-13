@@ -9,6 +9,7 @@ import {
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
+  Checkbox,
   FormField,
   Input,
   Modal,
@@ -43,6 +44,7 @@ type BillingRunResult = components["schemas"]["BillingRunResult"];
 type BulkPaymentResult = components["schemas"]["BulkPaymentResult"];
 type CardChargesResult = components["schemas"]["CardChargesResult"];
 type PeriodSimulation = components["schemas"]["PeriodSimulation"];
+type RemittanceReturnsResult = components["schemas"]["RemittanceReturnsResult"];
 type RollbackResult = components["schemas"]["RollbackResult"];
 
 /**
@@ -594,6 +596,148 @@ export function MarkPaidModal({
           onClick={() => void markPaid()}
         >
           {t("admin-billing:confirm.markPaid")}
+        </Button>
+        <Button disabled={pending} onClick={onClose} variant="ghost">
+          {t("admin-billing:actions.cancel")}
+        </Button>
+      </Actions>
+    </Modal>
+  );
+}
+
+/**
+ * [Marca impagats (selecció)] (R-12-17, SEPA-04 (b)): several bank returns of one remittance in
+ * one request, all or none — the club-local day (not after today), a required reason and, when
+ * every receipt is periodic, «Torna'ls a presentar a la propera remesa» (`includeInNextRun`, sent
+ * only when ticked). The admins get one notice for the whole request (N-10).
+ */
+export function MarkReturnedModal({
+  client,
+  invoiceIds,
+  keys,
+  onClose,
+  onConflict,
+  onReturned,
+  periodic,
+  remittanceId,
+}: {
+  client: ApiClient;
+  invoiceIds: readonly string[];
+  keys: SubmissionKeys;
+  onClose: () => void;
+  /** `409 INVALID_STATE`: one of them changed (all or none): the list is read again. */
+  onConflict: () => void;
+  onReturned: (result: RemittanceReturnsResult) => void;
+  /** Every receipt is PERIODIC: only those can be presented again (R-12-19). */
+  periodic: boolean;
+  remittanceId: string;
+}) {
+  const { t } = useTranslation(["admin-billing", "errors"]);
+  const branding = useBranding();
+  const errorMessage = useBillingErrorMessage();
+  const today = clubToday(branding.timeZone);
+  const [at, setAt] = useState(today);
+  const [reason, setReason] = useState("");
+  const [presentAgain, setPresentAgain] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [failure, setFailure] = useState<unknown>();
+  const fields = errorFields(failure);
+  const fieldError = fields.includes("at") || fields.includes("reason");
+
+  const markReturned = async () => {
+    if (reason.trim() === "") return;
+    setPending(true);
+    setFailure(undefined);
+    const body = {
+      at,
+      invoiceIds: [...invoiceIds],
+      ...(periodic && presentAgain ? { includeInNextRun: true } : {}),
+      reason: reason.trim(),
+    };
+    try {
+      const result = await keys.send(JSON.stringify(["returns", remittanceId, body]), (key) =>
+        client.POST("/remittances/{id}/returns", {
+          body,
+          params: { header: { "Idempotency-Key": key }, path: { id: remittanceId } },
+        }),
+      );
+      if (result.data !== undefined) onReturned(result.data);
+    } catch (error) {
+      setFailure(error);
+      if (isApiError(error, "INVALID_STATE") || isApiError(error, "STALE_VERSION")) onConflict();
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const message = fields.includes("invoiceIds")
+    ? t("admin-billing:errors.returnsOtherRemittance")
+    : fields.includes("includeInNextRun")
+      ? t("admin-billing:errors.presentAgainPeriodicOnly")
+      : errorMessage(failure);
+
+  return (
+    <Modal
+      closeLabel={t("admin-billing:actions.close")}
+      dismissible={!pending}
+      onClose={onClose}
+      open
+      title={t("admin-billing:confirm.markFailedTitle")}
+    >
+      <p className="billing-modal__body">
+        {t("admin-billing:confirm.markFailedBody", { count: invoiceIds.length })}
+      </p>
+      <FormField
+        id="billing-bulk-failed-at"
+        label={t("admin-billing:drawer.failAt")}
+        {...(fields.includes("at") ? { error: t("admin-billing:errors.dateAfterToday") } : {})}
+      >
+        <Input
+          id="billing-bulk-failed-at"
+          max={today}
+          onChange={(event) => {
+            setAt(event.currentTarget.value);
+          }}
+          required
+          type="date"
+          value={at}
+        />
+      </FormField>
+      <FormField
+        id="billing-bulk-failed-reason"
+        label={t("admin-billing:drawer.reason")}
+        {...(fields.includes("reason") ? { error: t("admin-billing:errors.reasonRequired") } : {})}
+      >
+        <Textarea
+          id="billing-bulk-failed-reason"
+          maxLength={500}
+          onChange={(event) => {
+            setReason(event.currentTarget.value);
+          }}
+          required
+          value={reason}
+        />
+      </FormField>
+      {periodic ? (
+        <label className="billing-manual__check">
+          <Checkbox
+            checked={presentAgain}
+            onChange={(event) => {
+              setPresentAgain(event.currentTarget.checked);
+            }}
+          />
+          {t("admin-billing:confirm.presentAgain")}
+        </label>
+      ) : null}
+      {failure === undefined || fieldError ? null : <Alert>{message}</Alert>}
+      <Actions>
+        <Button
+          disabled={at === "" || reason.trim() === ""}
+          loading={pending}
+          loadingLabel={t("admin-billing:confirm.markingFailed")}
+          onClick={() => void markReturned()}
+        >
+          {t("admin-billing:confirm.markFailed")}
         </Button>
         <Button disabled={pending} onClick={onClose} variant="ghost">
           {t("admin-billing:actions.cancel")}

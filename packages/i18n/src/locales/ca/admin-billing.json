@@ -19,6 +19,9 @@
     "rollback": "Retrocedeix la remesa",
     "chargeCards": "COBRA LES TARGETES",
     "markPaidSelection": "Marcar cobrat (selecció)",
+    "markPaidSelectionWhy": "Només es poden marcar com a cobrats els rebuts pendents o impagats que no siguin de targeta.",
+    "markFailedSelection": "Marca impagats (selecció)",
+    "markFailedSelectionWhy": "Només es poden marcar com a impagats els rebuts domiciliats, remesats o cobrats, d'una mateixa remesa.",
     "accountingExport": "Exporta per a comptabilitat",
     "manualInvoice": "Rebut manual",
     "refresh": "Actualitza",
@@ -54,6 +57,11 @@
     "reference": "Referència (opcional)",
     "markPaid": "Marca cobrat",
     "markingPaid": "Marcant cobrat…",
+    "markFailedTitle": "Marca impagats",
+    "markFailedBody": "{count, plural, one {Es marcarà # rebut de la remesa com a impagat (retornat pel banc).} other {Es marcaran # rebuts de la remesa com a impagats (retornats pel banc).}}",
+    "presentAgain": "Torna'ls a presentar a la propera remesa",
+    "markFailed": "Marca impagats",
+    "markingFailed": "Marcant impagats…",
     "submissionTitle": "Marca com a enviada al banc · {month}",
     "submissionBody": "La remesa quedarà marcada com a enviada al banc. A partir d'aquí ja no es podrà retrocedir.",
     "submittedAt": "Data d'enviament al banc",
@@ -187,6 +195,7 @@
     "payTitle": "Marca cobrat",
     "failTitle": "Marca impagat",
     "failAt": "Data de l'impagat",
+    "presentAgain": "Torna'l a presentar a la propera remesa",
     "retryTitle": "Reintenta amb targeta",
     "retryBody": "Es tornaran a cobrar {total} a la targeta ···· {last4}.",
     "refundTitle": "Reemborsa",
@@ -304,7 +313,9 @@
     "submittedAtRange": "La data ha de ser entre el {earliest} i avui.",
     "undoCollectionDatePassed": "Ja ha arribat la data de cobrament de la remesa: ja no es pot desfer.",
     "undoInvoiceChanged": "{count, plural, one {Un rebut de la remesa ja ha canviat (impagat, cobrat o anul·lat): la remesa ja no es pot desfer.} other {# rebuts de la remesa ja han canviat (impagats, cobrats o anul·lats): la remesa ja no es pot desfer.}}",
-    "reasonRequired": "Escriu el motiu (fins a 500 caràcters)."
+    "reasonRequired": "Escriu el motiu (fins a 500 caràcters).",
+    "returnsOtherRemittance": "Algun dels rebuts triats no és d'aquesta remesa: no se n'ha marcat cap.",
+    "presentAgainPeriodicOnly": "Només els rebuts periòdics es poden tornar a presentar a la propera remesa."
   },
   "toasts": {
     "simulated": "Mes simulat.",
@@ -314,6 +325,7 @@
     "chargesSkipped": "{count, plural, one {# rebut omès} other {# rebuts omesos}}: {reasons}",
     "charging": "Cobrant les targetes…",
     "markedPaid": "{count, plural, one {# rebut marcat com a cobrat} other {# rebuts marcats com a cobrats}}",
+    "markedFailed": "{count, plural, one {# rebut marcat com a impagat} other {# rebuts marcats com a impagats}}",
     "dismiss": "Tanca l'avís"
   },
   "concepts": {

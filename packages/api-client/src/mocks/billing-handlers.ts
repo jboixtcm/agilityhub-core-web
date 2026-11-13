@@ -53,6 +53,7 @@ type InvoiceRetryRequest = components["schemas"]["InvoiceRetryRequest"];
 type ManualInvoiceRequest = components["schemas"]["ManualInvoiceRequest"];
 type RefundRequest = components["schemas"]["RefundRequest"];
 type Remittance = components["schemas"]["Remittance"];
+type RemittanceReturnsRequest = components["schemas"]["RemittanceReturnsRequest"];
 type RollbackRequest = components["schemas"]["RollbackRequest"];
 type SimulationRequest = components["schemas"]["SimulationRequest"];
 type SubmissionRequest = components["schemas"]["SubmissionRequest"];
@@ -248,6 +249,50 @@ function markPaid(
   item.invoice.status = "PAID";
   item.invoice.paidAt = dayInstant(paidAt);
   item.invoice.version += 1;
+}
+
+/** R-12-17: a COLLECTING SEPA receipt, or a PAID one with a SEPA collection (a later return). */
+function returnable(item: StoredInvoice): boolean {
+  const { invoice } = item;
+  const sepa = invoice.collections.some((entry) => entry.provider === "SEPA_XML");
+  return (
+    sepa &&
+    (invoice.status === "COLLECTING" ||
+      (invoice.status === "PAID" &&
+        invoice.collections.some(
+          (entry) => entry.provider === "SEPA_XML" && entry.status === "SUCCEEDED",
+        )))
+  );
+}
+
+/** The remittance of a receipt's last SEPA attempt (SEPA-04 (b): bulk returns are per remittance). */
+function returnRemittanceOf(item: StoredInvoice): string | null {
+  const last = item.invoice.collections.filter((entry) => entry.provider === "SEPA_XML").at(-1);
+  return last?.remittanceId ?? item.invoice.remittanceId ?? null;
+}
+
+/**
+ * A bank return (R-12-17): `Collection FAILED{BANK_RETURN}` appended, the receipt FAILED and, for
+ * a periodic one the admin chose to present again (SEPA-04 (b)), waiting for the next remittance.
+ */
+function markReturned(item: StoredInvoice, at: string, reason: string, includeInNextRun: boolean) {
+  const { invoice } = item;
+  const remitted = invoice.collections.find((entry) => entry.provider === "SEPA_XML");
+  appendCollection(item, {
+    failureCode: "BANK_RETURN",
+    failureMessage: reason,
+    provider: "SEPA_XML",
+    providerRef: remitted?.providerRef ?? null,
+    remittanceId: remitted?.remittanceId ?? null,
+    resolvedAt: now(),
+    status: "FAILED",
+  });
+  invoice.status = "FAILED";
+  invoice.failedAt = dayInstant(at);
+  invoice.failureReason = reason;
+  invoice.includeInNextRun = includeInNextRun;
+  invoice.paidAt = null;
+  invoice.version += 1;
 }
 
 /** `GET /invoices` (CONVENCIONS_API §4) as the api reads it. */
@@ -925,6 +970,46 @@ export const billingHandlers = [
       return { body: structuredClone(remittance), status: 200 };
     });
   }),
+  http.post("*/api/v1/remittances/:id/returns", async ({ params, request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    const remittance = findRemittance(String(params.id));
+    if (remittance === undefined) return notFound();
+    const payload = await body<RemittanceReturnsRequest>(request);
+    return keyed(request, JSON.stringify({ id: params.id, payload }), () => {
+      const ids = payload?.invoiceIds;
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return validationError("invoiceIds", "REQUIRED");
+      }
+      if (
+        typeof payload?.reason !== "string" ||
+        payload.reason.trim() === "" ||
+        payload.reason.length > 500
+      ) {
+        return validationError("reason");
+      }
+      if (!isDate(payload.at) || payload.at > today()) return validationError("at");
+      const items = [...new Set(ids)].map((id) => findInvoice(id));
+      if (items.some((item) => item === undefined)) return notFound();
+      const found = items as StoredInvoice[];
+      // SEPA-04 (b), all or none: every receipt's SEPA attempt of this remittance, each returnable,
+      // and only periodic ones presented again.
+      if (found.some((item) => returnRemittanceOf(item) !== remittance.id)) {
+        return validationError("invoiceIds");
+      }
+      const blocked = found.find((item) => !returnable(item));
+      if (blocked !== undefined) return invalidState(blocked.invoice.status);
+      const includeInNextRun = payload.includeInNextRun === true;
+      if (includeInNextRun && found.some((item) => item.invoice.kind !== "PERIODIC")) {
+        return validationError("includeInNextRun");
+      }
+      for (const item of found) markReturned(item, payload.at, payload.reason, includeInNextRun);
+      return {
+        body: { invoices: found.map(invoiceAnswer), returned: found.length },
+        status: 200,
+      };
+    });
+  }),
   http.get("*/api/v1/invoices", ({ request }) => {
     const denied = refused();
     if (denied !== undefined) return denied;
@@ -1164,31 +1249,13 @@ export const billingHandlers = [
         return validationError("reason");
       }
       const { invoice } = item;
-      const sepa = invoice.collections.some((entry) => entry.provider === "SEPA_XML");
-      const returnable =
-        sepa &&
-        (invoice.status === "COLLECTING" ||
-          (invoice.status === "PAID" &&
-            invoice.collections.some(
-              (entry) => entry.provider === "SEPA_XML" && entry.status === "SUCCEEDED",
-            )));
-      if (!returnable) return invalidState(invoice.status);
+      if (!returnable(item)) return invalidState(invoice.status);
       if (payload.version !== invoice.version) return staleVersion();
-      const remitted = invoice.collections.find((entry) => entry.provider === "SEPA_XML");
-      appendCollection(item, {
-        failureCode: "BANK_RETURN",
-        failureMessage: payload.reason,
-        provider: "SEPA_XML",
-        providerRef: remitted?.providerRef ?? null,
-        remittanceId: remitted?.remittanceId ?? null,
-        resolvedAt: now(),
-        status: "FAILED",
-      });
-      invoice.status = "FAILED";
-      invoice.failedAt = dayInstant(payload.at);
-      invoice.failureReason = payload.reason;
-      invoice.paidAt = null;
-      invoice.version += 1;
+      // SEPA-04 (b): only a periodic receipt waits for the next remittance.
+      if (payload.includeInNextRun === true && invoice.kind !== "PERIODIC") {
+        return validationError("includeInNextRun");
+      }
+      markReturned(item, payload.at, payload.reason, payload.includeInNextRun === true);
       return { body: invoiceAnswer(item), status: 200 };
     });
   }),

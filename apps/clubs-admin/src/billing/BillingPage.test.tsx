@@ -615,16 +615,21 @@ describe("T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-1
     });
   });
 
-  it("T-12-25: a selection enables [Marcar cobrat (selecció)]; remitted rows cannot be selected; the bulk payment marks them paid", async () => {
+  it("T-12-25: a selection enables [Marcar cobrat (selecció)]; a remitted row in it keeps it disabled; the bulk payment marks them paid", async () => {
     await renderPage();
     const button = screen.getByRole("button", { name: "Marcar cobrat (selecció)" });
     expect(button).toBeDisabled();
-    // E87: a COLLECTING receipt takes no «marca cobrat», so it cannot be selected.
-    expect(
-      within(await invoiceRow("2026-0912")).getByRole("checkbox", {
-        name: "Selecciona el rebut 2026-0912",
-      }),
-    ).toBeDisabled();
+    // E87: a COLLECTING receipt takes no «marca cobrat». Since SEPA-04 (b) it can be selected, for
+    // [Marca impagats (selecció)]; while it is in the selection [Marcar cobrat (selecció)] waits.
+    const remitted = within(await invoiceRow("2026-0912")).getByRole("checkbox", {
+      name: "Selecciona el rebut 2026-0912",
+    });
+    fireEvent.click(remitted);
+    expect(button).toBeDisabled();
+    expect(button).toHaveAccessibleDescription(
+      "Només es poden marcar com a cobrats els rebuts pendents o impagats que no siguin de targeta.",
+    );
+    fireEvent.click(remitted);
     fireEvent.click(
       within(await invoiceRow("2026-0915")).getByRole("checkbox", {
         name: "Selecciona el rebut 2026-0915",
@@ -694,8 +699,16 @@ describe("T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-1
       fireEvent.click(screen.getByRole("button", { name: "Pàgina següent" }));
       await screen.findByText(`Pàgina ${String(page)} de 4`);
     }
+    // A payable row (pending or unpaid): since SEPA-04 (b) a remitted one is selectable too, for
+    // [Marca impagats (selecció)].
     const payable = within(invoiceTable())
-      .getAllByRole("checkbox")
+      .getAllByRole("row")
+      .filter(
+        (row) =>
+          row.hasAttribute("data-invoice-number") &&
+          ["pendent · marca cobrat", "impagat (manual)"].includes(cells(row).at(6) ?? ""),
+      )
+      .map((row) => within(row).getByRole("checkbox"))
       .find(
         (checkbox) =>
           !checkbox.hasAttribute("disabled") &&
@@ -2473,4 +2486,153 @@ it("programa un descompte recurrent per a dos abonats i permet retirar-lo", asyn
   fireEvent.click(dialog.getByRole("button", { name: "Retira" }));
   fireEvent.click(dialog.getByRole("button", { name: "Retira" }));
   await dialog.findByText("Encara no hi ha conceptes programats.");
+});
+
+describe("SEPA-04 (b) bulk returns of a remittance and re-presentation (R-12-17/19, owner decision of 13 Nov 2026)", () => {
+  async function select(number: string) {
+    fireEvent.click(
+      within(await invoiceRow(number)).getByRole("checkbox", {
+        name: `Selecciona el rebut ${number}`,
+      }),
+    );
+  }
+
+  it("two remitted receipts of September's remittance: [Marca impagats (selecció)] → day, reason and «Torna'ls a presentar…» → one POST /remittances/{id}/returns with a key; both read «impagat (manual)»", async () => {
+    await renderPage();
+    const returns = screen.getByRole("button", { name: "Marca impagats (selecció)" });
+    expect(returns).toBeDisabled();
+    await select("2026-0912");
+    await select("2026-0914");
+    expect(returns).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Marcar cobrat (selecció)" })).toBeDisabled();
+    fireEvent.click(returns);
+    const dialog = await screen.findByRole("dialog", { name: "Marca impagats" });
+    expect(
+      within(dialog).getByText(
+        "Es marcaran 2 rebuts de la remesa com a impagats (retornats pel banc).",
+      ),
+    ).toBeVisible();
+    expect(within(dialog).getByLabelText("Data de l'impagat")).toHaveValue("2026-08-26");
+    const confirm = within(dialog).getByRole("button", { name: "Marca impagats" });
+    // The reason is required (the api refuses a blank one).
+    expect(confirm).toBeDisabled();
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "Devolució bancària" },
+    });
+    const again = within(dialog).getByRole("checkbox", {
+      name: "Torna'ls a presentar a la propera remesa",
+    });
+    expect(again).not.toBeChecked();
+    fireEvent.click(again);
+    fireEvent.click(confirm);
+
+    expect(await screen.findByText("2 rebuts marcats com a impagats")).toBeVisible();
+    const month = await client().GET("/billing/periods/{period}", {
+      params: { path: { period: "2026-09" } },
+    });
+    const [request] = sent.filter(
+      (entry) => entry.method === "POST" && entry.url.pathname.endsWith("/returns"),
+    );
+    expect(request?.url.pathname).toBe(
+      `/api/v1/remittances/${month.data?.remittance?.id ?? ""}/returns`,
+    );
+    expect(request?.body).toEqual({
+      at: "2026-08-26",
+      includeInNextRun: true,
+      invoiceIds: [expect.any(String), expect.any(String)],
+      reason: "Devolució bancària",
+    });
+    expect(request?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/u);
+    // One request for both: never one `…/failure` per receipt.
+    expect(sent.filter((entry) => entry.url.pathname.endsWith("/failure"))).toHaveLength(0);
+    await waitFor(async () => {
+      expect(cells(await invoiceRow("2026-0912")).at(6)).toBe("impagat (manual)");
+      expect(cells(await invoiceRow("2026-0914")).at(6)).toBe("impagat (manual)");
+    });
+    expect(returns).toBeDisabled();
+    // The returned periodic receipt now waits for the next remittance (R-12-19).
+    const drawer = await openDrawer("2026-0912");
+    expect(await within(drawer).findByText("amb la propera remesa")).toBeVisible();
+  });
+
+  it("left unticked, the request carries no includeInNextRun; the api's 400 {invoiceIds} is named in the dialog", async () => {
+    let refuse = false;
+    server.use(
+      http.post("*/api/v1/remittances/:id/returns", () =>
+        refuse
+          ? HttpResponse.json(
+              {
+                code: "VALIDATION_ERROR",
+                details: { field: "invoiceIds" },
+                message: "Invalid",
+                traceId: "t-400",
+              },
+              { status: 400 },
+            )
+          : undefined,
+      ),
+    );
+    await renderPage();
+    await select("2026-0912");
+    fireEvent.click(screen.getByRole("button", { name: "Marca impagats (selecció)" }));
+    let dialog = await screen.findByRole("dialog", { name: "Marca impagats" });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Retornat" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Marca impagats" }));
+    expect(await screen.findByText("1 rebut marcat com a impagat")).toBeVisible();
+    const [first] = sent.filter((entry) => entry.url.pathname.endsWith("/returns"));
+    expect(first?.body).toEqual({
+      at: "2026-08-26",
+      invoiceIds: [expect.any(String)],
+      reason: "Retornat",
+    });
+
+    refuse = true;
+    await select("2026-0914");
+    fireEvent.click(screen.getByRole("button", { name: "Marca impagats (selecció)" }));
+    dialog = await screen.findByRole("dialog", { name: "Marca impagats" });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Retornat" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Marca impagats" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Algun dels rebuts triats no és d'aquesta remesa: no se n'ha marcat cap.",
+    );
+  });
+
+  it("a selection with a pending cash receipt and a remitted one takes neither action, and each says why", async () => {
+    await renderPage();
+    await select("2026-0915");
+    await select("2026-0912");
+    const paid = screen.getByRole("button", { name: "Marcar cobrat (selecció)" });
+    const returns = screen.getByRole("button", { name: "Marca impagats (selecció)" });
+    expect(paid).toBeDisabled();
+    expect(returns).toBeDisabled();
+    expect(returns).toHaveAccessibleDescription(
+      "Només es poden marcar com a impagats els rebuts domiciliats, remesats o cobrats, d'una mateixa remesa.",
+    );
+  });
+
+  it("the receipt drawer's «Marca impagat» on a periodic receipt offers «Torna'l a presentar…»: ticked, POST /invoices/{id}/failure carries includeInNextRun and the drawer reads «amb la propera remesa»", async () => {
+    await renderPage();
+    const drawer = await openDrawer("2026-0912");
+    await within(drawer).findByText("Quota Abonat 2 gossos — Setembre 2026");
+    expect(within(drawer).queryByText("amb la propera remesa")).toBeNull();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Marca impagat" }));
+    const dialog = await screen.findByRole("dialog", { name: "Marca impagat" });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "Devolució bancària" },
+    });
+    fireEvent.click(
+      within(dialog).getByRole("checkbox", { name: "Torna'l a presentar a la propera remesa" }),
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "Marca impagat" }));
+    expect(await within(drawer).findByText("Rebut marcat com a impagat.")).toBeVisible();
+    const [failure] = sent.filter((entry) => entry.url.pathname.endsWith("/failure"));
+    const { version, ...body } = (failure?.body ?? {}) as Record<string, unknown>;
+    expect(body).toEqual({
+      at: "2026-08-26",
+      includeInNextRun: true,
+      reason: "Devolució bancària",
+    });
+    expect(typeof version).toBe("number");
+    expect(await within(drawer).findByText("amb la propera remesa")).toBeVisible();
+  });
 });

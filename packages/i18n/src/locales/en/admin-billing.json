@@ -19,6 +19,9 @@
     "rollback": "Roll back the remittance",
     "chargeCards": "CHARGE THE CARDS",
     "markPaidSelection": "Mark paid (selection)",
+    "markPaidSelectionWhy": "Only pending or unpaid receipts that are not paid by card can be marked as paid.",
+    "markFailedSelection": "Mark unpaid (selection)",
+    "markFailedSelectionWhy": "Only direct debits that were remitted or collected, all of one remittance, can be marked as unpaid.",
     "accountingExport": "Export for accounting",
     "manualInvoice": "Manual receipt",
     "refresh": "Refresh",
@@ -54,6 +57,11 @@
     "reference": "Reference (optional)",
     "markPaid": "Mark paid",
     "markingPaid": "Marking paid…",
+    "markFailedTitle": "Mark unpaid",
+    "markFailedBody": "{count, plural, one {# receipt of the remittance will be marked as unpaid (returned by the bank).} other {# receipts of the remittance will be marked as unpaid (returned by the bank).}}",
+    "presentAgain": "Present them again in the next remittance",
+    "markFailed": "Mark unpaid",
+    "markingFailed": "Marking unpaid…",
     "submissionTitle": "Mark as sent to the bank · {month}",
     "submissionBody": "The remittance will be marked as sent to the bank. From then on it can no longer be rolled back.",
     "submittedAt": "Date sent to the bank",
@@ -187,6 +195,7 @@
     "payTitle": "Mark paid",
     "failTitle": "Mark unpaid",
     "failAt": "Unpaid date",
+    "presentAgain": "Present it again in the next remittance",
     "retryTitle": "Retry by card",
     "retryBody": "{total} will be charged again to the card ···· {last4}.",
     "refundTitle": "Refund",
@@ -304,7 +313,9 @@
     "submittedAtRange": "The date must be between {earliest} and today.",
     "undoCollectionDatePassed": "The remittance's collection date has come: it can no longer be undone.",
     "undoInvoiceChanged": "{count, plural, one {A receipt of the remittance has changed already (unpaid, paid or cancelled): the remittance can no longer be undone.} other {# receipts of the remittance have changed already (unpaid, paid or cancelled): the remittance can no longer be undone.}}",
-    "reasonRequired": "Write the reason (up to 500 characters)."
+    "reasonRequired": "Write the reason (up to 500 characters).",
+    "returnsOtherRemittance": "One of the chosen receipts is not of this remittance: none was marked.",
+    "presentAgainPeriodicOnly": "Only periodic receipts can be presented again in the next remittance."
   },
   "toasts": {
     "simulated": "Month simulated.",
@@ -314,6 +325,7 @@
     "chargesSkipped": "{count, plural, one {# receipt left out} other {# receipts left out}}: {reasons}",
     "charging": "Charging the cards…",
     "markedPaid": "{count, plural, one {# receipt marked as paid} other {# receipts marked as paid}}",
+    "markedFailed": "{count, plural, one {# receipt marked as unpaid} other {# receipts marked as unpaid}}",
     "dismiss": "Close the notice"
   },
   "concepts": {

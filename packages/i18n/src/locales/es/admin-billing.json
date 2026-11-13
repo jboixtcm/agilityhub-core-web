@@ -19,6 +19,9 @@
     "rollback": "Revertir la remesa",
     "chargeCards": "COBRAR LAS TARJETAS",
     "markPaidSelection": "Marcar cobrado (selección)",
+    "markPaidSelectionWhy": "Solo se pueden marcar como cobrados los recibos pendientes o impagados que no sean de tarjeta.",
+    "markFailedSelection": "Marcar impagados (selección)",
+    "markFailedSelectionWhy": "Solo se pueden marcar como impagados los recibos domiciliados, remesados o cobrados, de una misma remesa.",
     "accountingExport": "Exportar para contabilidad",
     "manualInvoice": "Recibo manual",
     "refresh": "Actualizar",
@@ -54,6 +57,11 @@
     "reference": "Referencia (opcional)",
     "markPaid": "Marcar cobrado",
     "markingPaid": "Marcando cobrado…",
+    "markFailedTitle": "Marcar impagados",
+    "markFailedBody": "{count, plural, one {Se marcará # recibo de la remesa como impagado (devuelto por el banco).} other {Se marcarán # recibos de la remesa como impagados (devueltos por el banco).}}",
+    "presentAgain": "Volver a presentarlos en la próxima remesa",
+    "markFailed": "Marcar impagados",
+    "markingFailed": "Marcando impagados…",
     "submissionTitle": "Marcar como enviada al banco · {month}",
     "submissionBody": "La remesa quedará marcada como enviada al banco. A partir de ahí ya no se podrá revertir.",
     "submittedAt": "Fecha de envío al banco",
@@ -187,6 +195,7 @@
     "payTitle": "Marcar cobrado",
     "failTitle": "Marcar impagado",
     "failAt": "Fecha del impago",
+    "presentAgain": "Volver a presentarlo en la próxima remesa",
     "retryTitle": "Reintentar con tarjeta",
     "retryBody": "Se volverán a cobrar {total} a la tarjeta ···· {last4}.",
     "refundTitle": "Reembolsar",
@@ -304,7 +313,9 @@
     "submittedAtRange": "La fecha debe estar entre el {earliest} y hoy.",
     "undoCollectionDatePassed": "Ya ha llegado la fecha de cobro de la remesa: ya no se puede deshacer.",
     "undoInvoiceChanged": "{count, plural, one {Un recibo de la remesa ya ha cambiado (impagado, cobrado o anulado): la remesa ya no se puede deshacer.} other {# recibos de la remesa ya han cambiado (impagados, cobrados o anulados): la remesa ya no se puede deshacer.}}",
-    "reasonRequired": "Escribe el motivo (hasta 500 caracteres)."
+    "reasonRequired": "Escribe el motivo (hasta 500 caracteres).",
+    "returnsOtherRemittance": "Alguno de los recibos elegidos no es de esta remesa: no se ha marcado ninguno.",
+    "presentAgainPeriodicOnly": "Solo los recibos periódicos se pueden volver a presentar en la próxima remesa."
   },
   "toasts": {
     "simulated": "Mes simulado.",
@@ -314,6 +325,7 @@
     "chargesSkipped": "{count, plural, one {# recibo omitido} other {# recibos omitidos}}: {reasons}",
     "charging": "Cobrando las tarjetas…",
     "markedPaid": "{count, plural, one {# recibo marcado como cobrado} other {# recibos marcados como cobrados}}",
+    "markedFailed": "{count, plural, one {# recibo marcado como impagado} other {# recibos marcados como impagados}}",
     "dismiss": "Cerrar el aviso"
   },
   "concepts": {

@@ -41,6 +41,7 @@ import {
   ChargeCardsModal,
   GenerateModal,
   MarkPaidModal,
+  MarkReturnedModal,
   type RollbackKeyword,
   RollbackModal,
 } from "./BillingModals";
@@ -60,7 +61,9 @@ import {
   invoiceStatusView,
   isPayable,
   isPeriod,
+  isReturnable,
   periodOf,
+  returnsRemittance,
   shiftPeriod,
   useBillingErrorMessage,
   useBillingLocale,
@@ -84,6 +87,12 @@ interface ListData {
 }
 
 const ROW_FIELDS = ["displayNumber", "member", "paymentMethodType", "status"] as const;
+/**
+ * SEPA-04 (b): what the selection actions read, whatever columns are shown — the remittance a
+ * receipt went in and its kind (only a periodic one is presented again). Asked for, never required:
+ * a receipt outside any remittance may come without `remittanceId`.
+ */
+const SELECTION_FIELDS = ["kind", "remittanceId"] as const;
 /** The «Estat» label reads the amounts and the rollback flag too (S12 §2, «reemborsat»). */
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   status: ["status", "paymentMethodType", "total", "refundedTotal", "rolledBack"],
@@ -181,7 +190,20 @@ interface Feedback {
 }
 
 type ModalState =
-  "concepts" | "charge" | "export" | "generate" | "manual" | "markPaid" | "rollback" | undefined;
+  | "concepts"
+  | "charge"
+  | "export"
+  | "generate"
+  | "manual"
+  | "markPaid"
+  | "returns"
+  | "rollback"
+  | undefined;
+
+/** A row the selection can hold: one [Marcar cobrat] or [Marca impagats] takes (R-12-16/17). */
+function isSelectable(row: InvoiceRow): boolean {
+  return isPayable(row) || isReturnable(row);
+}
 
 /**
  * D6 «Facturació» (S12 §2, `/facturacio?mes=YYYY-MM`, ADMIN, module BILLING): the month's
@@ -223,6 +245,14 @@ export function BillingPage({
   const [simulating, setSimulating] = useState(false);
   // The receipts [Marcar cobrat (selecció)] was opened with: one payload, one key, until it closes.
   const [markPaidIds, setMarkPaidIds] = useState<string[]>([]);
+  // The receipts and remittance [Marca impagats (selecció)] was opened with (SEPA-04 (b)).
+  const [returns, setReturns] = useState<{
+    invoiceIds: string[];
+    periodic: boolean;
+    remittanceId: string;
+  }>();
+  // Every row read so far, by id: a selection may span pages, and its actions read each receipt.
+  const [known, setKnown] = useState<ReadonlyMap<string, InvoiceRow>>(() => new Map());
 
   const say = useCallback((text: ReactNode, tone: Tone = "success") => {
     const id = nextFeedback.current;
@@ -354,6 +384,7 @@ export function BillingPage({
     const query = {
       fields: listFields([
         ...ROW_FIELDS,
+        ...SELECTION_FIELDS,
         ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
       ]),
       filter: invoiceFilters(period, state, memberHistory),
@@ -369,12 +400,17 @@ export function BillingPage({
           if (result.data === undefined) throw new TypeError("Invoice list without data");
           const items = itemsWith(result.data.items, ROW_FIELDS);
           // Persist the removal in the controlled selection. Otherwise navigating to another page
-          // can resurrect a receipt this fresh response just made non-payable.
+          // can resurrect a receipt this fresh response just made unselectable.
           setSelected((selectedIds) => {
-            const stale = items.filter((row) => selectedIds.has(row.id) && !isPayable(row));
+            const stale = items.filter((row) => selectedIds.has(row.id) && !isSelectable(row));
             if (stale.length === 0) return selectedIds;
             const next = new Set(selectedIds);
             stale.forEach((row) => next.delete(row.id));
+            return next;
+          });
+          setKnown((current) => {
+            const next = new Map(current);
+            items.forEach((row) => next.set(row.id, row));
             return next;
           });
           setListResult({
@@ -435,7 +471,6 @@ export function BillingPage({
     if (!explicitListState.current && !savedViews.resolved) return;
     writeUrl(period, state, invoiceId, memberHistory);
   }, [invoiceId, memberHistory, period, savedViews.resolved, state]);
-
 
   const changePeriod = (next: string) => {
     setPeriod(next);
@@ -829,6 +864,15 @@ export function BillingPage({
     }
   };
 
+  // The selected receipts as last read (a selection may span pages): each action takes them all.
+  const selectedRows = [...selection].flatMap((id) => {
+    const row = known.get(id);
+    return row === undefined ? [] : [row];
+  });
+  const selectionRead = selection.size > 0 && selectedRows.length === selection.size;
+  const canMarkPaid = selectionRead && selectedRows.every(isPayable);
+  const returnsIn = selectionRead ? returnsRemittance(selectedRows) : undefined;
+
   const generateBlocked =
     simulation === undefined
       ? t("admin-billing:actions.generateNeedsSimulation")
@@ -1184,17 +1228,62 @@ export function BillingPage({
             {t("admin-billing:list.selectedCount", { count: selection.size })}
           </span>
         )}
-        <button
-          className="billing-chip"
-          disabled={selection.size === 0}
-          onClick={() => {
-            setMarkPaidIds([...selection]);
-            setModal("markPaid");
-          }}
-          type="button"
+        {/* A selection one action cannot take says why, beside the disabled action (E164 (b)). */}
+        <span
+          {...(selection.size > 0 && !canMarkPaid
+            ? { title: t("admin-billing:actions.markPaidSelectionWhy") }
+            : {})}
         >
-          {t("admin-billing:actions.markPaidSelection")}
-        </button>
+          <button
+            {...(selection.size > 0 && !canMarkPaid
+              ? { "aria-describedby": "billing-mark-paid-why" }
+              : {})}
+            className="billing-chip"
+            disabled={!canMarkPaid}
+            onClick={() => {
+              setMarkPaidIds([...selection]);
+              setModal("markPaid");
+            }}
+            type="button"
+          >
+            {t("admin-billing:actions.markPaidSelection")}
+          </button>
+          {selection.size > 0 && !canMarkPaid ? (
+            <span className="ah-sr-only" id="billing-mark-paid-why">
+              {t("admin-billing:actions.markPaidSelectionWhy")}
+            </span>
+          ) : null}
+        </span>
+        <span
+          {...(selection.size > 0 && returnsIn === undefined
+            ? { title: t("admin-billing:actions.markFailedSelectionWhy") }
+            : {})}
+        >
+          <button
+            {...(selection.size > 0 && returnsIn === undefined
+              ? { "aria-describedby": "billing-mark-failed-why" }
+              : {})}
+            className="billing-chip"
+            disabled={returnsIn === undefined}
+            onClick={() => {
+              if (returnsIn === undefined) return;
+              setReturns({
+                invoiceIds: selectedRows.map((row) => row.id),
+                periodic: selectedRows.every((row) => row.kind === "PERIODIC"),
+                remittanceId: returnsIn,
+              });
+              setModal("returns");
+            }}
+            type="button"
+          >
+            {t("admin-billing:actions.markFailedSelection")}
+          </button>
+          {selection.size > 0 && returnsIn === undefined ? (
+            <span className="ah-sr-only" id="billing-mark-failed-why">
+              {t("admin-billing:actions.markFailedSelectionWhy")}
+            </span>
+          ) : null}
+        </span>
         {memberHistory ? null : (
           <Button
             onClick={() => {
@@ -1222,7 +1311,7 @@ export function BillingPage({
         exportBusy={listExport.busy}
         {...(listExport.error?.source === "list" ? { exportError: listExport.error.message } : {})}
         filterColumns={filterColumns}
-        isRowSelectable={isPayable}
+        isRowSelectable={isSelectable}
         labels={labels}
         listKey="invoices"
         loadFilterValues={loadFilterValues}
@@ -1345,6 +1434,25 @@ export function BillingPage({
             setSelected(new Set());
             refreshAll();
           }}
+        />
+      ) : null}
+      {modal === "returns" && returns !== undefined ? (
+        <MarkReturnedModal
+          client={client}
+          invoiceIds={returns.invoiceIds}
+          keys={keys}
+          onClose={() => {
+            setModal(undefined);
+          }}
+          onConflict={refreshAll}
+          onReturned={(result) => {
+            setModal(undefined);
+            say(t("admin-billing:toasts.markedFailed", { count: result.returned }));
+            setSelected(new Set());
+            refreshAll();
+          }}
+          periodic={returns.periodic}
+          remittanceId={returns.remittanceId}
         />
       ) : null}
       {modal === "export" ? (
