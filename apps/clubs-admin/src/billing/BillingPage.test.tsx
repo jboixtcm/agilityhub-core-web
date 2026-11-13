@@ -187,6 +187,48 @@ async function openDrawer(number: string) {
   return screen.findByRole("dialog", { name: `Rebut ${number}` });
 }
 
+describe("T-12-07 saved simulation forecast", () => {
+  it("shows, pages and searches planned invoices without generating or charging them", async () => {
+    const month = (
+      await client().GET("/billing/periods/{period}", { params: { path: { period: "2026-09" } } })
+    ).data;
+    if (month?.simulation == null) throw new Error("Missing simulation fixture");
+    const invoicesPreview = Array.from({ length: 21 }, (_, index) => ({
+      memberId: `preview-${String(index)}`,
+      memberName: `Alumne previst ${String(index).padStart(2, "0")}`,
+      paymentMethodType: "SEPA_DD",
+      total: { amountMinor: 6000, currency: "EUR" },
+      lines: [
+        {
+          origin: "MONTHLY_FEE",
+          description: `Quota prevista ${String(index)}`,
+          total: { amountMinor: 6000, currency: "EUR" },
+        },
+      ],
+    }));
+    server.use(
+      http.get("*/api/v1/billing/periods/2026-09", () =>
+        HttpResponse.json({ ...month, simulation: { ...month.simulation, invoicesPreview } }),
+      ),
+    );
+    await renderPage();
+    const heading = await screen.findByRole("heading", { name: "Detall dels rebuts previstos" });
+    const card = heading.closest(".billing-preview");
+    if (!(card instanceof HTMLElement)) throw new Error("Missing preview");
+    expect(within(card).getByRole("link", { name: "Alumne previst 00" })).toBeVisible();
+    expect(within(card).queryByRole("link", { name: "Alumne previst 20" })).toBeNull();
+    fireEvent.click(within(card).getByRole("button", { name: "Següent" }));
+    expect(within(card).getByRole("link", { name: "Alumne previst 20" })).toBeVisible();
+    fireEvent.change(within(card).getByRole("searchbox"), {
+      target: { value: "Quota prevista 3" },
+    });
+    expect(within(card).getAllByRole("link")).toHaveLength(1);
+    expect(within(card).getByRole("link", { name: "Alumne previst 03" })).toBeVisible();
+    expect(requests("POST", "/billing/runs")).toHaveLength(0);
+    expect(requests("POST", "/billing/simulations")).toHaveLength(0);
+  });
+});
+
 describe("T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2)", () => {
   it("T-12-25: header, incidents first with their labels and «Obre fitxa» links, the cash members, the KPIs and the chips", async () => {
     const { onNavigate } = await renderPage();

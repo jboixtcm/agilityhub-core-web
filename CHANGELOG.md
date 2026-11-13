@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-13 — Class times and student/administration feedback
+
+- Allow typed start and end times when creating or editing a class, while retaining suggested planning times.
+- Filter census dates with calendar inputs and club-local day ranges; keep compact lists aligned to the left.
+- Recover booking screens for an empty pack without an expiry date; fall back to the member name when a handler is blank.
+- Explain rejected, unvalidated applications and the amount already received at signup.
+- Show saved simulation receipt details with search and pagination, separately from issued invoices.
+
 ## 2026-11-12 — Student links, dog category lists and billing diagnosis
 
 - Link instructor attendance, waiting lists, class registrants, training occupants and task headers to the corresponding student card.

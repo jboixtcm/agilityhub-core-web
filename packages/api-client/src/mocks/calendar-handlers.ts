@@ -352,13 +352,19 @@ function openingWindow(date: string): { close: number; open: number } | undefine
  * Time checks shared by classes and blocks: granularity (400), range (400), opening hours (422;
  * also on a closed day).
  */
-function timeProblem(date: string, startTime: string, endTime: string, minimum = 1) {
+function timeProblem(
+  date: string,
+  startTime: string,
+  endTime: string,
+  minimum = 1,
+  granularity = 1,
+) {
   if (!/^\d{2}:\d{2}$/u.test(startTime) || !/^\d{2}:\d{2}$/u.test(endTime)) {
     return validationError("startTime");
   }
   const start = minutes(startTime);
   const end = minutes(endTime);
-  if (start % SLOT_MINUTES !== 0 || end % SLOT_MINUTES !== 0) {
+  if (start % granularity !== 0 || end % granularity !== 0) {
     return apiError("INVALID_SLOT_GRANULARITY", "Times must be multiples of the slot", 400);
   }
   if (end - start < minimum) {
@@ -598,7 +604,7 @@ function blockProblem(fields: BlockFields, ignoreId?: string) {
   if (to <= from || clubLocalDateOf(fields.to) !== date) {
     return apiError("INVALID_TIME_RANGE", "Invalid time range", 400);
   }
-  const time = timeProblem(date, fromLocal, toLocal, TRAINING_SLOT_MINUTES);
+  const time = timeProblem(date, fromLocal, toLocal, TRAINING_SLOT_MINUTES, SLOT_MINUTES);
   if (time !== undefined) return time;
   const conflicts = conflictsOf(fields.ringId, date, fromLocal, toLocal, ignoreId);
   return conflicts.length > 0

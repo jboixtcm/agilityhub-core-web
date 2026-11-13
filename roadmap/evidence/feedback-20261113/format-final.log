@@ -1,0 +1,3 @@
+apps/clubs-admin/src/dashboard/SignupReviewPage.test.tsx 236ms
+apps/clubs-admin/e2e/planning-calendar.spec.ts 36ms (unchanged)
+apps/clubs/src/instructor/attendance-rows.test.tsx 7ms

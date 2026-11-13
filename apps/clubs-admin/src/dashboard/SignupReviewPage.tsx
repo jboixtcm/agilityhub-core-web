@@ -1291,7 +1291,11 @@ export function SignupReviewPage({
               ) : (
                 <Input
                   className="signup-review-paid-input"
-                  aria-describedby={upfrontError === undefined ? undefined : "signup-upfront-error"}
+                  aria-describedby={
+                    upfrontError === undefined
+                      ? "signup-paid-help"
+                      : "signup-paid-help signup-upfront-error"
+                  }
                   aria-invalid={upfrontError !== undefined || undefined}
                   max={majorUnits(amountDue, branding.currency).toFixed(paidDigits)}
                   min="0"
@@ -1305,6 +1309,9 @@ export function SignupReviewPage({
                 />
               )}
             </label>
+            {!stripePaid ? (
+              <p id="signup-paid-help">{t("admin-census:signupReview.actuallyPaidHelp")}</p>
+            ) : null}
             {hasPendingCheckout ? (
               <label className="census-record__check-row">
                 <Checkbox

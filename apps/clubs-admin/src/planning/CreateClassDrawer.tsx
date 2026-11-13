@@ -139,7 +139,7 @@ export function CreateClassDrawer({
   const starts =
     bands === undefined
       ? openingStarts
-      : bands.map((band) => band.startTime).filter((time) => openingStarts.includes(time));
+      : [...new Set([...bands.map((band) => band.startTime), ...openingStarts])].sort();
   /** The typed date is a day the club is closed (absent from `club.openingHours`). */
   const closedDay = isoDate !== undefined && openingOf(openingHours, isoDate) === null;
   const [startTime, setStartTime] = useState(starts[0] ?? "");
@@ -153,9 +153,14 @@ export function CreateClassDrawer({
     const day = dayBands.data;
     if (day?.date !== (isoDate ?? today) || !day.configured) return;
     const band = day.bands.find((candidate) => candidate.startTime === startTime) ?? day.bands[0];
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrate suggested times after the daily snapshot arrives.
-    setStartTime(band?.startTime ?? "");
-    setEndTime(band?.endTime ?? "");
+
+    const first = band?.startTime ?? openingStarts[0] ?? "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hydrate suggested times from the loaded daily snapshot.
+    setStartTime(first);
+    setEndTime(
+      band?.endTime ??
+        (first === "" ? "" : clampTime(timeOf(minutesOf(first) + DEFAULT_LENGTH_MINUTES), ends)),
+    );
     // A changed date or freshly loaded snapshot resets the suggested times once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dayBands.data, isoDate, today]);
@@ -178,7 +183,9 @@ export function CreateClassDrawer({
     setStartTime(nextStart);
     setEndTime(
       bands?.find((band) => band.startTime === nextStart)?.endTime ??
-        clampTime(timeOf(minutesOf(nextStart) + length), ends),
+        (nextStart === ""
+          ? ""
+          : timeOf(Math.min(minutesOf(nextStart) + length, minutesOf(ends.at(-1) ?? "23:59")))),
     );
     dropBookings();
   };
@@ -249,6 +256,14 @@ export function CreateClassDrawer({
       return;
     }
     if (noTimes) return;
+    if (
+      !/^\d{2}:\d{2}$/u.test(startTime) ||
+      !/^\d{2}:\d{2}$/u.test(endTime) ||
+      startTime >= endTime
+    ) {
+      setErrors({ time: t("errors:INVALID_TIME_RANGE") });
+      return;
+    }
     const sent = placement;
     setPending(true);
     setErrors({});
@@ -360,41 +375,49 @@ export function CreateClassDrawer({
             id="calendar-create-start"
             label={t("admin-scheduling:calendar.createForm.start")}
           >
-            <Select
+            <Input
               disabled={noTimes}
               id="calendar-create-start"
+              type="time"
+              step={60}
+              list="calendar-create-start-suggestions"
               onChange={(event) => {
                 moveStart(event.currentTarget.value, ends);
               }}
               value={startTime}
-            >
+            />
+            <datalist id="calendar-create-start-suggestions">
               {startOptions.map((time) => (
                 <option key={time} value={time}>
                   {timeLabel(time)}
                 </option>
               ))}
-            </Select>
+            </datalist>
           </FormField>
           <FormField
             {...errorProp(errors.time)}
             id="calendar-create-end"
             label={t("admin-scheduling:calendar.createForm.end")}
           >
-            <Select
+            <Input
               disabled={noTimes}
               id="calendar-create-end"
+              type="time"
+              step={60}
+              list="calendar-create-end-suggestions"
               onChange={(event) => {
                 setEndTime(event.currentTarget.value);
                 dropBookings();
               }}
               value={endTime}
-            >
+            />
+            <datalist id="calendar-create-end-suggestions">
               {endOptions.map((time) => (
                 <option key={time} value={time}>
                   {timeLabel(time)}
                 </option>
               ))}
-            </Select>
+            </datalist>
           </FormField>
         </div>
         {settings.maxInstructors <= 1 ? (

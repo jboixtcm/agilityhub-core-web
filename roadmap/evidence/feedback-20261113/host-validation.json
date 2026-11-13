@@ -1,0 +1,52 @@
+{
+  "tasks": 38,
+  "unitComponentTests": 3742,
+  "byPackage": {
+    "@agilityhub/ui": 208,
+    "@agilityhub/course-core": 378,
+    "@agilityhub/i18n": 162,
+    "@agilityhub/shared-types": 38,
+    "@agilityhub/course-ui": 56,
+    "@agilityhub/auth": 129,
+    "@agilityhub/api-client": 801,
+    "clubs": 799,
+    "id": 20,
+    "clubs-admin": 1151
+  },
+  "checks": [
+    {
+      "command": "pnpm turbo run lint typecheck test build --concurrency=2",
+      "exitCode": 0,
+      "log": "web-final.log",
+      "sha256": "389ee9fd64274aa6e1c7894e6c9ffa1e0d10680f8599e9fd987a494587c00f19"
+    },
+    {
+      "command": "pnpm i18n:check",
+      "exitCode": 0,
+      "log": "i18n-check-final.log",
+      "sha256": "9c7790835b13f114031cd7a5029e252c0ca842a12f4c3a1622c4305d23e40a2c"
+    },
+    {
+      "command": "pnpm typecheck:e2e-core",
+      "exitCode": 0,
+      "log": "core-typecheck.log",
+      "sha256": "2e8b988eac67573ee30eeb9969681f7fcdbcde1053640528dc322fe685191c93"
+    },
+    {
+      "command": "pnpm size-limit",
+      "exitCode": 0,
+      "log": "size-limit.log",
+      "sha256": "6008e3c570bdf7d03ed5c49b8a5ce6ed6770dad3d2dfa876a53f21ac0df03d57"
+    }
+  ],
+  "browser": {
+    "total": 401,
+    "admin": 236,
+    "clubs": 160,
+    "courseUi": 4,
+    "identity": 1,
+    "exitCode": 0,
+    "log": "e2e-final.log",
+    "focusedResponsive": 10
+  }
+}

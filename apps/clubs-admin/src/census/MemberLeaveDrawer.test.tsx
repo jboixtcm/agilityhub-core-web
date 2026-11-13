@@ -7,33 +7,75 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from "vitest";
 
 import { MemberLeaveDrawer } from "./MemberLeaveDrawer";
 
-const branding: Branding = { ...brandingFixture, theme: { ...brandingFixture.theme, mode: "dark" } };
+const branding: Branding = {
+  ...brandingFixture,
+  theme: { ...brandingFixture.theme, mode: "dark" },
+};
 const trilingualBranding: Branding = { ...branding, locales: ["ca", "es", "en"] };
 
-beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
-beforeEach(() => { resetMemberBillingState(); mockScenario("admin"); });
-afterEach(() => {
-  cleanup(); server.resetHandlers(); resetMemberBillingState(); mockScenario("admin");
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
 });
-afterAll(() => { server.close(); });
+beforeEach(() => {
+  resetMemberBillingState();
+  mockScenario("admin");
+});
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+  resetMemberBillingState();
+  mockScenario("admin");
+});
+afterAll(() => {
+  server.close();
+});
 
 async function loadMember(): Promise<components["schemas"]["Member"]> {
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
-  const result = await client.GET("/members/{id}/overview", { params: { path: { id: "member-laura" } } });
+  const result = await client.GET("/members/{id}/overview", {
+    params: { path: { id: "member-laura" } },
+  });
   if (result.data === undefined) throw new TypeError("Missing member fixture");
   return result.data.member;
 }
 
-async function renderDrawer(member: components["schemas"]["Member"], language = "ca", onChanged = vi.fn(), onErased = vi.fn()) {
-  const i18n = await createI18n({ branding: trilingualBranding, browserLanguages: [language], initialNamespaces: ["admin-census", "common", "enums", "errors"], storage: undefined });
+async function renderDrawer(
+  member: components["schemas"]["Member"],
+  language = "ca",
+  onChanged = vi.fn(),
+  onErased = vi.fn(),
+) {
+  const i18n = await createI18n({
+    branding: trilingualBranding,
+    browserLanguages: [language],
+    initialNamespaces: ["admin-census", "common", "enums", "errors"],
+    storage: undefined,
+  });
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={trilingualBranding}>
-        <MemberLeaveDrawer client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} member={member} onChanged={onChanged} onClose={() => undefined} onErased={onErased} open />
+        <MemberLeaveDrawer
+          client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+          member={member}
+          onChanged={onChanged}
+          onClose={() => undefined}
+          onErased={onErased}
+          open
+        />
       </BrandingProvider>
     </I18nextProvider>,
   );
@@ -41,23 +83,47 @@ async function renderDrawer(member: components["schemas"]["Member"], language = 
 }
 
 describe("T-13-31 admin leave lifecycle", () => {
+  it("T-13-31 a rejected never-validated application explains the signup route before attempting reactivation", async () => {
+    const member = await loadMember();
+    await renderDrawer({ ...member, status: "LEFT", memberNumber: null, accountId: null });
+    fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
+    const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
+    expect(within(modal).getByText(/Cal tornar a presentar l’alta/u)).toBeVisible();
+    expect(within(modal).getByRole("button", { name: "Reactiva l'abonat" })).toBeDisabled();
+    expect(within(modal).queryByLabelText("Modalitat")).toBeNull();
+  });
+
   it("E8-W06 #6 shows the shared in-progress message and retries direct leave with the retained key", async () => {
     const member = await loadMember();
     const sentKeys: string[] = [];
-    server.use(http.post("*/api/v1/members/:id/leave", ({ request }) => {
-      sentKeys.push(request.headers.get("Idempotency-Key") ?? "");
-      return sentKeys.length === 1
-        ? HttpResponse.json({ code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" }, message: "still running", traceId: "test" }, { status: 409 })
-        : HttpResponse.json({ cancelledBookings: [] }, { status: 201 });
-    }));
+    server.use(
+      http.post("*/api/v1/members/:id/leave", ({ request }) => {
+        sentKeys.push(request.headers.get("Idempotency-Key") ?? "");
+        return sentKeys.length === 1
+          ? HttpResponse.json(
+              {
+                code: "IDEMPOTENCY_KEY_REUSED",
+                details: { reason: "IN_PROGRESS" },
+                message: "still running",
+                traceId: "test",
+              },
+              { status: 409 },
+            )
+          : HttpResponse.json({ cancelledBookings: [] }, { status: 201 });
+      }),
+    );
     await renderDrawer(member);
     const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), {
+      target: { value: "2026-11-30" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
     const modal = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
     if (modal === undefined) throw new TypeError("Missing direct-leave confirmation");
     fireEvent.click(within(modal).getByRole("button", { name: "Programa la baixa" }));
-    expect(await within(modal).findByRole("alert")).toHaveTextContent("L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.");
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
+    );
     fireEvent.click(within(modal).getByRole("button", { name: "Programa la baixa" }));
     await waitFor(() => {
       expect(sentKeys).toHaveLength(2);
@@ -71,29 +137,69 @@ describe("T-13-31 admin leave lifecycle", () => {
     const result = await client.GET("/prices", { params: { query: { planId: "plan-member" } } });
     const price = result.data?.items[0];
     if (price === undefined) throw new TypeError("Missing price fixture");
-    server.use(http.get("*/api/v1/prices", () => HttpResponse.json({
-      items: [{ ...price, amount: { amountMinor: 6000, currency: "JPY" } }],
-      totalItems: 1,
-    })));
+    server.use(
+      http.get("*/api/v1/prices", () =>
+        HttpResponse.json({
+          items: [{ ...price, amount: { amountMinor: 6000, currency: "JPY" } }],
+          totalItems: 1,
+        }),
+      ),
+    );
     await renderDrawer({ ...member, status: "LEFT", nextInvoiceDate: "2026-11-01" });
     fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
     const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
-    fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+    fireEvent.change(within(modal).getByLabelText("Modalitat"), {
+      target: { value: "plan-member" },
+    });
     expect(await within(modal).findByRole("option", { name: /6\.000.*¥/u })).toBeInTheDocument();
   });
 
   it("prefills the effective date for a pending request", async () => {
     const member = await loadMember();
     const pending = {
-      cancelledBookings: [], comment: "Canvi de ciutat", decision: null, id: "leave-pending", member: { fullName: member.fullName, id: member.id, leaveDate: null, leftAt: null, leftReason: null, memberNumber: member.memberNumber, status: "ACTIVE" }, nps: 8, origin: "APP", packBalanceId: null, reason: "Motius externs", reasonKey: "EXTERNAL", requestedAt: "2026-08-01T10:00:00Z", requestedBy: { accountId: "account-laura", impersonatedMemberId: null }, requestedDate: "2026-08-31", source: "MEMBER", state: "PENDING", version: 1,
+      cancelledBookings: [],
+      comment: "Canvi de ciutat",
+      decision: null,
+      id: "leave-pending",
+      member: {
+        fullName: member.fullName,
+        id: member.id,
+        leaveDate: null,
+        leftAt: null,
+        leftReason: null,
+        memberNumber: member.memberNumber,
+        status: "ACTIVE",
+      },
+      nps: 8,
+      origin: "APP",
+      packBalanceId: null,
+      reason: "Motius externs",
+      reasonKey: "EXTERNAL",
+      requestedAt: "2026-08-01T10:00:00Z",
+      requestedBy: { accountId: "account-laura", impersonatedMemberId: null },
+      requestedDate: "2026-08-31",
+      source: "MEMBER",
+      state: "PENDING",
+      version: 1,
     };
     server.use(
-      http.get("*/api/v1/leave-requests", () => HttpResponse.json({ appliedFilters: [], items: [pending], page: 0, size: 20, totalItems: 1, totalPages: 1 })),
+      http.get("*/api/v1/leave-requests", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [pending],
+          page: 0,
+          size: 20,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
       http.get("*/api/v1/leave-requests/:id", () => HttpResponse.json(pending)),
     );
     await renderDrawer(member);
     const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    expect(await within(drawer).findByDisplayValue("2026-08-31")).toHaveAccessibleName("Data d'efecte");
+    expect(await within(drawer).findByDisplayValue("2026-08-31")).toHaveAccessibleName(
+      "Data d'efecte",
+    );
     expect(within(drawer).getByRole("button", { name: "Aprova" })).toBeVisible();
     expect(within(drawer).getByRole("button", { name: "Denega" })).toBeVisible();
   });
@@ -115,19 +221,36 @@ describe("T-13-31 admin leave lifecycle", () => {
   it("E8-W03 round 2 #5 confirms direct leave before POST and reports cancelled bookings", async () => {
     const member = await loadMember();
     const writes: unknown[] = [];
-    server.use(http.post("*/api/v1/members/:id/leave", async ({ request }) => {
-      writes.push(await request.json());
-      return HttpResponse.json({ cancelledBookings: [{ id: "64000000-0000-4000-8000-000000000001", sessionDate: "2026-12-01", type: "CLASS" }] }, { status: 201 });
-    }));
+    server.use(
+      http.post("*/api/v1/members/:id/leave", async ({ request }) => {
+        writes.push(await request.json());
+        return HttpResponse.json(
+          {
+            cancelledBookings: [
+              {
+                id: "64000000-0000-4000-8000-000000000001",
+                sessionDate: "2026-12-01",
+                type: "CLASS",
+              },
+            ],
+          },
+          { status: 201 },
+        );
+      }),
+    );
     await renderDrawer(member);
     const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), {
+      target: { value: "2026-11-30" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
     expect(writes).toHaveLength(0);
     const confirm = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
     if (confirm === undefined) throw new TypeError("Missing direct-leave confirmation");
     fireEvent.click(within(confirm).getByRole("button", { name: "Programa la baixa" }));
-    await waitFor(() => { expect(writes).toEqual([{ effectiveDate: "2026-11-30" }]); });
+    await waitFor(() => {
+      expect(writes).toEqual([{ effectiveDate: "2026-11-30" }]);
+    });
     expect(await screen.findByText("S'han anul·lat 1 reserva")).toBeVisible();
   });
 
@@ -135,60 +258,121 @@ describe("T-13-31 admin leave lifecycle", () => {
     const member = await loadMember();
     server.use(
       http.post("*/api/v1/members/:id/leave", () =>
-        HttpResponse.json({ code: "LEAVE_DATE_INVALID", details: {}, message: "invalid", traceId: "test" }, { status: 422 }),
+        HttpResponse.json(
+          { code: "LEAVE_DATE_INVALID", details: {}, message: "invalid", traceId: "test" },
+          { status: 422 },
+        ),
       ),
     );
     await renderDrawer(member);
     let drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), {
+      target: { value: "2026-11-30" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
     let modal = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
     if (modal === undefined) throw new TypeError("Missing direct-leave confirmation");
     fireEvent.click(within(modal).getByRole("button", { name: "Programa la baixa" }));
-    expect(await within(modal).findByRole("alert")).toHaveTextContent("La data demanada ja ha passat");
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "La data demanada ja ha passat",
+    );
 
     cleanup();
     server.resetHandlers();
     mockScenario("admin");
     server.use(
       http.delete("*/api/v1/members/:id/planned-leave", () =>
-        HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 }),
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" },
+          { status: 500 },
+        ),
       ),
     );
     await renderDrawer({ ...member, leaveDate: "2026-12-12" });
     drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    fireEvent.click(await within(drawer).findByRole("button", { name: "Anul·la la baixa prevista" }));
+    fireEvent.click(
+      await within(drawer).findByRole("button", { name: "Anul·la la baixa prevista" }),
+    );
     modal = screen.getByRole("dialog", { name: "Anul·la la baixa prevista" });
     fireEvent.click(within(modal).getByRole("button", { name: "Anul·la la baixa prevista" }));
-    expect(await within(modal).findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat",
+    );
 
     cleanup();
     server.resetHandlers();
     mockScenario("admin");
     server.use(
       http.post("*/api/v1/members/:id/reactivation", () =>
-        HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 }),
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" },
+          { status: 500 },
+        ),
       ),
     );
     await renderDrawer({ ...member, status: "LEFT", nextInvoiceDate: "2026-11-01" });
     fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
     modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
-    fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+    fireEvent.change(within(modal).getByLabelText("Modalitat"), {
+      target: { value: "plan-member" },
+    });
     const failedPrice = within(modal).getByLabelText("Tarifa");
     await within(failedPrice).findByRole("option", { name: /60,00.*€/u });
     fireEvent.change(failedPrice, { target: { value: "price-member" } });
     fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
-    expect(await within(modal).findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat",
+    );
   });
 
   it("E8-W03 round 2 #7 reports detail and reactivation plan-read failures", async () => {
     const member = await loadMember();
     const pending = {
-      cancelledBookings: [], comment: null, decision: null, id: "65000000-0000-4000-8000-000000000001", member: { fullName: member.fullName, id: member.id, leaveDate: null, leftAt: null, leftReason: null, memberNumber: member.memberNumber, status: "ACTIVE" }, nps: null, origin: "APP", packBalanceId: null, reason: null, reasonKey: null, requestedAt: "2026-10-01T10:00:00Z", requestedBy: { accountId: "63000000-0000-4000-8000-000000000001", impersonatedMemberId: null }, requestedDate: "2026-11-30", source: "MEMBER", state: "PENDING", version: 1,
+      cancelledBookings: [],
+      comment: null,
+      decision: null,
+      id: "65000000-0000-4000-8000-000000000001",
+      member: {
+        fullName: member.fullName,
+        id: member.id,
+        leaveDate: null,
+        leftAt: null,
+        leftReason: null,
+        memberNumber: member.memberNumber,
+        status: "ACTIVE",
+      },
+      nps: null,
+      origin: "APP",
+      packBalanceId: null,
+      reason: null,
+      reasonKey: null,
+      requestedAt: "2026-10-01T10:00:00Z",
+      requestedBy: {
+        accountId: "63000000-0000-4000-8000-000000000001",
+        impersonatedMemberId: null,
+      },
+      requestedDate: "2026-11-30",
+      source: "MEMBER",
+      state: "PENDING",
+      version: 1,
     };
     server.use(
-      http.get("*/api/v1/leave-requests", () => HttpResponse.json({ appliedFilters: [], items: [pending], page: 0, size: 20, totalItems: 1, totalPages: 1 })),
-      http.get("*/api/v1/leave-requests/:id", () => HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 })),
+      http.get("*/api/v1/leave-requests", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [pending],
+          page: 0,
+          size: 20,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/leave-requests/:id", () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" },
+          { status: 500 },
+        ),
+      ),
     );
     await renderDrawer(member);
     expect(await screen.findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
@@ -196,7 +380,14 @@ describe("T-13-31 admin leave lifecycle", () => {
 
     server.resetHandlers();
     mockScenario("admin");
-    server.use(http.get("*/api/v1/plans", () => HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 })));
+    server.use(
+      http.get("*/api/v1/plans", () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" },
+          { status: 500 },
+        ),
+      ),
+    );
     await renderDrawer({ ...member, status: "LEFT" });
     expect(await screen.findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
   });
@@ -205,29 +396,45 @@ describe("T-13-31 admin leave lifecycle", () => {
     const member = await loadMember();
     await renderDrawer(member);
     const reason = await screen.findByLabelText("Motiu (opcional)");
-    expect(await within(reason).findByRole("option", { name: "Decisió del club" })).toBeInTheDocument();
+    expect(
+      await within(reason).findByRole("option", { name: "Decisió del club" }),
+    ).toBeInTheDocument();
     expect(within(reason).queryByRole("option", { name: "Pack caducat" })).not.toBeInTheDocument();
   });
 
   it("E8-W03 round 2 #12 submits reactivation and formats prices through club money rules", async () => {
     // Club-local 05/10/2026: the proposed date is 01/11 (E11-W07 step 4).
-    vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
-    onTestFinished(() => { vi.useRealTimers(); });
+    vi.useFakeTimers({
+      now: new Date("2026-10-05T10:00:00Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date"],
+    });
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
     const member = await loadMember();
     const writes: unknown[] = [];
-    server.use(http.post("*/api/v1/members/:id/reactivation", async ({ request }) => {
-      writes.push(await request.json());
-      return HttpResponse.json({ ...member, status: "ACTIVE" });
-    }));
+    server.use(
+      http.post("*/api/v1/members/:id/reactivation", async ({ request }) => {
+        writes.push(await request.json());
+        return HttpResponse.json({ ...member, status: "ACTIVE" });
+      }),
+    );
     await renderDrawer({ ...member, status: "LEFT", nextInvoiceDate: "2026-11-01" });
     fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
     const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
-    fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+    fireEvent.change(within(modal).getByLabelText("Modalitat"), {
+      target: { value: "plan-member" },
+    });
     const price = within(modal).getByLabelText("Tarifa");
     await within(price).findByRole("option", { name: /60,00.*€/u });
     fireEvent.change(price, { target: { value: "price-member" } });
     fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
-    await waitFor(() => { expect(writes).toEqual([{ nextInvoiceDate: "2026-11-01", planId: "plan-member", priceId: "price-member" }]); });
+    await waitFor(() => {
+      expect(writes).toEqual([
+        { nextInvoiceDate: "2026-11-01", planId: "plan-member", priceId: "price-member" },
+      ]);
+    });
   });
 
   describe("E11-W07 step 4 (E156 N1, R-13-16): the reactivation proposes the next invoice day, never the stale date", () => {
@@ -239,7 +446,9 @@ describe("T-13-31 admin leave lifecycle", () => {
       await renderDrawer(member);
       fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
       const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
-      fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+      fireEvent.change(within(modal).getByLabelText("Modalitat"), {
+        target: { value: "plan-member" },
+      });
       const price = within(modal).getByLabelText("Tarifa");
       await within(price).findByRole("option", { name: /60,00.*€/u });
       fireEvent.change(price, { target: { value: "price-member" } });
@@ -247,42 +456,89 @@ describe("T-13-31 admin leave lifecycle", () => {
     }
 
     it("E156 N1: a LEFT member with nextInvoiceDate 2026-04-01 on 20/11/2026 → the field shows 2026-12-01 (the 1st of the month after the club's)", async () => {
-      vi.useFakeTimers({ now: new Date("2026-11-20T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+      vi.useFakeTimers({
+        now: new Date("2026-11-20T10:00:00Z"),
+        shouldAdvanceTime: true,
+        toFake: ["Date"],
+      });
       const member = await loadMember();
       const writes: unknown[] = [];
-      server.use(http.post("*/api/v1/members/:id/reactivation", async ({ request }) => {
-        writes.push(await request.json());
-        return HttpResponse.json({ ...member, status: "ACTIVE" });
-      }));
-      const modal = await openReactivation({ ...member, nextInvoiceDate: "2026-04-01", status: "LEFT" });
+      server.use(
+        http.post("*/api/v1/members/:id/reactivation", async ({ request }) => {
+          writes.push(await request.json());
+          return HttpResponse.json({ ...member, status: "ACTIVE" });
+        }),
+      );
+      const modal = await openReactivation({
+        ...member,
+        nextInvoiceDate: "2026-04-01",
+        status: "LEFT",
+      });
       const date = within(modal).getByLabelText("Data del proper rebut");
-      await waitFor(() => { expect(date).toHaveValue("2026-12-01"); });
+      await waitFor(() => {
+        expect(date).toHaveValue("2026-12-01");
+      });
       expect(date).toHaveAttribute("min", "2026-11-01");
       fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
-      await waitFor(() => { expect(writes).toEqual([{ nextInvoiceDate: "2026-12-01", planId: "plan-member", priceId: "price-member" }]); });
+      await waitFor(() => {
+        expect(writes).toEqual([
+          { nextInvoiceDate: "2026-12-01", planId: "plan-member", priceId: "price-member" },
+        ]);
+      });
     });
 
     it("E156 N1: the club's billing.nextInvoiceDayOfMonth (5) is the proposed day; the api's 400 fieldErrors[nextInvoiceDate] lands on the field", async () => {
-      vi.useFakeTimers({ now: new Date("2026-11-20T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+      vi.useFakeTimers({
+        now: new Date("2026-11-20T10:00:00Z"),
+        shouldAdvanceTime: true,
+        toFake: ["Date"],
+      });
       server.use(
         http.get("*/api/v1/parameters/billing.nextInvoiceDayOfMonth", () =>
-          HttpResponse.json({ block: "general", constraints: { max: 28, min: 1 }, default: 1, editableBy: "CLUB", help: "", history: [], isOverride: true, key: "billing.nextInvoiceDayOfMonth", label: "Dia del proper rebut", module: "BILLING", type: "INT", value: 5, version: 2 }),
+          HttpResponse.json({
+            block: "general",
+            constraints: { max: 28, min: 1 },
+            default: 1,
+            editableBy: "CLUB",
+            help: "",
+            history: [],
+            isOverride: true,
+            key: "billing.nextInvoiceDayOfMonth",
+            label: "Dia del proper rebut",
+            module: "BILLING",
+            type: "INT",
+            value: 5,
+            version: 2,
+          }),
         ),
         http.post("*/api/v1/members/:id/reactivation", () =>
           HttpResponse.json(
-            { code: "VALIDATION_ERROR", details: { fieldErrors: [{ code: "INVALID_VALUE", field: "nextInvoiceDate" }] }, message: "Validation failed", traceId: "t-react" },
+            {
+              code: "VALIDATION_ERROR",
+              details: { fieldErrors: [{ code: "INVALID_VALUE", field: "nextInvoiceDate" }] },
+              message: "Validation failed",
+              traceId: "t-react",
+            },
             { status: 400 },
           ),
         ),
       );
       const member = await loadMember();
-      const modal = await openReactivation({ ...member, nextInvoiceDate: "2026-04-01", status: "LEFT" });
+      const modal = await openReactivation({
+        ...member,
+        nextInvoiceDate: "2026-04-01",
+        status: "LEFT",
+      });
       const date = within(modal).getByLabelText("Data del proper rebut");
-      await waitFor(() => { expect(date).toHaveValue("2026-12-05"); });
+      await waitFor(() => {
+        expect(date).toHaveValue("2026-12-05");
+      });
       fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
       const field = date.closest(".ah-form-field");
       if (!(field instanceof HTMLElement)) throw new TypeError("No date field");
-      expect(await within(field).findByText("La data no pot ser anterior al 01/11/2026.")).toBeVisible();
+      expect(
+        await within(field).findByText("La data no pot ser anterior al 01/11/2026."),
+      ).toBeVisible();
       expect(within(modal).getAllByRole("alert")).toHaveLength(1);
     });
   });
@@ -290,17 +546,30 @@ describe("T-13-31 admin leave lifecycle", () => {
   it("E8-W03 round 2 #6 makes MEMBER_ERASED terminal and notifies D10", async () => {
     const member = await loadMember();
     const onErased = vi.fn();
-    server.use(http.post("*/api/v1/members/:id/leave", () => HttpResponse.json({ code: "MEMBER_ERASED", details: {}, message: "erased", traceId: "test" }, { status: 409 })));
+    server.use(
+      http.post("*/api/v1/members/:id/leave", () =>
+        HttpResponse.json(
+          { code: "MEMBER_ERASED", details: {}, message: "erased", traceId: "test" },
+          { status: 409 },
+        ),
+      ),
+    );
     await renderDrawer(member, "ca", vi.fn(), onErased);
     const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    fireEvent.change(await within(drawer).findByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.change(await within(drawer).findByLabelText("Data d'efecte"), {
+      target: { value: "2026-11-30" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
     const confirmation = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
     if (confirmation === undefined) throw new TypeError("Missing direct-leave confirmation");
     fireEvent.click(within(confirmation).getByRole("button", { name: "Programa la baixa" }));
-    await waitFor(() => { expect(onErased).toHaveBeenCalledTimes(1); });
+    await waitFor(() => {
+      expect(onErased).toHaveBeenCalledTimes(1);
+    });
     expect(within(drawer).getByRole("alert")).toHaveTextContent("Aquest abonat ha estat suprimit");
-    expect(within(drawer).queryByRole("button", { name: "Programa la baixa" })).not.toBeInTheDocument();
+    expect(
+      within(drawer).queryByRole("button", { name: "Programa la baixa" }),
+    ).not.toBeInTheDocument();
   });
 
   it("E8-W03 round 2 #10 persists leave approval into the queue member overview", async () => {
@@ -310,25 +579,59 @@ describe("T-13-31 admin leave lifecycle", () => {
       headers: { "Idempotency-Key": "67000000-0000-4000-8000-000000000003" },
       params: { path: { id: "65000000-0000-4000-8000-000000000003" } },
     });
-    expect(approved.data).toMatchObject({ cancelledBookings: [{ type: "CLASS" }], state: "APPROVED" });
-    const overview = await client.GET("/members/{id}/overview", { params: { path: { id: "member-montse" } } });
-    expect(overview.data?.member).toMatchObject({ displayStatus: { kind: "LEAVE_SCHEDULED" }, leaveDate: "2026-11-30" });
+    expect(approved.data).toMatchObject({
+      cancelledBookings: [{ type: "CLASS" }],
+      state: "APPROVED",
+    });
+    const overview = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-montse" } },
+    });
+    expect(overview.data?.member).toMatchObject({
+      displayStatus: { kind: "LEAVE_SCHEDULED" },
+      leaveDate: "2026-11-30",
+    });
   });
 
   it("E8-W03 round 3 #6 derives seeded overviews and keeps planned-leave cancellation projections in sync", async () => {
     const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
-    const inactive = await client.GET("/members/{id}/overview", { params: { path: { id: "member-eva" } } });
-    expect(inactive.data?.member).toMatchObject({ displayStatus: { kind: "INACTIVE_PERIOD" }, status: "INACTIVE" });
-
-    const planned = await client.GET("/members/{id}/overview", { params: { path: { id: "member-joan" } } });
-    expect(planned.data?.member).toMatchObject({ displayStatus: { kind: "LEAVE_SCHEDULED" }, leaveDate: "2026-12-12" });
-    await client.DELETE("/members/{id}/planned-leave", {
-      params: { header: { "Idempotency-Key": "67000000-0000-4000-8000-000000000006" }, path: { id: "member-joan" } },
+    const inactive = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-eva" } },
     });
-    const refreshed = await client.GET("/members/{id}/overview", { params: { path: { id: "member-joan" } } });
-    expect(refreshed.data?.member).toMatchObject({ displayStatus: { kind: "ACTIVE" }, leaveDate: null });
+    expect(inactive.data?.member).toMatchObject({
+      displayStatus: { kind: "INACTIVE_PERIOD" },
+      status: "INACTIVE",
+    });
+
+    const planned = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-joan" } },
+    });
+    expect(planned.data?.member).toMatchObject({
+      displayStatus: { kind: "LEAVE_SCHEDULED" },
+      leaveDate: "2026-12-12",
+    });
+    await client.DELETE("/members/{id}/planned-leave", {
+      params: {
+        header: { "Idempotency-Key": "67000000-0000-4000-8000-000000000006" },
+        path: { id: "member-joan" },
+      },
+    });
+    const refreshed = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-joan" } },
+    });
+    expect(refreshed.data?.member).toMatchObject({
+      displayStatus: { kind: "ACTIVE" },
+      leaveDate: null,
+    });
     const requests = await client.GET("/leave-requests", {
-      params: { query: { fields: "member,effectiveDate,state", filter: ["memberId:eq:member-joan"], page: 0, size: 20, sort: ["requestedAt,asc"] } },
+      params: {
+        query: {
+          fields: "member,effectiveDate,state",
+          filter: ["memberId:eq:member-joan"],
+          page: 0,
+          size: 20,
+          sort: ["requestedAt,asc"],
+        },
+      },
     });
     expect(requests.data?.items).toEqual([expect.objectContaining({ state: "CANCELLED" })]);
   });
@@ -337,15 +640,23 @@ describe("T-13-31 admin leave lifecycle", () => {
     mockScenario("memberLeft");
     resetMemberBillingState();
     const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
-    const before = await client.GET("/members/{id}/overview", { params: { path: { id: "member-laura" } } });
+    const before = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
     expect(before.data?.member.status).toBe("LEFT");
     await client.POST("/members/{id}/reactivation", {
       body: { nextInvoiceDate: "2026-11-01", planId: "plan-member", priceId: "price-member" },
       headers: { "Idempotency-Key": "67000000-0000-4000-8000-000000000007" },
       params: { path: { id: "member-laura" } },
     });
-    const after = await client.GET("/members/{id}/overview", { params: { path: { id: "member-laura" } } });
-    expect(after.data?.member).toMatchObject({ displayStatus: { kind: "ACTIVE" }, leaveDate: null, status: "ACTIVE" });
+    const after = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    expect(after.data?.member).toMatchObject({
+      displayStatus: { kind: "ACTIVE" },
+      leaveDate: null,
+      status: "ACTIVE",
+    });
   });
 });
 
@@ -361,7 +672,9 @@ describe("T-13-32 ca/es/en drawer literals", () => {
     const drawer = await screen.findByRole("dialog", { name: title });
     expect(drawer).toBeVisible();
     expect(screen.getAllByText(action).length).toBeGreaterThan(0);
-    await waitFor(() => { expect(within(drawer).queryByRole("status")).not.toBeInTheDocument(); });
+    await waitFor(() => {
+      expect(within(drawer).queryByRole("status")).not.toBeInTheDocument();
+    });
     expect(drawer.textContent).toMatchSnapshot(language);
   });
 });

@@ -73,7 +73,14 @@
     "providerConfigurationTitle": "Configuración de pagos del club",
     "providerConfigurationHelp": "Estas incidencias se resuelven en la configuración de pagos del club. Pide al administrador de la plataforma que la revise y vuelve a simular el mes.",
     "sepaNotConfigured": "La domiciliación SEPA está activada, pero faltan los datos del acreedor del club. Hay que completar el nombre, el identificador de acreedor, el IBAN y el sufijo.",
-    "sepaDisabled": "La domiciliación SEPA está desactivada para el club."
+    "sepaDisabled": "La domiciliación SEPA está desactivada para el club.",
+    "previewTitle": "Detalle de los recibos previstos",
+    "previewHelp": "Previsión de la última simulación. Consultarla no genera recibos ni realiza cobros. Si cambian los datos de facturación, volver a simular el mes.",
+    "previewSearch": "Buscar por abonado o concepto",
+    "previewCount": "{count} recibos previstos",
+    "previewLines": "Conceptos",
+    "previewPrevious": "Anterior",
+    "previewNext": "Siguiente"
   },
   "empty": {
     "noSimulation": "Todavía no hay ninguna simulación de este mes",

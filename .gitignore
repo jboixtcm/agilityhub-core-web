@@ -105,3 +105,6 @@ __pycache__/
 # Direct user feedback validation, November 12.
 !roadmap/evidence/feedback-20261112/*.log
 !roadmap/evidence/feedback-20261112-receipts/*.log
+
+# Direct user feedback validation, November 13.
+!roadmap/evidence/feedback-20261113/*.log

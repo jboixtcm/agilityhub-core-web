@@ -49,7 +49,9 @@
     "sortAscending": "Ordena {column} de manera ascendent",
     "sortDescending": "Ordena {column} de manera descendent",
     "view": "Vistes: «{name}»",
-    "views": "Vistes"
+    "views": "Vistes",
+    "dateFrom": "Des de",
+    "dateTo": "Fins a"
   },
   "members": {
     "activeCount": "{count} d'alta",

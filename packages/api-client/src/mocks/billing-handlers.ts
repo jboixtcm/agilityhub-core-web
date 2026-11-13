@@ -509,6 +509,7 @@ function billingPeriod(period: string): BillingPeriod {
             cashMembers: simulation.cashMembers,
             id: simulation.id,
             incidents: simulation.incidents,
+            invoicesPreview: simulation.invoicesPreview,
             kpis: simulation.kpis,
           },
   };

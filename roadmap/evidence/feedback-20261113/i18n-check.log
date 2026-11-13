@@ -1,0 +1,8 @@
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs && node scripts/check-es-actions.mjs
+
+i18n check failed with 2 issue(s):
+- unused translation key admin-census:reactivation.description
+- unused translation key admin-census:reactivation.notValidated
+ ELIFECYCLE  Command failed with exit code 1.

@@ -8,14 +8,15 @@ export type InstructorDayClass = components["schemas"]["InstructorDayClass"];
 export type DayRingBlock = components["schemas"]["DayRingBlock"];
 export type InstructorCard = components["schemas"]["InstructorCard"];
 
-/** R-10-00: «{guia} + {gos}», the guide being `handlerName ?? memberFirstName`. */
+/** R-10-00: «{guia} + {gos}», a blank guide falls back to the member’s first name. */
 export function studentName(
   t: Translate,
   student: { dogName: string; handlerName?: string | null | undefined; memberFirstName: string },
 ): string {
+  const handler = student.handlerName?.trim() ?? "";
   return t("instructor:student.name", {
     dog: student.dogName,
-    handler: student.handlerName ?? student.memberFirstName,
+    handler: handler === "" ? student.memberFirstName : handler,
   });
 }
 

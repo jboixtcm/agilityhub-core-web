@@ -31,6 +31,32 @@ async function renderBook(options: Parameters<typeof renderPage>[1] = {}) {
 }
 
 describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03)", () => {
+  it("T-08-37 an empty pack without an expiry keeps the booking screen usable", async () => {
+    server.use(
+      http.get("*/api/v1/me/bookable-classes", async ({ request }) => {
+        const response = await getResponse(handlers, request);
+        if (response === undefined) throw new Error("Missing fixture");
+        const body = (await response.json()) as Record<string, unknown>;
+        return HttpResponse.json({
+          ...body,
+          pack: {
+            planName: "Pack 10",
+            sessionsTotal: 0,
+            consumed: 0,
+            available: 0,
+            expiresOn: null,
+            state: "EMPTY",
+          },
+        });
+      }),
+    );
+    await renderBook();
+    expect(screen.getByText("Pack 10 — amb la Duna")).toBeVisible();
+    expect(document.querySelector(".pack-card")).toHaveTextContent("0 disponibles");
+    expect(document.querySelector(".pack-card")).not.toHaveTextContent("caduca");
+    expect(rows().length).toBeGreaterThan(0);
+  });
+
   it("Duna: the chips without «Tots», the pack, the intro, the activities and the six rows (mockup 04's, with «ds 8» a normal row: E7-W07 step 6, ruling E85)", async () => {
     await renderBook();
     const chips = screen.getByRole("group", { name: "Gossos" });
@@ -196,9 +222,7 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
       ),
     );
     await renderBook();
-    expect(
-      screen.getByText("Aquest abonament està en un període d'inactivitat."),
-    ).toBeVisible();
+    expect(screen.getByText("Aquest abonament està en un període d'inactivitat.")).toBeVisible();
     expect(rows()[0]).toHaveAttribute("data-bookable-state", "NOT_BOOKABLE");
     expect(rows()[0]?.querySelector("button")).toBeNull();
   });

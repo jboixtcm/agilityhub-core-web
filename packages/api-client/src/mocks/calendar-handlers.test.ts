@@ -353,7 +353,7 @@ describe("E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §
     expect(monday.response.status).toBe(201);
   });
 
-  it("S06 §3 with an opening at 07:05 and 10-minute slots: 07:10 is the first valid start", async () => {
+  it("T-06-09 manual class times accept 07:05 while keeping opening-hour checks", async () => {
     await putOpeningHours((value) =>
       Object.fromEntries(Object.keys(value).map((day) => [day, { close: "21:55", open: "07:05" }])),
     );
@@ -361,10 +361,7 @@ describe("E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §
       client.POST("/class-sessions", {
         body: { ...sundayClass, date: "2026-08-13", endTime, startTime },
       });
-    await expect(at("07:05", "08:05")).rejects.toMatchObject({
-      code: "INVALID_SLOT_GRANULARITY",
-      status: 400,
-    });
+    expect((await at("07:05", "08:05")).response.status).toBe(201);
     await expect(at("07:00", "08:00")).rejects.toMatchObject({
       code: "OUTSIDE_OPENING_HOURS",
       status: 422,

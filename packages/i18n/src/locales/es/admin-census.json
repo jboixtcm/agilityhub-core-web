@@ -76,7 +76,8 @@
     "price": "Tarifa",
     "nextInvoiceDate": "Fecha del próximo recibo",
     "action": "Reactivar al abonado",
-    "success": "El abonado se ha reactivado."
+    "success": "El abonado se ha reactivado.",
+    "notValidated": "Esta ficha corresponde a una solicitud que no llegó a validarse: todavía no tiene número ni cuenta de abonado. Es necesario volver a presentar el alta desde «Apuntarse» y validarla, eligiendo la modalidad y revisando el cobro inicial. La reactivación es para abonados que ya tuvieron un alta validada."
   },
   "paymentMethod": {
     "current": "Método actual",
@@ -648,7 +649,8 @@
       "BANK_TRANSFER": "Transferencia",
       "CASH": "Efectivo"
     },
-    "cancelPendingCheckout": "Anular el intento de pago con tarjeta pendiente al validar el alta"
+    "cancelPendingCheckout": "Anular el intento de pago con tarjeta pendiente al validar el alta",
+    "actuallyPaidHelp": "Indicar solo el dinero que el club ya ha recibido por los conceptos iniciales. Este importe reduce el pendiente, pero no realiza ningún cargo bancario. Si no se ha cobrado nada, indicar 0 y confirmar que queda pendiente."
   },
   "values": {
     "empty": "—",

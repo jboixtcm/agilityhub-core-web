@@ -1,0 +1,13 @@
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:4132) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+> clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+> playwright test feedback-20261113.spec.ts --workers\=2
+
+[WebServer] (node:4245) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+··········
+  10 passed (29.1s)

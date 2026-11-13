@@ -1,0 +1,210 @@
+.                                        |  WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:2787) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+> clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+> playwright test feedback-20261113.spec.ts --workers\=2
+
+[WebServer] (node:2900) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 10 tests using 2 workers
+FFFFFFF·F·
+
+  1) [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 light 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--f3bfd-7-saved-forecast-1280-light-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--f3bfd-7-saved-forecast-1280-light-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--f3bfd-7-saved-forecast-1280-light-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 dark 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--5ff0e-07-saved-forecast-1280-dark-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--5ff0e-07-saved-forecast-1280-dark-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--5ff0e-07-saved-forecast-1280-dark-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 light 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--efa4a-07-saved-forecast-375-light-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--efa4a-07-saved-forecast-375-light-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--efa4a-07-saved-forecast-375-light-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 dark 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--f54d8--07-saved-forecast-375-dark-chromium/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--f54d8--07-saved-forecast-375-dark-chromium/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--f54d8--07-saved-forecast-375-dark-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 light 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--f3bfd-7-saved-forecast-1280-light-webkit-ui/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--f3bfd-7-saved-forecast-1280-light-webkit-ui/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--f3bfd-7-saved-forecast-1280-light-webkit-ui/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 dark 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--5ff0e-07-saved-forecast-1280-dark-webkit-ui/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--5ff0e-07-saved-forecast-1280-dark-webkit-ui/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--5ff0e-07-saved-forecast-1280-dark-webkit-ui/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 light 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--efa4a-07-saved-forecast-375-light-webkit-ui/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--efa4a-07-saved-forecast-375-light-webkit-ui/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--efa4a-07-saved-forecast-375-light-webkit-ui/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 dark 
+
+    ReferenceError: testInfo is not defined
+
+      56 |       await card.scrollIntoViewIfNeeded();
+      57 |       await page.screenshot({
+    > 58 |         path: resolve(evidence, `times-${testInfo.project.name}-${String(width)}-${mode}.png`),
+         |                                          ^
+      59 |       });
+      60 |       await page.goto(`${base}/facturacio?mes=2026-09`);
+      61 |       const preview = page.locator(".billing-preview");
+        at /work/apps/clubs-admin/e2e/feedback-20261113.spec.ts:58:42
+
+    Error Context: ../../test-results/clubs-admin/feedback-20261113-T-06-09--f54d8--07-saved-forecast-375-dark-webkit-ui/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../test-results/clubs-admin/feedback-20261113-T-06-09--f54d8--07-saved-forecast-375-dark-webkit-ui/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../../test-results/clubs-admin/feedback-20261113-T-06-09--f54d8--07-saved-forecast-375-dark-webkit-ui/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 light 
+    [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 dark 
+    [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 light 
+    [chromium] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 dark 
+    [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 light 
+    [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 1280 dark 
+    [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 light 
+    [webkit-ui] › e2e/feedback-20261113.spec.ts:38:5 › T-06-09 free class times and T-12-07 saved forecast 375 dark 
+  2 passed (18.4s)
+/work/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 e2e: `playwright test feedback-20261113.spec.ts --workers\=2`
+Exit status 1

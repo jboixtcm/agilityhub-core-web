@@ -1,10 +1,35 @@
-import { apiFieldErrors, isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  isInProgress,
+  type ApiClient,
+  type components,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { Badge, Button, Drawer, FormField, Input, Modal, Select, Textarea, Toast, useBranding } from "@agilityhub/ui";
+import {
+  Badge,
+  Button,
+  Drawer,
+  FormField,
+  Input,
+  Modal,
+  Select,
+  Textarea,
+  Toast,
+  useBranding,
+} from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { clubToday, formatMoney, invoiceDayOf, shiftPeriod, useBillingLocale, useNextInvoiceDay } from "../billing/shared";
+import {
+  clubToday,
+  formatMoney,
+  invoiceDayOf,
+  shiftPeriod,
+  useBillingLocale,
+  useNextInvoiceDay,
+} from "../billing/shared";
 
 type Member = components["schemas"]["Member"];
 type Leave = components["schemas"]["LeaveRequest"];
@@ -27,7 +52,21 @@ function parameterReasons(value: unknown, language: string): { key: string; labe
   });
 }
 
-export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased, open }: { client: ApiClient; member: Member; onChanged: (member?: Member) => void; onClose: () => void; onErased: () => void; open: boolean }) {
+export function MemberLeaveDrawer({
+  client,
+  member,
+  onChanged,
+  onClose,
+  onErased,
+  open,
+}: {
+  client: ApiClient;
+  member: Member;
+  onChanged: (member?: Member) => void;
+  onClose: () => void;
+  onErased: () => void;
+  open: boolean;
+}) {
   const branding = useBranding();
   const formats = useClubFormats();
   const { i18n, t } = useTranslation(["admin-census", "common", "enums", "errors"]);
@@ -57,11 +96,16 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
   const [reload, setReload] = useState(0);
   const [erased, setErased] = useState(false);
   const billing = branding.modules.includes("BILLING");
+  const neverValidated =
+    member.status === "LEFT" && member.memberNumber == null && member.accountId == null;
   const invoiceDay = useNextInvoiceDay(client, open && billing && member.status === "LEFT");
   const clubMonth = clubToday(branding.timeZone).slice(0, 7);
   const nextInvoiceDate =
-    editedInvoiceDate ?? (invoiceDay === undefined ? "" : invoiceDayOf(shiftPeriod(clubMonth, 1), invoiceDay));
-  const invoiceDateRefused = apiFieldErrors(failure).some((entry) => entry.field === "nextInvoiceDate");
+    editedInvoiceDate ??
+    (invoiceDay === undefined ? "" : invoiceDayOf(shiftPeriod(clubMonth, 1), invoiceDay));
+  const invoiceDateRefused = apiFieldErrors(failure).some(
+    (entry) => entry.field === "nextInvoiceDate",
+  );
 
   useEffect(() => {
     if (!open) return undefined;
@@ -70,15 +114,16 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
       try {
         const [list, parameter] = await Promise.all([
           client.GET("/leave-requests", {
-        params: {
-          query: {
-            fields: "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt,comment",
-            filter: [`memberId:eq:${member.id}`],
-            page: 0,
-            size: 20,
-            sort: ["requestedAt,desc"],
-          },
-        },
+            params: {
+              query: {
+                fields:
+                  "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt,comment",
+                filter: [`memberId:eq:${member.id}`],
+                page: 0,
+                size: 20,
+                sort: ["requestedAt,desc"],
+              },
+            },
           }),
           client.GET("/parameters/{key}", { params: { path: { key: "leave.reasons" } } }),
         ] as const);
@@ -138,15 +183,23 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
     }
     let current = true;
     void client.GET("/prices", { params: { query: { planId } } }).then(
-      (result) => { if (current) setPrices(result.data?.items ?? []); },
-      (cause: unknown) => { if (current) setFailure(cause); },
+      (result) => {
+        if (current) setPrices(result.data?.items ?? []);
+      },
+      (cause: unknown) => {
+        if (current) setFailure(cause);
+      },
     );
     return () => {
       current = false;
     };
   }, [billing, client, member.status, planId]);
 
-  const run = async (signature: string, write: (key: string) => Promise<{ data?: unknown }>, onSuccess?: (data: unknown) => void) => {
+  const run = async (
+    signature: string,
+    write: (key: string) => Promise<{ data?: unknown }>,
+    onSuccess?: (data: unknown) => void,
+  ) => {
     setPending(true);
     setFailure(undefined);
     try {
@@ -173,18 +226,31 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
   const errorMessage = useMemo(() => {
     if (failure === undefined) return undefined;
     if (isInProgress(failure)) return t("common:inProgress");
-    if (isApiError(failure, "LEAVE_DATE_INVALID")) return t("admin-census:leave.errors.dateInvalid");
-    return isApiError(failure) ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError");
+    if (isApiError(failure, "LEAVE_DATE_INVALID"))
+      return t("admin-census:leave.errors.dateInvalid");
+    return isApiError(failure)
+      ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
+      : t("admin-census:common.genericError");
   }, [failure, t]);
   const plannedSource = rows.find((row) => row.effectiveDate === member.leaveDate)?.source;
   const today = clubToday(branding.timeZone);
   const modalOpen = confirmCancel || confirmDirect || reactivationOpen;
 
   return (
-    <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:leave.title")}>
+    <Drawer
+      closeLabel={t("admin-census:common.close")}
+      onClose={onClose}
+      open={open}
+      title={t("admin-census:leave.title")}
+    >
       {loading ? <p role="status">{t("admin-census:common.loading")}</p> : null}
       {erased ? (
-        <><p role="alert">{t("errors:MEMBER_ERASED")}</p><Button onClick={onClose} variant="ghost">{t("admin-census:common.cancel")}</Button></>
+        <>
+          <p role="alert">{t("errors:MEMBER_ERASED")}</p>
+          <Button onClick={onClose} variant="ghost">
+            {t("admin-census:common.cancel")}
+          </Button>
+        </>
       ) : member.status === "LEFT" ? (
         <Button
           onClick={() => {
@@ -203,7 +269,9 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
                   date: formats.formatPlainDate(member.leaveDate),
                 })}
               </h3>
-              {plannedSource === undefined ? null : <Badge>{t(`enums:leaveSource.${plannedSource}`)}</Badge>}
+              {plannedSource === undefined ? null : (
+                <Badge>{t(`enums:leaveSource.${plannedSource}`)}</Badge>
+              )}
               <Button
                 disabled={pending}
                 onClick={() => {
@@ -220,11 +288,20 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
             <section className="census-record__form">
               <h3>{t("admin-census:leave.pending")}</h3>
               <p>
-                {formats.formatPlainDate(request.requestedDate)} · {request.reason ?? request.reasonKey ?? t("admin-census:values.empty")}
+                {formats.formatPlainDate(request.requestedDate)} ·{" "}
+                {request.reason ?? request.reasonKey ?? t("admin-census:values.empty")}
               </p>
-              {request.nps == null ? null : <p>{t("admin-census:leave.nps", { value: request.nps })}</p>}
+              {request.nps == null ? null : (
+                <p>{t("admin-census:leave.nps", { value: request.nps })}</p>
+              )}
               {request.comment == null ? null : <p>{request.comment}</p>}
-              <FormField {...(isApiError(failure, "LEAVE_DATE_INVALID") && errorMessage !== undefined ? { error: errorMessage } : {})} id="leave-effective-date" label={t("admin-census:leave.effectiveDate")}>
+              <FormField
+                {...(isApiError(failure, "LEAVE_DATE_INVALID") && errorMessage !== undefined
+                  ? { error: errorMessage }
+                  : {})}
+                id="leave-effective-date"
+                label={t("admin-census:leave.effectiveDate")}
+              >
                 <Input
                   id="leave-effective-date"
                   min={today}
@@ -302,7 +379,13 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
             >
               <h3>{t("admin-census:leave.direct")}</h3>
               <p className="census-record__warning">{t("admin-census:leave.directWarning")}</p>
-              <FormField {...(isApiError(failure, "LEAVE_DATE_INVALID") && errorMessage !== undefined ? { error: errorMessage } : {})} id="direct-leave-date" label={t("admin-census:leave.effectiveDate")}>
+              <FormField
+                {...(isApiError(failure, "LEAVE_DATE_INVALID") && errorMessage !== undefined
+                  ? { error: errorMessage }
+                  : {})}
+                id="direct-leave-date"
+                label={t("admin-census:leave.effectiveDate")}
+              >
                 <Input
                   id="direct-leave-date"
                   min={today}
@@ -347,7 +430,12 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
           )}
         </>
       )}
-      {erased || modalOpen || errorMessage === undefined || isApiError(failure, "LEAVE_DATE_INVALID") ? null : <p role="alert">{errorMessage}</p>}
+      {erased ||
+      modalOpen ||
+      errorMessage === undefined ||
+      isApiError(failure, "LEAVE_DATE_INVALID") ? null : (
+        <p role="alert">{errorMessage}</p>
+      )}
       {success === undefined ? null : (
         <Toast
           dismissLabel={t("admin-census:common.close")}
@@ -361,31 +449,50 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
       )}
       <Modal
         closeLabel={t("admin-census:common.close")}
-        onClose={() => { setConfirmDirect(false); }}
+        onClose={() => {
+          setConfirmDirect(false);
+        }}
         open={!erased && confirmDirect}
         title={t("admin-census:leave.confirm")}
       >
         <p>{t("admin-census:leave.directWarning")}</p>
         {errorMessage === undefined ? null : <p role="alert">{errorMessage}</p>}
         <div className="census-record__dialog-actions">
-          <Button onClick={() => { setConfirmDirect(false); }} variant="ghost">{t("admin-census:common.cancel")}</Button>
-          <Button loading={pending} onClick={() => {
-            void run(
-              JSON.stringify({ memberId: member.id, effectiveDate, reasonKey, note }),
-              (key) => client.POST("/members/{id}/leave", {
-                body: {
-                  effectiveDate,
-                  ...(reasonKey === "" ? {} : { reasonKey }),
-                  ...(note.trim() === "" ? {} : { note }),
+          <Button
+            onClick={() => {
+              setConfirmDirect(false);
+            }}
+            variant="ghost"
+          >
+            {t("admin-census:common.cancel")}
+          </Button>
+          <Button
+            loading={pending}
+            onClick={() => {
+              void run(
+                JSON.stringify({ memberId: member.id, effectiveDate, reasonKey, note }),
+                (key) =>
+                  client.POST("/members/{id}/leave", {
+                    body: {
+                      effectiveDate,
+                      ...(reasonKey === "" ? {} : { reasonKey }),
+                      ...(note.trim() === "" ? {} : { note }),
+                    },
+                    headers: { "Idempotency-Key": key },
+                    params: { path: { id: member.id } },
+                  }),
+                (data) => {
+                  setSuccess(
+                    t("admin-census:leave.cancelledToast", {
+                      count: (data as Leave | undefined)?.cancelledBookings.length ?? 0,
+                    }),
+                  );
                 },
-                headers: { "Idempotency-Key": key },
-                params: { path: { id: member.id } },
-              }),
-              (data) => {
-                setSuccess(t("admin-census:leave.cancelledToast", { count: (data as Leave | undefined)?.cancelledBookings.length ?? 0 }));
-              },
-            );
-          }}>{t("admin-census:leave.confirm")}</Button>
+              );
+            }}
+          >
+            {t("admin-census:leave.confirm")}
+          </Button>
         </div>
       </Modal>
       <Modal
@@ -438,6 +545,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
           className="census-record__form"
           onSubmit={(event) => {
             event.preventDefault();
+            if (neverValidated) return;
             const body = billing ? { planId, priceId, nextInvoiceDate } : {};
             void run(
               JSON.stringify({ memberId: member.id, ...body }),
@@ -453,9 +561,15 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
             );
           }}
         >
-          <p>{t("admin-census:reactivation.description")}</p>
-          {errorMessage === undefined || invoiceDateRefused ? null : <p role="alert">{errorMessage}</p>}
-          {billing ? (
+          <p>
+            {neverValidated
+              ? t("admin-census:reactivation.notValidated")
+              : t("admin-census:reactivation.description")}
+          </p>
+          {errorMessage === undefined || invoiceDateRefused ? null : (
+            <p role="alert">{errorMessage}</p>
+          )}
+          {billing && !neverValidated ? (
             <>
               <FormField id="reactivation-plan" label={t("admin-census:reactivation.plan")}>
                 <Select
@@ -495,7 +609,11 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
               </FormField>
               <FormField
                 {...(invoiceDateRefused
-                  ? { error: t("admin-census:member.billing.nextInvoice.notBefore", { date: formats.formatPlainDate(`${clubMonth}-01`) }) }
+                  ? {
+                      error: t("admin-census:member.billing.nextInvoice.notBefore", {
+                        date: formats.formatPlainDate(`${clubMonth}-01`),
+                      }),
+                    }
                   : {})}
                 id="reactivation-invoice-date"
                 label={t("admin-census:reactivation.nextInvoiceDate")}
@@ -513,7 +631,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
               </FormField>
             </>
           ) : null}
-          <Button disabled={pending} loading={pending} type="submit">
+          <Button disabled={pending || neverValidated} loading={pending} type="submit">
             {t("admin-census:reactivation.action")}
           </Button>
         </form>

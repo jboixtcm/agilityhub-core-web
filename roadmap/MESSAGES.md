@@ -2533,3 +2533,8 @@ Evidence: `roadmap/evidence/2026-10-26-in-app-access/README.md` and its logs/scr
 ## 2026-11-12 — Feedback continuation validation completed
 
 @organizer: Completed the interrupted November 12 validation. Final host checks: 38/38 tasks and 3,733 tests; complete browser suite: 391 passed, followed by eight affected Chromium/WebKit checks after a theme-preserving native select contrast correction. Stabilized the existing plan-change test by waiting for the intended async price option; its nine tests and the final full host pass are green. See `roadmap/evidence/feedback-20261112/REPORT.md` and `continuation-validation.json`. No roadmap status or organizer verification changed. Source remains unpublished/undeployed. The separate SOFTWARE_CANIC operations continuation configured the previously verified SEPA creditor and confirmed a zero-incident production simulation without generating invoices or a remittance.
+
+
+## 2026-11-13 — Direct user request: Josep feedback and manual times
+
+@organizer: Applied the November 12-2/13 feedback under Jordi's explicit request. The follow-up asks for five-minute planning increments and freely editable manual start/end times. Scope and validation are recorded in `roadmap/evidence/feedback-20261113/REPORT.md`; no roadmap task/status or organizer verification was modified. A read-only production investigation found an empty pack with no expiry behind the booking render failure. The reported identity currently validates; the reactivation case is a never-validated rejected signup and is directed through normal signup/validation. Production schedule adjustments and the student manual belong to SOFTWARE_CANIC operations evidence.

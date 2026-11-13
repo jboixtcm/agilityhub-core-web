@@ -1,0 +1,9 @@
+
+/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin/e2e/feedback-20261113.spec.ts
+  58:42  error  Invalid type "any" of template literal expression                @typescript-eslint/restrict-template-expressions
+  58:51  error  Unsafe member access .project on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  71:47  error  Invalid type "any" of template literal expression                @typescript-eslint/restrict-template-expressions
+  71:56  error  Unsafe member access .project on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+
+✖ 4 problems (4 errors, 0 warnings)
+

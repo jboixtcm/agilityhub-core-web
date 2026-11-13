@@ -67,6 +67,7 @@ import {
   useBillingLocale,
   useClubProviderSettings,
 } from "./shared";
+import { SimulationPreview } from "./SimulationPreview";
 import "./billing.css";
 
 type BillingIncident = components["schemas"]["BillingIncident"];
@@ -1157,6 +1158,10 @@ export function BillingPage({
           </div>
         </div>
       )}
+
+      {!memberHistory && simulation?.invoicesPreview !== undefined ? (
+        <SimulationPreview key={simulation.at} items={simulation.invoicesPreview} />
+      ) : null}
 
       <div className="billing-toolbar">
         {memberHistory ? null : (

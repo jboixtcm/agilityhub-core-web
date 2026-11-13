@@ -76,7 +76,8 @@
     "price": "Price",
     "nextInvoiceDate": "Next invoice date",
     "action": "Reactivate member",
-    "success": "The member was reactivated."
+    "success": "The member was reactivated.",
+    "notValidated": "This application was never validated, so it has no member number or account. Submit a new application through ‘Sign up’, then validate it after choosing the plan and reviewing the initial payment. Reactivation is for members whose signup was previously validated."
   },
   "paymentMethod": {
     "current": "Current method",
@@ -648,7 +649,8 @@
       "BANK_TRANSFER": "Bank transfer",
       "CASH": "Cash"
     },
-    "cancelPendingCheckout": "Cancel the pending card checkout when validating the signup"
+    "cancelPendingCheckout": "Cancel the pending card checkout when validating the signup",
+    "actuallyPaidHelp": "Enter only money the club has already received for the initial charges. This reduces the outstanding amount; it does not charge a bank account. If nothing has been received, enter 0 and confirm that payment remains pending."
   },
   "values": {
     "empty": "—",

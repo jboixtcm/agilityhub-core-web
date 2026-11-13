@@ -630,7 +630,7 @@ describe("E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)", () => {
         await waitFor(() => {
           expect(document.getElementById(target)).toHaveTextContent(text);
         });
-        const field = document.querySelector(`[aria-describedby="${target}"]`);
+        const field = document.querySelector(`[aria-describedby~="${target}"]`);
         expect(field).toHaveAttribute("aria-invalid", "true");
       }
       expect(onNavigate).not.toHaveBeenCalled();
@@ -2240,7 +2240,9 @@ it("T-04-22 requires explicit cancellation of a pending card checkout before val
   fireEvent.click(screen.getByRole("checkbox", { name: /Anul·la l’intent de pagament/u }));
   fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
   validate();
-  await waitFor(() => { expect(sent(requests, "POST", "/validation", false)).toHaveLength(1); });
+  await waitFor(() => {
+    expect(sent(requests, "POST", "/validation", false)).toHaveLength(1);
+  });
   expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({
     cancelPendingCheckout: true,
   });

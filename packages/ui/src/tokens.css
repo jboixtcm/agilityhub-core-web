@@ -29,6 +29,7 @@
 
   --ah-color-primary: #1d1d1f;
   --ah-color-primary-fg: #ffffff;
+  --ah-color-link: color-mix(in srgb, var(--ah-color-primary) 80%, var(--ah-color-text));
   --ah-color-background: #ffffff;
   --ah-color-surface: #ffffff;
   --ah-color-surface-2: color-mix(in srgb, #ffffff 94%, #1d1d1f);

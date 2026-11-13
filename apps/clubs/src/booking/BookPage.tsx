@@ -285,11 +285,13 @@ export function BookPage({ client }: { client: ApiClient }) {
                 planName: data.pack.planName,
               })}
             </strong>
-            <Badge tone={packTone}>
-              {t("booking:pack.expires", {
-                expiresOn: formats.formatPlainDate(data.pack.expiresOn),
-              })}
-            </Badge>
+            {data.pack.expiresOn == null ? null : (
+              <Badge tone={packTone}>
+                {t("booking:pack.expires", {
+                  expiresOn: formats.formatPlainDate(data.pack.expiresOn),
+                })}
+              </Badge>
+            )}
           </div>
           <div aria-hidden="true" className="pack-card__bar">
             <span className="pack-card__used" style={{ flexGrow: data.pack.consumed }} />

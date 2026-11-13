@@ -655,9 +655,8 @@
 }
 
 .instructor-student-link {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+  color: var(--ah-color-link);
+  text-decoration: none;
 }
 
 .instructor-student-link:focus-visible {

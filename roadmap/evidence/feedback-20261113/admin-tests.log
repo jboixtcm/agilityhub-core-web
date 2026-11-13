@@ -1,0 +1,76 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin
+
+Not implemented: navigation to another Document
+stderr | src/billing/BillingPage.test.tsx > T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2) > T-12-25: header, incidents first with their labels and «Obre fitxa» links, the cash members, the KPIs and the chips
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+ ❯ src/dashboard/SignupReviewPage.test.tsx (100 tests | 1 failed) 14338ms
+   ❯ E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) (11)
+     × UPFRONT_AMOUNT_EXCEEDS_DUE (422, bare as the api sends it) is shown on its field 112ms
+stderr | src/billing/BillingPage.test.tsx > T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2) > T-12-25: the month steppers rewrite ?mes= and read that month; a month without a simulation offers [1 · SIMULA EL MES], which shows its incidents
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+stderr | src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > R-12-29 (CONVENCIONS_API §7, E85): an unanswered generation (503) keeps its Idempotency-Key, so the retry is the same submission; the answer then retires it
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > CONVENCIONS_API §7 (E80): 409 IDEMPOTENCY_KEY_REUSED {IN_PROGRESS} reads the shared «encara està en curs» text inside the modal
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > T-12-25: «Es generaran 168 rebuts…» from the simulation's KPIs, then POST /billing/runs with one Idempotency-Key, «168 rebuts generats»
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > T-12-25 / R-12-07 billingStale: 409 SIMULATION_STALE turns the modal into «Torna a simular el mes» with [Simula de nou]
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > T-12-25: 422 COLLECTION_DATE_TOO_SOON shows the api's dates inside the modal (two business days, T-12-29b)
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/billing/BillingPage.test.tsx > T-12-25 [Retrocedeix la remesa] only when the api says so (R-12-14) > T-12-25: absent once the remittance is submitted (rollbackable false), present while rollbackable
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/billing/BillingPage.test.tsx > T-12-25 [Retrocedeix la remesa] only when the api says so (R-12-14) > T-12-25: the rollback button stays disabled until «RETROCEDIR» is typed exactly; then 200 «168 rebuts anul·lats» and the month reads rolled back
+An error occurred in the <SimulationPreview> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+

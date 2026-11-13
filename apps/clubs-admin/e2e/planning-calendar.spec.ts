@@ -388,7 +388,8 @@ test.describe("T-06-28 E4-W10 D4 on a day the club is closed", () => {
     for (const editor of [
       card.getByRole("spinbutton"),
       card.getByLabel("Pista"),
-      card.getByLabel("Hora"),
+      card.getByLabel("Hora", { exact: true }),
+      card.getByLabel("Final", { exact: true }),
       card.getByLabel("Descripció"),
       card.getByRole("button", { name: /^Nivells/u }),
     ]) {
@@ -471,7 +472,8 @@ test.describe("T-06-28 E4-W14 D4 closed-day chips (E4-W11 review #2 and #3)", ()
     for (const editor of [
       card.getByRole("spinbutton"),
       card.getByLabel("Pista"),
-      card.getByLabel("Hora"),
+      card.getByLabel("Hora", { exact: true }),
+      card.getByLabel("Final", { exact: true }),
       card.getByLabel("Descripció"),
       card.getByRole("button", { name: /^Nivells/u }),
     ]) {

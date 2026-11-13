@@ -42,6 +42,7 @@ import {
   SendAnnouncementDialog,
 } from "../messaging/SendAnnouncementDialog";
 
+import { dateFilterInput } from "./date-filters";
 import { resolveDogOwners } from "./dog-owners";
 
 type MemberListItem = components["schemas"]["MemberListItem"];
@@ -103,6 +104,7 @@ const DOG_DEFAULT_FILTERS: UniversalFilter[] = [
 ];
 
 function filterValue(value: unknown): string {
+  if (Array.isArray(value)) return value.map(filterValue).join(",");
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
     : "";
@@ -1136,8 +1138,17 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
     const value = filterValue(filter.value);
     const memberItems = (data?.items ?? []) as MemberRow[];
     const dogItems = (data?.items ?? []) as DogRow[];
+    const dateColumn =
+      definitions.find((definition) => definition.key === filter.field)?.type === "date";
+    const dateLabel =
+      dateColumn && filter.op !== "exists"
+        ? [
+            ...new Set(value.split(",").map((part) => formatDate(part, locale, timeZone, true))),
+          ].join(" – ")
+        : undefined;
     const valueLabel =
-      kind === "members" && filter.field === "planId"
+      dateLabel ??
+      (kind === "members" && filter.field === "planId"
         ? (memberItems.find((item) => item.plan?.id === value)?.plan?.name ?? value)
         : kind === "dogs" && filter.field === "levelId"
           ? (dogItems.find((item) => item.level?.id === value)?.level?.name ?? value)
@@ -1149,7 +1160,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                 ? t("census:values.yes")
                 : value === "false"
                   ? t("census:values.no")
-                  : value;
+                  : value);
     return {
       field: filter.field,
       fieldLabel:
@@ -1234,7 +1245,9 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           caption={t("census:members.caption")}
           columns={memberColumns}
           {...(errorMessage === undefined ? {} : { error: errorMessage })}
-          filterColumns={memberFilterColumns}
+          filterColumns={memberFilterColumns.map((column) =>
+            dateFilterInput(column, timeZone, t("census:list.dateFrom"), t("census:list.dateTo")),
+          )}
           labels={memberLabels}
           listKey="members"
           loadFilterValues={loadFilterValues}
@@ -1286,7 +1299,9 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           caption={t("census:dogs.caption")}
           columns={dogColumns}
           {...(errorMessage === undefined ? {} : { error: errorMessage })}
-          filterColumns={dogFilterColumns}
+          filterColumns={dogFilterColumns.map((column) =>
+            dateFilterInput(column, timeZone, t("census:list.dateFrom"), t("census:list.dateTo")),
+          )}
           labels={dogLabels}
           listKey="dogs"
           loadFilterValues={loadFilterValues}

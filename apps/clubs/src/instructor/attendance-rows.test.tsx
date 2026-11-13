@@ -13,6 +13,7 @@ import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AttendancePage } from "./AttendancePage";
+import { studentName } from "./shared";
 
 const canic: Branding = {
   ...brandingCanicFixture,
@@ -114,3 +115,18 @@ function present<T>(value: T | null | undefined): T {
   if (value === null || value === undefined) throw new TypeError("Expected an element");
   return value;
 }
+
+it.each([undefined, null, "", "   "])(
+  "T-10-00 blank handler %s keeps the member name",
+  async (handlerName) => {
+    const i18n = await createClubsI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["instructor"],
+      storage: undefined,
+    });
+    expect(
+      studentName(i18n.t.bind(i18n), { dogName: "Duna", memberFirstName: "Laura", handlerName }),
+    ).toBe("Laura + Duna");
+  },
+);

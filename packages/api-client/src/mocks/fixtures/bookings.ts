@@ -1093,7 +1093,7 @@ export function seatHoldResponse(
     holdSeconds: 60,
     id: hold.id,
     limit,
-    pack: pack === null ? null : { available: pack.available, expiresOn: pack.expiresOn },
+    pack: pack === null ? null : { available: pack.available, expiresOn: pack.expiresOn ?? null },
     payment: options.modules.includes("SINGLE_CLASS")
       ? { mode: chargeMode(dog.id), price: SINGLE_CLASS_PRICE }
       : null,

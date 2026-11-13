@@ -115,7 +115,11 @@ async function concurrentPatch(
 }
 
 function optionValues(select: HTMLElement): string[] {
-  return [...(select as HTMLSelectElement).options].map((option) => option.value);
+  const options =
+    select instanceof HTMLInputElement
+      ? (select.list?.options ?? [])
+      : (select as HTMLSelectElement).options;
+  return [...options].map((option) => option.value);
 }
 
 function minutesOfDay(time: string): number {
@@ -1125,7 +1129,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
 });
 
 describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
-  it("S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries", async () => {
+  it("T-06-09 manual time entry is independent of the planning grid; creation suggests configured grid times", async () => {
     await putOpeningHours("07:05", "21:55");
     await renderCalendar();
     const week = await grid(/del 10 al 16 d.agost$/u);
@@ -1134,9 +1138,10 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     // The card of a 60-minute class: starts on slot boundaries that end by 21:55.
     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
     const hour = within(selectedCard()).getByLabelText("Hora");
-    expect(optionValues(hour)[0]).toBe("07:10");
-    expect(optionValues(hour).at(-1)).toBe("20:50");
-    expect(optionValues(hour).every((time) => minutesOfDay(time) % 10 === 0)).toBe(true);
+    expect(hour).toHaveAttribute("type", "time");
+    expect(hour).toHaveAttribute("step", "60");
+    expect(hour).toHaveAttribute("min", "07:05");
+    expect(hour).toHaveAttribute("max", "21:55");
     expect(hour).toHaveValue("18:50");
     // [ACCEPTA] sends the aligned start and the end that keeps the 60 minutes (E4-W10 step 5).
     const patches = captureBodies("PATCH", `/class-sessions/${WEDNESDAY_1850}`);
@@ -1333,7 +1338,7 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
 
     // The Sunday class keeps its own time and offers no other.
     fireEvent.click(within(week).getByRole("button", { name: /^dg 16 10:00/u }));
-    expect(optionValues(within(selectedCard()).getByLabelText("Hora"))).toEqual(["10:00"]);
+    expect(within(selectedCard()).getByLabelText("Hora")).toHaveValue("10:00");
     expect(within(selectedCard()).getByText(CLOSED_DAY)).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
@@ -1443,7 +1448,7 @@ describe("T-06-28 E4-W10 D4 follow-ups of the E4-W09 review", () => {
     expect(screen.getByRole("button", { name: "Crear classe" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Bloqueja pista" })).toBeDisabled();
     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
-    expect(optionValues(within(selectedCard()).getByLabelText("Hora"))).toEqual(["18:50"]);
+    expect(within(selectedCard()).getByLabelText("Hora")).toHaveValue("18:50");
 
     failOpeningHours = false;
     fireEvent.click(retry);
@@ -1452,7 +1457,7 @@ describe("T-06-28 E4-W10 D4 follow-ups of the E4-W09 review", () => {
     });
     expect(screen.getByRole("button", { name: "Bloqueja pista" })).toBeEnabled();
     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).not.toBeInTheDocument();
-    expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
+    expect(within(selectedCard()).getByLabelText("Hora")).toHaveAttribute("min", "07:00");
   });
 });
 
@@ -1516,7 +1521,7 @@ describe("T-06-28 E4-W11 D4 follow-ups of the E4-W10 review", () => {
     const week = await grid(/del 10 al 16 d.agost$/u);
     fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
     await waitFor(() => {
-      expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
+      expect(within(selectedCard()).getByLabelText("Hora")).toHaveAttribute("min", "07:00");
     });
     const card = selectedCard();
     expect(within(card).queryByText(CLOSED_DAY)).not.toBeInTheDocument();
@@ -1601,7 +1606,7 @@ describe("T-06-28 E4-W14 D4 follow-ups of the E4-W11 review", () => {
     const open = await grid(/del 10 al 16 d.agost$/u);
     fireEvent.click(within(open).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
     await waitFor(() => {
-      expect(optionValues(within(selectedCard()).getByLabelText("Hora"))[0]).toBe("07:00");
+      expect(within(selectedCard()).getByLabelText("Hora")).toHaveAttribute("min", "07:00");
     });
     expect(selectedCard().querySelector(".calendar-chip--disabled")).toBeNull();
   });
@@ -2072,16 +2077,17 @@ describe("Josep feedback: generated daily bands", () => {
     const start = within(drawer).getByLabelText("Inici");
     const end = within(drawer).getByLabelText("Final");
     await waitFor(() => {
-      expect(optionValues(start)).toEqual(["17:40", "18:50"]);
+      expect(optionValues(start)).toEqual(expect.arrayContaining(["17:40", "18:50"]));
     });
     expect(start).toHaveValue("17:40");
     expect(end).toHaveValue("18:40");
     fireEvent.change(start, { target: { value: "18:50" } });
     expect(end).toHaveValue("19:50");
     fireEvent.change(date, { target: { value: "2026-08-16" } });
-    await waitFor(() => {
-      expect(optionValues(start)).toEqual([]);
-    });
-    expect(within(drawer).getByRole("button", { name: "CREA LA CLASSE" })).toBeDisabled();
+    await waitFor(() => expect(start).toBeEnabled());
+    fireEvent.change(start, { target: { value: "10:15" } });
+    fireEvent.change(end, { target: { value: "11:20" } });
+    expect(start).toHaveValue("10:15");
+    expect(end).toHaveValue("11:20");
   });
 });

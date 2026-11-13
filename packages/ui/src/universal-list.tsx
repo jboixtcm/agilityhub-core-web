@@ -118,6 +118,8 @@ export interface UniversalListFilterColumn {
   label: string;
   operators?: readonly UniversalFilterOperator[];
   range?: UniversalFilterRange;
+  inputType?: "date";
+  toFilter?: (filter: UniversalFilter) => UniversalFilter;
   type: UniversalFilterType;
 }
 
@@ -420,7 +422,8 @@ export function UniversalList<Row>({
   const range = selectedFilterColumn?.range;
   const rangeActive = filterOperator === "between" && range !== undefined;
   const valueRequired = filterOperator !== "exists";
-  const suggestedValueActive = valueRequired && !rangeActive;
+  const typedValueActive = selectedFilterColumn?.inputType === "date";
+  const suggestedValueActive = valueRequired && !rangeActive && !typedValueActive;
   const [rangeStart, setRangeStart] = useState("");
   const [rangeEnd, setRangeEnd] = useState("");
   const rangeOrdered =
@@ -556,7 +559,11 @@ export function UniversalList<Row>({
       ...state,
       filters: [
         ...withoutField,
-        { field: filterField, operator: filterOperator, value: pendingValue },
+        selectedFilterColumn?.toFilter?.({
+          field: filterField,
+          operator: filterOperator,
+          value: pendingValue,
+        }) ?? { field: filterField, operator: filterOperator, value: pendingValue },
       ],
       page: 0,
     });
@@ -733,7 +740,18 @@ export function UniversalList<Row>({
                 ))}
               </select>
             </label>
-            {!valueRequired ? null : !rangeActive ? (
+            {!valueRequired ? null : typedValueActive && !rangeActive ? (
+              <label>
+                <span>{labels.filterValue}</span>
+                <input
+                  type="date"
+                  value={filterValue}
+                  onChange={(event) => {
+                    setFilterValue(event.currentTarget.value);
+                  }}
+                />
+              </label>
+            ) : !rangeActive ? (
               <label>
                 <span>{labels.filterValue}</span>
                 <select

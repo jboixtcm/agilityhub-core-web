@@ -73,7 +73,14 @@
     "providerConfigurationTitle": "Club payment configuration",
     "providerConfigurationHelp": "These issues are resolved in the club’s payment configuration. Ask the platform administrator to review it, then simulate the month again.",
     "sepaNotConfigured": "SEPA direct debit is enabled, but the club’s creditor details are missing. Complete the creditor name, creditor identifier, IBAN and suffix.",
-    "sepaDisabled": "SEPA direct debit is disabled for the club."
+    "sepaDisabled": "SEPA direct debit is disabled for the club.",
+    "previewTitle": "Planned invoice details",
+    "previewHelp": "Forecast from the latest simulation. Viewing it does not issue invoices or collect payments. Run the simulation again after changing billing information.",
+    "previewSearch": "Search by member or item",
+    "previewCount": "{count} planned invoices",
+    "previewLines": "Items",
+    "previewPrevious": "Previous",
+    "previewNext": "Next"
   },
   "empty": {
     "noSimulation": "There is no simulation for this month yet",

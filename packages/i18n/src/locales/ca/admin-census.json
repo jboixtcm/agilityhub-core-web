@@ -76,7 +76,8 @@
     "price": "Tarifa",
     "nextInvoiceDate": "Data del proper rebut",
     "action": "Reactiva l'abonat",
-    "success": "L'abonat s'ha reactivat."
+    "success": "L'abonat s'ha reactivat.",
+    "notValidated": "Aquesta fitxa correspon a una sol·licitud que no va arribar a validar-se: encara no té número ni compte d’abonat. Cal tornar a presentar l’alta des de «Apunta-t’hi» i validar-la, escollint la modalitat i revisant el cobrament inicial. La reactivació és per a abonats que ja havien tingut una alta validada."
   },
   "paymentMethod": {
     "current": "Mètode actual",
@@ -648,7 +649,8 @@
       "BANK_TRANSFER": "Transferència",
       "CASH": "Efectiu"
     },
-    "cancelPendingCheckout": "Anul·la l’intent de pagament amb targeta pendent en validar l’alta"
+    "cancelPendingCheckout": "Anul·la l’intent de pagament amb targeta pendent en validar l’alta",
+    "actuallyPaidHelp": "Indica només els diners que el club ja ha rebut pels conceptes inicials. Aquest import redueix el pendent, però no fa cap càrrec bancari. Si no has cobrat res, indica 0 i confirma «No s’ha cobrat res: queda pendent»."
   },
   "values": {
     "empty": "—",

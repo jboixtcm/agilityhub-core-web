@@ -1,0 +1,125 @@
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: feedback-20261113
+Capture folder of the permanent mock specs: feedback-20261113
+Playwright arguments: --workers=4
+Checkout copied into the container: 921M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 60, added 0
+Progress: resolved 858, reused 0, downloaded 158, added 158
+Progress: resolved 858, reused 0, downloaded 305, added 305
+Progress: resolved 858, reused 0, downloaded 436, added 436
+Progress: resolved 858, reused 0, downloaded 527, added 526
+Progress: resolved 858, reused 0, downloaded 558, added 558
+Progress: resolved 858, reused 0, downloaded 581, added 581
+Progress: resolved 858, reused 0, downloaded 607, added 607
+Progress: resolved 858, reused 0, downloaded 635, added 635
+Progress: resolved 858, reused 0, downloaded 717, added 717
+Progress: resolved 858, reused 0, downloaded 781, added 781
+Progress: resolved 858, reused 0, downloaded 847, added 847
+Progress: resolved 858, reused 0, downloaded 856, added 856
+Progress: resolved 858, reused 0, downloaded 857, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 15.7s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 34dad6eab5ba9492
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 57f19dc03ec8fdba
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing 9e7506aff9e682a0
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 1093174788d956af
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@0.0.1 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=4
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+@agilityhub/course-ui:e2e: ····
+@agilityhub/course-ui:e2e:   4 passed (24.0s)
+clubs:build: cache miss, executing c49342f11d3f777c
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: ../../packages/api-client/src/mocks/fixtures/bookings.ts(1096,5): error TS2322: Type '{ available: number; expiresOn: string | null | undefined; } | null' is not assignable to type '{ available: number; expiresOn?: string | null; } | null | undefined'.
+clubs:build:   Type '{ available: number; expiresOn: string | null | undefined; }' is not assignable to type '{ available: number; expiresOn?: string | null; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+clubs:build:     Types of property 'expiresOn' are incompatible.
+clubs:build:       Type 'string | null | undefined' is not assignable to type 'string | null'.
+clubs:build:         Type 'undefined' is not assignable to type 'string | null'.
+clubs:build:  ELIFECYCLE  Command failed with exit code 2.
+clubs-admin:build: cache miss, executing 77c13538e8389cc0
+id:build: cache miss, executing 625c44152e605215
+clubs#build:  ERROR  command (/work/apps/clubs) /usr/bin/pnpm run build exited (2)
+
+ Tasks:    4 successful, 7 total
+Cached:    0 cached, 7 total
+  Time:    48.405s 
+Failed:    clubs#build
+
+ ERROR  run failed: command  exited (2)
+evidence: feedback-20261113/r2-course-ui-harness-1280-light.png
+evidence: feedback-20261113/r2-course-ui-harness-1280-dark.png
+evidence: feedback-20261113/r2-course-ui-harness-1280-after-nudge.png

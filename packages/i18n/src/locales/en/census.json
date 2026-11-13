@@ -49,7 +49,9 @@
     "sortAscending": "Sort {column} ascending",
     "sortDescending": "Sort {column} descending",
     "view": "Views: “{name}”",
-    "views": "Views"
+    "views": "Views",
+    "dateFrom": "From",
+    "dateTo": "To"
   },
   "members": {
     "activeCount": "{count} active",

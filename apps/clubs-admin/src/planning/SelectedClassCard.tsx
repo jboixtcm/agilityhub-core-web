@@ -21,7 +21,6 @@ import {
   minutesOf,
   type OpeningHours,
   openingOf,
-  rangeOptions,
   reviewTimeValue,
   timeLabel,
   timeOf,
@@ -54,6 +53,7 @@ interface DraftValues {
   placementId: string | null;
   ringId: string | null;
   startTime: string;
+  endTime: string;
 }
 
 function initialValues(session: ClassSession): DraftValues {
@@ -66,6 +66,7 @@ function initialValues(session: ClassSession): DraftValues {
     placementId: session.placementId ?? null,
     ringId: session.ringId ?? null,
     startTime: session.startTime,
+    endTime: session.endTime,
   };
 }
 
@@ -73,7 +74,7 @@ function sameSet(left: readonly string[], right: readonly string[]): boolean {
   return left.length === right.length && left.every((value) => right.includes(value));
 }
 
-/** Only the R-06-09 fields that changed (never `date`); the end time keeps the duration. */
+/** Only the R-06-09 fields that changed (never `date`); start and end can change independently. */
 function diffOf(session: ClassSession, values: DraftValues, editable: boolean): ClassSessionPatch {
   const patch: ClassSessionPatch = { version: session.version };
   const notes = values.notes.trim() === "" ? null : values.notes.trim();
@@ -90,12 +91,8 @@ function diffOf(session: ClassSession, values: DraftValues, editable: boolean): 
   if (capacity !== currentCapacity) patch.capacity = capacity;
   const description = values.description.trim() === "" ? null : values.description.trim();
   if (description !== (session.description ?? null)) patch.description = description;
-  if (values.startTime !== session.startTime) {
-    patch.startTime = values.startTime;
-    patch.endTime = timeOf(
-      minutesOf(values.startTime) + minutesOf(session.endTime) - minutesOf(session.startTime),
-    );
-  }
+  if (values.startTime !== session.startTime) patch.startTime = values.startTime;
+  if (values.endTime !== session.endTime) patch.endTime = values.endTime;
   return patch;
 }
 
@@ -299,12 +296,6 @@ export function SelectedClassCard({
         : automaticDescription(catalogs.levels, chips.levelIds, t),
     [catalogs.levels, chips.levelIds, session, t],
   );
-  const duration = minutesOf(session.endTime) - minutesOf(session.startTime);
-  const hours =
-    opening === undefined || opening === null
-      ? []
-      : rangeOptions(opening, settings.slotMinutes, duration).starts;
-  const hourOptions = hours.includes(session.startTime) ? hours : [session.startTime, ...hours];
   const notesEditable = notesOnly || (editable && closedDay);
   const chipsDisabled = busy || !chipsEditable;
   // A disabled chip editor looks disabled too (muted, `not-allowed`): on a closed day the admin
@@ -319,6 +310,15 @@ export function SelectedClassCard({
 
   const save = async (cancelBookings = false) => {
     if (busy) return;
+    if (
+      chipsEditable &&
+      (!/^\d{2}:\d{2}$/u.test(chips.startTime) ||
+        !/^\d{2}:\d{2}$/u.test(chips.endTime) ||
+        chips.startTime >= chips.endTime)
+    ) {
+      setError({ field: "general", message: t("errors:INVALID_TIME_RANGE") });
+      return;
+    }
     setPending(true);
     setError(undefined);
     try {
@@ -545,19 +545,41 @@ export function SelectedClassCard({
             <span className="calendar-chip__label">
               {t("admin-scheduling:calendar.selected.time")}
             </span>
-            <Select
+            <Input
               disabled={chipsDisabled}
+              type="time"
+              step={60}
+              min={opening?.open}
+              max={opening?.close}
               onChange={(event) => {
-                set({ startTime: event.currentTarget.value });
+                const startTime = event.currentTarget.value;
+                const length = minutesOf(values.endTime) - minutesOf(values.startTime);
+                const end = minutesOf(startTime) + length;
+                set({
+                  startTime,
+                  ...(startTime !== "" && length > 0 && end < 24 * 60
+                    ? { endTime: timeOf(end) }
+                    : {}),
+                });
               }}
               value={chips.startTime}
-            >
-              {hourOptions.map((time) => (
-                <option key={time} value={time}>
-                  {timeLabel(time)}
-                </option>
-              ))}
-            </Select>
+            />
+          </label>
+          <label className={chipClass("calendar-chip calendar-chip--select")}>
+            <span className="calendar-chip__label">
+              {t("admin-scheduling:calendar.createForm.end")}
+            </span>
+            <Input
+              disabled={chipsDisabled}
+              type="time"
+              step={60}
+              min={chips.startTime}
+              max={opening?.close}
+              onChange={(event) => {
+                set({ endTime: event.currentTarget.value });
+              }}
+              value={chips.endTime}
+            />
           </label>
           <label className={chipClass("calendar-chip calendar-chip--wide")}>
             <span className="calendar-chip__label">

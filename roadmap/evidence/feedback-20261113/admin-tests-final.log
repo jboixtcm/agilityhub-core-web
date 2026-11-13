@@ -1,0 +1,44 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin
+
+Not implemented: navigation to another Document
+ ❯ src/dashboard/SignupReviewPage.test.tsx (100 tests | 1 failed) 17744ms
+   ❯ E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) (11)
+     × UPFRONT_AMOUNT_EXCEEDS_DUE (422, bare as the api sends it) is shown on its field 148ms
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/SignupReviewPage.test.tsx > E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) > UPFRONT_AMOUNT_EXCEEDS_DUE (422, bare as the api sends it) is shown on its field
+Error: expect(received).toHaveAttribute()
+
+received value must be an HTMLElement or an SVGElement.
+Received has type:  Null
+Received has value: null
+ ❯ src/dashboard/SignupReviewPage.test.tsx:634:23
+    632|         });
+    633|         const field = document.querySelector(`[aria-describedby="${tar…
+    634|         expect(field).toHaveAttribute("aria-invalid", "true");
+       |                       ^
+    635|       }
+    636|       expect(onNavigate).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 69 passed (70)
+      Tests  1 failed | 1150 passed (1151)
+   Start at  12:10:11
+   Duration  64.63s (tests 67%, environment 13%, transform 11%, import 6%, setup 3%)
+
+    Isolate  70 workers spawned · ~1.38s startup each (spawn + environment, per file)
+             at least ~4.30s faster with isolate: false — reuses workers across files instead of one per file
+
+/Users/jordib/.config/agilityhub-clubs/production/josep-feedback-20261106/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run`
+Exit status 1

@@ -73,7 +73,14 @@
     "providerConfigurationTitle": "Configuració de pagaments del club",
     "providerConfigurationHelp": "Aquestes incidències es resolen a la configuració de pagaments del club. Demana a l’administrador de la plataforma que la revisi i torna a simular el mes.",
     "sepaNotConfigured": "La domiciliació SEPA està activada, però falten les dades del creditor del club. Cal completar el nom, l’identificador de creditor, l’IBAN i el sufix.",
-    "sepaDisabled": "La domiciliació SEPA està desactivada per al club."
+    "sepaDisabled": "La domiciliació SEPA està desactivada per al club.",
+    "previewTitle": "Detall dels rebuts previstos",
+    "previewHelp": "Previsió de la darrera simulació. Consultar-la no genera rebuts ni fa cap cobrament. Si canvies dades de facturació, torna a simular el mes.",
+    "previewSearch": "Cerca per abonat o concepte",
+    "previewCount": "{count} rebuts previstos",
+    "previewLines": "Conceptes",
+    "previewPrevious": "Anterior",
+    "previewNext": "Següent"
   },
   "empty": {
     "noSimulation": "Encara no hi ha cap simulació d'aquest mes",

@@ -1270,7 +1270,7 @@ export interface paths {
         put?: never;
         /**
          * createClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28). placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]).
+         * @description Manual start and end times accept any whole minute within opening hours. Template bands and classes.slotMinutes are suggestions, not restrictions on manual classes. Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28). placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]).
          */
         post: operations["createClass"];
         delete?: never;
@@ -1298,7 +1298,7 @@ export interface paths {
         head?: never;
         /**
          * patchClass
-         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]), while the ones the class already has may have become inactive and stay (S05 R-05-03, R-06-05). A reorder of instructorIds is stored as sent but is no change: no diff entry, no N-08b (R-06-09).
+         * @description Manual start and end times accept any whole minute within opening hours and may be edited independently. Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]), while the ones the class already has may have become inactive and stay (S05 R-05-03, R-06-05). A reorder of instructorIds is stored as sent but is no change: no diff entry, no N-08b (R-06-09).
          */
         patch: operations["patchClass"];
         trace?: never;
@@ -13603,8 +13603,11 @@ export interface components {
             available: number;
             /** Format: int32 */
             consumed: number;
-            /** Format: date */
-            expiresOn: string;
+            /**
+             * Format: date
+             * @description No expiry when the member has no issued pack
+             */
+            expiresOn?: string | null;
             planName: string;
             /** Format: int32 */
             sessionsTotal: number;
@@ -13819,6 +13822,8 @@ export interface components {
             /** Format: uuid */
             id: string;
             incidents: components["schemas"]["BillingIncident"][];
+            /** @description Saved simulation details; reading the period never generates invoices */
+            invoicesPreview?: components["schemas"]["InvoicePreview"][];
             kpis: components["schemas"]["SimulationKpis"];
         };
         Phone: {

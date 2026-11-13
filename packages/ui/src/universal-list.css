@@ -267,7 +267,8 @@
 }
 
 .ah-universal-list table {
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   font-size: 0.78rem;
   border-collapse: collapse;
 }

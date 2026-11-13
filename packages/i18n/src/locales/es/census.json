@@ -49,7 +49,9 @@
     "sortAscending": "Ordenar {column} de forma ascendente",
     "sortDescending": "Ordenar {column} de forma descendente",
     "view": "Vistas: «{name}»",
-    "views": "Vistas"
+    "views": "Vistas",
+    "dateFrom": "Desde",
+    "dateTo": "Hasta"
   },
   "members": {
     "activeCount": "{count} de alta",
