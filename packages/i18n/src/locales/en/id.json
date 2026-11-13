@@ -102,6 +102,11 @@
     "description": "The address you opened does not match any page.",
     "back": "BACK TO SIGN IN"
   },
+  "privacy": {
+    "title": "Privacy policy",
+    "version": "Version {version}",
+    "versionAndDate": "Version {version} · In effect from {date}"
+  },
   "errors": {
     "generic": "The action could not be completed. Try again."
   }

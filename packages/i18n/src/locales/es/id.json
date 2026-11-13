@@ -102,6 +102,11 @@
     "description": "La dirección que has abierto no corresponde a ninguna página.",
     "back": "VOLVER AL INICIO"
   },
+  "privacy": {
+    "title": "Política de privacidad",
+    "version": "Versión {version}",
+    "versionAndDate": "Versión {version} · En vigor desde el {date}"
+  },
   "errors": {
     "generic": "No se ha podido completar la acción. Vuelve a intentarlo."
   }

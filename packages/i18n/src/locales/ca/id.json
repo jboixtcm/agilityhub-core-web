@@ -102,6 +102,11 @@
     "description": "L'adreça que has obert no correspon a cap pàgina.",
     "back": "TORNA A L'INICI"
   },
+  "privacy": {
+    "title": "Política de privacitat",
+    "version": "Versió {version}",
+    "versionAndDate": "Versió {version} · En vigor des del {date}"
+  },
   "errors": {
     "generic": "No s'ha pogut completar l'acció. Torna-ho a provar."
   }

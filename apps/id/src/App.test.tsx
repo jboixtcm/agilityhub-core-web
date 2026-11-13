@@ -6,7 +6,8 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { I18nextProvider } from "react-i18next";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { App, oidcContinuation } from "./App";
+import { App, oidcContinuation, PrivacyPage } from "./App";
+import { PRIVACY_POLICY, PRIVACY_POLICY_VERSION } from "./privacy/privacy-policy";
 
 type Me = components["schemas"]["Me"];
 
@@ -627,4 +628,65 @@ it("Internal access: the identity fallback is neutral and email actions can be d
   ).toBeNull();
   expect(document.body.textContent).not.toMatch(/AgilityHub/u);
   expect(document.title).not.toMatch(/AgilityHub/u);
+});
+
+describe("PRIV-01 (decision of 13 Nov 2026): apps/id serves the platform's privacy policy at /privacy", () => {
+  it("shows the versioned policy to a visitor without a session, in the page's language", async () => {
+    window.history.replaceState(null, "", "/privacy");
+    const { fetcher, requests } = testFetcher();
+    // No session on this device: the cookie refresh is refused.
+    const anonymous = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = input instanceof Request ? input.url : String(input);
+      if (new URL(url).pathname === "/oauth2/token") {
+        requests.push({ body: "", method: "POST", url });
+        return json({ error: "invalid_grant" }, 400);
+      }
+      return fetcher(input, init);
+    }) as typeof fetch;
+    const { i18n, navigate } = await renderApp(createClient(anonymous));
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Política de privacitat" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "Pàgina no trobada" })).toBeNull();
+    expect(screen.getByText(`Versió ${PRIVACY_POLICY_VERSION}`)).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "1. Qui és el responsable del tractament" }),
+    ).toBeVisible();
+    expect(screen.getAllByText(/Club Agility Cànic/u).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "info@agilitycanic.cat" })[0]).toHaveAttribute(
+      "href",
+      "mailto:info@agilitycanic.cat",
+    );
+    await waitFor(() => {
+      expect(requests.some((request) => request.url.endsWith("/oauth2/token"))).toBe(true);
+    });
+    // Public: the page asks for no account and sends nobody to the login.
+    expect(requests.filter((request) => request.url.includes("/api/v1/"))).toHaveLength(0);
+    expect(navigate).not.toHaveBeenCalled();
+    expect(screen.getByRole("heading", { level: 1, name: "Política de privacitat" })).toBeVisible();
+
+    await i18n.changeLanguage("es");
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Política de privacidad" }),
+    ).toBeVisible();
+    expect(screen.getByText(`Versión ${PRIVACY_POLICY_VERSION}`)).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "1. Quién es el responsable del tratamiento" }),
+    ).toBeVisible();
+  });
+
+  it("shows the effective date in the reader's language once it is set", async () => {
+    const i18n = await createTestI18n("en");
+    render(
+      <I18nextProvider i18n={i18n}>
+        <PrivacyPage policy={{ ...PRIVACY_POLICY, effectiveDate: "2026-12-01", version: "7" }} />
+      </I18nextProvider>,
+    );
+    expect(screen.getByRole("heading", { level: 1, name: "Privacy policy" })).toBeVisible();
+    expect(screen.getByText("Version 7 · In effect from December 1, 2026")).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "1. Who the controller is" }),
+    ).toBeVisible();
+  });
 });
