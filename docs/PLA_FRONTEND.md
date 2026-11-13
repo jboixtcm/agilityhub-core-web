@@ -71,7 +71,7 @@ Tipus generats de l'OpenAPI (`packages/api-client`) + hooks per recurs (`useMemb
 `/tauler` D1 (S14) · `/preinscripcions/:id` D2 (S04) · `/plantilles` D3/D3b · `/calendari` D4/D4b/D4c (S06) · `/abonats` D5 + `/abonats/:id` D10 (S03, S12, S13) · `/gossos` D15 (S03) · `/facturacio` D6 + `/facturacio/remeses` (S12) · `/activitats` D7 (S07) · `/modalitats` D8 (S05) · `/comunicats` D9 (S11) · `/parametres` D11 (S02, S05 FAQ i nivells, S15 processos) · `/agenda` D12 · `/alumnes/:id` D13 · `/seguiment` D14 (S10) · `/pistes` D16 (+ geometria S16) · `/equip` D17 (S05) · `/recorreguts` D18 (S16) · `/inactivitats` (S13, pàgina nova) · `/consola/*` D19 (S17, només `AGILITYHUB_ADMIN`). Guard per rol (instructor: `/agenda`, `/alumnes`, `/recorreguts` lectura); «Entra com l'abonat» obre `clubs` amb token d'impersonació.
 
 ### `apps/id`
-`/login` (flux OIDC amb marca del client) · `/magic-link` · `/set-password` · `/account` (dades, idioma, sessions, membresies) · `/products` (R2 selector; R1 enllaços) (S01, S19).
+`/login` (flux OIDC amb marca del client) · `/magic-link` · `/set-password` · `/account` (dades, idioma, sessions, membresies) · `/products` (R2 selector; R1 enllaços) · `/privacy` (política de privacitat de la plataforma, pública, ca/es/en; PRIV-01) (S01, S19).
 
 ## 7. Ordre d'implementació (segueix les etapes; paquets = §12 de cada spec)
 

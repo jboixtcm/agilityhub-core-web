@@ -60,6 +60,30 @@ describe("PRIV-01 the platform's privacy policy", () => {
     expect(PRIVACY_POLICY.text.en).toContain("**6 years**");
   });
 
+  it("describes the consent and change-log records as the api keeps them", () => {
+    // Review of PRIV-01: only the sign-up form's consents carry the language and the IP fingerprint
+    // (the onboarding acceptance keeps policy, version and date), and the change log also records
+    // the person's own changes, with the IP address and browser (`AuditWriter`).
+    expect(PRIVACY_POLICY.text.ca).toContain(
+      "amb la versió i la data; els que dones en el formulari d'alta, també amb l'idioma i una empremta irreversible",
+    );
+    expect(PRIVACY_POLICY.text.ca).toContain(
+      "tant els de l'equip del club com els que hi fas tu (qui, què i quan, amb l'adreça IP i el navegador)",
+    );
+    expect(PRIVACY_POLICY.text.es).toContain(
+      "con la versión y la fecha; los que das en el formulario de alta, también con el idioma y una huella irreversible",
+    );
+    expect(PRIVACY_POLICY.text.es).toContain(
+      "tanto los del equipo del club como los que haces tú (quién, qué y cuándo, con la dirección IP y el navegador)",
+    );
+    expect(PRIVACY_POLICY.text.en).toContain(
+      "with the version and date; those you give on the sign-up form also with the language and an irreversible fingerprint",
+    );
+    expect(PRIVACY_POLICY.text.en).toContain(
+      "both by the club's team and by you (who, what and when, with the IP address and browser)",
+    );
+  });
+
   it("carries no draft marker, placeholder or forbidden word", () => {
     for (const locale of productLocales) {
       const text = PRIVACY_POLICY.text[locale];
