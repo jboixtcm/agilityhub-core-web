@@ -385,6 +385,10 @@
           "help": "Schema used for the SEPA collection file.",
           "label": "SEPA schema"
         },
+        "settlementBusinessDays": {
+          "help": "Bank business days (TARGET) after the collection date before the receipts of a sent remittance count as paid, unless they were marked unpaid; with 0, on the collection date itself.",
+          "label": "Margin before a remittance counts as collected"
+        },
         "useFrst": {
           "help": "Uses the first-payment sequence before recurring collections.",
           "label": "SEPA first-payment sequence"

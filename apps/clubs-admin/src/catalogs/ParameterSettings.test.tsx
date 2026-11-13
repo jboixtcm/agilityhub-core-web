@@ -11,17 +11,29 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { ParameterSettings } from "./ParameterSettings";
 
-const branding: Branding = { ...brandingCanicFixture, theme: { ...brandingCanicFixture.theme, mode: "dark" } };
+const branding: Branding = {
+  ...brandingCanicFixture,
+  theme: { ...brandingCanicFixture.theme, mode: "dark" },
+};
 
-beforeAll(() => { server.listen({ onUnhandledRequest: "error" }); });
-afterEach(() => { cleanup(); server.resetHandlers(); resetSettingsState(); });
-afterAll(() => { server.close(); });
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: "error" });
+});
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+  resetSettingsState();
+});
+afterAll(() => {
+  server.close();
+});
 
 // The real core serialises a module-less parameter as `module: null` instead of omitting it.
 const nullModuleFetch: typeof fetch = async (input, init) => {
   const response = await fetch(input, init);
   const request = input instanceof Request ? input : new Request(input, init);
-  if (request.method !== "GET" || !new URL(request.url).pathname.endsWith("/parameters")) return response;
+  if (request.method !== "GET" || !new URL(request.url).pathname.endsWith("/parameters"))
+    return response;
   const body = (await response.json()) as { blocks: { rows: { module?: string | null }[] }[] };
   for (const block of body.blocks) {
     for (const row of block.rows) row.module ??= null;
@@ -31,12 +43,20 @@ const nullModuleFetch: typeof fetch = async (input, init) => {
 
 describe("T-02-13 D11 parameter rows", () => {
   it("keeps module-less parameters that the core sends with module null", async () => {
-    const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-settings"], storage: undefined });
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings"],
+      storage: undefined,
+    });
     render(
       <I18nextProvider i18n={i18n}>
         <BrandingProvider branding={branding}>
           <ParameterSettings
-            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1`, fetch: nullModuleFetch })}
+            client={createApiClient({
+              baseUrl: `${window.location.origin}/api/v1`,
+              fetch: nullModuleFetch,
+            })}
             levels={[]}
             modules={branding.modules}
             onModulesChange={() => undefined}
@@ -55,8 +75,11 @@ describe("T-02-13 D11 parameter rows", () => {
     const learnInSystem: typeof fetch = async (input, init) => {
       const response = await fetch(input, init);
       const request = input instanceof Request ? input : new Request(input, init);
-      if (request.method !== "GET" || !new URL(request.url).pathname.endsWith("/parameters")) return response;
-      const body = (await response.json()) as { blocks: { key: string; rows: Record<string, unknown>[]; title?: string }[] };
+      if (request.method !== "GET" || !new URL(request.url).pathname.endsWith("/parameters"))
+        return response;
+      const body = (await response.json()) as {
+        blocks: { key: string; rows: Record<string, unknown>[]; title?: string }[];
+      };
       const signup = body.blocks.find((block) => block.key === "signup")?.rows[0];
       body.blocks.push({
         key: "system",
@@ -73,12 +96,20 @@ describe("T-02-13 D11 parameter rows", () => {
       });
       return Response.json(body, { status: response.status });
     };
-    const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-settings"], storage: undefined });
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings"],
+      storage: undefined,
+    });
     render(
       <I18nextProvider i18n={i18n}>
         <BrandingProvider branding={branding}>
           <ParameterSettings
-            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1`, fetch: learnInSystem })}
+            client={createApiClient({
+              baseUrl: `${window.location.origin}/api/v1`,
+              fetch: learnInSystem,
+            })}
             levels={[]}
             modules={branding.modules}
             onModulesChange={() => undefined}
@@ -90,7 +121,8 @@ describe("T-02-13 D11 parameter rows", () => {
 
     const heading = await screen.findByRole("heading", { name: "Alta i consentiments" });
     const card = heading.closest(".settings-card");
-    if (!(card instanceof HTMLElement)) throw new TypeError("Missing the «Alta i consentiments» card");
+    if (!(card instanceof HTMLElement))
+      throw new TypeError("Missing the «Alta i consentiments» card");
     expect(within(card).getByRole("button", { name: "Ajornaments de la política3" })).toBeVisible();
     // The fields with the labels of «Completa el teu perfil» (S01 §14), never the stored JSON.
     expect(
@@ -99,9 +131,48 @@ describe("T-02-13 D11 parameter rows", () => {
       }),
     ).toBeVisible();
     // No learn row, labelled or raw, in any block (the modules card keeps its «Enllaç a Learn»).
-    const rows = [...document.querySelectorAll(".settings-parameter")].map((row) => row.textContent);
+    const rows = [...document.querySelectorAll(".settings-parameter")].map(
+      (row) => row.textContent,
+    );
     expect(rows.length).toBeGreaterThan(10);
     expect(rows.filter((row) => /Learn|learn\./u.test(row))).toEqual([]);
+  });
+
+  it("SEPA-04 (c) (decision of 13 Nov 2026): «Quotes, packs i remesa» shows billing.sepa.settlementBusinessDays with its label, help and value", async () => {
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ParameterSettings
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            levels={[]}
+            modules={branding.modules}
+            onModulesChange={() => undefined}
+            plans={[]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+
+    const heading = await screen.findByRole("heading", { name: "Quotes, packs i remesa" });
+    const card = heading.closest(".settings-card");
+    if (!(card instanceof HTMLElement))
+      throw new TypeError("Missing the «Quotes, packs i remesa» card");
+    const row = within(card).getByRole("button", {
+      name: "Marge per donar la remesa per cobrada5",
+    });
+    expect(row).toBeVisible();
+    fireEvent.click(row);
+    expect(
+      await screen.findByText(
+        "Dies hàbils bancaris (TARGET) que han de passar després de la data de cobrament perquè els rebuts d'una remesa enviada es donin per cobrats, si no s'han marcat com a impagats; amb 0, el mateix dia de cobrament.",
+      ),
+    ).toBeVisible();
   });
 });
 

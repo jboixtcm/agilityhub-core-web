@@ -385,6 +385,10 @@
           "help": "Esquema del fitxer de remesa SEPA.",
           "label": "Esquema SEPA"
         },
+        "settlementBusinessDays": {
+          "help": "Dies hàbils bancaris (TARGET) que han de passar després de la data de cobrament perquè els rebuts d'una remesa enviada es donin per cobrats, si no s'han marcat com a impagats; amb 0, el mateix dia de cobrament.",
+          "label": "Marge per donar la remesa per cobrada"
+        },
         "useFrst": {
           "help": "Usa la seqüència inicial abans dels cobraments recurrents.",
           "label": "Seqüència inicial SEPA"

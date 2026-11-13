@@ -385,6 +385,10 @@
           "help": "Esquema del archivo de remesa SEPA.",
           "label": "Esquema SEPA"
         },
+        "settlementBusinessDays": {
+          "help": "Días hábiles bancarios (TARGET) que deben pasar después de la fecha de cobro para que los recibos de una remesa enviada se den por cobrados, si no se han marcado como impagados; con 0, el mismo día de cobro.",
+          "label": "Margen para dar la remesa por cobrada"
+        },
         "useFrst": {
           "help": "Usa la secuencia inicial antes de los cobros recurrentes.",
           "label": "Secuencia inicial SEPA"
