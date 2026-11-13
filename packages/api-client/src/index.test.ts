@@ -664,7 +664,8 @@ describe("MSW bootstrap handlers", () => {
     // Price edits and confirmed price/plan deletion.
     // Administrative family group creation, updates, lookup and dissolution.
     // SCH-01: + `POST /class-sessions/{id}/restoration` (calendar-handlers.ts).
-    expect(handlers).toHaveLength(415);
+    // AUTH-02: + D10's `POST /members/{id}/login-email` (handlers.ts).
+    expect(handlers).toHaveLength(416);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {
