@@ -222,6 +222,7 @@ describe("T-01-22 apps/id", () => {
     const { fetcher, requests } = testFetcher();
     const navigate = vi.fn<(destination: string) => void>();
     await renderApp(createClient(fetcher), "ca", navigate);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
 
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/oidc/callback?flow=flow-magic");
@@ -290,6 +291,7 @@ describe("T-01-22 apps/id", () => {
     const { fetcher } = testFetcher();
     const navigate = vi.fn<(destination: string) => void>();
     await renderApp(createClient(fetcher), "ca", navigate);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
 
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/account");
@@ -575,9 +577,42 @@ describe("T-01-18 (E11-W02 round 2, INC-41): apps/id's login after a 429, and th
       expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
     });
     expect(new URLSearchParams(window.location.search).get("flow")).toBe("flow-123");
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     await waitFor(() => {
       expect(navigate).toHaveBeenCalled();
     });
+  });
+
+  it("AUTH-06 (decision of 13 Nov 2026): the magic link is redeemed only when «Entra» is pressed, never when the page loads", async () => {
+    window.history.replaceState(null, "", "/magic-link?t=valid");
+    const { fetcher, requests } = testFetcher();
+    const navigate = vi.fn<(destination: string) => void>();
+    await renderApp(createClient(fetcher), "ca", navigate);
+
+    expect(
+      await screen.findByRole("heading", { name: "Entra amb l'enllaç del correu" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Prem el botó per entrar al teu compte amb aquest enllaç."),
+    ).toBeVisible();
+    expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
+    const magicGrants = () =>
+      requests.filter(
+        (request) =>
+          request.url.endsWith("/oauth2/token") &&
+          new URLSearchParams(request.body).get("grant_type") === "urn:agilityhub:grant:magic-link",
+      );
+    // The page has loaded and settled: nothing has been redeemed.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(magicGrants()).toHaveLength(0);
+    expect(navigate).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/account");
+    });
+    expect(magicGrants()).toHaveLength(1);
+    expect(new URLSearchParams(magicGrants()[0]?.body).get("token")).toBe("valid");
   });
 });
 

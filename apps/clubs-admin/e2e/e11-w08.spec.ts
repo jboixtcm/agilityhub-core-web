@@ -115,6 +115,8 @@ test.describe("E11-W08 step 2 (S17 §2 «Entrada», S01 R-01-02, ruling E157): t
   }) => {
     await prepare(page, "platform", brandingProduct);
     await page.goto(`${baseUrl}/activacio?t=mock-magic-token`);
+    // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+    await page.getByRole("button", { name: "ENTRA" }).click();
     await page.waitForURL("**/consola/clubs");
     await expect(page.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();
   });

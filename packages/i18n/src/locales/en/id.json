@@ -38,6 +38,8 @@
   "magic": {
     "title": "Checking the link",
     "description": "We are signing you in and preparing your account.",
+    "confirmTitle": "Sign in with the email link",
+    "confirmDescription": "Press the button to sign in to your account with this link.",
     "validating": "Validating the link…",
     "invalidTitle": "This link is no longer valid",
     "invalidDescription": "Request another link to sign in again.",

@@ -415,6 +415,8 @@ async function loginMemberByLink(browser: Browser, email: string): Promise<Sessi
           "urn:agilityhub:grant:magic-link",
     );
     await page.goto(`${clubsUrl}${delivered.pathname}${delivered.search}`);
+    // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+    await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     const exchange = await exchanged;
     expect(exchange.status()).toBe(200);
     await page.getByRole("button", { name: "CONTINUAR", exact: true }).click();

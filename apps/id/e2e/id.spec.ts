@@ -69,6 +69,8 @@ test.describe("T-01-22 AgilityHub ID", () => {
     });
 
     await page.goto(`${baseUrl}/magic-link?t=invalid`);
+    // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+    await page.getByRole("button", { name: "ENTRA" }).click();
     await expect(page.getByRole("heading", { name: "Aquest enllaç ja no és vàlid" })).toBeVisible();
     await page.screenshot({
       fullPage: true,

@@ -766,6 +766,7 @@ describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the co
     window.history.pushState(null, "", "/activacio?t=mock-magic-token");
     const assign = stubFullLoads();
     await renderApplication(authClient(), currentMockScenario().branding);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith("/consola/clubs");
     });
@@ -777,11 +778,42 @@ describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the co
     server.events.removeAllListeners();
   });
 
+  it("AUTH-06 (decision of 13 Nov 2026): the magic link leaves the address at once and is redeemed only when «Entra» is pressed", async () => {
+    mockScenario("platform");
+    const grants = recordTokenRequests();
+    window.history.pushState(null, "", "/activacio?t=mock-magic-token");
+    const assign = stubFullLoads();
+    await renderApplication(authClient(), currentMockScenario().branding);
+
+    const enter = await screen.findByRole("button", { name: "ENTRA" });
+    expect(
+      screen.getByText("Prem el botó per iniciar la sessió en aquest dispositiu."),
+    ).toBeVisible();
+    expect(window.location.search).toBe("");
+    // The page has loaded and settled: nothing has been redeemed.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(grants).not.toContainEqual({
+      clientId: "clubs-admin",
+      grant: "urn:agilityhub:grant:magic-link",
+    });
+    expect(assign).not.toHaveBeenCalled();
+
+    fireEvent.click(enter);
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/consola/clubs");
+    });
+    expect(
+      grants.filter((grant) => grant.grant === "urn:agilityhub:grant:magic-link"),
+    ).toHaveLength(1);
+    server.events.removeAllListeners();
+  });
+
   it("the magic link of an account without the platform role says so (403 PLATFORM_ONLY)", async () => {
     mockScenario("platformRefused");
     window.history.pushState(null, "", "/activacio?t=mock-magic-token");
     const assign = stubFullLoads();
     await renderApplication(authClient(), currentMockScenario().branding);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(await screen.findByText(REFUSAL)).toBeVisible();
     expect(assign).not.toHaveBeenCalled();
   });
@@ -790,6 +822,7 @@ describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the co
     mockScenario("platform");
     window.history.pushState(null, "", "/activacio?t=invalid");
     await renderApplication(authClient(), currentMockScenario().branding);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(
       await screen.findByRole("heading", { level: 1, name: "Aquest enllaç ja no és vàlid" }),
     ).toBeVisible();

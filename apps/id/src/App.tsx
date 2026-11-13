@@ -439,6 +439,9 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
   const { t } = useTranslation("id");
   const [token] = useState(() => new URLSearchParams(window.location.search).get("t"));
   const [failure, setFailure] = useState(token === null || token === "");
+  // AUTH-06 (pre-production audit): the link is redeemed when the person presses «Entra», never
+  // when the page loads (a mail scanner that opens the link no longer spends it).
+  const [redeeming, setRedeeming] = useState(false);
   const started = useRef(false);
 
   useEffect(() => {
@@ -447,7 +450,8 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
     }
     started.current = true;
     // E11-W02 round 2 (INC-41): the one-time token leaves the address bar (and the history, a
-    // shared screen, a copied address) as soon as it is read; the rest of the query stays.
+    // shared screen, a copied address) as soon as it is read, before anything else; the rest of
+    // the query stays. It is kept in memory only.
     const address = new URL(window.location.href);
     if (address.searchParams.has("t")) {
       address.searchParams.delete("t");
@@ -457,9 +461,13 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
         `${address.pathname}${address.search}${address.hash}`,
       );
     }
-    if (token === null || token === "") {
+  }, []);
+
+  const redeem = () => {
+    if (token === null || token === "" || redeeming) {
       return;
     }
+    setRedeeming(true);
     void authClient
       .exchangeMagicLink(token)
       .then(async () => {
@@ -470,20 +478,37 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
       .catch(() => {
         setFailure(true);
       });
-  }, [authClient, navigate, token]);
+  };
 
+  const confirming = !failure && !redeeming;
   return (
     <main className="id-page id-page--centered">
       <Card className="id-status-card">
         <Icon aria-hidden="true" name={failure ? "warn" : "link"} />
         <PageIntro
-          description={failure ? t("id:magic.invalidDescription") : t("id:magic.description")}
-          title={failure ? t("id:magic.invalidTitle") : t("id:magic.title")}
+          description={
+            failure
+              ? t("id:magic.invalidDescription")
+              : confirming
+                ? t("id:magic.confirmDescription")
+                : t("id:magic.description")
+          }
+          title={
+            failure
+              ? t("id:magic.invalidTitle")
+              : confirming
+                ? t("id:magic.confirmTitle")
+                : t("id:magic.title")
+          }
         />
         {failure ? (
           <a className="ah-button ah-button--primary" href="/login">
             {t("id:magic.tryAgain")}
           </a>
+        ) : confirming ? (
+          <Button onClick={redeem} type="button">
+            {t("id:login.submit")}
+          </Button>
         ) : (
           <p aria-live="polite">{t("id:magic.validating")}</p>
         )}

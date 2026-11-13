@@ -385,6 +385,10 @@ test("T-01-19 E4-W16 step 10 · a RESET link sets the new password once without 
   expect(link.pathname).toBe("/activacio");
   expect(deliveredPurpose, "api E5-T29: the RESET link carries &purpose=reset").toBe("reset");
   await page.goto(`${clubsUrl}${link.pathname}${link.search}`);
+  // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+  const enter = page.getByRole("button", { name: "ENTRA", exact: true });
+  await enter.click();
+  await expect(enter).toHaveCount(0);
   const heading = page.getByRole("heading", { level: 1 });
   await expect(heading).toBeVisible();
   writeEvidence("recovery-link-core.json", {

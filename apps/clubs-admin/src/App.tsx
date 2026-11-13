@@ -931,10 +931,14 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   const [failure, setFailure] = useState<
     { kind: "invalid" } | { kind: "refused"; message: string } | { kind: "unanswered" }
   >();
-  const [pending, setPending] = useState(token !== null && token !== "");
+  const [pending, setPending] = useState(false);
+  // AUTH-06 (pre-production audit): the link is redeemed when the person presses «Entra», never
+  // when the page loads (a mail scanner that opens the link no longer spends it).
+  const [requested, setRequested] = useState(false);
 
   const exchange = useCallback(
     (code: string) => {
+      setRequested(true);
       setPending(true);
       setFailure(undefined);
       authClient.exchangeMagicLink(code).then(
@@ -960,12 +964,12 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     [authClient, platformOnlyMessage],
   );
 
+  // The one-time token leaves the address before anything else; it is kept in memory only.
   useEffect(() => {
     if (started.current || token === null || token === "") return;
     started.current = true;
     window.history.replaceState(null, "", "/activacio");
-    exchange(token);
-  }, [exchange, token]);
+  }, [token]);
 
   if (token === null || token === "" || failure?.kind === "invalid") {
     return (
@@ -984,6 +988,19 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     <main className="access-page">
       <Card className="access-card">
         <h1>{t("auth:admin.title")}</h1>
+        {requested ? null : (
+          <>
+            <p>{t("auth:activation.confirmDescription")}</p>
+            <Button
+              onClick={() => {
+                exchange(token);
+              }}
+              type="button"
+            >
+              {t("auth:access.enter")}
+            </Button>
+          </>
+        )}
         {pending ? <p role="status">{t("auth:activation.loading")}</p> : null}
         {failure?.kind === "refused" ? <p role="alert">{failure.message}</p> : null}
         {failure?.kind === "unanswered" ? (

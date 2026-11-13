@@ -479,6 +479,7 @@ describe("E11-W06 W1 (S11 R-11-11, S01 §2 01/02): a deep link survives the sign
     // The e-mail's link opens a new tab: no `?next=` there, the path kept for it.
     window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     fireEvent.click(await screen.findByRole("button", { name: "CONTINUAR" }));
     await waitFor(() => {
       expect(window.location.pathname).toBe("/reserves/b1");
@@ -1021,6 +1022,7 @@ describe("T-01-19 activation screen", () => {
       mockScenario(scenario);
       window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
       await renderApplication(authClient());
+      fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
       expect(await screen.findByRole("heading", { name: heading })).toBeVisible();
       expect(screen.getByRole("button", { name: "CONTINUAR" })).toBeVisible();
       expect(screen.getByText("Compte activat")).toBeVisible();
@@ -1035,6 +1037,7 @@ describe("T-01-19 activation screen", () => {
     mockScenario("activationReset");
     window.history.pushState(null, "", "/activacio?token=valid&purpose=RESET");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     expect(screen.queryByText("Compte activat")).not.toBeInTheDocument();
     cleanup();
@@ -1042,6 +1045,7 @@ describe("T-01-19 activation screen", () => {
     mockScenario("invalidMagicLink");
     window.history.pushState(null, "", "/activacio?token=invalid&purpose=LOGIN");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(
       await screen.findByRole("heading", { name: "Aquest enllaç ja no és vàlid" }),
     ).toBeVisible();
@@ -1050,7 +1054,7 @@ describe("T-01-19 activation screen", () => {
 });
 
 describe("AUTH-06 (pre-production audit): the activation link's token leaves the address", () => {
-  it("drops `token` and `t` from the address before redeeming the link and keeps `purpose`", async () => {
+  it("drops `token` and `t` from the address before anything else and keeps `purpose`", async () => {
     mockScenario("activationReset");
     const client = authClient();
     const addresses: string[] = [];
@@ -1062,12 +1066,41 @@ describe("AUTH-06 (pre-production audit): the activation link's token leaves the
     window.history.pushState(null, "", "/activacio?token=valid&t=valid&purpose=RESET#form");
     await renderApplication(client);
 
+    await screen.findByRole("button", { name: "ENTRA" });
+    expect(`${window.location.pathname}${window.location.search}${window.location.hash}`).toBe(
+      "/activacio?purpose=RESET#form",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
     expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     expect(addresses).toEqual(["/activacio?purpose=RESET"]);
     expect(spy).toHaveBeenCalledWith("valid");
     expect(`${window.location.pathname}${window.location.search}${window.location.hash}`).toBe(
       "/activacio?purpose=RESET#form",
     );
+  });
+
+  it("redeems the link only when the person presses «Entra», never when the page loads (decision of 13 Nov 2026)", async () => {
+    mockScenario("activationFemale");
+    const client = authClient();
+    const spy = vi.spyOn(client, "exchangeMagicLink");
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(client);
+
+    expect(
+      await screen.findByRole("heading", { name: "Entra amb l'enllaç del correu" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Prem el botó per iniciar la sessió en aquest dispositiu."),
+    ).toBeVisible();
+    // The page has loaded and settled: nothing has been redeemed.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(spy).not.toHaveBeenCalled();
+    expect(screen.queryByRole("heading", { name: "Benvinguda, Estel!" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("heading", { name: "Benvinguda, Estel!" })).toBeVisible();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith("valid");
   });
 });
 
@@ -1814,6 +1847,7 @@ describe("T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET 
     const password = recordPasswordBodies();
     window.history.pushState(null, "", "/activacio?token=reset-link&purpose=RESET");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
 
     expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     expect(screen.queryByLabelText("contrasenya actual")).not.toBeInTheDocument();

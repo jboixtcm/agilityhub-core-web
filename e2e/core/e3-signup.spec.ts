@@ -970,6 +970,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     memberConsole.push(`${new Date().toISOString()} ${message.type()} ${text.slice(0, 300)}`);
   });
   await member.goto(`${clubsUrl}${welcomeLink.pathname}${welcomeLink.search}`);
+  // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+  await member.getByRole("button", { name: "ENTRA", exact: true }).click();
   await expect(member.getByRole("heading", { name: /Nora/u })).toBeVisible();
   await member.getByRole("button", { name: "CONTINUAR" }).click();
   await member.waitForURL("**/inici");

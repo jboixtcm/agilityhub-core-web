@@ -1093,11 +1093,14 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation(["auth", "errors"]);
   const parameters = new URLSearchParams(window.location.search);
   const purpose = parameters.get("purpose")?.toUpperCase();
-  // Read once: the effect below takes the token out of the address before redeeming it.
+  // Read once: the effect below takes the token out of the address before anything else.
   const [token] = useState(() => parameters.get("token") ?? parameters.get("t"));
   const started = useRef(false);
   const [me, setMe] = useState<CurrentMe>();
   const [invalid, setInvalid] = useState(token === null || token === "");
+  // AUTH-06 (pre-production audit): the link is redeemed when the person presses «Entra», never
+  // when the page loads (a mail scanner that opens the link no longer spends it).
+  const [redeeming, setRedeeming] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [passwordPending, setPasswordPending] = useState(false);
@@ -1111,7 +1114,8 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     }
     started.current = true;
     // AUTH-06: the one-time token leaves the address bar (and the history, a shared screen, a
-    // copied address) before it is redeemed, as the handoff code does; `purpose` stays.
+    // copied address) before anything else, as the handoff code does; `purpose` stays. It is kept
+    // in memory only, so a reload before «Entra» finds no link.
     const address = new URL(window.location.href);
     if (address.searchParams.has("token") || address.searchParams.has("t")) {
       address.searchParams.delete("token");
@@ -1122,9 +1126,13 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
         `${address.pathname}${address.search}${address.hash}`,
       );
     }
-    if (token === null || token === "") {
+  }, []);
+
+  const redeem = () => {
+    if (token === null || token === "" || redeeming) {
       return;
     }
+    setRedeeming(true);
     void authClient.exchangeMagicLink(token).then(
       (result) => {
         if (isCurrentClubMe(result)) {
@@ -1137,7 +1145,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
         setInvalid(true);
       },
     );
-  }, [authClient, token]);
+  };
 
   if (invalid) {
     return (
@@ -1154,6 +1162,24 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
             type="button"
           >
             {t("auth:activation.resend")}
+          </Button>
+        </section>
+      </main>
+    );
+  }
+
+  if (me === undefined && !redeeming) {
+    return (
+      <main className="auth-page">
+        <section
+          aria-labelledby="activation-confirm-title"
+          className="auth-panel auth-panel--centered"
+        >
+          <LogoMark compact />
+          <h1 id="activation-confirm-title">{t("auth:activation.confirmTitle")}</h1>
+          <p>{t("auth:activation.confirmDescription")}</p>
+          <Button className="auth-form__primary" onClick={redeem} type="button">
+            {t("auth:access.enter")}
           </Button>
         </section>
       </main>
