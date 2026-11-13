@@ -8,7 +8,7 @@ import {
 } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
-import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -91,8 +91,11 @@ const puts = () =>
     .filter((item) => item.method === "PUT" && item.path === PREFERENCES)
     .map((item) => item.body);
 
-/** A browser with web push: `PushManager`, `Notification` and the app's worker registration. */
-function browserWithPush(permission: NotificationPermission) {
+/**
+ * A browser with web push: `PushManager`, `Notification` and the app's worker registration, whose
+ * `getSubscription` answers `held` (the subscription the browser already holds, none by default).
+ */
+function browserWithPush(permission: NotificationPermission, held: object | null = null) {
   const requestPermission = vi.fn(() => Promise.resolve(permission));
   vi.stubGlobal("PushManager", {});
   vi.stubGlobal("Notification", { permission: "default", requestPermission });
@@ -105,8 +108,12 @@ function browserWithPush(permission: NotificationPermission) {
       }),
     }),
   );
-  setPushRegistration({ pushManager: { subscribe } } as unknown as ServiceWorkerRegistration);
-  return { requestPermission, subscribe };
+  const getSubscription = vi.fn(() => Promise.resolve(held));
+  const registration = {
+    pushManager: { getSubscription, subscribe },
+  } as unknown as ServiceWorkerRegistration;
+  setPushRegistration(registration);
+  return { getSubscription, registration, requestPermission, subscribe };
 }
 
 async function openProfile(options: Parameters<typeof renderApp>[1] = {}) {
@@ -178,6 +185,15 @@ const noticesOutbox = () =>
   JSON.parse(sessionStorage.getItem(NOTICES_OUTBOX_KEY) ?? "null") as { patch: unknown } | null;
 
 const reminderSelect = () => screen.getByRole("combobox", { name: "Recordatori de classe" });
+
+/** WEB-02: the button that subscribes this device, on the member's tap only. */
+const THIS_DEVICE = "Activa les notificacions en aquest dispositiu";
+const pushSwitch = () =>
+  screen.getByRole("switch", {
+    name: "Vull rebre notificacions al mòbil quan hi hagi comunicats del club",
+  });
+const pushPosts = () =>
+  requests.filter((item) => item.method === "POST" && item.path === "/api/v1/push-subscriptions");
 
 /** Reminder 60 (its `PUT` is the first), then 120, and the member leaves 12 at once. */
 async function sixtyThenTwoHoursAndLeave() {
@@ -788,7 +804,7 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(requests.some((item) => item.path === "/api/v1/push-subscriptions")).toBe(false);
   });
 
-  it("an iPhone outside the installed app gets the install hint and no permission prompt", async () => {
+  it("WEB-02 (R-11-07): an iPhone outside the installed app gets the install hint, an inert push switch and no permission prompt", async () => {
     const { requestPermission } = browserWithPush("granted");
     Object.defineProperty(navigator, "standalone", { configurable: true, value: false });
     Object.defineProperty(navigator, "userAgent", {
@@ -804,11 +820,20 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     const push = screen.getByRole("switch", {
       name: "Vull rebre notificacions al mòbil quan hi hagi comunicats del club",
     });
+    // The account's preference shows, but it cannot be changed here: the note says how to install.
+    expect(push).toHaveAttribute("aria-checked", "true");
+    expect(push).toBeDisabled();
+    expect(push).toHaveAccessibleDescription(
+      /Afegeix l'app a la pantalla d'inici per rebre notificacions.*Comparteix ▸ Afegeix a la pantalla d'inici/u,
+    );
     fireEvent.click(push);
-    fireEvent.click(push);
+    // The reminder still saves (it arrives in the app) and asks the browser for nothing.
+    fireEvent.change(reminderSelect(), { target: { value: "60" } });
     await waitFor(() => {
-      expect(puts()).toHaveLength(1);
+      expect(puts()).toEqual([{ reminderMinutesBefore: 60 }]);
     });
+    expect(push).toHaveAttribute("aria-checked", "true");
+    expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
     expect(requestPermission).not.toHaveBeenCalled();
   });
 
@@ -919,5 +944,128 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
       ).toBe(true);
     });
     expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNull();
+  });
+});
+
+describe("WEB-02 (R-11-07): push on for the account, and this device's own subscription", () => {
+  const unavailable =
+    "Aquest navegador no pot rebre notificacions ara mateix. Els avisos continuen arribant a l'app.";
+  const failed =
+    "No s'han pogut activar les notificacions en aquest dispositiu. Torna-ho a provar més tard.";
+  const held = { endpoint: "https://push.example.test/send/laura-phone" };
+
+  it("push on and no subscription on this device: the button subscribes it on the tap, never on opening 12", async () => {
+    const { requestPermission, subscribe } = browserWithPush("granted");
+    await openProfile();
+    const button = await screen.findByRole("button", { name: THIS_DEVICE });
+    expect(pushSwitch()).toHaveAttribute("aria-checked", "true");
+    // Opening 12 only reads this device: no permission prompt, no subscription, no POST.
+    expect(requestPermission).not.toHaveBeenCalled();
+    expect(subscribe).not.toHaveBeenCalled();
+    expect(pushPosts()).toHaveLength(0);
+
+    fireEvent.click(button);
+    await waitFor(() => {
+      expect(pushPosts()).toHaveLength(1);
+    });
+    expect(requestPermission).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
+    });
+    expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBe('{"id":"push-1"}');
+    // The account's preference is not touched by the button.
+    expect(puts()).toEqual([]);
+  });
+
+  it("no button when this device holds its subscription; the same browser after a logout (no stored id) gets it", async () => {
+    const { getSubscription } = browserWithPush("granted", held);
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-1" }));
+    await openProfile();
+    await waitFor(() => {
+      expect(getSubscription).toHaveBeenCalled();
+    });
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
+    cleanup();
+
+    // A logout removed the id: the browser still holds a subscription the api no longer has.
+    localStorage.removeItem(PUSH_SUBSCRIPTION_STORAGE_KEY);
+    browserWithPush("granted", held);
+    await openProfile();
+    expect(await screen.findByRole("button", { name: THIS_DEVICE })).toBeVisible();
+  });
+
+  it("no button while push is off for the account", async () => {
+    browserWithPush("granted");
+    await openProfile();
+    expect(await screen.findByRole("button", { name: THIS_DEVICE })).toBeVisible();
+    fireEvent.click(pushSwitch());
+    expect(pushSwitch()).toHaveAttribute("aria-checked", "false");
+    expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
+  });
+
+  it("an impersonated session never reads this device nor offers the button (the admin's browser)", async () => {
+    const { getSubscription } = browserWithPush("granted");
+    await openProfile({ scenario: "impersonated" });
+    expect(pushSwitch()).toHaveAttribute("aria-checked", "true");
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
+    expect(getSubscription).not.toHaveBeenCalled();
+  });
+
+  it("12 opened before the app's worker is handed in reads this device again once it is", async () => {
+    const { registration } = browserWithPush("granted", held);
+    setPushRegistration(undefined);
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-1" }));
+    await openProfile();
+    expect(await screen.findByRole("button", { name: THIS_DEVICE })).toBeVisible();
+    act(() => {
+      setPushRegistration(registration);
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
+    });
+  });
+
+  it("a tap without the app's worker says this browser cannot receive notifications now (unavailable)", async () => {
+    const { requestPermission } = browserWithPush("granted");
+    setPushRegistration(undefined);
+    await openProfile();
+    fireEvent.click(await screen.findByRole("button", { name: THIS_DEVICE }));
+    expect(await screen.findByText(unavailable)).toBeVisible();
+    expect(screen.getByText(unavailable)).toHaveAttribute("role", "status");
+    expect(requestPermission).not.toHaveBeenCalled();
+    expect(pushPosts()).toHaveLength(0);
+  });
+
+  it("a subscription that fails says so, from the switch too, and a later tap that works clears it", async () => {
+    const { subscribe } = browserWithPush("granted");
+    subscribe.mockImplementationOnce(() => Promise.reject(new Error("The push service refused")));
+    await openProfile();
+    fireEvent.click(await screen.findByRole("button", { name: THIS_DEVICE }));
+    expect(await screen.findByText(failed)).toBeVisible();
+    expect(pushPosts()).toHaveLength(0);
+
+    // The switch turned off and on again fails the same way.
+    subscribe.mockImplementationOnce(() => Promise.reject(new Error("The push service refused")));
+    fireEvent.click(pushSwitch());
+    fireEvent.click(pushSwitch());
+    await waitFor(() => {
+      expect(subscribe).toHaveBeenCalledTimes(2);
+    });
+    expect(await screen.findByText(failed)).toBeVisible();
+
+    fireEvent.click(screen.getByRole("button", { name: THIS_DEVICE }));
+    await waitFor(() => {
+      expect(pushPosts()).toHaveLength(1);
+    });
+    await waitFor(() => {
+      expect(screen.queryByText(failed)).toBeNull();
+    });
+    expect(screen.queryByRole("button", { name: THIS_DEVICE })).toBeNull();
   });
 });

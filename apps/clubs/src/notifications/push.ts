@@ -4,6 +4,7 @@ import type { ApiClient } from "@agilityhub/api-client";
 export const PUSH_SUBSCRIPTION_STORAGE_KEY = "agilityhub.push.subscription.v1";
 
 let pushRegistration: ServiceWorkerRegistration | undefined;
+const registrationListeners = new Set<() => void>();
 
 /**
  * The app's own worker registration, handed in by `registerSW` (`onRegisteredSW`, `main.tsx`).
@@ -11,6 +12,18 @@ let pushRegistration: ServiceWorkerRegistration | undefined;
  */
 export function setPushRegistration(registration: ServiceWorkerRegistration | undefined): void {
   pushRegistration = registration;
+  for (const listener of registrationListeners) listener();
+}
+
+/**
+ * Called each time the app's worker registration is handed in (WEB-02: 12 may open before
+ * `registerSW` answers, and reads this device's subscription again then). Returns the unsubscribe.
+ */
+export function onPushRegistration(listener: () => void): () => void {
+  registrationListeners.add(listener);
+  return () => {
+    registrationListeners.delete(listener);
+  };
 }
 
 /**
@@ -80,8 +93,8 @@ export function applicationServerKey(publicKey: string): Uint8Array<ArrayBuffer>
 
 /**
  * `denied`: the browser refused (the row explains it); `dismissed`: the prompt was closed;
- * `unavailable`: no key, no app worker or no push in this browser (nothing to tell);
- * `failed`: the subscription or its registration failed (push is an enhancement: nothing shown).
+ * `unavailable`: no key, no app worker or no push in this browser; `failed`: the subscription or
+ * its registration failed. 12 explains both of the last two (WEB-02).
  */
 export type PushOutcome = "denied" | "dismissed" | "failed" | "subscribed" | "unavailable";
 
@@ -103,6 +116,22 @@ function storedSubscriptionId(): string | undefined {
     return typeof id === "string" && id !== "" ? id : undefined;
   } catch {
     return undefined;
+  }
+}
+
+/**
+ * Whether this device holds a subscription the api accepted (WEB-02): the browser's own
+ * subscription for the app's worker, and the id the last accepted `POST /push-subscriptions` left
+ * here (a logout removes it). Only read: it never asks for the permission and never subscribes.
+ * `false` while the app's worker registration is not there, or when the browser cannot tell.
+ */
+export async function devicePushSubscribed(): Promise<boolean> {
+  const registration = pushRegistration;
+  if (registration === undefined || storedSubscriptionId() === undefined) return false;
+  try {
+    return (await registration.pushManager.getSubscription()) !== null;
+  } catch {
+    return false;
   }
 }
 
@@ -141,7 +170,8 @@ async function dropLateSubscription(
 
 /**
  * Subscribes this device to web push **in context** (R-11-07): called only right after the member
- * turns the push toggle on or picks a reminder other than «Mai», never at start-up. Asks for the
+ * turns the push toggle on, picks a reminder other than «Mai» or taps 12's «turn on notifications
+ * on this device» (WEB-02), never at start-up nor without a tap. Asks for the
  * permission, subscribes with the club's VAPID key and upserts `POST /push-subscriptions`. Never
  * throws: a failure (a `404 MODULE_DISABLED` from a stale client included) is an outcome. A logout
  * while it travels drops it when it lands (`logoutWithPush`).

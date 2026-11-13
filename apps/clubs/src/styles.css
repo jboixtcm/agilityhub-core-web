@@ -609,6 +609,12 @@ select {
   justify-self: center;
 }
 
+/* WEB-02: an iPhone outside the installed app sees the push switch inert (as `.ah-button`). */
+.profile-notices__switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .profile-notices__reminder,
 .profile-notices__mobile-row {
   display: flex;

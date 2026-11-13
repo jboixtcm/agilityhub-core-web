@@ -8,7 +8,9 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import {
   applicationServerKey,
   deviceLabel,
+  devicePushSubscribed,
   logoutWithPush,
+  onPushRegistration,
   PUSH_SUBSCRIPTION_STORAGE_KEY,
   pushSupport,
   setPushRegistration,
@@ -291,5 +293,55 @@ describe("E7-W02 step 5 · web push in context (S11 R-11-07)", () => {
     const logout = vi.fn(() => Promise.resolve());
     await logoutWithPush(client, logout, 30);
     expect(logout).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("WEB-02 (R-11-07): this device's own subscription, only read", () => {
+  /** The app's worker registration, whose browser holds `held` (or nothing). */
+  function registrationHolding(held: object | null | Error) {
+    const getSubscription = vi.fn(() =>
+      held instanceof Error ? Promise.reject(held) : Promise.resolve(held),
+    );
+    const subscribe = vi.fn();
+    return {
+      getSubscription,
+      registration: {
+        pushManager: { getSubscription, subscribe },
+      } as unknown as ServiceWorkerRegistration,
+      subscribe,
+    };
+  }
+  const held = { endpoint: "https://push.example.test/send/device" };
+
+  it("subscribed only with the browser's subscription and the id the api accepted here", async () => {
+    const { getSubscription, registration, subscribe } = registrationHolding(held);
+    // No worker registration yet.
+    expect(await devicePushSubscribed()).toBe(false);
+    setPushRegistration(registration);
+    // The browser holds one, but no accepted POST left its id here (a logout removes it).
+    expect(await devicePushSubscribed()).toBe(false);
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-1" }));
+    expect(await devicePushSubscribed()).toBe(true);
+    expect(getSubscription).toHaveBeenCalled();
+    // Only read: never a subscription.
+    expect(subscribe).not.toHaveBeenCalled();
+  });
+
+  it("not subscribed when the browser holds none (expired, cleared) or cannot tell", async () => {
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-1" }));
+    setPushRegistration(registrationHolding(null).registration);
+    expect(await devicePushSubscribed()).toBe(false);
+    setPushRegistration(registrationHolding(new Error("No push service")).registration);
+    expect(await devicePushSubscribed()).toBe(false);
+  });
+
+  it("tells a listener each time the app's worker registration is handed in, until it stops", () => {
+    const listener = vi.fn();
+    const stop = onPushRegistration(listener);
+    setPushRegistration(registrationHolding(null).registration);
+    expect(listener).toHaveBeenCalledTimes(1);
+    stop();
+    setPushRegistration(undefined);
+    expect(listener).toHaveBeenCalledTimes(1);
   });
 });
