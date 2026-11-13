@@ -870,7 +870,7 @@ export interface paths {
         put?: never;
         /**
          * confirmBooking
-         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) books without N-36 to the member, also for a swap's cancellation; recorded in BOOKING_CREATED_BY_CLUB details.notifyMember. R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
          */
         post: operations["confirmBooking"];
         delete?: never;
@@ -950,7 +950,7 @@ export interface paths {
         put?: never;
         /**
          * cancelBooking
-         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). ADMIN without impersonation and without MEMBER → 403. An account with MEMBER and INSTRUCTOR cancels its own (or its family group's) booking as a member (origin APP, cancelReason MEMBER; R-08-19) and another member's as an instructor (origin INSTRUCTOR) (R-01-07). R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) cancels without N-36 to the member; recorded in BOOKING_CANCELLED_BY_CLUB details.notifyMember. ADMIN without impersonation and without MEMBER → 403. An account with MEMBER and INSTRUCTOR cancels its own (or its family group's) booking as a member (origin APP, cancelReason MEMBER; R-08-19) and another member's as an instructor (origin INSTRUCTOR) (R-01-07). R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
          */
         post: operations["cancelBooking"];
         delete?: never;
@@ -2026,7 +2026,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog level
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING. COMM-03: notifyMember false changes the level without N-09 to the member; recorded in DOG_LEVEL_CHANGED details.notifyMember.
          */
         patch: operations["updateDogLevel"];
         trace?: never;
@@ -2958,7 +2958,7 @@ export interface paths {
         put?: never;
         /**
          * triggerJob
-         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). An optional Idempotency-Key answers its own run to a retry whose answer was lost, without running again (CONVENCIONS_API §7, E75). Tenant comes from the JWT.
+         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). PRIV-02: a real run of retention-sweep needs confirmation {dryRunId, counters}: a SUCCEEDED dry run of it in this club from the last 30 minutes and the effects.counters it showed; its WOULD_ counts must match, and so must those of a plan made when it runs, or nothing runs: 409 SIMULATION_STALE {reason: DRY_RUN_REQUIRED | COUNTS_MISMATCH | PLAN_CHANGED}. An optional Idempotency-Key answers its own run to a retry whose answer was lost, without running again (CONVENCIONS_API §7, E75). Tenant comes from the JWT.
          */
         post: operations["triggerJob"];
         delete?: never;
@@ -4042,7 +4042,7 @@ export interface paths {
         put?: never;
         /**
          * Resend access
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. S03 R-03-06 (WEB-01): D10's «Envia la benvinguda», the welcome e-mail (N-27, variant ADMIN_WELCOME, a link valid auth.welcomeLinkDays) to an ACTIVE member's account, sent only when an ADMIN asks, one member at a time. 429 RATE_LIMITED (details.retryAfter) per address and per club, not per the administrator's IP.
          */
         post: operations["resendAccess"];
         delete?: never;
@@ -4243,6 +4243,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/members/{id}/login-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Change login e-mail
+         * @description S03 R-03-06b (AUTH-02). Tenant comes from the JWT. ADMIN endpoints reject impersonation; a support access is refused (403 SUPPORT_RESTRICTED, S17 R-17-10); erased members reject mutations. Mails a link to the NEW address only (N-25, variant EMAIL_CHANGE, valid auth.welcomeLinkDays); nothing is sent to the current one and nothing changes yet. When the link is used (the magic-link grant, /activacio), the account's login e-mail becomes the new address, verified, its emailStatus is cleared and ACCOUNT_EMAIL_CHANGED is audited as the requesting ADMIN's. A newer request supersedes an unused one. Only an ACTIVE member with an account (422 MEMBER_NOT_ACTIVE); only an account that is this club's alone, without a platform role (403 FORBIDDEN); the new address must differ from the current one (400 VALIDATION_ERROR, fieldErrors email · UNCHANGED); the limits of /auth/magic-link apply to the new address, per address and per IP (429 RATE_LIMITED). An address that already belongs to another account gets no link, with the same 202 (no existence is revealed); a link whose address was taken in between answers MAGIC_LINK_INVALID and changes nothing.
+         */
+        post: operations["changeLoginEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/members/{id}/merge": {
         parameters: {
             query?: never;
@@ -4362,7 +4382,7 @@ export interface paths {
         head?: never;
         /**
          * Update payment method
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method. A pending readmission's method is edited with PATCH /members/{id}.A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method. A pending readmission's method is edited with PATCH /members/{id}.A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING. COMM-03: notifyMember false changes the method without N-38 to the member; recorded in MEMBER_PAYMENT_METHOD_CHANGED details.notifyMember.
          */
         patch: operations["updatePaymentMethod"];
         trace?: never;
@@ -5118,7 +5138,7 @@ export interface paths {
         put?: never;
         /**
          * platformTriggerJob
-         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED. An optional Idempotency-Key answers its own run to a retry (CONVENCIONS_API §7, E75).
+         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED. PRIV-02: a real run of retention-sweep needs confirmation {dryRunId, counters}: a SUCCEEDED dry run of it in this club from the last 30 minutes and the effects.counters it showed; its WOULD_ counts must match, and so must those of a plan made when it runs, or nothing runs: 409 SIMULATION_STALE {reason: DRY_RUN_REQUIRED | COUNTS_MISMATCH | PLAN_CHANGED}. An optional Idempotency-Key answers its own run to a retry (CONVENCIONS_API §7, E75).
          */
         post: operations["platformTriggerJob"];
         delete?: never;
@@ -6686,7 +6706,7 @@ export interface paths {
         put?: never;
         /**
          * bookTraining
-         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE, override{limit, reason} allowed). R-09-06 transaction; the partial unique index {clubId, ringId, startsAt, seatIndex} on ACTIVE is the final guard; without ringId («Qualsevol») the first FREE ring in catalog order. details: TRAINING_LIMIT_REACHED{limit, used, weekStart, weekEnd, cancellableBookings[]}, SLOT_TAKEN{ringId, startsAt, reason, freeRings[]}, SLOT_OUT_OF_WINDOW{from, to}. A repeated Idempotency-Key returns the same response, also a 409/422. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE, override{limit, reason} allowed). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) books without N-47 to the member; recorded in TRAINING_BOOKED_BY_CLUB details.notifyMember. R-09-06 transaction; the partial unique index {clubId, ringId, startsAt, seatIndex} on ACTIVE is the final guard; without ringId («Qualsevol») the first FREE ring in catalog order. details: TRAINING_LIMIT_REACHED{limit, used, weekStart, weekEnd, cancellableBookings[]}, SLOT_TAKEN{ringId, startsAt, reason, freeRings[]}, SLOT_OUT_OF_WINDOW{from, to}. A repeated Idempotency-Key returns the same response, also a 409/422. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         post: operations["bookTraining"];
         delete?: never;
@@ -6766,7 +6786,7 @@ export interface paths {
         put?: never;
         /**
          * cancelTraining
-         * @description Roles: MEMBER (own or family group, also the impersonation token). R-09-10: until startsAt - training.cancelThresholdMinutes; later only with the impersonation token and a reason (ADMIN_LATE, audited). A booking block never prevents it; a second call is INVALID_STATE. details TRAINING_CANCEL_TOO_LATE{thresholdMinutes, minutesBefore}. An optional Idempotency-Key replays the same 200. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) cancels without N-47 to the member; recorded in TRAINING_CANCELLED_BY_CLUB details.notifyMember. R-09-10: until startsAt - training.cancelThresholdMinutes; later only with the impersonation token and a reason (ADMIN_LATE, audited). A booking block never prevents it; a second call is INVALID_STATE. details TRAINING_CANCEL_TOO_LATE{thresholdMinutes, minutesBefore}. An optional Idempotency-Key replays the same 200. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         post: operations["cancelTraining"];
         delete?: never;
@@ -6910,7 +6930,7 @@ export interface paths {
         put?: never;
         /**
          * claimSeat
-         * @description Roles: MEMBER (own or family group, also the impersonation token). R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token). COMM-03: notifyMember as POST /bookings. R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
          */
         post: operations["claimSeat"];
         delete?: never;
@@ -8109,7 +8129,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "ACCOUNT_EMAIL_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -8423,6 +8443,8 @@ export interface components {
         BookingCancellationRequest: {
             /** @description Text of the club (25) */
             message?: string | null;
+            /** @description COMM-03: false = do not notify the member (no N-36); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
         };
         BookingCharge: {
             /** @enum {string} */
@@ -8490,6 +8512,8 @@ export interface components {
             state?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
         };
         BookingRequest: {
+            /** @description COMM-03: false = do not notify the member (no N-36); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Explicit confirmation of a weekly-limit exception by an administrator acting for the member */
             overrideWeeklyLimit?: boolean;
             seatHoldId: string;
@@ -9257,6 +9281,8 @@ export interface components {
         /** @enum {string} */
         CheckoutStatus: "PENDING" | "PAID" | "EXPIRED";
         ClaimRequest: {
+            /** @description COMM-03: false = do not notify the member (no N-36); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Explicit confirmation of a weekly-limit exception by an administrator acting for the member */
             overrideWeeklyLimit?: boolean;
             seatHoldId: string;
@@ -10617,6 +10643,8 @@ export interface components {
         };
         DogLevelRequest: {
             levelId: string;
+            /** @description COMM-03: false = do not notify the member (no N-09). Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
         };
         DogListItem: {
             /** Format: double */
@@ -11842,6 +11870,15 @@ export interface components {
             /** @enum {string} */
             trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
         };
+        /** @description PRIV-02: the dry run the caller saw and its effects.counters as it showed them; only the WOULD_ counters other than zero are compared, with the dry run's and with those of a plan made at execution time */
+        JobRunConfirmation: {
+            /** @description The dry run's effects.counters */
+            counters: {
+                [key: string]: number;
+            };
+            /** @description runId of the dry run */
+            dryRunId: string;
+        };
         JobRunListItem: {
             counters?: {
                 [key: string]: number;
@@ -11904,6 +11941,8 @@ export interface components {
             name: string;
         };
         JobTriggerRequest: {
+            /** @description PRIV-02: a real run of a process that deletes personal data (retention-sweep) confirms a dry run of the same process made in the last 30 minutes and the counts it showed; ignored for a dry run and for the other processes */
+            confirmation?: components["schemas"]["JobRunConfirmation"] | null;
             dryRun: boolean;
         };
         JwkSet: {
@@ -12393,6 +12432,10 @@ export interface components {
             close: string;
             open: string;
         };
+        LoginEmailChangeRequest: {
+            /** Format: email */
+            email: string;
+        };
         MagicLinkRequest: {
             client_id: string;
             /** Format: email */
@@ -12715,6 +12758,8 @@ export interface components {
             lastName2?: string | null;
             /** Format: date */
             leaveDate?: string | null;
+            /** @description S03 R-03-06b (AUTH-02): the login e-mail of the member's account and its suppression mark; null without an account or after erasure */
+            login?: components["schemas"]["MemberLogin"] | null;
             maskedAccount?: string | null;
             /** Format: int32 */
             memberNumber?: number | null;
@@ -12902,6 +12947,15 @@ export interface components {
         MemberListSignup: {
             /** Format: date-time */
             submittedAt: string;
+        };
+        MemberLogin: {
+            /** Format: email */
+            email: string;
+            /**
+             * @description BOUNCED (hard bounce or invalid address) or COMPLAINED (spam complaint): no system e-mail (sign-in links, recovery, welcome) reaches this address; null: none
+             * @enum {string|null}
+             */
+            emailStatus?: "BOUNCED" | "COMPLAINED" | null;
         };
         MemberMergePreview: {
             blockers: string[];
@@ -13700,6 +13754,15 @@ export interface components {
         };
         /** @enum {string} */
         PaymentMethodType: "SEPA_DD" | "CARD" | "MANUAL";
+        PaymentMethodUpdate: {
+            card?: components["schemas"]["CardInput"];
+            manual?: components["schemas"]["ManualInput"];
+            /** @description COMM-03: false = do not notify the member (no N-38). Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
+            sepa?: components["schemas"]["SepaInput"];
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+        };
         /** @description No full IBAN, card credentials or setup intent IDs. */
         PaymentMethodView: {
             channel?: string | null;
@@ -16451,6 +16514,8 @@ export interface components {
         };
         TrainingBookingRequest: {
             dogId: string;
+            /** @description COMM-03: false = do not notify the member (no N-47); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Impersonation only (R-09-16); otherwise 403 OVERRIDE_NOT_ALLOWED */
             override?: components["schemas"]["TrainingOverride"] | null;
             /** @description Absent = «Qualsevol»: first FREE ring by catalog order (R-09-07) */
@@ -16472,6 +16537,8 @@ export interface components {
             thresholdMinutes: number;
         };
         TrainingCancellationRequest: {
+            /** @description COMM-03: false = do not notify the member (no N-47); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Required for a late cancellation with the impersonation token (ADMIN_LATE, R-09-10) */
             reason?: string | null;
         };
@@ -23481,7 +23548,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OVERRIDE_NOT_ALLOWED */
+            /** @description OVERRIDE_NOT_ALLOWED, FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -23974,7 +24041,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -38840,7 +38907,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description JOB_ALREADY_RUNNING, SIMULATION_STALE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
             /** @description Too Many Requests */
             429: {
@@ -48365,6 +48432,133 @@ export interface operations {
             };
         };
     };
+    changeLoginEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginEmailChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description AccessResendResponse: sentTo is the new address */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccessResendResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, SUPPORT_RESTRICTED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_NOT_ACTIVE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     merge: {
         parameters: {
             query?: never;
@@ -49123,7 +49317,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PaymentMethodPatch"];
+                "application/json": components["schemas"]["PaymentMethodUpdate"];
             };
         };
         responses: {
@@ -55438,7 +55632,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description JOB_ALREADY_RUNNING, SIMULATION_STALE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
             /** @description Too Many Requests */
             429: {
@@ -67362,7 +67556,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OVERRIDE_NOT_ALLOWED */
+            /** @description OVERRIDE_NOT_ALLOWED, FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -67880,7 +68074,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -68860,7 +69054,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OVERRIDE_NOT_ALLOWED */
+            /** @description OVERRIDE_NOT_ALLOWED, FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
