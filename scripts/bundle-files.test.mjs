@@ -1,15 +1,16 @@
 // The files each build emits next to its index.html (bundle-files.mjs) and their check on a built
-// dist (check-bundle-files.mjs): CFG-04 the Content-Security-Policy, CFG-05 robots.txt. Run by
-// `apps/clubs`'s `test`: node --test.
+// dist (check-bundle-files.mjs): CFG-04 the Content-Security-Policy, CFG-05 robots.txt, REL-02
+// version.json and the one version of the web workspaces. Run by `apps/clubs`'s `test`: node --test.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  buildCommit,
   CONTENT_SECURITY_POLICY_FILE,
   contentSecurityPolicy,
   contentSecurityPolicyFor,
@@ -18,6 +19,8 @@ import {
   ROBOTS_FILE,
   ROBOTS_TXT,
   robotsTxt,
+  VERSION_FILE,
+  versionJson,
 } from "./bundle-files.mjs";
 import { checkBundleFiles } from "./check-bundle-files.mjs";
 
@@ -68,6 +71,7 @@ function built(files = {}) {
     [CONTENT_SECURITY_POLICY_FILE]: contentSecurityPolicyFor(BUILT_INDEX),
     "index.html": BUILT_INDEX,
     [ROBOTS_FILE]: ROBOTS_TXT,
+    [VERSION_FILE]: '{"version":"1.0.0","commit":null}\n',
     ...files,
   };
   return Object.fromEntries(Object.entries(all).filter(([, contents]) => contents !== null));
@@ -182,4 +186,69 @@ test("CFG-05 a dist without robots.txt, or with one that lets a robot in, is ref
     ),
     [`${ROBOTS_FILE}: not «Disallow: /» for every robot`],
   );
+});
+
+const SHA = "0123456789abcdef0123456789abcdef01234567";
+
+test("REL-02 the build's commit is CI's GITHUB_SHA, and null without a full commit id", () => {
+  assert.equal(buildCommit({ GITHUB_SHA: SHA }), SHA);
+  assert.equal(buildCommit({ GITHUB_SHA: ` ${SHA.toUpperCase()}\n` }), SHA);
+  assert.equal(buildCommit({}), null);
+  assert.equal(buildCommit({ GITHUB_SHA: "0123456" }), null);
+  assert.equal(buildCommit({ GITHUB_SHA: `${SHA}-dirty` }), null);
+});
+
+test("REL-02 every build writes version.json with its package.json version and its commit", async () => {
+  const folder = await dist("app", { "package.json": '{"name":"app","version":"1.2.3"}' });
+  const packageJson = path.join(folder, "package.json");
+  assert.deepEqual(generate({}, versionJson(packageJson, { GITHUB_SHA: SHA })), [
+    { fileName: "version.json", source: `{"version":"1.2.3","commit":"${SHA}"}\n`, type: "asset" },
+  ]);
+  assert.deepEqual(generate({}, versionJson(packageJson, {})), [
+    { fileName: "version.json", source: '{"version":"1.2.3","commit":null}\n', type: "asset" },
+  ]);
+  await writeFile(packageJson, '{"name":"app"}');
+  assert.throws(
+    () => generate({}, versionJson(packageJson, {})),
+    /version «undefined» is not x\.y\.z/u,
+  );
+});
+
+test("REL-02 a dist without version.json, or with another shape, is refused", async () => {
+  const refused = async (name, body) =>
+    checkBundleFiles(await dist(name, built({ [VERSION_FILE]: body })));
+  assert.deepEqual(await refused("no-version", null), [`${VERSION_FILE}: missing`]);
+  assert.deepEqual(await refused("ci-version", `{"version":"1.0.0","commit":"${SHA}"}`), []);
+  assert.deepEqual(await refused("not-json", "1.0.0"), [`${VERSION_FILE}: not JSON`]);
+  assert.deepEqual(await refused("short-commit", '{"version":"1.0.0","commit":"0123456"}'), [
+    `${VERSION_FILE}: commit «0123456» is neither a full commit id nor null`,
+  ]);
+  assert.deepEqual(await refused("snapshot", '{"version":"1.0.0-SNAPSHOT","commit":null}'), [
+    `${VERSION_FILE}: version «1.0.0-SNAPSHOT» is not x.y.z`,
+  ]);
+  assert.deepEqual(await refused("extra-key", '{"version":"1.0.0","commit":null,"date":"x"}'), [
+    `${VERSION_FILE}: has the keys «commit,date,version», not «commit,version»`,
+  ]);
+});
+
+test("REL-02 the web workspaces share one real version", async () => {
+  const manifests = ["package.json"];
+  for (const folder of ["apps", "packages"]) {
+    for (const entry of await readdir(path.join(root, folder), { withFileTypes: true })) {
+      if (entry.isDirectory()) manifests.push(path.join(folder, entry.name, "package.json"));
+    }
+  }
+  const versions = new Map();
+  for (const manifest of manifests) {
+    const { version } = JSON.parse(await readFile(path.join(root, manifest), "utf8"));
+    versions.set(manifest, version);
+  }
+  assert.ok(versions.size >= 12, `the root, three apps and the packages: ${[...versions.keys()]}`);
+  assert.deepEqual(
+    new Set(versions.values()).size,
+    1,
+    JSON.stringify(Object.fromEntries(versions)),
+  );
+  const [version] = versions.values();
+  assert.match(version, /^[1-9]\d*\.\d+\.\d+$/u, "a release version, not 0.x");
 });

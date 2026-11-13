@@ -9,7 +9,12 @@
 //
 // CFG-05 `robots.txt`: `Disallow: /` for every robot. Each host (the product hosts, the identity
 // host and every club alias) serves one of the three bundles, so each answers its own robots.txt.
+//
+// REL-02 `version.json`: `{"version", "commit"}`, the version of the app's `package.json` and the
+// git commit the bundle was built from (`GITHUB_SHA` in CI; `null` elsewhere, where the tree may
+// differ from any commit), so a deployed bundle names its source.
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 
 export const CONTENT_SECURITY_POLICY_FILE = "content-security-policy.txt";
 
@@ -144,5 +149,59 @@ export function robotsTxt() {
       this.emitFile({ fileName: ROBOTS_FILE, source: ROBOTS_TXT, type: "asset" });
     },
     name: "robots-txt",
+  };
+}
+
+export const VERSION_FILE = "version.json";
+
+const SEMANTIC_VERSION = /^\d+\.\d+\.\d+$/u;
+const COMMIT = /^[0-9a-f]{40}$/u;
+
+/** REL-02: the commit a build comes from: CI's `GITHUB_SHA` (a full lowercase SHA-1), else `null`. */
+export function buildCommit(environment = process.env) {
+  const sha = environment.GITHUB_SHA?.trim().toLowerCase() ?? "";
+  return COMMIT.test(sha) ? sha : null;
+}
+
+/** REL-02: why a `version.json` body is not `{"version": "x.y.z", "commit": <sha> | null}`. */
+export function versionFileProblem(body) {
+  let value;
+  try {
+    value = JSON.parse(body);
+  } catch {
+    return "not JSON";
+  }
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return "not an object";
+  const keys = Object.keys(value).sort().join(",");
+  if (keys !== "commit,version") return `has the keys «${keys}», not «commit,version»`;
+  if (typeof value.version !== "string" || !SEMANTIC_VERSION.test(value.version)) {
+    return `version «${String(value.version)}» is not x.y.z`;
+  }
+  if (value.commit !== null && (typeof value.commit !== "string" || !COMMIT.test(value.commit))) {
+    return `commit «${String(value.commit)}» is neither a full commit id nor null`;
+  }
+  return null;
+}
+
+/**
+ * REL-02: emits `version.json` with the version of the app's `package.json` (`packageJson`, its
+ * path or file URL) and the build's commit (`buildCommit`).
+ */
+export function versionJson(packageJson, environment = process.env) {
+  return {
+    apply: "build",
+    enforce: "post",
+    generateBundle() {
+      const { version } = JSON.parse(readFileSync(packageJson, "utf8"));
+      if (typeof version !== "string" || !SEMANTIC_VERSION.test(version)) {
+        this.error(`REL-02: the app's package.json version «${String(version)}» is not x.y.z`);
+      }
+      this.emitFile({
+        fileName: VERSION_FILE,
+        source: `${JSON.stringify({ version, commit: buildCommit(environment) })}\n`,
+        type: "asset",
+      });
+    },
+    name: "version-json",
   };
 }

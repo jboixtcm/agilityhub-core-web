@@ -6,7 +6,7 @@ import react from "@vitejs/plugin-react";
 import { loadEnv, type Plugin } from "vite";
 import { configDefaults, defineConfig } from "vitest/config";
 
-import { contentSecurityPolicy, robotsTxt } from "../../scripts/bundle-files.mjs";
+import { contentSecurityPolicy, robotsTxt, versionJson } from "../../scripts/bundle-files.mjs";
 
 /** course-ui's FBX models (D18's 3D tab, E9-W03), published at `/obstacle-models` as Planner3D reads them. */
 const OBSTACLE_MODELS = resolve(
@@ -82,6 +82,8 @@ export default defineConfig(({ mode }) => {
       contentSecurityPolicy(),
       // CFG-05: `robots.txt` with `Disallow: /`, so no host this bundle serves is crawled.
       robotsTxt(),
+      // REL-02: `version.json`, this app's version and the commit it was built from.
+      versionJson(new URL("./package.json", import.meta.url)),
       react(),
       tailwindcss(),
       obstacleModels(),

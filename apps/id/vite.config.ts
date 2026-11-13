@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
 
-import { contentSecurityPolicy, robotsTxt } from "../../scripts/bundle-files.mjs";
+import { contentSecurityPolicy, robotsTxt, versionJson } from "../../scripts/bundle-files.mjs";
 
 import { PRIVACY_POLICY_EFFECTIVE_DATE } from "./src/privacy/privacy-policy.ts";
 import { privacyPolicyBuildGuard } from "./src/privacy/release-guard.ts";
@@ -47,6 +47,8 @@ export default defineConfig(({ mode }) => {
       contentSecurityPolicy(),
       // CFG-05: `robots.txt` with `Disallow: /`, so no host this bundle serves is crawled.
       robotsTxt(),
+      // REL-02: `version.json`, this app's version and the commit it was built from.
+      versionJson(new URL("./package.json", import.meta.url)),
       react(),
       tailwindcss(),
     ],

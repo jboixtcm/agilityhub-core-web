@@ -1,7 +1,8 @@
 // @vitest-environment node
 import type { Plugin, PluginOption } from "vite";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
+import packageJson from "../package.json";
 import viteConfig from "../vite.config";
 
 function flatPlugins(options: PluginOption[] | undefined): Plugin[] {
@@ -28,6 +29,26 @@ function buildPlugin(name: string): Plugin {
   return plugin;
 }
 
+/** Runs a build plugin's `generateBundle`; returns the files it emits. */
+function emittedBy(plugin: Plugin): unknown[] {
+  const emitted: unknown[] = [];
+  const hook = plugin.generateBundle;
+  const handler = typeof hook === "function" ? hook : hook?.handler;
+  (handler as ((this: unknown) => void) | undefined)?.call({
+    emitFile(file: unknown) {
+      emitted.push(file);
+    },
+    error(message: string): never {
+      throw new Error(message);
+    },
+  });
+  return emitted;
+}
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+});
+
 describe("the files this app's bundle carries (scripts/bundle-files.mjs)", () => {
   it("CFG-04 emits the Content-Security-Policy of its built index.html", () => {
     const plugin = buildPlugin("content-security-policy");
@@ -39,16 +60,31 @@ describe("the files this app's bundle carries (scripts/bundle-files.mjs)", () =>
   it("CFG-05 emits a robots.txt that disallows every path to every robot", () => {
     const plugin = buildPlugin("robots-txt");
     expect(plugin.apply).toBe("build");
-    const emitted: { fileName: string; source: string }[] = [];
-    const hook = plugin.generateBundle;
-    const handler = typeof hook === "function" ? hook : hook?.handler;
-    (handler as ((this: unknown) => void) | undefined)?.call({
-      emitFile(file: { fileName: string; source: string }) {
-        emitted.push(file);
-      },
-    });
-    expect(emitted).toEqual([
+    expect(emittedBy(plugin)).toEqual([
       { fileName: "robots.txt", source: "User-agent: *\nDisallow: /\n", type: "asset" },
+    ]);
+  });
+
+  it("REL-02 emits version.json with this app's version and the commit CI builds", () => {
+    const { version } = packageJson;
+    const sha = "89abcdef0123456789abcdef0123456789abcdef";
+    vi.stubEnv("GITHUB_SHA", sha);
+    const plugin = buildPlugin("version-json");
+    expect(plugin.apply).toBe("build");
+    expect(emittedBy(plugin)).toEqual([
+      {
+        fileName: "version.json",
+        source: `{"version":"${version}","commit":"${sha}"}\n`,
+        type: "asset",
+      },
+    ]);
+    vi.stubEnv("GITHUB_SHA", "");
+    expect(emittedBy(plugin)).toEqual([
+      {
+        fileName: "version.json",
+        source: `{"version":"${version}","commit":null}\n`,
+        type: "asset",
+      },
     ]);
   });
 });

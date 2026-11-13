@@ -27,3 +27,17 @@ export declare const ROBOTS_TXT: string;
 
 /** CFG-05: emits `robots.txt` (`Disallow: /`) into the bundle. */
 export declare function robotsTxt(): BundleFilePlugin;
+
+export declare const VERSION_FILE: string;
+
+/** REL-02: the commit a build comes from: CI's `GITHUB_SHA`, else `null`. */
+export declare function buildCommit(
+  environment?: Record<string, string | undefined>,
+): string | null;
+export declare function versionFileProblem(body: string): string | null;
+
+/** REL-02: emits `version.json` with the app's version and the build's commit. */
+export declare function versionJson(
+  packageJson: string | URL,
+  environment?: Record<string, string | undefined>,
+): BundleFilePlugin;
