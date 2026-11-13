@@ -2063,3 +2063,100 @@ describe("WEB-01 (decision of 13 Nov 2026): D10's welcome e-mail, manual only an
     expect(screen.queryByText(/S’ha sol·licitat la benvinguda per a/u)).toBeNull();
   });
 });
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» on an ADMIN's level change and payment-method edit", () => {
+  /** The bodies D10 sends with `method` to a path ending in `suffix`. */
+  function recordBodies(method: string, suffix: string): unknown[] {
+    const bodies: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === method && new URL(request.url).pathname.endsWith(suffix)) {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            bodies.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return bodies;
+  }
+
+  async function levelDialog() {
+    await renderRecord("dog");
+    await screen.findByRole("heading", { name: "Duna" });
+    fireEvent.click(screen.getByRole("button", { name: "Canvia el nivell" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia el nivell" });
+    fireEvent.change(within(dialog).getByLabelText("Nivell nou"), {
+      target: { value: "level-d" },
+    });
+    return dialog;
+  }
+
+  it("the level change offers it ticked; unticked, PATCH /dogs/{id}/level carries notifyMember: false", async () => {
+    const bodies = recordBodies("PATCH", "/level");
+    const dialog = await levelDialog();
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El nivell s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([{ levelId: "level-d", notifyMember: false }]);
+  });
+
+  it("left ticked, the level change is sent as before (the member is notified)", async () => {
+    const bodies = recordBodies("PATCH", "/level");
+    const dialog = await levelDialog();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El nivell s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([{ levelId: "level-d" }]);
+  });
+
+  async function paymentDialog() {
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const row = screen
+      .getByText("Pagament", { selector: "dt" })
+      .closest<HTMLElement>(".census-record__data-row");
+    if (row === null) throw new TypeError("D10 has no «Pagament» row");
+    fireEvent.click(within(row).getByRole("button", { name: "Edita" }));
+    const dialog = screen.getByRole("dialog", { name: "Mètode de pagament" });
+    fireEvent.change(within(dialog).getByLabelText("IBAN nou"), {
+      target: { value: "ES9121000418450200051332" },
+    });
+    return dialog;
+  }
+
+  it("the payment-method edit offers it ticked; unticked, the PATCH carries notifyMember: false", async () => {
+    const bodies = recordBodies("PATCH", "/payment-method");
+    const dialog = await paymentDialog();
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El mètode de pagament s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([
+      {
+        notifyMember: false,
+        sepa: { holderName: "Laura Serra Vidal", iban: "ES9121000418450200051332" },
+        type: "SEPA_DD",
+      },
+    ]);
+  });
+
+  it("left ticked, the payment-method edit is sent as before (the member is notified)", async () => {
+    const bodies = recordBodies("PATCH", "/payment-method");
+    const dialog = await paymentDialog();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El mètode de pagament s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([
+      {
+        sepa: { holderName: "Laura Serra Vidal", iban: "ES9121000418450200051332" },
+        type: "SEPA_DD",
+      },
+    ]);
+  });
+});

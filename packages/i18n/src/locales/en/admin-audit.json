@@ -193,5 +193,6 @@
   },
   "rowLabel": "Open the “{action}” change",
   "search": "Search by action, actor or entity",
-  "title": "Audit"
+  "title": "Audit",
+  "withoutNotice": "member not notified"
 }

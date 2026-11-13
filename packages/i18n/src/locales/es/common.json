@@ -131,5 +131,6 @@
     "acknowledge": "Entendido",
     "checkSpam": "Si no encuentras el mensaje, comprueba también la carpeta de correo no deseado.",
     "close": "Cerrar"
-  }
+  },
+  "notifyMember": "Avisar al abonado"
 }

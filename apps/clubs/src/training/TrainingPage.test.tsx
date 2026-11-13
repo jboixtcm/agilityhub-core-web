@@ -800,3 +800,41 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the sha
     expect(requests.keys[2]).not.toBe(requests.keys[0]);
   });
 });
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» when an ADMIN books a training for the member", () => {
+  it("is offered ticked to an ADMIN acting as the member; unticked, the booking carries notifyMember: false", async () => {
+    const requests = recordRequests();
+    await openTraining({ scenario: "impersonated" });
+    expect(screen.queryByRole("checkbox", { name: "Avisa l'abonat" })).toBeNull();
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "8:30, lliure" }));
+    const choice = screen.getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(confirmButton());
+    expect(await screen.findByText("Entrenament reservat")).toBeVisible();
+    await waitFor(() => {
+      expect(requests.bodies.get("/training-bookings")).toEqual([
+        {
+          dogId: "dog-rock",
+          notifyMember: false,
+          ringId: "ring-muntanya",
+          startsAt: "2026-08-03T06:30:00Z",
+        },
+      ]);
+    });
+  });
+
+  it("the member gets no choice and books as before", async () => {
+    const requests = recordRequests();
+    await openTraining();
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "8:30, lliure" }));
+    expect(screen.queryByRole("checkbox", { name: "Avisa l'abonat" })).toBeNull();
+    fireEvent.click(confirmButton());
+    expect(await screen.findByText("Entrenament reservat")).toBeVisible();
+    await waitFor(() => {
+      expect(requests.bodies.get("/training-bookings")).toEqual([
+        { dogId: "dog-rock", ringId: "ring-muntanya", startsAt: "2026-08-03T06:30:00Z" },
+      ]);
+    });
+  });
+});

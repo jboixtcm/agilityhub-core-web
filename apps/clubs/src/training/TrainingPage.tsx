@@ -26,6 +26,11 @@ import { useTranslation } from "react-i18next";
 
 import "../booking/booking.css";
 import { DogChips } from "../booking/DogChips";
+import {
+  memberNoticeField,
+  NotifyMemberChoice,
+  useMemberNoticeChoice,
+} from "../booking/NotifyMemberChoice";
 import { errorText, navigateInApp, type Translate } from "../booking/shared";
 import { TrainingSetupLines } from "../courses/blocks";
 
@@ -179,6 +184,9 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   }, [selectedStart]);
   const [pending, setPending] = useState(false);
   const [booked, setBooked] = useState(false);
+  // COMM-03: an ADMIN acting as the member may book without notifying them (N-47).
+  const noticeChoice = useMemberNoticeChoice();
+  const [notify, setNotify] = useState(true);
   /**
    * One `Idempotency-Key` per submission (its payload), kept while the api has not answered it (a
    * lost answer, a 5xx or IN_PROGRESS) and retired by its answer: the shared rule (CONVENCIONS_API
@@ -334,7 +342,12 @@ export function TrainingPage({ client }: { client: ApiClient }) {
 
   const confirm = async () => {
     if (choice === undefined || selectedDog === null) return;
-    const body = { dogId: selectedDog, ringId: choice.ringId, startsAt: choice.startsAt };
+    const body = {
+      dogId: selectedDog,
+      ringId: choice.ringId,
+      startsAt: choice.startsAt,
+      ...memberNoticeField(noticeChoice, notify),
+    };
     setPending(true);
     setFailure(undefined);
     setBooked(false);
@@ -676,6 +689,14 @@ export function TrainingPage({ client }: { client: ApiClient }) {
                 {t("training:confirm.dismissError")}
               </Button>
             </div>
+          ) : null}
+          {noticeChoice && choice !== undefined ? (
+            <NotifyMemberChoice
+              checked={notify}
+              disabled={pending}
+              id="training-notify-member"
+              onChange={setNotify}
+            />
           ) : null}
           {failure?.kind === "limit" ? (
             limitMessage(failure.limit, failure.cancellable)

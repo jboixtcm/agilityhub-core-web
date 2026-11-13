@@ -435,3 +435,77 @@ describe("T-14-26 / R-14-11 E11-W05 step 5 (e): the «Data» range ends at the e
     );
   });
 });
+
+describe("COMM-03 (decision of 13 Nov 2026): D9 names an action made without the member's notice", () => {
+  const entry = {
+    action: "DOG_LEVEL_CHANGED",
+    actorName: "Jordi",
+    actorRole: "ADMIN",
+    at: "2026-11-13T10:02:00Z",
+    changes: [],
+    details: { notifyMember: false },
+    entityId: "00000000-0000-4000-8000-000000000301",
+    entityLabel: "Duna",
+    entityType: "Dog",
+    id: "00000000-0000-4000-8000-000000000302",
+    memberId: "00000000-0000-4000-8000-000000000087",
+    origin: "BACKOFFICE",
+  } as const;
+
+  it("shows «sense avís a l'abonat» in the details column and in the change's drawer", async () => {
+    server.use(
+      http.get("*/api/v1/members/:id/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [entry],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/audit-entries/:id", () => HttpResponse.json(entry)),
+    );
+    window.history.replaceState(
+      null,
+      "",
+      "/abonats/member-laura/auditoria?fields=at,action,details",
+    );
+    await renderAudit();
+    const action = await screen.findByRole("link", { name: "Nivell del gos modificat" });
+    const row = action.closest("tr");
+    if (row === null) throw new TypeError("No audit row");
+    expect(within(row).getByText("sense avís a l'abonat")).toHaveClass("ah-badge");
+
+    fireEvent.click(action);
+    const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
+    expect(await within(drawer).findByText("sense avís a l'abonat")).toHaveClass("ah-badge");
+  });
+
+  it("says nothing of the kind for an action that notified the member", async () => {
+    const notified = { ...entry, details: {} };
+    server.use(
+      http.get("*/api/v1/members/:id/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [notified],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/audit-entries/:id", () => HttpResponse.json(notified)),
+    );
+    window.history.replaceState(
+      null,
+      "",
+      "/abonats/member-laura/auditoria?fields=at,action,details",
+    );
+    await renderAudit();
+    fireEvent.click(await screen.findByRole("link", { name: "Nivell del gos modificat" }));
+    const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
+    await within(drawer).findByText("Duna");
+    expect(screen.queryByText("sense avís a l'abonat")).toBeNull();
+  });
+});

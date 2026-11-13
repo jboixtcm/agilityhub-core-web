@@ -690,3 +690,11 @@ button.confirm-option {
   margin: var(--ah-space-1) 0;
   overflow-wrap: anywhere;
 }
+
+/* COMM-03: «Avisa l'abonat» on the sheets an ADMIN uses while acting as the member. */
+.staff-notice-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+  padding-block: var(--ah-space-1);
+}

@@ -2,7 +2,7 @@ import { bookingState, catalogState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 
 import { canic, renderApp, setupBookingWorld, without } from "./test-utils";
 
@@ -467,5 +467,55 @@ describe("T-08-39 the waiting entry (/espera/:id, R-08-16)", () => {
       expect(screen.queryByRole("button", { name: "SURT DE LA LLISTA D'ESPERA" })).toBeNull();
     });
     expect(screen.queryByText("Classe C i sup. · amb la Duna")).toBeNull();
+  });
+});
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» when an ADMIN cancels for the member", () => {
+  function recordCancellations(): unknown[] {
+    const bodies: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "POST" && request.url.endsWith("/cancellation")) {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            bodies.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return bodies;
+  }
+
+  async function cancelDialog(scenario?: "impersonated" | "instructorBookings") {
+    await renderApp("/reserves/booking-duna-mon3", scenario === undefined ? {} : { scenario });
+    await screen.findByRole("heading", { name: "Detall de la reserva" });
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    return screen.getByRole("dialog", { name: "Vols anul·lar la reserva de la classe B+C?" });
+  }
+
+  it("is offered ticked to an ADMIN acting as the member; unticked, the cancellation carries notifyMember: false", async () => {
+    const bodies = recordCancellations();
+    const dialog = await cancelDialog("impersonated");
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    await waitFor(() => {
+      expect(bodies).toEqual([{ notifyMember: false }]);
+    });
+  });
+
+  it("the member gets no choice and cancels with an empty body, as before", async () => {
+    const bodies = recordCancellations();
+    const dialog = await cancelDialog();
+    expect(within(dialog).queryByRole("checkbox", { name: "Avisa l'abonat" })).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    await waitFor(() => {
+      expect(bodies).toEqual([{}]);
+    });
   });
 });

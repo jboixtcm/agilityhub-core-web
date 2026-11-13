@@ -193,5 +193,6 @@
   },
   "rowLabel": "Obre el canvi «{action}»",
   "search": "Cerca per acció, actor o entitat",
-  "title": "Auditoria"
+  "title": "Auditoria",
+  "withoutNotice": "sense avís a l'abonat"
 }

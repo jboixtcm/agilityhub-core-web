@@ -50,6 +50,7 @@ import { MemberNextInvoice, NEXT_INVOICE_DRAWER } from "./MemberNextInvoice";
 import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
 import { MemberPlanDrawer } from "./MemberPlanDrawer";
 import { MemberDataExportButton, MemberPrivacyCard } from "./MemberPrivacyCard";
+import { memberNoticeField, NotifyMemberChoice } from "./NotifyMemberChoice";
 import { RecordActions } from "./RecordActions";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
@@ -2274,6 +2275,8 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
   const [pending, setPending] = useState(false);
   const [dialogError, setDialogError] = useState<string>();
   const [selectedLevel, setSelectedLevel] = useState("");
+  // COMM-03: «Avisa l'abonat» on the level change, ticked by default (N-09).
+  const [notifyLevel, setNotifyLevel] = useState(true);
   const [freeOverride, setFreeOverride] = useState<"false" | "true">("false");
   const [toMemberId, setToMemberId] = useState("");
   const [reason, setReason] = useState("");
@@ -2417,6 +2420,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             <SectionTitle>{t("admin-census:dog.sections.level")}</SectionTitle>
             <Button
               onClick={() => {
+                setNotifyLevel(true);
                 setDialog("level");
               }}
               variant="ghost"
@@ -2586,6 +2590,12 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             ))}
           </Select>
         </FormField>
+        <NotifyMemberChoice
+          checked={notifyLevel}
+          disabled={pending}
+          id="dog-level-notify-member"
+          onChange={setNotifyLevel}
+        />
         {dialogError === undefined ? null : <p role="alert">{dialogError}</p>}
         <div className="census-record__dialog-actions">
           <Button
@@ -2601,7 +2611,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             onClick={() =>
               void run(async () => {
                 const result = await client.PATCH("/dogs/{id}/level", {
-                  body: { levelId: selectedLevel },
+                  body: { levelId: selectedLevel, ...memberNoticeField(notifyLevel) },
                   params: { path: { id: dog.id } },
                 });
                 if (result.data === undefined)

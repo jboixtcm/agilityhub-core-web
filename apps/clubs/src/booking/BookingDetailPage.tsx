@@ -18,6 +18,7 @@ import { BookingCourseLines } from "../courses/blocks";
 import { useWindowFocus } from "../training/shared";
 
 import "./booking.css";
+import { memberNoticeField, NotifyMemberChoice, useMemberNoticeChoice } from "./NotifyMemberChoice";
 import { type Booking, errorText, localParts, type Translate, useBooking } from "./shared";
 
 type DisplayState = NonNullable<Booking["displayState"]>;
@@ -91,6 +92,9 @@ export function BookingDetailPage({
   const [dialog, setDialog] = useState<{ late: boolean }>();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  // COMM-03: an ADMIN acting as the member may cancel without notifying them (N-36).
+  const noticeChoice = useMemberNoticeChoice();
+  const [notify, setNotify] = useState(true);
   // The answer of this page's own cancellation: only it says «dins el termini» or «tard» (step 6).
   // A booking cancelled elsewhere (a swap, the system, an old one) shows just its state chip.
   const [cancelled, setCancelled] = useState<{ late: boolean }>();
@@ -201,6 +205,7 @@ export function BookingDetailPage({
 
   const open = () => {
     setError(undefined);
+    setNotify(true);
     // R-08-10: in time while now ≤ `cancellableInTimeUntil`, the instant the api computes (the
     // class start minus the threshold); after it the dialog warns first.
     setDialog({ late: Date.now() > Date.parse(data.cancellableInTimeUntil) });
@@ -211,7 +216,7 @@ export function BookingDetailPage({
     setError(undefined);
     try {
       const response = await client.POST("/bookings/{id}/cancellation", {
-        body: {},
+        body: memberNoticeField(noticeChoice, notify),
         params: { path: { id: data.id } },
       });
       const result = response.data;
@@ -279,6 +284,14 @@ export function BookingDetailPage({
           ) : (
             <p className="booking-note booking-note--neutral">{t("booking:detail.inTimeNotice")}</p>
           )}
+          {noticeChoice ? (
+            <NotifyMemberChoice
+              checked={notify}
+              disabled={pending}
+              id="booking-cancel-notify-member"
+              onChange={setNotify}
+            />
+          ) : null}
           {error === undefined ? null : (
             <p className="booking-note booking-note--danger" role="alert">
               {error}

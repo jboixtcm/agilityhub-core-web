@@ -740,3 +740,76 @@ describe("T-08-16 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's bo
     expect(keys[1]).toBe(keys[0]);
   });
 });
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» when an ADMIN books for the member", () => {
+  /** 06 with a fresh hold, as 04 opens it; `waitlistEntryId` makes it a waiting-list claim. */
+  function openHold(waitlistEntryId: string | null = null) {
+    const now = Date.now();
+    const hold = heldSeat(new Date(now).toISOString(), new Date(now + 60_000).toISOString());
+    window.history.replaceState(
+      { confirm: { hold, kind: "hold", receivedAt: now, waitlistEntryId } },
+      "",
+      "/reservar/confirmar",
+    );
+    return hold;
+  }
+
+  it("is offered ticked to an ADMIN acting as the member; unticked, the booking carries notifyMember: false", async () => {
+    const writes = recordWrites();
+    const hold = openHold();
+    await renderPage(<ConfirmPage client={apiClient()} />, { scenario: "impersonated" });
+    const choice = screen.getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    expect(choice).not.toBeChecked();
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRMAR LA RESERVA" }));
+    await waitFor(() => {
+      expect(writes.find((write) => write.path === "/api/v1/bookings")?.body).toEqual({
+        notifyMember: false,
+        seatHoldId: hold.id,
+      });
+    });
+  });
+
+  it("left ticked, the booking is sent as before, without the field (the member is notified)", async () => {
+    const writes = recordWrites();
+    const hold = openHold();
+    await renderPage(<ConfirmPage client={apiClient()} />, { scenario: "impersonated" });
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRMAR LA RESERVA" }));
+    await waitFor(() => {
+      expect(writes.find((write) => write.path === "/api/v1/bookings")?.body).toEqual({
+        seatHoldId: hold.id,
+      });
+    });
+  });
+
+  it("a waiting-list claim made unticked carries notifyMember: false too", async () => {
+    const writes = recordWrites();
+    const hold = openHold("waitlist-entry-1");
+    await renderPage(<ConfirmPage client={apiClient()} />, { scenario: "impersonated" });
+    fireEvent.click(screen.getByRole("checkbox", { name: "Avisa l'abonat" }));
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRMAR LA RESERVA" }));
+    await waitFor(() => {
+      expect(
+        writes.find((write) => write.path === "/api/v1/waitlist-entries/waitlist-entry-1/claim")
+          ?.body,
+      ).toEqual({ notifyMember: false, seatHoldId: hold.id });
+    });
+  });
+
+  it.each(["member", "instructorBookings"] as const)(
+    "is never offered in the %s session, whose booking carries no notifyMember",
+    async (scenario) => {
+      const writes = recordWrites();
+      const hold = openHold();
+      await renderPage(<ConfirmPage client={apiClient()} />, { scenario });
+      expect(screen.queryByRole("checkbox", { name: "Avisa l'abonat" })).toBeNull();
+      fireEvent.click(screen.getByRole("button", { name: "CONFIRMAR LA RESERVA" }));
+      await waitFor(() => {
+        expect(writes.find((write) => write.path === "/api/v1/bookings")?.body).toEqual({
+          seatHoldId: hold.id,
+        });
+      });
+    },
+  );
+});

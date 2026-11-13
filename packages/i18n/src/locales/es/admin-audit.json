@@ -193,5 +193,6 @@
   },
   "rowLabel": "Abrir el cambio «{action}»",
   "search": "Buscar por acción, actor o entidad",
-  "title": "Auditoría"
+  "title": "Auditoría",
+  "withoutNotice": "sin aviso al abonado"
 }

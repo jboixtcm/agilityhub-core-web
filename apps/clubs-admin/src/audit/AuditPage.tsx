@@ -212,6 +212,25 @@ function filterLabel(t: Translation, field: string, value: string): string {
   return value;
 }
 
+/**
+ * COMM-03 (decision of 13 Nov 2026): an ADMIN's action made without the member's notice records
+ * `details.notifyMember = false` (S14 R-14-09); D9 names it «sense avís a l'abonat».
+ */
+function withoutMemberNotice(details: unknown): boolean {
+  return (
+    typeof details === "object" &&
+    details !== null &&
+    Reflect.get(details, "notifyMember") === false
+  );
+}
+
+function WithoutMemberNotice({ details }: { details: unknown }) {
+  const { t } = useTranslation("admin-audit");
+  return withoutMemberNotice(details) ? (
+    <Badge tone="warning">{t("admin-audit:withoutNotice")}</Badge>
+  ) : null;
+}
+
 function auditValue(value: unknown, empty: string): string {
   if (value === null || value === undefined || value === "") return empty;
   if (typeof value === "string") return value;
@@ -451,7 +470,9 @@ function DetailDrawer({
           <dl>
             <div>
               <dt>{t("admin-audit:drawer.action")}</dt>
-              <dd>{actionLabel(t, entry.action)}</dd>
+              <dd>
+                {actionLabel(t, entry.action)} <WithoutMemberNotice details={entry.details} />
+              </dd>
             </div>
             <div>
               <dt>{t("admin-audit:drawer.entity")}</dt>
@@ -598,7 +619,12 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
       {
         key: "details",
         label: t("admin-audit:columns.details"),
-        render: (entry) => auditValue(entry.details, t("admin-audit:none")),
+        render: (entry) => (
+          <>
+            <WithoutMemberNotice details={entry.details} />{" "}
+            {auditValue(entry.details, t("admin-audit:none"))}
+          </>
+        ),
       },
     ],
     [branding.timeZone, locale, t],

@@ -131,5 +131,6 @@
     "acknowledge": "Entesos",
     "checkSpam": "Si no trobes el missatge, comprova també la carpeta de correu no desitjat.",
     "close": "Tanca"
-  }
+  },
+  "notifyMember": "Avisa l'abonat"
 }
