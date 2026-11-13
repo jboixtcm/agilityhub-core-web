@@ -35,4 +35,20 @@ describe("the files this app's bundle carries (scripts/bundle-files.mjs)", () =>
     // After Vite's HTML plugin, so the policy is computed from the final index.html.
     expect(plugin.enforce).toBe("post");
   });
+
+  it("CFG-05 emits a robots.txt that disallows every path to every robot", () => {
+    const plugin = buildPlugin("robots-txt");
+    expect(plugin.apply).toBe("build");
+    const emitted: { fileName: string; source: string }[] = [];
+    const hook = plugin.generateBundle;
+    const handler = typeof hook === "function" ? hook : hook?.handler;
+    (handler as ((this: unknown) => void) | undefined)?.call({
+      emitFile(file: { fileName: string; source: string }) {
+        emitted.push(file);
+      },
+    });
+    expect(emitted).toEqual([
+      { fileName: "robots.txt", source: "User-agent: *\nDisallow: /\n", type: "asset" },
+    ]);
+  });
 });

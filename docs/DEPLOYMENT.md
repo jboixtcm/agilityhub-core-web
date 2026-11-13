@@ -27,6 +27,7 @@ Each application's `vite build` writes these files into its `dist` next to `inde
 | File | Content | Used by |
 | --- | --- | --- |
 | `content-security-policy.txt` | The `Content-Security-Policy` header value of this bundle, one line: `default-src 'self'`, `script-src 'self'` plus the `sha256` hash of every inline script of the built `index.html` (the cached-branding boot script of `clubs` and `clubs-admin`), `style-src 'self' 'unsafe-inline'`, `img-src 'self' data: blob:`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`. | The server (Caddy) sends it with the bundle's static answers, never with the proxied API (CFG-04). |
+| `robots.txt` | `User-agent: *` and `Disallow: /`: no robot may crawl any path. | Served as a static file by every host: the product hosts, the identity host and every club alias each serve one of the three bundles (CFG-05). |
 
 The policy allows only the host's own origin: the API is proxied under each SPA host and its signed file URLs are relative. Serving files or the API from another origin (an S3 bucket for attachments, for instance) needs that origin added to the policy first.
 

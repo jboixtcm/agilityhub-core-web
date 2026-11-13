@@ -7,7 +7,7 @@ import { loadEnv, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { configDefaults, defineConfig } from "vitest/config";
 
-import { contentSecurityPolicy } from "../../scripts/bundle-files.mjs";
+import { contentSecurityPolicy, robotsTxt } from "../../scripts/bundle-files.mjs";
 
 /**
  * course-ui's FBX models, published at `/obstacle-models` as Planner3D reads them: the viewer's 3D
@@ -96,6 +96,8 @@ export default defineConfig(({ mode }) => {
       },
       // CFG-04: the Content-Security-Policy Caddy sends with this bundle, computed from its index.html.
       contentSecurityPolicy(),
+      // CFG-05: `robots.txt` with `Disallow: /`, so no host this bundle serves is crawled.
+      robotsTxt(),
       react(),
       tailwindcss(),
       obstacleModels(),

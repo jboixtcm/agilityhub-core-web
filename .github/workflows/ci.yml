@@ -44,7 +44,8 @@ jobs:
       - name: Check production bundles for mock data
         run: node scripts/check-production-bundles.mjs
 
-      # CFG-04: each production bundle carries the Content-Security-Policy of its own index.html.
+      # CFG-04: each production bundle carries the Content-Security-Policy of its own index.html;
+      # CFG-05: and a robots.txt that disallows every path.
       - name: Check the files every production bundle carries
         run: node scripts/check-bundle-files.mjs
 

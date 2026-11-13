@@ -21,3 +21,9 @@ export declare function contentSecurityPolicyProblems(policy: string, html: stri
 
 /** CFG-04: emits `content-security-policy.txt` next to the built `index.html`. */
 export declare function contentSecurityPolicy(): BundleFilePlugin;
+
+export declare const ROBOTS_FILE: string;
+export declare const ROBOTS_TXT: string;
+
+/** CFG-05: emits `robots.txt` (`Disallow: /`) into the bundle. */
+export declare function robotsTxt(): BundleFilePlugin;

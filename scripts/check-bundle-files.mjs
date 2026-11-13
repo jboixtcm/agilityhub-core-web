@@ -1,6 +1,7 @@
 // The files every production bundle carries (`scripts/bundle-files.mjs`), checked on each built
 // `dist` folder: CFG-04 `content-security-policy.txt`, one line that allows every inline script
-// of the folder's `index.html` (its hash recomputed here) and is no other policy than the build's.
+// of the folder's `index.html` (its hash recomputed here) and is no other policy than the build's;
+// CFG-05 `robots.txt`, `Disallow: /` for every robot.
 //
 // Usage: node scripts/check-bundle-files.mjs [dist directory …]
 // (default: the dist folders of apps/clubs, apps/clubs-admin and apps/id).
@@ -12,6 +13,8 @@ import {
   CONTENT_SECURITY_POLICY_FILE,
   contentSecurityPolicyFor,
   contentSecurityPolicyProblems,
+  ROBOTS_FILE,
+  ROBOTS_TXT,
 } from "./bundle-files.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -48,6 +51,10 @@ export async function checkBundleFiles(directory) {
       );
     }
   }
+  const robots = await text(directory, ROBOTS_FILE);
+  if (robots === null) problems.push(`${ROBOTS_FILE}: missing`);
+  else if (robots !== ROBOTS_TXT)
+    problems.push(`${ROBOTS_FILE}: not «Disallow: /» for every robot`);
   return problems;
 }
 

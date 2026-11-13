@@ -1,5 +1,6 @@
-// CFG-04: the Content-Security-Policy each build emits next to its index.html (bundle-files.mjs)
-// and its check on a built dist (check-bundle-files.mjs). Run by `apps/clubs`'s `test`: node --test.
+// The files each build emits next to its index.html (bundle-files.mjs) and their check on a built
+// dist (check-bundle-files.mjs): CFG-04 the Content-Security-Policy, CFG-05 robots.txt. Run by
+// `apps/clubs`'s `test`: node --test.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -14,6 +15,9 @@ import {
   contentSecurityPolicyFor,
   contentSecurityPolicyProblems,
   inlineScriptHashes,
+  ROBOTS_FILE,
+  ROBOTS_TXT,
+  robotsTxt,
 } from "./bundle-files.mjs";
 import { checkBundleFiles } from "./check-bundle-files.mjs";
 
@@ -30,8 +34,8 @@ function browserHash(text) {
   return `'sha256-${createHash("sha256").update(Buffer.from(text, "utf8")).digest("base64")}'`;
 }
 
-/** Runs the plugin's `generateBundle` on a bundle as Rollup would; returns the emitted files. */
-function generate(bundle) {
+/** Runs a plugin's `generateBundle` on a bundle as Rollup would; returns the emitted files. */
+function generate(bundle, plugin = contentSecurityPolicy()) {
   const emitted = [];
   const context = {
     emitFile(file) {
@@ -42,7 +46,7 @@ function generate(bundle) {
       throw new Error(message);
     },
   };
-  contentSecurityPolicy().generateBundle.call(context, {}, bundle);
+  plugin.generateBundle.call(context, {}, bundle);
   return emitted;
 }
 
@@ -57,6 +61,17 @@ before(async () => {
 after(async () => {
   await rm(directory, { force: true, recursive: true });
 });
+
+/** The files a build writes for BUILT_INDEX, with `files` replacing or removing (`null`) some. */
+function built(files = {}) {
+  const all = {
+    [CONTENT_SECURITY_POLICY_FILE]: contentSecurityPolicyFor(BUILT_INDEX),
+    "index.html": BUILT_INDEX,
+    [ROBOTS_FILE]: ROBOTS_TXT,
+    ...files,
+  };
+  return Object.fromEntries(Object.entries(all).filter(([, contents]) => contents !== null));
+}
 
 async function dist(name, files) {
   const folder = path.join(directory, name);
@@ -121,21 +136,18 @@ test("CFG-04 the build stops without an index.html or with an inline event handl
 });
 
 test("CFG-04 a built dist passes with the policy its build emitted", async () => {
-  const folder = await dist("good", {
-    [CONTENT_SECURITY_POLICY_FILE]: contentSecurityPolicyFor(BUILT_INDEX),
-    "index.html": BUILT_INDEX,
-  });
-  assert.deepEqual(await checkBundleFiles(folder), []);
+  assert.deepEqual(await checkBundleFiles(await dist("good", built())), []);
 });
 
 test("CFG-04 a dist without the policy, with another script's hash or a multi-line file is refused", async () => {
-  assert.deepEqual(await checkBundleFiles(await dist("none", { "index.html": BUILT_INDEX })), [
-    `${CONTENT_SECURITY_POLICY_FILE}: missing`,
-  ]);
-  const stale = await dist("stale", {
-    [CONTENT_SECURITY_POLICY_FILE]: contentSecurityPolicyFor("<script>old()</script>"),
-    "index.html": BUILT_INDEX,
-  });
+  assert.deepEqual(
+    await checkBundleFiles(await dist("none", built({ [CONTENT_SECURITY_POLICY_FILE]: null }))),
+    [`${CONTENT_SECURITY_POLICY_FILE}: missing`],
+  );
+  const stale = await dist(
+    "stale",
+    built({ [CONTENT_SECURITY_POLICY_FILE]: contentSecurityPolicyFor("<script>old()</script>") }),
+  );
   const problems = await checkBundleFiles(stale);
   assert.equal(problems.length, 2);
   assert.match(
@@ -143,11 +155,31 @@ test("CFG-04 a dist without the policy, with another script's hash or a multi-li
     /an inline script of index\.html .* is not allowed by script-src/u,
   );
   assert.match(problems[1] ?? "", /not the policy the build computes/u);
-  const twoLines = await dist("two-lines", {
-    [CONTENT_SECURITY_POLICY_FILE]: `${contentSecurityPolicyFor(BUILT_INDEX)}\n`,
-    "index.html": BUILT_INDEX,
-  });
+  const twoLines = await dist(
+    "two-lines",
+    built({ [CONTENT_SECURITY_POLICY_FILE]: `${contentSecurityPolicyFor(BUILT_INDEX)}\n` }),
+  );
   assert.deepEqual(await checkBundleFiles(twoLines), [
     `${CONTENT_SECURITY_POLICY_FILE}: not a single line (a header value)`,
   ]);
+});
+
+test("CFG-05 every build writes a robots.txt that disallows every path to every robot", () => {
+  assert.equal(ROBOTS_TXT, "User-agent: *\nDisallow: /\n");
+  assert.deepEqual(generate({}, robotsTxt()), [
+    { fileName: "robots.txt", source: "User-agent: *\nDisallow: /\n", type: "asset" },
+  ]);
+});
+
+test("CFG-05 a dist without robots.txt, or with one that lets a robot in, is refused", async () => {
+  assert.deepEqual(
+    await checkBundleFiles(await dist("no-robots", built({ [ROBOTS_FILE]: null }))),
+    [`${ROBOTS_FILE}: missing`],
+  );
+  assert.deepEqual(
+    await checkBundleFiles(
+      await dist("open-robots", built({ [ROBOTS_FILE]: "User-agent: *\nDisallow:\n" })),
+    ),
+    [`${ROBOTS_FILE}: not «Disallow: /» for every robot`],
+  );
 });

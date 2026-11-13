@@ -6,6 +6,9 @@
 // sends with the bundle's static answers, one line. It is computed from the built `index.html`:
 // `script-src` allows the hash of every inline script that file carries (the cached-branding boot
 // script of apps/clubs and apps/clubs-admin), so the policy and the script cannot drift.
+//
+// CFG-05 `robots.txt`: `Disallow: /` for every robot. Each host (the product hosts, the identity
+// host and every club alias) serves one of the three bundles, so each answers its own robots.txt.
 import { createHash } from "node:crypto";
 
 export const CONTENT_SECURITY_POLICY_FILE = "content-security-policy.txt";
@@ -124,5 +127,22 @@ export function contentSecurityPolicy() {
       });
     },
     name: "content-security-policy",
+  };
+}
+
+export const ROBOTS_FILE = "robots.txt";
+
+/** CFG-05: no robot may crawl any path of any host. */
+export const ROBOTS_TXT = "User-agent: *\nDisallow: /\n";
+
+/** CFG-05: emits `robots.txt` (`Disallow: /`) into the bundle. */
+export function robotsTxt() {
+  return {
+    apply: "build",
+    enforce: "post",
+    generateBundle() {
+      this.emitFile({ fileName: ROBOTS_FILE, source: ROBOTS_TXT, type: "asset" });
+    },
+    name: "robots-txt",
   };
 }
