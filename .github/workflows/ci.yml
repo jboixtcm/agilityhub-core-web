@@ -37,6 +37,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # FE-08: the production dependency audit, as a report only: it never fails the run. The
+      # accepted advisories, and why: audit-accepted-advisories.json; any other is a warning.
+      - name: Audit production dependencies (report only)
+        continue-on-error: true
+        run: node scripts/audit-report.mjs
+
       - name: Lint, typecheck, test, and build
         run: pnpm turbo run lint typecheck test build --concurrency=2
 

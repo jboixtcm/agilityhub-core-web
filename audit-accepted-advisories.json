@@ -1,0 +1,14 @@
+{
+  "$comment": "FE-08: production advisories accepted for now, and why. CI runs `pnpm audit --prod --audit-level high` as a report only (scripts/audit-report.mjs): it never fails a run, marks these advisories as accepted and warns about any other. An entry names the advisory, the package and the versions it covers, the day it was accepted, the reason and what ends it; remove it once the advisory is no longer reported.",
+  "advisories": [
+    {
+      "id": "GHSA-mrhx-c7xc-m3w5",
+      "package": "zod",
+      "versions": "3.25.76",
+      "severity": "high",
+      "accepted": "2026-11-13",
+      "reason": "Memory exhaustion while validating oversized constrained collections. zod validates course data in the browser only (packages/course-core, packages/shared-types), so a hostile course file can exhaust the memory of the tab that opens it: no data is exposed and no server is affected. The fix exists only in zod 4.6.6 and later, a major upgrade with API changes, and the owner decided on 13 Nov 2026 to accept the advisory and take no major upgrade now.",
+      "until": "course-core and shared-types move to a zod release with the fix (zod 4, a major upgrade)"
+    }
+  ]
+}
