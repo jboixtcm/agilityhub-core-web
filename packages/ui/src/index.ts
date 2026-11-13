@@ -17,6 +17,7 @@ export * from "./chunk-reload";
 export * from "./components";
 export * from "./day-grid";
 export * from "./dog-photo";
+export * from "./dog-photo-resize";
 export * from "./icons/Icon";
 export * from "./icons/names";
 export * from "./lazy-boundary";

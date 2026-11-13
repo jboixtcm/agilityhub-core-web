@@ -20,6 +20,7 @@ import {
   Icon,
   Input,
   Modal,
+  resizeDogPhoto,
   Select,
   Skeleton,
   Tabs,
@@ -2787,7 +2788,12 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             onClick={() =>
               void run(async () => {
                 if (photo === undefined) return;
-                const fileKey = await uploadSigned(client, photo, "DOG_PHOTO");
+                // WEB-05: reduced in the browser first (longest side 1600 px).
+                const fileKey = await uploadSigned(
+                  client,
+                  await resizeDogPhoto(photo),
+                  "DOG_PHOTO",
+                );
                 const result = await client.PUT("/dogs/{id}/photo", {
                   body: { fileKey },
                   params: { path: { id: dog.id } },

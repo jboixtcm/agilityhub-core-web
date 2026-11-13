@@ -1130,6 +1130,60 @@ describe("T-03-38 dog record", () => {
     expect(await screen.findByText("El gos s'ha reactivat.")).toBeVisible();
     expect(screen.getByText("actiu")).toBeVisible();
   });
+
+  it("WEB-05: «Canvia la foto» uploads the photo reduced in the browser (1600 px, WebP)", async () => {
+    // jsdom decodes and draws nothing: a 3024 × 4032 portrait and a canvas that encodes WebP.
+    vi.stubGlobal(
+      "createImageBitmap",
+      vi.fn(() => Promise.resolve({ close: vi.fn(), height: 4032, width: 3024 })),
+    );
+    const context = vi
+      .spyOn(HTMLCanvasElement.prototype, "getContext")
+      .mockImplementation(() => ({ drawImage: vi.fn(), imageSmoothingQuality: "low" }) as never);
+    const drawn: string[] = [];
+    const encode = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type,
+    ) {
+      drawn.push(`${String(this.width)}×${String(this.height)} ${type ?? ""}`);
+      callback(new Blob(["reduced"], { type: type ?? "image/png" }));
+    });
+    const grants: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method !== "POST" || !request.url.endsWith("/attachments/upload-url")) return;
+      void request
+        .clone()
+        .json()
+        .then((body: unknown) => {
+          grants.push(body);
+        });
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+      context.mockRestore();
+      encode.mockRestore();
+      vi.unstubAllGlobals();
+    });
+
+    await renderRecord("dog");
+    await screen.findByRole("heading", { name: "Duna" });
+    fireEvent.click(screen.getByRole("button", { name: "Canvia la foto" }));
+    const dialog = screen.getByRole("dialog", { name: "Foto del gos" });
+    fireEvent.change(within(dialog).getByLabelText("Fitxer d'imatge"), {
+      target: {
+        files: [new File(["a 4 MB camera picture"], "duna.jpeg", { type: "image/jpeg" })],
+      },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Canvia la foto" }));
+
+    expect(await screen.findByText("La foto s'ha actualitzat.")).toBeVisible();
+    expect(drawn).toEqual(["1200×1600 image/webp"]);
+    expect(grants).toEqual([
+      { fileName: "duna.webp", mimeType: "image/webp", purpose: "DOG_PHOTO", sizeBytes: 7 },
+    ]);
+  });
 });
 
 describe("E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission", () => {

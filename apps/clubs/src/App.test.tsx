@@ -3008,6 +3008,70 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     expect(api.parameterReads()).toEqual([]);
     api.stop();
   });
+
+  it("WEB-05: a camera photo goes up reduced in the browser (1600 px, WebP)", async () => {
+    // jsdom decodes and draws nothing: a 4032 × 3024 picture and a canvas that encodes WebP.
+    const close = vi.fn();
+    vi.stubGlobal(
+      "createImageBitmap",
+      vi.fn(() => Promise.resolve({ close, height: 3024, width: 4032 })),
+    );
+    const context = vi
+      .spyOn(HTMLCanvasElement.prototype, "getContext")
+      .mockImplementation(() => ({ drawImage: vi.fn(), imageSmoothingQuality: "low" }) as never);
+    const drawn: string[] = [];
+    const encode = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type,
+    ) {
+      drawn.push(`${String(this.width)}×${String(this.height)} ${type ?? ""}`);
+      callback(new Blob(["reduced"], { type: type ?? "image/png" }));
+    });
+    const uploaded: Blob[] = [];
+    server.use(
+      http.put("https://uploads.example.test/:fileKey", async ({ request }) => {
+        uploaded.push(await request.blob());
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const api = recordApi();
+    try {
+      await openMyDogs();
+      fireEvent.change(screen.getByLabelText("Canvia la foto de Duna"), {
+        target: {
+          files: [new File(["a 3 MB camera picture"], "IMG_0042.JPG", { type: "image/jpeg" })],
+        },
+      });
+      await waitFor(() => {
+        expect(
+          api.recorded.some(
+            (request) =>
+              request.method === "PUT" && /^\/me\/dogs\/[^/]+\/photo$/u.test(request.path),
+          ),
+        ).toBe(true);
+      });
+      expect(drawn).toEqual(["1600×1200 image/webp"]);
+      const grant = api.recorded.find(
+        (request) => request.method === "POST" && request.path === "/attachments/upload-url",
+      );
+      expect(grant?.body).toEqual({
+        fileName: "IMG_0042.webp",
+        mimeType: "image/webp",
+        purpose: "DOG_PHOTO",
+        sizeBytes: "reduced".length,
+      });
+      // The signed PUT carries the reduced file's type (jsdom's File does not cross into the
+      // request body, so its bytes are checked through the grant's `sizeBytes` above).
+      expect(uploaded.map((file) => file.type)).toEqual(["image/webp"]);
+      expect(close).toHaveBeenCalledOnce();
+    } finally {
+      api.stop();
+      context.mockRestore();
+      encode.mockRestore();
+      vi.unstubAllGlobals();
+    }
+  });
 });
 
 describe("T-03-41 mobile own data", () => {
