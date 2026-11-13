@@ -855,6 +855,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/billing/stripe-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * stripeEvents
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PAY-02 (R-12-21): the club's Stripe events whose processing failed, universal list (CONVENCIONS_API §4), newest receivedAt first; no filter and no free-text search (a filter or a q → 400 INVALID_FILTER). A failed processing is retried with a growing backoff (1 min, 5 min, 15 min, 30 min, 1 h, 2 h, 4 h, 8 h, 8 h: ten attempts over about 24 hours); an outage of the provider (connection error, 5xx, 401, 403, 429) spends no attempt and waits 5 min. A row: the Stripe event id and type, receivedAt, the attempts spent, and nextAttemptAt while it is retrying or processedAt once its retries ran out. A FAILED event is kept until the retention cleanup (jobs.retention.stripeEventsDays); Stripe delivering it again (a resend from the Stripe dashboard) puts it back in the queue. Tenant comes from the JWT; another club's resource → 404.
+         */
+        get: operations["stripeEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/bookings": {
         parameters: {
             query?: never;
@@ -2798,7 +2818,7 @@ export interface paths {
         put?: never;
         /**
          * markInvoiceFailed
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-17 «impagat (manual)»: a COLLECTING SEPA invoice, or a PAID one with a SEPA collection (a later bank return) → Collection FAILED{BANK_RETURN} (appended), invoice FAILED with the reason, InvoiceFailed → N-10 to the admins, INVOICE_MARKED_FAILED audit. No automatic claim or booking block (BR-08). at is a club-local day, not after today. Another state → 409 INVALID_STATE {status}. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-17 «impagat (manual)»: a COLLECTING SEPA invoice, or a PAID one with a SEPA collection (a later bank return) → Collection FAILED{BANK_RETURN} (appended), invoice FAILED with the reason, InvoiceFailed → N-10 to the admins, INVOICE_MARKED_FAILED audit. No automatic claim or booking block (BR-08). at is a club-local day, not after today. SEPA-04: includeInNextRun true → a returned PERIODIC receipt waits, FAILED, for the next run's remittance (R-12-19); a manual one → 400 VALIDATION_ERROR {field: includeInNextRun}; absent or false → it waits for none. Several returns of one remittance: POST /remittances/{id}/returns. Another state → 409 INVALID_STATE {status}. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["markInvoiceFailed"];
         delete?: never;
@@ -6011,6 +6031,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/remittances/{id}/returns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * markRemittanceReturns
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. SEPA-04 (b), R-12-17 [Marca impagats (selecció)]: several bank returns of this remittance in one request, all or none — each receipt as POST /invoices/{id}/failure makes it (a COLLECTING SEPA receipt, or a PAID one with a SEPA collection: Collection FAILED{BANK_RETURN} appended, FAILED with the reason, InvoiceFailed{summarized: true}, its own INVOICE_MARKED_FAILED audit), and the admins get ONE N-10 for the request (InvoicesFailed) instead of one per receipt. A receipt whose SEPA collection is not of this remittance → 400 VALIDATION_ERROR {field: invoiceIds}; one in another state → 409 INVALID_STATE {status}; another club's → 404. at is a club-local day, not after today. includeInNextRun true → the returned PERIODIC receipts wait, FAILED, for the next run's remittance (R-12-19); a manual one → 400 VALIDATION_ERROR {field: includeInNextRun}. The same Idempotency-Key answers the same result. Tenant comes from the JWT; another club's resource → 404.
+         */
+        post: operations["markRemittanceReturns"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/remittances/{id}/spreadsheet": {
         parameters: {
             query?: never;
@@ -6045,6 +6085,26 @@ export interface paths {
          * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-15 [Marca com a enviada al banc]: GENERATED → SUBMITTED with submittedAt (the club-local day the XML went to the bank: not after today, not before the remittance's day → otherwise 400 VALIDATION_ERROR {field: submittedAt}) and submittedByAccountId; REMITTANCE_SUBMITTED audit. From then on the run cannot be rolled back (409 RUN_NOT_ROLLBACKABLE {reasons: [REMITTANCE_SUBMITTED]}) and an unpaid debit follows R-12-17. Not GENERATED → 409 INVALID_STATE. The same Idempotency-Key answers the same remittance. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["submitRemittance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/remittances/{id}/submission-undo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * undoRemittanceSubmission
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. SEPA-04 (a), R-12-15 [Desfés «enviada al banc»]: the file did not reach the bank (refused, or marked by mistake): SUBMITTED → GENERATED, submittedAt and submittedByAccountId removed; REMITTANCE_SUBMISSION_UNDONE audit with the reason. Only before the remittance's collection date (club-local) → otherwise 409 INVALID_STATE {reason: COLLECTION_DATE_PASSED}; and only while every receipt of the remittance is still COLLECTING in it with its attempt here open and last (none marked returned or paid, cancelled or charged by card since) → otherwise 409 INVALID_STATE {reason: INVOICE_CHANGED, invoiceIds}. Not SUBMITTED → 409 INVALID_STATE {status}. The run can then be rolled back (R-12-14). The same Idempotency-Key answers the same remittance. Tenant comes from the JWT; another club's resource → 404.
+         */
+        post: operations["undoRemittanceSubmission"];
         delete?: never;
         options?: never;
         head?: never;
@@ -7414,7 +7474,7 @@ export interface paths {
         put?: never;
         /**
          * receiveStripeEvent
-         * @description Roles: Stripe (signature), no bearer token. R-12-21: before anything else the Stripe-Signature header (t={unix seconds},v1={hex HMAC-SHA256 of "{t}.{raw body}"}) is verified with the club's webhook secret, with Stripe's 5-minute tolerance on t; a missing, wrong or stale signature, a tampered body, an unknown club or a club without a webhook secret → 401 WEBHOOK_SIGNATURE_INVALID and a SecurityEvent, nothing else stored. Then a club without BILLING → 404 MODULE_DISABLED, without an enabled STRIPE provider → 404. The event is stored once per eventId (a second delivery → 200 with no effect) and processed in a transaction by type (checkout.session.completed/expired, payment_intent.succeeded/payment_failed, charge.refunded, setup_intent.succeeded, payment_method.detached, customer.deleted); an out-of-order event is IGNORED. 2xx as soon as the event is stored. Durable receipt, transactional processing and internal recovery (E8-T04).
+         * @description Roles: Stripe (signature), no bearer token. R-12-21: before anything else the Stripe-Signature header (t={unix seconds},v1={hex HMAC-SHA256 of "{t}.{raw body}"}) is verified with the club's webhook secret, with Stripe's 5-minute tolerance on t; a missing, wrong or stale signature, a tampered body, an unknown club or a club without a webhook secret → 401 WEBHOOK_SIGNATURE_INVALID and a SecurityEvent, nothing else stored. Then a club without BILLING → 404 MODULE_DISABLED, without an enabled STRIPE provider → 404. The event is stored once per eventId (a second delivery → 200 with no effect, unless the stored event is FAILED: then it goes back in the queue and is processed again, PAY-02) and processed in a transaction by type (checkout.session.completed/expired, payment_intent.succeeded/payment_failed, charge.refunded, setup_intent.succeeded, payment_method.detached, customer.deleted); an out-of-order event is IGNORED. 2xx as soon as the event is stored. Durable receipt, transactional processing and internal recovery (E8-T04): a failed processing is retried with a growing backoff over about 24 hours, an outage of the provider spending no attempt (PAY-02; GET /billing/stripe-events lists the FAILED events).
          */
         post: operations["receiveStripeEvent"];
         delete?: never;
@@ -8129,7 +8189,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "ACCOUNT_EMAIL_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "REMITTANCE_SUBMISSION_UNDONE" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "ACCOUNT_EMAIL_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -11683,6 +11743,8 @@ export interface components {
         InvoiceFailureRequest: {
             /** Format: date */
             at: string;
+            /** @description SEPA-04 (R-12-17, R-12-19): true → the returned periodic receipt waits, FAILED, for the next run's remittance, which presents it again with the member's current mandate; absent or false → it waits for no remittance (marked paid or cancelled by hand). true on a manual receipt → 400 VALIDATION_ERROR {field: includeInNextRun} */
+            includeInNextRun?: boolean | null;
             reason: string;
             /** Format: int64 */
             version: number;
@@ -14881,6 +14943,20 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
+        RemittanceReturnsRequest: {
+            /** Format: date */
+            at: string;
+            /** @description SEPA-04 (R-12-17, R-12-19): true → the returned periodic receipt waits, FAILED, for the next run's remittance, which presents it again with the member's current mandate; absent or false → it waits for no remittance (marked paid or cancelled by hand). true on a manual receipt → 400 VALIDATION_ERROR {field: includeInNextRun} */
+            includeInNextRun?: boolean | null;
+            invoiceIds: string[];
+            reason: string;
+        };
+        /** @description SEPA-04: POST /remittances/{id}/returns: how many receipts of the remittance were marked returned */
+        RemittanceReturnsResult: {
+            invoices: components["schemas"]["Invoice"][];
+            /** Format: int32 */
+            returned: number;
+        };
         /** @enum {string} */
         RemittanceStatus: "GENERATED" | "SUBMITTED" | "ROLLED_BACK";
         RenewalRequest: {
@@ -16145,6 +16221,31 @@ export interface components {
         StaleAttendanceDetails: {
             current: components["schemas"]["AttendanceSheet"];
         };
+        /** @description A row of the failed Stripe events list (CONVENCIONS_API §4, PAY-02): only the row id is required. id is Stripe's event id (evt_…). attempts: the processing attempts it spent (an outage of the provider spends none). nextAttemptAt: when it runs again, while it is retrying; processedAt: when its retries ran out, after which it stays FAILED until Stripe delivers it again or the retention cleanup deletes it. */
+        StripeEventListItem: {
+            /** Format: int32 */
+            attempts?: number;
+            id: string;
+            /** Format: date-time */
+            nextAttemptAt?: string;
+            /** Format: date-time */
+            processedAt?: string;
+            /** Format: date-time */
+            receivedAt?: string;
+            type?: string;
+        };
+        StripeEventPage: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["StripeEventListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
         /** @description Stripe's event envelope (https://docs.stripe.com/api/events/object); any other key is accepted and ignored */
         StripeWebhookEvent: {
             /**
@@ -16163,6 +16264,10 @@ export interface components {
              * @description The club-local day the XML was uploaded to the bank (R-12-15)
              */
             submittedAt: string;
+        };
+        SubmissionUndoRequest: {
+            /** @description SEPA-04 (R-12-15): why the remittance is no longer taken as sent, e.g. the bank refused the file or it was marked by mistake; kept in the audit entry */
+            reason: string;
         };
         SupportAccess: {
             /** Format: date-time */
@@ -23307,6 +23412,138 @@ export interface operations {
                 };
             };
             /** @description BILLING_BUSY, PRICE_OVERLAP */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    stripeEvents: {
+        parameters: {
+            query?: {
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description StripeEventPage */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeEventPage"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -61686,6 +61923,128 @@ export interface operations {
             };
         };
     };
+    markRemittanceReturns: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemittanceReturnsRequest"];
+            };
+        };
+        responses: {
+            /** @description RemittanceReturnsResult */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemittanceReturnsResult"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     spreadsheet: {
         parameters: {
             query?: never;
@@ -61823,6 +62182,128 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SubmissionRequest"];
+            };
+        };
+        responses: {
+            /** @description Remittance */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Remittance"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    undoRemittanceSubmission: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmissionUndoRequest"];
             };
         };
         responses: {
