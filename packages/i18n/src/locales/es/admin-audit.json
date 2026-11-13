@@ -69,6 +69,7 @@
     "REMITTANCE_GENERATED": "Remesa generada",
     "REMITTANCE_ROLLED_BACK": "Remesa revertida",
     "REMITTANCE_SUBMITTED": "Remesa marcada como enviada al banco",
+    "REMITTANCE_SUBMISSION_UNDONE": "Remesa desmarcada como enviada al banco",
     "RING_BLOCK_CANCELLED": "Bloqueo de pista anulado",
     "RING_BLOCK_CREATED": "Bloqueo de pista creado",
     "RING_GEOMETRY_CHANGED": "Geometría de la pista modificada",

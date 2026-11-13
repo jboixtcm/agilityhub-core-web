@@ -58,7 +58,11 @@
     "submissionBody": "The remittance will be marked as sent to the bank. From then on it can no longer be rolled back.",
     "submittedAt": "Date sent to the bank",
     "submit": "Mark as sent",
-    "submitting": "Saving…"
+    "submitting": "Saving…",
+    "undoSubmissionTitle": "Undo “sent to the bank” · {month}",
+    "undoSubmissionBody": "The remittance will be generated again: you can mark it as sent again or roll it back. Do this only if the bank did not accept the file or it was marked by mistake.",
+    "undoSubmission": "Undo “sent”",
+    "undoingSubmission": "Undoing…"
   },
   "simulation": {
     "incidentsTitle": "Step 1 — Simulation: issues first",
@@ -260,6 +264,7 @@
     "downloadExcel": "Remittance Excel",
     "downloading": "Downloading…",
     "markSubmitted": "Mark as sent to the bank",
+    "undoSubmission": "Undo “sent to the bank”",
     "open": "Open the remittance: {month}",
     "drawerTitle": "Remittance · {month}",
     "close": "Close the remittance",
@@ -275,7 +280,8 @@
     "creditorId": "Creditor identifier",
     "creditorIban": "Creditor account",
     "creditorBic": "BIC",
-    "submitted": "Remittance marked as sent to the bank."
+    "submitted": "Remittance marked as sent to the bank.",
+    "submissionUndone": "The remittance is generated again: it no longer reads as sent to the bank."
   },
   "errors": {
     "loadRun": "The card charge status could not be refreshed.",
@@ -295,7 +301,10 @@
     "trace": "Error reference: {traceId}",
     "chargingSlow": "The card charges are still being processed.",
     "dateAfterToday": "The date cannot be later than today.",
-    "submittedAtRange": "The date must be between {earliest} and today."
+    "submittedAtRange": "The date must be between {earliest} and today.",
+    "undoCollectionDatePassed": "The remittance's collection date has come: it can no longer be undone.",
+    "undoInvoiceChanged": "{count, plural, one {A receipt of the remittance has changed already (unpaid, paid or cancelled): the remittance can no longer be undone.} other {# receipts of the remittance have changed already (unpaid, paid or cancelled): the remittance can no longer be undone.}}",
+    "reasonRequired": "Write the reason (up to 500 characters)."
   },
   "toasts": {
     "simulated": "Month simulated.",

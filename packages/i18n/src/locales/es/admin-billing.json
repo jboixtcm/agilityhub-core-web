@@ -58,7 +58,11 @@
     "submissionBody": "La remesa quedará marcada como enviada al banco. A partir de ahí ya no se podrá revertir.",
     "submittedAt": "Fecha de envío al banco",
     "submit": "Marcar como enviada",
-    "submitting": "Guardando…"
+    "submitting": "Guardando…",
+    "undoSubmissionTitle": "Deshacer «enviada al banco» · {month}",
+    "undoSubmissionBody": "La remesa volverá a quedar como generada: podrás volver a marcarla como enviada o revertirla. Hazlo solo si el banco no ha aceptado el fichero o si se marcó por error.",
+    "undoSubmission": "Deshacer «enviada»",
+    "undoingSubmission": "Deshaciendo…"
   },
   "simulation": {
     "incidentsTitle": "Paso 1 — Simulación: incidencias primero",
@@ -260,6 +264,7 @@
     "downloadExcel": "Excel de la remesa",
     "downloading": "Descargando…",
     "markSubmitted": "Marcar como enviada al banco",
+    "undoSubmission": "Deshacer «enviada al banco»",
     "open": "Abrir la remesa: {month}",
     "drawerTitle": "Remesa · {month}",
     "close": "Cerrar la remesa",
@@ -275,7 +280,8 @@
     "creditorId": "Identificador de acreedor",
     "creditorIban": "Cuenta del acreedor",
     "creditorBic": "BIC",
-    "submitted": "Remesa marcada como enviada al banco."
+    "submitted": "Remesa marcada como enviada al banco.",
+    "submissionUndone": "La remesa vuelve a estar generada: ya no consta como enviada al banco."
   },
   "errors": {
     "loadRun": "No se ha podido actualizar el estado de los cobros.",
@@ -295,7 +301,10 @@
     "trace": "Referencia del error: {traceId}",
     "chargingSlow": "Los cobros con tarjeta todavía se están procesando.",
     "dateAfterToday": "La fecha no puede ser posterior a hoy.",
-    "submittedAtRange": "La fecha debe estar entre el {earliest} y hoy."
+    "submittedAtRange": "La fecha debe estar entre el {earliest} y hoy.",
+    "undoCollectionDatePassed": "Ya ha llegado la fecha de cobro de la remesa: ya no se puede deshacer.",
+    "undoInvoiceChanged": "{count, plural, one {Un recibo de la remesa ya ha cambiado (impagado, cobrado o anulado): la remesa ya no se puede deshacer.} other {# recibos de la remesa ya han cambiado (impagados, cobrados o anulados): la remesa ya no se puede deshacer.}}",
+    "reasonRequired": "Escribe el motivo (hasta 500 caracteres)."
   },
   "toasts": {
     "simulated": "Mes simulado.",

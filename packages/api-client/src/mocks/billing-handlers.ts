@@ -56,6 +56,7 @@ type Remittance = components["schemas"]["Remittance"];
 type RollbackRequest = components["schemas"]["RollbackRequest"];
 type SimulationRequest = components["schemas"]["SimulationRequest"];
 type SubmissionRequest = components["schemas"]["SubmissionRequest"];
+type SubmissionUndoRequest = components["schemas"]["SubmissionUndoRequest"];
 
 /** `billing.stripeMaxAttempts` (S12 §13 proposal, 3). */
 const STRIPE_MAX_ATTEMPTS = 3;
@@ -869,6 +870,58 @@ export const billingHandlers = [
       remittance.status = "SUBMITTED";
       remittance.submittedAt = dayInstant(payload.submittedAt);
       remittance.submittedByAccountId = BILLING_ADMIN_ACCOUNT_ID;
+      return { body: structuredClone(remittance), status: 200 };
+    });
+  }),
+  http.post("*/api/v1/remittances/:id/submission-undo", async ({ params, request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    const remittance = findRemittance(String(params.id));
+    if (remittance === undefined) return notFound();
+    const payload = await body<SubmissionUndoRequest>(request);
+    return keyed(request, JSON.stringify({ id: params.id, payload }), () => {
+      if (
+        typeof payload?.reason !== "string" ||
+        payload.reason.trim() === "" ||
+        payload.reason.length > 500
+      ) {
+        return validationError("reason");
+      }
+      if (remittance.status !== "SUBMITTED") return invalidState(remittance.status);
+      // SEPA-04 (a), R-12-15: only before the collection date (club-local)…
+      if (today() >= remittance.requestedCollectionDate) {
+        return apiError("INVALID_STATE", "Invalid state", 409, {
+          reason: "COLLECTION_DATE_PASSED",
+        });
+      }
+      // …and while every receipt is as the run left it: COLLECTING in it, its attempt here open
+      // and its last one.
+      const changed = world()
+        .invoices.filter((item) =>
+          item.invoice.collections.some((entry) => remittance.collectionIds.includes(entry.id)),
+        )
+        .filter(({ invoice }) => {
+          const attempt = invoice.collections.find((entry) =>
+            remittance.collectionIds.includes(entry.id),
+          );
+          return (
+            invoice.status !== "COLLECTING" ||
+            invoice.remittanceId !== remittance.id ||
+            (attempt?.status !== "CREATED" && attempt?.status !== "SUBMITTED") ||
+            invoice.collections.at(-1)?.id !== attempt.id
+          );
+        })
+        .map((item) => item.invoice.id)
+        .sort();
+      if (changed.length > 0) {
+        return apiError("INVALID_STATE", "Invalid state", 409, {
+          invoiceIds: changed,
+          reason: "INVOICE_CHANGED",
+        });
+      }
+      remittance.status = "GENERATED";
+      remittance.submittedAt = null;
+      remittance.submittedByAccountId = null;
       return { body: structuredClone(remittance), status: 200 };
     });
   }),

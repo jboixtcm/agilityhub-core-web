@@ -69,6 +69,7 @@
     "REMITTANCE_GENERATED": "Remittance generated",
     "REMITTANCE_ROLLED_BACK": "Remittance rolled back",
     "REMITTANCE_SUBMITTED": "Remittance marked as sent to the bank",
+    "REMITTANCE_SUBMISSION_UNDONE": "Remittance no longer marked as sent to the bank",
     "RING_BLOCK_CANCELLED": "Ring block cancelled",
     "RING_BLOCK_CREATED": "Ring block created",
     "RING_GEOMETRY_CHANGED": "Ring geometry changed",

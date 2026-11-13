@@ -58,7 +58,11 @@
     "submissionBody": "La remesa quedarà marcada com a enviada al banc. A partir d'aquí ja no es podrà retrocedir.",
     "submittedAt": "Data d'enviament al banc",
     "submit": "Marca com a enviada",
-    "submitting": "Desant…"
+    "submitting": "Desant…",
+    "undoSubmissionTitle": "Desfés «enviada al banc» · {month}",
+    "undoSubmissionBody": "La remesa tornarà a quedar com a generada: la podràs tornar a marcar com a enviada o retrocedir. Fes-ho només si el banc no ha acceptat el fitxer o si es va marcar per error.",
+    "undoSubmission": "Desfés «enviada»",
+    "undoingSubmission": "Desfent…"
   },
   "simulation": {
     "incidentsTitle": "Pas 1 — Simulació: incidències primer",
@@ -260,6 +264,7 @@
     "downloadExcel": "Excel de la remesa",
     "downloading": "Descarregant…",
     "markSubmitted": "Marca com a enviada al banc",
+    "undoSubmission": "Desfés «enviada al banc»",
     "open": "Obre la remesa: {month}",
     "drawerTitle": "Remesa · {month}",
     "close": "Tanca la remesa",
@@ -275,7 +280,8 @@
     "creditorId": "Identificador de creditor",
     "creditorIban": "Compte del creditor",
     "creditorBic": "BIC",
-    "submitted": "Remesa marcada com a enviada al banc."
+    "submitted": "Remesa marcada com a enviada al banc.",
+    "submissionUndone": "La remesa torna a estar generada: ja no consta com a enviada al banc."
   },
   "errors": {
     "loadRun": "No s'ha pogut actualitzar l'estat dels cobraments.",
@@ -295,7 +301,10 @@
     "trace": "Referència de l'error: {traceId}",
     "chargingSlow": "Els cobraments amb targeta encara s'estan processant.",
     "dateAfterToday": "La data no pot ser posterior a avui.",
-    "submittedAtRange": "La data ha de ser entre el {earliest} i avui."
+    "submittedAtRange": "La data ha de ser entre el {earliest} i avui.",
+    "undoCollectionDatePassed": "Ja ha arribat la data de cobrament de la remesa: ja no es pot desfer.",
+    "undoInvoiceChanged": "{count, plural, one {Un rebut de la remesa ja ha canviat (impagat, cobrat o anul·lat): la remesa ja no es pot desfer.} other {# rebuts de la remesa ja han canviat (impagats, cobrats o anul·lats): la remesa ja no es pot desfer.}}",
+    "reasonRequired": "Escriu el motiu (fins a 500 caràcters)."
   },
   "toasts": {
     "simulated": "Mes simulat.",

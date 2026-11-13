@@ -415,3 +415,172 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
     expect(last?.url.searchParams.getAll("filter")).toEqual(["status:eq:SUBMITTED"]);
   });
 });
+
+describe("SEPA-04 (a) [Desfés «enviada al banc»] (R-12-15, owner decision of 13 Nov 2026)", () => {
+  const origin = () => window.location.origin;
+
+  /** October simulated, generated (collection date 01/10) and marked sent, straight to the api. */
+  async function octoberSent(): Promise<string> {
+    const simulation = (await (
+      await fetch(`${origin()}/api/v1/billing/simulations`, {
+        body: JSON.stringify({ period: "2026-10" }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      })
+    ).json()) as { id: string };
+    const run = (await (
+      await fetch(`${origin()}/api/v1/billing/runs`, {
+        body: JSON.stringify({ period: "2026-10", simulationId: simulation.id }),
+        headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+        method: "POST",
+      })
+    ).json()) as { remittance: { id: string; requestedCollectionDate: string } };
+    expect(run.remittance.requestedCollectionDate).toBe("2026-10-01");
+    await markSent(run.remittance.id);
+    return run.remittance.id;
+  }
+
+  async function markSent(id: string) {
+    const response = await fetch(`${origin()}/api/v1/remittances/${id}/submission`, {
+      body: JSON.stringify({ submittedAt: "2026-08-26" }),
+      headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+      method: "POST",
+    });
+    expect(response.status).toBe(200);
+  }
+
+  async function rowOf(month: string) {
+    const table = await screen.findByRole("table", { name: "Remeses SEPA" });
+    return waitFor(() => {
+      const found = within(table)
+        .getAllByRole("row")
+        .find((row) => within(row).queryByRole("button", { name: `Obre la remesa: ${month}` }));
+      if (found === undefined) throw new TypeError(`No ${month} row`);
+      return found;
+    });
+  }
+
+  it("a remittance sent before its collection date offers it; the reason is required; POST …/submission-undo {reason} with a key makes it «generada» again", async () => {
+    await octoberSent();
+    await renderPage();
+    const october = await rowOf("Octubre 2026");
+    expect(text(october).at(5)).toBe("enviada al banc");
+    // August went to the bank and its collection date (01/08) has come; September is not sent.
+    for (const month of ["Agost 2026", "Setembre 2026"]) {
+      expect(
+        within(await rowOf(month)).queryByRole("button", { name: "Desfés «enviada al banc»" }),
+      ).toBeNull();
+    }
+    fireEvent.click(within(october).getByRole("button", { name: "Desfés «enviada al banc»" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Desfés «enviada al banc» · Octubre 2026",
+    });
+    expect(
+      within(dialog).getByText(/Fes-ho només si el banc no ha acceptat el fitxer/u),
+    ).toBeVisible();
+    const confirm = within(dialog).getByRole("button", { name: "Desfés «enviada»" });
+    expect(confirm).toBeDisabled();
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "   " } });
+    expect(confirm).toBeDisabled();
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "El banc ha refusat el fitxer" },
+    });
+    fireEvent.click(confirm);
+    expect(
+      await screen.findByText(
+        "La remesa torna a estar generada: ja no consta com a enviada al banc.",
+      ),
+    ).toBeVisible();
+    const undo = sent.filter((entry) => entry.url.pathname.endsWith("/submission-undo"));
+    expect(undo.map((entry) => entry.body)).toEqual([{ reason: "El banc ha refusat el fitxer" }]);
+    expect(undo[0]?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/u);
+    await waitFor(async () => {
+      const row = await rowOf("Octubre 2026");
+      expect(text(row).at(5)).toBe("generada");
+      expect(
+        within(row).getByRole("button", { name: "Marca com a enviada al banc" }),
+      ).toBeVisible();
+      expect(within(row).queryByRole("button", { name: "Desfés «enviada al banc»" })).toBeNull();
+    });
+  });
+
+  it("409 INVALID_STATE INVOICE_CHANGED (receipts returned since) says so in the dialog and the list is read again", async () => {
+    // September's run has two bank returns (the fixture): once sent, its undo is refused.
+    const generated = (await (
+      await fetch(`${origin()}/api/v1/remittances?filter=status:eq:GENERATED`)
+    ).json()) as { items: { id: string }[] };
+    await markSent(generated.items[0]?.id ?? "");
+    await renderPage();
+    fireEvent.click(
+      within(await rowOf("Setembre 2026")).getByRole("button", {
+        name: "Desfés «enviada al banc»",
+      }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Desfés «enviada al banc» · Setembre 2026",
+    });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "Marcada per error" },
+    });
+    const listReads = sent.filter((entry) => entry.url.pathname === "/api/v1/remittances").length;
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desfés «enviada»" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "2 rebuts de la remesa ja han canviat (impagats, cobrats o anul·lats): la remesa ja no es pot desfer.",
+    );
+    await waitFor(() => {
+      expect(
+        sent.filter((entry) => entry.url.pathname === "/api/v1/remittances").length,
+      ).toBeGreaterThan(listReads);
+    });
+    expect(text(await rowOf("Setembre 2026")).at(5)).toBe("enviada al banc");
+  });
+
+  it("409 INVALID_STATE COLLECTION_DATE_PASSED and 400 VALIDATION_ERROR {reason} are named in the dialog", async () => {
+    let answer: "date" | "reason" = "date";
+    server.use(
+      http.post("*/api/v1/remittances/:id/submission-undo", () =>
+        answer === "date"
+          ? HttpResponse.json(
+              {
+                code: "INVALID_STATE",
+                details: { reason: "COLLECTION_DATE_PASSED" },
+                message: "Invalid state",
+                traceId: "t-409",
+              },
+              { status: 409 },
+            )
+          : HttpResponse.json(
+              {
+                code: "VALIDATION_ERROR",
+                details: { field: "reason" },
+                message: "Invalid",
+                traceId: "t-400",
+              },
+              { status: 400 },
+            ),
+      ),
+    );
+    await octoberSent();
+    await renderPage();
+    fireEvent.click(
+      within(await rowOf("Octubre 2026")).getByRole("button", {
+        name: "Desfés «enviada al banc»",
+      }),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Desfés «enviada al banc» · Octubre 2026",
+    });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Refusat" } });
+    const confirm = within(dialog).getByRole("button", { name: "Desfés «enviada»" });
+    fireEvent.click(confirm);
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Ja ha arribat la data de cobrament de la remesa: ja no es pot desfer.",
+    );
+    answer = "reason";
+    fireEvent.click(confirm);
+    expect(
+      await within(dialog).findByText("Escriu el motiu (fins a 500 caràcters)."),
+    ).toBeVisible();
+    expect(within(dialog).getAllByRole("alert")).toHaveLength(1);
+  });
+});
