@@ -44,6 +44,10 @@ jobs:
       - name: Check production bundles for mock data
         run: node scripts/check-production-bundles.mjs
 
+      # CFG-04: each production bundle carries the Content-Security-Policy of its own index.html.
+      - name: Check the files every production bundle carries
+        run: node scripts/check-bundle-files.mjs
+
       # E11-W03: the real-core specs are no workspace package, so turbo never typechecked them.
       - name: Typecheck the real-core specs
         run: pnpm typecheck:e2e-core

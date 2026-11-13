@@ -20,6 +20,16 @@ For a hosted isolated demo, replace the Clubs URL with its actual member-app ori
 
 Before sharing the demo, use the separate safe demo seed, configure its real legal/privacy-policy URL instead of the placeholder, and verify the built cards and club links on the intended hosts. Keep production seed values and production-default navigation unchanged. Local HTTPS tests use a test proxy and certificate; hosted DNS, public TLS and provider configuration require their own later verification.
 
+## Files every production bundle carries
+
+Each application's `vite build` writes these files into its `dist` next to `index.html` (`scripts/bundle-files.mjs`); `node scripts/check-bundle-files.mjs [dist …]` checks them on a built folder, and CI runs it on its three builds.
+
+| File | Content | Used by |
+| --- | --- | --- |
+| `content-security-policy.txt` | The `Content-Security-Policy` header value of this bundle, one line: `default-src 'self'`, `script-src 'self'` plus the `sha256` hash of every inline script of the built `index.html` (the cached-branding boot script of `clubs` and `clubs-admin`), `style-src 'self' 'unsafe-inline'`, `img-src 'self' data: blob:`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`. | The server (Caddy) sends it with the bundle's static answers, never with the proxied API (CFG-04). |
+
+The policy allows only the host's own origin: the API is proxied under each SPA host and its signed file URLs are relative. Serving files or the API from another origin (an S3 bucket for attachments, for instance) needs that origin added to the policy first.
+
 ## Preparing the isolated hosted demo
 
 The functional stack in `scripts/core-stack/docker-compose.yml` is disposable local QA. Its `local` API profile enables test-only clock/DNS helpers and fake or local providers. Do not publish that stack as the hosted demo. The API repository's `deploy/compose.prod.yaml` and `docs/DEPLOY.md` describe the release topology; its preflight requires `prod`, reviewed registry artifacts, private configuration and the production storage/provider settings. A local image ID is not a reviewed registry digest.

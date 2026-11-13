@@ -5,6 +5,8 @@ import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
 
+import { contentSecurityPolicy } from "../../scripts/bundle-files.mjs";
+
 import { PRIVACY_POLICY_EFFECTIVE_DATE } from "./src/privacy/privacy-policy.ts";
 import { privacyPolicyBuildGuard } from "./src/privacy/release-guard.ts";
 
@@ -41,6 +43,8 @@ export default defineConfig(({ mode }) => {
           });
         },
       },
+      // CFG-04: the Content-Security-Policy Caddy sends with this bundle, computed from its index.html.
+      contentSecurityPolicy(),
       react(),
       tailwindcss(),
     ],

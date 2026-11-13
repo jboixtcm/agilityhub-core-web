@@ -113,7 +113,7 @@ GET /members?page=0&size=50&sort=lastName,asc&sort=firstName,asc
 
 ## 9. Seguretat bàsica
 
-- Rate limit per IP i per compte a `ANON` i a `/oauth2/token`; CORS només per als hosts de club registrats + `id.*`; headers de seguretat (HSTS, CSP per a les SPAs); logs estructurats amb `traceId`, `clubId`, `accountId`; secrets només en variables d'entorn; claus Stripe xifrades a la BBDD.
+- Rate limit per IP i per compte a `ANON` i a `/oauth2/token`; CORS només per als hosts de club registrats + `id.*`; headers de seguretat (HSTS, CSP per a les SPAs); la CSP de cada SPA la posa el servidor (Caddy) a les respostes estàtiques de l'app (mai a les de l'api, que porten la seva), amb el valor que el build de l'app escriu a `content-security-policy.txt` del seu `dist`: `default-src 'self'`, `script-src 'self'` més el hash `sha256` de cada script en línia de l'`index.html` construït (l'script d'arrencada del branding en memòria de `clubs` i `clubs-admin`), calculat al build i comprovat per test perquè no se'n separin, `style-src 'self' 'unsafe-inline'`, `img-src 'self' data: blob:`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'` (CFG-04, 13-11-2026); logs estructurats amb `traceId`, `clubId`, `accountId`; secrets només en variables d'entorn; claus Stripe xifrades a la BBDD.
 - Webhooks Stripe: verificació de signatura + idempotència per `event.id` (`stripe_events`).
 
 ## 10. Tests mínims per endpoint (DoD, PLA_BACKEND §9)

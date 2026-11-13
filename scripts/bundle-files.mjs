@@ -1,0 +1,128 @@
+// Files every production bundle of the three SPAs carries, emitted by the app's own `vite build`
+// (the `plugins` of apps/clubs, apps/clubs-admin and apps/id `vite.config.ts`), so they always
+// describe the bundle they are in. `scripts/check-bundle-files.mjs` checks them on a built `dist`.
+//
+// CFG-04 `content-security-policy.txt`: the Content-Security-Policy header value the server (Caddy)
+// sends with the bundle's static answers, one line. It is computed from the built `index.html`:
+// `script-src` allows the hash of every inline script that file carries (the cached-branding boot
+// script of apps/clubs and apps/clubs-admin), so the policy and the script cannot drift.
+import { createHash } from "node:crypto";
+
+export const CONTENT_SECURITY_POLICY_FILE = "content-security-policy.txt";
+
+/**
+ * The policy of the three SPAs, directive by directive; `script-src` also gets the bundle's inline
+ * script hashes. Everything is the host's own origin (the api is proxied under each SPA host and
+ * its signed file URLs are relative paths). `style-src 'unsafe-inline'`: the admin's e-mail preview
+ * (an `<iframe srcdoc>`, which inherits this policy) is styled by `style` attributes. `img-src`
+ * `data:` and `blob:`: local previews of a chosen file and the 3D viewer's embedded textures.
+ * `object-src`, `base-uri`, `form-action` and `frame-ancestors` as the api's own answers.
+ */
+export const CONTENT_SECURITY_POLICY = Object.freeze([
+  Object.freeze(["default-src", "'self'"]),
+  Object.freeze(["script-src", "'self'"]),
+  Object.freeze(["style-src", "'self'", "'unsafe-inline'"]),
+  Object.freeze(["img-src", "'self'", "data:", "blob:"]),
+  Object.freeze(["object-src", "'none'"]),
+  Object.freeze(["base-uri", "'self'"]),
+  Object.freeze(["form-action", "'self'"]),
+  Object.freeze(["frame-ancestors", "'none'"]),
+]);
+
+const SCRIPT_ELEMENT = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/giu;
+const SRC_ATTRIBUTE = /(?:^|\s)src\s*=/iu;
+// An attribute `on…=` inside a start tag (`<body onload="…">`): no policy with hashes allows it.
+const EVENT_HANDLER_ATTRIBUTE = /<[a-z][^>]*\son[a-z]+\s*=/giu;
+
+/** The text of every inline `<script>` (no `src`) of an HTML document, exactly as written. */
+export function inlineScripts(html) {
+  return [...html.matchAll(SCRIPT_ELEMENT)]
+    .filter((match) => !SRC_ATTRIBUTE.test(match[1] ?? ""))
+    .map((match) => match[2] ?? "");
+}
+
+/** A CSP hash source (`'sha256-<base64>'`) of a script's text, as a browser computes it. */
+export function scriptHash(text) {
+  return `'sha256-${createHash("sha256").update(text, "utf8").digest("base64")}'`;
+}
+
+/** The hash sources of an HTML document's inline scripts, in document order, without repeats. */
+export function inlineScriptHashes(html) {
+  return [...new Set(inlineScripts(html).map(scriptHash))];
+}
+
+/** The start tags of an HTML document (outside its scripts) that carry an inline event handler. */
+export function inlineEventHandlers(html) {
+  const markup = html.replaceAll(SCRIPT_ELEMENT, "<script></script>");
+  return [...markup.matchAll(EVENT_HANDLER_ATTRIBUTE)].map((match) => match[0]);
+}
+
+/** The Content-Security-Policy header value of a bundle whose `index.html` is `html`. */
+export function contentSecurityPolicyFor(html) {
+  const hashes = inlineScriptHashes(html);
+  return CONTENT_SECURITY_POLICY.map(([directive, ...sources]) =>
+    [directive, ...sources, ...(directive === "script-src" ? hashes : [])].join(" "),
+  ).join("; ");
+}
+
+/** The source sets of a policy's directives (`script-src` → its sources). */
+export function policyDirectives(policy) {
+  return new Map(
+    policy
+      .split(";")
+      .map((part) => part.trim().split(/\s+/u))
+      .filter((tokens) => tokens[0] !== undefined && tokens[0] !== "")
+      .map(([directive, ...sources]) => [directive.toLowerCase(), sources]),
+  );
+}
+
+/**
+ * Why `policy` does not fit the bundle whose `index.html` is `html`: an inline script whose hash
+ * its `script-src` does not allow, or an inline event handler (never allowed). Empty when it fits.
+ */
+export function contentSecurityPolicyProblems(policy, html) {
+  const scriptSources = policyDirectives(policy).get("script-src") ?? [];
+  const problems = inlineScriptHashes(html)
+    .filter((hash) => !scriptSources.includes(hash))
+    .map((hash) => `an inline script of index.html (${hash}) is not allowed by script-src`);
+  for (const tag of inlineEventHandlers(html)) {
+    problems.push(`index.html has an inline event handler, which the policy blocks: ${tag}`);
+  }
+  return problems;
+}
+
+function assetText(asset) {
+  return typeof asset.source === "string" ? asset.source : new TextDecoder().decode(asset.source);
+}
+
+/**
+ * CFG-04: emits `content-security-policy.txt` next to the built `index.html` (a post plugin, so
+ * the HTML is final). Refuses an `index.html` with an inline event handler.
+ */
+export function contentSecurityPolicy() {
+  return {
+    apply: "build",
+    enforce: "post",
+    generateBundle(_options, bundle) {
+      const index = bundle["index.html"];
+      if (index?.type !== "asset") {
+        this.error(
+          "CFG-04: the build has no index.html to compute its Content-Security-Policy from",
+        );
+      }
+      const html = assetText(index);
+      const handlers = inlineEventHandlers(html);
+      if (handlers.length > 0) {
+        this.error(
+          `CFG-04: index.html has an inline event handler, which the policy blocks: ${handlers[0]}`,
+        );
+      }
+      this.emitFile({
+        fileName: CONTENT_SECURITY_POLICY_FILE,
+        source: contentSecurityPolicyFor(html),
+        type: "asset",
+      });
+    },
+    name: "content-security-policy",
+  };
+}
