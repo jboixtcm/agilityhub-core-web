@@ -1254,12 +1254,16 @@ export const memberBillingHandlers = [
   http.post("*/api/v1/me/card-setup", () => {
     const refused = moduleOff("BILLING");
     if (refused !== undefined) return refused;
-    return currentMockScenario().memberBilling === "cardInvalid"
-      ? HttpResponse.json(
-          { checkoutUrl: "https://checkout.example.test/setup/cs_card" },
-          { status: 201 },
-        )
-      : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    const scenario = currentMockScenario();
+    if (scenario.memberBilling !== "cardInvalid") {
+      return error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    }
+    // PAY-09 (S12 R-12-22): only a member who pays by card opens their own card setup.
+    if (scenario.me.paymentMethod?.type !== "CARD") return error("INVALID_STATE", 409);
+    return HttpResponse.json(
+      { checkoutUrl: "https://checkout.example.test/setup/cs_card" },
+      { status: 201 },
+    );
   }),
   http.get("*/api/v1/checkout-sessions/:id", ({ params, request }) => {
     const refused = moduleOff("BILLING");
