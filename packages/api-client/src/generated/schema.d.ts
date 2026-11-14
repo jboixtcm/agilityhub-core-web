@@ -910,7 +910,7 @@ export interface paths {
         put?: never;
         /**
          * confirmBooking
-         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) books without N-36 to the member, also for a swap's cancellation; recorded in BOOKING_CREATED_BY_CLUB details.notifyMember. R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) books without N-36 to the member, also for a swap's cancellation; recorded in BOOKING_CREATED_BY_CLUB details.notifyMember. R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. BOOK-02: 422 DOG_ALREADY_BOOKED when the dog holds another live class booking (ACTIVE or PAYMENT_PENDING) whose class overlaps this one in time, or an ACTIVE free-training booking over it; the booking a swap cancels (swapBookingId) does not count; back-to-back classes do not overlap. Tenant comes from the JWT.
          */
         post: operations["confirmBooking"];
         delete?: never;
@@ -1378,7 +1378,7 @@ export interface paths {
         put?: never;
         /**
          * cancelClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. PLAN-02: refused with 409 INVALID_STATE once the class has started (startsAt at or before now), whatever the reason (CLUB_MANUAL or DELETED) or state; nothing changes.
          */
         post: operations["cancelClass"];
         delete?: never;
@@ -7030,7 +7030,7 @@ export interface paths {
         put?: never;
         /**
          * claimSeat
-         * @description Roles: MEMBER (own or family group, also the impersonation token). COMM-03: notifyMember as POST /bookings. R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token). COMM-03: notifyMember as POST /bookings. R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. BOOK-02: 422 DOG_ALREADY_BOOKED as POST /bookings (the dog's overlapping class or training booking; a swapped one does not count). Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
          */
         post: operations["claimSeat"];
         delete?: never;
@@ -24017,7 +24017,7 @@ export interface operations {
             };
             /** @description SEAT_HOLD_EXPIRED, CLASS_FULL, BOOKING_LIMIT_REACHED, ALREADY_BOOKED, SEAT_TAKEN, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
-            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY */
+            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, DOG_ALREADY_BOOKED, PACK_EMPTY */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -69896,7 +69896,7 @@ export interface operations {
             };
             /** @description SEAT_TAKEN, SEAT_HOLD_EXPIRED, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
-            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, INACTIVITY_PERIOD, MEMBER_LEAVING, SWAP_NOT_ALLOWED */
+            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, INACTIVITY_PERIOD, MEMBER_LEAVING, SWAP_NOT_ALLOWED, DOG_ALREADY_BOOKED */
             422: {
                 headers: {
                     [name: string]: unknown;
