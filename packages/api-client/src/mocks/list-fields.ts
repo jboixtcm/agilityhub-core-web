@@ -56,7 +56,6 @@ export const MEMBER_LIST_FIELDS = [
   "lastName2",
   "contactEmails",
   "phones",
-  "address",
   "status",
   "leaveSource",
   "inactivityUntil",

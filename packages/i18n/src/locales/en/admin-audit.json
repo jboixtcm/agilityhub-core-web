@@ -79,6 +79,7 @@
     "SIGNUP_SUBMITTED": "Signup request submitted",
     "SUPPORT_ACCESS_ENDED": "Support access ended",
     "SUPPORT_ACCESS_STARTED": "Support access started",
+    "SUPPORT_WRITE": "Change made by support",
     "TEMPLATE_BAND_DELETED": "Template time band deleted",
     "TEMPLATE_CLASS_DELETED": "Template class deleted",
     "TRAINING_BOOKED_BY_CLUB": "Training booked by the club",
