@@ -729,6 +729,14 @@
           "help": "Límit mensual de seguretat dels SMS.",
           "label": "Límit mensual d'SMS"
         },
+        "quietHoursEnd": {
+          "help": "Hora (del club) en què surten els SMS que esperaven.",
+          "label": "Final de les hores sense SMS"
+        },
+        "quietHoursStart": {
+          "help": "A partir d'aquesta hora (hora del club) els SMS no urgents esperen fins al final de la franja; una oferta de plaça amb termini no espera. Igual que el final: sense franja.",
+          "label": "Inici de les hores sense SMS"
+        },
         "senderId": {
           "help": "Identificador que apareix com a remitent dels SMS.",
           "label": "Remitent dels SMS"

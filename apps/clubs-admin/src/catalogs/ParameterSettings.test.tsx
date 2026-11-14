@@ -219,6 +219,90 @@ describe("SEPA-10 (decision of 13 Nov 2026): D11 «Quotes, packs i remesa»", ()
   });
 });
 
+describe("COMM-06 (decision of 13 Nov 2026): D11 «Comunicacions» SMS quiet hours", () => {
+  async function renderSettings(language: string, modules: string[]) {
+    const i18n = await createI18n({
+      branding: { ...branding, locales: ["ca", "es", "en"] },
+      browserLanguages: [language],
+      initialNamespaces: ["admin-settings"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ParameterSettings
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            levels={[]}
+            modules={modules}
+            onModulesChange={() => undefined}
+            plans={[]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+  }
+
+  async function messagingCard(title: string): Promise<HTMLElement> {
+    const heading = await screen.findByRole("heading", { name: title });
+    const card = heading.closest(".settings-card");
+    if (!(card instanceof HTMLElement)) throw new TypeError(`Missing the «${title}» card`);
+    return card;
+  }
+
+  it("shows messaging.sms.quietHoursStart and quietHoursEnd beside the SMS cap, with their help and the time input", async () => {
+    await renderSettings("ca", branding.modules);
+    const card = await messagingCard("Comunicacions");
+    const rows = [...card.querySelectorAll(".settings-parameter__main span")].map(
+      (label) => label.textContent,
+    );
+    expect(rows.slice(rows.indexOf("Límit mensual d'SMS"))).toEqual([
+      "Límit mensual d'SMS",
+      "Inici de les hores sense SMS",
+      "Final de les hores sense SMS",
+    ]);
+    expect(
+      within(card).getByRole("button", { name: "Final de les hores sense SMS08:00" }),
+    ).toBeVisible();
+
+    fireEvent.click(
+      within(card).getByRole("button", { name: "Inici de les hores sense SMS22:00" }),
+    );
+    const drawer = await screen.findByRole("dialog", { name: "Inici de les hores sense SMS" });
+    expect(
+      within(drawer).getByText(
+        "A partir d'aquesta hora (hora del club) els SMS no urgents esperen fins al final de la franja; una oferta de plaça amb termini no espera. Igual que el final: sense franja.",
+      ),
+    ).toBeVisible();
+    const field = within(drawer).getByLabelText("Inici de les hores sense SMS");
+    expect(field).toHaveAttribute("type", "time");
+    expect(field).toHaveValue("22:00");
+  });
+
+  it("labels both rows in es and en", async () => {
+    for (const [language, title, start, end] of [
+      ["es", "Comunicaciones", "Inicio de las horas sin SMS", "Final de las horas sin SMS"],
+      ["en", "Communications", "Start of the no-SMS hours", "End of the no-SMS hours"],
+    ] as const) {
+      await renderSettings(language, branding.modules);
+      const card = await messagingCard(title);
+      expect(within(card).getByRole("button", { name: `${start}22:00` })).toBeVisible();
+      expect(within(card).getByRole("button", { name: `${end}08:00` })).toBeVisible();
+      cleanup();
+    }
+  });
+
+  it("shows neither row while the SMS module is off, like the SMS cap", async () => {
+    await renderSettings(
+      "ca",
+      branding.modules.filter((module) => module !== "SMS"),
+    );
+    const card = await messagingCard("Comunicacions");
+    expect(within(card).queryByText("Límit mensual d'SMS")).toBeNull();
+    expect(within(card).queryByText("Inici de les hores sense SMS")).toBeNull();
+    expect(within(card).queryByText("Final de les hores sense SMS")).toBeNull();
+  });
+});
+
 describe("T-02-13 D11 «Restableix el valor de producte» (WEB-06, decision of 13 Nov 2026)", () => {
   const key = "bookings.lateCancelThresholdMinutes";
   const label = "Llindar d'anul·lació tardana («classe feta»)";

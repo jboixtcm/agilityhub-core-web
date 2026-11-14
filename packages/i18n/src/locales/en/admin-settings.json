@@ -729,6 +729,14 @@
           "help": "Monthly SMS safety limit.",
           "label": "Monthly SMS limit"
         },
+        "quietHoursEnd": {
+          "help": "Time (club time) at which the SMS that were waiting are sent.",
+          "label": "End of the no-SMS hours"
+        },
+        "quietHoursStart": {
+          "help": "From this time (club time) non-urgent SMS wait until the end of the window; a seat offer with a deadline does not wait. Set it equal to the end for no window.",
+          "label": "Start of the no-SMS hours"
+        },
         "senderId": {
           "help": "Identifier shown as the SMS sender.",
           "label": "SMS sender"

@@ -343,6 +343,13 @@ const initialParameters: Parameters = {
           constraints: { min: 0 },
           module: "SMS",
         }),
+        // COMM-06: SMS quiet hours in the club's time zone (CATALEG_PARAMETRES, 22:00–08:00).
+        parameter("messaging.sms.quietHoursStart", "messaging", "time", "22:00", {
+          module: "SMS",
+        }),
+        parameter("messaging.sms.quietHoursEnd", "messaging", "time", "08:00", {
+          module: "SMS",
+        }),
       ],
       title: "admin-settings:block.messaging.title",
     },
