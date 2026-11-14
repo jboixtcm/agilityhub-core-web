@@ -1350,18 +1350,46 @@ describe("S12 R-12-15 · the remittances page (GET /remittances, file, submissio
       total: eur(624000),
     });
     expect(data?.creditor.maskedIban).toContain("****");
-    for (const item of [items[0], items[2]]) {
+    // SEPA-06: `remesa-{period}-{seq}.xml`, `seq` from the `MsgId`, and a ROLLED_BACK one's name
+    // says it is cancelled (was `remesa-{period}.xml` for both).
+    for (const [item, fileName] of [
+      [items[0], "remesa-2026-09-1.xml"],
+      [items[2], "remesa-2026-08-1-ANULLADA-NO-PUJAR.xml"],
+    ] as const) {
       const file = await client.GET("/remittances/{id}/file", {
         params: { path: { id: item?.id ?? "" } },
       });
       expectValid("RemittanceFile", file.data);
-      // The snapshot's attachment name (b67a07b): `remesa-{period}.xml`.
-      expect(file.data?.fileName).toBe(`remesa-${item?.period ?? ""}.xml`);
-      expect(file.data?.downloadUrl).toMatch(/\/remesa-2026-0[89]\.xml\?/u);
+      expect(file.data?.fileName).toBe(fileName);
+      expect(file.data?.downloadUrl).toContain(`/${fileName}?`);
     }
     expect(
       await failure(client.GET("/remittances/{id}", { params: { path: { id: UNKNOWN_ID } } })),
     ).toEqual({ code: "NOT_FOUND", details: {}, status: 404 });
+  });
+
+  it("SEPA-06: a month generated again never reuses a file name, and the rolled-back file is named cancelled", async () => {
+    const first = (await month()).remittance?.id ?? "";
+    expect((await rollback(await liveRunId())).response.status).toBe(200);
+    const generated = await generate({ period: SEPTEMBER, simulationId: await simulationId() });
+    const second = generated.data?.remittance?.id ?? "";
+    expect(second).not.toBe(first);
+    const names = async (id: string) => {
+      const file = await client.GET("/remittances/{id}/file", { params: { path: { id } } });
+      const sheet = await client.GET("/remittances/{id}/spreadsheet", {
+        params: { path: { id } },
+        parseAs: "blob",
+      });
+      return [file.data?.fileName, sheet.response.headers.get("Content-Disposition")];
+    };
+    expect(await names(first)).toEqual([
+      "remesa-2026-09-1-ANULLADA-NO-PUJAR.xml",
+      'attachment; filename="remesa-2026-09-1-ANULLADA-NO-PUJAR.xlsx"',
+    ]);
+    expect(await names(second)).toEqual([
+      "remesa-2026-09-2.xml",
+      'attachment; filename="remesa-2026-09-2.xlsx"',
+    ]);
   });
 
   it("T-12-30 [Marca com a enviada al banc] → 200 SUBMITTED; again → 409 INVALID_STATE; the run is no longer rollbackable {REMITTANCE_SUBMITTED}", async () => {

@@ -67,9 +67,28 @@ const DEFAULT_COLUMNS = [
  * first day [Marca com a enviada al banc] accepts) and its collection date (until which [Desfés
  * «enviada al banc»] is offered), whatever columns are shown.
  */
-const ROW_FIELDS = ["period", "status", "fileAvailable", "creationAt", "requestedCollectionDate"];
+const ROW_FIELDS = [
+  "period",
+  "status",
+  "fileAvailable",
+  "creationAt",
+  "requestedCollectionDate",
+  // SEPA-06: the file name's sequence, for a download whose header names no file.
+  "messageId",
+];
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = { actions: [] };
 const STATUSES: readonly RemittanceStatus[] = ["GENERATED", "SUBMITTED", "ROLLED_BACK"];
+
+/**
+ * SEPA-06 (S12 §2 D6): the api's name of a remittance's file, `remesa-{period}-{seq}` with the
+ * `MsgId`'s sequence and `-ANULLADA-NO-PUJAR` once rolled back — only when its download does not
+ * name the file itself (`Content-Disposition`).
+ */
+function remittanceFileName(item: RemittanceListItem, extension: "xlsx"): string {
+  const sequence = item.messageId?.split("-").at(-1);
+  const cancelled = item.status === "ROLLED_BACK" ? "-ANULLADA-NO-PUJAR" : "";
+  return `remesa-${item.period ?? item.id}${sequence === undefined ? "" : `-${sequence}`}${cancelled}.${extension}`;
+}
 
 function statusTone(status: RemittanceStatus | undefined): Tone {
   return status === "SUBMITTED" ? "success" : status === "ROLLED_BACK" ? "neutral" : "warning";
@@ -252,7 +271,7 @@ export function RemittancesPage({
         saveFile(
           data,
           contentDispositionFileName(response.headers.get("Content-Disposition")) ??
-            `remesa-${item.period ?? item.id}.xlsx`,
+            remittanceFileName(item, "xlsx"),
         );
         return;
       }
@@ -391,55 +410,69 @@ export function RemittancesPage({
     {
       key: "actions",
       label: t("admin-billing:remittances.columns.actions"),
-      render: (item) => (
-        <span className="billing-remittance-actions">
-          {item.fileAvailable === true ? (
-            <>
+      render: (item) => {
+        // SEPA-06: a rolled-back remittance's file stays downloadable for the record, marked as
+        // cancelled beside its buttons and in their names, so it is never uploaded to the bank.
+        const cancelled = item.status === "ROLLED_BACK";
+        return (
+          <span className="billing-remittance-actions">
+            {item.fileAvailable === true ? (
+              <>
+                {cancelled ? (
+                  <Badge tone="danger">{t("admin-billing:remittances.cancelledFile")}</Badge>
+                ) : null}
+                <Button
+                  {...(cancelled
+                    ? { "aria-label": t("admin-billing:remittances.downloadCancelled") }
+                    : {})}
+                  disabled={downloading !== undefined}
+                  loading={downloading === item.id}
+                  loadingLabel={t("admin-billing:remittances.downloading")}
+                  onClick={() => void download(item)}
+                  variant="ghost"
+                >
+                  <Icon aria-hidden="true" name="export" />
+                  {t("admin-billing:remittances.download")}
+                </Button>
+                <Button
+                  {...(cancelled
+                    ? { "aria-label": t("admin-billing:remittances.downloadExcelCancelled") }
+                    : {})}
+                  variant="ghost"
+                  disabled={downloading !== undefined}
+                  loading={downloading === "xlsx-" + item.id}
+                  loadingLabel={t("admin-billing:remittances.downloading")}
+                  onClick={() => void download(item, true)}
+                >
+                  <Icon aria-hidden="true" name="export" />
+                  {t("admin-billing:remittances.downloadExcel")}
+                </Button>
+              </>
+            ) : null}
+            {item.status === "GENERATED" ? (
               <Button
-                disabled={downloading !== undefined}
-                loading={downloading === item.id}
-                loadingLabel={t("admin-billing:remittances.downloading")}
-                onClick={() => void download(item)}
+                onClick={() => {
+                  setSubmitting(item);
+                }}
+                variant="secondary"
+              >
+                {t("admin-billing:remittances.markSubmitted")}
+              </Button>
+            ) : null}
+            {undoable(item, today) ? (
+              <Button
+                onClick={() => {
+                  setUndoing(item);
+                }}
                 variant="ghost"
               >
-                <Icon aria-hidden="true" name="export" />
-                {t("admin-billing:remittances.download")}
+                <Icon aria-hidden="true" name="undo" />
+                {t("admin-billing:remittances.undoSubmission")}
               </Button>
-              <Button
-                variant="ghost"
-                disabled={downloading !== undefined}
-                loading={downloading === "xlsx-" + item.id}
-                loadingLabel={t("admin-billing:remittances.downloading")}
-                onClick={() => void download(item, true)}
-              >
-                <Icon aria-hidden="true" name="export" />
-                {t("admin-billing:remittances.downloadExcel")}
-              </Button>
-            </>
-          ) : null}
-          {item.status === "GENERATED" ? (
-            <Button
-              onClick={() => {
-                setSubmitting(item);
-              }}
-              variant="secondary"
-            >
-              {t("admin-billing:remittances.markSubmitted")}
-            </Button>
-          ) : null}
-          {undoable(item, today) ? (
-            <Button
-              onClick={() => {
-                setUndoing(item);
-              }}
-              variant="ghost"
-            >
-              <Icon aria-hidden="true" name="undo" />
-              {t("admin-billing:remittances.undoSubmission")}
-            </Button>
-          ) : null}
-        </span>
-      ),
+            ) : null}
+          </span>
+        );
+      },
     },
   ];
   const filterColumns: UniversalListFilterColumn[] = [

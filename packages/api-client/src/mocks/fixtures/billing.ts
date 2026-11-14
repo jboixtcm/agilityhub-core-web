@@ -714,7 +714,11 @@ export function generateRun(
           creditor: { ...CREDITOR },
           fileAvailable: true,
           id: remittanceId,
-          messageId: `canic-${options.period}-${String(world.runs.length + 1)}`,
+          // `{clubSlug}-{period}-{seq}`: one more for each remittance of the month, rolled-back ones
+          // included, as the api's `SepaRemittanceWriter` numbers it (SEPA-06).
+          messageId: `canic-${options.period}-${String(
+            world.remittances.filter((item) => item.period === options.period).length + 1,
+          )}`,
           period: options.period,
           requestedCollectionDate: options.collectionDate ?? defaultCollectionDate(options.period),
           runId,
@@ -908,6 +912,20 @@ export function periodRemittance(remittance: Remittance, today: string): PeriodR
       remittance.status === "GENERATED" &&
       today >= addDaysToDate(remittance.requestedCollectionDate, -1),
   };
+}
+
+/**
+ * SEPA-06 (S12 §2 D6, R-12-14): a remittance file's download name, as the api's
+ * `RemittanceService.fileName` gives it — `remesa-{period}-{seq}.{extension}`, `seq` being the last
+ * part of its `MsgId`, and `-ANULLADA-NO-PUJAR` before the extension once it is rolled back.
+ */
+export function remittanceFileName(
+  remittance: Pick<Remittance, "messageId" | "period" | "status">,
+  extension: "xlsx" | "xml",
+): string {
+  const sequence = remittance.messageId.split("-").at(-1) ?? "";
+  const cancelled = remittance.status === "ROLLED_BACK" ? "-ANULLADA-NO-PUJAR" : "";
+  return `remesa-${remittance.period}-${sequence}${cancelled}.${extension}`;
 }
 
 function addDaysToDate(date: string, days: number): string {

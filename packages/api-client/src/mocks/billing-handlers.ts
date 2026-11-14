@@ -21,6 +21,7 @@ import {
   periodCounts,
   periodRemittance,
   periodRun,
+  remittanceFileName,
   remittanceListItem,
   resetBillingState,
   rollBackRun,
@@ -903,7 +904,7 @@ export const billingHandlers = [
     return new HttpResponse(mockExportBody("xlsx"), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="remesa-${item.period}.xlsx"`,
+        "Content-Disposition": `attachment; filename="${remittanceFileName(item, "xlsx")}"`,
       },
     });
   }),
@@ -912,8 +913,9 @@ export const billingHandlers = [
     if (denied !== undefined) return denied;
     const remittance = findRemittance(String(params.id));
     if (remittance?.fileAvailable !== true) return notFound();
-    // The api's attachment name (S12 §6, snapshot b67a07b): `remesa-{period}.xml`.
-    const fileName = `remesa-${remittance.period}.xml`;
+    // The api's attachment name (S12 §6, SEPA-06): `remesa-{period}-{seq}.xml`, and
+    // `remesa-{period}-{seq}-ANULLADA-NO-PUJAR.xml` once rolled back.
+    const fileName = remittanceFileName(remittance, "xml");
     return json({
       downloadUrl: `https://files.example.test/remittances/${remittance.id}/${fileName}?X-Amz-Expires=300&X-Amz-Signature=mock`,
       expiresAt: new Date(Date.now() + 300_000).toISOString().replace(/\.\d{3}Z$/u, "Z"),

@@ -202,9 +202,9 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
     await waitFor(() => {
       expect(clicked).toHaveLength(1);
     });
-    // The api's attachment name (snapshot b67a07b): `remesa-{period}.xml`.
+    // The api's attachment name (SEPA-06): `remesa-{period}-{seq}.xml` (was `remesa-{period}.xml`).
     expect(clicked[0]).toMatch(
-      /^https:\/\/files\.example\.test\/remittances\/[0-9a-f-]+\/remesa-2026-09\.xml\?/u,
+      /^https:\/\/files\.example\.test\/remittances\/[0-9a-f-]+\/remesa-2026-09-1\.xml\?/u,
     );
     const file = sent.filter((entry) => entry.url.pathname.endsWith("/file"));
     expect(file.map((entry) => entry.method)).toEqual(["GET"]);
@@ -370,8 +370,14 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
     if (august === undefined || rolledBack === undefined) throw new TypeError("Rows missing");
     for (const row of [august, rolledBack]) {
       expect(within(row).queryByRole("button", { name: "Marca com a enviada al banc" })).toBeNull();
-      expect(within(row).getByRole("button", { name: "Descarrega l'XML" })).toBeEnabled();
     }
+    expect(within(august).getByRole("button", { name: "Descarrega l'XML" })).toBeEnabled();
+    // SEPA-06: the rolled-back file's button says it is cancelled.
+    expect(
+      within(rolledBack).getByRole("button", {
+        name: "Descarrega l'XML (anul·lada, no la pugis al banc)",
+      }),
+    ).toBeEnabled();
   });
 
   it("opens a remittance: its message, sequences, XSD check and the creditor with the IBAN masked", async () => {
@@ -582,5 +588,100 @@ describe("SEPA-04 (a) [Desfés «enviada al banc»] (R-12-15, owner decision of 
       await within(dialog).findByText("Escriu el motiu (fins a 500 caràcters)."),
     ).toBeVisible();
     expect(within(dialog).getAllByRole("alert")).toHaveLength(1);
+  });
+});
+
+describe("SEPA-06 (S12 §2 D6, decision of 13 Nov 2026): a rolled-back remittance's file is marked cancelled", () => {
+  function captureLinks() {
+    const clicked: { download: string; href: string }[] = [];
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
+      this: HTMLAnchorElement,
+    ) {
+      clicked.push({ download: this.download, href: this.href });
+    });
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:remittance");
+    vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined);
+    return clicked;
+  }
+
+  it("marks only the ROLLED_BACK row, beside its buttons and in their names", async () => {
+    await renderPage();
+    const [september, august, rolledBack] = await rows();
+    if (september === undefined || august === undefined || rolledBack === undefined) {
+      throw new TypeError("Rows missing");
+    }
+    expect(within(rolledBack).getByText("Anul·lada — no la pugis al banc")).toHaveClass(
+      "ah-tone--danger",
+    );
+    expect(
+      within(rolledBack).getByRole("button", {
+        name: "Excel de la remesa (anul·lada, no la pugis al banc)",
+      }),
+    ).toBeEnabled();
+    expect(within(rolledBack).queryByRole("button", { name: "Descarrega l'XML" })).toBeNull();
+    for (const row of [september, august]) {
+      expect(within(row).queryByText("Anul·lada — no la pugis al banc")).toBeNull();
+      expect(within(row).getByRole("button", { name: "Descarrega l'XML" })).toBeEnabled();
+      expect(within(row).getByRole("button", { name: "Excel de la remesa" })).toBeEnabled();
+    }
+  });
+
+  it("downloads the rolled-back XML and Excel under their cancelled names", async () => {
+    const clicked = captureLinks();
+    await renderPage();
+    const [, , rolledBack] = await rows();
+    if (rolledBack === undefined) throw new TypeError("No rolled-back row");
+    fireEvent.click(
+      within(rolledBack).getByRole("button", {
+        name: "Descarrega l'XML (anul·lada, no la pugis al banc)",
+      }),
+    );
+    await waitFor(() => {
+      expect(clicked).toHaveLength(1);
+    });
+    expect(clicked[0]?.href).toMatch(/\/remesa-2026-08-1-ANULLADA-NO-PUJAR\.xml\?/u);
+    fireEvent.click(
+      within(rolledBack).getByRole("button", {
+        name: "Excel de la remesa (anul·lada, no la pugis al banc)",
+      }),
+    );
+    await waitFor(() => {
+      expect(clicked).toHaveLength(2);
+    });
+    expect(clicked[1]?.download).toBe("remesa-2026-08-1-ANULLADA-NO-PUJAR.xlsx");
+  });
+
+  it("without the api's file name, the Excel is saved under the remittance's own name, never the month's alone", async () => {
+    server.use(
+      http.get(
+        "*/api/v1/remittances/:id/spreadsheet",
+        () =>
+          new HttpResponse("xlsx", {
+            headers: {
+              "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            },
+          }),
+      ),
+    );
+    const clicked = captureLinks();
+    await renderPage();
+    const [september, , rolledBack] = await rows();
+    if (september === undefined || rolledBack === undefined) throw new TypeError("Rows missing");
+    fireEvent.click(within(september).getByRole("button", { name: "Excel de la remesa" }));
+    await waitFor(() => {
+      expect(clicked).toHaveLength(1);
+    });
+    fireEvent.click(
+      within(rolledBack).getByRole("button", {
+        name: "Excel de la remesa (anul·lada, no la pugis al banc)",
+      }),
+    );
+    await waitFor(() => {
+      expect(clicked).toHaveLength(2);
+    });
+    expect(clicked.map((link) => link.download)).toEqual([
+      "remesa-2026-09-1.xlsx",
+      "remesa-2026-08-1-ANULLADA-NO-PUJAR.xlsx",
+    ]);
   });
 });
