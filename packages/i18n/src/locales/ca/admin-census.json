@@ -474,6 +474,7 @@
           "upfrontOpen": "Hi ha pagaments inicials oberts.",
           "futureBookings": "Hi ha reserves futures actives.",
           "otherMembershipsActive": "El compte té una altra afiliació activa.",
+          "sepaRefundWindow": "Un cobrament SEPA encara es pot retornar (8 setmanes): la supressió s'executarà quan es tanqui el termini.",
           "other": "La supressió està bloquejada."
         }
       }

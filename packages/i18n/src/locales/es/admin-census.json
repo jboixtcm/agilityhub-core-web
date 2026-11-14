@@ -474,6 +474,7 @@
           "upfrontOpen": "Hay pagos iniciales abiertos.",
           "futureBookings": "Hay reservas futuras activas.",
           "otherMembershipsActive": "La cuenta tiene otra afiliación activa.",
+          "sepaRefundWindow": "Un cobro SEPA todavía se puede devolver (8 semanas): la supresión se ejecutará cuando se cierre el plazo.",
           "other": "La supresión está bloqueada."
         }
       }

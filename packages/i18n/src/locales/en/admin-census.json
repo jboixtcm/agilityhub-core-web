@@ -474,6 +474,7 @@
           "upfrontOpen": "There are open upfront payments.",
           "futureBookings": "There are active future bookings.",
           "otherMembershipsActive": "The account has another active membership.",
+          "sepaRefundWindow": "A SEPA direct debit can still be refunded (8 weeks): the erasure will run once that period closes.",
           "other": "Erasure is blocked."
         }
       }
