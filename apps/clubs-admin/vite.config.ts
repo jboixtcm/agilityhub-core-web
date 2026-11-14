@@ -62,7 +62,28 @@ export default defineConfig(({ mode }) => {
 
   return {
     // Keep MSW out of production; emit the public favicon explicitly.
-    build: { copyPublicDir: mockEnabled },
+    build: {
+      copyPublicDir: mockEnabled,
+      rolldownOptions: {
+        output: {
+          codeSplitting: {
+            groups: [
+              {
+                // Load the related planning, activity and training labels together for each language.
+                name(id) {
+                  const locale =
+                    /\/locales\/(ca|es|en)\/admin-(?:activities|scheduling|training)\.json$/u.exec(
+                      id,
+                    );
+                  const language = locale?.[1];
+                  return language === undefined ? null : `planning-labels-${language}`;
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
     // Locale loaders use the default JSON export. Omit the duplicate named exports in each language chunk.
     json: { namedExports: false },
     plugins: [
