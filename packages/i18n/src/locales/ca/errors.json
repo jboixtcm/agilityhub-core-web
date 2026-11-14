@@ -250,5 +250,6 @@
   "WEEK_ALREADY_GENERATED": "Aquesta setmana ja s'ha generat.",
   "WEEK_IN_PAST": "Aquesta setmana ja ha passat.",
   "WEEK_INCONSISTENT": "La setmana conté dades incoherents.",
-  "WEEKLY_LIMIT_DONE": "S'ha assolit el límit setmanal."
+  "WEEKLY_LIMIT_DONE": "S'ha assolit el límit setmanal.",
+  "RECENT_LOGIN_REQUIRED": "Per seguretat, torna a iniciar la sessió per continuar."
 }

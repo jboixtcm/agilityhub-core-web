@@ -250,5 +250,6 @@
   "WEEK_ALREADY_GENERATED": "This week has already been generated.",
   "WEEK_IN_PAST": "This week is in the past.",
   "WEEK_INCONSISTENT": "The week contains inconsistent data.",
-  "WEEKLY_LIMIT_DONE": "The weekly limit has been reached."
+  "WEEKLY_LIMIT_DONE": "The weekly limit has been reached.",
+  "RECENT_LOGIN_REQUIRED": "For your security, sign in again to continue."
 }

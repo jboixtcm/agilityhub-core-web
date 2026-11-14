@@ -154,7 +154,14 @@ function loginError(error: unknown, t: Translate): string {
 
 function passwordError(error: unknown, t: Translate): string {
   if (isApiError(error, "PASSWORD_TOO_SHORT")) {
-    return t("errors:PASSWORD_TOO_SHORT");
+    // AUTH-01 (S01 R-01-05): the minimum the api applied, 12 for a staff account.
+    const minLength: unknown =
+      typeof error.details === "object" && error.details !== null && "minLength" in error.details
+        ? error.details.minLength
+        : undefined;
+    return typeof minLength === "number"
+      ? t("common:password.tooShort", { minLength })
+      : t("errors:PASSWORD_TOO_SHORT");
   }
   if (isApiError(error, "PASSWORD_MISMATCH")) {
     return t("errors:PASSWORD_MISMATCH");

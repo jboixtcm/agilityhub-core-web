@@ -14,7 +14,7 @@ import {
 } from "@agilityhub/auth";
 import { createI18n, LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider, requiredModulesForUiItem } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -1250,5 +1250,33 @@ describe("T-05 feedback 3: desktop sidebar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Desplega el menú" }));
     expect(localStorage.getItem("admin-sidebar-collapsed")).toBe("false");
     localStorage.removeItem("admin-sidebar-collapsed");
+  });
+});
+
+describe("AUTH-01 (S01 R-01-18, decision of 13 Nov 2026): the back office asks «Confirma que ets tu»", () => {
+  afterEach(() => {
+    window.history.pushState(null, "", "/");
+  });
+
+  it("answers the api's request for a recent sign-in with the password dialog, which signs the admin in again", async () => {
+    window.history.pushState(null, "", "/tauler");
+    const client = authClient();
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(client.getMe()).not.toBeNull();
+    });
+    let confirmed: Promise<boolean> | undefined;
+    act(() => {
+      confirmed = client.requestRecentLogin();
+    });
+    const dialog = await screen.findByRole("dialog", { name: "Confirma que ets tu" });
+    fireEvent.change(within(dialog).getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    await expect(confirmed).resolves.toBe(true);
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Confirma que ets tu" })).toBeNull();
+    });
   });
 });

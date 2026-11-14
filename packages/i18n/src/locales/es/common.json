@@ -124,7 +124,8 @@
   },
   "password": {
     "show": "Mostrar la contraseña",
-    "hide": "Ocultar la contraseña"
+    "hide": "Ocultar la contraseña",
+    "tooShort": "La contraseña debe tener como mínimo {minLength} caracteres."
   },
   "recovery": {
     "title": "Solicitud recibida",

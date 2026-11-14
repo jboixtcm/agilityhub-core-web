@@ -124,7 +124,8 @@
   },
   "password": {
     "show": "Mostra la contrasenya",
-    "hide": "Amaga la contrasenya"
+    "hide": "Amaga la contrasenya",
+    "tooShort": "La contrasenya ha de tenir com a mínim {minLength} caràcters."
   },
   "recovery": {
     "title": "Revisa el correu",

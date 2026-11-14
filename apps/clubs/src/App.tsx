@@ -5,6 +5,7 @@ import {
   keepReturnPath,
   type Me,
   OnboardingExperience,
+  RecentLoginDialog,
   RequireAuth,
   RequireModule,
   RequireRole,
@@ -1111,7 +1112,14 @@ export function AccessPage({
 
 function passwordError(error: unknown, t: ReturnType<typeof useTranslation>["t"]): string {
   if (isApiError(error, "PASSWORD_TOO_SHORT")) {
-    return t("errors:PASSWORD_TOO_SHORT");
+    // AUTH-01 (S01 R-01-05): the minimum the api applied, 12 for a staff account.
+    const minLength: unknown =
+      typeof error.details === "object" && error.details !== null && "minLength" in error.details
+        ? error.details.minLength
+        : undefined;
+    return typeof minLength === "number"
+      ? t("common:password.tooShort", { minLength })
+      : t("errors:PASSWORD_TOO_SHORT");
   }
   if (isApiError(error, "PASSWORD_MISMATCH")) {
     return t("errors:PASSWORD_MISMATCH");
@@ -1953,9 +1961,12 @@ interface AppProps {
 
 export function App(props: AppProps) {
   const { t } = useTranslation("common");
+  // AUTH-01 (S01 R-01-18): an instructor's week PDF or a staff account's own data package asks
+  // for a recent sign-in through «Confirma que ets tu».
   return (
     <ToastProvider dismissLabel={t("gallery.close")}>
       <AppContent {...props} />
+      <RecentLoginDialog client={props.authClient} />
     </ToastProvider>
   );
 }

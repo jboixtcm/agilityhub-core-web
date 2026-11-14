@@ -1973,8 +1973,16 @@ export const handlers = [
     if (body.new !== body.repeat) {
       return apiError("PASSWORD_MISMATCH", "Passwords do not match", 400);
     }
-    if (body.new.length < 8) {
-      return apiError("PASSWORD_TOO_SHORT", "Password is too short", 400);
+    // R-01-05 (AUTH-01): a staff account (ADMIN or INSTRUCTOR of the club, or AGILITYHUB_ADMIN)
+    // needs 12 characters, a member `auth.passwordMinLength` (8); the 400 says which.
+    const { me } = currentMockScenario();
+    const minLength =
+      me.membership?.roles.some((role) => role === "ADMIN" || role === "INSTRUCTOR") === true ||
+      me.account.platformRoles.includes("AGILITYHUB_ADMIN")
+        ? 12
+        : 8;
+    if (Array.from(body.new).length < minLength) {
+      return apiErrorWithDetails("PASSWORD_TOO_SHORT", "Password is too short", 400, { minLength });
     }
     // R-01-05: `current` is required when the account has a password, except once in the
     // session of a RESET link (E49); a LOGIN link's session still sends it.

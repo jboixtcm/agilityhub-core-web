@@ -5,6 +5,7 @@ import {
   HANDOFF_SESSION_CONFLICT,
   keepReturnPath,
   OnboardingExperience,
+  RecentLoginDialog,
   RequireModule,
   RequirePlatformRole,
   RequireRole,
@@ -1288,7 +1289,21 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   );
 }
 
+/**
+ * The back office and the console, with AUTH-01's «Confirma que ets tu» (S01 R-01-18): the dialog
+ * an export, a remittance file, a bank account or a payment provider opens when the api asks the
+ * staff for a recent sign-in.
+ */
 export function App({ authClient }: { authClient: AuthClient }) {
+  return (
+    <>
+      <AppRoutes authClient={authClient} />
+      <RecentLoginDialog client={authClient} />
+    </>
+  );
+}
+
+function AppRoutes({ authClient }: { authClient: AuthClient }) {
   const { i18n } = useContext(I18nContext);
   // E11-W06 W5 (CONVENCIONS_I18N §1): the signed-in account's language.
   useAccountLocale();

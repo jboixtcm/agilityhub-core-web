@@ -690,3 +690,62 @@ describe("PRIV-01 (decision of 13 Nov 2026): apps/id serves the platform's priva
     ).toBeVisible();
   });
 });
+
+describe("AUTH-01 (S01 R-01-05, decision of 13 Nov 2026): the password's minimum comes from the api", () => {
+  /** The account page's password form, whose `PUT /me/password` answers `refusal`. */
+  async function submitPassword(refusal: Record<string, unknown>, locale: Locale = "ca") {
+    // The page follows the account's language (`useAccountLocale`).
+    const { fetcher } = testFetcher({ ...me, account: { ...me.account, locale } });
+    const answered = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      return new URL(request.url).pathname === "/api/v1/me/password"
+        ? json({ message: "Password is too short", traceId: "t", ...refusal }, 400)
+        : fetcher(input, init);
+    }) as typeof fetch;
+    const client = createClient(answered);
+    await client.login("biel.roca@example.test", "secret-password");
+    window.history.replaceState(null, "", "/set-password");
+    // The app's own namespaces (`main.tsx`): «common» holds the password texts.
+    const i18n = await createIdI18n({
+      branding: { defaultLocale: locale, locales: ["ca", "es", "en"] },
+      browserLanguages: [locale],
+      initialNamespaces: ["common", "errors", "id"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <SessionProvider client={client}>
+          <App authClient={client} navigate={vi.fn()} />
+        </SessionProvider>
+      </I18nextProvider>,
+    );
+    const form = (await screen.findByRole("heading", { name: /Contrase|Password/u })).closest(
+      "main",
+    );
+    if (form === null) throw new TypeError("Expected the password page");
+    const fields = form.querySelectorAll<HTMLInputElement>('input[autocomplete$="password"]');
+    for (const field of fields) {
+      fireEvent.change(field, { target: { value: "short-pass1" } });
+    }
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (submit === null) throw new TypeError("Expected the password submit");
+    fireEvent.click(submit);
+    return screen.findByRole("alert");
+  }
+
+  it.each([
+    ["ca", "La contrasenya ha de tenir com a mínim 12 caràcters."],
+    ["es", "La contraseña debe tener como mínimo 12 caracteres."],
+    ["en", "The password must be at least 12 characters long."],
+  ] as const)("a staff account's refusal shows its 12 characters (%s)", async (locale, text) => {
+    expect(
+      await submitPassword({ code: "PASSWORD_TOO_SHORT", details: { minLength: 12 } }, locale),
+    ).toHaveTextContent(text);
+  });
+
+  it("a refusal without the minimum keeps the general message", async () => {
+    expect(await submitPassword({ code: "PASSWORD_TOO_SHORT", details: {} })).toHaveTextContent(
+      "La contrasenya és massa curta.",
+    );
+  });
+});

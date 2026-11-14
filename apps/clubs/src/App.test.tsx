@@ -23,7 +23,7 @@ import {
 import { LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -3311,5 +3311,73 @@ it("T-01-08 WEB-01: with the old recovery-only flags, 01 sends RESET from the re
   );
   await waitFor(() => {
     expect(request).toHaveBeenCalledWith("laura@example.test", "LOGIN");
+  });
+});
+
+describe("AUTH-01 (S01 R-01-05 and R-01-18, decision of 13 Nov 2026)", () => {
+  afterEach(() => {
+    window.history.pushState(null, "", "/");
+  });
+
+  async function changePassword(value: string) {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    fireEvent.click(await screen.findByRole("button", { name: "Canvia la contrasenya" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia la contrasenya" });
+    fireEvent.change(within(dialog).getByLabelText("contrasenya actual"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("nova contrasenya"), { target: { value } });
+    fireEvent.change(within(dialog).getByLabelText("repeteix-la"), { target: { value } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "DESA LA CONTRASENYA" }));
+    return within(dialog).findByRole("alert");
+  }
+
+  it("a member's password shorter than 8 is refused with the minimum the api applied", async () => {
+    mockScenario("member");
+    expect(await changePassword("duna26!")).toHaveTextContent(
+      "La contrasenya ha de tenir com a mínim 8 caràcters.",
+    );
+  });
+
+  it("a staff account's password is refused under 12 with that minimum", async () => {
+    mockScenario("member");
+    // As the api answers an account with ADMIN or INSTRUCTOR in a club (R-01-05).
+    server.use(
+      http.put("*/api/v1/me/password", () =>
+        HttpResponse.json(
+          {
+            code: "PASSWORD_TOO_SHORT",
+            details: { minLength: 12 },
+            message: "Password is too short",
+            traceId: "t",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    expect(await changePassword("duna2026!")).toHaveTextContent(
+      "La contrasenya ha de tenir com a mínim 12 caràcters.",
+    );
+  });
+
+  it("the member app answers the api's request for a recent sign-in with «Confirma que ets tu»", async () => {
+    mockScenario("admin");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    let confirmed: Promise<boolean> | undefined;
+    act(() => {
+      confirmed = client.requestRecentLogin();
+    });
+    const dialog = await screen.findByRole("dialog", { name: "Confirma que ets tu" });
+    fireEvent.change(within(dialog).getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    await expect(confirmed).resolves.toBe(true);
   });
 });

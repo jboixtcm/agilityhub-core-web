@@ -124,7 +124,8 @@
   },
   "password": {
     "show": "Show password",
-    "hide": "Hide password"
+    "hide": "Hide password",
+    "tooShort": "The password must be at least {minLength} characters long."
   },
   "recovery": {
     "title": "Check your email",
