@@ -16,6 +16,8 @@
   },
   "unsubscribe": {
     "title": "Deixar de rebre aquests comunicats",
+    "intro": "Deixaràs de rebre els comunicats del club per correu.",
+    "confirm": "Deixa de rebre'ls",
     "working": "Un moment…",
     "done": "Ja no rebràs els comunicats del club per correu.",
     "invalid": "Aquest enllaç ja no és vàlid.",

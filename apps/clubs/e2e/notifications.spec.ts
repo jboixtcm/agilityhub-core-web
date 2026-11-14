@@ -397,7 +397,13 @@ test("E7-W02 step 10 the e-mail unsubscribe link turns the club's announcements 
 }) => {
   await prepare(page, "member");
   await page.goto(`${baseUrl}/comunicats/baixa?t=mock-unsubscribe-valid`);
+  // COMM-08: the page asks before it unsubscribes.
+  await expect(
+    page.getByText("Deixaràs de rebre els comunicats del club per correu."),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Deixa de rebre'ls" }).click();
   await expect(page.getByText("Ja no rebràs els comunicats del club per correu.")).toBeVisible();
   await page.goto(`${baseUrl}/comunicats/baixa?t=mock-unsubscribe-expired`);
+  await page.getByRole("button", { name: "Deixa de rebre'ls" }).click();
   await expect(page.getByText("Aquest enllaç ja no és vàlid.")).toBeVisible();
 });
