@@ -74,7 +74,16 @@
     "undoingSubmission": "Desfent…",
     "collectionDate": "Data de cobrament",
     "collectionDateHelp": "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
-    "collectionDateNotBusinessDay": "El {date} no és un dia hàbil bancari (TARGET): el següent és el {next}."
+    "collectionDateNotBusinessDay": "El {date} no és un dia hàbil bancari (TARGET): el següent és el {next}.",
+    "comparison": "Respecte del mes anterior ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
+    "comparisonAmount": "Respecte del mes anterior ({previousMonth}: {previousTotal}): {difference}.",
+    "comparisonNone": "No hi ha cap mes anterior per comparar.",
+    "comparisonMissing": "Aquesta simulació no compara el total amb el del mes anterior.",
+    "secondTitle": "Segona confirmació",
+    "secondBody": "El total d'aquest mes canvia un {differencePercent} respecte del mes anterior ({previousMonth}). El club demana una segona confirmació quan la diferència passa del {thresholdPercent}. Vols generar els rebuts igualment?",
+    "secondBodyNone": "No hi ha cap total del mes anterior per comparar-hi el d'aquest mes. Vols generar els rebuts igualment?",
+    "secondBodyMissing": "Aquesta simulació no compara el total amb el del mes anterior. Vols generar els rebuts igualment?",
+    "secondConfirm": "Sí, genera els rebuts"
   },
   "simulation": {
     "incidentsTitle": "Pas 1 — Simulació: incidències primer",

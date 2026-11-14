@@ -560,6 +560,7 @@ function billingPeriod(period: string): BillingPeriod {
         : {
             at: simulation.at,
             cashMembers: simulation.cashMembers,
+            ...(simulation.comparison === undefined ? {} : { comparison: simulation.comparison }),
             id: simulation.id,
             incidents: simulation.incidents,
             kpis: simulation.kpis,

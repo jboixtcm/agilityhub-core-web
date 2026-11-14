@@ -413,6 +413,10 @@
       "upfrontCutoffDay": {
         "help": "Deadline for requesting a registration for the following month.",
         "label": "Following-month registration deadline"
+      },
+      "totalDifferenceConfirmPercent": {
+        "help": "If the month's total changes by more than this percentage from the previous month, generating the receipts asks for a second confirmation; with 0, any difference does.",
+        "label": "Difference that asks for a second confirmation"
       }
     },
     "bookings": {

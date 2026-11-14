@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { createApiClient } from "@agilityhub/api-client";
+import { type components, createApiClient } from "@agilityhub/api-client";
 import {
   BILLING_MOCK_NOW,
   billingState,
+  handlers,
   mockScenario,
   resetBillingMockState,
   type MockScenario,
@@ -14,7 +15,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n, loadNamespace, type Locale } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { delay, http, HttpResponse } from "msw";
+import { delay, getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -144,6 +145,14 @@ async function renderPage({
     });
   }
   return { onNavigate };
+}
+
+/**
+ * SEPA-10 (R-12-11): a month whose total cannot be compared with a previous run (the mock worlds
+ * without one) or differs from it by more than the threshold asks a second, explicit confirmation.
+ */
+async function confirmTwice(name = "Sí, genera els rebuts") {
+  fireEvent.click(await screen.findByRole("button", { name }));
 }
 
 function requests(method: string, path: string) {
@@ -376,6 +385,7 @@ describe("T-12-25 the strong confirmation and the generation (R-12-11, R-12-06)"
     fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     // The catalog's text of the api's code (errors:INTERNAL_ERROR), inside the modal.
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "S'ha produït un error inesperat.",
@@ -454,6 +464,7 @@ describe("T-12-25 the strong confirmation and the generation (R-12-11, R-12-06)"
     fireEvent.click(await screen.findByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "Hi ha hagut canvis des de l'última simulació. Torna a simular el mes.",
     );
@@ -466,6 +477,7 @@ describe("T-12-25 the strong confirmation and the generation (R-12-11, R-12-06)"
     fireEvent.click(
       within(await screen.findByRole("dialog")).getByRole("button", { name: "Genera" }),
     );
+    await confirmTwice();
     expect(await screen.findByText("168 rebuts generats")).toBeVisible();
   });
 
@@ -480,6 +492,7 @@ describe("T-12-25 the strong confirmation and the generation (R-12-11, R-12-06)"
     fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "La data de cobrament 01/09/2026 és massa propera: la primera possible és 02/09/2026.",
     );
@@ -980,6 +993,7 @@ describe("T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R
     fireEvent.click(
       within(await screen.findByRole("dialog")).getByRole("button", { name: "Genera" }),
     );
+    await confirmTwice();
     expect(await screen.findByText("168 rebuts generats")).toBeVisible();
     expect(
       await within(screen.getByRole("group", { name: "Estat dels rebuts" })).findByRole("button", {
@@ -1106,6 +1120,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     fireEvent.click(await screen.findByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     const again = await within(dialog).findByRole("button", { name: "Simula de nou" });
     fireEvent.click(again);
     await waitFor(() => {
@@ -1791,6 +1806,7 @@ describe("E8-W01 second review (01-10): the manual receipt's member and errors, 
     fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     const earliest = await within(dialog).findByRole("button", {
       name: "Genera amb cobrament el 02/09/2026",
     });
@@ -1835,6 +1851,7 @@ describe("E8-W01 second review (01-10): the manual receipt's member and errors, 
     fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     fireEvent.click(
       await within(dialog).findByRole("button", {
         name: "Genera amb cobrament el 02/09/2026",
@@ -2175,6 +2192,7 @@ describe("E11-W06 W9 (S12 §6, INC-68, E138): 409 PRICE_OVERLAP on the simulatio
     fireEvent.click(await screen.findByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
 
     const alert = await within(dialog).findByRole("alert");
     await waitFor(() => {
@@ -2657,6 +2675,7 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
       "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
     );
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
     const runs = requests("POST", "/billing/runs");
     expect(runs).toHaveLength(1);
@@ -2669,6 +2688,7 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
       target: { value: "2026-09-04" },
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
     expect(requests("POST", "/billing/runs")[0]?.body).toMatchObject({
       collectionDate: "2026-09-04",
@@ -2681,11 +2701,15 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
     const field = within(dialog).getByLabelText("Data de cobrament");
     fireEvent.change(field, { target: { value: "2026-09-05" } });
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     const offer = await within(dialog).findByRole("button", {
       name: "Genera amb cobrament el 07/09/2026",
     });
-    expect(field).toHaveAttribute("aria-invalid", "true");
-    expect(field).toHaveAccessibleDescription(
+    // The second step replaced the first one meanwhile: the field is drawn again, with its value.
+    const refused = within(dialog).getByLabelText("Data de cobrament");
+    expect(refused).toHaveValue("2026-09-05");
+    expect(refused).toHaveAttribute("aria-invalid", "true");
+    expect(refused).toHaveAccessibleDescription(
       expect.stringContaining(
         "El 05/09/2026 no és un dia hàbil bancari (TARGET): el següent és el 07/09/2026.",
       ) as string,
@@ -2707,9 +2731,11 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
     const field = within(dialog).getByLabelText("Data de cobrament");
     fireEvent.change(field, { target: { value: "2026-12-25" } });
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await confirmTwice();
     await within(dialog).findByRole("button", { name: "Genera amb cobrament el 28/12/2026" });
-    fireEvent.change(field, { target: { value: "2026-09-03" } });
-    expect(field).not.toHaveAttribute("aria-invalid");
+    const refused = within(dialog).getByLabelText("Data de cobrament");
+    fireEvent.change(refused, { target: { value: "2026-09-03" } });
+    expect(refused).not.toHaveAttribute("aria-invalid");
     expect(within(dialog).queryByRole("alert")).toBeNull();
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
     expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
@@ -2723,6 +2749,7 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
     const field = within(dialog).getByLabelText("Collection date");
     fireEvent.change(field, { target: { value: "2026-09-06" } });
     fireEvent.click(within(dialog).getByRole("button", { name: "Generate" }));
+    await confirmTwice("Yes, generate the receipts");
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
       "is not a TARGET banking business day: the next one is",
     );
@@ -2733,5 +2760,152 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
     fireEvent.click(await screen.findByRole("button", { name: "2 · GENERA ELS REBUTS" }));
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).queryByLabelText("Data de cobrament")).toBeNull();
+  });
+});
+
+describe("SEPA-10 (S12 R-12-11, decision of 13 Nov 2026): the total against the previous month and a second confirmation", () => {
+  type SimulationComparison = components["schemas"]["SimulationComparison"];
+  const eur = (amountMinor: number) => ({ amountMinor, currency: "EUR" });
+  /** The api's figures for October: +25 % on September's 5.184,00 €, more than 20 %. */
+  const above: SimulationComparison = {
+    difference: eur(129600),
+    differencePercent: 25,
+    previousPeriod: "2026-09",
+    previousTotal: eur(518400),
+    secondConfirmationRequired: true,
+    thresholdPercent: 20,
+  };
+
+  /** D6's month as the api answers it, with this `simulation.comparison` (`null`: absent). */
+  function serveComparison(comparison: SimulationComparison | null) {
+    server.use(
+      http.get("*/api/v1/billing/periods/:period", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected the month");
+        const month = (await original.json()) as components["schemas"]["BillingPeriod"];
+        if (month.simulation === null || month.simulation === undefined) {
+          return HttpResponse.json(month);
+        }
+        const simulation = { ...month.simulation };
+        delete simulation.comparison;
+        return HttpResponse.json({
+          ...month,
+          simulation: comparison === null ? simulation : { ...simulation, comparison },
+        });
+      }),
+    );
+  }
+
+  async function openOctober(locale: Locale = "ca") {
+    await renderPage({ locale, search: "?mes=2026-10" });
+    const [simulate] = screen.getAllByRole("button", { name: /^1 · / });
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+    const generate = screen.getByRole("button", { name: /^2 · / });
+    await waitFor(() => {
+      expect(generate).toBeEnabled();
+    });
+    fireEvent.click(generate);
+    return screen.findByRole("dialog");
+  }
+
+  it("shows the difference with the previous month and generates at once when the api does not ask twice", async () => {
+    const dialog = await openOctober();
+    expect(
+      within(dialog).getByText(
+        "Respecte del mes anterior (Setembre 2026: 6.480,00 €): 0,00 € (0,0 %).",
+      ),
+    ).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    expect(await screen.findByText("168 rebuts generats")).toBeVisible();
+    expect(screen.queryByText("Segona confirmació")).toBeNull();
+    expect(requests("POST", "/billing/runs")).toHaveLength(1);
+  });
+
+  it("above the threshold asks a second, explicit confirmation before generating", async () => {
+    serveComparison(above);
+    const dialog = await openOctober();
+    expect(
+      within(dialog).getByText(
+        "Respecte del mes anterior (Setembre 2026: 5.184,00 €): +1.296,00 € (+25,0 %).",
+      ),
+    ).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    const heading = await within(dialog).findByRole("heading", { name: "Segona confirmació" });
+    await waitFor(() => {
+      expect(heading).toHaveFocus();
+    });
+    expect(dialog).toHaveTextContent(
+      "El total d'aquest mes canvia un +25,0 % respecte del mes anterior (Setembre 2026). El club demana una segona confirmació quan la diferència passa del 20 %. Vols generar els rebuts igualment?",
+    );
+    expect(within(dialog).queryByRole("button", { name: "Genera" })).toBeNull();
+    expect(requests("POST", "/billing/runs")).toHaveLength(0);
+    const confirm = within(dialog).getByRole("button", { name: "Sí, genera els rebuts" });
+    expect(confirm).not.toHaveFocus();
+    fireEvent.click(confirm);
+    expect(await screen.findByText("168 rebuts generats")).toBeVisible();
+    expect(requests("POST", "/billing/runs")).toHaveLength(1);
+  });
+
+  it("[Cancel·la] on the second step generates nothing", async () => {
+    serveComparison(above);
+    const dialog = await openOctober();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await within(dialog).findByRole("heading", { name: "Segona confirmació" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    expect(requests("POST", "/billing/runs")).toHaveLength(0);
+  });
+
+  it("without a previous month to compare with, says so and asks twice", async () => {
+    await renderPage({ scenario: "billingStale" });
+    const [simulate] = screen.getAllByRole("button", { name: "1 · SIMULA EL MES" });
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+    await screen.findByText("Mes simulat.");
+    fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText("No hi ha cap mes anterior per comparar.")).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    expect(
+      await within(dialog).findByText(
+        "No hi ha cap total del mes anterior per comparar-hi el d'aquest mes. Vols generar els rebuts igualment?",
+      ),
+    ).toBeVisible();
+    expect(requests("POST", "/billing/runs")).toHaveLength(0);
+  });
+
+  it("a simulation without the comparison (stored before it) says so and asks twice", async () => {
+    serveComparison(null);
+    const dialog = await openOctober();
+    expect(
+      within(dialog).getByText("Aquesta simulació no compara el total amb el del mes anterior."),
+    ).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    expect(
+      await within(dialog).findByText(
+        "Aquesta simulació no compara el total amb el del mes anterior. Vols generar els rebuts igualment?",
+      ),
+    ).toBeVisible();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Sí, genera els rebuts" }));
+    expect(await screen.findByText("168 rebuts generats")).toBeVisible();
+  });
+
+  it("reads the comparison and the second step in en", async () => {
+    serveComparison(above);
+    const dialog = await openOctober("en");
+    expect(dialog).toHaveTextContent(
+      "Compared with the previous month (September 2026: €5,184.00): +€1,296.00 (+25.0%).",
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "Generate" }));
+    await within(dialog).findByRole("heading", { name: "Second confirmation" });
+    expect(dialog).toHaveTextContent(
+      "This month's total changes by +25.0% compared with the previous month (September 2026). The club asks for a second confirmation when the difference exceeds 20%. Do you want to generate the receipts anyway?",
+    );
+    expect(
+      within(dialog).getByRole("button", { name: "Yes, generate the receipts" }),
+    ).toBeEnabled();
   });
 });

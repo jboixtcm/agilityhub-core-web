@@ -413,6 +413,10 @@
       "upfrontCutoffDay": {
         "help": "Dia límit per demanar una alta per al mes següent.",
         "label": "Dia límit d'altes del mes següent"
+      },
+      "totalDifferenceConfirmPercent": {
+        "help": "Si el total del mes canvia més d'aquest percentatge respecte del mes anterior, generar els rebuts demana una segona confirmació; amb 0, qualsevol diferència la demana.",
+        "label": "Diferència per demanar una segona confirmació"
       }
     },
     "bookings": {

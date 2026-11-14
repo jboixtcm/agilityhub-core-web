@@ -74,7 +74,16 @@
     "undoingSubmission": "Deshaciendo…",
     "collectionDate": "Fecha de cobro",
     "collectionDateHelp": "Un día hábil bancario (TARGET), como mínimo dos días hábiles después de hoy.",
-    "collectionDateNotBusinessDay": "El {date} no es un día hábil bancario (TARGET): el siguiente es el {next}."
+    "collectionDateNotBusinessDay": "El {date} no es un día hábil bancario (TARGET): el siguiente es el {next}.",
+    "comparison": "Respecto al mes anterior ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
+    "comparisonAmount": "Respecto al mes anterior ({previousMonth}: {previousTotal}): {difference}.",
+    "comparisonNone": "No hay ningún mes anterior para comparar.",
+    "comparisonMissing": "Esta simulación no compara el total con el del mes anterior.",
+    "secondTitle": "Segunda confirmación",
+    "secondBody": "El total de este mes cambia un {differencePercent} respecto al mes anterior ({previousMonth}). El club pide una segunda confirmación cuando la diferencia supera el {thresholdPercent}. ¿Quieres generar los recibos igualmente?",
+    "secondBodyNone": "No hay ningún total del mes anterior con el que comparar el de este mes. ¿Quieres generar los recibos igualmente?",
+    "secondBodyMissing": "Esta simulación no compara el total con el del mes anterior. ¿Quieres generar los recibos igualmente?",
+    "secondConfirm": "Sí, generar los recibos"
   },
   "simulation": {
     "incidentsTitle": "Paso 1 — Simulación: incidencias primero",

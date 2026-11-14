@@ -182,6 +182,12 @@ const initialParameters: Parameters = {
           constraints: { max: 40, min: 0 },
           module: "BILLING",
         }),
+        // SEPA-10: D6 asks a second confirmation when the month's total differs from the previous
+        // month's by more than this percentage (CATALEG_PARAMETRES, default 20, 0–100).
+        parameter("billing.totalDifferenceConfirmPercent", "billing", "int", 20, {
+          constraints: { max: 100, min: 0 },
+          module: "BILLING",
+        }),
         parameter("billing.stripeMaxAttempts", "billing", "int", 3, {
           constraints: { min: 1 },
           module: "BILLING",

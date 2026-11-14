@@ -176,6 +176,49 @@ describe("T-02-13 D11 parameter rows", () => {
   });
 });
 
+describe("SEPA-10 (decision of 13 Nov 2026): D11 «Quotes, packs i remesa»", () => {
+  it("shows billing.totalDifferenceConfirmPercent with its label, help and value (0–100)", async () => {
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ParameterSettings
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            levels={[]}
+            modules={branding.modules}
+            onModulesChange={() => undefined}
+            plans={[]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+
+    const heading = await screen.findByRole("heading", { name: "Quotes, packs i remesa" });
+    const card = heading.closest(".settings-card");
+    if (!(card instanceof HTMLElement))
+      throw new TypeError("Missing the «Quotes, packs i remesa» card");
+    const row = within(card).getByRole("button", {
+      name: "Diferència per demanar una segona confirmació20",
+    });
+    fireEvent.click(row);
+    expect(
+      await screen.findByText(
+        "Si el total del mes canvia més d'aquest percentatge respecte del mes anterior, generar els rebuts demana una segona confirmació; amb 0, qualsevol diferència la demana.",
+      ),
+    ).toBeVisible();
+    const field = await screen.findByRole("spinbutton", {
+      name: "Diferència per demanar una segona confirmació",
+    });
+    expect(field).toHaveAttribute("min", "0");
+    expect(field).toHaveAttribute("max", "100");
+  });
+});
+
 describe("T-02-13 D11 «Restableix el valor de producte» (WEB-06, decision of 13 Nov 2026)", () => {
   const key = "bookings.lateCancelThresholdMinutes";
   const label = "Llindar d'anul·lació tardana («classe feta»)";

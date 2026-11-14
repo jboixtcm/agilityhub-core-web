@@ -74,7 +74,16 @@
     "undoingSubmission": "Undoing…",
     "collectionDate": "Collection date",
     "collectionDateHelp": "A TARGET banking business day, at least two business days after today.",
-    "collectionDateNotBusinessDay": "{date} is not a TARGET banking business day: the next one is {next}."
+    "collectionDateNotBusinessDay": "{date} is not a TARGET banking business day: the next one is {next}.",
+    "comparison": "Compared with the previous month ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
+    "comparisonAmount": "Compared with the previous month ({previousMonth}: {previousTotal}): {difference}.",
+    "comparisonNone": "There is no previous month to compare with.",
+    "comparisonMissing": "This simulation does not compare the total with the previous month's.",
+    "secondTitle": "Second confirmation",
+    "secondBody": "This month's total changes by {differencePercent} compared with the previous month ({previousMonth}). The club asks for a second confirmation when the difference exceeds {thresholdPercent}. Do you want to generate the receipts anyway?",
+    "secondBodyNone": "There is no total for the previous month to compare this month's with. Do you want to generate the receipts anyway?",
+    "secondBodyMissing": "This simulation does not compare the total with the previous month's. Do you want to generate the receipts anyway?",
+    "secondConfirm": "Yes, generate the receipts"
   },
   "simulation": {
     "incidentsTitle": "Step 1 — Simulation: issues first",

@@ -20,7 +20,7 @@ import {
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { useListExport } from "../audit/useListExport";
@@ -118,6 +118,16 @@ export function GenerateModal({
       : undefined;
   const [simulating, setSimulating] = useState(false);
   const [simulateError, setSimulateError] = useState<ReactNode>();
+  // SEPA-10 (R-12-11): the simulated total against the previous month's run, and the second,
+  // explicit confirmation the api asks for (or when the simulation predates the comparison).
+  const comparison = simulation.comparison;
+  const needsSecondConfirmation = comparison?.secondConfirmationRequired !== false;
+  const [secondStep, setSecondStep] = useState(false);
+  const [confirmedTwice, setConfirmedTwice] = useState(false);
+  const secondHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (secondStep) secondHeading.current?.focus();
+  }, [secondStep]);
   // R-12-06: the included members' next receipt moves to that day of the following month.
   const nextDay = useNextInvoiceDay(client);
   const nextPeriod = shiftPeriod(period, 1);
@@ -183,6 +193,52 @@ export function GenerateModal({
       : undefined;
   const retryCollectionDate = earliest ?? nextBusinessDay ?? acceptedCollectionDate;
 
+  // SEPA-10: signed figures in the admin's language (`+96,00 €`, `+8,2 %`), the threshold whole.
+  const percent = (value: number, signed: boolean) =>
+    new Intl.NumberFormat(locale, {
+      maximumFractionDigits: signed ? 1 : 0,
+      minimumFractionDigits: signed ? 1 : 0,
+      signDisplay: signed ? "exceptZero" : "auto",
+      style: "percent",
+    }).format(value / 100);
+  const previousTotal = comparison?.previousTotal ?? undefined;
+  const differencePercent = comparison?.differencePercent ?? undefined;
+  const previousMonth =
+    comparison === undefined ? "" : formats.formatMonthTitle(comparison.previousPeriod);
+  const difference = comparison?.difference ?? undefined;
+  const comparisonFigures =
+    previousTotal === undefined
+      ? undefined
+      : {
+          difference:
+            difference === undefined
+              ? ""
+              : `${difference.amountMinor > 0 ? "+" : ""}${formatMoney(difference, locale)}`,
+          previousMonth,
+          previousTotal: formatMoney(previousTotal, locale),
+        };
+  const comparisonLine =
+    comparison === undefined
+      ? t("admin-billing:confirm.comparisonMissing")
+      : comparisonFigures === undefined
+        ? t("admin-billing:confirm.comparisonNone")
+        : differencePercent === undefined
+          ? t("admin-billing:confirm.comparisonAmount", comparisonFigures)
+          : t("admin-billing:confirm.comparison", {
+              ...comparisonFigures,
+              differencePercent: percent(differencePercent, true),
+            });
+  const secondBody =
+    comparison === undefined
+      ? t("admin-billing:confirm.secondBodyMissing")
+      : previousTotal === undefined || differencePercent === undefined
+        ? t("admin-billing:confirm.secondBodyNone")
+        : t("admin-billing:confirm.secondBody", {
+            differencePercent: percent(differencePercent, true),
+            previousMonth,
+            thresholdPercent: percent(comparison.thresholdPercent, false),
+          });
+
   return (
     <Modal
       closeLabel={t("admin-billing:actions.close")}
@@ -207,6 +263,28 @@ export function GenerateModal({
             </Button>
           </Actions>
         </>
+      ) : secondStep ? (
+        // SEPA-10: the second, explicit step: its own button, the focus on its heading.
+        <>
+          <h3 className="billing-modal__step" ref={secondHeading} tabIndex={-1}>
+            {t("admin-billing:confirm.secondTitle")}
+          </h3>
+          <p className="billing-modal__body">{secondBody}</p>
+          <Actions>
+            <Button
+              onClick={() => {
+                setSecondStep(false);
+                setConfirmedTwice(true);
+                void generate();
+              }}
+            >
+              {t("admin-billing:confirm.secondConfirm")}
+            </Button>
+            <Button onClick={onClose} variant="ghost">
+              {t("admin-billing:actions.cancel")}
+            </Button>
+          </Actions>
+        </>
       ) : (
         <>
           {nextDay === undefined ? (
@@ -223,6 +301,7 @@ export function GenerateModal({
               })}
             </p>
           )}
+          <p className="billing-modal__body billing-modal__comparison">{comparisonLine}</p>
           {sepaReceipts ? (
             <FormField
               {...(notBusinessDay
@@ -286,7 +365,10 @@ export function GenerateModal({
                 disabled={nextDay === undefined}
                 loading={pending}
                 loadingLabel={t("admin-billing:confirm.generating")}
-                onClick={() => void generate()}
+                onClick={() => {
+                  if (needsSecondConfirmation && !confirmedTwice) setSecondStep(true);
+                  else void generate();
+                }}
               >
                 {t("admin-billing:confirm.generate")}
               </Button>

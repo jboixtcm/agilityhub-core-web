@@ -26,6 +26,7 @@ type PeriodRemittance = components["schemas"]["PeriodRemittance"];
 type Remittance = components["schemas"]["Remittance"];
 type RemittanceListItem = components["schemas"]["RemittanceListItem"];
 type RollbackBlocker = components["schemas"]["RollbackBlocker"];
+type SimulationComparison = components["schemas"]["SimulationComparison"];
 type SimulationKpis = components["schemas"]["SimulationKpis"];
 type StripeEventListItem = components["schemas"]["StripeEventListItem"];
 
@@ -445,6 +446,44 @@ export function simulationKpis(world: BillingWorld, period: string): SimulationK
   };
 }
 
+/** `billing.totalDifferenceConfirmPercent` (CATALEG_PARAMETRES default, SEPA-10). */
+export const TOTAL_DIFFERENCE_CONFIRM_PERCENT = 20;
+
+/**
+ * SEPA-10 (R-12-11): the simulated total against the previous month's live run, over all its
+ * providers, as the api's `TotalComparison`: a second confirmation when the difference, up or down,
+ * is more than the threshold of the previous total, or when there is no positive previous total.
+ */
+function simulationComparison(
+  world: BillingWorld,
+  period: string,
+  total: Money,
+): SimulationComparison {
+  const previousPeriod = shiftPeriod(period, -1);
+  const previous = world.runs.find(
+    (stored) => stored.run.period === previousPeriod && stored.run.status !== "ROLLED_BACK",
+  );
+  const thresholdPercent = TOTAL_DIFFERENCE_CONFIRM_PERCENT;
+  if (previous === undefined) {
+    return { previousPeriod, secondConfirmationRequired: true, thresholdPercent };
+  }
+  const previousMinor = Object.values(previous.run.byProvider).reduce(
+    (sum, totals) => sum + totals.total.amountMinor,
+    0,
+  );
+  const differenceMinor = total.amountMinor - previousMinor;
+  return {
+    difference: eur(differenceMinor),
+    differencePercent:
+      previousMinor > 0 ? Math.round((differenceMinor * 1000) / previousMinor) / 10 : null,
+    previousPeriod,
+    previousTotal: eur(previousMinor),
+    secondConfirmationRequired:
+      previousMinor <= 0 || Math.abs(differenceMinor) * 100 > thresholdPercent * previousMinor,
+    thresholdPercent,
+  };
+}
+
 export function buildSimulation(
   world: BillingWorld,
   period: string,
@@ -468,6 +507,7 @@ export function buildSimulation(
     id: uuid(5, world.sequence),
     incidents: [...incidentsOf(world.variant)],
     invoicesPreview: preview,
+    comparison: simulationComparison(world, period, simulationKpis(world, period).total),
     // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1, moved to the next
     // TARGET business day, SEPA-05), null without SEPA.
     kpis: {

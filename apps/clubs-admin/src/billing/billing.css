@@ -330,6 +330,16 @@
   font-size: 0.8rem;
 }
 
+/* SEPA-10: the comparison with the previous month and the second confirmation's heading. */
+.billing-modal__comparison {
+  color: var(--ah-color-text-muted);
+}
+
+.billing-modal__step {
+  margin: 0 0 var(--ah-space-2);
+  font-size: 1rem;
+}
+
 .billing-modal__list {
   margin: 0 0 var(--ah-space-3);
   padding-left: var(--ah-space-5);
