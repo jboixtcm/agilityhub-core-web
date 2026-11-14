@@ -2207,6 +2207,58 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
     expect(complete.mock.calls[0]?.[0]).not.toHaveProperty("imageConsent");
   });
 
+  it("PRIV-05: a grant the member's own account did not give leaves the image box unticked and keeps it", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const state = await client.getOnboarding();
+    // The api answers null for a grant set by the migration, by staff or by a public sign-up.
+    vi.spyOn(client, "getOnboarding").mockResolvedValue({ ...state, imageConsent: null });
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    expect(
+      await screen.findByRole("checkbox", { name: "Autoritzo l’ús de la meva imatge (opcional)" }),
+    ).not.toBeChecked();
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    // Nothing is sent for the untouched box, so the stored value is kept.
+    expect(complete.mock.calls[0]?.[0]).not.toHaveProperty("imageConsent");
+  });
+
+  it("PRIV-05: the member's own tick of an unticked box is sent as their grant", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const state = await client.getOnboarding();
+    vi.spyOn(client, "getOnboarding").mockResolvedValue({ ...state, imageConsent: null });
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    const image = await screen.findByRole("checkbox", {
+      name: "Autoritzo l’ús de la meva imatge (opcional)",
+    });
+    expect(image).not.toBeChecked();
+    fireEvent.click(image);
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    expect(complete.mock.calls[0]?.[0]).toMatchObject({ imageConsent: true });
+  });
+
   it("completes pending profile data without requesting an already accepted policy", async () => {
     mockScenario("onboarding");
     const client = authClient();
