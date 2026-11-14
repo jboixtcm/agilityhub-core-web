@@ -724,7 +724,7 @@ export interface paths {
         };
         /**
          * exportAccounting
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-26 «Exporta per a comptabilitat» (S14 engine, listKey = accounting): one row per invoice line (number, date, month, member number, name, holder's tax id, concept, base, tax %, tax, total, method, status, collection date, remittance, mandate or PaymentIntent reference), UTF-8 with BOM, `;`, decimals per the admin's locale. 200 file or 202 ExportAccepted for a large one; DATA_EXPORTED audit. format defaults to billing.accountingExportFormat. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-26 «Exporta per a comptabilitat» (S14 engine, listKey = accounting): one row per invoice line (number, date, month, member number, name, holder's tax id, concept, base, tax %, tax, total, method, status, collection date, remittance, mandate or PaymentIntent reference, then — SEPA-09 — the status of the receipt's last collection attempt and its return date failedAt), UTF-8 with BOM, `;`, decimals per the admin's locale. 200 file or 202 ExportAccepted for a large one; DATA_EXPORTED audit. format defaults to billing.accountingExportFormat. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["exportAccounting"];
         put?: never;
@@ -744,7 +744,7 @@ export interface paths {
         };
         /**
          * billingPeriod
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's month (`?mes=YYYY-MM`): its last simulation (step 1), its live run — else its last rolled-back one — with rollbackable and rollbackBlockers computed now (R-12-14), its remittance and the chip counts (all, pending = PENDING, remitted = COLLECTING, paid, failed). A month is not a stored resource: every club reads its own, null parts until they exist. period not YYYY-MM → 400 VALIDATION_ERROR. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's month (`?mes=YYYY-MM`): its last simulation (step 1), its live run — else its last rolled-back one — with rollbackable and rollbackBlockers computed now (R-12-14), its remittance and the chip counts (all, pending = PENDING, remitted = COLLECTING, paid, failed). A month is not a stored resource: every club reads its own, null parts until they exist; the simulation carries its comparison with the previous month's run (SEPA-10). period not YYYY-MM → 400 VALIDATION_ERROR. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["billingPeriod"];
         put?: never;
@@ -766,7 +766,7 @@ export interface paths {
         put?: never;
         /**
          * createBillingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices, billing.* parameters and the club's configuration, with the same unbilled PendingCharges and waiting includeInNextRun receipts (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]), and so are the waiting receipts the simulation listed as incidents (they stay PENDING); the others join the remittance. collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day) and must leave two business days after today → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest}. Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). Two prices of one plan and concept valid on the issue date (INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, nothing written. The same Idempotency-Key answers the same run. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices, billing.* parameters and the club's configuration, with the same unbilled PendingCharges and waiting includeInNextRun receipts (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]), and so are the waiting receipts the simulation listed as incidents (they stay PENDING); the others join the remittance. collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day), moved to the next TARGET business day when that day is not one (a weekend, 1 January, Good Friday, Easter Monday, 1 May, 25 or 26 December; SEPA-05). A date the admin chooses must be a TARGET business day → otherwise 400 VALIDATION_ERROR {field: collectionDate, fieldErrors: [{field: collectionDate, code: NOT_BUSINESS_DAY}], nextBusinessDay}. The date must leave two TARGET business days after today → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest} (earliest is a business day). Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). Two prices of one plan and concept valid on the issue date (INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, nothing written. The same Idempotency-Key answers the same run. D6 calls it after its confirmation, and after a second explicit one when the simulation's comparison.secondConfirmationRequired (SEPA-10); the request does not carry either. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["createBillingRun"];
         delete?: never;
@@ -846,7 +846,7 @@ export interface paths {
         put?: never;
         /**
          * simulateBilling
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. The waiting manual SEPA_DD receipts with includeInNextRun (R-12-19) the run will remit are in the preview (with their invoiceId and displayNumber) and the KPIs; one whose member has left, no longer pays by SEPA_DD, has no account or signed another mandate since is an incident (NO_BANK_ACCOUNT) and is not remitted. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Two prices of one plan and concept valid on the issue date (a legacy twin, INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}: no price is chosen. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. The waiting manual SEPA_DD receipts with includeInNextRun (R-12-19) the run will remit are in the preview (with their invoiceId and displayNumber) and the KPIs; one whose member has left, no longer pays by SEPA_DD, has no account or signed another mandate since is an incident (NO_BANK_ACCOUNT) and is not remitted. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Two prices of one plan and concept valid on the issue date (a legacy twin, INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}: no price is chosen. SEPA-10: comparison holds the total of the previous month's live run (previousTotal, null without one), the difference and its percentage, thresholdPercent (billing.totalDifferenceConfirmPercent) and secondConfirmationRequired — the difference, up or down, is above the threshold or there is nothing to compare with — which D6's generate confirmation uses to ask a second explicit confirmation. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["simulateBilling"];
         delete?: never;
@@ -3805,7 +3805,7 @@ export interface paths {
         get?: never;
         /**
          * Set or change the current account password
-         * @description Account token, never impersonated. R-01-05: current is required only when a password already exists, except once in a session opened by a RESET magic link, within 15 minutes of the link's exchange (ruling E49); a LOGIN link never allows it.
+         * @description Account token, never impersonated. R-01-05: current is required only when a password already exists, except once in a session opened by a RESET magic link, within 15 minutes of the link's exchange (ruling E49); a LOGIN link never allows it. AUTH-01: the new password has at least auth.passwordMinLength characters (code points), and at least 12 for a staff account (ADMIN or INSTRUCTOR in a club, or AGILITYHUB_ADMIN); PASSWORD_TOO_SHORT carries details.minLength, the account's minimum. Existing passwords stay valid.
          */
         put: operations["password"];
         post?: never;
@@ -3972,7 +3972,7 @@ export interface paths {
         };
         /**
          * List members
-         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields. S13 R-13-17 (E8-T01): the ADMIN-only filters leaveSource (MEMBER · ADMIN · PACK_EXPIRED · MIGRATED), inactivityUntil (date; with INACTIVITY) and hasPendingRequest are published; they are evaluated from the tenant-scoped lifecycle documents.
+         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. AUTHZ-02: an INSTRUCTOR lists ACTIVE and PENDING members only (pages, counts and filter values) and never the postal address: no address key, and the city and postalCode columns and filters and the city sort are refused (400 INVALID_FILTER). Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields. S13 R-13-17 (E8-T01): the ADMIN-only filters leaveSource (MEMBER · ADMIN · PACK_EXPIRED · MIGRATED), inactivityUntil (date; with INACTIVITY) and hasPendingRequest are published; they are evaluated from the tenant-scoped lifecycle documents.
          */
         get: operations["listMembers"];
         put?: never;
@@ -4016,7 +4016,7 @@ export interface paths {
         };
         /**
          * Member filter values
-         * @description R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply.
+         * @description R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply (AUTHZ-02: an INSTRUCTOR counts ACTIVE and PENDING members only).
          */
         get: operations["memberFilterValues"];
         put?: never;
@@ -4036,7 +4036,7 @@ export interface paths {
         };
         /**
          * Get member
-         * @description S03 §6, R-03-31. ADMIN: Member; INSTRUCTOR: MemberInstructorView. Other-club resources return NOT_FOUND.
+         * @description S03 §6, R-03-31. ADMIN: Member; INSTRUCTOR: MemberInstructorView, without the postal address; an ex-member (status LEFT or INACTIVE) is NOT_FOUND for an INSTRUCTOR (AUTHZ-02). Other-club resources return NOT_FOUND.
          */
         get: operations["getMember"];
         put?: never;
@@ -4046,7 +4046,7 @@ export interface paths {
         head?: never;
         /**
          * Update member
-         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission. The remarks and internal notes stay the LEFT record's: changing them answers the same 409 (READMISSION_PENDING, INC-39); sending the ones it has is no edit.
+         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission. The remarks and internal notes stay the LEFT record's: changing them answers the same 409 (READMISSION_PENDING, INC-39); sending the ones it has is no edit. AUTH-01: a request carrying paymentMethod (a pending member's bank account) needs a sign-in of the last 15 minutes: 403 RECENT_LOGIN_REQUIRED {maxAgeMinutes} otherwise.
          */
         patch: operations["updateMember"];
         trace?: never;
@@ -5980,7 +5980,7 @@ export interface paths {
         };
         /**
          * remittances
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6 «Remeses»: the club's remittances, universal list (CONVENCIONS_API §4), newest creationAt first, filters period and status; no free-text search (a q → 400 INVALID_FILTER). A row: month, creation date, collection date, invoice count, total, status, fileAvailable (the XML can be downloaded) and submittedAt. A rolled-back remittance stays listed with its file (R-12-14). A club without SEPA_XML has none: an empty page, never an error (R-12-28). Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6 «Remeses»: the club's remittances, universal list (CONVENCIONS_API §4), newest creationAt first, filters period and status; no free-text search (a q → 400 INVALID_FILTER). A row: month, creation date, collection date, invoice count, total, status, fileAvailable (the XML can be downloaded) and submittedAt. A rolled-back remittance stays listed with its file (R-12-14), whose download is named as cancelled (SEPA-06). A club without SEPA_XML has none: an empty page, never an error (R-12-28). Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittances"];
         put?: never;
@@ -6020,7 +6020,7 @@ export interface paths {
         };
         /**
          * remittanceFile
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. [Descarrega l'XML]: a signed URL of the pain.008 file valid for five minutes (also of a ROLLED_BACK one, whose file is kept); its download answers Content-Type application/xml and Content-Disposition attachment; filename="remesa-{period}.xml" (CONVENCIONS_API §5) and authorises itself (no bearer). Issuing the link is the file access, audited DATA_EXPORTED. A remittance without a file → 404. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. [Descarrega l'XML]: a signed URL of the pain.008 file valid for five minutes (also of a ROLLED_BACK one, whose file is kept); its download answers Content-Type application/xml and Content-Disposition attachment; filename="remesa-{period}-{seq}.xml" (CONVENCIONS_API §5), seq being the sequence of the remittance's MsgId ({clubSlug}-{period}-{seq}), so a month generated again after a rollback never reuses a name (SEPA-06); a ROLLED_BACK remittance's is remesa-{period}-{seq}-ANULLADA-NO-PUJAR.xml (cancelled, do not upload it to the bank). fileName is that name. The download authorises itself (no bearer). Issuing the link is the file access, audited DATA_EXPORTED. A remittance without a file → 404. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittanceFile"];
         put?: never;
@@ -6060,7 +6060,7 @@ export interface paths {
         };
         /**
          * downloadRemittanceSpreadsheet
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Excel file with one row per bank debit, from the stored remittance.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Excel file with one row per bank debit, from the stored remittance, named remesa-{period}-{seq}.xlsx as its XML (SEPA-06: seq is the MsgId's; a ROLLED_BACK one's name ends -ANULLADA-NO-PUJAR).
          */
         get: operations["spreadsheet"];
         put?: never;
@@ -7394,7 +7394,7 @@ export interface paths {
         put?: never;
         /**
          * Issue tokens using an OAuth2 or AgilityHub grant
-         * @description ANON with client authentication. Club context comes from the host, never request data. On the console's product host (a platform host other than the ID's, which resolves no club) clubs-admin's password, magic-link, handoff and refresh grants issue a session without club context (platformRoles, no clubId/roles, aud clubs-admin, ah_refresh on that host) to an account holding AGILITYHUB_ADMIN, and 403 PLATFORM_ONLY to any other account. It issues and renews only those sessions: a refresh token or an authorization code bound to a club is 400 VALIDATION_ERROR (oauth2Error invalid_grant) there, never renewed with its club; every grant of any other client there is 404 UNKNOWN_HOST and leaves its link or code unused. Password and magic-link grants issue sessions; refresh tokens rotate on every use. Handoff codes issue a destination session once within 60 seconds. Authorization-code grants support S256 PKCE, scoped claims and confidential clients. COOKIE clients receive ah_refresh (HttpOnly, Secure, SameSite=Strict, host-only, Path=/oauth2/token); refresh_token is omitted from JSON. Cookie refresh requires explicit client_id and a same-host Origin or Referer. BODY clients retain JSON refresh tokens. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
+         * @description ANON with client authentication. Club context comes from the host, never request data. On the console's product host (a platform host other than the ID's, which resolves no club) clubs-admin's password, magic-link, handoff and refresh grants issue a session without club context (platformRoles, no clubId/roles, aud clubs-admin, ah_refresh on that host) to an account holding AGILITYHUB_ADMIN, and 403 PLATFORM_ONLY to any other account. It issues and renews only those sessions: a refresh token or an authorization code bound to a club is 400 VALIDATION_ERROR (oauth2Error invalid_grant) there, never renewed with its club; every grant of any other client there is 404 UNKNOWN_HOST and leaves its link or code unused. Password and magic-link grants issue sessions; refresh tokens rotate on every use. AUTH-01: a clubs-admin session (club back office and console) ends 12 hours after it began, however often it is refreshed: its refresh token and access tokens never outlive that end, and a later refresh is 400 REFRESH_EXPIRED; other clients slide auth.sessionDays. Handoff codes issue a destination session once within 60 seconds. Authorization-code grants support S256 PKCE, scoped claims and confidential clients. COOKIE clients receive ah_refresh (HttpOnly, Secure, SameSite=Strict, host-only, Path=/oauth2/token); refresh_token is omitted from JSON. Cookie refresh requires explicit client_id and a same-host Origin or Referer. BODY clients retain JSON refresh tokens. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
          */
         post: operations["token"];
         delete?: never;
@@ -8189,7 +8189,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "REMITTANCE_SUBMISSION_UNDONE" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "ACCOUNT_EMAIL_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "REMITTANCE_SUBMISSION_UNDONE" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "ACCOUNT_EMAIL_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "SUPPORT_WRITE" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -8326,7 +8326,7 @@ export interface components {
         BillingRunRequest: {
             /**
              * Format: date
-             * @description Default: billing.sepa.collectionDayOfMonth of the billed month (R-12-12)
+             * @description Default: billing.sepa.collectionDayOfMonth of the billed month, moved to the next TARGET business day when it is not one (R-12-12, SEPA-05). A date given must be a TARGET business day and leave two TARGET business days after today
              */
             collectionDate?: string;
             period: string;
@@ -8346,6 +8346,8 @@ export interface components {
             /** Format: date-time */
             at: string;
             cashMembers: components["schemas"]["CashMember"][];
+            /** @description SEPA-10; absent for a simulation stored before it: D6 asks the second confirmation */
+            comparison?: components["schemas"]["SimulationComparison"];
             /** Format: uuid */
             id: string;
             incidents: components["schemas"]["BillingIncident"][];
@@ -12914,9 +12916,8 @@ export interface components {
             /** @description CLASS always; TRAINING with FREE_TRAINING; ACTIVITY with ACTIVITIES */
             types: ("CLASS" | "TRAINING" | "ACTIVITY")[];
         };
-        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason. */
+        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes, booking-block reason and (AUTHZ-02) the postal address; only ACTIVE and PENDING members. */
         MemberInstructorListItem: {
-            address?: components["schemas"]["Address"];
             bookingBlocked?: boolean;
             contactEmails?: components["schemas"]["ContactEmail"][];
             displayStatus?: components["schemas"]["DisplayStatus"];
@@ -12935,9 +12936,8 @@ export interface components {
             /** Format: int64 */
             version?: number;
         };
-        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason. */
+        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes, booking-block reason and (AUTHZ-02) the postal address; only ACTIVE and PENDING members. */
         MemberInstructorView: {
-            address?: components["schemas"]["Address"];
             bookingBlocked: boolean;
             contactEmails: components["schemas"]["ContactEmail"][];
             displayStatus: components["schemas"]["DisplayStatus"];
@@ -13011,6 +13011,11 @@ export interface components {
             submittedAt: string;
         };
         MemberLogin: {
+            /**
+             * Format: date-time
+             * @description AUTH-03 (S03 R-03-06b): when the account's last access or recovery e-mail (N-25, N-27) finally failed, after its one retry; null: none, or a later one was accepted by the provider
+             */
+            accessEmailFailedAt?: string | null;
             /** Format: email */
             email: string;
             /**
@@ -13917,6 +13922,8 @@ export interface components {
             /** Format: date-time */
             at: string;
             cashMembers: components["schemas"]["CashMember"][];
+            /** @description SEPA-10; absent for a simulation stored before it: D6 asks the second confirmation */
+            comparison?: components["schemas"]["SimulationComparison"];
             /** Format: uuid */
             id: string;
             incidents: components["schemas"]["BillingIncident"][];
@@ -16121,13 +16128,30 @@ export interface components {
         };
         /** @enum {string} */
         SignupWarning: "CARD_INVALID" | "NO_IMAGE_CONSENT" | "ACCOUNT_NOT_PROVIDED" | "DOCUMENT_PENDING" | "FAMILY_HOLDER_NOT_FOUND" | "UPFRONT_UNPAID" | "READMISSION" | "CHECKOUT_PENDING" | "PAID_EXCEEDS_QUOTE";
+        /** @description SEPA-10 (R-12-11): the simulated total (kpis.total) against the total of the previous month's live run, as simulated. D6's generate confirmation shows it and, when secondConfirmationRequired, asks for a second explicit confirmation before POST /billing/runs: the difference, up or down, is more than thresholdPercent of previousTotal, or there is no previous total to compare with */
+        SimulationComparison: {
+            /** @description kpis.total − previousTotal, signed; null without previousTotal */
+            difference?: components["schemas"]["Money"] | null;
+            /** @description difference as a percentage of previousTotal, one decimal, signed; null without a positive previousTotal */
+            differencePercent?: number | null;
+            /** @description The month before the simulated one */
+            previousPeriod: string;
+            /** @description The previous month's live run total over all its providers; null without one (or in another currency) */
+            previousTotal?: components["schemas"]["Money"] | null;
+            secondConfirmationRequired: boolean;
+            /**
+             * Format: int32
+             * @description billing.totalDifferenceConfirmPercent when simulated
+             */
+            thresholdPercent: number;
+        };
         SimulationKpis: {
             byProvider: components["schemas"]["ByProvider"];
             /** Format: int32 */
             cashPending: number;
             /**
              * Format: date
-             * @description Default collection date in the billed month, club-local; null for a simulation stored before E90
+             * @description Default collection date: the day of the billed month, or the next TARGET business day when that day is not one (SEPA-05), club-local; null for a simulation stored before E90
              */
             collectionDate?: string | null;
             /** Format: int32 */
@@ -17973,7 +17997,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -19869,7 +19893,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -21522,7 +21546,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -21669,7 +21693,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -22662,7 +22686,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -30869,7 +30893,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -31016,7 +31040,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -33144,7 +33168,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -33267,7 +33291,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -33393,7 +33417,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -36642,7 +36666,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -37546,7 +37570,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -41469,7 +41493,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -45027,7 +45051,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description PASSWORD_TOO_SHORT, PASSWORD_MISMATCH, PASSWORD_COMPROMISED */
+            /** @description PASSWORD_TOO_SHORT {minLength}, PASSWORD_MISMATCH, PASSWORD_COMPROMISED */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -46436,7 +46460,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -46583,7 +46607,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -46958,7 +46982,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -47837,7 +47861,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -49585,7 +49609,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -51860,7 +51884,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -55959,7 +55983,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED, SUPPORT_RESTRICTED */
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, SUPPORT_RESTRICTED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -58052,7 +58076,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -58178,7 +58202,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -61838,7 +61862,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -62083,7 +62107,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -68176,7 +68200,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -72608,7 +72632,7 @@ export interface operations {
             /** @description TokenResponse; refresh_token only for BODY clients; id_token depends on grant and scope */
             200: {
                 headers: {
-                    /** @description COOKIE clients: ah_refresh; HttpOnly; Secure; SameSite=Strict; Path=/oauth2/token; Max-Age=auth.sessionDays in seconds. Secure relaxed only for local HTTP. */
+                    /** @description COOKIE clients: ah_refresh; HttpOnly; Secure; SameSite=Strict; Path=/oauth2/token; Max-Age=the refresh token's lifetime in seconds: auth.sessionDays, at most until 12 hours after the sign-in for clubs-admin (AUTH-01). Secure relaxed only for local HTTP. */
                     "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
