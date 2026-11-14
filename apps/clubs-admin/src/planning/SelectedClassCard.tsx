@@ -27,7 +27,7 @@ import {
   timeOf,
   useCalendarErrorMessage,
 } from "./calendar-shared";
-import type { ClassHeading } from "./CancelClassModal";
+import { type ClassHeading, isCancellable } from "./CancelClassModal";
 import { ClassRegistrantsPanel } from "./ClassRegistrantsPanel";
 import { automaticDescription } from "./description";
 import { PlannedCourseSelect, useCoursesModule } from "./PlannedCourseSelect";
@@ -257,6 +257,8 @@ export function SelectedClassCard({
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
   const notesOnly = !readOnly && !editable;
+  // PLAN-02: [ANUL·LA LA CLASSE] and [ELIMINA] only before the class starts (R-06-10).
+  const cancellable = isCancellable(session);
   // R-06-13: the review an exemption skips runs at the club's `classes.riskReviewTime`.
   const exemptLabel = t("admin-scheduling:calendar.selected.exempt", {
     time: reviewTimeValue(settings.riskReviewTime),
@@ -682,7 +684,7 @@ export function SelectedClassCard({
               {t("admin-scheduling:calendar.selected.accept")}
             </Button>
             <span className="calendar-selected-card__spacer" />
-            {session.state === "ACTIVE" ? (
+            {session.state === "ACTIVE" && cancellable ? (
               <Button
                 className="calendar-button--danger-outline"
                 disabled={busy}
@@ -695,7 +697,7 @@ export function SelectedClassCard({
                 {t("admin-scheduling:calendar.selected.cancel")}
               </Button>
             ) : null}
-            {session.state === "ACTIVE" || session.state === "DRAFT" ? (
+            {(session.state === "ACTIVE" || session.state === "DRAFT") && cancellable ? (
               <Button
                 disabled={busy}
                 onClick={() => {

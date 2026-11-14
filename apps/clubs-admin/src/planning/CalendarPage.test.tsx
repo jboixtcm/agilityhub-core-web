@@ -409,12 +409,13 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     await renderCalendar();
     const week = await grid(/del 10 al 16 d.agost$/u);
 
-    fireEvent.click(within(week).getByRole("button", { name: /^dt 11 18:50 · A\+B · 3\/5/u }));
+    // PLAN-02: a class still ahead (Friday); a started one offers no [ELIMINA].
+    fireEvent.click(within(week).getByRole("button", { name: /^dv 14 18:50 · A\+B · 4\/5/u }));
     fireEvent.click(within(selectedCard()).getByRole("button", { name: "ELIMINA" }));
     const dialog = await screen.findByRole("dialog", {
-      name: "Anul·lar la classe — dt 11 · 18:50 · A+B · Central · Laura",
+      name: "Anul·lar la classe — dv 14 · 18:50 · A+B · Central · Laura",
     });
-    const confirm = within(dialog).getByRole("button", { name: "ANUL·LA I AVISA ELS 3 ALUMNES" });
+    const confirm = within(dialog).getByRole("button", { name: "ANUL·LA I AVISA ELS 4 ALUMNES" });
     expect(confirm).toBeDisabled();
     fireEvent.change(within(dialog).getByLabelText("Text de l'avís"), {
       target: { value: "Eliminem la classe." },
@@ -424,7 +425,7 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     expect(await screen.findByText("Classe eliminada")).toBeVisible();
     await waitFor(() =>
       expect(
-        within(week).queryByRole("button", { name: /^dt 11 18:50 · A/u }),
+        within(week).queryByRole("button", { name: /^dv 14 18:50 · A/u }),
       ).not.toBeInTheDocument(),
     );
 
@@ -433,6 +434,25 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
     await waitFor(() => {
       expect(cancelled.querySelectorAll("button.ah-schedule-cell--struck")).toHaveLength(2);
     });
+  });
+
+  it("PLAN-02: a class that has started offers neither [ANUL·LA LA CLASSE] nor [ELIMINA]; one still ahead offers both", async () => {
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+
+    // Tuesday 11 18:50 is still ACTIVE (bookings, attendance) but started before the mockup's Wednesday.
+    fireEvent.click(within(week).getByRole("button", { name: /^dt 11 18:50 · A\+B · 3\/5/u }));
+    expect(selectedCard()).toHaveTextContent("Classe seleccionada — dt 11 · 18:50 · A+B");
+    expect(within(selectedCard()).queryByRole("button", { name: "ANUL·LA LA CLASSE" })).toBeNull();
+    expect(within(selectedCard()).queryByRole("button", { name: "ELIMINA" })).toBeNull();
+    expect(within(selectedCard()).getByRole("button", { name: "ACCEPTA" })).toBeVisible();
+
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C/u }));
+    await waitFor(() => {
+      expect(selectedCard()).toHaveTextContent("Classe seleccionada — dc 12 · 18:50 · B+C");
+    });
+    expect(within(selectedCard()).getByRole("button", { name: "ANUL·LA LA CLASSE" })).toBeVisible();
+    expect(within(selectedCard()).getByRole("button", { name: "ELIMINA" })).toBeVisible();
   });
 
   it("R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card", async () => {

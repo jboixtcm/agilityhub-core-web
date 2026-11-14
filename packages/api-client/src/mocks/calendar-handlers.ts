@@ -910,6 +910,10 @@ export const calendarHandlers = [
     if (current.state !== "DRAFT" && current.state !== "ACTIVE") {
       return apiError("INVALID_STATE", "The class cannot be cancelled", 409);
     }
+    // PLAN-02 (R-06-10): once the class has started (`startsAt` ≤ now) neither reason is accepted.
+    if (Date.parse(current.startsAt) <= Date.now()) {
+      return apiError("INVALID_STATE", "The class has already started", 409);
+    }
     const adminText = body.adminText?.trim() ?? "";
     const affected = current.counters.booked + current.counters.waiting;
     if (affected > 0 && (adminText === "" || adminText.length > 500)) {
