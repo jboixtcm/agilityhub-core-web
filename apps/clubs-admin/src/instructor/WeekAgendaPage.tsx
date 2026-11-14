@@ -390,7 +390,8 @@ function AttendancePanel({
                     onNavigate(href);
                   }}
                 >
-                  <DogPhoto name={row.dogName} src={row.dogPhotoUrl} />
+                  {/* WEB-05: the thumbnail, else the photo (none for one it cannot reduce). */}
+                  <DogPhoto name={row.dogName} src={row.dogPhotoThumbnailUrl ?? row.dogPhotoUrl} />
                   {name}
                 </a>
                 {row.memberFullName === undefined ? null : (

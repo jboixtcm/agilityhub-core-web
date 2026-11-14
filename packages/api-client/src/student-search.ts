@@ -76,7 +76,9 @@ export function useStudentSearch(
       const { data } = await client.GET("/dogs", {
         params: {
           query: {
-            fields: "id,name,photoUrl,handlerName,handlerIsMember,owner,level,displayStatus",
+            // WEB-05: the rows show `photoThumbnailUrl`, else `photoUrl`.
+            fields:
+              "id,name,photoUrl,photoThumbnailUrl,handlerName,handlerIsMember,owner,level,displayStatus",
             filter: [
               ...(status === "ALL" ? [] : [`status:eq:${status}`]),
               ...(levelId === "" ? [] : [`levelId:eq:${levelId}`]),

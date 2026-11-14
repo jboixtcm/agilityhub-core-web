@@ -169,7 +169,8 @@ function SheetRow({
             }}
             type="button"
           >
-            <img alt="" src={row.dogPhotoUrl} />
+            {/* WEB-05: the row shows the thumbnail, else the photo; enlarged, the photo. */}
+            <img alt="" src={row.dogPhotoThumbnailUrl ?? row.dogPhotoUrl} />
           </button>
         )}
         <span className="instructor-sheet__who">

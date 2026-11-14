@@ -91,6 +91,78 @@ describe("T-03-38 D5 universal member list", () => {
     expect(name.closest("tr")?.querySelector("img")).toHaveAttribute("src", photoUrl);
   });
 
+  it("WEB-05: the dog list asks for the thumbnail beside the photo; a row shows its thumbnail, a row without one its photo", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    const asked: string[][] = [];
+    server.use(
+      http.get("*/api/v1/dogs", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected dogs response");
+        const page = (await original.json()) as components["schemas"]["ListPageDogListItem"];
+        asked.push(new URL(request.url).searchParams.get("fields")?.split(",") ?? []);
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) => ({
+            ...item,
+            photoUrl,
+            ...(item.name === "Duna" ? { photoThumbnailUrl: thumbnailUrl } : {}),
+          })),
+        });
+      }),
+    );
+    window.history.pushState(null, "", "/gossos");
+    await renderPage("dogs");
+    const duna = await screen.findByText("Duna");
+    expect(duna.closest("tr")?.querySelector("img")).toHaveAttribute("src", thumbnailUrl);
+    expect(screen.getByText("Rock").closest("tr")?.querySelector("img")).toHaveAttribute(
+      "src",
+      photoUrl,
+    );
+    // The rows' read (another one, with `fields=id`, reads the header's active count).
+    expect(asked.find((fields) => fields.includes("name"))).toEqual(
+      expect.arrayContaining(["photoUrl", "photoThumbnailUrl"]),
+    );
+  });
+
+  it("WEB-05: a member row shows each dog's thumbnail, and the photo of a dog without one", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/members", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected members response");
+        const page = (await original.json()) as components["schemas"]["ListPageMemberListItem"];
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) => ({
+            ...item,
+            ...(item.dogs === undefined
+              ? {}
+              : {
+                  dogs: item.dogs.map((dog) => ({
+                    ...dog,
+                    photoUrl,
+                    ...(dog.name === "Duna" ? { photoThumbnailUrl: thumbnailUrl } : {}),
+                  })),
+                }),
+          })),
+        });
+      }),
+    );
+    window.history.pushState(null, "", "/abonats");
+    await renderPage("members");
+    const row = (await screen.findByText("Laura Serra Vidal")).closest("tr");
+    if (row === null) throw new Error("Expected Laura's row");
+    const photo = (dog: string) =>
+      within(row)
+        .getByText(dog, { exact: false })
+        .closest(".ah-dog-identity")
+        ?.querySelector("img");
+    expect(photo("Duna")).toHaveAttribute("src", thumbnailUrl);
+    expect(photo("Rock")).toHaveAttribute("src", photoUrl);
+  });
+
   it("renders applied filters and preserves selection when page size changes", async () => {
     window.history.pushState(
       null,

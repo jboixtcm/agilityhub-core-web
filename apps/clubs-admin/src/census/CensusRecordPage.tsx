@@ -991,7 +991,8 @@ function MemberSummary({
               <li key={dog.id}>
                 <a className="census-record__dog-link" href={`/gossos/${dog.id}`}>
                   <span className="ah-dog-identity">
-                    <DogPhoto name={dog.name} src={dog.photoUrl} />
+                    {/* WEB-05: the thumbnail, else the photo; the dog's record keeps the photo. */}
+                    <DogPhoto name={dog.name} src={dog.photoThumbnailUrl ?? dog.photoUrl} />
                     <strong>{dog.name}</strong> · {dog.breed}
                   </span>
                   <span className="census-record__dog-details">

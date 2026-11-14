@@ -165,7 +165,9 @@ function toUniversalSavedView(view: SavedView): UniversalListSavedView {
 function queryFor(kind: CensusKind, state: UniversalListState) {
   const requestedFields = [
     ...(kind === "members" ? MEMBER_ROW_FIELDS : DOG_ROW_FIELDS),
-    ...(kind === "dogs" ? ["photoUrl"] : []),
+    // WEB-05: the row shows the photo's thumbnail, else the photo (the api sends no thumbnail for
+    // a photo it cannot reduce); the members' `dogs[]` carry both without being asked.
+    ...(kind === "dogs" ? ["photoUrl", "photoThumbnailUrl"] : []),
     ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
   ];
   return {
@@ -641,7 +643,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                 ? t("census:values.empty")
                 : (item.dogs ?? []).map((dog) => (
                     <span className="ah-dog-identity" key={dog.id}>
-                      <DogPhoto name={dog.name} src={dog.photoUrl} />
+                      <DogPhoto name={dog.name} src={dog.photoThumbnailUrl ?? dog.photoUrl} />
                       {dog.name} {dog.level === undefined ? null : levelChip(dog.level.code)}
                     </span>
                   ))}
@@ -843,7 +845,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           label: t("census:dogs.columns.name"),
           render: (item) => (
             <span className="ah-dog-identity">
-              <DogPhoto name={item.name} src={item.photoUrl} />
+              <DogPhoto name={item.name} src={item.photoThumbnailUrl ?? item.photoUrl} />
               {item.name}
             </span>
           ),

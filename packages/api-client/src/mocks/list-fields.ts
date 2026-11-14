@@ -67,6 +67,7 @@ export const DOG_LIST_FIELDS = [
   "id",
   "name",
   "photoUrl",
+  "photoThumbnailUrl",
   "breed",
   "level",
   "owner",

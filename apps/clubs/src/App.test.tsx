@@ -3200,16 +3200,23 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     api.stop();
   });
 
-  it("WEB-05: a camera photo goes up reduced in the browser (1600 px, WebP)", async () => {
-    // jsdom decodes and draws nothing: a 4032 × 3024 picture and a canvas that encodes WebP.
+  it("WEB-05: a camera photo goes up reduced in the browser (1600 px, JPEG, never WebP)", async () => {
+    // jsdom decodes and draws nothing: a 4032 × 3024 picture and a canvas that encodes WebP and
+    // JPEG; the reduced photo is asked as JPEG, the type the api makes the lists' thumbnail from.
     const close = vi.fn();
     vi.stubGlobal(
       "createImageBitmap",
       vi.fn(() => Promise.resolve({ close, height: 3024, width: 4032 })),
     );
-    const context = vi
-      .spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockImplementation(() => ({ drawImage: vi.fn(), imageSmoothingQuality: "low" }) as never);
+    const context = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+      () =>
+        ({
+          drawImage: vi.fn(),
+          fillRect: vi.fn(),
+          fillStyle: "",
+          imageSmoothingQuality: "low",
+        }) as never,
+    );
     const drawn: string[] = [];
     const encode = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(function (
       this: HTMLCanvasElement,
@@ -3242,19 +3249,19 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
           ),
         ).toBe(true);
       });
-      expect(drawn).toEqual(["1600×1200 image/webp"]);
+      expect(drawn).toEqual(["1600×1200 image/jpeg"]);
       const grant = api.recorded.find(
         (request) => request.method === "POST" && request.path === "/attachments/upload-url",
       );
       expect(grant?.body).toEqual({
-        fileName: "IMG_0042.webp",
-        mimeType: "image/webp",
+        fileName: "IMG_0042.jpg",
+        mimeType: "image/jpeg",
         purpose: "DOG_PHOTO",
         sizeBytes: "reduced".length,
       });
       // The signed PUT carries the reduced file's type (jsdom's File does not cross into the
       // request body, so its bytes are checked through the grant's `sizeBytes` above).
-      expect(uploaded.map((file) => file.type)).toEqual(["image/webp"]);
+      expect(uploaded.map((file) => file.type)).toEqual(["image/jpeg"]);
       expect(close).toHaveBeenCalledOnce();
     } finally {
       api.stop();

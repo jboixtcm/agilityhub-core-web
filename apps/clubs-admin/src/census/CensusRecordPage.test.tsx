@@ -106,6 +106,34 @@ describe("Assigned access roles", () => {
     expect(link).toHaveAttribute("href", "/gossos/dog-duna");
   });
 
+  it("WEB-05: the Gossos block shows a dog's thumbnail, and the photo of a dog without one", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({
+          ...overview,
+          dogs: overview.dogs.map((dog, index) => ({
+            ...dog,
+            photoUrl,
+            ...(index === 0 ? { photoThumbnailUrl: thumbnailUrl } : {}),
+          })),
+        });
+      }),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const links = [...document.querySelectorAll<HTMLAnchorElement>(".census-record__dog-link")];
+    expect(links.length).toBeGreaterThan(1);
+    expect(links.map((link) => link.querySelector("img")?.getAttribute("src"))).toEqual([
+      thumbnailUrl,
+      ...links.slice(1).map(() => photoUrl),
+    ]);
+  });
+
   it("shows only assigned roles while retaining the existing role editor", async () => {
     const { client } = await renderRecord("member");
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
@@ -1152,15 +1180,22 @@ describe("T-03-38 dog record", () => {
     expect(screen.getByText("actiu")).toBeVisible();
   });
 
-  it("WEB-05: «Canvia la foto» uploads the photo reduced in the browser (1600 px, WebP)", async () => {
-    // jsdom decodes and draws nothing: a 3024 × 4032 portrait and a canvas that encodes WebP.
+  it("WEB-05: «Canvia la foto» uploads the photo reduced in the browser (1600 px, JPEG, never WebP)", async () => {
+    // jsdom decodes and draws nothing: a 3024 × 4032 portrait and a canvas that encodes WebP and
+    // JPEG; the reduced photo is asked as JPEG, the type the api makes the lists' thumbnail from.
     vi.stubGlobal(
       "createImageBitmap",
       vi.fn(() => Promise.resolve({ close: vi.fn(), height: 4032, width: 3024 })),
     );
-    const context = vi
-      .spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockImplementation(() => ({ drawImage: vi.fn(), imageSmoothingQuality: "low" }) as never);
+    const context = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+      () =>
+        ({
+          drawImage: vi.fn(),
+          fillRect: vi.fn(),
+          fillStyle: "",
+          imageSmoothingQuality: "low",
+        }) as never,
+    );
     const drawn: string[] = [];
     const encode = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(function (
       this: HTMLCanvasElement,
@@ -1200,9 +1235,9 @@ describe("T-03-38 dog record", () => {
     fireEvent.click(within(dialog).getByRole("button", { name: "Canvia la foto" }));
 
     expect(await screen.findByText("La foto s'ha actualitzat.")).toBeVisible();
-    expect(drawn).toEqual(["1200×1600 image/webp"]);
+    expect(drawn).toEqual(["1200×1600 image/jpeg"]);
     expect(grants).toEqual([
-      { fileName: "duna.webp", mimeType: "image/webp", purpose: "DOG_PHOTO", sizeBytes: 7 },
+      { fileName: "duna.jpg", mimeType: "image/jpeg", purpose: "DOG_PHOTO", sizeBytes: 7 },
     ]);
   });
 });
