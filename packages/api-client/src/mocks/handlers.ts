@@ -1293,9 +1293,13 @@ function signupPaymentMethod(
 const signupReplays = new Map<string, unknown>();
 const submittedSignupIdentities = new Set<string>();
 const submittedDogChips = new Set<string>();
+// PAY-04 (S04 R-04-26): the same key replays its checkout; another key (the retry after leaving
+// Stripe) closes the open one, as the api does at the provider first, and opens a new one at once.
+const signupCheckouts = new Map<string, { checkoutSessionId: string; checkoutUrl: string }>();
 
 function resetSignupMockState(): void {
   signupReplays.clear();
+  signupCheckouts.clear();
   submittedSignupIdentities.clear();
   submittedDogChips.clear();
   signupMockToday = undefined;
@@ -2265,13 +2269,18 @@ export const handlers = [
     if (currentMockScenario().signupStripe !== true) {
       return apiError("PAYMENT_PROVIDER_NOT_ENABLED", "Payment provider not enabled", 422);
     }
-    return HttpResponse.json(
-      {
-        checkoutSessionId: "cs_mock_signup",
-        checkoutUrl: "https://checkout.test/cs_mock_signup",
-      },
-      { status: 201 },
-    );
+    const key = request.headers.get("Idempotency-Key") ?? "";
+    const replay = signupCheckouts.get(key);
+    if (replay !== undefined) return HttpResponse.json(replay, { status: 201 });
+    const sequence = signupCheckouts.size + 1;
+    const checkoutSessionId =
+      sequence === 1 ? "cs_mock_signup" : `cs_mock_signup_${String(sequence)}`;
+    const checkout = {
+      checkoutSessionId,
+      checkoutUrl: `https://checkout.test/${checkoutSessionId}`,
+    };
+    if (key !== "") signupCheckouts.set(key, checkout);
+    return HttpResponse.json(checkout, { status: 201 });
   }),
   http.put("*/api/v1/me/dogs/:id/instructor-note", async ({ params, request }) => {
     if (!currentMockScenario().branding.modules.includes("TASKS")) {

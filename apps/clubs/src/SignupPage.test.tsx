@@ -1181,8 +1181,9 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
     expect((await lastBody(recorded, "/signup")).payment).toMatchObject({ iban: VALID_IBAN });
     expect(screen.getByLabelText("Accepto la política de privacitat")).toBeChecked();
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    // PAY-04: another key closes the open checkout and opens a new one at once (S04 R-04-26).
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
     });
     expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
     const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
@@ -1193,6 +1194,108 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
       signupToken: "mock-signup-token",
     });
     expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
+  });
+});
+
+describe("PAY-04 (decision of 13 Nov 2026): back from Stripe Checkout, the applicant pays again at once", () => {
+  /** Signs up with a card checkout, then comes back by Stripe's cancel URL. */
+  async function cancelFirstCheckout(
+    navigate: ReturnType<typeof vi.fn<(path: string) => void>>,
+    cancelPath: string,
+  ) {
+    seedDraft({
+      payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", type: "SEPA_DD" },
+    });
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+    await waitFor(() => {
+      expect(sessionStorage.getItem(CHECKOUT_RETURN_KEY)).toBe("cs_mock_signup");
+    });
+    cleanup();
+    navigate.mockClear();
+    await renderSignup({ navigate, path: cancelPath, scenario: "signupStripe" });
+  }
+
+  it("the notice offers paying again now; the retry opens a new checkout and the return reads it", async () => {
+    const recorded = recordRequests();
+    const navigate = vi.fn<(path: string) => void>();
+    await cancelFirstCheckout(navigate, "/apuntat-hi/pagament?cs=cancel");
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "El pagament no s'ha completat. Pots tornar a pagar ara mateix.",
+    );
+    expect(screen.queryByText(/correu/u)).not.toBeInTheDocument();
+    const payNow = screen.getByRole("button", { name: "PAGA ARA" });
+    expect(payNow).toBeEnabled();
+    fireEvent.click(payNow);
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
+    });
+    const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
+    expect(checkouts).toHaveLength(2);
+    expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
+    expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
+    // Stripe's success URL then reads the new checkout, not the one that was closed.
+    expect(sessionStorage.getItem(CHECKOUT_RETURN_KEY)).toBe("cs_mock_signup_2");
+    cleanup();
+    await renderSignup({
+      navigate,
+      path: "/apuntat-hi/enviada?cs=success",
+      scenario: "signupStripe",
+    });
+    await waitFor(() => {
+      expect(requestsTo(recorded, "GET", "/checkout-sessions/cs_mock_signup_2")).not.toHaveLength(
+        0,
+      );
+    });
+    expect(requestsTo(recorded, "GET", "/checkout-sessions/cs_mock_signup")).toHaveLength(0);
+  });
+
+  it("the notice in es and en", async () => {
+    const navigate = vi.fn<(path: string) => void>();
+    await cancelFirstCheckout(navigate, "/apuntat-hi/pagament?cs=cancel&lang=es");
+    expect(
+      await screen.findByText("El pago no se ha completado. Puedes volver a pagar ahora mismo."),
+    ).toBeVisible();
+    const english = await createClubsI18n({
+      branding: brandingFor("signupStripe"),
+      browserLanguages: ["en"],
+      initialNamespaces: ["signup"],
+      storage: undefined,
+    });
+    await english.changeLanguage("en");
+    expect(english.t("signup:payment.cancelled")).toBe(
+      "The payment was not completed. You can pay again right away.",
+    );
+  });
+
+  it("a retry the api refuses with 409 INVALID_STATE (the open checkout could not be closed) stays on 19 and can be tried again", async () => {
+    const recorded = recordRequests();
+    const navigate = vi.fn<(path: string) => void>();
+    await cancelFirstCheckout(navigate, "/apuntat-hi/pagament?cs=cancel");
+    server.use(
+      http.post("*/api/v1/checkout-sessions", () => apiErrorResponse("INVALID_STATE", 409)),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    expect(
+      await screen.findByText("Aquest element no està en un estat vàlid per a aquesta operació."),
+    ).toBeVisible();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "PAGA ARA" })).toBeEnabled();
+    server.resetHandlers();
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith(expect.stringMatching(/^https:\/\/checkout\.test\//u));
+    });
+    const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
+    expect(checkouts).toHaveLength(3);
+    // The answered 409 retired its key: the next press is a new request.
+    expect(checkouts[2]?.key).not.toBe(checkouts[1]?.key);
+    expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
   });
 });
 
@@ -1730,7 +1833,7 @@ describe("E3-W06 round 2", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
     });
     expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
     expect(firstBody.payment).toMatchObject({
@@ -2674,7 +2777,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     await renderSignup({ navigate, path: reloaded, scenario: "signupStripe" });
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
     });
     const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
     expect(checkouts).toHaveLength(3);
