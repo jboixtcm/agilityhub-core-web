@@ -79,8 +79,12 @@ for (const width of [1280, 375]) {
 
 test("T-03-31 a calendar date replaces timestamp suggestions", async ({ page }) => {
   await login(page, "light");
-  await page.goto(`${base}/abonats`);
-  await expect(page.getByRole("link", { name: "Laura Serra Vidal", exact: true })).toBeVisible();
+  const loaded = page.waitForResponse(
+    (response) => response.request().method() === "GET" && new URL(response.url()).pathname === "/api/v1/members",
+  );
+  await page.locator("#admin-navigation").getByRole("link", { name: "Abonats", exact: true }).click();
+  expect((await loaded).ok()).toBe(true);
+  await expect(page.getByRole("heading", { level: 1, name: /^Abonats(?: |$)/u })).toBeVisible();
   const filter = page
     .locator("details")
     .filter({ has: page.locator("summary").filter({ hasText: /^Filtre/u }) });
