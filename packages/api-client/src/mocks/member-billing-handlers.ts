@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { refuse } from "./backoffice-handlers";
 import { catalogState } from "./fixtures/catalogs";
 import {
   censusMembers,
@@ -31,6 +32,7 @@ type InactivityRequest = components["schemas"]["InactivityRequest"];
 type LeaveRequest = components["schemas"]["LeaveCreateRequest"];
 type PackAdjustment = components["schemas"]["PackAdjustmentRequest"];
 type UpfrontRequest = components["schemas"]["UpfrontPaymentRequest"];
+type RefundRequest = components["schemas"]["RefundRequest"];
 type AdminInactivityRequest = components["schemas"]["AdminInactivityRequest"];
 type AdminInactivityPatch = components["schemas"]["AdminInactivityPatchRequest"];
 type DecisionRequest = components["schemas"]["DecisionRequest"];
@@ -125,8 +127,29 @@ const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
     refunds: [],
     status: "PAID",
   },
+  // PAY-05: a pack paid by card through Stripe Checkout, the row D10 can refund.
+  {
+    amountDue: { amountMinor: 12000, currency: "EUR" },
+    amountPaid: { amountMinor: 12000, currency: "EUR" },
+    concept: "PACK",
+    createdAt: "2026-09-02T17:30:00Z",
+    dogId: "dog-rock",
+    id: "54000000-0000-4000-8000-000000000101",
+    memberId: "member-laura",
+    note: null,
+    paidAt: "2026-09-02T17:31:00Z",
+    provider: {
+      chargeId: "ch_mock_pack_101",
+      checkoutSessionId: "cs_mock_pack_101",
+      paymentIntentId: "pi_mock_pack_101",
+      type: "STRIPE",
+    },
+    refunds: [],
+    status: "PAID",
+  },
 ];
 let upfront = structuredClone(initialUpfront);
+let upfrontRefunds = 0;
 const checkoutReads = new Map<string, number>();
 
 interface PersistedMemberLifecycle {
@@ -387,6 +410,7 @@ export function resetMemberBillingState(): void {
   });
   memberCreatedInactivity = false;
   upfront = structuredClone(initialUpfront);
+  upfrontRefunds = 0;
   checkoutReads.clear();
 }
 
@@ -1385,6 +1409,52 @@ export const memberBillingHandlers = [
     };
     upfront = [item, ...upfront];
     return HttpResponse.json(item, { status: 201 });
+  }),
+  // PAY-05 (S12 R-12-20): the refund of a card payment, ADMIN only and never from an impersonation;
+  // `amount` absent = what is left. `charge.refunded` arrives at once in the mock: the refund is on
+  // the row already, and a full one makes it REFUNDED.
+  http.post("*/api/v1/upfront-payments/:id/refund", async ({ params, request }) => {
+    const refused = refuse(currentMockScenario(), ["ADMIN"]) ?? moduleOff("BILLING");
+    if (refused !== undefined) return refused;
+    const body = (await request.json()) as RefundRequest;
+    if (typeof body.reason !== "string" || body.reason.trim() === "" || body.reason.length > 500) {
+      return error("VALIDATION_ERROR", 400, {
+        fieldErrors: [{ code: "NOT_BLANK", field: "reason" }],
+      });
+    }
+    const item = upfront.find((row) => row.id === String(params.id));
+    if (item === undefined) return error("NOT_FOUND", 404);
+    if (item.provider?.type !== "STRIPE") return error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    if (item.status !== "PAID") return error("INVALID_STATE", 409, { status: item.status });
+    const currency = item.amountPaid.currency;
+    if (body.amount !== undefined && body.amount.currency !== currency) {
+      return error("CURRENCY_MISMATCH", 422, { field: "amount" });
+    }
+    const left =
+      item.amountPaid.amountMinor -
+      item.refunds.reduce((sum, refund) => sum + refund.amount.amountMinor, 0);
+    const amount = body.amount?.amountMinor ?? left;
+    if (amount <= 0 || amount > left) return error("REFUND_EXCEEDS_PAID", 422);
+    upfrontRefunds += 1;
+    item.refunds = [
+      ...item.refunds,
+      {
+        amount: { amountMinor: amount, currency },
+        at: MOCK_NOW,
+        byAccountId: null,
+        providerRef: `re_mock_upfront_${String(upfrontRefunds)}`,
+        reason: body.reason,
+      },
+    ];
+    if (amount === left) item.status = "REFUNDED";
+    return HttpResponse.json(
+      {
+        amount: { amountMinor: amount, currency },
+        id: `56000000-0000-4000-8000-${String(upfrontRefunds).padStart(12, "0")}`,
+        providerRef: null,
+      },
+      { status: 202 },
+    );
   }),
   http.get("*/api/v1/pack-balances", ({ request }) => {
     const refused = moduleOff("BILLING") ?? moduleOff("PACKS");

@@ -392,6 +392,25 @@
         "date": "Fecha del próximo recibo",
         "range": "Elige una fecha entre el {from} y el {to}.",
         "notBefore": "La fecha no puede ser anterior al {date}."
+      },
+      "refund": {
+        "action": "Reembolsar",
+        "actionFor": "Reembolsar {concept} ({amount})",
+        "title": "Reembolsar un pago con tarjeta",
+        "summary": "{concept}: pagado con tarjeta {paid}; queda por reembolsar {left}.",
+        "amount": "Importe a reembolsar",
+        "amountHelp": "En blanco, se reembolsa todo lo que queda ({left}).",
+        "amountInvalid": "Escribe un importe positivo que no supere {left}.",
+        "reasonRequired": "Escribe el motivo del reembolso.",
+        "continue": "Continuar",
+        "confirmTitle": "Confirmar el reembolso",
+        "confirmBody": "Se reembolsarán {amount} a {member} por el pago «{concept}». Stripe los devolverá a la tarjeta con la que se pagó, y no se puede deshacer.",
+        "confirmReason": "Motivo: {reason}",
+        "confirm": "Reembolsar {amount}",
+        "back": "Volver",
+        "requested": "Reembolso de {amount} solicitado: se confirmará cuando Stripe lo procese.",
+        "stale": "Este pago ha cambiado y ya no se puede reembolsar así. Se ha vuelto a leer la lista.",
+        "line": "Reembolso de {amount} el {date}: {reason}"
       }
     },
     "language": "idioma: {locale}",
@@ -635,7 +654,7 @@
     "familyDecisionRequired": "Elige el grupo del titular o «Sin grupo».",
     "resolved": "Esta preinscripción ya se ha resuelto",
     "resolvedLink": "Abrir la ficha del abonado",
-    "refundWarning": "Hay un pago cobrado: habrá que devolverlo desde Facturación",
+    "refundWarning": "Hay un pago cobrado: habrá que devolverlo. Si se pagó con tarjeta, se reembolsa desde la ficha del abonado, en «Pagos al momento».",
     "invoiceInvalid": "La fecha del próximo recibo no es válida.",
     "gender": {
       "FEMALE": "Femenino",

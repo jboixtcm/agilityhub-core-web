@@ -22,6 +22,8 @@ import { useTranslation } from "react-i18next";
 
 import { clubToday } from "../billing/shared";
 
+import { isRefundable, UpfrontRefundModal } from "./UpfrontRefundModal";
+
 type Dog = components["schemas"]["MemberOverview"]["dogs"][number];
 type Invoice = components["schemas"]["InvoiceListItem"];
 type Pack = components["schemas"]["PackBalanceDetail"];
@@ -43,12 +45,15 @@ export function MemberBillingBlock({
   client,
   dogs,
   memberId,
+  memberName,
   onPackAdjusted,
   readOnly = false,
 }: {
   client: ApiClient;
   dogs: readonly Dog[];
   memberId: string;
+  /** Named by the refund's confirmation (PAY-05). */
+  memberName: string;
   onPackAdjusted?: () => void;
   readOnly?: boolean;
 }) {
@@ -69,6 +74,9 @@ export function MemberBillingBlock({
   const [reload, setReload] = useState(0);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [adjusting, setAdjusting] = useState<Pack>();
+  // PAY-05: the card payment being refunded, and the request's outcome under the list.
+  const [refunding, setRefunding] = useState<Upfront>();
+  const [refundRequested, setRefundRequested] = useState<string>();
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
   const [dogId, setDogId] = useState("");
@@ -272,15 +280,44 @@ export function MemberBillingBlock({
         <ul className="census-record__plain-list">
           {payments.map((payment) => (
             <li key={payment.id}>
-              <span>{t(`enums:upfrontConcept.${payment.concept}`)}</span>
-              <span>
-                {formats.formatMoneyMinor(payment.amountPaid)} /{" "}
-                {formats.formatMoneyMinor(payment.amountDue)}
-              </span>
-              <Badge>{t(`enums:upfrontStatus.${payment.status}`)}</Badge>
+              <div className="member-billing__upfront">
+                <span>
+                  <span>{t(`enums:upfrontConcept.${payment.concept}`)}</span>
+                  <span>
+                    {formats.formatMoneyMinor(payment.amountPaid)} /{" "}
+                    {formats.formatMoneyMinor(payment.amountDue)}
+                  </span>
+                  <Badge>{t(`enums:upfrontStatus.${payment.status}`)}</Badge>
+                </span>
+                {readOnly || !isRefundable(payment) ? null : (
+                  <Button
+                    aria-label={t("admin-census:member.billing.refund.actionFor", {
+                      amount: formats.formatMoneyMinor(payment.amountPaid),
+                      concept: t(`enums:upfrontConcept.${payment.concept}`),
+                    })}
+                    onClick={() => {
+                      setRefundRequested(undefined);
+                      setRefunding(payment);
+                    }}
+                    variant="ghost"
+                  >
+                    {t("admin-census:member.billing.refund.action")}
+                  </Button>
+                )}
+              </div>
+              {payment.refunds.map((refund) => (
+                <small key={`${refund.at}-${String(refund.amount.amountMinor)}`}>
+                  {t("admin-census:member.billing.refund.line", {
+                    amount: formats.formatMoneyMinor(refund.amount),
+                    date: formats.formatDate(refund.at),
+                    reason: refund.reason,
+                  })}
+                </small>
+              ))}
             </li>
           ))}
         </ul>
+        {refundRequested === undefined ? null : <p role="status">{refundRequested}</p>}
         {readError(readFailures.payments)}
       </section>
       {packsEnabled ? (
@@ -323,6 +360,29 @@ export function MemberBillingBlock({
           {readError(readFailures.packs)}
         </section>
       ) : null}
+      {refunding === undefined ? null : (
+        <UpfrontRefundModal
+          client={client}
+          keys={keys}
+          memberName={memberName}
+          onClose={() => {
+            setRefunding(undefined);
+          }}
+          onRefunded={(amount) => {
+            setRefunding(undefined);
+            setRefundRequested(
+              t("admin-census:member.billing.refund.requested", {
+                amount: formats.formatMoneyMinor(amount),
+              }),
+            );
+            setReload((value) => value + 1);
+          }}
+          onStale={() => {
+            setReload((value) => value + 1);
+          }}
+          payment={refunding}
+        />
+      )}
       <Modal
         closeLabel={t("admin-census:common.cancel")}
         onClose={() => {

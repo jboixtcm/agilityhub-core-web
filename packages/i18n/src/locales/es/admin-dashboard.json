@@ -57,7 +57,7 @@
     "dog": "{name} {isAddDog, select, true {(perro nuevo)} other {({breed})}}",
     "validateLabel": "VALIDAR: {name}",
     "submitted": "enviada el {date}",
-    "refundRequired": "Hay un pago cobrado: habrá que devolverlo desde Facturación"
+    "refundRequired": "Hay un pago cobrado: habrá que devolverlo. Si se pagó con tarjeta, se reembolsa desde la ficha del abonado, en «Pagos al momento»."
   },
   "chart": {
     "title": "Perros por nivel — {count} activos",

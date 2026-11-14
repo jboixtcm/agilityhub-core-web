@@ -392,6 +392,25 @@
         "date": "Data del proper rebut",
         "range": "Tria una data entre el {from} i el {to}.",
         "notBefore": "La data no pot ser anterior al {date}."
+      },
+      "refund": {
+        "action": "Reemborsa",
+        "actionFor": "Reemborsa {concept} ({amount})",
+        "title": "Reemborsa un pagament amb targeta",
+        "summary": "{concept}: pagat amb targeta {paid}; queda per reemborsar {left}.",
+        "amount": "Import a reemborsar",
+        "amountHelp": "En blanc, es reemborsa tot el que queda ({left}).",
+        "amountInvalid": "Escriu un import positiu que no superi {left}.",
+        "reasonRequired": "Escriu el motiu del reemborsament.",
+        "continue": "Continua",
+        "confirmTitle": "Confirma el reemborsament",
+        "confirmBody": "Es reemborsaran {amount} a {member} pel pagament «{concept}». Stripe els retornarà a la targeta amb què es va pagar, i no es pot desfer.",
+        "confirmReason": "Motiu: {reason}",
+        "confirm": "Reemborsa {amount}",
+        "back": "Enrere",
+        "requested": "Reemborsament de {amount} sol·licitat: es confirmarà quan Stripe el processi.",
+        "stale": "Aquest pagament ha canviat i ja no es pot reemborsar així. S'ha tornat a llegir la llista.",
+        "line": "Reemborsament de {amount} el {date}: {reason}"
       }
     },
     "language": "idioma: {locale}",
@@ -635,7 +654,7 @@
     "familyDecisionRequired": "Tria el grup del titular o «Sense grup».",
     "resolved": "Aquesta preinscripció ja s'ha resolt",
     "resolvedLink": "Obre la fitxa de l'abonat",
-    "refundWarning": "Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació",
+    "refundWarning": "Hi ha un pagament cobrat: caldrà retornar-lo. Si es va pagar amb targeta, es reemborsa des de la fitxa de l'abonat, a «Pagaments a l'acte».",
     "invoiceInvalid": "La data del proper rebut no és vàlida.",
     "gender": {
       "FEMALE": "Femení",

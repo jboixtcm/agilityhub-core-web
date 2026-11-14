@@ -1058,6 +1058,7 @@ function MemberSummary({
             client={client}
             dogs={overview.dogs}
             memberId={member.id}
+            memberName={member.fullName}
             onPackAdjusted={() => {
               onReload();
             }}

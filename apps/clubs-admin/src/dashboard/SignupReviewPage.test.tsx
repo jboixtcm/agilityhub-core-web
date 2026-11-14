@@ -817,7 +817,9 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
       fireEvent.change(iban, { target: { value: typed } });
       fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
 
-      expect(await within(drawer).findByText("El número de compte bancari no és vàlid.")).toBeVisible();
+      expect(
+        await within(drawer).findByText("El número de compte bancari no és vàlid."),
+      ).toBeVisible();
       expect(iban).toHaveAttribute("aria-invalid", "true");
       expect(iban).toHaveFocus();
       expect(sent(requests, "PATCH", `/members/${memberId}`)).toEqual([]);
@@ -1062,7 +1064,9 @@ describe("E3-W07 step 7 · the refund warning (R-04-23)", () => {
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
     expect(
-      within(modal).getByText("Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació"),
+      within(modal).getByText(
+        "Hi ha un pagament cobrat: caldrà retornar-lo. Si es va pagar amb targeta, es reemborsa des de la fitxa de l'abonat, a «Pagaments a l'acte».",
+      ),
     ).toBeVisible();
     expect(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" })).toBeDisabled();
     fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), {
@@ -2272,7 +2276,9 @@ it("T-04-22 requires explicit cancellation of a pending card checkout before val
   fireEvent.click(screen.getByRole("checkbox", { name: /Anul·la l’intent de pagament/u }));
   fireEvent.click(screen.getByRole("checkbox", { name: "No s'ha cobrat res: queda pendent" }));
   validate();
-  await waitFor(() => { expect(sent(requests, "POST", "/validation", false)).toHaveLength(1); });
+  await waitFor(() => {
+    expect(sent(requests, "POST", "/validation", false)).toHaveLength(1);
+  });
   expect(sent(requests, "POST", "/validation", false)[0]?.body).toMatchObject({
     cancelPendingCheckout: true,
   });

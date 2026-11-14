@@ -65,6 +65,8 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   /^\/members\/[^/]+\/(leave|reactivation|card-setup-link)$/,
   { method: "DELETE", path: /^\/members\/[^/]+\/planned-leave$/ },
   /^\/upfront-payments$/,
+  // PAY-05: D10's refund of a card payment (R-12-20).
+  /^\/upfront-payments\/[^/]+\/refund$/,
   /^\/pack-balances\/[^/]+\/adjustments$/,
   // S16 course builder (R-16-03, R-16-05 and R-16-11).
   "/courses",

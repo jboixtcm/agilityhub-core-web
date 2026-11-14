@@ -392,6 +392,25 @@
         "date": "Next invoice date",
         "range": "Choose a date between {from} and {to}.",
         "notBefore": "The date cannot be before {date}."
+      },
+      "refund": {
+        "action": "Refund",
+        "actionFor": "Refund {concept} ({amount})",
+        "title": "Refund a card payment",
+        "summary": "{concept}: paid by card {paid}; left to refund {left}.",
+        "amount": "Amount to refund",
+        "amountHelp": "Leave it blank to refund everything that is left ({left}).",
+        "amountInvalid": "Enter a positive amount no greater than {left}.",
+        "reasonRequired": "Enter the reason for the refund.",
+        "continue": "Continue",
+        "confirmTitle": "Confirm the refund",
+        "confirmBody": "{amount} will be refunded to {member} for the payment «{concept}». Stripe returns it to the card it was paid with, and it cannot be undone.",
+        "confirmReason": "Reason: {reason}",
+        "confirm": "Refund {amount}",
+        "back": "Back",
+        "requested": "Refund of {amount} requested: it will be confirmed once Stripe processes it.",
+        "stale": "This payment has changed and can no longer be refunded this way. The list has been read again.",
+        "line": "Refund of {amount} on {date}: {reason}"
       }
     },
     "language": "language: {locale}",
@@ -635,7 +654,7 @@
     "familyDecisionRequired": "Choose the holder's group or «No group».",
     "resolved": "This signup has already been resolved",
     "resolvedLink": "Open the member record",
-    "refundWarning": "A payment has been collected: it must be refunded from Billing",
+    "refundWarning": "A payment has been collected: it must be refunded. If it was paid by card, refund it from the member's record, under «Upfront payments».",
     "invoiceInvalid": "The next invoice date is not valid.",
     "gender": {
       "FEMALE": "Female",

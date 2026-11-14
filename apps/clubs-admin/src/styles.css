@@ -679,6 +679,34 @@ select {
   display: block;
 }
 
+/* PAY-05: an upfront payment's row with its [Reemborsa]; its refunds are listed under it. */
+.member-billing__upfront {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2) var(--ah-space-3);
+  justify-content: space-between;
+}
+
+.member-billing__upfront > span {
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+/* The refund's confirmation step: its heading takes the focus. */
+.member-billing__step {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.member-billing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
 .member-billing__next p {
   margin: 0;
 }
