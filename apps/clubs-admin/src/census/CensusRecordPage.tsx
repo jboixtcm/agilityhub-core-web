@@ -818,10 +818,23 @@ function MemberSummary({
           <SectionTitle>{t("admin-census:member.sections.dataPayment")}</SectionTitle>
           <dl className="census-record__data-list">
             {/* S03 R-03-06b (AUTH-02): the account's login e-mail and, when mail no longer reaches
-                it, its «rebot» / «queixa» mark with what that means. None without an account. */}
+                it, its «rebot» / «queixa» mark with what that means. None without an account.
+                AUTH-03: when its last access or recovery e-mail finally failed (after the api's
+                one retry), a mark with that day in the club's time zone. */}
             {member.login == null ? null : (
               <DataRow label={t("admin-census:member.fields.login")}>
                 {member.login.email} <LoginEmailMark status={member.login.emailStatus} />
+                {member.login.accessEmailFailedAt == null ? null : (
+                  <>
+                    {" "}
+                    <Badge tone="warning">{t("admin-census:member.login.accessEmailFailed")}</Badge>
+                    <span className="census-record__login-note">
+                      {t("admin-census:member.login.accessEmailFailedHelp", {
+                        date: formatDate(member.login.accessEmailFailedAt, formats),
+                      })}
+                    </span>
+                  </>
+                )}
                 {member.login.emailStatus === "BOUNCED" ||
                 member.login.emailStatus === "COMPLAINED" ? (
                   <span className="census-record__login-note">

@@ -509,7 +509,9 @@
       "bounced": "rebot",
       "complained": "queixa",
       "bouncedHelp": "Aquesta adreça rebota o no existeix: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda.",
-      "complainedHelp": "Des d'aquesta adreça s'ha marcat un correu del club com a correu brossa: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda."
+      "complainedHelp": "Des d'aquesta adreça s'ha marcat un correu del club com a correu brossa: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda.",
+      "accessEmailFailed": "enviament fallit",
+      "accessEmailFailedHelp": "L'últim correu d'accés no ha arribat ({date}), tampoc en tornar-lo a provar."
     },
     "rateLimited": "Massa enviaments seguits. Torna-ho a provar d'aquí a {minutes, plural, one {# minut} other {# minuts}}."
   },

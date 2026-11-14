@@ -2009,6 +2009,77 @@ describe("AUTH-02 (S03 R-03-06b, decision of 13 Nov 2026): D10's login e-mail an
   });
 });
 
+describe("AUTH-03 (S03 R-03-06b, decision of 13 Nov 2026): D10 marks a failed access e-mail", () => {
+  type MemberLogin = components["schemas"]["MemberLogin"];
+  const email = "laura.serra@example.test";
+
+  function serveLogin(login: MemberLogin) {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({ ...overview, member: { ...overview.member, login } });
+      }),
+    );
+  }
+
+  async function loginRow(language = "ca", label = "Adreça d'accés"): Promise<HTMLElement> {
+    // A club that offers the three locales (the Cànic's fixture offers ca and es).
+    await renderRecord(
+      "member",
+      { ...branding, locales: ["ca", "es", "en"] },
+      "member-laura",
+      language,
+    );
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const row = screen
+      .getByText(label, { selector: "dt" })
+      .closest<HTMLElement>(".census-record__data-row");
+    if (row === null) throw new TypeError("D10 has no login row");
+    return row;
+  }
+
+  it("shows no mark while the last access e-mail reached the address", async () => {
+    serveLogin({ accessEmailFailedAt: null, email, emailStatus: null });
+    const row = await loginRow();
+    expect(row).toHaveTextContent(email);
+    expect(within(row).queryByText("enviament fallit")).toBeNull();
+    expect(row).not.toHaveTextContent("L'últim correu d'accés no ha arribat");
+  });
+
+  it("marks the failure with its day in the club's time zone, beside a suppression mark", async () => {
+    // 23:30 UTC on 12 November is already 13 November in Europe/Madrid, the club's zone.
+    serveLogin({ accessEmailFailedAt: "2026-11-12T23:30:00Z", email, emailStatus: "BOUNCED" });
+    const row = await loginRow();
+    expect(within(row).getByText("enviament fallit")).toHaveClass("ah-tone--warning");
+    expect(row).toHaveTextContent(
+      "L'últim correu d'accés no ha arribat (13/11/2026), tampoc en tornar-lo a provar.",
+    );
+    expect(within(row).getByText("rebot")).toHaveClass("ah-tone--danger");
+  });
+
+  it.each([
+    [
+      "es",
+      "Dirección de acceso",
+      "envío fallido",
+      "El último correo de acceso no ha llegado (13/11/2026), tampoco al volver a intentarlo.",
+    ],
+    [
+      "en",
+      "Login email",
+      "delivery failed",
+      "The last sign-in email was not delivered (11/13/2026), not even on a second attempt.",
+    ],
+  ] as const)("reads the mark in %s", async (language, label, mark, help) => {
+    serveLogin({ accessEmailFailedAt: "2026-11-12T23:30:00Z", email, emailStatus: null });
+    const row = await loginRow(language, label);
+    expect(within(row).getByText(mark)).toHaveClass("ah-tone--warning");
+    expect(row).toHaveTextContent(help);
+  });
+});
+
 describe("WEB-01 (decision of 13 Nov 2026): D10's welcome e-mail, manual only and limited per club", () => {
   function recordWelcomes() {
     const sent: string[] = [];

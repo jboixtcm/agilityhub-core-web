@@ -509,7 +509,9 @@
       "bounced": "rebote",
       "complained": "queja",
       "bouncedHelp": "Esta dirección rebota o no existe: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida.",
-      "complainedHelp": "Desde esta dirección se ha marcado un correo del club como correo no deseado: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida."
+      "complainedHelp": "Desde esta dirección se ha marcado un correo del club como correo no deseado: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida.",
+      "accessEmailFailed": "envío fallido",
+      "accessEmailFailedHelp": "El último correo de acceso no ha llegado ({date}), tampoco al volver a intentarlo."
     },
     "rateLimited": "Demasiados envíos seguidos. Vuelve a intentarlo dentro de {minutes, plural, one {# minuto} other {# minutos}}."
   },

@@ -509,7 +509,9 @@
       "bounced": "bounce",
       "complained": "complaint",
       "bouncedHelp": "This address bounces or does not exist: sign-in links, password recovery and the welcome email do not reach it.",
-      "complainedHelp": "A club email was marked as spam from this address: sign-in links, password recovery and the welcome email do not reach it."
+      "complainedHelp": "A club email was marked as spam from this address: sign-in links, password recovery and the welcome email do not reach it.",
+      "accessEmailFailed": "delivery failed",
+      "accessEmailFailedHelp": "The last sign-in email was not delivered ({date}), not even on a second attempt."
     },
     "rateLimited": "Too many emails in a row. Try again in {minutes, plural, one {# minute} other {# minutes}}."
   },
