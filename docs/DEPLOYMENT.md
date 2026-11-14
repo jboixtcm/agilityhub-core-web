@@ -49,7 +49,7 @@ To deploy: choose the CI run of the reviewed commit, check that it succeeded (`g
 
 ## Scheduled real-core run
 
-`.github/workflows/real-core.yml` runs the critical real-core suite (`pnpm e2e:core <id> critical`: the five flows of `PLA_FRONTEND.md` §8) from Monday to Saturday, and on demand, against the api image that is deployed, on the disposable local stack of `scripts/e2e-core.sh`; it never calls a deployed host. The image is the repository variable `DEPLOYED_CORE_IMAGE` (`ghcr.io/<owner>/agilityhub-core-api:sha-<commit>`): update it at every api release, with the release record. The workflow pulls it with the run's `GITHUB_TOKEN`, so the api's package must grant this repository read access. Each run keeps its evidence as the artifact `real-core-critical` for 14 days.
+`.github/workflows/real-core.yml` runs the critical real-core suite (`pnpm e2e:core <id> critical`: the five flows of `PLA_FRONTEND.md` §8) from Monday to Saturday, and on demand, against the api image that is deployed, on the disposable local stack of `scripts/e2e-core.sh`; it never calls a deployed host. The image is the repository variable `DEPLOYED_CORE_IMAGE` (`ghcr.io/<owner>/agilityhub-core-api:sha-<commit>`: the tag the api's CI publishes, `sha-` and the first 7 hex of the commit, or up to all 40, optionally pinned with `@sha256:<digest>` as the api's `IMAGE_TAG`; a moving tag such as `main` or `latest`, or another registry, is refused): update it at every api release, with the release record. The workflow pulls it with the run's `GITHUB_TOKEN`, so the api's package must grant this repository read access. Each run keeps its evidence as the artifact `real-core-critical` for 14 days.
 
 ## Preparing the isolated hosted demo
 
