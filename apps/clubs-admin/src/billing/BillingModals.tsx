@@ -1,5 +1,6 @@
 import {
   type AccountingExportFormat,
+  apiFieldErrors,
   type ApiClient,
   type components,
   isApiError,
@@ -68,7 +69,9 @@ function Alert({ children }: { children: ReactNode }) {
 
 /**
  * The strong confirmation of button 2 (S12 §2, R-12-11): «Es generaran {n} rebuts per un total de
- * {import}…» from the simulation's KPIs, then `POST /billing/runs` with one key per payload.
+ * {import}…» from the simulation's KPIs, then `POST /billing/runs` with one key per payload. With
+ * SEPA receipts, the collection date can be chosen (R-12-12, SEPA-05): prefilled with the default
+ * the api simulated (`kpis.collectionDate`, already a TARGET business day).
  */
 export function GenerateModal({
   client,
@@ -104,6 +107,15 @@ export function GenerateModal({
   // Once the admin accepts the api's first valid collection day, it is part of the submission
   // payload. A retryable failure must not turn the next press back into the original payload.
   const [acceptedCollectionDate, setAcceptedCollectionDate] = useState<string>();
+  // SEPA-05: the date field, shown when the month has SEPA receipts. Sent only when the admin
+  // changes the default: the api applies that same default without it.
+  const defaultCollectionDate = simulation.kpis.collectionDate ?? undefined;
+  const sepaReceipts = (simulation.kpis.byProvider.SEPA_XML?.count ?? 0) > 0;
+  const [chosenDate, setChosenDate] = useState(defaultCollectionDate ?? "");
+  const chosenCollectionDate =
+    sepaReceipts && chosenDate !== "" && chosenDate !== defaultCollectionDate
+      ? chosenDate
+      : undefined;
   const [simulating, setSimulating] = useState(false);
   const [simulateError, setSimulateError] = useState<ReactNode>();
   // R-12-06: the included members' next receipt moves to that day of the following month.
@@ -112,10 +124,11 @@ export function GenerateModal({
   const code = isApiError(failure) ? failure.code : undefined;
 
   /**
-   * `collectionDate` only when the admin takes the api's `earliest` after `422
-   * COLLECTION_DATE_TOO_SOON` (`BillingRunRequest.collectionDate`): another payload, another key.
+   * `collectionDate` when the admin chose another date, or takes the api's `earliest` after `422
+   * COLLECTION_DATE_TOO_SOON` or its `nextBusinessDay` after `400 VALIDATION_ERROR` `NOT_BUSINESS_DAY`
+   * (`BillingRunRequest.collectionDate`): another payload, another key.
    */
-  const generate = async (collectionDate = acceptedCollectionDate) => {
+  const generate = async (collectionDate = acceptedCollectionDate ?? chosenCollectionDate) => {
     setPending(true);
     setFailure(undefined);
     const body = {
@@ -158,7 +171,17 @@ export function GenerateModal({
     /^\d{4}-\d{2}-\d{2}$/u.test(details.earliest)
       ? details.earliest
       : undefined;
-  const retryCollectionDate = earliest ?? acceptedCollectionDate;
+  // SEPA-05: a chosen date that is not a TARGET business day; the api names the next one.
+  const notBusinessDay = apiFieldErrors(failure).some(
+    (entry) => entry.field === "collectionDate" && entry.code === "NOT_BUSINESS_DAY",
+  );
+  const nextBusinessDay =
+    notBusinessDay &&
+    typeof details.nextBusinessDay === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/u.test(details.nextBusinessDay)
+      ? details.nextBusinessDay
+      : undefined;
+  const retryCollectionDate = earliest ?? nextBusinessDay ?? acceptedCollectionDate;
 
   return (
     <Modal
@@ -200,7 +223,35 @@ export function GenerateModal({
               })}
             </p>
           )}
-          {failure === undefined ? null : (
+          {sepaReceipts ? (
+            <FormField
+              {...(notBusinessDay
+                ? {
+                    error: t("admin-billing:confirm.collectionDateNotBusinessDay", {
+                      date: dateOf(chosenDate),
+                      next: dateOf(nextBusinessDay),
+                    }),
+                  }
+                : {})}
+              help={t("admin-billing:confirm.collectionDateHelp")}
+              id="billing-collection-date"
+              label={t("admin-billing:confirm.collectionDate")}
+            >
+              <Input
+                aria-describedby="billing-collection-date-help"
+                disabled={pending}
+                id="billing-collection-date"
+                onChange={(event) => {
+                  setChosenDate(event.currentTarget.value);
+                  setAcceptedCollectionDate(undefined);
+                  setFailure(undefined);
+                }}
+                type="date"
+                value={chosenDate}
+              />
+            </FormField>
+          ) : null}
+          {failure === undefined || notBusinessDay ? null : (
             <Alert>
               {code === "BILLING_BUSY" ? (
                 t("admin-billing:errors.billingBusy")
@@ -246,6 +297,7 @@ export function GenerateModal({
                 loadingLabel={t("admin-billing:confirm.generating")}
                 onClick={() => {
                   setAcceptedCollectionDate(retryCollectionDate);
+                  setChosenDate(retryCollectionDate);
                   void generate(retryCollectionDate);
                 }}
               >

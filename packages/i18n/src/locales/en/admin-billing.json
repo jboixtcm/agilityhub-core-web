@@ -71,7 +71,10 @@
     "undoSubmissionTitle": "Undo “sent to the bank” · {month}",
     "undoSubmissionBody": "The remittance will be generated again: you can mark it as sent again or roll it back. Do this only if the bank did not accept the file or it was marked by mistake.",
     "undoSubmission": "Undo “sent”",
-    "undoingSubmission": "Undoing…"
+    "undoingSubmission": "Undoing…",
+    "collectionDate": "Collection date",
+    "collectionDateHelp": "A TARGET banking business day, at least two business days after today.",
+    "collectionDateNotBusinessDay": "{date} is not a TARGET banking business day: the next one is {next}."
   },
   "simulation": {
     "incidentsTitle": "Step 1 — Simulation: issues first",

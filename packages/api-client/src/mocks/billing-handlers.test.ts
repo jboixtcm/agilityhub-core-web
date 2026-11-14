@@ -8,6 +8,11 @@ import { createApiClient } from "../client";
 import type { components } from "../generated/schema";
 
 import {
+  defaultCollectionDate,
+  isTargetBusinessDay,
+  targetBusinessDaysAfter,
+} from "./fixtures/billing";
+import {
   BILLING_MOCK_NOW,
   billingState,
   ERASED_MEMBER_ID,
@@ -485,6 +490,43 @@ describe("S12 R-12-11 / R-12-12 · POST /billing/runs («2 · GENERA REMESA SEPA
     expect(later.response.status).toBe(201);
     expect(later.data?.run.collectionDate).toBe("2026-09-02");
     expect(later.data?.remittance?.requestedCollectionDate).toBe("2026-09-02");
+  });
+
+  it("SEPA-05 (R-12-12): a chosen day off the TARGET calendar → 400 NOT_BUSINESS_DAY {nextBusinessDay}; the default and the lead time follow the calendar", async () => {
+    expect((await rollback(await liveRunId())).response.status).toBe(200);
+    const simulation = await simulationId();
+    expect((await month()).simulation?.kpis.collectionDate).toBe("2026-09-01");
+    for (const [chosen, next] of [
+      ["2026-09-05", "2026-09-07"],
+      ["2026-12-25", "2026-12-28"],
+    ] as const) {
+      expect(
+        await failure(
+          generate({ collectionDate: chosen, period: SEPTEMBER, simulationId: simulation }),
+        ),
+      ).toEqual({
+        code: "VALIDATION_ERROR",
+        details: {
+          field: "collectionDate",
+          fieldErrors: [{ code: "NOT_BUSINESS_DAY", field: "collectionDate" }],
+          nextBusinessDay: next,
+        },
+        status: 400,
+      });
+    }
+    expect(isTargetBusinessDay("2027-03-26")).toBe(false); // Good Friday 2027
+    expect(isTargetBusinessDay("2027-03-29")).toBe(false); // Easter Monday 2027
+    expect(isTargetBusinessDay("2027-03-30")).toBe(true);
+    expect(defaultCollectionDate("2027-01")).toBe("2027-01-04");
+    expect(defaultCollectionDate("2026-11")).toBe("2026-11-02");
+    expect(targetBusinessDaysAfter("2026-12-23", 2)).toBe("2026-12-28");
+    const chosen = await generate({
+      collectionDate: "2026-09-04",
+      period: SEPTEMBER,
+      simulationId: simulation,
+    });
+    expect(chosen.response.status).toBe(201);
+    expect(chosen.data?.remittance?.requestedCollectionDate).toBe("2026-09-04");
   });
 
   it("T-12-32 billingManualOnly: the run issues every receipt PENDING by hand and no remittance", async () => {

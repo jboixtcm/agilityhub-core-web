@@ -2636,3 +2636,102 @@ describe("SEPA-04 (b) bulk returns of a remittance and re-presentation (R-12-17/
     expect(await within(drawer).findByText("amb la propera remesa")).toBeVisible();
   });
 });
+
+describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collection date", () => {
+  /** The generate confirmation of the simulated September (billingStale: simulated, not generated). */
+  async function openGenerate(locale: Locale = "ca") {
+    await renderPage({ locale, scenario: "billingStale" });
+    const [simulate] = screen.getAllByRole("button", { name: /^1 · / });
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+    await screen.findByText(/^(Mes simulat\.|Month simulated\.)$/u);
+    fireEvent.click(screen.getByRole("button", { name: /^2 · / }));
+    return screen.findByRole("dialog");
+  }
+
+  it("prefills the simulated default and sends no date when the admin keeps it", async () => {
+    const dialog = await openGenerate();
+    const field = within(dialog).getByLabelText("Data de cobrament");
+    expect(field).toHaveValue("2026-09-01");
+    expect(field).toHaveAccessibleDescription(
+      "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
+    const runs = requests("POST", "/billing/runs");
+    expect(runs).toHaveLength(1);
+    expect(runs[0]?.body).not.toHaveProperty("collectionDate");
+  });
+
+  it("sends the date the admin chose", async () => {
+    const dialog = await openGenerate();
+    fireEvent.change(within(dialog).getByLabelText("Data de cobrament"), {
+      target: { value: "2026-09-04" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
+    expect(requests("POST", "/billing/runs")[0]?.body).toMatchObject({
+      collectionDate: "2026-09-04",
+      period: "2026-09",
+    });
+  });
+
+  it("a day that is not a TARGET business day is refused on the field, which offers the next one (another payload, another key)", async () => {
+    const dialog = await openGenerate();
+    const field = within(dialog).getByLabelText("Data de cobrament");
+    fireEvent.change(field, { target: { value: "2026-09-05" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    const offer = await within(dialog).findByRole("button", {
+      name: "Genera amb cobrament el 07/09/2026",
+    });
+    expect(field).toHaveAttribute("aria-invalid", "true");
+    expect(field).toHaveAccessibleDescription(
+      expect.stringContaining(
+        "El 05/09/2026 no és un dia hàbil bancari (TARGET): el següent és el 07/09/2026.",
+      ) as string,
+    );
+    // The field's own message, no general alert repeating it.
+    expect(within(dialog).getAllByRole("alert")).toHaveLength(1);
+    expect(within(dialog).queryByRole("button", { name: "Genera" })).toBeNull();
+    fireEvent.click(offer);
+    expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
+    const runs = requests("POST", "/billing/runs");
+    expect(runs).toHaveLength(2);
+    expect(runs[0]?.body).toMatchObject({ collectionDate: "2026-09-05" });
+    expect(runs[1]?.body).toMatchObject({ collectionDate: "2026-09-07", period: "2026-09" });
+    expect(runs[1]?.idempotencyKey).not.toBe(runs[0]?.idempotencyKey);
+  });
+
+  it("changing the date after a refusal clears it and generates with the new date", async () => {
+    const dialog = await openGenerate();
+    const field = within(dialog).getByLabelText("Data de cobrament");
+    fireEvent.change(field, { target: { value: "2026-12-25" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    await within(dialog).findByRole("button", { name: "Genera amb cobrament el 28/12/2026" });
+    fireEvent.change(field, { target: { value: "2026-09-03" } });
+    expect(field).not.toHaveAttribute("aria-invalid");
+    expect(within(dialog).queryByRole("alert")).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
+    expect(requests("POST", "/billing/runs")[1]?.body).toMatchObject({
+      collectionDate: "2026-09-03",
+    });
+  });
+
+  it("reads the field and its refusal in en", async () => {
+    const dialog = await openGenerate("en");
+    const field = within(dialog).getByLabelText("Collection date");
+    fireEvent.change(field, { target: { value: "2026-09-06" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Generate" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "is not a TARGET banking business day: the next one is",
+    );
+  });
+
+  it("a month without SEPA receipts has no date field", async () => {
+    await renderPage({ scenario: "billingManualOnly" });
+    fireEvent.click(await screen.findByRole("button", { name: "2 · GENERA ELS REBUTS" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).queryByLabelText("Data de cobrament")).toBeNull();
+  });
+});

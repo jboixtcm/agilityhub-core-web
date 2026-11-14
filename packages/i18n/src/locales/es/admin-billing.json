@@ -71,7 +71,10 @@
     "undoSubmissionTitle": "Deshacer «enviada al banco» · {month}",
     "undoSubmissionBody": "La remesa volverá a quedar como generada: podrás volver a marcarla como enviada o revertirla. Hazlo solo si el banco no ha aceptado el fichero o si se marcó por error.",
     "undoSubmission": "Deshacer «enviada»",
-    "undoingSubmission": "Deshaciendo…"
+    "undoingSubmission": "Deshaciendo…",
+    "collectionDate": "Fecha de cobro",
+    "collectionDateHelp": "Un día hábil bancario (TARGET), como mínimo dos días hábiles después de hoy.",
+    "collectionDateNotBusinessDay": "El {date} no es un día hábil bancario (TARGET): el siguiente es el {next}."
   },
   "simulation": {
     "incidentsTitle": "Paso 1 — Simulación: incidencias primero",

@@ -468,10 +468,11 @@ export function buildSimulation(
     id: uuid(5, world.sequence),
     incidents: [...incidentsOf(world.variant)],
     invoicesPreview: preview,
-    // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1), null without SEPA.
+    // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1, moved to the next
+    // TARGET business day, SEPA-05), null without SEPA.
     kpis: {
       ...simulationKpis(world, period),
-      collectionDate: world.providers.includes("SEPA_XML") ? `${period}-01` : null,
+      collectionDate: world.providers.includes("SEPA_XML") ? defaultCollectionDate(period) : null,
     },
     period,
   };
@@ -715,7 +716,7 @@ export function generateRun(
           id: remittanceId,
           messageId: `canic-${options.period}-${String(world.runs.length + 1)}`,
           period: options.period,
-          requestedCollectionDate: options.collectionDate ?? `${options.period}-01`,
+          requestedCollectionDate: options.collectionDate ?? defaultCollectionDate(options.period),
           runId,
           sequenceBreakdown: { FRST: 0, RCUR: sepaInvoices.length },
           status: "GENERATED",
@@ -734,7 +735,9 @@ export function generateRun(
     previousNextNumber,
     run: {
       byProvider,
-      collectionDate: sepa ? (options.collectionDate ?? `${options.period}-01`) : null,
+      collectionDate: sepa
+        ? (options.collectionDate ?? defaultCollectionDate(options.period))
+        : null,
       createdByAccountId: ADMIN_ACCOUNT_ID,
       finishedAt: null,
       id: runId,
@@ -911,6 +914,61 @@ function addDaysToDate(date: string, days: number): string {
   const day = new Date(`${date}T00:00:00Z`);
   day.setUTCDate(day.getUTCDate() + days);
   return day.toISOString().slice(0, 10);
+}
+
+/** Easter Sunday of `year` (Gregorian computus), `YYYY-MM-DD`. */
+function easterSunday(year: number): string {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return `${String(year)}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/**
+ * R-12-12 (SEPA-05): a TARGET business day, as the api's `TargetCalendar` — not a weekend, nor
+ * 1 January, Good Friday, Easter Monday, 1 May, 25 or 26 December.
+ */
+export function isTargetBusinessDay(date: string): boolean {
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+  if (weekday === 0 || weekday === 6) return false;
+  const monthDay = date.slice(5);
+  if (["01-01", "05-01", "12-25", "12-26"].includes(monthDay)) return false;
+  const easter = easterSunday(Number(date.slice(0, 4)));
+  return date !== addDaysToDate(easter, -2) && date !== addDaysToDate(easter, 1);
+}
+
+/** The day itself or the next TARGET business day (`TargetCalendar.onOrAfter`). */
+export function targetBusinessDayOnOrAfter(date: string): string {
+  let current = date;
+  while (!isTargetBusinessDay(current)) current = addDaysToDate(current, 1);
+  return current;
+}
+
+/** `days` TARGET business days after `date` (the bank's lead time, R-12-12). */
+export function targetBusinessDaysAfter(date: string, days: number): string {
+  let current = date;
+  let left = days;
+  while (left > 0) {
+    current = addDaysToDate(current, 1);
+    if (isTargetBusinessDay(current)) left -= 1;
+  }
+  return current;
+}
+
+/** The run's default collection date: day 1 (the Cànic's) of the billed month, rolled (SEPA-05). */
+export function defaultCollectionDate(period: string): string {
+  return targetBusinessDayOnOrAfter(`${period}-01`);
 }
 
 export function remittanceListItem(remittance: Remittance): RemittanceListItem {

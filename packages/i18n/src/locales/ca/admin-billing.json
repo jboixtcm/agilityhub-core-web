@@ -71,7 +71,10 @@
     "undoSubmissionTitle": "Desfés «enviada al banc» · {month}",
     "undoSubmissionBody": "La remesa tornarà a quedar com a generada: la podràs tornar a marcar com a enviada o retrocedir. Fes-ho només si el banc no ha acceptat el fitxer o si es va marcar per error.",
     "undoSubmission": "Desfés «enviada»",
-    "undoingSubmission": "Desfent…"
+    "undoingSubmission": "Desfent…",
+    "collectionDate": "Data de cobrament",
+    "collectionDateHelp": "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
+    "collectionDateNotBusinessDay": "El {date} no és un dia hàbil bancari (TARGET): el següent és el {next}."
   },
   "simulation": {
     "incidentsTitle": "Pas 1 — Simulació: incidències primer",

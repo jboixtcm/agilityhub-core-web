@@ -9,11 +9,13 @@ import {
   billingState,
   billingUuid,
   buildSimulation,
+  defaultCollectionDate,
   displayNumber,
   eur,
   FAILED_STRIPE_EVENTS,
   generateRun,
   isPeriod,
+  isTargetBusinessDay,
   listItem,
   memberMethod,
   periodCounts,
@@ -25,13 +27,15 @@ import {
   rollbackBlockers,
   runResource,
   shiftPeriod,
+  targetBusinessDayOnOrAfter,
+  targetBusinessDaysAfter,
   type BillingVariant,
   type BillingWorld,
   type StoredInvoice,
   type StoredRun,
 } from "./fixtures/billing";
 import { censusMembers, ERASED_MEMBER_ID } from "./fixtures/census";
-import { addDays, clubLocalDate } from "./fixtures/planning";
+import { clubLocalDate } from "./fixtures/planning";
 import { mockExportBody } from "./list-exports";
 import { fieldsProjection } from "./list-fields";
 import { apiError, validationError } from "./planning-handlers";
@@ -190,18 +194,6 @@ function invalidState(status: string) {
 
 function staleVersion() {
   return apiError("STALE_VERSION", "Stale version", 409);
-}
-
-/** Two business days after `date` (R-12-12: RCUR/CORE, weekends only — no bank holidays). */
-function businessDaysAfter(date: string, days: number): string {
-  let current = date;
-  let left = days;
-  while (left > 0) {
-    current = addDays(current, 1);
-    const weekday = new Date(`${current}T12:00:00Z`).getUTCDay();
-    if (weekday !== 0 && weekday !== 6) left -= 1;
-  }
-  return current;
 }
 
 function appendCollection(
@@ -750,8 +742,17 @@ export const billingHandlers = [
       const overlap = priceOverlap();
       if (overlap !== undefined) return overlap;
       const sepa = target.providers.includes("SEPA_XML");
-      const requested = payload?.collectionDate ?? `${period}-01`;
-      const earliest = businessDaysAfter(today(), 2);
+      const requested = payload?.collectionDate ?? defaultCollectionDate(period);
+      // R-12-12 (SEPA-05): a chosen date must be a TARGET business day (the default is rolled to
+      // one); then the two TARGET business days of lead time.
+      if (sepa && !isTargetBusinessDay(requested)) {
+        return apiError("VALIDATION_ERROR", "Validation failed", 400, {
+          field: "collectionDate",
+          fieldErrors: [{ code: "NOT_BUSINESS_DAY", field: "collectionDate" }],
+          nextBusinessDay: targetBusinessDayOnOrAfter(requested),
+        });
+      }
+      const earliest = targetBusinessDaysAfter(today(), 2);
       if (sepa && requested < earliest) {
         return apiError("COLLECTION_DATE_TOO_SOON", "Collection date too soon", 422, {
           earliest,
