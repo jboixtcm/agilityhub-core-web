@@ -9,6 +9,7 @@
     "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB": "Activity registration cancelled by the club",
     "ACTIVITY_UPDATED": "Activity changed",
     "ANNOUNCEMENT_SENT": "Announcement sent",
+    "ANNOUNCEMENT_RESENT": "Announcement's failed e-mails resent",
     "ATTENDANCE_OVERRIDDEN": "Attendance corrected",
     "BOOKING_BLOCK_CLEARED": "Booking block removed",
     "BOOKING_BLOCK_SET": "Bookings blocked",

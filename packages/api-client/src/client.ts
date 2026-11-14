@@ -43,8 +43,10 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   // S10 D14 (R-10-13): a row read and «Marcar-ho tot com a llegit».
   /^\/followup\/[^/]+\/read$/,
   "/followup/read-all",
-  // S11 «Enviar comunicat» and its dryRun (R-11-13).
+  // S11 «Enviar comunicat» and its dryRun (R-11-13), and an announcement's «Reenvia els fallits»
+  // (COMM-07).
   /^\/message-templates\/[^/]+\/send$/,
+  /^\/announcements\/[^/]+\/resend-failed$/,
   // S12 D6 and the remittances page (R-12-11, R-12-13…R-12-20, R-12-29): every write the contract
   // keys. Not `POST /billing/simulations`: its contract declares no key.
   /^\/billing\/runs$/,

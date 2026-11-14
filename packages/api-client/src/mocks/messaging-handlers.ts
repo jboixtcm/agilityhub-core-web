@@ -167,6 +167,7 @@ const NOTIFICATION_SPEC: ListSpec<StoredNotification> = {
     "recipient",
     "channels",
     "readAt",
+    "batchId",
   ],
   filterable: ["code", "category", "channel", "status", "memberId", "createdAt"],
   search: (item) =>
@@ -496,6 +497,56 @@ export const messagingHandlers = [
         .sort(([left], [right]) => left.localeCompare(right))
         .map(([value, count]) => ({ count, label: valueLabel(field, value), value })),
     });
+  }),
+  // COMM-07 (R-11-13): «Reenvia els fallits» of an announcement: every e-mail of the batch that
+  // ended FAILED (with its address) goes back to the queue, due now, its attempts at zero; 0 writes
+  // nothing. ADMIN, keyed; an unknown batch (or another club's) is 404.
+  http.post("*/api/v1/announcements/:batchId/resend-failed", ({ params, request }) => {
+    const refused = adminOnly();
+    if (refused !== undefined) return refused;
+    const key = request.headers.get("Idempotency-Key");
+    if (key === null || key === "") {
+      return validationError("Idempotency-Key", "REQUIRED");
+    }
+    const batchId = String(params.batchId);
+    const signature = JSON.stringify({ batchId, route: "resend-failed" });
+    const replay = messagingState.idempotency.get(key);
+    if (replay !== undefined) {
+      return replay.signature === signature
+        ? HttpResponse.json(replay.body as Record<string, unknown>, { status: replay.status })
+        : failure(409, "IDEMPOTENCY_KEY_REUSED", { reason: "DIFFERENT_REQUEST" });
+    }
+    const notices = notificationLog.filter((item) => item.batchId === batchId);
+    const sentBatch = /^batch-(\d{4})$/u.exec(batchId);
+    if (
+      notices.length === 0 &&
+      (sentBatch === null || Number(sentBatch[1]) > messagingState.batches)
+    ) {
+      return apiError("NOT_FOUND", "Announcement not found", 404);
+    }
+    let resent = 0;
+    for (const notice of notices) {
+      notice.deliveries = notice.deliveries.map((entry) => {
+        if (entry.channel !== "EMAIL" || entry.status !== "FAILED" || entry.target == null) {
+          return entry;
+        }
+        resent += 1;
+        return {
+          ...entry,
+          attempts: 0,
+          failedAt: null,
+          nextAttemptAt: new Date().toISOString(),
+          status: "QUEUED",
+        };
+      });
+      notice.channels = notice.deliveries.map((entry) => ({
+        channel: entry.channel,
+        status: entry.status,
+      }));
+    }
+    const answer = { batchId, resent };
+    messagingState.idempotency.set(key, { body: answer, signature, status: 202 });
+    return HttpResponse.json(answer, { status: 202 });
   }),
   http.get("*/api/v1/notifications/:id", ({ params }) => {
     const refused = adminOnly();

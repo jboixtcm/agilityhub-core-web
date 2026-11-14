@@ -1,9 +1,18 @@
-import { type ApiClient, type components, isApiError, listFields } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  isApiError,
+  isInProgress,
+  listFields,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
+  Button,
   DataTable,
   Drawer,
+  Modal,
   Skeleton,
   type Tone,
   UniversalList,
@@ -137,7 +146,11 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
     const result = await client.GET("/notifications", {
       params: {
         query: {
-          fields: listFields(state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [])),
+          // COMM-07: every row brings its announcement batch, for the drawer's «Reenvia els fallits».
+          fields: listFields([
+            ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? []),
+            "batchId",
+          ]),
           filter: apiFilters(state.filters),
           page: state.page,
           ...(state.q === "" ? {} : { q: state.q }),
@@ -418,29 +431,141 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
       />
       {openId === undefined ? null : (
         <NotificationDrawer
+          batchId={data?.items.find((row) => row.id === openId)?.batchId ?? undefined}
           client={client}
           id={openId}
           onClose={() => {
             setOpenId(undefined);
           }}
+          onResent={retry}
         />
       )}
     </section>
   );
 }
 
+/**
+ * COMM-07 (R-11-13): «Reenvia els fallits» of the announcement a notice belongs to, offered on a
+ * notice of an announcement batch whose own e-mail failed. A confirmation first; then
+ * `POST /announcements/{batchId}/resend-failed` with its key; the api's count says how many went
+ * back to the queue.
+ */
+function ResendFailed({
+  batchId,
+  client,
+  onResent,
+}: {
+  batchId: string;
+  client: ApiClient;
+  /** The api's answer in words; the drawer keeps it once the e-mail is no longer FAILED. */
+  onResent: (message: string) => void;
+}) {
+  const { t } = useTranslation(["admin-messaging", "common", "errors"]);
+  const keys = useSubmissionKeys();
+  const [confirming, setConfirming] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [failure, setFailure] = useState<string>();
+
+  const resend = async () => {
+    setPending(true);
+    setFailure(undefined);
+    try {
+      const { data } = await keys.send(JSON.stringify(["resend-failed", batchId]), (key) =>
+        client.POST("/announcements/{batchId}/resend-failed", {
+          params: { header: { "Idempotency-Key": key }, path: { batchId } },
+        }),
+      );
+      const resent = data?.resent ?? 0;
+      setConfirming(false);
+      onResent(
+        resent === 0
+          ? t("admin-messaging:log.resend.none")
+          : t("admin-messaging:log.resend.done", { count: resent }),
+      );
+    } catch (cause) {
+      setFailure(
+        isInProgress(cause)
+          ? t("common:inProgress")
+          : isApiError(cause, "NOT_FOUND")
+            ? t("admin-messaging:log.resend.notFound")
+            : isApiError(cause) && cause.status !== 0 && cause.code !== "NETWORK"
+              ? t(`errors:${cause.code}`, { defaultValue: t("admin-messaging:log.resend.error") })
+              : t("admin-messaging:log.resend.error"),
+      );
+    } finally {
+      setPending(false);
+    }
+  };
+
+  return (
+    <section className="messaging-log__resend">
+      <p>{t("admin-messaging:log.resend.help")}</p>
+      <Button
+        onClick={() => {
+          setFailure(undefined);
+          setConfirming(true);
+        }}
+        variant="secondary"
+      >
+        {t("admin-messaging:log.resend.action")}
+      </Button>
+      <Modal
+        closeLabel={t("admin-messaging:log.detail.close")}
+        dismissible={!pending}
+        onClose={() => {
+          setConfirming(false);
+        }}
+        open={confirming}
+        title={t("admin-messaging:log.resend.confirmTitle")}
+      >
+        <p>{t("admin-messaging:log.resend.confirmBody")}</p>
+        {failure === undefined ? null : (
+          <p className="messaging-editor__error" role="alert">
+            {failure}
+          </p>
+        )}
+        <div className="messaging-dialog__actions">
+          <Button
+            disabled={pending}
+            onClick={() => {
+              setConfirming(false);
+            }}
+            variant="ghost"
+          >
+            {t("admin-messaging:log.resend.cancel")}
+          </Button>
+          <Button
+            loading={pending}
+            loadingLabel={t("admin-messaging:log.resend.sending")}
+            onClick={() => void resend()}
+          >
+            {t("admin-messaging:log.resend.confirm")}
+          </Button>
+        </div>
+      </Modal>
+    </section>
+  );
+}
+
 function NotificationDrawer({
+  batchId,
   client,
   id,
   onClose,
+  onResent,
 }: {
+  /** The announcement batch of the row opened (`NotificationListItem.batchId`), if any. */
+  batchId?: string | undefined;
   client: ApiClient;
   id: string;
   onClose: () => void;
+  onResent: () => void;
 }) {
   const { t } = useTranslation(["admin-messaging", "enums", "errors"]);
   const formats = useClubFormats();
   const [state, setState] = useState<{ detail: Detail } | { error: unknown } | undefined>();
+  const [reload, setReload] = useState(0);
+  const [resent, setResent] = useState<string>();
   const temporaryReasons: Readonly<Record<string, string>> = {
     SENDING_IP_BLOCKED_SPAMCOP: t("admin-messaging:log.reason.SENDING_IP_BLOCKED_SPAMCOP"),
     SENDING_IP_BLOCKED: t("admin-messaging:log.reason.SENDING_IP_BLOCKED"),
@@ -462,7 +587,7 @@ function NotificationDrawer({
     return () => {
       current = false;
     };
-  }, [client, id]);
+  }, [client, id, reload]);
 
   const dateTime = (instant: string | null | undefined) =>
     instant == null
@@ -620,6 +745,21 @@ function NotificationDrawer({
               </dl>
             </section>
           ))}
+          {batchId === undefined ||
+          !state.detail.deliveries.some(
+            (delivery) => delivery.channel === "EMAIL" && delivery.status === "FAILED",
+          ) ? null : (
+            <ResendFailed
+              batchId={batchId}
+              client={client}
+              onResent={(message) => {
+                setResent(message);
+                setReload((value) => value + 1);
+                onResent();
+              }}
+            />
+          )}
+          {resent === undefined ? null : <p role="status">{resent}</p>}
         </div>
       )}
     </Drawer>

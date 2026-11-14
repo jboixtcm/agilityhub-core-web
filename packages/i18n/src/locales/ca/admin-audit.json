@@ -9,6 +9,7 @@
     "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB": "Inscripció a l'activitat cancel·lada pel club",
     "ACTIVITY_UPDATED": "Activitat modificada",
     "ANNOUNCEMENT_SENT": "Comunicat enviat",
+    "ANNOUNCEMENT_RESENT": "Correus fallits d'un comunicat reenviats",
     "ATTENDANCE_OVERRIDDEN": "Assistència corregida",
     "BOOKING_BLOCK_CLEARED": "Bloqueig de reserves retirat",
     "BOOKING_BLOCK_SET": "Reserves bloquejades",
