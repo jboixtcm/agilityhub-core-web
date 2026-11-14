@@ -51,7 +51,7 @@
   "DOCUMENT_NOT_PENDING": "Este documento no está pendiente de revisión.",
   "DOCUMENT_REMINDER_TOO_SOON": "Todavía no se puede enviar el recordatorio del documento.",
   "DOCUMENT_TYPE_UNKNOWN": "No se reconoce el tipo de documento.",
-  "DOG_ALREADY_BOOKED": "Este perro ya tiene una reserva.",
+  "DOG_ALREADY_BOOKED": "Este perro ya tiene una reserva a esta hora.",
   "DOG_CHIP_ALREADY_REGISTERED": "El chip de este perro ya está registrado.",
   "DOG_DOCUMENT_REQUIRED": "Se necesita un documento para este perro.",
   "DOG_HAS_FUTURE_BOOKINGS": "Este perro tiene reservas futuras.",

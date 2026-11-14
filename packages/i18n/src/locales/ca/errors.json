@@ -51,7 +51,7 @@
   "DOCUMENT_NOT_PENDING": "Aquest document no està pendent de revisió.",
   "DOCUMENT_REMINDER_TOO_SOON": "Encara no es pot enviar el recordatori del document.",
   "DOCUMENT_TYPE_UNKNOWN": "No es reconeix el tipus de document.",
-  "DOG_ALREADY_BOOKED": "Aquest gos ja té una reserva.",
+  "DOG_ALREADY_BOOKED": "Aquest gos ja té una reserva a aquesta hora.",
   "DOG_CHIP_ALREADY_REGISTERED": "El xip d'aquest gos ja està registrat.",
   "DOG_DOCUMENT_REQUIRED": "Cal un document per a aquest gos.",
   "DOG_HAS_FUTURE_BOOKINGS": "Aquest gos té reserves futures.",

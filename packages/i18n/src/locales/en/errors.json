@@ -51,7 +51,7 @@
   "DOCUMENT_NOT_PENDING": "This document is not pending review.",
   "DOCUMENT_REMINDER_TOO_SOON": "The document reminder cannot be sent yet.",
   "DOCUMENT_TYPE_UNKNOWN": "The document type is not recognized.",
-  "DOG_ALREADY_BOOKED": "This dog already has a booking.",
+  "DOG_ALREADY_BOOKED": "This dog already has a booking at this time.",
   "DOG_CHIP_ALREADY_REGISTERED": "This dog's chip is already registered.",
   "DOG_DOCUMENT_REQUIRED": "A document is required for this dog.",
   "DOG_HAS_FUTURE_BOOKINGS": "This dog has future bookings.",

@@ -648,6 +648,28 @@ describe("R-08-15 the claim of a NOTIFIED waiting entry (step 5)", () => {
   });
 });
 
+describe("BOOK-02 (decision of 13 Nov 2026): the dog already has a booking at that time", () => {
+  it("422 DOG_ALREADY_BOOKED on the confirmation goes back to 04 with «Aquest gos ja té una reserva a aquesta hora.» and releases the hold", async () => {
+    const writes = recordWrites();
+    server.use(
+      http.post("*/api/v1/bookings", () =>
+        HttpResponse.json(
+          { code: "DOG_ALREADY_BOOKED", details: {}, message: "x", traceId: "t" },
+          { status: 422 },
+        ),
+      ),
+    );
+    await tapRow(0);
+    fireEvent.click(screen.getByRole("button", { name: "CONFIRMAR LA RESERVA" }));
+    expect(await screen.findByText("Aquest gos ja té una reserva a aquesta hora.")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Classes" })).toBeVisible();
+    expect(window.location.pathname).toBe("/reservar");
+    await waitFor(() => {
+      expect(writes.filter((write) => write.method === "DELETE")).toHaveLength(1);
+    });
+  });
+});
+
 /** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
 const IN_PROGRESS_BODY = {
   code: "IDEMPOTENCY_KEY_REUSED",

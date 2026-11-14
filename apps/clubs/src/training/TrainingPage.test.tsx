@@ -781,9 +781,11 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the sha
     expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 7:30–8:00 · Muntanya");
     expect(confirmButton()).toBeEnabled();
     fireEvent.click(confirmButton());
-    expect(await screen.findByText("Aquest gos ja té una reserva.")).toBeVisible();
+    expect(await screen.findByText("Aquest gos ja té una reserva a aquesta hora.")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Entesos" }));
-    expect(screen.queryByText("Aquest gos ja té una reserva.")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Aquest gos ja té una reserva a aquesta hora."),
+    ).not.toBeInTheDocument();
     // The api answered (a 4xx with its body): the same booking chosen again is a new submission.
     choose();
     fireEvent.click(confirmButton());
