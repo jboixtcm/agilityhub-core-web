@@ -69,14 +69,17 @@ export default defineConfig(({ mode }) => {
           codeSplitting: {
             groups: [
               {
-                // Load the related planning, activity and training labels together for each language.
+                // Keep related translations in language-specific chunks, including the SEPA settings and billing screens.
                 name(id) {
-                  const locale =
-                    /\/locales\/(ca|es|en)\/admin-(?:activities|scheduling|training)\.json$/u.exec(
+                  const match =
+                    /\/locales\/(ca|es|en)\/admin-(activities|scheduling|training|billing|settings)\.json$/u.exec(
                       id,
                     );
-                  const language = locale?.[1];
-                  return language === undefined ? null : `planning-labels-${language}`;
+                  const language = match?.[1];
+                  if (language === undefined) return null;
+                  const family =
+                    match?.[2] === "billing" || match?.[2] === "settings" ? "settings" : "planning";
+                  return `${family}-labels-${language}`;
                 },
               },
             ],
