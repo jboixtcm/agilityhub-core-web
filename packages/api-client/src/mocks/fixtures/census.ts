@@ -87,6 +87,7 @@ const memberOverviewFixture: MemberOverview = {
       level: levelAt(3),
       name: "Rock",
       pack: {
+        consumed: 6,
         expiresOn: "2026-11-12",
         id: "pack-rock-10",
         remaining: 4,
@@ -322,7 +323,15 @@ function dogDetailFixture(id: "dog-duna" | "dog-rock"): DogDetail {
       status: "ACTIVE",
     },
     ...(rock
-      ? { pack: { expiresOn: "2026-11-12", id: "pack-rock-10", remaining: 4, total: 10 } }
+      ? {
+          pack: {
+            consumed: 6,
+            expiresOn: "2026-11-12",
+            id: "pack-rock-10",
+            remaining: 4,
+            total: 10,
+          },
+        }
       : {}),
     tasksSummary: { completed: 1, open: 2 },
     version: 4,
@@ -936,6 +945,7 @@ function dogListItem(input: DogFixtureInput): DogListItem {
     ...("pack" in input
       ? {
           pack: {
+            consumed: 6,
             expiresOn: "2026-11-12",
             id: "pack-list-10",
             remaining: 4,

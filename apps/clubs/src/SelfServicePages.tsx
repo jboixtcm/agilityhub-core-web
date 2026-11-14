@@ -586,8 +586,9 @@ function DogCard({
     });
   const pack = dogPacks[0];
   const usablePackCount = dogPacks.filter((item) => item.state === "ACTIVE").length;
+  const adjustedSessions = pack === undefined ? 0 : pack.consumed + pack.remaining;
   const progress =
-    pack === undefined || pack.sessionsTotal === 0 ? 0 : pack.consumed / pack.sessionsTotal;
+    pack === undefined || adjustedSessions === 0 ? 0 : pack.consumed / adjustedSessions;
 
   return (
     <Card className="dog-card" id={`dog-card-${dog.id}`} tabIndex={-1}>

@@ -1,4 +1,5 @@
 {
+  "support": "Support",
   "common": {
     "error": "The action could not be completed.",
     "loading": "Loading…",

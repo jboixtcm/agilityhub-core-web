@@ -207,6 +207,7 @@
       "active": "Active",
       "color": "Colour",
       "member": "Member",
+      "profile": "Profile",
       "shortName": "Short name",
       "since": "Since"
     },
@@ -214,8 +215,9 @@
     "createInstructorTitle": "New instructor",
     "editAdministratorTitle": "Edit administrator",
     "editInstructorTitle": "Edit instructor",
+    "editSupport": "Edit support staff member",
     "emptyAdministrators": "There are no administrators yet",
-    "emptyInstructors": "There are no instructors yet",
+    "emptyInstructors": "There are no instructors or support staff yet",
     "fields": {
       "color": "Colour",
       "member": "Member",
@@ -223,15 +225,19 @@
       "shortName": "Short name",
       "since": "Since"
     },
-    "instructorCaption": "Club instructors",
+    "instructor": "Instructor",
+    "instructorCaption": "Instructors and support staff",
     "instructorInUse": "They have {count} future classes assigned: reassign them in the calendar before deactivating them",
-    "instructors": "Instructors",
+    "instructors": "Instructors and support staff",
     "lastAdmin": "There must be at least one active administrator",
     "memberWithDog": "{name} ({dog})",
     "newAdministrator": "New administrator",
     "newInstructor": "New instructor",
+    "newSupport": "New support staff member",
     "removeQuestion": "Delete {name}?",
     "removeTitle": "Delete team member",
-    "title": "Instructors and administrators"
+    "support": "Support",
+    "supportHelp": "This member can be assigned to templates and classes. Their current permissions stay the same.",
+    "title": "Club team"
   }
 }

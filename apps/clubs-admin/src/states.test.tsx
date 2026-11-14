@@ -115,7 +115,7 @@ const SCREENS: [string, string, string, string | null][] = [
   ["D13", "/alumnes", "Carregant els alumnes", "Cap alumne amb aquesta cerca"],
   ["D14", "/seguiment", "Carregant el llistat", "No hi ha res al seguiment"],
   ["D16", "/pistes", "Carregant", "Encara no hi ha cap pista"],
-  ["D17", "/equip", "Carregant", "Encara no hi ha cap instructor"],
+  ["D17", "/equip", "Carregant", "Encara no hi ha cap instructor ni cap persona de suport"],
   ["D18", "/recorreguts", "Carregant el llistat", "Encara no hi ha cap recorregut"],
   ["inactivitats", "/inactivitats", "Carregant la fitxa…", "No hi ha inactivitats"],
   ["auditoria", "/auditoria", "Carregant el llistat", "No hi ha entrades d'auditoria"],

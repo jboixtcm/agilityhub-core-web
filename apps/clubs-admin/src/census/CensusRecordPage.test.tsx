@@ -290,12 +290,24 @@ describe("T-03-39 D10 member record", () => {
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
 
-    expect(await screen.findByText("Pack 10: 4/6 · caduca 12-11")).toBeVisible();
+    expect(await screen.findByText("Pack 10: 6/6 · caduca 12-11")).toBeVisible();
     const refreshedBillingPack = screen
       .getByText(/Rock · Pack 10/u)
       .closest(".member-billing__pack");
-    expect(refreshedBillingPack).toHaveTextContent("4 consumides");
+    expect(refreshedBillingPack).toHaveTextContent("6 consumides");
     expect(refreshedBillingPack).toHaveTextContent("6 disponibles");
+
+    fireEvent.click(screen.getByRole("button", { name: "Corregeix les classes consumides" }));
+    const correction = screen.getByRole("dialog", { name: "Corregeix les classes consumides" });
+    fireEvent.change(within(correction).getByLabelText("Total de classes consumides"), {
+      target: { value: "3" },
+    });
+    fireEvent.change(within(correction).getByLabelText("Motiu"), { target: { value: "Recompte" } });
+    fireEvent.click(within(correction).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("Pack 10: 3/9 · caduca 12-11")).toBeVisible();
+    expect(screen.getByText(/Rock · Pack 10/u).closest(".member-billing__pack")).toHaveTextContent(
+      "3 consumides · 9 disponibles",
+    );
   });
 
   it("renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL", async () => {

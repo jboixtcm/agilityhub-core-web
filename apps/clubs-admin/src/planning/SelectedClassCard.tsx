@@ -21,7 +21,9 @@ import {
   minutesOf,
   type OpeningHours,
   openingOf,
+  rangeOptions,
   reviewTimeValue,
+  TimeSuggestions,
   timeLabel,
   timeOf,
   useCalendarErrorMessage,
@@ -30,7 +32,7 @@ import type { ClassHeading } from "./CancelClassModal";
 import { ClassRegistrantsPanel } from "./ClassRegistrantsPanel";
 import { automaticDescription } from "./description";
 import { PlannedCourseSelect, useCoursesModule } from "./PlannedCourseSelect";
-import type { PlanningCatalogs } from "./shared";
+import { instructorNames, planningStaffName, type PlanningCatalogs } from "./shared";
 
 type ClassSessionPatch = components["schemas"]["ClassSessionPatchRequest"];
 
@@ -256,6 +258,7 @@ export function SelectedClassCard({
   // Starts on slot boundaries that keep the class length inside the day's opening hours; a closed
   // day (R-02-09) offers none, and neither do the hours while they load: the class keeps its time.
   const opening = openingHours === undefined ? undefined : openingOf(openingHours, session.date);
+  const times = rangeOptions(opening ?? null, settings.slotMinutes, settings.slotMinutes);
   const closedDay = opening === null;
   // On a closed day the api re-validates the whole class (OUTSIDE_OPENING_HOURS) on any patch that
   // is not only `notes`, even with its times unchanged: only «Notes» stays editable there. The
@@ -284,11 +287,8 @@ export function SelectedClassCard({
       .filter((level) => ids.includes(level.id))
       .map((level) => level.name)
       .join(", ") || t("admin-scheduling:calendar.selected.noLevels");
-  const instructorNames = (ids: readonly string[]) =>
-    ids
-      .map((id) => catalogs.instructors.find((instructor) => instructor.id === id)?.shortName)
-      .filter((name): name is string => name !== undefined)
-      .join(", ");
+  const staffNames = (ids: readonly string[]) =>
+    instructorNames(ids, catalogs.instructors, t("admin-scheduling:support"));
   const preview = useMemo(
     () =>
       sameSet(chips.levelIds, session.levelIds) && (session.description ?? "") === ""
@@ -494,7 +494,7 @@ export function SelectedClassCard({
                 ) : null}
                 {instructorOptions.map((instructor) => (
                   <option key={instructor.id} value={instructor.id}>
-                    {instructor.shortName}
+                    {planningStaffName(instructor, t("admin-scheduling:support"))}
                   </option>
                 ))}
               </Select>
@@ -513,10 +513,10 @@ export function SelectedClassCard({
               }}
               options={instructorOptions.map((instructor) => ({
                 id: instructor.id,
-                label: instructor.shortName,
+                label: planningStaffName(instructor, t("admin-scheduling:support")),
               }))}
               selected={chips.instructorIds}
-              summary={instructorNames(chips.instructorIds)}
+              summary={staffNames(chips.instructorIds)}
             />
           )}
           <label
@@ -547,6 +547,7 @@ export function SelectedClassCard({
             </span>
             <Input
               disabled={chipsDisabled}
+              list="calendar-selected-start-suggestions"
               type="time"
               step={60}
               min={opening?.open}
@@ -565,12 +566,14 @@ export function SelectedClassCard({
               value={chips.startTime}
             />
           </label>
+          <TimeSuggestions id="calendar-selected-start-suggestions" times={times.starts} />
           <label className={chipClass("calendar-chip calendar-chip--select")}>
             <span className="calendar-chip__label">
               {t("admin-scheduling:calendar.createForm.end")}
             </span>
             <Input
               disabled={chipsDisabled}
+              list="calendar-selected-end-suggestions"
               type="time"
               step={60}
               min={chips.startTime}
@@ -581,6 +584,7 @@ export function SelectedClassCard({
               value={chips.endTime}
             />
           </label>
+          <TimeSuggestions id="calendar-selected-end-suggestions" times={times.ends} />
           <label className={chipClass("calendar-chip calendar-chip--wide")}>
             <span className="calendar-chip__label">
               {t("admin-scheduling:classCard.description")}
@@ -625,7 +629,7 @@ export function SelectedClassCard({
           ) : null}
           <StaticChip
             label={t("admin-scheduling:classCard.instructor")}
-            value={instructorNames(session.instructorIds)}
+            value={staffNames(session.instructorIds)}
           />
           <StaticChip
             label={t("admin-scheduling:classCard.capacity")}

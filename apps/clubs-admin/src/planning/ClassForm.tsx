@@ -25,6 +25,7 @@ import {
   type TemplateClass,
   type TimeBand,
   weekdayLabel,
+  planningStaffName,
 } from "./shared";
 
 export interface ClassFormValues {
@@ -405,7 +406,7 @@ export function ClassForm({
             >
               {activeInstructors.map((instructor) => (
                 <option key={instructor.id} value={instructor.id}>
-                  {instructor.shortName}
+                  {planningStaffName(instructor, t("admin-scheduling:support"))}
                 </option>
               ))}
             </Select>
@@ -427,7 +428,7 @@ export function ClassForm({
                     }}
                     type="button"
                   >
-                    {instructor.shortName}
+                    {planningStaffName(instructor, t("admin-scheduling:support"))}
                   </button>
                 );
               })}

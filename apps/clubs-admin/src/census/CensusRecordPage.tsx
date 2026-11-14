@@ -969,7 +969,7 @@ function MemberSummary({
                               : formatDate(dog.pack.expiresOn, formats, false).replaceAll("/", "-"),
                           remaining: dog.pack.remaining,
                           total: dog.pack.total,
-                          used: dog.pack.total - dog.pack.remaining,
+                          used: dog.pack.consumed,
                         })}
                       </span>
                     ) : null}

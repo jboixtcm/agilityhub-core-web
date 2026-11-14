@@ -737,7 +737,11 @@ function WeekGrid({
             item.ringId === null || item.ringId === undefined
               ? undefined
               : ringsById.get(item.ringId);
-          const instructors = instructorNames(item, catalogs.instructors);
+          const instructors = instructorNames(
+            item.instructorIds,
+            catalogs.instructors,
+            t("admin-scheduling:support"),
+          );
           const warnings = item.inconsistencyIds
             .map((id) => inconsistencyTypes.get(id))
             .filter((type) => type !== undefined)

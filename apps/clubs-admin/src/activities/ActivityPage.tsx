@@ -37,6 +37,8 @@ import {
   type OpeningHours,
   openingOf,
   parseMaskedDate,
+  rangeOptions,
+  TimeSuggestions,
 } from "../planning/calendar-shared";
 
 import { ActivityPlacementsCard } from "./ActivityPlacementsCard";
@@ -935,6 +937,13 @@ export function ActivityPage({
     isoDate !== undefined &&
     opening !== undefined &&
     openingOf(opening, isoDate) === null;
+  const suggestionWindow =
+    blocksRings && isoDate !== undefined
+      ? opening === undefined
+        ? null
+        : openingOf(opening, isoDate)
+      : { open: "00:00", close: "23:59" };
+  const times = rangeOptions(suggestionWindow, settings.slotMinutes, settings.slotMinutes);
   const holiday = isoDate !== undefined && settings.holidays.includes(isoDate);
   const waitlistModule = branding.modules.includes("WAITLIST");
   const title = activity.title;
@@ -1251,6 +1260,7 @@ export function ActivityPage({
               >
                 <Input
                   id="activity-start"
+                  list="activity-start-suggestions"
                   type="time"
                   step={60}
                   onChange={(event) => {
@@ -1258,6 +1268,7 @@ export function ActivityPage({
                   }}
                   value={form.startTime}
                 />
+                <TimeSuggestions id="activity-start-suggestions" times={times.starts} />
               </FormField>
               <FormField
                 {...fieldError("endTime")}
@@ -1266,6 +1277,7 @@ export function ActivityPage({
               >
                 <Input
                   id="activity-end"
+                  list="activity-end-suggestions"
                   type="time"
                   step={60}
                   onChange={(event) => {
@@ -1273,6 +1285,7 @@ export function ActivityPage({
                   }}
                   value={form.endTime}
                 />
+                <TimeSuggestions id="activity-end-suggestions" times={times.ends} />
               </FormField>
             </div>
             {holiday ? (

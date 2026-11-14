@@ -2301,7 +2301,7 @@ describe("T-03-40 mobile own dogs", () => {
 
   it("E8-W02 round 3 #4 keeps expired sessions visible without availability and counts only usable extra packs", async () => {
     const pack = (id: string, dogId: string, state: "ACTIVE" | "EXPIRED") => ({
-      consumed: state === "ACTIVE" ? 2 : 6,
+      consumed: 6,
       dogId,
       expiresOn: state === "ACTIVE" ? "2027-01-31" : "2026-07-31",
       id,
@@ -2310,7 +2310,7 @@ describe("T-03-40 mobile own dogs", () => {
       openedOn: "2026-01-01",
       planId: "plan-pack-10",
       planName: "Pack 10",
-      remaining: state === "ACTIVE" ? 8 : 4,
+      remaining: state === "ACTIVE" ? 6 : 4,
       sessionsTotal: 10,
       state,
       upfrontPaymentId: null,
@@ -2334,6 +2334,9 @@ describe("T-03-40 mobile own dogs", () => {
     expect(duna).toHaveTextContent("4");
     expect(duna).not.toHaveTextContent("4 disponibles");
     expect(rock).not.toHaveTextContent("+1 pack");
+    expect(rock).toHaveTextContent("6 consumides");
+    expect(rock).toHaveTextContent("6 disponibles");
+    expect(rock?.querySelector(".dog-pack__track span")).toHaveStyle({ inlineSize: "50%" });
   });
 
   it("E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions", async () => {

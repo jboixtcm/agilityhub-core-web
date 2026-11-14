@@ -526,7 +526,7 @@ test("T-05-22/T-05-25 real catalog create, edit and deactivate round trips", asy
 
   await screenshot(page, "D11-parametres-catalogs-core-1280.png");
   await navigateSpa(page, "/equip");
-  await expect(page.getByRole("heading", { name: "Instructors i administradors" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Equip del club" })).toBeVisible();
   await screenshot(page, "D17-equip-core-1280.png");
   await navigateSpa(page, "/modalitats");
   await expect(page.getByRole("heading", { name: "Modalitats i tarifes" })).toBeVisible();

@@ -93,6 +93,92 @@ describe("D10 member billing block", () => {
     expect(await within(dialog).findByText(/no pot superar/u)).toBeVisible();
   });
 
+  it("sets an absolute consumed count and preserves a separately adjusted balance", async () => {
+    await renderBlock();
+    fireEvent.click(await screen.findByRole("button", { name: "Ajusta" }));
+    const adjustment = screen.getByRole("dialog", { name: "Ajusta" });
+    fireEvent.change(within(adjustment).getByLabelText("Variació de sessions"), {
+      target: { value: "2" },
+    });
+    fireEvent.change(within(adjustment).getByLabelText("Motiu"), {
+      target: { value: "Dues sessions de regal" },
+    });
+    fireEvent.click(within(adjustment).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText(/6 consumides · 6 disponibles/u)).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Corregeix les classes consumides" }));
+    const correction = screen.getByRole("dialog", { name: "Corregeix les classes consumides" });
+    const input = within(correction).getByLabelText("Total de classes consumides");
+    expect(input).toHaveValue(6);
+    fireEvent.change(input, { target: { value: "3" } });
+    expect(
+      within(correction).getByText(/Saldo després de la correcció: 9 sessions/u),
+    ).toBeVisible();
+    fireEvent.change(within(correction).getByLabelText("Motiu"), {
+      target: { value: "Recompte d’assistència" },
+    });
+    fireEvent.click(within(correction).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText(/3 consumides · 9 disponibles/u)).toBeVisible();
+  });
+
+  it("refreshes a stale pack and requires reviewing the new counts", async () => {
+    server.use(
+      http.post("*/api/v1/pack-balances/:id/consumption-corrections", () =>
+        HttpResponse.json({ code: "STALE_VERSION", message: "Changed" }, { status: 409 }),
+      ),
+    );
+    await renderBlock();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Corregeix les classes consumides" }),
+    );
+    const correction = screen.getByRole("dialog", { name: "Corregeix les classes consumides" });
+    fireEvent.change(within(correction).getByLabelText("Total de classes consumides"), {
+      target: { value: "8" },
+    });
+    fireEvent.change(within(correction).getByLabelText("Motiu"), {
+      target: { value: "Classes anteriors" },
+    });
+    fireEvent.click(within(correction).getByRole("button", { name: "Desa" }));
+    expect(await within(correction).findByRole("alert")).toHaveTextContent("El pack ha canviat");
+    expect(within(correction).getByRole("button", { name: "Desa" })).toBeDisabled();
+  });
+
+  it("shows the minimum from charged bookings and excludes refunded bookings", async () => {
+    server.use(
+      http.get("*/api/v1/pack-balances", () =>
+        HttpResponse.json([
+          {
+            id: "pack-rock",
+            dogId: "dog-rock",
+            planName: "Pack 10",
+            consumed: 4,
+            sessionsTotal: 10,
+            remaining: 6,
+            expiresOn: "2026-11-25",
+            state: "ACTIVE",
+            movements: [
+              { bookingId: "attended", type: "CONSUME", delta: -1 },
+              { bookingId: "cancelled", type: "CONSUME", delta: -1 },
+              { bookingId: "cancelled", type: "REFUND", delta: 1 },
+            ],
+          },
+        ]),
+      ),
+    );
+    await renderBlock();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Corregeix les classes consumides" }),
+    );
+    const dialog = screen.getByRole("dialog", { name: "Corregeix les classes consumides" });
+    const field = within(dialog).getByLabelText("Total de classes consumides");
+    expect(field).toHaveAccessibleDescription(/entre 1 i 10 classes/u);
+    expect(field).toHaveAttribute("min", "1");
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Recompte" } });
+    fireEvent.change(field, { target: { value: "0" } });
+    expect(within(dialog).getByRole("button", { name: "Desa" })).toBeDisabled();
+    fireEvent.change(field, { target: { value: "1" } });
+    expect(within(dialog).getByRole("button", { name: "Desa" })).toBeEnabled();
+  });
+
   it("requires a new expiry when adjusting an expired pack", async () => {
     server.use(
       http.get("*/api/v1/pack-balances", () =>

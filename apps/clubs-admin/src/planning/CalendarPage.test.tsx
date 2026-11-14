@@ -1129,8 +1129,13 @@ describe("T-06-28 D4 / D4b / D4c class calendar (front half, MSW)", () => {
 });
 
 describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
-  it("T-06-09 manual time entry is independent of the planning grid; creation suggests configured grid times", async () => {
+  it("T-06-09 manual time entry is independent of the planning grid; creation and editing offer the configured five-minute grid", async () => {
     await putOpeningHours("07:05", "21:55");
+    server.use(
+      http.get("*/api/v1/parameters/classes.slotMinutes", () =>
+        HttpResponse.json({ key: "classes.slotMinutes", value: 5, version: 1 }),
+      ),
+    );
     await renderCalendar();
     const week = await grid(/del 10 al 16 d.agost$/u);
     const bodies = captureBodies("POST", "/class-sessions");
@@ -1143,13 +1148,16 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     expect(hour).toHaveAttribute("min", "07:05");
     expect(hour).toHaveAttribute("max", "21:55");
     expect(hour).toHaveValue("18:50");
-    // [ACCEPTA] sends the aligned start and the end that keeps the 60 minutes (E4-W10 step 5).
+    expect(optionValues(hour).slice(0, 3)).toEqual(["07:05", "07:10", "07:15"]);
+    const editedEnd = within(selectedCard()).getByLabelText("Final");
+    expect(optionValues(editedEnd)).toContain("08:15");
     const patches = captureBodies("PATCH", `/class-sessions/${WEDNESDAY_1850}`);
-    fireEvent.change(hour, { target: { value: "07:10" } });
+    fireEvent.change(hour, { target: { value: "07:07" } });
+    fireEvent.change(editedEnd, { target: { value: "08:18" } });
     fireEvent.click(within(selectedCard()).getByRole("button", { name: "ACCEPTA" }));
     expect(await screen.findByText("Canvis desats")).toBeVisible();
     await waitFor(() => {
-      expect(patches).toEqual([{ endTime: "08:10", startTime: "07:10", version: 1 }]);
+      expect(patches).toEqual([{ endTime: "08:18", startTime: "07:07", version: 1 }]);
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Crear classe" }));
@@ -1158,16 +1166,16 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     const start = within(drawer).getByLabelText("Inici");
     const end = within(drawer).getByLabelText("Final");
     await waitFor(() => {
-      expect(optionValues(start)[0]).toBe("07:10");
+      expect(optionValues(start).slice(0, 3)).toEqual(["07:05", "07:10", "07:15"]);
     });
-    expect(optionValues(start).at(-1)).toBe("21:40");
-    expect(optionValues(end)[0]).toBe("07:20");
-    expect(optionValues(end).at(-1)).toBe("21:50");
+    expect(optionValues(start).at(-1)).toBe("21:50");
+    expect(optionValues(end)[0]).toBe("07:10");
+    expect(optionValues(end).at(-1)).toBe("21:55");
     expect(
-      [...optionValues(start), ...optionValues(end)].every((time) => minutesOfDay(time) % 10 === 0),
+      [...optionValues(start), ...optionValues(end)].every((time) => minutesOfDay(time) % 5 === 0),
     ).toBe(true);
-    expect(start).toHaveValue("07:10");
-    expect(end).toHaveValue("08:10");
+    fireEvent.change(start, { target: { value: "10:07" } });
+    fireEvent.change(end, { target: { value: "11:18" } });
 
     fireEvent.click(within(drawer).getByRole("button", { name: "B" }));
     fireEvent.click(within(drawer).getByRole("button", { name: "CREA LA CLASSE" }));
@@ -1175,7 +1183,7 @@ describe("T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review", () => {
     await waitFor(() => {
       expect(bodies).toHaveLength(1);
     });
-    expect(bodies[0]).toMatchObject({ date: "2026-08-13", endTime: "08:10", startTime: "07:10" });
+    expect(bodies[0]).toMatchObject({ date: "2026-08-13", endTime: "11:18", startTime: "10:07" });
   });
 
   it("R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries", async () => {

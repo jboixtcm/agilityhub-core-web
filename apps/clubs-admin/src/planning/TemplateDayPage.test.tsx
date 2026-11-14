@@ -1,5 +1,5 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { resetPlanningState } from "@agilityhub/api-client/mocks";
+import { catalogState, resetCatalogState, resetPlanningState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -26,6 +26,7 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
   resetPlanningState();
+  resetCatalogState();
 });
 afterAll(() => {
   server.close();
@@ -101,6 +102,19 @@ describe("T-06-27 D3b day view per ring / per instructor", () => {
     );
     expect(columnHeaders(table)).toEqual(["Laura", "Marc", "Anna"]);
     expect(window.location.search).toBe("?vista=instructor");
+  });
+
+  it("identifies a scheduled support member in their template column", async () => {
+    const support = catalogState.instructors.find((person) => person.id === "instructor-marc");
+    if (support === undefined) throw new Error("Missing Marc in the test roster");
+    support.schedulingOnly = true;
+    await renderDay("TUESDAY");
+    const table = await screen.findByRole("table", { name: "Plantilla «Setmana A» · dimarts" });
+    fireEvent.click(screen.getByRole("button", { name: "Visió per instructor" }));
+    expect(columnHeaders(table)).toContain("Marc · Suport");
+    expect(within(table).getAllByRole("group", { name: /Marc · Suport/ }).length).toBeGreaterThan(
+      0,
+    );
   });
 
   it("moves between days and goes back to the weekly view of the same template", async () => {

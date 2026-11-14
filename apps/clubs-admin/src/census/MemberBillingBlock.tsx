@@ -22,6 +22,8 @@ import { useTranslation } from "react-i18next";
 
 import { clubToday } from "../billing/shared";
 
+import { PackConsumptionCorrection } from "./PackConsumptionCorrection";
+
 type Dog = components["schemas"]["MemberOverview"]["dogs"][number];
 type Invoice = components["schemas"]["InvoiceListItem"];
 type Pack = components["schemas"]["PackBalanceDetail"];
@@ -69,6 +71,7 @@ export function MemberBillingBlock({
   const [reload, setReload] = useState(0);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [adjusting, setAdjusting] = useState<Pack>();
+  const [correcting, setCorrecting] = useState<Pack>();
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
   const [dogId, setDogId] = useState("");
@@ -307,6 +310,16 @@ export function MemberBillingBlock({
               {readOnly ? null : (
                 <Button
                   onClick={() => {
+                    setCorrecting(pack);
+                  }}
+                  variant="ghost"
+                >
+                  {t("admin-census:member.billing.correctConsumption")}
+                </Button>
+              )}
+              {readOnly ? null : (
+                <Button
+                  onClick={() => {
                     setFailure(undefined);
                     setDelta("");
                     setReason("");
@@ -323,6 +336,20 @@ export function MemberBillingBlock({
           {readError(readFailures.packs)}
         </section>
       ) : null}
+      {correcting === undefined ? null : (
+        <PackConsumptionCorrection
+          client={client}
+          dogName={dogName(correcting.dogId)}
+          onClose={() => {
+            setCorrecting(undefined);
+          }}
+          onRefresh={() => {
+            setReload((value) => value + 1);
+            onPackAdjusted?.();
+          }}
+          pack={correcting}
+        />
+      )}
       <Modal
         closeLabel={t("admin-census:common.cancel")}
         onClose={() => {

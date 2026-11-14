@@ -4787,6 +4787,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/pack-balances/{id}/consumption-corrections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * correctPackConsumption
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. Set the absolute consumed count, retaining previous balance adjustments and the expiry. Supply the consumed and remaining counts shown to the administrator. Changed counts return STALE_VERSION. The new count must cover the bookings still charged to this pack. The reason and correction are recorded in the pack history and audit.
+         */
+        post: operations["correctPackConsumption"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/parameters": {
         parameters: {
             query?: never;
@@ -11453,6 +11473,8 @@ export interface components {
             lastChange?: components["schemas"]["LastChange"];
             /** Format: uuid */
             memberId?: string;
+            /** @description True for scheduling-only support staff. */
+            schedulingOnly?: boolean;
             shortName: string;
             usage?: components["schemas"]["InstructorUsage"];
             /** Format: int64 */
@@ -11476,6 +11498,8 @@ export interface components {
         InstructorCreate: {
             color: string;
             memberId: string;
+            /** @description Support profile for class planning only. */
+            schedulingOnly?: boolean;
             shortName: string;
         };
         InstructorDay: {
@@ -11548,6 +11572,8 @@ export interface components {
             color: string;
             /** Format: uuid */
             id: string;
+            /** @description True for scheduling-only support staff. */
+            schedulingOnly?: boolean;
             shortName: string;
             /** Format: int64 */
             version: number;
@@ -13614,6 +13640,15 @@ export interface components {
             /** @enum {string} */
             state: "ACTIVE" | "EXPIRING" | "EXPIRED" | "EMPTY";
         };
+        PackConsumptionCorrectionRequest: {
+            /** Format: int32 */
+            consumed: number;
+            /** Format: int32 */
+            expectedConsumed: number;
+            /** Format: int32 */
+            expectedRemaining: number;
+            reason: string;
+        };
         PackMovement: {
             /** Format: date-time */
             at: string;
@@ -13629,7 +13664,7 @@ export interface components {
             type: components["schemas"]["PackMovementType"];
         };
         /** @enum {string} */
-        PackMovementType: "OPEN" | "CONSUME" | "REFUND" | "ADJUST" | "EXPIRE";
+        PackMovementType: "OPEN" | "CONSUME" | "REFUND" | "ADJUST" | "EXPIRE" | "CONSUMPTION_CORRECTION";
         PackSettings: {
             /** Format: int32 */
             sessions: number;
@@ -13637,6 +13672,11 @@ export interface components {
             validityMonths: number;
         };
         PackSummary: {
+            /**
+             * Format: int32
+             * @description Sessions charged to the pack, including manual consumption corrections
+             */
+            consumed: number;
             /** Format: date */
             expiresOn?: string;
             /** Format: uuid */
@@ -52299,6 +52339,128 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["PackAdjustmentRequest"];
+            };
+        };
+        responses: {
+            /** @description PackBalanceDetail */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PackBalanceDetail"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
+            /** @description PACK_NEGATIVE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    correctPackConsumption: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PackConsumptionCorrectionRequest"];
             };
         };
         responses: {

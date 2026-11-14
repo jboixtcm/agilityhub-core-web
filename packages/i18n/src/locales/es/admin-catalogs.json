@@ -207,6 +207,7 @@
       "active": "Activo",
       "color": "Color",
       "member": "Abonado",
+      "profile": "Perfil",
       "shortName": "Nombre corto",
       "since": "Desde"
     },
@@ -214,8 +215,9 @@
     "createInstructorTitle": "Nuevo instructor",
     "editAdministratorTitle": "Editar el administrador",
     "editInstructorTitle": "Editar el instructor",
+    "editSupport": "Editar el apoyo",
     "emptyAdministrators": "Todavía no hay ningún administrador",
-    "emptyInstructors": "Todavía no hay ningún instructor",
+    "emptyInstructors": "Todavía no hay instructores ni personal de apoyo",
     "fields": {
       "color": "Color",
       "member": "Abonado",
@@ -223,15 +225,19 @@
       "shortName": "Nombre corto",
       "since": "Desde"
     },
-    "instructorCaption": "Instructores del club",
+    "instructor": "Instructor",
+    "instructorCaption": "Instructores y apoyo",
     "instructorInUse": "Tiene {count} clases futuras asignadas: reasígnalas en el calendario antes de desactivarlo",
-    "instructors": "Instructores",
+    "instructors": "Instructores y apoyo",
     "lastAdmin": "Debe haber al menos un administrador activo",
     "memberWithDog": "{name} ({dog})",
     "newAdministrator": "Nuevo administrador",
     "newInstructor": "Nuevo instructor",
+    "newSupport": "Nuevo apoyo",
     "removeQuestion": "¿Eliminar a {name}?",
     "removeTitle": "Eliminar el miembro del equipo",
-    "title": "Instructores y administradores"
+    "support": "Apoyo",
+    "supportHelp": "Puedes asignar a este abonado a plantillas y clases. Conserva sus permisos actuales.",
+    "title": "Equipo del club"
   }
 }

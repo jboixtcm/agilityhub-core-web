@@ -70,6 +70,7 @@ import {
   mondayOf,
   type PlanningCatalogs,
   useResource,
+  instructorNames,
 } from "./shared";
 
 type Relative = WeekCalendar["week"]["relative"];
@@ -375,11 +376,8 @@ export function CalendarPage({
   );
   const instructorsOf = useCallback(
     (ids: readonly string[]) =>
-      ids
-        .map((id) => cat?.instructors.find((instructor) => instructor.id === id)?.shortName)
-        .filter((name): name is string => name !== undefined)
-        .join(", "),
-    [cat],
+      instructorNames(ids, cat?.instructors ?? [], t("admin-scheduling:support")),
+    [cat, t],
   );
 
   const relativeOf = (startDate: string): Relative =>

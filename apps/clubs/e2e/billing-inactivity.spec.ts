@@ -138,4 +138,19 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     await expect(page.getByRole("button", { name: "Ajusta" })).toBeVisible();
     await shot(page, "D10-bloc-facturacio-1280.png");
   });
+
+  test("D10 corrects the absolute consumed pack sessions", async ({ page }) => {
+    await page.setViewportSize({ height: 812, width: 375 });
+    await loginAdmin(page);
+    await page.goto(`${adminUrl}/abonats/member-laura`);
+    await page.getByRole("button", { name: "Corregeix les classes consumides" }).click();
+    const correction = page.getByRole("dialog", { name: "Corregeix les classes consumides" });
+    await expect(correction).toBeInViewport({ ratio: 1 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await correction.getByLabel("Total de classes consumides").fill("8");
+    await correction.getByLabel("Motiu").fill("Recompte de classes fetes");
+    await expect(correction.getByText("Saldo després de la correcció: 2 sessions.")).toBeVisible();
+    await correction.getByRole("button", { name: "Desa" }).click();
+    await expect(page.getByText(/8 consumides · 2 disponibles/u)).toBeVisible();
+  });
 });

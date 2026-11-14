@@ -217,13 +217,21 @@ export async function loadPlanningCatalogs(
   };
 }
 
+export function planningStaffName(instructor: Instructor, supportLabel: string): string {
+  return instructor.schedulingOnly
+    ? `${instructor.shortName} · ${supportLabel}`
+    : instructor.shortName;
+}
+
 export function instructorNames(
-  item: Pick<TemplateClass, "instructorIds">,
+  ids: readonly string[],
   instructors: readonly Instructor[],
+  supportLabel: string,
 ): string {
-  return item.instructorIds
-    .map((id) => instructors.find((instructor) => instructor.id === id)?.shortName)
-    .filter((name): name is string => name !== undefined)
+  return ids
+    .map((id) => instructors.find((instructor) => instructor.id === id))
+    .filter((instructor): instructor is Instructor => instructor !== undefined)
+    .map((instructor) => planningStaffName(instructor, supportLabel))
     .join(", ");
 }
 

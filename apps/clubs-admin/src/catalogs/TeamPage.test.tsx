@@ -23,6 +23,7 @@ const member = (id: string, memberNumber: number | null | undefined, fullName = 
 });
 const instructor = {
   active: true,
+  schedulingOnly: false,
   color: branding.theme.ringPalette?.[0] ?? "",
   id: "instructor-test",
   memberId: "member-second-page",
@@ -157,7 +158,9 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
       }),
     );
     await renderTeam([]);
-    expect(await screen.findByText("Encara no hi ha cap instructor")).toBeVisible();
+    expect(
+      await screen.findByText("Encara no hi ha cap instructor ni cap persona de suport"),
+    ).toBeVisible();
     expect(reads).toBe(0);
   });
 
@@ -203,41 +206,57 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
     expect(await screen.findByRole("button", { name: "Edita Recovered Member" })).toBeVisible();
   });
 
-  it("shows a newly saved instructor after reloading the team references", async () => {
-    const team = [instructor];
-    const existing = member(instructor.memberId, 1, "Existing Person");
-    const added = member("new-member", 2, "New Person");
-    server.use(
-      http.get(`${base}/members`, ({ request }) => {
-        const filters = new URL(request.url).searchParams.getAll("filter");
-        const selection = filters.find((filter) => filter.startsWith("id:in:"));
-        const candidates =
-          selection === undefined
-            ? [added]
-            : [existing, added].filter((item) => selection.slice(6).split(",").includes(item.id));
-        return HttpResponse.json(page(candidates));
-      }),
-      http.post(`${base}/instructors`, async ({ request }) => {
-        const body = (await request.json()) as { memberId: string; shortName: string };
-        const created = { ...instructor, ...body, id: "new-instructor" };
-        team.push(created);
-        return HttpResponse.json(created, { status: 201 });
-      }),
-    );
-    await renderTeam(team);
-    expect(await screen.findByRole("button", { name: "Edita Existing Person" })).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "Nou instructor" }));
-    const dialog = await screen.findByRole("dialog", { name: "Nou instructor" });
-    await waitFor(() => {
-      expect(dialog.querySelectorAll("datalist option")).toHaveLength(1);
-    });
-    fireEvent.change(within(dialog).getByLabelText("Abonat"), {
-      target: { value: "New Person · 2" },
-    });
-    fireEvent.change(within(dialog).getByLabelText("Nom curt"), { target: { value: "New" } });
-    fireEvent.click(within(dialog).getByRole("button", { name: "DESA" }));
-    expect(await screen.findByRole("button", { name: "Edita New Person" })).toBeVisible();
-  });
+  it.each([
+    { title: "Nou instructor", schedulingOnly: false, profile: "Instructor" },
+    { title: "Nou suport", schedulingOnly: true, profile: "Suport" },
+  ])(
+    "adds a named team member from $title with the selected profile",
+    async ({ title, schedulingOnly, profile }) => {
+      const team = [instructor];
+      const existing = member(instructor.memberId, 1, "Existing Person");
+      const added = member("new-member", 2, "New Person");
+      server.use(
+        http.get(`${base}/members`, ({ request }) => {
+          const filters = new URL(request.url).searchParams.getAll("filter");
+          const selection = filters.find((filter) => filter.startsWith("id:in:"));
+          const candidates =
+            selection === undefined
+              ? [added]
+              : [existing, added].filter((item) => selection.slice(6).split(",").includes(item.id));
+          return HttpResponse.json(page(candidates));
+        }),
+        http.post(`${base}/instructors`, async ({ request }) => {
+          const body = (await request.json()) as {
+            memberId: string;
+            shortName: string;
+            schedulingOnly: boolean;
+          };
+          expect(body.schedulingOnly).toBe(schedulingOnly);
+          const created = { ...instructor, ...body, id: "new-instructor" };
+          team.push(created);
+          return HttpResponse.json(created, { status: 201 });
+        }),
+      );
+      await renderTeam(team);
+      expect(await screen.findByRole("button", { name: "Edita Existing Person" })).toBeVisible();
+      fireEvent.click(screen.getByRole("button", { name: title }));
+      const dialog = await screen.findByRole("dialog", { name: title });
+      await waitFor(() => {
+        expect(dialog.querySelectorAll("datalist option")).toHaveLength(1);
+      });
+      fireEvent.change(within(dialog).getByLabelText("Abonat"), {
+        target: { value: "New Person · 2" },
+      });
+      fireEvent.change(within(dialog).getByLabelText("Nom curt"), { target: { value: "New" } });
+      fireEvent.click(within(dialog).getByRole("button", { name: "DESA" }));
+      const row = await screen.findByRole("row", { name: /New Person/ });
+      expect(within(row).getByText(profile)).toBeVisible();
+      if (schedulingOnly) {
+        fireEvent.click(within(row).getByRole("button", { name: "Edita New Person" }));
+        expect(await screen.findByRole("dialog", { name: "Edita el suport" })).toBeVisible();
+      }
+    },
+  );
 
   it("shows the approved future-class count when deactivation is refused", async () => {
     server.use(

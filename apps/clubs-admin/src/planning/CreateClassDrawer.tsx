@@ -24,7 +24,7 @@ import {
   parseMaskedDate,
   placementKey,
   rangeOptions,
-  timeLabel,
+  TimeSuggestions,
   timeOf,
   useCalendarErrorMessage,
 } from "./calendar-shared";
@@ -38,6 +38,7 @@ import {
   mondayOf,
   type PlanningCatalogs,
   useResource,
+  planningStaffName,
 } from "./shared";
 
 type FieldKey =
@@ -386,13 +387,7 @@ export function CreateClassDrawer({
               }}
               value={startTime}
             />
-            <datalist id="calendar-create-start-suggestions">
-              {startOptions.map((time) => (
-                <option key={time} value={time}>
-                  {timeLabel(time)}
-                </option>
-              ))}
-            </datalist>
+            <TimeSuggestions id="calendar-create-start-suggestions" times={startOptions} />
           </FormField>
           <FormField
             {...errorProp(errors.time)}
@@ -411,13 +406,7 @@ export function CreateClassDrawer({
               }}
               value={endTime}
             />
-            <datalist id="calendar-create-end-suggestions">
-              {endOptions.map((time) => (
-                <option key={time} value={time}>
-                  {timeLabel(time)}
-                </option>
-              ))}
-            </datalist>
+            <TimeSuggestions id="calendar-create-end-suggestions" times={endOptions} />
           </FormField>
         </div>
         {settings.maxInstructors <= 1 ? (
@@ -435,7 +424,7 @@ export function CreateClassDrawer({
             >
               {activeInstructors.map((instructor) => (
                 <option key={instructor.id} value={instructor.id}>
-                  {instructor.shortName}
+                  {planningStaffName(instructor, t("admin-scheduling:support"))}
                 </option>
               ))}
             </Select>
@@ -463,7 +452,7 @@ export function CreateClassDrawer({
                     }}
                     type="button"
                   >
-                    {instructor.shortName}
+                    {planningStaffName(instructor, t("admin-scheduling:support"))}
                   </button>
                 );
               })}

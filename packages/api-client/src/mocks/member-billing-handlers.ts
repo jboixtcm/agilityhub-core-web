@@ -29,6 +29,25 @@ type NextInvoiceDateRequest = components["schemas"]["NextInvoiceDateRequest"];
 const MOCK_NOW = "2026-10-05T10:00:00Z";
 const MOCK_CURRENT_MONTH = "2026-10";
 
+function updateOverviewPack(balance: components["schemas"]["PackBalanceDetail"]) {
+  const overviewDogId =
+    balance.dogId === "31000000-0000-4000-8000-000000000002"
+      ? "dog-rock"
+      : balance.dogId;
+  const overviewDog = censusRecordState.memberOverview.dogs.find(
+    (dog) => dog.id === overviewDogId,
+  );
+  if (overviewDog !== undefined) {
+    overviewDog.pack = {
+      consumed: balance.consumed,
+      expiresOn: balance.expiresOn,
+      id: balance.id,
+      remaining: balance.remaining,
+      total: balance.sessionsTotal,
+    };
+  }
+}
+
 function monthEnd(month: string): string {
   const match = /^(\d{4})-(\d{2})$/u.exec(month);
   if (match === null) throw new TypeError(`Invalid lifecycle month: ${month}`);
@@ -1147,6 +1166,34 @@ export const memberBillingHandlers = [
       );
     return HttpResponse.json(rows);
   }),
+  http.post("*/api/v1/pack-balances/:id/consumption-corrections", async ({ params, request }) => {
+    const refused = moduleOff("BILLING") ?? moduleOff("PACKS");
+    if (refused !== undefined) return refused;
+    const body = (await request.json()) as components["schemas"]["PackConsumptionCorrectionRequest"];
+    const balance = packs.find((item) => item.id === String(params.id));
+    if (balance === undefined) return error("NOT_FOUND", 404);
+    if (body.expectedConsumed !== balance.consumed || body.expectedRemaining !== balance.remaining) {
+      return error("STALE_VERSION", 409);
+    }
+    const chargedBookings = balance.movements.reduce((sum, move) =>
+      move.bookingId && (move.type === "CONSUME" || move.type === "REFUND") ? sum - move.delta : sum, 0);
+    if (!Number.isInteger(body.consumed) || body.consumed < chargedBookings) {
+      return error("VALIDATION_ERROR", 400, { field: "consumed" });
+    }
+    const remaining = balance.remaining + balance.consumed - body.consumed;
+    if (remaining < 0) return error("PACK_NEGATIVE", 422);
+    balance.movements.push({
+      id: crypto.randomUUID(),
+      type: "CONSUMPTION_CORRECTION",
+      at: new Date().toISOString(),
+      delta: remaining - balance.remaining,
+      reason: body.reason,
+    });
+    balance.consumed = body.consumed;
+    balance.remaining = remaining;
+    updateOverviewPack(balance);
+    return HttpResponse.json(balance);
+  }),
   http.post("*/api/v1/pack-balances/:id/adjustments", async ({ params, request }) => {
     const body = (await request.json()) as PackAdjustment;
     const balance = packs.find((item) => item.id === String(params.id));
@@ -1154,26 +1201,11 @@ export const memberBillingHandlers = [
     if (balance.state === "EXPIRED" && body.expiresOn === undefined) return error("VALIDATION_ERROR", 400, { fields: [{ field: "expiresOn", code: "REQUIRED" }] });
     if (balance.remaining + body.delta < 0) return error("PACK_NEGATIVE", 422);
     balance.remaining += body.delta;
-    balance.consumed = balance.sessionsTotal - balance.remaining;
     if (body.expiresOn !== undefined) {
       balance.expiresOn = body.expiresOn;
       balance.state = "ACTIVE";
     }
-    const overviewDogId =
-      balance.dogId === "31000000-0000-4000-8000-000000000002"
-        ? "dog-rock"
-        : balance.dogId;
-    const overviewDog = censusRecordState.memberOverview.dogs.find(
-      (dog) => dog.id === overviewDogId,
-    );
-    if (overviewDog !== undefined) {
-      overviewDog.pack = {
-        expiresOn: balance.expiresOn,
-        id: balance.id,
-        remaining: balance.remaining,
-        total: balance.sessionsTotal,
-      };
-    }
+    updateOverviewPack(balance);
     return HttpResponse.json(balance);
   }),
 ];

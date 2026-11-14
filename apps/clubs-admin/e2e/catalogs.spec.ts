@@ -106,8 +106,10 @@ test.describe("E2-W04 club catalogs", () => {
     await prepareAdmin(page, "admin", brandingCanic);
     await page.goto(`${baseUrl}/equip`);
 
-    await expect(page.getByRole("heading", { name: "Instructors i administradors" })).toBeVisible();
-    await expect(page.getByRole("heading", { exact: true, name: "Instructors" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Equip del club" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { exact: true, name: "Instructors i suport" }),
+    ).toBeVisible();
     await expect(page.getByRole("heading", { exact: true, name: "Administradors" })).toBeVisible();
     await expect(page.getByText("Laura Serra Vidal (Duna)").first()).toBeVisible();
     await page.screenshot({

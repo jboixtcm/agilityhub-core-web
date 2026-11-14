@@ -4128,7 +4128,16 @@ export const handlers = [
     const existing = catalogState.instructors.find(
       (instructor) => instructor.memberId === body.memberId,
     );
+    const schedulingOnly = body.schedulingOnly ?? existing?.schedulingOnly ?? false;
     if (existing !== undefined) {
+      if (existing.active && (existing.schedulingOnly ?? false) !== schedulingOnly) {
+        return apiError(
+          "VALIDATION_ERROR",
+          "Member already has a different active team profile",
+          400,
+        );
+      }
+      existing.schedulingOnly = schedulingOnly;
       existing.active = true;
       existing.shortName = body.shortName;
       existing.color = body.color;
@@ -4140,6 +4149,7 @@ export const handlers = [
       color: body.color,
       id: `instructor-${String(Date.now())}`,
       memberId: body.memberId,
+      schedulingOnly,
       shortName: body.shortName,
       version: 1,
     };

@@ -663,7 +663,8 @@ describe("MSW bootstrap handlers", () => {
     // Daily time-band snapshots and complete plan details.
     // Price edits and confirmed price/plan deletion.
     // Administrative family group creation, updates, lookup and dissolution.
-    expect(handlers).toHaveLength(415);
+    // Administrators can correct the consumed sessions of a pack.
+    expect(handlers).toHaveLength(416);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

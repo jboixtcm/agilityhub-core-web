@@ -291,6 +291,7 @@ export const meDogsFixture: MeDogs = {
       ],
       name: "Rock",
       pack: {
+        consumed: 6,
         expiresOn: "2026-11-12",
         id: "pack-rock-10",
         remaining: 4,

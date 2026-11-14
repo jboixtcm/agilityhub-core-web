@@ -33,7 +33,7 @@ type InstructorReaderView = components["schemas"]["InstructorReaderView"];
 const MEMBER_FIELDS = ["fullName", "dogs"] as const;
 const MEMBER_REQUEST_FIELDS = [...MEMBER_FIELDS, "memberNumber"] as const;
 type Member = ListItemWith<components["schemas"]["MemberListItem"], (typeof MEMBER_FIELDS)[number]>;
-type TeamKind = "administrator" | "instructor";
+type TeamKind = "administrator" | "instructor" | "support";
 
 function isManagedInstructor(item: Instructor | InstructorReaderView): item is Instructor {
   return "active" in item && "version" in item;
@@ -154,7 +154,7 @@ function TeamPersonForm({
   const [memberId, setMemberId] = useState(item?.memberId ?? "");
   const [shortName, setShortName] = useState(item?.shortName ?? "");
   const [color, setColor] = useState(
-    kind === "instructor" && item !== undefined && "color" in item
+    kind !== "administrator" && item !== undefined && "color" in item
       ? item.color
       : (branding.theme.ringPalette?.[0] ?? ""),
   );
@@ -173,9 +173,14 @@ function TeamPersonForm({
     setPending(true);
     setError(undefined);
     try {
-      if (kind === "instructor") {
+      if (kind !== "administrator") {
         if (item === undefined) {
-          const body: InstructorCreate = { color, memberId, shortName };
+          const body: InstructorCreate = {
+            color,
+            memberId,
+            shortName,
+            schedulingOnly: kind === "support",
+          };
           await client.POST("/instructors", { body });
         } else {
           const body: InstructorPatch = { active, color, shortName, version: item.version };
@@ -213,6 +218,7 @@ function TeamPersonForm({
 
   return (
     <form className="catalog-form" onSubmit={(event) => void submit(event)}>
+      {kind === "support" ? <p>{t("admin-catalogs:team.supportHelp")}</p> : null}
       <TeamMemberPicker
         client={client}
         disabled={item !== undefined}
@@ -230,7 +236,7 @@ function TeamPersonForm({
           value={shortName}
         />
       </FormField>
-      {kind === "instructor" ? (
+      {kind !== "administrator" ? (
         <FormField id="instructor-color" label={t("admin-catalogs:team.fields.color")}>
           <div className="catalog-color-picker">
             {(branding.theme.ringPalette ?? []).map((candidate) => (
@@ -378,7 +384,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
       return;
     }
     try {
-      if (removing.kind === "instructor" && "id" in removing.item) {
+      if (removing.kind !== "administrator" && "id" in removing.item) {
         await client.DELETE("/instructors/{id}", {
           params: { path: { id: removing.item.id } },
         });
@@ -423,14 +429,25 @@ export function TeamPage({ client }: { client: ApiClient }) {
       <section className="catalog-section">
         <CatalogSectionHeader
           action={
-            <Button
-              onClick={() => {
-                setEditing({ kind: "instructor" });
-              }}
-            >
-              <Icon aria-hidden="true" name="plus" />
-              {t("admin-catalogs:team.newInstructor")}
-            </Button>
+            <div className="catalog-form__actions">
+              <Button
+                onClick={() => {
+                  setEditing({ kind: "instructor" });
+                }}
+              >
+                <Icon aria-hidden="true" name="plus" />
+                {t("admin-catalogs:team.newInstructor")}
+              </Button>
+              <Button
+                onClick={() => {
+                  setEditing({ kind: "support" });
+                }}
+                variant="secondary"
+              >
+                <Icon aria-hidden="true" name="plus" />
+                {t("admin-catalogs:team.newSupport")}
+              </Button>
+            </div>
           }
           title={t("admin-catalogs:team.instructors")}
         />
@@ -450,6 +467,14 @@ export function TeamPage({ client }: { client: ApiClient }) {
               render: (item) => item.shortName,
             },
             {
+              header: t("admin-catalogs:team.columns.profile"),
+              key: "profile",
+              render: (item) =>
+                item.schedulingOnly
+                  ? t("admin-catalogs:team.support")
+                  : t("admin-catalogs:team.instructor"),
+            },
+            {
               header: t("admin-catalogs:team.columns.color"),
               key: "color",
               render: (item) => <ColorValue color={item.color} text={false} />,
@@ -463,10 +488,10 @@ export function TeamPage({ client }: { client: ApiClient }) {
           empty={t("admin-catalogs:team.emptyInstructors")}
           loading={instructors.loading || members.loading}
           onEdit={(item) => {
-            setEditing({ item, kind: "instructor" });
+            setEditing({ item, kind: item.schedulingOnly ? "support" : "instructor" });
           }}
           onRemove={(item) => {
-            setRemoving({ item, kind: "instructor" });
+            setRemoving({ item, kind: item.schedulingOnly ? "support" : "instructor" });
           }}
           rowName={(item) => memberLabel(memberById.get(item.memberId ?? ""), item.shortName)}
           rows={instructors.items}
@@ -531,13 +556,17 @@ export function TeamPage({ client }: { client: ApiClient }) {
         }}
         open={editing !== undefined}
         title={
-          editing?.kind === "instructor"
+          editing?.kind === "support"
             ? editing.item === undefined
-              ? t("admin-catalogs:team.createInstructorTitle")
-              : t("admin-catalogs:team.editInstructorTitle")
-            : editing?.item === undefined
-              ? t("admin-catalogs:team.createAdministratorTitle")
-              : t("admin-catalogs:team.editAdministratorTitle")
+              ? t("admin-catalogs:team.newSupport")
+              : t("admin-catalogs:team.editSupport")
+            : editing?.kind === "instructor"
+              ? editing.item === undefined
+                ? t("admin-catalogs:team.createInstructorTitle")
+                : t("admin-catalogs:team.editInstructorTitle")
+              : editing?.item === undefined
+                ? t("admin-catalogs:team.createAdministratorTitle")
+                : t("admin-catalogs:team.editAdministratorTitle")
         }
       >
         {editing === undefined ? null : (

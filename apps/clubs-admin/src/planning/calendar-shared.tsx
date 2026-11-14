@@ -81,6 +81,18 @@ export function timeOptions(open: string, close: string, step: number): string[]
   return slotTimes(minutesOf(open), minutesOf(close), Math.max(step, 1));
 }
 
+export function TimeSuggestions({ id, times }: { id: string; times: readonly string[] }) {
+  return (
+    <datalist id={id}>
+      {times.map((time) => (
+        <option key={time} value={time}>
+          {timeLabel(time)}
+        </option>
+      ))}
+    </datalist>
+  );
+}
+
 /** One day's window of `club.openingHours` (a closed day has none: R-02-09). */
 export interface OpeningWindow {
   close: string;

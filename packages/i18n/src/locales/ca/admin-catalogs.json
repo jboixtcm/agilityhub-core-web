@@ -207,6 +207,7 @@
       "active": "Actiu",
       "color": "Color",
       "member": "Abonat",
+      "profile": "Perfil",
       "shortName": "Nom curt",
       "since": "Des de"
     },
@@ -214,8 +215,9 @@
     "createInstructorTitle": "Nou instructor",
     "editAdministratorTitle": "Edita l'administrador",
     "editInstructorTitle": "Edita l'instructor",
+    "editSupport": "Edita el suport",
     "emptyAdministrators": "Encara no hi ha cap administrador",
-    "emptyInstructors": "Encara no hi ha cap instructor",
+    "emptyInstructors": "Encara no hi ha cap instructor ni cap persona de suport",
     "fields": {
       "color": "Color",
       "member": "Abonat",
@@ -223,15 +225,19 @@
       "shortName": "Nom curt",
       "since": "Des de"
     },
-    "instructorCaption": "Instructors del club",
+    "instructor": "Instructor",
+    "instructorCaption": "Instructors i suport",
     "instructorInUse": "Té {count} classes futures assignades: reassigna-les al calendari abans de desactivar-lo",
-    "instructors": "Instructors",
+    "instructors": "Instructors i suport",
     "lastAdmin": "Hi ha d'haver almenys un administrador actiu",
     "memberWithDog": "{name} ({dog})",
     "newAdministrator": "Nou administrador",
     "newInstructor": "Nou instructor",
+    "newSupport": "Nou suport",
     "removeQuestion": "Eliminar {name}?",
     "removeTitle": "Elimina el membre de l'equip",
-    "title": "Instructors i administradors"
+    "support": "Suport",
+    "supportHelp": "Aquest abonat es pot assignar a plantilles i classes. Conserva els seus permisos actuals.",
+    "title": "Equip del club"
   }
 }

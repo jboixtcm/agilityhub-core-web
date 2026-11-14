@@ -27,6 +27,7 @@ import {
   type TemplateClass,
   useResource,
   weekdayLabel,
+  planningStaffName,
 } from "./shared";
 
 export type DayView = "instructor" | "ring";
@@ -122,7 +123,7 @@ export function TemplateDayPage({
         .map((instructor) => ({
           color: instructor.color,
           id: instructor.id,
-          label: instructor.shortName,
+          label: planningStaffName(instructor, t("admin-scheduling:support")),
         }));
       cellsFor = (item) =>
         item.instructorIds.map((instructorId) => ({
@@ -282,7 +283,11 @@ export function TemplateDayPage({
                 item.ringId === null || item.ringId === undefined
                   ? undefined
                   : cat.rings.find((candidate) => candidate.id === item.ringId);
-              const instructors = instructorNames(item, cat.instructors);
+              const instructors = instructorNames(
+                item.instructorIds,
+                cat.instructors,
+                t("admin-scheduling:support"),
+              );
               return (
                 <ScheduleCell
                   color={ring?.color ?? null}
