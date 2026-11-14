@@ -3,8 +3,22 @@ import { http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import { catalogState } from "./fixtures/catalogs";
-import { censusMembers, censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview, resetCensusRecordState } from "./fixtures/census";
-import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
+import {
+  censusMembers,
+  censusRecordState,
+  ERASED_MEMBER_ID,
+  erasedMemberOverview,
+  resetCensusRecordState,
+} from "./fixtures/census";
+import {
+  adminInactivityPeriods,
+  adminLeaveRequests,
+  inactivityContextFixture,
+  inactivityPreviewFixture,
+  leaveContextFixture,
+  lifecycleMemberId,
+  lifecycleMembers,
+} from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
 import { clubLocalDate } from "./fixtures/planning";
 import { billingDayState, findParameter } from "./fixtures/settings";
@@ -69,11 +83,16 @@ function normalizeOverviewInvoiceStatus(status: string): components["schemas"]["
 }
 
 function error(code: string, status: number, details: Record<string, unknown> = {}) {
-  return HttpResponse.json<ApiError>({ code, details, message: code, traceId: "mock-e8-w02" }, { status });
+  return HttpResponse.json<ApiError>(
+    { code, details, message: code, traceId: "mock-e8-w02" },
+    { status },
+  );
 }
 
 function moduleOff(module: string) {
-  return currentMockScenario().branding.modules.includes(module) ? undefined : error("MODULE_DISABLED", 404, { module });
+  return currentMockScenario().branding.modules.includes(module)
+    ? undefined
+    : error("MODULE_DISABLED", 404, { module });
 }
 
 function normalized(value: string): string {
@@ -209,25 +228,37 @@ function receiptPdf(invoice: components["schemas"]["MeInvoice"]): Uint8Array {
 }
 
 function createLifecycleOverviews(): Map<string, components["schemas"]["MemberOverview"]> {
-  return new Map(lifecycleMembers.map((lifecycleMember) => {
-    const overview = structuredClone(censusRecordState.memberOverview);
-    const activePeriod = adminPeriods.find((period) => period.member.id === lifecycleMember.id && period.state === "ACTIVE");
-    const plannedLeave = adminLeaves.find((request) => request.member.id === lifecycleMember.id && request.state === "APPROVED");
-    const leaveDate = plannedLeave?.member.leaveDate ?? plannedLeave?.decision?.effectiveDate ?? null;
-    Object.assign(overview.member, {
-      displayStatus: activePeriod === undefined
-        ? leaveDate === null
-          ? { kind: "ACTIVE", label: "alta" }
-          : { date: leaveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${leaveDate}` }
-        : { date: activePeriod.toMonth == null ? null : monthEnd(activePeriod.toMonth), kind: "INACTIVE_PERIOD", label: "inactiva" },
-      fullName: lifecycleMember.fullName,
-      id: lifecycleMember.id,
-      leaveDate,
-      memberNumber: lifecycleMember.memberNumber,
-      status: activePeriod === undefined ? "ACTIVE" : "INACTIVE",
-    });
-    return [lifecycleMember.id, overview];
-  }));
+  return new Map(
+    lifecycleMembers.map((lifecycleMember) => {
+      const overview = structuredClone(censusRecordState.memberOverview);
+      const activePeriod = adminPeriods.find(
+        (period) => period.member.id === lifecycleMember.id && period.state === "ACTIVE",
+      );
+      const plannedLeave = adminLeaves.find(
+        (request) => request.member.id === lifecycleMember.id && request.state === "APPROVED",
+      );
+      const leaveDate =
+        plannedLeave?.member.leaveDate ?? plannedLeave?.decision?.effectiveDate ?? null;
+      Object.assign(overview.member, {
+        displayStatus:
+          activePeriod === undefined
+            ? leaveDate === null
+              ? { kind: "ACTIVE", label: "alta" }
+              : { date: leaveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${leaveDate}` }
+            : {
+                date: activePeriod.toMonth == null ? null : monthEnd(activePeriod.toMonth),
+                kind: "INACTIVE_PERIOD",
+                label: "inactiva",
+              },
+        fullName: lifecycleMember.fullName,
+        id: lifecycleMember.id,
+        leaveDate,
+        memberNumber: lifecycleMember.memberNumber,
+        status: activePeriod === undefined ? "ACTIVE" : "INACTIVE",
+      });
+      return [lifecycleMember.id, overview];
+    }),
+  );
 }
 
 function initializeMemberLeftScenario(): void {
@@ -245,7 +276,9 @@ function initializeMemberLeftScenario(): void {
   memberLifecycleStorage()?.setItem(memberLeftScenarioStorageKey(), "LEFT");
 }
 
-export function lifecycleMemberOverview(value: string): components["schemas"]["MemberOverview"] | undefined {
+export function lifecycleMemberOverview(
+  value: string,
+): components["schemas"]["MemberOverview"] | undefined {
   initializeMemberLeftScenario();
   if (value === censusRecordState.memberOverview.member.id) return censusRecordState.memberOverview;
   return lifecycleOverviews.get(lifecycleMemberId(value));
@@ -254,9 +287,10 @@ export function lifecycleMemberOverview(value: string): components["schemas"]["M
 function syncLifecycleProjections(value: string): void {
   const id = lifecycleMemberId(value);
   const lifecycleMember = lifecycleMembers.find((item) => item.id === id);
-  const member = id === lifecycleMembers[0].id
-    ? censusRecordState.memberOverview.member
-    : lifecycleOverviews.get(id)?.member;
+  const member =
+    id === lifecycleMembers[0].id
+      ? censusRecordState.memberOverview.member
+      : lifecycleOverviews.get(id)?.member;
   if (lifecycleMember === undefined || member === undefined) return;
   const listMember = censusMembers.find((item) => item.id === lifecycleMember.alias);
   if (listMember !== undefined) {
@@ -266,12 +300,17 @@ function syncLifecycleProjections(value: string): void {
     } else {
       delete listMember.leaveDate;
     }
-    if (member.displayStatus.kind === "INACTIVE_PERIOD" && typeof member.displayStatus.date === "string") {
+    if (
+      member.displayStatus.kind === "INACTIVE_PERIOD" &&
+      typeof member.displayStatus.date === "string"
+    ) {
       listMember.inactivityUntil = member.displayStatus.date;
     } else {
       delete listMember.inactivityUntil;
     }
-    listMember.leaveSource = adminLeaves.find((request) => request.member.id === id && request.state === "APPROVED")?.source ?? null;
+    listMember.leaveSource =
+      adminLeaves.find((request) => request.member.id === id && request.state === "APPROVED")
+        ?.source ?? null;
     listMember.hasPendingRequest =
       adminPeriods.some((period) => period.member.id === id && period.state === "REQUESTED") ||
       adminLeaves.some((request) => request.member.id === id && request.state === "PENDING");
@@ -319,7 +358,10 @@ function recomputeLifecycleMember(value: string): void {
   syncLifecycleProjections(id);
 }
 
-function updateLifecycleMember(value: string, update: (member: components["schemas"]["Member"]) => void): void {
+function updateLifecycleMember(
+  value: string,
+  update: (member: components["schemas"]["Member"]) => void,
+): void {
   const id = lifecycleMemberId(value);
   const lifecycle = lifecycleOverviews.get(id);
   if (lifecycle !== undefined) update(lifecycle.member);
@@ -340,7 +382,9 @@ export function resetMemberBillingState(): void {
   adminLeaves = structuredClone(adminLeaveRequests);
   lifecycleOverviews = createLifecycleOverviews();
   memberLeftScenarioInitialized = false;
-  lifecycleMembers.forEach((member) => { syncLifecycleProjections(member.id); });
+  lifecycleMembers.forEach((member) => {
+    syncLifecycleProjections(member.id);
+  });
   memberCreatedInactivity = false;
   upfront = structuredClone(initialUpfront);
   checkoutReads.clear();
@@ -356,8 +400,20 @@ function localizedLeave(request: Request) {
   const language = (request.headers.get("Accept-Language") ?? "ca").slice(0, 2);
   const labels = {
     ca: leaveContextFixture.reasons.map((item) => item.label),
-    es: ["Ya he aprendido todo lo que quería", "No encuentro tiempo para ir", "No es lo que esperaba", "Condicionantes personales ajenos al club", "Otros"],
-    en: ["I have learnt everything I wanted", "I cannot find time to attend", "It is not what I expected", "Personal circumstances unrelated to the club", "Other"],
+    es: [
+      "Ya he aprendido todo lo que quería",
+      "No encuentro tiempo para ir",
+      "No es lo que esperaba",
+      "Condicionantes personales ajenos al club",
+      "Otros",
+    ],
+    en: [
+      "I have learnt everything I wanted",
+      "I cannot find time to attend",
+      "It is not what I expected",
+      "Personal circumstances unrelated to the club",
+      "Other",
+    ],
   } as const;
   const chosen = language === "es" ? labels.es : language === "en" ? labels.en : labels.ca;
   return {
@@ -386,7 +442,10 @@ function queueFilters(url: URL): QueueFilter[] | undefined {
   return filters;
 }
 
-function queueFilterMatches(rawValue: string | number | null | undefined, filter: QueueFilter): boolean {
+function queueFilterMatches(
+  rawValue: string | number | null | undefined,
+  filter: QueueFilter,
+): boolean {
   if (filter.op === "exists") return rawValue !== null && rawValue !== undefined;
   if (rawValue === null || rawValue === undefined) return false;
   const choices = filter.value.split(",");
@@ -394,62 +453,121 @@ function queueFilterMatches(rawValue: string | number | null | undefined, filter
     const compared = choices.map(Number);
     if (compared.some((choice) => !Number.isFinite(choice))) return false;
     switch (filter.op) {
-      case "eq": return rawValue === compared[0];
-      case "ne": return rawValue !== compared[0];
-      case "in": return compared.includes(rawValue);
-      case "nin": return !compared.includes(rawValue);
-      case "lt": return compared[0] !== undefined && rawValue < compared[0];
-      case "lte": return compared[0] !== undefined && rawValue <= compared[0];
-      case "gt": return compared[0] !== undefined && rawValue > compared[0];
-      case "gte": return compared[0] !== undefined && rawValue >= compared[0];
-      case "between": return compared[0] !== undefined && compared[1] !== undefined && rawValue >= compared[0] && rawValue <= compared[1];
-      default: return false;
+      case "eq":
+        return rawValue === compared[0];
+      case "ne":
+        return rawValue !== compared[0];
+      case "in":
+        return compared.includes(rawValue);
+      case "nin":
+        return !compared.includes(rawValue);
+      case "lt":
+        return compared[0] !== undefined && rawValue < compared[0];
+      case "lte":
+        return compared[0] !== undefined && rawValue <= compared[0];
+      case "gt":
+        return compared[0] !== undefined && rawValue > compared[0];
+      case "gte":
+        return compared[0] !== undefined && rawValue >= compared[0];
+      case "between":
+        return (
+          compared[0] !== undefined &&
+          compared[1] !== undefined &&
+          rawValue >= compared[0] &&
+          rawValue <= compared[1]
+        );
+      default:
+        return false;
     }
   }
   const value = rawValue;
   switch (filter.op) {
-    case "eq": return value === choices[0];
-    case "ne": return value !== choices[0];
-    case "in": return choices.includes(value);
-    case "nin": return !choices.includes(value);
-    case "lt": return choices[0] !== undefined && value < choices[0];
-    case "lte": return choices[0] !== undefined && value <= choices[0];
-    case "gt": return choices[0] !== undefined && value > choices[0];
-    case "gte": return choices[0] !== undefined && value >= choices[0];
-    case "between": return choices[0] !== undefined && choices[1] !== undefined && value >= choices[0] && value <= choices[1];
-    default: return false;
+    case "eq":
+      return value === choices[0];
+    case "ne":
+      return value !== choices[0];
+    case "in":
+      return choices.includes(value);
+    case "nin":
+      return !choices.includes(value);
+    case "lt":
+      return choices[0] !== undefined && value < choices[0];
+    case "lte":
+      return choices[0] !== undefined && value <= choices[0];
+    case "gt":
+      return choices[0] !== undefined && value > choices[0];
+    case "gte":
+      return choices[0] !== undefined && value >= choices[0];
+    case "between":
+      return (
+        choices[0] !== undefined &&
+        choices[1] !== undefined &&
+        value >= choices[0] &&
+        value <= choices[1]
+      );
+    default:
+      return false;
   }
 }
 
-function inactivityFilterValue(item: components["schemas"]["InactivityPeriod"], field: string): string | number | null | undefined {
+function inactivityFilterValue(
+  item: components["schemas"]["InactivityPeriod"],
+  field: string,
+): string | number | null | undefined {
   switch (field) {
-    case "memberId": return item.member.id;
-    case "state": return item.state;
-    case "fromMonth": return item.fromMonth;
-    case "toMonth": return item.toMonth;
-    case "origin": return item.origin;
-    case "requestedAt": return item.requestedAt;
-    default: return undefined;
+    case "memberId":
+      return item.member.id;
+    case "state":
+      return item.state;
+    case "fromMonth":
+      return item.fromMonth;
+    case "toMonth":
+      return item.toMonth;
+    case "origin":
+      return item.origin;
+    case "requestedAt":
+      return item.requestedAt;
+    default:
+      return undefined;
   }
 }
 
-function leaveFilterValue(item: components["schemas"]["LeaveRequest"], field: string): string | number | null | undefined {
+function leaveFilterValue(
+  item: components["schemas"]["LeaveRequest"],
+  field: string,
+): string | number | null | undefined {
   switch (field) {
-    case "memberId": return item.member.id;
-    case "state": return item.state;
-    case "source": return item.source;
-    case "requestedDate": return item.requestedDate;
-    case "effectiveDate": return item.decision?.effectiveDate;
-    case "reasonKey": return item.reasonKey;
-    case "nps": return item.nps;
-    case "requestedAt": return item.requestedAt;
-    default: return undefined;
+    case "memberId":
+      return item.member.id;
+    case "state":
+      return item.state;
+    case "source":
+      return item.source;
+    case "requestedDate":
+      return item.requestedDate;
+    case "effectiveDate":
+      return item.decision?.effectiveDate;
+    case "reasonKey":
+      return item.reasonKey;
+    case "nps":
+      return item.nps;
+    case "requestedAt":
+      return item.requestedAt;
+    default:
+      return undefined;
   }
 }
 
-function filterQueue<Row>(items: readonly Row[], filters: readonly QueueFilter[], valueOf: (item: Row, field: string) => string | number | null | undefined, allowedFields: readonly string[]): Row[] | undefined {
+function filterQueue<Row>(
+  items: readonly Row[],
+  filters: readonly QueueFilter[],
+  valueOf: (item: Row, field: string) => string | number | null | undefined,
+  allowedFields: readonly string[],
+): Row[] | undefined {
   if (filters.some((filter) => !allowedFields.includes(filter.field))) return undefined;
-  return items.filter((item) => filters.every((filter) => queueFilterMatches(valueOf(item, filter.field), filter)));
+  return items.filter((item) =>
+    filters.every((filter) => queueFilterMatches(valueOf(item, filter.field), filter)),
+  );
 }
 
 function sortQueue<Row>(
@@ -460,8 +578,11 @@ function sortQueue<Row>(
 ): Row[] | undefined {
   const parsed = sorts.map((sort) => {
     const [field, direction, ...rest] = sort.split(",");
-    return field === undefined || direction === undefined || rest.length > 0 ||
-      !allowedFields.includes(field) || (direction !== "asc" && direction !== "desc")
+    return field === undefined ||
+      direction === undefined ||
+      rest.length > 0 ||
+      !allowedFields.includes(field) ||
+      (direction !== "asc" && direction !== "desc")
       ? undefined
       : { direction, field };
   });
@@ -471,13 +592,16 @@ function sortQueue<Row>(
       if (sort === undefined) continue;
       const leftValue = valueOf(left, sort.field);
       const rightValue = valueOf(right, sort.field);
-      const compared = leftValue == null
-        ? rightValue == null ? 0 : 1
-        : rightValue == null
-          ? -1
-          : typeof leftValue === "number" && typeof rightValue === "number"
-            ? leftValue - rightValue
-            : String(leftValue).localeCompare(String(rightValue));
+      const compared =
+        leftValue == null
+          ? rightValue == null
+            ? 0
+            : 1
+          : rightValue == null
+            ? -1
+            : typeof leftValue === "number" && typeof rightValue === "number"
+              ? leftValue - rightValue
+              : String(leftValue).localeCompare(String(rightValue));
       if (compared !== 0) return sort.direction === "asc" ? compared : -compared;
     }
     return 0;
@@ -493,8 +617,10 @@ function leaveSortValue(item: components["schemas"]["LeaveRequest"], field: stri
 }
 
 function cancelBookingsOnApproval(): boolean {
-  return currentMockScenario().lifecycle !== "inactivityNoCancelBookings" &&
-    findParameter("inactivity.cancelBookingsOnApproval")?.value !== false;
+  return (
+    currentMockScenario().lifecycle !== "inactivityNoCancelBookings" &&
+    findParameter("inactivity.cancelBookingsOnApproval")?.value !== false
+  );
 }
 
 export const memberBillingHandlers = [
@@ -504,19 +630,37 @@ export const memberBillingHandlers = [
     const url = new URL(request.url);
     const filters = queueFilters(url);
     if (filters === undefined) return error("INVALID_FILTER", 400);
-    const memberFilter = filters.find((filter) => filter.field === "memberId" && filter.op === "eq");
+    const memberFilter = filters.find(
+      (filter) => filter.field === "memberId" && filter.op === "eq",
+    );
     const memberId = memberFilter === undefined ? undefined : lifecycleMemberId(memberFilter.value);
     if (memberId !== undefined && currentMockScenario().lifecycle === "memberPackPlan") {
       return error("INACTIVITY_NOT_APPLICABLE", 422);
     }
-    const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
+    const normalizedFilters = filters.map((filter) =>
+      filter.field === "memberId"
+        ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") }
+        : filter,
+    );
     const query = normalized((url.searchParams.get("q") ?? "").trim());
-    const searched = query === ""
-      ? adminPeriods
-      : adminPeriods.filter((item) => normalized(item.member.fullName).includes(query));
-    const filtered = filterQueue(searched, normalizedFilters, inactivityFilterValue, ["memberId", "state", "fromMonth", "toMonth", "origin", "requestedAt"]);
+    const searched =
+      query === ""
+        ? adminPeriods
+        : adminPeriods.filter((item) => normalized(item.member.fullName).includes(query));
+    const filtered = filterQueue(searched, normalizedFilters, inactivityFilterValue, [
+      "memberId",
+      "state",
+      "fromMonth",
+      "toMonth",
+      "origin",
+      "requestedAt",
+    ]);
     if (filtered === undefined) return error("INVALID_FILTER", 400);
-    const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), inactivitySortValue, ["fromMonth", "requestedAt", "memberLastName"]);
+    const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), inactivitySortValue, [
+      "fromMonth",
+      "requestedAt",
+      "memberLastName",
+    ]);
     if (sorted === undefined) return error("INVALID_FILTER", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
@@ -533,7 +677,11 @@ export const memberBillingHandlers = [
       toMonth: item.toMonth ?? null,
     }));
     return HttpResponse.json({
-      appliedFilters: filters.map((filter) => ({ field: filter.field, op: filter.op, value: filter.value })),
+      appliedFilters: filters.map((filter) => ({
+        field: filter.field,
+        op: filter.op,
+        value: filter.value,
+      })),
       items,
       page,
       size,
@@ -551,11 +699,21 @@ export const memberBillingHandlers = [
     const refused = moduleOff("INACTIVITY");
     if (refused !== undefined) return refused;
     const body = (await request.json()) as AdminInactivityRequest;
-    if (currentMockScenario().lifecycle === "memberPackPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
-    if (currentMockScenario().lifecycle === "inactivityDeadlinePassed" && body.overrideDeadline !== true) return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
+    if (currentMockScenario().lifecycle === "memberPackPlan")
+      return error("INACTIVITY_NOT_APPLICABLE", 422);
+    if (
+      currentMockScenario().lifecycle === "inactivityDeadlinePassed" &&
+      body.overrideDeadline !== true
+    )
+      return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
     const normalizedMemberId = lifecycleMemberId(body.memberId);
-    const existing = adminPeriods.find((period) => period.member.id === normalizedMemberId && ["REQUESTED", "APPROVED", "ACTIVE"].includes(period.state));
-    if (existing !== undefined) return error("INACTIVITY_OVERLAP", 409, { hint: "EXTEND", periodId: existing.id });
+    const existing = adminPeriods.find(
+      (period) =>
+        period.member.id === normalizedMemberId &&
+        ["REQUESTED", "APPROVED", "ACTIVE"].includes(period.state),
+    );
+    if (existing !== undefined)
+      return error("INACTIVITY_OVERLAP", 409, { hint: "EXTEND", periodId: existing.id });
     const member = lifecycleMemberOverview(body.memberId)?.member;
     if (member === undefined) return error("NOT_FOUND", 404);
     const created: components["schemas"]["InactivityPeriod"] = {
@@ -585,7 +743,10 @@ export const memberBillingHandlers = [
       },
       origin: "BACKOFFICE",
       requestedAt: MOCK_NOW,
-      requestedBy: { accountId: "63000000-0000-4000-8000-000000000099", impersonatedMemberId: null },
+      requestedBy: {
+        accountId: "63000000-0000-4000-8000-000000000099",
+        impersonatedMemberId: null,
+      },
       ...(body.fromMonth <= MOCK_CURRENT_MONTH ? { startedAt: MOCK_NOW } : {}),
       state: body.fromMonth <= MOCK_CURRENT_MONTH ? "ACTIVE" : "APPROVED",
       toMonth: body.toMonth ?? null,
@@ -622,7 +783,12 @@ export const memberBillingHandlers = [
     const item = adminPeriods.find((period) => period.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
     if (item.state !== "REQUESTED") return error("INACTIVITY_INVALID_STATE", 409);
-    item.state = body.decision === "APPROVED" ? (item.fromMonth <= MOCK_CURRENT_MONTH ? "ACTIVE" : "APPROVED") : "DENIED";
+    item.state =
+      body.decision === "APPROVED"
+        ? item.fromMonth <= MOCK_CURRENT_MONTH
+          ? "ACTIVE"
+          : "APPROVED"
+        : "DENIED";
     item.decision = {
       at: MOCK_NOW,
       byAccountId: "63000000-0000-4000-8000-000000000099",
@@ -632,13 +798,24 @@ export const memberBillingHandlers = [
     };
     if (body.decision === "APPROVED") {
       item.feeSnapshot = currentMockScenario().branding.modules.includes("BILLING")
-        ? { firstMonth: { amountMinor: 2000, currency: "EUR" }, followingMonths: { amountMinor: 1000, currency: "EUR" } }
+        ? {
+            firstMonth: { amountMinor: 2000, currency: "EUR" },
+            followingMonths: { amountMinor: 1000, currency: "EUR" },
+          }
         : null;
       item.bookingsInside ??= 2;
       item.cancelledBookings = cancelBookingsOnApproval()
         ? [
-            { id: "64000000-0000-4000-8000-000000000001", sessionDate: "2026-10-12", type: "CLASS" },
-            { id: "64000000-0000-4000-8000-000000000002", sessionDate: "2026-10-14", type: "TRAINING" },
+            {
+              id: "64000000-0000-4000-8000-000000000001",
+              sessionDate: "2026-10-12",
+              type: "CLASS",
+            },
+            {
+              id: "64000000-0000-4000-8000-000000000002",
+              sessionDate: "2026-10-14",
+              type: "TRAINING",
+            },
           ]
         : [];
       if (item.state === "ACTIVE") item.startedAt = MOCK_NOW;
@@ -680,14 +857,32 @@ export const memberBillingHandlers = [
     const url = new URL(request.url);
     const filters = queueFilters(url);
     if (filters === undefined) return error("INVALID_FILTER", 400);
-    const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
+    const normalizedFilters = filters.map((filter) =>
+      filter.field === "memberId"
+        ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") }
+        : filter,
+    );
     const query = normalized((url.searchParams.get("q") ?? "").trim());
-    const searched = query === ""
-      ? adminLeaves
-      : adminLeaves.filter((item) => normalized(item.member.fullName).includes(query));
-    const filtered = filterQueue(searched, normalizedFilters, leaveFilterValue, ["memberId", "state", "source", "requestedAt", "requestedDate", "effectiveDate", "reasonKey", "nps"]);
+    const searched =
+      query === ""
+        ? adminLeaves
+        : adminLeaves.filter((item) => normalized(item.member.fullName).includes(query));
+    const filtered = filterQueue(searched, normalizedFilters, leaveFilterValue, [
+      "memberId",
+      "state",
+      "source",
+      "requestedAt",
+      "requestedDate",
+      "effectiveDate",
+      "reasonKey",
+      "nps",
+    ]);
     if (filtered === undefined) return error("INVALID_FILTER", 400);
-    const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), leaveSortValue, ["requestedAt", "requestedDate", "effectiveDate"]);
+    const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), leaveSortValue, [
+      "requestedAt",
+      "requestedDate",
+      "effectiveDate",
+    ]);
     if (sorted === undefined) return error("INVALID_FILTER", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
@@ -704,7 +899,11 @@ export const memberBillingHandlers = [
       state: item.state,
     }));
     return HttpResponse.json({
-      appliedFilters: filters.map((filter) => ({ field: filter.field, op: filter.op, value: filter.value })),
+      appliedFilters: filters.map((filter) => ({
+        field: filter.field,
+        op: filter.op,
+        value: filter.value,
+      })),
       items,
       page,
       size,
@@ -721,13 +920,15 @@ export const memberBillingHandlers = [
     if (item === undefined) return error("NOT_FOUND", 404);
     if (item.state !== "PENDING") return error("LEAVE_INVALID_STATE", 409);
     const body = (await request.json()) as LeaveDecisionRequest;
-    if (currentMockScenario().lifecycle === "leaveDateInvalid") return error("LEAVE_DATE_INVALID", 422);
+    if (currentMockScenario().lifecycle === "leaveDateInvalid")
+      return error("LEAVE_DATE_INVALID", 422);
     item.state = body.decision === "APPROVED" ? "APPROVED" : "DENIED";
     item.decision = {
       at: "2026-10-05T10:00:00Z",
       byAccountId: "63000000-0000-4000-8000-000000000099",
       decision: body.decision,
-      effectiveDate: body.decision === "APPROVED" ? (body.effectiveDate ?? item.requestedDate) : null,
+      effectiveDate:
+        body.decision === "APPROVED" ? (body.effectiveDate ?? item.requestedDate) : null,
       note: body.note ?? null,
     };
     if (body.decision === "APPROVED") {
@@ -738,7 +939,11 @@ export const memberBillingHandlers = [
       item.member.leaveDate = effectiveDate;
       updateLifecycleMember(item.member.id, (member) => {
         member.leaveDate = effectiveDate;
-        member.displayStatus = { date: effectiveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${effectiveDate}` };
+        member.displayStatus = {
+          date: effectiveDate,
+          kind: "LEAVE_SCHEDULED",
+          label: `baixa prevista ${effectiveDate}`,
+        };
       });
     }
     item.version += 1;
@@ -746,14 +951,17 @@ export const memberBillingHandlers = [
   }),
   http.post("*/api/v1/members/:id/leave", async ({ params, request }) => {
     const body = (await request.json()) as DirectLeaveRequest;
-    if (currentMockScenario().lifecycle === "leaveDateInvalid") return error("LEAVE_DATE_INVALID", 422);
+    if (currentMockScenario().lifecycle === "leaveDateInvalid")
+      return error("LEAVE_DATE_INVALID", 422);
     const requestedId = String(params.id);
     if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
     const overview = lifecycleMemberOverview(requestedId);
     if (overview === undefined) return error("NOT_FOUND", 404);
     const normalizedId = lifecycleMemberId(requestedId);
     const member = overview.member;
-    for (const pendingRequest of adminLeaves.filter((item) => item.member.id === normalizedId && item.state === "PENDING")) {
+    for (const pendingRequest of adminLeaves.filter(
+      (item) => item.member.id === normalizedId && item.state === "PENDING",
+    )) {
       pendingRequest.state = "CANCELLED";
       pendingRequest.version += 1;
     }
@@ -762,14 +970,37 @@ export const memberBillingHandlers = [
     const created: components["schemas"]["LeaveRequest"] = {
       ...seed,
       comment: body.note ?? null,
-      decision: { at: "2026-10-05T10:00:00Z", byAccountId: "63000000-0000-4000-8000-000000000099", decision: "APPROVED", effectiveDate: body.effectiveDate, note: body.note ?? null },
-      cancelledBookings: [{ id: "64000000-0000-4000-8000-000000000004", sessionDate: body.effectiveDate, type: "CLASS" }],
+      decision: {
+        at: "2026-10-05T10:00:00Z",
+        byAccountId: "63000000-0000-4000-8000-000000000099",
+        decision: "APPROVED",
+        effectiveDate: body.effectiveDate,
+        note: body.note ?? null,
+      },
+      cancelledBookings: [
+        {
+          id: "64000000-0000-4000-8000-000000000004",
+          sessionDate: body.effectiveDate,
+          type: "CLASS",
+        },
+      ],
       id: `65000000-0000-4000-8000-${String(adminLeaves.length + 1).padStart(12, "0")}`,
-      member: { fullName: member.fullName, id: normalizedId, leaveDate: body.effectiveDate, leftAt: null, leftReason: null, ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }), status: "ACTIVE" },
+      member: {
+        fullName: member.fullName,
+        id: normalizedId,
+        leaveDate: body.effectiveDate,
+        leftAt: null,
+        leftReason: null,
+        ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }),
+        status: "ACTIVE",
+      },
       origin: "BACKOFFICE",
       reasonKey: body.reasonKey ?? null,
       requestedAt: "2026-10-05T10:00:00Z",
-      requestedBy: { accountId: "63000000-0000-4000-8000-000000000099", impersonatedMemberId: null },
+      requestedBy: {
+        accountId: "63000000-0000-4000-8000-000000000099",
+        impersonatedMemberId: null,
+      },
       requestedDate: body.effectiveDate,
       source: "ADMIN",
       state: "APPROVED",
@@ -787,10 +1018,11 @@ export const memberBillingHandlers = [
     if (member.leaveDate == null) return error("NO_PLANNED_LEAVE", 409);
     const leaveDate = member.leaveDate;
     const normalizedId = lifecycleMemberId(requestedId);
-    for (const request of adminLeaves.filter((item) =>
-      item.member.id === normalizedId &&
-      item.state === "APPROVED" &&
-      (item.decision?.effectiveDate ?? item.member.leaveDate ?? item.requestedDate) === leaveDate
+    for (const request of adminLeaves.filter(
+      (item) =>
+        item.member.id === normalizedId &&
+        item.state === "APPROVED" &&
+        (item.decision?.effectiveDate ?? item.member.leaveDate ?? item.requestedDate) === leaveDate,
     )) {
       request.state = "CANCELLED";
       request.cancelledAt = "2026-10-05T10:00:00Z";
@@ -824,7 +1056,10 @@ export const memberBillingHandlers = [
         version: updated.version + 1,
       });
     });
-    if (currentMockScenario().lifecycle === "memberLeft" && lifecycleMemberId(requestedId) === lifecycleMembers[0].id) {
+    if (
+      currentMockScenario().lifecycle === "memberLeft" &&
+      lifecycleMemberId(requestedId) === lifecycleMembers[0].id
+    ) {
       memberLifecycleStorage()?.setItem(memberLeftScenarioStorageKey(), "ACTIVE");
     }
     return HttpResponse.json(member);
@@ -847,7 +1082,8 @@ export const memberBillingHandlers = [
       // A member without a date moving to a MONTHLY plan gets the request's, else next month's
       // `billing.nextInvoiceDayOfMonth` (the value `GET /parameters/{key}` reads, E164 (e)), at
       // most that month's last day; an existing date never moves.
-      const monthly = catalogState.plans.find((plan) => plan.id === body.planId)?.type === "MONTHLY";
+      const monthly =
+        catalogState.plans.find((plan) => plan.id === body.planId)?.type === "MONTHLY";
       const nextMonth = shiftMonth(clubMonth(), 1);
       const lastDay = Number(monthEnd(nextMonth).slice(8));
       const day = Math.min(Math.max(1, billingDayState.nextInvoiceDayOfMonth), lastDay);
@@ -883,7 +1119,15 @@ export const memberBillingHandlers = [
     }
     if (typeof body?.reason !== "string" || body.reason.trim() === "" || body.reason.length > 200) {
       return error("VALIDATION_ERROR", 400, {
-        fieldErrors: [{ code: typeof body?.reason === "string" && body.reason.length > 200 ? "INVALID_VALUE" : "REQUIRED", field: "reason" }],
+        fieldErrors: [
+          {
+            code:
+              typeof body?.reason === "string" && body.reason.length > 200
+                ? "INVALID_VALUE"
+                : "REQUIRED",
+            field: "reason",
+          },
+        ],
       });
     }
     if (member.status !== "ACTIVE") return error("INVALID_STATE", 409);
@@ -894,19 +1138,28 @@ export const memberBillingHandlers = [
         updated.version += 1;
       });
       const overview = lifecycleMemberOverview(requestedId);
-      if (overview?.nextInvoice !== undefined) overview.nextInvoice = { ...overview.nextInvoice, date };
+      if (overview?.nextInvoice !== undefined)
+        overview.nextInvoice = { ...overview.nextInvoice, date };
     }
     const answer: components["schemas"]["NextInvoiceDate"] = { nextInvoiceDate: date };
     return HttpResponse.json(answer);
   }),
   http.post("*/api/v1/members/:id/card-setup-link", ({ params }) => {
-    if (String(params.id) !== censusRecordState.memberOverview.member.id) return error("NOT_FOUND", 404);
-    return currentMockScenario().branding.modules.includes("BILLING") ? HttpResponse.json({ checkoutUrl: "https://checkout.example.test/setup/admin-card" }, { status: 201 }) : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    if (String(params.id) !== censusRecordState.memberOverview.member.id)
+      return error("NOT_FOUND", 404);
+    return currentMockScenario().branding.modules.includes("BILLING")
+      ? HttpResponse.json(
+          { checkoutUrl: "https://checkout.example.test/setup/admin-card" },
+          { status: 201 },
+        )
+      : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
   }),
   http.get("*/api/v1/invoices", ({ request }) => {
     const url = new URL(request.url);
     const filters = url.searchParams.getAll("filter");
-    const memberId = filters.find((filter) => filter.startsWith("memberId:eq:"))?.slice("memberId:eq:".length);
+    const memberId = filters
+      .find((filter) => filter.startsWith("memberId:eq:"))
+      ?.slice("memberId:eq:".length);
     if (memberId !== "member-laura" && memberId !== ERASED_MEMBER_ID) return undefined;
     const items: components["schemas"]["InvoiceListItem"][] =
       memberId === ERASED_MEMBER_ID
@@ -975,7 +1228,12 @@ export const memberBillingHandlers = [
   http.post("*/api/v1/me/card-setup", () => {
     const refused = moduleOff("BILLING");
     if (refused !== undefined) return refused;
-    return currentMockScenario().memberBilling === "cardInvalid" ? HttpResponse.json({ checkoutUrl: "https://checkout.example.test/setup/cs_card" }, { status: 201 }) : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    return currentMockScenario().memberBilling === "cardInvalid"
+      ? HttpResponse.json(
+          { checkoutUrl: "https://checkout.example.test/setup/cs_card" },
+          { status: 201 },
+        )
+      : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
   }),
   http.get("*/api/v1/checkout-sessions/:id", ({ params, request }) => {
     const refused = moduleOff("BILLING");
@@ -1002,16 +1260,16 @@ export const memberBillingHandlers = [
   http.get("*/api/v1/me/inactivity-periods", () => {
     const refused = moduleOff("INACTIVITY");
     if (refused !== undefined) return refused;
-    if (currentMockScenario().memberBilling === "packPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
+    if (currentMockScenario().memberBilling === "packPlan")
+      return error("INACTIVITY_NOT_APPLICABLE", 422);
     restoreMemberLifecycle();
     const billingEnabled = currentMockScenario().branding.modules.includes("BILLING");
     return HttpResponse.json({
       ...inactivity,
       fee: billingEnabled ? inactivity.fee : null,
-      periods: (
-        currentMockScenario().memberBilling === "noInactivity" && !memberCreatedInactivity
-          ? []
-          : inactivity.periods
+      periods: (currentMockScenario().memberBilling === "noInactivity" && !memberCreatedInactivity
+        ? []
+        : inactivity.periods
       ).map((period) => (billingEnabled ? period : { ...period, fee: null })),
     });
   }),
@@ -1022,7 +1280,8 @@ export const memberBillingHandlers = [
   http.post("*/api/v1/me/inactivity-periods", async ({ request }) => {
     restoreMemberLifecycle();
     const body = (await request.json()) as InactivityRequest;
-    if (currentMockScenario().memberBilling === "deadlinePassed") return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
+    if (currentMockScenario().memberBilling === "deadlinePassed")
+      return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
     const seed = inactivityContextFixture.periods[0];
     if (seed === undefined) throw new TypeError("The inactivity fixture requires a seed period");
     const created = {
@@ -1105,7 +1364,8 @@ export const memberBillingHandlers = [
   }),
   http.post("*/api/v1/upfront-payments", async ({ request }) => {
     const body = (await request.json()) as UpfrontRequest;
-    if (body.amountPaid.amountMinor > body.amountDue.amountMinor) return error("AMOUNT_EXCEEDS_DUE", 422);
+    if (body.amountPaid.amountMinor > body.amountDue.amountMinor)
+      return error("AMOUNT_EXCEEDS_DUE", 422);
     if (body.concept === "PACK" && body.dogId === undefined) return error("PLAN_NOT_PACK", 422);
     const item: components["schemas"]["UpfrontPayment"] = {
       ...body,
@@ -1132,7 +1392,8 @@ export const memberBillingHandlers = [
     const url = new URL(request.url);
     const memberId = url.searchParams.get("memberId");
     const dogId = url.searchParams.get("dogId");
-    const effectiveMemberId = memberId === "member-laura" ? "20000000-0000-4000-8000-000000000002" : memberId;
+    const effectiveMemberId =
+      memberId === "member-laura" ? "20000000-0000-4000-8000-000000000002" : memberId;
     const rows = packs
       .filter(
         (item) =>
@@ -1140,8 +1401,7 @@ export const memberBillingHandlers = [
           (dogId === null || item.dogId === dogId),
       )
       .map((item) =>
-        memberId === "member-laura" &&
-        item.dogId === "31000000-0000-4000-8000-000000000002"
+        memberId === "member-laura" && item.dogId === "31000000-0000-4000-8000-000000000002"
           ? { ...item, dogId: "dog-rock" }
           : item,
       );
@@ -1151,7 +1411,8 @@ export const memberBillingHandlers = [
     const body = (await request.json()) as PackAdjustment;
     const balance = packs.find((item) => item.id === String(params.id));
     if (balance === undefined) return error("NOT_FOUND", 404);
-    if (balance.state === "EXPIRED" && body.expiresOn === undefined) return error("VALIDATION_ERROR", 400, { fields: [{ field: "expiresOn", code: "REQUIRED" }] });
+    if (balance.state === "EXPIRED" && body.expiresOn === undefined)
+      return error("VALIDATION_ERROR", 400, { fields: [{ field: "expiresOn", code: "REQUIRED" }] });
     if (balance.remaining + body.delta < 0) return error("PACK_NEGATIVE", 422);
     balance.remaining += body.delta;
     balance.consumed = balance.sessionsTotal - balance.remaining;
@@ -1160,9 +1421,7 @@ export const memberBillingHandlers = [
       balance.state = "ACTIVE";
     }
     const overviewDogId =
-      balance.dogId === "31000000-0000-4000-8000-000000000002"
-        ? "dog-rock"
-        : balance.dogId;
+      balance.dogId === "31000000-0000-4000-8000-000000000002" ? "dog-rock" : balance.dogId;
     const overviewDog = censusRecordState.memberOverview.dogs.find(
       (dog) => dog.id === overviewDogId,
     );
