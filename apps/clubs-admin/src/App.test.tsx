@@ -1166,6 +1166,36 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     },
   );
 
+  it("AUTHZ-02: an INSTRUCTOR without ADMIN who opens a member's record lands on D12 and never reads /members", async () => {
+    const memberReads: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      const { pathname } = new URL(request.url);
+      if (pathname.startsWith("/api/v1/members")) memberReads.push(pathname);
+    });
+    try {
+      mockScenario("instructor");
+      const client = authClient();
+      await client.login("marc@example.test", "secret-password");
+      // An old link to an ex-member's record: the api answers 404 to an instructor (R-03-31).
+      window.history.pushState(null, "", "/abonats/member-laura");
+      await renderApplication(client);
+      expect(
+        await screen.findByRole(
+          "heading",
+          { level: 1, name: "Agenda de la setmana" },
+          { timeout: 5_000 },
+        ),
+      ).toBeVisible();
+      await waitFor(() => {
+        expect(window.location.pathname).toBe("/agenda");
+      });
+      expect(screen.queryByRole("link", { name: "Abonats" })).toBeNull();
+      expect(memberReads).toEqual([]);
+    } finally {
+      server.events.removeAllListeners();
+    }
+  });
+
   it("an unknown path lands a platform-only account on the console list, never on D1", async () => {
     await renderPlatform("/");
     expect(
