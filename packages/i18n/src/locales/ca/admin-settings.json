@@ -386,6 +386,10 @@
         "useFrst": {
           "help": "Usa la seqüència inicial abans dels cobraments recurrents.",
           "label": "Seqüència inicial SEPA"
+        },
+        "leadBusinessDays": {
+          "help": "Dies hàbils TARGET entre la presentació i el cobrament.",
+          "label": "Antelació de la remesa SEPA"
         }
       },
       "singleClassCancelPolicy": {
@@ -811,6 +815,10 @@
           "help": "Introducció de la modalitat de teràpia.",
           "label": "Text de teràpia"
         }
+      },
+      "cardEnabled": {
+        "help": "Permet pagar amb targeta durant l’alta si Stripe està habilitat.",
+        "label": "Targeta en les altes"
       }
     },
     "training": {
@@ -827,7 +835,7 @@
         "label": "Reserves simultànies per pista i franja"
       },
       "freeTrainingRequiresLicense": {
-        "help": "Indica informativament si cal llicència esportiva.",
+        "help": "Per reservar entrenament lliure, el gos autoritzat ha de tenir una llicència amb organisme i número.",
         "label": "Llicència per a entrenament lliure"
       },
       "maxPerWeek": {

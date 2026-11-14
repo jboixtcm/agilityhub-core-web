@@ -386,6 +386,10 @@
         "useFrst": {
           "help": "Uses the first-payment sequence before recurring collections.",
           "label": "SEPA first-payment sequence"
+        },
+        "leadBusinessDays": {
+          "help": "TARGET business days between submission and collection.",
+          "label": "SEPA submission lead time"
         }
       },
       "singleClassCancelPolicy": {
@@ -811,6 +815,10 @@
           "help": "Introduction to the therapy option.",
           "label": "Therapy text"
         }
+      },
+      "cardEnabled": {
+        "help": "Allow card payments during signup when Stripe is enabled.",
+        "label": "Card payments at signup"
       }
     },
     "training": {
@@ -827,7 +835,7 @@
         "label": "Simultaneous bookings per ring and time slot"
       },
       "freeTrainingRequiresLicense": {
-        "help": "Informational indication of whether a sports licence is needed.",
+        "help": "To book free training, an authorized dog must have a licence with an issuing organisation and a number.",
         "label": "Licence for free training"
       },
       "maxPerWeek": {

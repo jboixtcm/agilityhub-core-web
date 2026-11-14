@@ -386,6 +386,10 @@
         "useFrst": {
           "help": "Usa la secuencia inicial antes de los cobros recurrentes.",
           "label": "Secuencia inicial SEPA"
+        },
+        "leadBusinessDays": {
+          "help": "Días hábiles TARGET entre la presentación y el cobro.",
+          "label": "Antelación de la remesa SEPA"
         }
       },
       "singleClassCancelPolicy": {
@@ -811,6 +815,10 @@
           "help": "Introducción de la modalidad de terapia.",
           "label": "Texto de terapia"
         }
+      },
+      "cardEnabled": {
+        "help": "Permite pagar con tarjeta durante el alta si Stripe está habilitado.",
+        "label": "Tarjeta en las altas"
       }
     },
     "training": {
@@ -827,7 +835,7 @@
         "label": "Reservas simultáneas por pista y franja"
       },
       "freeTrainingRequiresLicense": {
-        "help": "Indica de forma informativa si se necesita licencia deportiva.",
+        "help": "Para reservar entrenamiento libre, el perro autorizado debe tener una licencia con organismo y número.",
         "label": "Licencia para entrenamiento libre"
       },
       "maxPerWeek": {
