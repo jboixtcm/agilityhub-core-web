@@ -23,6 +23,7 @@ import {
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { DisputeMark } from "./DisputeMark";
 import {
   clubToday,
   errorDetails,
@@ -472,6 +473,7 @@ export function InvoiceDrawer({
                           })}
                         </span>
                       )}
+                      {entry.dispute == null ? null : <DisputeMark dispute={entry.dispute} />}
                       {entry.refunds.map((refund) => (
                         <span key={`${refund.at}-${String(refund.amount.amountMinor)}`}>
                           {t("admin-billing:drawer.refundLine", {

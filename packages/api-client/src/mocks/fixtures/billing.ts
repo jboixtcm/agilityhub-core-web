@@ -566,6 +566,8 @@ function collection(
   return {
     amount: invoice.total,
     attempt: 1,
+    // PAY-06: the api sends `dispute: null` on a collection nobody disputed.
+    dispute: null,
     failureCode: null,
     failureMessage: null,
     id: uuid(3, world.sequence),

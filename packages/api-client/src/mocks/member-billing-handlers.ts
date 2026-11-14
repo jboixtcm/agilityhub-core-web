@@ -118,6 +118,7 @@ const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
     amountPaid: { amountMinor: 3000, currency: "EUR" },
     concept: "ENTRY_FEE",
     createdAt: "2026-08-11T09:00:00Z",
+    dispute: null,
     dogId: null,
     id: "54000000-0000-4000-8000-000000000001",
     memberId: "member-laura",
@@ -133,6 +134,7 @@ const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
     amountPaid: { amountMinor: 12000, currency: "EUR" },
     concept: "PACK",
     createdAt: "2026-09-02T17:30:00Z",
+    dispute: null,
     dogId: "dog-rock",
     id: "54000000-0000-4000-8000-000000000101",
     memberId: "member-laura",
@@ -1396,6 +1398,7 @@ export const memberBillingHandlers = [
       amountDue: body.amountDue,
       amountPaid: body.amountPaid,
       createdAt: `${body.paidAt}T12:00:00Z`,
+      dispute: null,
       id: `54000000-0000-4000-8000-${String(upfront.length + 2).padStart(12, "0")}`,
       paidAt: `${body.paidAt}T12:00:00Z`,
       provider: {

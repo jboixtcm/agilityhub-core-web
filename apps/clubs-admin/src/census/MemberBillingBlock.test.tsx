@@ -549,3 +549,57 @@ describe("PAY-05 (decision of 13 Nov 2026): D10 refunds a card payment", () => {
     expect(within(dialog).getByRole("button", { name: "Refund €120.00" })).toBeVisible();
   });
 });
+
+describe("PAY-06 (decision of 13 Nov 2026): D10 marks a card payment under dispute", () => {
+  it("shows the mark on the disputed row only, read-only, with the amount, the reason and the date", async () => {
+    server.use(
+      http.get("*/api/v1/upfront-payments", () =>
+        HttpResponse.json({
+          items: [
+            {
+              amountDue: { amountMinor: 1500, currency: "EUR" },
+              amountPaid: { amountMinor: 1500, currency: "EUR" },
+              concept: "SINGLE_CLASS",
+              createdAt: "2026-10-20T16:00:00Z",
+              dispute: {
+                amount: { amountMinor: 1500, currency: "EUR" },
+                closedAt: null,
+                openedAt: "2026-11-10T09:00:00Z",
+                providerRef: "dp_test_d10",
+                reason: "duplicate",
+                status: "needs_response",
+              },
+              id: "54000000-0000-4000-8000-000000000201",
+              memberId: "member-laura",
+              provider: { type: "STRIPE" },
+              refunds: [],
+              status: "PAID",
+            },
+            {
+              amountDue: { amountMinor: 3000, currency: "EUR" },
+              amountPaid: { amountMinor: 3000, currency: "EUR" },
+              concept: "ENTRY_FEE",
+              createdAt: "2026-08-11T09:00:00Z",
+              dispute: null,
+              id: "54000000-0000-4000-8000-000000000001",
+              memberId: "member-laura",
+              provider: { channel: "CASH", type: "MANUAL" },
+              refunds: [],
+              status: "PAID",
+            },
+          ],
+        }),
+      ),
+    );
+    await renderBlock();
+    const disputed = (await screen.findByText("Classe individual")).closest("li");
+    if (disputed === null) throw new Error("Missing the disputed row");
+    expect(within(disputed).getByText("En disputa")).toHaveClass("ah-tone--danger");
+    expect(disputed).toHaveTextContent(
+      "El titular ha disputat 15,00 € al banc (cobrament duplicat) el 10/11/2026. Respon la disputa des del tauler de Stripe.",
+    );
+    // The mark changes nothing: the payment stays «cobrat».
+    expect(within(disputed).getByText("cobrat")).toBeVisible();
+    expect(screen.getByText("Entrada").closest("li")).not.toHaveTextContent("disputa");
+  });
+});

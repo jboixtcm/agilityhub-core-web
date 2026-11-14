@@ -207,6 +207,7 @@ function appendCollection(
     amount: item.invoice.total,
     attempt: 1,
     createdAt: now(),
+    dispute: null,
     failureCode: null,
     failureMessage: null,
     id: billingUuid(3, target.sequence),

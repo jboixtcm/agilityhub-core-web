@@ -20,6 +20,7 @@ import {
 import { useEffect, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
+import { DisputeMark } from "../billing/DisputeMark";
 import { clubToday } from "../billing/shared";
 
 import { isRefundable, UpfrontRefundModal } from "./UpfrontRefundModal";
@@ -305,6 +306,7 @@ export function MemberBillingBlock({
                   </Button>
                 )}
               </div>
+              {payment.dispute == null ? null : <DisputeMark dispute={payment.dispute} />}
               {payment.refunds.map((refund) => (
                 <small key={`${refund.at}-${String(refund.amount.amountMinor)}`}>
                   {t("admin-census:member.billing.refund.line", {

@@ -695,6 +695,18 @@ select {
   gap: var(--ah-space-2);
 }
 
+/* PAY-06: a disputed card payment's mark (D10's up-front payments, D6's receipt drawer). */
+.dispute-mark {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-1) var(--ah-space-2);
+}
+
+.dispute-mark small {
+  color: var(--ah-color-text-muted);
+}
+
 /* The refund's confirmation step: its heading takes the focus. */
 .member-billing__step {
   margin: 0;

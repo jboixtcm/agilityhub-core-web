@@ -1256,6 +1256,38 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     expect(refund?.body).toEqual({ amount: { amountMinor: 2000, currency: "EUR" }, reason: "" });
   });
 
+  it("PAY-06: the drawer marks a card collection under dispute, with no action of its own", async () => {
+    await settleStripeCards();
+    const stored = billingState.world.invoices.find(
+      (item) => item.invoice.displayNumber === "2026-0914",
+    );
+    const charge = stored?.invoice.collections.find(
+      (entry) => entry.provider === "STRIPE" && entry.status === "SUCCEEDED",
+    );
+    if (charge === undefined) throw new TypeError("No card collection on 2026-0914");
+    charge.dispute = {
+      amount: charge.amount,
+      closedAt: "2026-10-30T10:00:00Z",
+      openedAt: "2026-10-02T08:00:00Z",
+      providerRef: "dp_test_d6",
+      reason: "unrecognized",
+      status: "lost",
+    };
+    await renderPage({ scenario: "billingStripe" });
+    const dialog = await openDrawer("2026-0914");
+    const collections = within(dialog)
+      .getByRole("heading", { name: "Cobraments" })
+      .closest("section");
+    if (collections === null) throw new TypeError("No collections section");
+    expect(await within(collections).findByText("Disputa perduda")).toHaveClass("ah-tone--danger");
+    expect(collections).toHaveTextContent(
+      "oberta el 02/10/2026 i tancada per Stripe el 30/10/2026.",
+    );
+    expect(collections).toHaveTextContent("(no el reconeix)");
+    // No action: the dispute is answered in Stripe's dashboard.
+    expect(within(collections).queryByRole("button")).toBeNull();
+  });
+
   it("R-12-19: 422 CURRENCY_MISMATCH reads inside the manual receipt modal", async () => {
     server.use(
       http.post("*/api/v1/invoices", () =>

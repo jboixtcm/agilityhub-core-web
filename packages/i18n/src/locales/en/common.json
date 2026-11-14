@@ -133,5 +133,17 @@
     "checkSpam": "If you cannot find the message, check your spam or junk folder too.",
     "close": "Close"
   },
-  "notifyMember": "Notify the member"
+  "notifyMember": "Notify the member",
+  "paymentDispute": {
+    "state": {
+      "open": "Disputed",
+      "won": "Dispute won",
+      "lost": "Dispute lost",
+      "closed": "Dispute closed"
+    },
+    "reason": "{reason, select, fraudulent {fraud} duplicate {duplicate charge} unrecognized {not recognised} product_not_received {service not received} credit_not_processed {credit not processed} general {general reason} other {reason: {reason}}}",
+    "noReason": "no reason given",
+    "openDetail": "The cardholder disputed {amount} with their bank ({reason}) on {date}. Respond to the dispute from the Stripe dashboard.",
+    "closedDetail": "Dispute of {amount} ({reason}) opened on {opened} and closed by Stripe on {closed}."
+  }
 }
