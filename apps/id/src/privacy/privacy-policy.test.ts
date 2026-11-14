@@ -84,6 +84,33 @@ describe("PRIV-01 the platform's privacy policy", () => {
     );
   });
 
+  it("CFG-07: lists the server's access log and keeps it at most 30 days, unmodified, like the backups", () => {
+    // The api logs each request (IP address, browser, date, the address without its query string)
+    // and keeps the rolled files 30 days (`deploy/Caddyfile`); an erasure does not rewrite them.
+    expect(PRIVACY_POLICY.text.ca).toContain(
+      "El servidor també registra cada petició que es fa a la plataforma, amb l'adreça IP, el navegador, la data i l'adreça demanada (sense els seus paràmetres).",
+    );
+    expect(PRIVACY_POLICY.text.ca).toContain(
+      "- **El registre de les peticions al servidor** es conserva com a màxim 30 dies i no es modifica: les dades suprimides en desapareixen quan caduca, com a les còpies de seguretat.",
+    );
+    expect(PRIVACY_POLICY.text.es).toContain(
+      "El servidor también registra cada petición que se hace a la plataforma, con la dirección IP, el navegador, la fecha y la dirección solicitada (sin sus parámetros).",
+    );
+    expect(PRIVACY_POLICY.text.es).toContain(
+      "- **El registro de las peticiones al servidor** se conserva como máximo 30 días y no se modifica: los datos suprimidos desaparecen de él cuando caduca, como en las copias de seguridad.",
+    );
+    expect(PRIVACY_POLICY.text.en).toContain(
+      "The server also records each request made to the platform, with the IP address, the browser, the date and the address requested (without its parameters).",
+    );
+    expect(PRIVACY_POLICY.text.en).toContain(
+      "- **The log of requests to the server** is kept for at most 30 days and is not modified: erased data disappear from it when it expires, as with the backups.",
+    );
+    // The header's note of the retention values names where the 30 days come from.
+    expect(legalDocument).toContain(
+      "els 30 dies del registre d'accés HTTP (`deploy/Caddyfile` de l'api)",
+    );
+  });
+
   it("carries no draft marker, placeholder or forbidden word", () => {
     for (const locale of productLocales) {
       const text = PRIVACY_POLICY.text[locale];
