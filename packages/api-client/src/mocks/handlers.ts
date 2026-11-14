@@ -4763,8 +4763,9 @@ export const handlers = [
     const fileName = `facturacio-${period}.${format}`;
     return format === "csv"
       ? new HttpResponse(
-          // UTF-8 with BOM and `;` (R-12-26); the rows themselves are the api's (E8-T02).
-          `\uFEFFnúmero;data;mes;número d'abonat;nom;NIF;concepte;base;% impost;impost;total;mètode;estat;data de cobrament;remesa;referència\n`,
+          // UTF-8 with BOM and `;` (R-12-26); the rows themselves are the api's (E8-T02). SEPA-09:
+          // the api's two last columns, after the sixteen original ones (18 in all).
+          `\uFEFFnúmero;data;mes;número d'abonat;nom;NIF;concepte;base;% impost;impost;total;mètode;estat;data de cobrament;remesa;referència;Estat de l’últim cobrament;Data de devolució\n`,
           {
             headers: {
               "Content-Disposition": `attachment; filename="${fileName}"`,

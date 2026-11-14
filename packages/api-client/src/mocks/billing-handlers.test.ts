@@ -1462,6 +1462,14 @@ describe("S12 the receipt PDF and the accounting export (T-12-19, T-12-20)", () 
     const bytes = new Uint8Array(data ?? new ArrayBuffer(0));
     expect([...bytes.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
     expect(new TextDecoder().decode(bytes)).toContain("número;data;mes;");
+    // SEPA-09: 18 columns, the last two the api's «Estat de l’últim cobrament» and «Data de devolució».
+    const header = (new TextDecoder().decode(bytes).split("\n")[0] ?? "").split(";");
+    expect(header).toHaveLength(18);
+    expect(header.slice(-3)).toEqual([
+      "referència",
+      "Estat de l’últim cobrament",
+      "Data de devolució",
+    ]);
     expect(
       await failure(
         client.GET("/billing/exports", {
