@@ -14,7 +14,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { DogsPage, MembersPage } from "../census/CensusListPage";
 
-import { MemberAuditPage } from "./AuditPage";
+import { AuditTrail, MemberAuditPage } from "./AuditPage";
 import { ExportJobsProvider } from "./ExportsDrawer";
 import { LastChange } from "./LastChange";
 
@@ -507,5 +507,66 @@ describe("COMM-03 (decision of 13 Nov 2026): D9 names an action made without the
     const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
     await within(drawer).findByText("Duna");
     expect(screen.queryByText("sense avís a l'abonat")).toBeNull();
+  });
+});
+
+describe("AUTHZ-05 (decision of 13 Nov 2026): D9 shows a support write's method and route", () => {
+  // `SUPPORT_WRITE` as the api writes it for an unaudited write made with a support token.
+  const entry = {
+    action: "SUPPORT_WRITE",
+    actorRole: "PLATFORM",
+    at: "2026-11-13T10:05:00Z",
+    changes: [],
+    details: { method: "POST", path: "/saved-views", route: "/saved-views", status: 201 },
+    entityId: "00000000-0000-4000-8000-000000000401",
+    entityType: "ImpersonationGrant",
+    id: "00000000-0000-4000-8000-000000000402",
+    origin: "PLATFORM_SUPPORT",
+  } as const;
+
+  it("the club's audit row and the change's drawer show details.method and details.route", async () => {
+    server.use(
+      http.get("*/api/v1/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [entry],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/audit-entries/:id", () => HttpResponse.json(entry)),
+    );
+    window.history.replaceState(null, "", "/auditoria?fields=at,action,origin,details");
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-audit", "admin-census", "census", "errors"],
+      storage: undefined,
+    });
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ExportJobsProvider client={client}>
+            <AuditTrail client={client} />
+          </ExportJobsProvider>
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+
+    const action = await screen.findByRole("link", { name: "Canvi fet pel suport" });
+    const row = action.closest("tr");
+    if (row === null) throw new TypeError("No audit row");
+    expect(within(row).getByText("Suport de plataforma")).toHaveClass("ah-badge");
+    expect(row).toHaveTextContent('"method":"POST"');
+    expect(row).toHaveTextContent('"route":"/saved-views"');
+
+    fireEvent.click(action);
+    const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
+    const details = await within(drawer).findByText(/"method": "POST"/u);
+    expect(details).toHaveTextContent('"route": "/saved-views"');
+    expect(details).toHaveTextContent('"path": "/saved-views"');
   });
 });
