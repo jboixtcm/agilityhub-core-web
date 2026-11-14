@@ -1,4 +1,4 @@
-import { type components, isApiError } from "@agilityhub/api-client";
+import { apiWritesInFlight, type components, isApiError } from "@agilityhub/api-client";
 import {
   type AuthClient,
   createAuthenticatedApiClient,
@@ -25,6 +25,7 @@ import {
   Input,
   PasswordInput,
   isModuleUiItemEnabled,
+  NewVersionNotice,
   requiredModulesForUiItem,
   resolveBrandingLogo,
   Sidebar,
@@ -54,6 +55,7 @@ import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
 import { BillingPage } from "./billing/BillingPage";
 import { RemittancesPage } from "./billing/RemittancesPage";
 import { StripeEventsPage } from "./billing/StripeEventsPage";
+import { RUNNING_BUILD } from "./build-version";
 import { PlansPage } from "./catalogs/PlansPage";
 import { RingsPage } from "./catalogs/RingsPage";
 import { SettingsPage } from "./catalogs/SettingsPage";
@@ -1299,7 +1301,26 @@ export function App({ authClient }: { authClient: AuthClient }) {
     <>
       <AppRoutes authClient={authClient} />
       <RecentLoginDialog client={authClient} />
+      <NewVersionOffer />
     </>
+  );
+}
+
+/**
+ * FE-07: «Hi ha una versió nova · Recarrega» when the host serves another build, at a safe moment
+ * (no dialog or drawer open, no field being typed in, no write in flight). It never suspends the
+ * back office while `common` loads: until then it shows nothing.
+ */
+function NewVersionOffer() {
+  const { ready, t } = useTranslation("common", { useSuspense: false });
+  if (!ready) return null;
+  return (
+    <NewVersionNotice
+      busy={() => apiWritesInFlight() > 0}
+      message={t("common:newVersion.message")}
+      reloadLabel={t("common:newVersion.reload")}
+      running={RUNNING_BUILD}
+    />
   );
 }
 

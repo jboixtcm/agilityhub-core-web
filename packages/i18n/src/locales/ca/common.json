@@ -145,5 +145,9 @@
     "noReason": "sense motiu",
     "openDetail": "El titular ha disputat {amount} al banc ({reason}) el {date}. Respon la disputa des del tauler de Stripe.",
     "closedDetail": "Disputa de {amount} ({reason}) oberta el {opened} i tancada per Stripe el {closed}."
+  },
+  "newVersion": {
+    "message": "Hi ha una versió nova",
+    "reload": "Recarrega"
   }
 }

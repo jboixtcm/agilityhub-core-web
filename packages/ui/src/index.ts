@@ -23,6 +23,7 @@ export * from "./icons/names";
 export * from "./lazy-boundary";
 export * from "./limited-markdown";
 export * from "./modules";
+export * from "./new-version";
 export * from "./password-input";
 export * from "./registrants-panel";
 export * from "./rich-text";

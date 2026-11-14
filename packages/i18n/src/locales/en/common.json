@@ -145,5 +145,9 @@
     "noReason": "no reason given",
     "openDetail": "The cardholder disputed {amount} with their bank ({reason}) on {date}. Respond to the dispute from the Stripe dashboard.",
     "closedDetail": "Dispute of {amount} ({reason}) opened on {opened} and closed by Stripe on {closed}."
+  },
+  "newVersion": {
+    "message": "A new version is available",
+    "reload": "Reload"
   }
 }

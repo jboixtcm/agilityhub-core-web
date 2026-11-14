@@ -1,4 +1,9 @@
-import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agilityhub/api-client";
+import {
+  apiClient as defaultApiClient,
+  apiWritesInFlight,
+  isApiError,
+  type ApiClient,
+} from "@agilityhub/api-client";
 import {
   type AuthClient,
   HANDOFF_SESSION_CONFLICT,
@@ -30,6 +35,7 @@ import {
   PasswordInput,
   isModuleUiItemEnabled,
   Modal,
+  NewVersionNotice,
   requiredModulesForUiItem,
   resolveBrandingLogo,
   Select,
@@ -60,6 +66,7 @@ import {
 } from "./access-profiles";
 import { safeDecode } from "./activities/shared";
 import { navigateInApp } from "./booking/shared";
+import { RUNNING_BUILD } from "./build-version";
 import { ClubLogoImage } from "./ClubLogoImage";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
 import { NotificationAttention } from "./notifications/NotificationAttention";
@@ -69,6 +76,7 @@ import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
 import { InstallAppCard } from "./pwa/InstallAppCard";
+import { checkForWorkerUpdate, prepareMemberAppReload, useWorkerUpdated } from "./pwa/update";
 import {
   navigate as navigateTo,
   type NavigationKind,
@@ -1961,12 +1969,23 @@ interface AppProps {
 
 export function App(props: AppProps) {
   const { t } = useTranslation("common");
+  const workerUpdated = useWorkerUpdated();
   // AUTH-01 (S01 R-01-18): an instructor's week PDF or a staff account's own data package asks
-  // for a recent sign-in through «Confirma que ets tu».
+  // for a recent sign-in through «Confirma que ets tu». FE-07: «Hi ha una versió nova · Recarrega»
+  // when the host serves another build or a new worker took over, at a safe moment.
   return (
     <ToastProvider dismissLabel={t("gallery.close")}>
       <AppContent {...props} />
       <RecentLoginDialog client={props.authClient} />
+      <NewVersionNotice
+        busy={() => apiWritesInFlight() > 0}
+        message={t("common:newVersion.message")}
+        onOtherBuild={checkForWorkerUpdate}
+        prepareReload={prepareMemberAppReload}
+        reloadLabel={t("common:newVersion.reload")}
+        running={RUNNING_BUILD}
+        workerUpdated={workerUpdated}
+      />
     </ToastProvider>
   );
 }

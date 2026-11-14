@@ -6,7 +6,12 @@ import react from "@vitejs/plugin-react";
 import { loadEnv, type Plugin } from "vite";
 import { configDefaults, defineConfig } from "vitest/config";
 
-import { contentSecurityPolicy, robotsTxt, versionJson } from "../../scripts/bundle-files.mjs";
+import {
+  buildVersion,
+  contentSecurityPolicy,
+  robotsTxt,
+  versionJson,
+} from "../../scripts/bundle-files.mjs";
 
 /** course-ui's FBX models (D18's 3D tab, E9-W03), published at `/obstacle-models` as Planner3D reads them. */
 const OBSTACLE_MODELS = resolve(
@@ -45,7 +50,7 @@ function obstacleModels(): Plugin {
   };
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const coreUrl = process.env.VITE_CORE_URL ?? env.VITE_CORE_URL ?? "http://localhost:8080";
   const idUrl = process.env.VITE_ID_URL ?? env.VITE_ID_URL ?? coreUrl;
@@ -65,6 +70,17 @@ export default defineConfig(({ mode }) => {
   return {
     // Keep MSW out of production; emit the public favicon explicitly.
     build: { copyPublicDir: mockEnabled },
+    // FE-07: this build's own `{version, commit}` (what its version.json says), compiled in so the
+    // page can tell when the host serves a newer bundle. Only a `vite build` carries CI's commit:
+    // the dev server and the unit tests run without one, so they never read version.json.
+    define: {
+      __AGILITYHUB_BUILD__: JSON.stringify(
+        buildVersion(
+          new URL("./package.json", import.meta.url),
+          command === "build" ? process.env : {},
+        ),
+      ),
+    },
     // Locale loaders use the default JSON export. Omit the duplicate named exports in each language chunk.
     json: { namedExports: false },
     plugins: [

@@ -12,7 +12,8 @@
 //
 // REL-02 `version.json`: `{"version", "commit"}`, the version of the app's `package.json` and the
 // git commit the bundle was built from (`GITHUB_SHA` in CI; `null` elsewhere, where the tree may
-// differ from any commit), so a deployed bundle names its source.
+// differ from any commit), so a deployed bundle names its source. FE-07: apps/clubs and
+// apps/clubs-admin compile the same pair in (`buildVersion`) and compare it with the served file.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
@@ -184,6 +185,16 @@ export function versionFileProblem(body) {
 }
 
 /**
+ * FE-07: the `{version, commit}` a build is, read as `version.json` writes it: the version of the
+ * app's `package.json` (`packageJson`, its path or file URL) and the build's commit. The apps also
+ * compile it in (`define` `__AGILITYHUB_BUILD__`), so a page can tell a newer deployed bundle.
+ */
+export function buildVersion(packageJson, environment = process.env) {
+  const { version } = JSON.parse(readFileSync(packageJson, "utf8"));
+  return { version, commit: buildCommit(environment) };
+}
+
+/**
  * REL-02: emits `version.json` with the version of the app's `package.json` (`packageJson`, its
  * path or file URL) and the build's commit (`buildCommit`).
  */
@@ -192,13 +203,13 @@ export function versionJson(packageJson, environment = process.env) {
     apply: "build",
     enforce: "post",
     generateBundle() {
-      const { version } = JSON.parse(readFileSync(packageJson, "utf8"));
+      const { version, commit } = buildVersion(packageJson, environment);
       if (typeof version !== "string" || !SEMANTIC_VERSION.test(version)) {
         this.error(`REL-02: the app's package.json version «${String(version)}» is not x.y.z`);
       }
       this.emitFile({
         fileName: VERSION_FILE,
-        source: `${JSON.stringify({ version, commit: buildCommit(environment) })}\n`,
+        source: `${JSON.stringify({ version, commit })}\n`,
         type: "asset",
       });
     },

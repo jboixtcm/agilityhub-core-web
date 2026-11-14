@@ -1,5 +1,5 @@
 import { isApiError } from "./api-error";
-import type { ApiClient } from "./client";
+import { type ApiClient, countedWrite } from "./client";
 import type { components } from "./generated/schema";
 
 export type UploadPurpose = components["schemas"]["UploadRequest"]["purpose"];
@@ -17,11 +17,14 @@ export interface SignedUploadTarget {
  * storage.
  */
 export async function putSignedFile(target: SignedUploadTarget, file: Blob): Promise<void> {
-  const response = await fetch(target.uploadUrl, {
-    body: file,
-    headers: target.headers,
-    method: "PUT",
-  });
+  // FE-07: an upload in flight is a write the «new version» notice waits for.
+  const response = await countedWrite(() =>
+    fetch(target.uploadUrl, {
+      body: file,
+      headers: target.headers,
+      method: "PUT",
+    }),
+  );
   if (!response.ok) throw new TypeError("The signed file upload failed");
 }
 

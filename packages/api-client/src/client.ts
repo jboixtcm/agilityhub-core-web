@@ -98,6 +98,38 @@ export interface ApiClientOptions {
 
 export type ApiClient = Client<paths>;
 
+const READ_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+let writesInFlight = 0;
+
+/**
+ * FE-07: the writes (any method but GET, HEAD and OPTIONS) this page has sent through an api client
+ * or a signed upload and not yet seen answered or failed. The «new version» notice waits for none.
+ */
+export function apiWritesInFlight(): number {
+  return writesInFlight;
+}
+
+/** FE-07: counts one write from its start until its answer (or failure) arrives. */
+export async function countedWrite<T>(send: () => Promise<T>): Promise<T> {
+  writesInFlight += 1;
+  try {
+    return await send();
+  } finally {
+    writesInFlight -= 1;
+  }
+}
+
+function countingWrites(fetchImpl: typeof globalThis.fetch): typeof globalThis.fetch {
+  return (input: RequestInfo | URL, init?: RequestInit) => {
+    const method = (
+      init?.method ?? (input instanceof Request ? input.method : "GET")
+    ).toUpperCase();
+    return READ_METHODS.has(method)
+      ? fetchImpl(input, init)
+      : countedWrite(() => fetchImpl(input, init));
+  };
+}
+
 function viteApiUrl(): string | undefined {
   const meta = import.meta as ImportMeta & {
     readonly env?: Record<string, string | undefined>;
@@ -168,7 +200,7 @@ const errorMiddleware: Middleware = {
 
 export function createApiClient(options: ApiClientOptions = {}): ApiClient {
   const guards = new WeakMap<Request, () => void>();
-  const fetch = options.fetch ?? globalThis.fetch;
+  const fetch = countingWrites(options.fetch ?? globalThis.fetch);
   const client = createClient<paths>({
     baseUrl: options.baseUrl ?? viteApiUrl() ?? DEFAULT_API_URL,
     credentials: options.credentials ?? "include",

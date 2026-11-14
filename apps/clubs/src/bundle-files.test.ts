@@ -11,15 +11,19 @@ function flatPlugins(options: PluginOption[] | undefined): Plugin[] {
   });
 }
 
-/** The plugins of this app's `vite build` (production mode). */
-function productionPlugins(): Plugin[] {
-  const config = viteConfig({
-    command: "build",
+/** This app's Vite configuration for a `vite build` (production mode) or its dev server. */
+function configFor(command: "build" | "serve") {
+  return viteConfig({
+    command,
     isPreview: false,
     isSsrBuild: false,
-    mode: "production",
+    mode: command === "build" ? "production" : "development",
   });
-  return flatPlugins(config.plugins);
+}
+
+/** The plugins of this app's `vite build` (production mode). */
+function productionPlugins(): Plugin[] {
+  return flatPlugins(configFor("build").plugins);
 }
 
 /** One of this app's build plugins, by name. */
@@ -86,5 +90,19 @@ describe("the files this app's bundle carries (scripts/bundle-files.mjs)", () =>
         type: "asset",
       },
     ]);
+  });
+
+  it("FE-07 compiles in the {version, commit} its version.json carries; the dev server, none", () => {
+    const { version } = packageJson;
+    const sha = "89abcdef0123456789abcdef0123456789abcdef";
+    vi.stubEnv("GITHUB_SHA", sha);
+    const compiled: unknown = configFor("build").define?.__AGILITYHUB_BUILD__;
+    expect(compiled).toBe(JSON.stringify({ version, commit: sha }));
+    const [file] = emittedBy(buildPlugin("version-json")) as { source: string }[];
+    expect(JSON.parse(String(compiled))).toEqual(JSON.parse(file?.source ?? ""));
+    // The dev server (and the unit tests, which run on it) never carry CI's commit.
+    expect(configFor("serve").define?.__AGILITYHUB_BUILD__).toBe(
+      JSON.stringify({ version, commit: null }),
+    );
   });
 });

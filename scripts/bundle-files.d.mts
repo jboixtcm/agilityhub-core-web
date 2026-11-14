@@ -36,6 +36,12 @@ export declare function buildCommit(
 ): string | null;
 export declare function versionFileProblem(body: string): string | null;
 
+/** FE-07: the `{version, commit}` a build is, as its `version.json` says. */
+export declare function buildVersion(
+  packageJson: string | URL,
+  environment?: Record<string, string | undefined>,
+): { version: unknown; commit: string | null };
+
 /** REL-02: emits `version.json` with the app's version and the build's commit. */
 export declare function versionJson(
   packageJson: string | URL,

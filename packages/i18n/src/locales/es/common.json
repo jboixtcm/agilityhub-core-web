@@ -145,5 +145,9 @@
     "noReason": "sin motivo",
     "openDetail": "El titular ha disputado {amount} en su banco ({reason}) el {date}. Responde a la disputa desde el panel de Stripe.",
     "closedDetail": "Disputa de {amount} ({reason}) abierta el {opened} y cerrada por Stripe el {closed}."
+  },
+  "newVersion": {
+    "message": "Hay una versión nueva",
+    "reload": "Recargar"
   }
 }

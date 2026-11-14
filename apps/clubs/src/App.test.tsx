@@ -30,6 +30,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 
 import { App, MOBILE_ROUTES, MobileNavigation } from "./App";
 import { PUSH_SUBSCRIPTION_STORAGE_KEY } from "./notifications/push";
+import { markWorkerUpdated, resetWorkerUpdate } from "./pwa/update";
 import { isCountryFieldValid } from "./SelfServicePages";
 
 const canicBranding: Branding = {
@@ -3431,5 +3432,28 @@ describe("AUTH-01 (S01 R-01-05 and R-01-18, decision of 13 Nov 2026)", () => {
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
     await expect(confirmed).resolves.toBe(true);
+  });
+});
+
+describe("FE-07 «Hi ha una versió nova · Recarrega» in the member app", () => {
+  afterEach(() => {
+    resetWorkerUpdate();
+  });
+
+  it("a new worker that takes over shows the offer instead of reloading the page under the member", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/estadistiques");
+    await renderApplication(client);
+    await screen.findByText(brandingCanicFixture.club.name);
+    expect(screen.queryByText("Hi ha una versió nova")).toBeNull();
+
+    act(() => {
+      markWorkerUpdated();
+    });
+    expect(await screen.findByText("Hi ha una versió nova")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Recarrega" })).toBeVisible();
+    // The page stays where it was: nothing reloaded it.
+    expect(window.location.pathname).toBe("/estadistiques");
   });
 });
