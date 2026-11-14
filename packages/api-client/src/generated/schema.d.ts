@@ -8172,6 +8172,8 @@ export interface components {
             bookingId: string;
             dogId: string;
             dogName: string;
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for the row; null when there is none (no photo, or one the server cannot reduce, such as WebP): show dogPhotoUrl, which the enlarged photo keeps */
+            dogPhotoThumbnailUrl?: string | null;
             /** @description Short-lived signed URL */
             dogPhotoUrl?: string | null;
             /** @description This row cannot currently be corrected. A saved NOTIFIED can be restored by an administrator or an instructor assigned to this class while their attendance window remains open. */
@@ -10779,6 +10781,8 @@ export interface components {
             owner?: components["schemas"]["OwnerSummary"];
             pack?: components["schemas"]["PackSummary"];
             pendingDocuments?: string[];
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for list rows; absent or null when there is none (no photo, or one the server cannot reduce, such as WebP): show photoUrl */
+            photoThumbnailUrl?: string | null;
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
             /** Format: date-time */
@@ -10814,6 +10818,8 @@ export interface components {
             id: string;
             level?: components["schemas"]["LevelSummary"];
             name: string;
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for list rows; absent or null when there is none (no photo, or one the server cannot reduce, such as WebP): show photoUrl */
+            photoThumbnailUrl?: string | null;
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
         };
@@ -13665,6 +13671,8 @@ export interface components {
             name: string;
             pack?: components["schemas"]["PackSummary"];
             pendingDocuments: string[];
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for list rows; absent or null when there is none (no photo, or one the server cannot reduce, such as WebP): show photoUrl */
+            photoThumbnailUrl?: string | null;
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
             /** @enum {string} */
@@ -72993,7 +73001,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description HANDOFF_SESSION_CONFLICT (FE-03, R-01-13): a handoff code of an account, not an impersonation launch code, redeemed with this host's ah_refresh cookie of the same client holding a live session (not revoked, not expired, current family version) of another account. The code stays unused, no tokens are issued and no Set-Cookie is sent; the body names neither account. The same account's session, no cookie or a dead one: the exchange goes on as usual */
             409: {
                 headers: {
                     [name: string]: unknown;
