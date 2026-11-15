@@ -42,7 +42,10 @@ function recordWrites(): Recorded[] {
   return writes;
 }
 
-const classRow = (index: number) => document.querySelectorAll<HTMLElement>(".class-row")[index];
+const classRow = (index: number) =>
+  document.querySelectorAll<HTMLElement>(
+    '.class-row:not([data-bookable-state="RESERVED"]):not([data-bookable-state="PAYMENT_PENDING"])',
+  )[index];
 
 /** 04 in the app, then a tap on the row at `index` (0-based, as the mockup's list). */
 async function tapRow(index: number, options: Parameters<typeof renderApp>[1] = {}) {

@@ -277,6 +277,7 @@ describe("E5-W01 i18n: the three locales, and the club's zone for a viewer elsew
     // E7-W07 step 6 (ruling E85): Saturday 8 is a normal row (Duna 1 of 2), not mockup 04's
     // «Weekly limit», which `book.test.tsx` reads in the `bookingLimitDone` world.
     expect(badges).toEqual([
+      "Booked",
       "2 places",
       "Full · 1",
       "Full · 3/3",

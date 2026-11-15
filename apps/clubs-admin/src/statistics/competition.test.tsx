@@ -48,6 +48,22 @@ async function show() {
   });
 }
 describe("Competition imports", () => {
+  it("T-STATS-33 refuses source text whose JSON envelope exceeds the public gateway limit", async () => {
+    let requests = 0;
+    server.use(
+      http.post("*/api/v1/competition-imports/preview", () => {
+        requests += 1;
+        return HttpResponse.error();
+      }),
+    );
+    await show();
+    fireEvent.change(screen.getByLabelText("Contingut del fitxer"), {
+      target: { value: '"'.repeat(1_000_000) },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Previsualitza" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("El contingut és massa gran");
+    expect(requests).toBe(0);
+  });
   it("T-STATS-18 previews without writing results and confirms only selected rows after review", async () => {
     const bodies: unknown[] = [];
     server.events.on("request:start", ({ request }) => {

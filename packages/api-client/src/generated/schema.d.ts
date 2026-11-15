@@ -6100,7 +6100,7 @@ export interface paths {
         };
         /**
          * publicClubLogo
-         * @description Public branding image. Only a logo currently published by this club is accessible; unrelated uploads always return 404.
+         * @description Public branding image, served directly with an ETag and a five-minute public cache lifetime. Only a logo currently published by this club is accessible at the origin; unrelated uploads always return 404. Replacing a logo changes its URL.
          */
         get: operations["publicClubLogo"];
         put?: never;
@@ -62705,8 +62705,17 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Short-lived download URL */
-            302: {
+            /** @description Published image */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/*": string;
+                };
+            };
+            /** @description Not modified */
+            304: {
                 headers: {
                     [name: string]: unknown;
                 };

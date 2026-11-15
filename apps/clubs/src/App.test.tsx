@@ -127,6 +127,7 @@ async function renderNavigation(
   modules: string[],
   roles: ("ADMIN" | "INSTRUCTOR" | "MEMBER")[],
   activeProfile: "ADMIN" | "INSTRUCTOR" | "MEMBER" = "MEMBER",
+  pathname = "/inici",
 ) {
   const i18n = await createClubsI18n({
     branding: canicBranding,
@@ -140,7 +141,7 @@ async function renderNavigation(
         <MobileNavigation
           activeProfile={activeProfile}
           modules={modules}
-          pathname="/inici"
+          pathname={pathname}
           roles={roles}
         />
       </BrandingProvider>
@@ -166,7 +167,7 @@ describe("T-02-14 clubs shell", () => {
     expect(screen.getByText(brandingCanicFixture.club.name)).toBeVisible();
   });
 
-  it("filters the six-tab mockup navigation by modules and roles", async () => {
+  it("filters the five primary destinations by modules and roles", async () => {
     await renderNavigation(["FREE_TRAINING", "FAQ"], ["MEMBER"]);
 
     expect(screen.getByRole("link", { name: "Inici" })).toBeInTheDocument();
@@ -175,7 +176,7 @@ describe("T-02-14 clubs shell", () => {
     expect(screen.getByRole("link", { name: "Avui" })).toHaveAttribute("href", "/avui");
     expect(screen.queryByRole("link", { name: "Visió global" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Perfil" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Info" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Info" })).not.toBeInTheDocument();
   });
 
   it("E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile", async () => {
@@ -234,7 +235,32 @@ describe("T-02-14 clubs shell", () => {
     await renderNavigation(["WAITLIST", "FAQ", "PUSH"], ["MEMBER"]);
 
     expect(screen.queryByRole("link", { name: "Entrenaments" })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Info" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Info" })).not.toBeInTheDocument();
+  });
+
+  it.each(["MEMBER", "INSTRUCTOR"] as const)(
+    "T-02-14 keeps Profile active while %s reads club information",
+    async (role) => {
+      await renderNavigation(["FAQ"], [role], role, "/info");
+      expect(screen.getByRole("link", { name: "Perfil" })).toHaveAttribute("aria-current", "page");
+      expect(screen.queryByRole("link", { name: "Info" })).not.toBeInTheDocument();
+    },
+  );
+
+  it("T-05-CP-07 opens club information from Profile", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    expect(screen.getByRole("link", { name: "Informació del club" })).toHaveAttribute(
+      "href",
+      "/info",
+    );
+    expect(
+      within(screen.getByRole("navigation", { name: "Navegació principal" })).queryByRole("link", {
+        name: "Info",
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it("registers every mobile route from the frontend plan", () => {

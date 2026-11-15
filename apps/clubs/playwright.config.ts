@@ -6,7 +6,7 @@ export default defineConfig({
     {
       name: "webkit-ui",
       testMatch:
-        /(?:ui-closure|feedback-signup|word-feedback|app-profiles|notification-attention)\.spec\.ts$/u,
+        /(?:ui-closure|feedback-signup|word-feedback|info-profile|mobile-booking|app-profiles|notification-attention)\.spec\.ts$/u,
       use: { browserName: "webkit" },
     },
   ],

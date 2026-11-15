@@ -2253,6 +2253,8 @@ div.lifecycle-error p {
 .info-page {
   display: grid;
   width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   align-self: start;
   align-content: start;
   gap: var(--ah-space-3);
@@ -2268,20 +2270,49 @@ div.lifecycle-error p {
   color: var(--ah-color-danger);
 }
 
-.info-page .ah-tabs__list {
-  max-width: 100%;
-  overflow-x: auto;
+.info-page__back {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: var(--ah-space-1);
+  min-height: 2.75rem;
+  color: var(--ah-color-text-muted);
+  text-decoration: none;
 }
 
-.info-page .ah-tabs__tab {
-  flex: 0 0 auto;
+.info-page__back .ah-icon {
+  transform: rotate(180deg);
+}
+
+.info-page__back:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+  border-radius: var(--ah-radius-sm);
+}
+
+.info-page__selector {
+  display: grid;
+  min-width: 0;
+  /* WebKit's native selected-option text must not widen the surrounding grid. */
+  contain: layout;
+  gap: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+}
+
+.info-page__selector select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .info-faq,
 .info-faq section,
 .info-faq__items {
   display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ah-space-2);
+  overflow-wrap: anywhere;
 }
 
 .info-faq {

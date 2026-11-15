@@ -160,7 +160,9 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     // The mock's swap (bookingLimit, mockup 06) cancels Friday 7 in time, as R-08-09.
     await renderApp("/reservar", { scenario: "bookingLimit" });
     await screen.findByRole("heading", { name: "Classes" });
-    const limitRow = document.querySelectorAll<HTMLElement>(".class-row")[3];
+    const limitRow = document.querySelectorAll<HTMLElement>(
+      '.class-row:not([data-bookable-state="RESERVED"]):not([data-bookable-state="PAYMENT_PENDING"])',
+    )[3];
     fireEvent.click(within(limitRow ?? document.body).getByRole("button"));
     fireEvent.click(await screen.findByRole("radio", { name: /^Divendres 7/u }));
     fireEvent.click(

@@ -5,6 +5,16 @@
 - Add member competition statistics and administrator preview/confirm imports behind STATS, with source links, period filters and Catalan/Spanish/English copy.
 - Adopt the branch OpenAPI contract and add fictional provider fixtures and browser/component coverage.
 
+## Unreleased — Club information in Profile
+
+- Move club information out of the fixed navigation and into Profile, retaining existing `/info` links.
+- Replace the overflowing information tabs with a labelled section selector and wrap long FAQ content on narrow screens.
+
+## 2026-11-15 — Mobile booking list
+
+- Keep the dog selector at the top while scrolling the mobile booking screen.
+- Keep upcoming reserved classes in chronological order with a reserved badge and a link to the existing booking. Pending payments retain their own status; changing dogs refreshes both lists together.
+
 ## 2026-11-13 — Class times and student/administration feedback
 
 - Allow typed start and end times when creating or editing a class, while retaining suggested planning times.

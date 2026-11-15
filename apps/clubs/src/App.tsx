@@ -482,7 +482,9 @@ export function MobileNavigation({
         label: t("shell:nav.students"),
       },
       {
-        active: ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path)),
+        active: ["/perfil", "/gossos", "/dades", "/info"].some((path) =>
+          matchesPath(pathname, path),
+        ),
         href: "/perfil",
         icon: "user",
         label: t("shell:nav.profile"),
@@ -511,7 +513,6 @@ export function MobileNavigation({
         }
       : { href: "/avui", icon: "day", id: "today", label: t("shell:nav.today") },
     { href: "/perfil", icon: "user", id: "profile", label: t("shell:nav.profile") },
-    { href: "/info", icon: "info", id: "info", label: t("shell:nav.info") },
   ];
   const items = definitions
     .filter((item) => isModuleUiItemEnabled(modules, "tabs", item.id))
@@ -520,7 +521,7 @@ export function MobileNavigation({
     .map((item) => ({
       active:
         item.id === "profile"
-          ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
+          ? ["/perfil", "/gossos", "/dades", "/info"].some((path) => matchesPath(pathname, path))
           : item.id === "home"
             ? // Mockups 25 and 11: the history and the notifications are reached from 03, and
               // «Inici» stays lit.
@@ -1713,6 +1714,11 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
+        <a href="/info">
+          <Icon aria-hidden="true" name="info" />
+          <span>{t("shell:info.tabs")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </a>
         {impersonated ? null : (
           <button
             onClick={() => {

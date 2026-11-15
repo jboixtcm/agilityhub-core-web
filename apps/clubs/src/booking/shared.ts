@@ -1,10 +1,11 @@
 import { type ApiClient, type components, isApiError, isInProgress } from "@agilityhub/api-client";
+import { clubLocalInstant } from "@agilityhub/i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { useTranslation } from "react-i18next";
 
 import type { LoadState } from "../activities/shared";
 import { navigate } from "../router";
-import { useWindowFocus } from "../training/shared";
+import { clubToday, useWindowFocus } from "../training/shared";
 
 export type Translate = ReturnType<typeof useTranslation>["t"];
 
@@ -13,6 +14,16 @@ export type HomeDog = components["schemas"]["HomeDog"];
 export type ReservationRowData = components["schemas"]["ReservationRow"];
 export type BookableClasses = components["schemas"]["BookableClasses"];
 export type BookableClass = components["schemas"]["BookableClass"];
+/** Presentation rows combine two existing API contracts; no new server state is implied. */
+export type ReservedClass = Pick<
+  BookableClass,
+  "id" | "startsAtLocal" | "description" | "ringColor"
+> & {
+  bookingId: string;
+  state: "RESERVED" | "PAYMENT_PENDING";
+};
+export type BookingListClass = BookableClass | ReservedClass;
+
 export type BookableDog = components["schemas"]["BookableDog"];
 export type SeatHoldResponse = components["schemas"]["SeatHoldResponse"];
 export type Booking = components["schemas"]["Booking"];
@@ -189,19 +200,43 @@ export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) 
   return useLoader(load, refresh, true, true);
 }
 
-/** `GET /me/bookable-classes?dogId=` (04): no `dogId` = the api's proposed dog. */
-export function useBookableClasses(client: ApiClient, dogId: string | null) {
-  const load = useCallback(
-    async () =>
-      required(
-        (
-          await client.GET("/me/bookable-classes", {
-            params: { query: dogId === null ? {} : { dogId } },
-          })
-        ).data,
-      ),
-    [client, dogId],
-  );
+/** Available classes plus the selected dog's upcoming reservations, refreshed together. */
+export function useBookableClasses(client: ApiClient, dogId: string | null, timeZone: string) {
+  const load = useCallback(async () => {
+    const query = dogId === null ? {} : { dogId };
+    const [available, booked] = await Promise.all([
+      client.GET("/me/bookable-classes", { params: { query } }),
+      client.GET("/me/bookings", {
+        params: { query: { ...query, from: clubToday(timeZone) } },
+      }),
+    ]);
+    const data = required(available.data);
+    const reservations: ReservedClass[] = required(booked.data)
+      .items.filter(
+        (booking) =>
+          booking.dogId === data.dog.id &&
+          (booking.state === "ACTIVE" || booking.state === "PAYMENT_PENDING") &&
+          clubLocalInstant(booking.classSession.startsAtLocal, timeZone) > Date.now(),
+      )
+      .map((booking) => ({
+        id: booking.classSessionId,
+        bookingId: booking.id,
+        startsAtLocal: booking.classSession.startsAtLocal,
+        description: booking.classSession.description,
+        ringColor: booking.classSession.ringColor ?? null,
+        state: booking.state === "PAYMENT_PENDING" ? "PAYMENT_PENDING" : "RESERVED",
+      }));
+    // A booking wins if the two reads overlap a confirmation; never offer the same class twice.
+    const reservedIds = new Set(reservations.map((row) => row.id));
+    const classes: BookingListClass[] = [
+      ...data.classes.filter((row) => !reservedIds.has(row.id)),
+      ...reservations,
+    ];
+    classes.sort(
+      (a, b) => a.startsAtLocal.localeCompare(b.startsAtLocal) || a.id.localeCompare(b.id),
+    );
+    return { ...data, classes };
+  }, [client, dogId, timeZone]);
   return useLoader(load, undefined, false, true);
 }
 

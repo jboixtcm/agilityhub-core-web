@@ -47,7 +47,7 @@
   "template": "Download CSV template",
   "file": "File (up to 2 MB)",
   "content": "File contents",
-  "fileTooLarge": "The file is larger than 2 MB.",
+  "fileTooLarge": "The content is too large to import. Try the results link instead.",
   "invalidImport": "The source or selection could not be validated. Check the link, format and licences. If the preview expired, prepare it again. Previous results are preserved.",
   "preview": "Preview",
   "review": "Review matches",
