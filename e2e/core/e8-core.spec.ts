@@ -964,6 +964,17 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   lifecycle.member = member;
   lifecycle.familyPartner = family;
 
+  // The demo seed starts billing next month. This lifecycle control needs an ungenerated
+  // current month too, so arrange its due date through the audited admin operation.
+  const dueDate = await call<Schemas["NextInvoiceDate"]>(
+    admin,
+    `/members/${member.id}/next-invoice-date`,
+    "PUT",
+    { nextInvoiceDate: `${weekMonth}-01`, reason: "Prova fictícia del mes de baixa E8-W04" },
+  );
+  expect(dueDate.status, JSON.stringify(dueDate.body)).toBe(200);
+  expect(dueDate.body.nextInvoiceDate).toBe(`${weekMonth}-01`);
+
   // Establish the fee proof from lifecycle dates, rather than relying on the fixed seed's Oct–Nov
   // range. Admin creation is approved in one step (R-13-05), freezing the amount for this period.
   const feePeriod = await call<InactivityPeriod>(admin, "/inactivity-periods", "POST", {
@@ -1007,7 +1018,7 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   );
   await expect(laura.page.getByRole("heading", { name: "Període d'inactivitat" })).toBeVisible();
   await laura.page.getByLabel("Mes d'inici (obligatori)").selectOption(fromMonth);
-  await laura.page.getByLabel("Mes de finalització (si el saps)").fill(fromMonth);
+  await laura.page.getByLabel("Mes de tornada (opcional)").selectOption(nextMonth(fromMonth));
   await laura.page.getByLabel("Comentaris").fill("Pausa fictícia E8-W04");
   const submit = laura.page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" });
   await expect(submit).toBeEnabled();

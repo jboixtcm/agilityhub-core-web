@@ -471,8 +471,9 @@ async function clubsSession(
   email: string,
   landing: "/inici" | "/instructor/dia",
   locale: Locale = "ca",
+  instance = "default",
 ): Promise<Session> {
-  const key = `clubs|${email}|${locale}`;
+  const key = `clubs|${email}|${locale}|${instance}`;
   const known = sessions.get(key);
   if (known !== undefined) return known;
   const context = await newContext(browser, mobile, locale);
@@ -789,7 +790,7 @@ function castStates(sheet: AttendanceSheet): Record<string, AttendanceState> {
 /** Screen 21's row of `name` («Rita + Mel»): its radio group carries the name. */
 function sheetRow(page: Page, name: string): Locator {
   return page.locator("li.instructor-sheet__row").filter({
-    has: page.locator(".instructor-sheet__who > strong", {
+    has: page.locator(".instructor-sheet__who strong", {
       hasText: new RegExp(`^${escapeRegExp(name)}$`, "u"),
     }),
   });
@@ -1438,7 +1439,14 @@ test.describe("Monday 04:00", () => {
     await expect(circle(unassigned.page, "ca", names.marti, sheetText.ca.noShow)).toBeDisabled();
 
     // (c) Two independent sessions of the assigned instructor exercise the version conflict.
-    const other = await clubsSession(browser, theScene().instructorA, "/instructor/dia");
+    const other = await clubsSession(
+      browser,
+      theScene().instructorA,
+      "/instructor/dia",
+      "ca",
+      "concurrent",
+    );
+    expect(other.context).not.toBe(berta.context);
     const otherSheet = await open21(other.page, classId);
     expect(otherSheet.sheet.version).toBe(versionRead);
     expect(otherSheet.sheet.canMarkPresence).toBe(true);
