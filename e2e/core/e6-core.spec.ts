@@ -1374,7 +1374,7 @@ test.describe("Monday 04:00", () => {
     await shot(berta.page, "22-fitxa-core-375.png");
   });
 
-  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves @critical-llista", async ({
+  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the assigned instructor's second session: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves @critical-llista", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1431,10 +1431,17 @@ test.describe("Monday 04:00", () => {
     await circle(page, "ca", names.nil, sheetText.ca.noShow).click();
     expect(puts).toBe(0);
 
-    // (c) The second instructor opens the same sheet and saves Martí «no presentat» first.
-    const other = await clubsSession(browser, theScene().instructorB, "/instructor/dia");
+    // An unassigned instructor can read the global sheet but cannot mark its attendance.
+    const unassigned = await clubsSession(browser, theScene().instructorB, "/instructor/dia");
+    const readOnlySheet = await open21(unassigned.page, classId);
+    expect(readOnlySheet.sheet).toMatchObject({ canMarkPresence: false, canMarkNotice: false });
+    await expect(circle(unassigned.page, "ca", names.marti, sheetText.ca.noShow)).toBeDisabled();
+
+    // (c) Two independent sessions of the assigned instructor exercise the version conflict.
+    const other = await clubsSession(browser, theScene().instructorA, "/instructor/dia");
     const otherSheet = await open21(other.page, classId);
     expect(otherSheet.sheet.version).toBe(versionRead);
+    expect(otherSheet.sheet.canMarkPresence).toBe(true);
     await circle(other.page, "ca", names.marti, sheetText.ca.noShow).click();
     const otherSave = await save21(other.page);
     expect(otherSave.status).toBe(200);

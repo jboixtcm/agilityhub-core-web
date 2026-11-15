@@ -66,7 +66,7 @@ const text = {
     confirmTitle: "Confirmar reserva",
     done: "Reserva confirmada. Afegeix-la al calendari:",
     email: "Correu electrònic",
-    hold: /^Plaça bloquejada per a tu · 0:(?:30|[0-2]\d)$/u,
+    hold: /^Plaça bloquejada per a tu · (?:1:00|0:[0-5]\d)$/u,
     // E5-W05 step 8: the note no longer names the week.
     inTime: "Anul·lació feta dins el termini establert: pots reservar una altra classe.",
     join: "APUNTA'M",
@@ -88,7 +88,7 @@ const text = {
     confirmTitle: "Confirmar reserva",
     done: "Reserva confirmada. Añádela al calendario:",
     email: "Correo electrónico",
-    hold: /^Plaza bloqueada para ti · 0:(?:30|[0-2]\d)$/u,
+    hold: /^Plaza bloqueada para ti · (?:1:00|0:[0-5]\d)$/u,
     join: "APÚNTAME",
     joinDialog: "¿Quieres apuntarte a la lista de espera de ",
     joined: "Estás en la lista de espera",
@@ -119,7 +119,10 @@ type HomeDog = Schemas["HomeDog"];
 type MeHome = Pick<Schemas["MeHome"], "dogs" | "limits" | "reservations">;
 type BookableRow = Schemas["BookableClass"];
 type BookableClasses = Pick<Schemas["BookableClasses"], "classes" | "dog" | "dogs">;
-type SeatHold = Pick<Schemas["SeatHoldResponse"], "expiresAt" | "id" | "limit" | "serverNow">;
+type SeatHold = Pick<
+  Schemas["SeatHoldResponse"],
+  "expiresAt" | "holdSeconds" | "id" | "limit" | "serverNow"
+>;
 type Booking = Pick<Schemas["Booking"], "cancellation" | "id" | "state">;
 type WaitlistEntry = Pick<
   Schemas["WaitlistEntry"],
@@ -709,7 +712,7 @@ async function rowStates(page: Page): Promise<string[]> {
 }
 
 /**
- * Taps a BOOKABLE row, checks the 30 s hold on the api clock and confirms inside it (R-08-07).
+ * Taps a BOOKABLE row, checks the configured hold on the api clock and confirms inside it (R-08-07).
  * Returns the booking, the hold and how long the seat was held before the confirmation left.
  */
 async function bookInsideHold(
@@ -724,8 +727,8 @@ async function bookInsideHold(
   expect(holdResponse.status()).toBe(201);
   const hold = (await holdResponse.json()) as SeatHold;
   const ttl = Date.parse(hold.expiresAt) - Date.parse(hold.serverNow);
-  expect(ttl).toBeGreaterThan(29_000);
-  expect(ttl).toBeLessThanOrEqual(30_500);
+  expect(hold.holdSeconds).toBe(60);
+  expect(ttl).toBe(hold.holdSeconds * 1_000);
   await expect(page.getByRole("heading", { name: text[locale].confirmTitle })).toBeVisible();
   await expect(page.getByText(text[locale].hold)).toBeVisible();
   const booking = page.waitForResponse(isCall("POST", /\/api\/v1\/bookings$/u));
@@ -733,7 +736,7 @@ async function bookInsideHold(
   const bookingResponse = await booking;
   const heldMs = Date.now() - heldAt;
   expect(bookingResponse.status()).toBe(201);
-  expect(heldMs).toBeLessThan(30_000);
+  expect(heldMs).toBeLessThan(ttl);
   await expect(page.getByText(text[locale].done)).toBeVisible();
   await expect(page.getByRole("link", { name: text[locale].calendar })).toBeVisible();
   await expect(page.getByRole("link", { name: "Outlook" })).toBeVisible();
@@ -1002,7 +1005,7 @@ test.describe("week 0 at demoNow", () => {
     await cancelWeekZeroRecords(browser);
   });
 
-  test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation @critical-reserva", async ({
+  test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the configured hold, an in-time and a late cancellation @critical-reserva", async ({
     browser,
   }) => {
     test.setTimeout(300_000);

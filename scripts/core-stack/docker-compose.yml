@@ -180,7 +180,12 @@ services:
         corepack enable
         pnpm config set store-dir /pnpm-store
         pnpm install --frozen-lockfile
-        pnpm exec playwright test --config=e2e/core/playwright.config.ts ${CORE_TEST_FILES:-}
+        result=0
+        pnpm exec playwright test --config=e2e/core/playwright.config.ts ${CORE_TEST_FILES:-} || result=$$?
+        if [ -d test-results ]; then
+          cp -R test-results /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}/
+        fi
+        exit "$$result"
     depends_on:
       core:
         condition: service_healthy
