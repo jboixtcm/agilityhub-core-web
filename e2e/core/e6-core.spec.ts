@@ -138,7 +138,8 @@ const historyText = {
   ca: {
     all: "Tots",
     byClub: (message: string) => `«${message}»`,
-    byMemberLate: /^Per tu, el \d{1,2}\/\d{1,2} a les \d{1,2}:\d{2} · compta com a feta$/u,
+    byMemberLate:
+      /^Anul·lada per tu, el \d{1,2}\/\d{1,2} a les \d{1,2}:\d{2} · compta com a feta$/u,
     cancelled: "anul·lada",
     cancelledByClub: "cancel·lada pel club",
     cancelledLate: "anul·lada tard",
@@ -151,7 +152,8 @@ const historyText = {
   es: {
     all: "Todos",
     byClub: (message: string) => `«${message}»`,
-    byMemberLate: /^Por ti, el \d{1,2}\/\d{1,2} a las \d{1,2}:\d{2} · cuenta como hecha$/u,
+    byMemberLate:
+      /^Anulada por ti, el \d{1,2}\/\d{1,2} a las \d{1,2}:\d{2} · cuenta como realizada$/u,
     cancelled: "anulada",
     cancelledByClub: "cancelada por el club",
     cancelledLate: "anulada tarde",
@@ -1523,7 +1525,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert @critical-llista", async ({
+  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays and an editable notice can be corrected @critical-llista", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -1536,7 +1538,7 @@ test.describe("Monday 04:00", () => {
     const saved = await save21(page);
     expect(saved.status).toBe(200);
     const alba = rowOf(saved.body, cast.alba.dog);
-    expect(alba).toMatchObject({ final: true, state: "NOTIFIED" });
+    expect(alba).toMatchObject({ final: false, state: "NOTIFIED" });
     expect(alba.notice).toMatchObject({
       afterClassEnd: false,
       bookingState: "CANCELLED",
@@ -1577,32 +1579,40 @@ test.describe("Monday 04:00", () => {
     });
     const n15Mail = newMessages(mailboxBefore).map(messageSummary);
 
-    // The final row is inert: no circle can be chosen, and a forced tap sends nothing.
+    // Attendance corrections restore the cancelled reservation while a seat is available.
+    // Choosing a circle remains local until save, and the API owns the resulting count.
     let puts = 0;
     page.on("request", (request) => {
       if (request.method() === "PUT" && SHEET_PATH.test(apiPath(request))) puts += 1;
     });
-    const group = page.getByRole("radiogroup", {
-      exact: true,
-      name: sheetText.ca.circles(names.alba),
-    });
-    await expect(group).toHaveAttribute("aria-disabled", "true");
-    for (const state of [sheetText.ca.pending, sheetText.ca.present, sheetText.ca.noShow]) {
-      const radio = group.getByRole("radio", { exact: true, name: state });
-      await expect(radio).toBeDisabled();
-      await radio.click({ force: true });
-    }
+    await circle(page, "ca", names.alba, sheetText.ca.pending).click();
+    expect(puts).toBe(0);
+    const restored = await save21(page);
+    expect(restored.status).toBe(200);
+    expect(rowOf(restored.body, cast.alba.dog)).toMatchObject({ final: false, state: "PENDING" });
+    expect(restored.body.classSession.booked).toBe(4);
+    await expect(page.locator(".instructor-sheet__meta")).toContainText("4/5");
+    const restoredBooking = await call<Schemas["Booking"]>(admin, `/bookings/${alba.bookingId}`);
+    expect(restoredBooking.status).toBe(200);
+    expect(restoredBooking.body.state).toBe("ACTIVE");
+
+    // Leave the scenario with Alba's notice saved for the later process/history checks.
+    await circle(page, "ca", names.alba, sheetText.ca.notified).click();
+    const notifiedAgain = await save21(page);
+    expect(notifiedAgain.status).toBe(200);
+    expect(rowOf(notifiedAgain.body, cast.alba.dog).notice?.bookingState).toBe("CANCELLED");
+    expect(notifiedAgain.body.classSession.booked).toBe(3);
     await expect(circle(page, "ca", names.alba, sheetText.ca.notified)).toHaveAttribute(
       "aria-checked",
       "true",
     );
     await expect(page.getByRole("button", { exact: true, name: sheetText.ca.save })).toBeDisabled();
-    expect(puts).toBe(0);
+    expect(puts).toBe(2);
     await shot(page, "21-ha-avisat-core-375.png");
     note("b-notice", {
       booked: saved.body.classSession.booked,
       entry: { adminRead: entry.status, state: entry.body.state ?? null },
-      forcedPuts: puts,
+      correctionPuts: puts,
       mailboxAfterNotice: n15Mail,
       notice: alba.notice,
       status: saved.status,

@@ -124,5 +124,10 @@ docker run --rm \
         echo "evidence: $task/${file#./}"
       done
     done
+    # Keep failure diagnostics after --rm removes the browser container.
+    if [ "$e2e_status" -ne 0 ] && [ -n "${E2E_CAPTURE_TASK:-}" ] && [ -d /work/test-results ]; then
+      mkdir -p "/evidence/$E2E_CAPTURE_TASK/test-results"
+      cp -R /work/test-results/. "/evidence/$E2E_CAPTURE_TASK/test-results/"
+    fi
     exit "$e2e_status"
   ' sh ${playwright_args[@]+"${playwright_args[@]}"}

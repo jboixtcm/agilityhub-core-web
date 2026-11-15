@@ -88,6 +88,15 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      - name: Upload Playwright failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-failure-diagnostics
+          path: roadmap/evidence/ci/test-results
+          if-no-files-found: ignore
+          retention-days: 7
+
   # REL-03: the production bundles that are deployed. Built only on a push to main and only after
   # every check above passed, from the release configuration committed in release/
   # (scripts/build-release-bundles.mjs), and published as this run's artifact: a deploy takes the
