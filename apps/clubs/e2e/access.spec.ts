@@ -84,7 +84,14 @@ test.describe("T-01-18 access screen", () => {
     await expect(
       page.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    // WEB-01 (decision of 13 Nov 2026): the first-access line, and a sign-up link a member does not
+    // take for the way in.
+    await expect(
+      page.getByText("Primer cop? Escriu el teu correu i t'enviarem un enllaç per entrar."),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "No ets soci del club? Fes-te'n soci →" }),
+    ).toBeVisible();
     // E3-W12 step 5 (S02 R-02-02): the public footer and, below it, the registered office.
     await expect(page.locator(".auth-footer .public-footer__line")).toHaveText([
       "Club Agility Cànic · G63189617 · Cabrera de Mar",
@@ -127,7 +134,7 @@ test.describe("T-01-18 access screen", () => {
   test("hides signup when the club has disabled it", async ({ page }) => {
     await prepareScenario(page, "minimal", brandingMinim);
     await page.goto(`${baseUrl}/entrar`);
-    await expect(page.getByRole("link", { name: /Apunta-t'hi/u })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Fes-te'n soci/u })).toHaveCount(0);
   });
 });
 
@@ -135,6 +142,8 @@ test.describe("T-01-19 activation screen", () => {
   test("renders screen 02 with continue before the optional password", async ({ page }) => {
     await prepareScenario(page, "activationFemale");
     await page.goto(`${baseUrl}/activacio?token=valid&purpose=LOGIN`);
+    // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+    await page.getByRole("button", { name: "ENTRA" }).click();
     await expect(page.getByRole("heading", { name: "Benvinguda, Estel!" })).toBeVisible();
     await expect(page.getByText("Compte activat")).toBeVisible();
     const continueBox = await page.getByRole("button", { name: "CONTINUAR" }).boundingBox();
@@ -159,6 +168,7 @@ test.describe("T-01-19 activation screen", () => {
       const page = await browser.newPage();
       await prepareScenario(page, scenario);
       await page.goto(`${baseUrl}/activacio?token=valid&purpose=LOGIN`);
+      await page.getByRole("button", { name: "ENTRA" }).click();
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
       await page.close();
     }
@@ -169,6 +179,7 @@ test.describe("T-01-19 activation screen", () => {
     await prepareScenario(resetPage, "activationReset");
     // E4-W16 step 10 (E49): the RESET link's session sets the new password once, without `current`.
     await resetPage.goto(`${baseUrl}/activacio?token=reset-link&purpose=RESET`);
+    await resetPage.getByRole("button", { name: "ENTRA" }).click();
     await expect(resetPage.getByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     await expect(resetPage.getByText("Compte activat")).toHaveCount(0);
     await expect(resetPage.getByLabel("contrasenya actual")).toHaveCount(0);
@@ -196,6 +207,7 @@ test.describe("T-01-19 activation screen", () => {
     const invalidPage = await browser.newPage();
     await prepareScenario(invalidPage, "invalidMagicLink");
     await invalidPage.goto(`${baseUrl}/activacio?token=invalid&purpose=LOGIN`);
+    await invalidPage.getByRole("button", { name: "ENTRA" }).click();
     await expect(
       invalidPage.getByRole("heading", { name: "Aquest enllaç ja no és vàlid" }),
     ).toBeVisible();

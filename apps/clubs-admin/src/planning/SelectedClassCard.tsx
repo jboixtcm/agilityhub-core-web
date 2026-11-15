@@ -28,10 +28,11 @@ import {
   timeOf,
   useCalendarErrorMessage,
 } from "./calendar-shared";
-import type { ClassHeading } from "./CancelClassModal";
+import { type ClassHeading, isCancellable } from "./CancelClassModal";
 import { ClassRegistrantsPanel } from "./ClassRegistrantsPanel";
 import { automaticDescription } from "./description";
 import { PlannedCourseSelect, useCoursesModule } from "./PlannedCourseSelect";
+import { isRestorable } from "./RestoreClassModal";
 import { instructorNames, planningStaffName, type PlanningCatalogs } from "./shared";
 
 type ClassSessionPatch = components["schemas"]["ClassSessionPatchRequest"];
@@ -186,7 +187,8 @@ function StaticChip({ label, value }: { label: string; value: ReactNode }) {
 /**
  * D4 «Classe seleccionada» (R-06-09): chip editors for ADMIN on DRAFT/ACTIVE classes, [ACCEPTA]
  * sends the diff with `version`; [ANUL·LA LA CLASSE] / [ELIMINA] go through D4c (parent).
- * FINISHED/CANCELLED keep only «Notes»; INSTRUCTOR sees the card read-only (A22 c). On a day the
+ * FINISHED/CANCELLED keep only «Notes», and a cancelled class that can come back (SCH-01) offers
+ * [RESTAURA LA CLASSE], confirmed by the parent; INSTRUCTOR sees the card read-only (A22 c). On a day the
  * club is closed (R-02-09) the card says so, the chip editors are disabled (and look it) and «Notes»
  * is offered: [ACCEPTA] saves only them; the «Exempta…» chip, its own action, stays.
  * The parent remounts it (`key`) on every new class or version, so the values always start from
@@ -205,6 +207,7 @@ export function SelectedClassCard({
   onClose,
   onConflict,
   onRegistrantsChanged,
+  onRestore,
   onSaved,
   openingHours,
   readOnly,
@@ -221,6 +224,8 @@ export function SelectedClassCard({
   onConflict: (message: string) => Promise<void>;
   /** A waiting entry was removed (R-08-16): the calendar refetches its counters. */
   onRegistrantsChanged?: () => void;
+  /** SCH-01: opens the restore confirmation (parent) of a restorable cancelled class. */
+  onRestore?: () => void;
   /** Refetches the calendar; resolves once the refetch settles. */
   onSaved: (session: ClassSession) => Promise<void>;
   /** `undefined` while `club.openingHours` is unknown (loading, failed, or a read-only page). */
@@ -251,6 +256,8 @@ export function SelectedClassCard({
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
   const notesOnly = !readOnly && !editable;
+  // PLAN-02: [ANUL·LA LA CLASSE] and [ELIMINA] only before the class starts (R-06-10).
+  const cancellable = isCancellable(session);
   // R-06-13: the review an exemption skips runs at the club's `classes.riskReviewTime`.
   const exemptLabel = t("admin-scheduling:calendar.selected.exempt", {
     time: reviewTimeValue(settings.riskReviewTime),
@@ -703,7 +710,7 @@ export function SelectedClassCard({
               {t("admin-scheduling:calendar.selected.accept")}
             </Button>
             <span className="calendar-selected-card__spacer" />
-            {session.state === "ACTIVE" ? (
+            {session.state === "ACTIVE" && cancellable ? (
               <Button
                 className="calendar-button--danger-outline"
                 disabled={busy}
@@ -716,7 +723,7 @@ export function SelectedClassCard({
                 {t("admin-scheduling:calendar.selected.cancel")}
               </Button>
             ) : null}
-            {session.state === "ACTIVE" || session.state === "DRAFT" ? (
+            {(session.state === "ACTIVE" || session.state === "DRAFT") && cancellable ? (
               <Button
                 disabled={busy}
                 onClick={() => {
@@ -727,6 +734,11 @@ export function SelectedClassCard({
                 {session.state === "ACTIVE"
                   ? t("admin-scheduling:calendar.selected.delete")
                   : t("admin-scheduling:calendar.selected.deleteDraft")}
+              </Button>
+            ) : null}
+            {onRestore !== undefined && isRestorable(session) ? (
+              <Button disabled={busy} onClick={onRestore} variant="secondary">
+                {t("admin-scheduling:calendar.selected.restore")}
               </Button>
             ) : null}
           </>

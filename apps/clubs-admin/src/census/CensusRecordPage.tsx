@@ -20,6 +20,7 @@ import {
   Icon,
   Input,
   Modal,
+  resizeDogPhoto,
   Select,
   Skeleton,
   Tabs,
@@ -35,9 +36,12 @@ import { useRefreshCounters } from "../dashboard/counters";
 import { isReadmissionPending, loadDogDocumentTypes } from "../dashboard/readmission";
 import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
+import { whatsAppUrl } from "../whatsapp";
 
+import { accessRequestError } from "./access-errors";
 import { AdminMemberActions } from "./AdminMemberActions";
 import { FamilyGroupAction } from "./FamilyGroupAction";
+import { LoginEmailDrawer, LoginEmailMark } from "./LoginEmailDrawer";
 import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
 import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
@@ -46,6 +50,7 @@ import { MemberNextInvoice, NEXT_INVOICE_DRAWER } from "./MemberNextInvoice";
 import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
 import { MemberPlanDrawer } from "./MemberPlanDrawer";
 import { MemberDataExportButton, MemberPrivacyCard } from "./MemberPrivacyCard";
+import { memberNoticeField, NotifyMemberChoice } from "./NotifyMemberChoice";
 import { RecordActions } from "./RecordActions";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
@@ -111,7 +116,16 @@ type DogDocument = components["schemas"]["DogDocument"];
 type Plan = components["schemas"]["Plan"];
 type Role = "ADMIN" | "INSTRUCTOR" | "MEMBER";
 type MemberDialog =
-  "block" | "impersonate" | "inactivity" | "leave" | "payment" | "plan" | "resend" | "roles" | null;
+  | "block"
+  | "impersonate"
+  | "inactivity"
+  | "leave"
+  | "loginEmail"
+  | "payment"
+  | "plan"
+  | "resend"
+  | "roles"
+  | null;
 
 interface Feedback {
   message: ReactNode;
@@ -758,7 +772,11 @@ function MemberSummary({
    * erased after the record was read, S14 §5) is final: the record stops offering changes and the
    * dialog cannot send the request again (E7-W07 step 3).
    */
-  const run = async (action: () => Promise<void>, failureOn: "dialog" | "page" = "dialog") => {
+  const run = async (
+    action: () => Promise<void>,
+    failureOn: "dialog" | "page" = "dialog",
+    describe: (error: unknown) => ReactNode = (error) => memberErrorText(error, t, member.id),
+  ) => {
     setPending(true);
     setFailure(undefined);
     try {
@@ -766,7 +784,7 @@ function MemberSummary({
       setDialog(null);
     } catch (error) {
       if (isApiError(error, "MEMBER_ERASED")) onErased();
-      const message = memberErrorText(error, t, member.id);
+      const message = describe(error);
       if (failureOn === "page") onFeedback({ message, tone: "danger" });
       else setFailure(message);
     } finally {
@@ -799,6 +817,34 @@ function MemberSummary({
         <Card>
           <SectionTitle>{t("admin-census:member.sections.dataPayment")}</SectionTitle>
           <dl className="census-record__data-list">
+            {/* S03 R-03-06b (AUTH-02): the account's login e-mail and, when mail no longer reaches
+                it, its «rebot» / «queixa» mark with what that means. None without an account.
+                AUTH-03: when its last access or recovery e-mail finally failed (after the api's
+                one retry), a mark with that day in the club's time zone. */}
+            {member.login == null ? null : (
+              <DataRow label={t("admin-census:member.fields.login")}>
+                {member.login.email} <LoginEmailMark status={member.login.emailStatus} />
+                {member.login.accessEmailFailedAt == null ? null : (
+                  <>
+                    {" "}
+                    <Badge tone="warning">{t("admin-census:member.login.accessEmailFailed")}</Badge>
+                    <span className="census-record__login-note">
+                      {t("admin-census:member.login.accessEmailFailedHelp", {
+                        date: formatDate(member.login.accessEmailFailedAt, formats),
+                      })}
+                    </span>
+                  </>
+                )}
+                {member.login.emailStatus === "BOUNCED" ||
+                member.login.emailStatus === "COMPLAINED" ? (
+                  <span className="census-record__login-note">
+                    {member.login.emailStatus === "BOUNCED"
+                      ? t("admin-census:member.login.bouncedHelp")
+                      : t("admin-census:member.login.complainedHelp")}
+                  </span>
+                ) : null}
+              </DataRow>
+            )}
             <DataRow label={t("admin-census:member.fields.contact")}>{contact}</DataRow>
             {modules.includes("BILLING") ? (
               <DataRow label={t("admin-census:member.fields.plan")}>
@@ -945,7 +991,8 @@ function MemberSummary({
               <li key={dog.id}>
                 <a className="census-record__dog-link" href={`/gossos/${dog.id}`}>
                   <span className="ah-dog-identity">
-                    <DogPhoto name={dog.name} src={dog.photoUrl} />
+                    {/* WEB-05: the thumbnail, else the photo; the dog's record keeps the photo. */}
+                    <DogPhoto name={dog.name} src={dog.photoThumbnailUrl ?? dog.photoUrl} />
                     <strong>{dog.name}</strong> · {dog.breed}
                   </span>
                   <span className="census-record__dog-details">
@@ -1012,6 +1059,7 @@ function MemberSummary({
             client={client}
             dogs={overview.dogs}
             memberId={member.id}
+            memberName={member.fullName}
             onPackAdjusted={() => {
               onReload();
             }}
@@ -1161,20 +1209,29 @@ function MemberSummary({
             <Button
               loading={pending}
               onClick={() =>
-                void run(async () => {
-                  const result = await client.POST("/members/{id}/access-resend", {
-                    params: { path: { id: member.id } },
-                  });
-                  if (result.data === undefined) {
-                    throw new TypeError("Access response did not contain data");
-                  }
-                  onFeedback({
-                    message: t("admin-census:member.feedback.accessSent", {
-                      email: result.data.sentTo,
-                    }),
-                    tone: "success",
-                  });
-                })
+                void run(
+                  async () => {
+                    const result = await client.POST("/members/{id}/access-resend", {
+                      params: { path: { id: member.id } },
+                    });
+                    if (result.data === undefined) {
+                      throw new TypeError("Access response did not contain data");
+                    }
+                    onFeedback({
+                      message: t("admin-census:member.feedback.accessSent", {
+                        email: result.data.sentTo,
+                      }),
+                      tone: "success",
+                    });
+                  },
+                  "dialog",
+                  // WEB-01 (decision of 13 Nov 2026): the welcome is limited per club; a refused
+                  // rate says in how many minutes to try again.
+                  (error) =>
+                    isApiError(error, "RATE_LIMITED")
+                      ? accessRequestError(error, t)
+                      : memberErrorText(error, t, member.id),
+                )
               }
             >
               {t("admin-census:member.actions.resend")}
@@ -1182,6 +1239,27 @@ function MemberSummary({
           )}
         </div>
       </Modal>
+
+      {/* Kept while open once the member is found erased: it says so as final (E7-W07 step 3). */}
+      {member.login == null || (erased && dialog !== "loginEmail") ? null : (
+        <LoginEmailDrawer
+          client={client}
+          login={member.login}
+          memberId={member.id}
+          onClose={() => {
+            setDialog(null);
+          }}
+          onErased={onErased}
+          onSent={(sentTo) => {
+            setDialog(null);
+            onFeedback({
+              message: t("admin-census:member.feedback.loginEmailSent", { email: sentTo }),
+              tone: "success",
+            });
+          }}
+          open={dialog === "loginEmail"}
+        />
+      )}
 
       <Modal
         closeLabel={t("admin-census:common.close")}
@@ -1536,7 +1614,7 @@ function MemberRecordContent({
           {primaryPhone === undefined ? null : (
             <a
               className="census-record__action-link"
-              href={`https://wa.me/${primaryPhone.prefix.replace("+", "")}${primaryPhone.number}`}
+              href={whatsAppUrl(primaryPhone)}
               rel="noreferrer"
               target="_blank"
             >
@@ -1581,6 +1659,18 @@ function MemberRecordContent({
                     >
                       {t("admin-census:member.actions.resend")}
                     </Button>
+                    {/* S03 R-03-06b (AUTH-02): closed to a support access (S17 R-17-10). */}
+                    {member.login == null || supportAccess ? null : (
+                      <Button
+                        onClick={() => {
+                          setTab("summary");
+                          setMemberDialog("loginEmail");
+                        }}
+                        variant="ghost"
+                      >
+                        {t("admin-census:member.actions.changeLogin")}
+                      </Button>
+                    )}
                   </>
                 }
                 between={
@@ -2200,6 +2290,8 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
   const [pending, setPending] = useState(false);
   const [dialogError, setDialogError] = useState<string>();
   const [selectedLevel, setSelectedLevel] = useState("");
+  // COMM-03: «Avisa l'abonat» on the level change, ticked by default (N-09).
+  const [notifyLevel, setNotifyLevel] = useState(true);
   const [freeOverride, setFreeOverride] = useState<"false" | "true">("false");
   const [toMemberId, setToMemberId] = useState("");
   const [reason, setReason] = useState("");
@@ -2343,6 +2435,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             <SectionTitle>{t("admin-census:dog.sections.level")}</SectionTitle>
             <Button
               onClick={() => {
+                setNotifyLevel(true);
                 setDialog("level");
               }}
               variant="ghost"
@@ -2512,6 +2605,12 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             ))}
           </Select>
         </FormField>
+        <NotifyMemberChoice
+          checked={notifyLevel}
+          disabled={pending}
+          id="dog-level-notify-member"
+          onChange={setNotifyLevel}
+        />
         {dialogError === undefined ? null : <p role="alert">{dialogError}</p>}
         <div className="census-record__dialog-actions">
           <Button
@@ -2527,7 +2626,7 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             onClick={() =>
               void run(async () => {
                 const result = await client.PATCH("/dogs/{id}/level", {
-                  body: { levelId: selectedLevel },
+                  body: { levelId: selectedLevel, ...memberNoticeField(notifyLevel) },
                   params: { path: { id: dog.id } },
                 });
                 if (result.data === undefined)
@@ -2786,7 +2885,12 @@ function DogRecordContent({ client, id }: { client: ApiClient; id: string }) {
             onClick={() =>
               void run(async () => {
                 if (photo === undefined) return;
-                const fileKey = await uploadSigned(client, photo, "DOG_PHOTO");
+                // WEB-05: reduced in the browser first (longest side 1600 px).
+                const fileKey = await uploadSigned(
+                  client,
+                  await resizeDogPhoto(photo),
+                  "DOG_PHOTO",
+                );
                 const result = await client.PUT("/dogs/{id}/photo", {
                   body: { fileKey },
                   params: { path: { id: dog.id } },

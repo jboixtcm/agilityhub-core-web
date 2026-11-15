@@ -378,6 +378,17 @@
   box-shadow: var(--ah-shadow-lg);
 }
 
+/* FE-07: «Hi ha una versió nova · Recarrega», a toast at the top of the page (the member app's
+   tab bar and its toasts keep the bottom). Never shown while a dialog or a drawer is open. */
+.ah-new-version {
+  position: fixed;
+  z-index: 60;
+  top: calc(env(safe-area-inset-top, 0px) + var(--ah-space-3));
+  left: 50%;
+  width: min(28rem, calc(100vw - var(--ah-space-8)));
+  transform: translateX(-50%);
+}
+
 .ah-tabs__list {
   display: flex;
   gap: var(--ah-space-1);

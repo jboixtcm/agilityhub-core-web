@@ -778,8 +778,9 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
     fireEvent.change(within(drawer).getByLabelText("NIF del titular"), {
       target: { value: "47123456K" },
     });
+    // WEB-07: an IBAN with valid check digits (an invalid one is no longer sent, see below).
     fireEvent.change(within(drawer).getByLabelText("IBAN"), {
-      target: { value: "ES00 0000 0000 0000 0000 0000" },
+      target: { value: "ES82 0000 0000 0000 0000 0000" },
     });
     fireEvent.change(within(drawer).getByLabelText("Notes als instructors"), {
       target: { value: "Poruga amb els sorolls" },
@@ -793,7 +794,7 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
         sepa: {
           holderName: "Marta Roca Pujol",
           holderTaxId: "47123456K",
-          iban: "ES0000000000000000000000",
+          iban: "ES8200000000000000000000",
         },
         type: "SEPA_DD",
       },
@@ -802,6 +803,39 @@ describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, 
     expect(sent(requests, "PATCH", `/dogs/${kiwiId}`)[0]?.body).toEqual({
       notesToInstructors: "Poruga amb els sorolls",
       version: 1,
+    });
+  });
+
+  it("WEB-07 (decision of 13 Nov 2026): an IBAN with wrong check digits or length is never sent", async () => {
+    const { fetch: over, requests } = recordingFetch();
+    await renderReview({ fetchOverride: over });
+    const drawer = openDrawer();
+    const iban = within(drawer).getByLabelText("IBAN");
+    expect(iban).toHaveProperty("type", "text");
+
+    for (const typed of ["ES91 2100 0418 4502 0005 1333", "ES55 0000 0000 0000 0000 0000 1"]) {
+      fireEvent.change(iban, { target: { value: typed } });
+      fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+      expect(
+        await within(drawer).findByText("El número de compte bancari no és vàlid."),
+      ).toBeVisible();
+      expect(iban).toHaveAttribute("aria-invalid", "true");
+      expect(iban).toHaveFocus();
+      expect(sent(requests, "PATCH", `/members/${memberId}`)).toEqual([]);
+    }
+
+    fireEvent.change(iban, { target: { value: "ES91 2100 0418 4502 0005 1332" } });
+    expect(within(drawer).queryByText("El número de compte bancari no és vàlid.")).toBeNull();
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA ELS CANVIS" }));
+
+    expect(await screen.findByText("Les dades s'han actualitzat.")).toBeVisible();
+    expect(sent(requests, "PATCH", `/members/${memberId}`)[0]?.body).toEqual({
+      paymentMethod: {
+        sepa: { holderName: "Marta Roca Pujol", iban: "ES9121000418450200051332" },
+        type: "SEPA_DD",
+      },
+      version: 3,
     });
   });
 
@@ -1030,7 +1064,9 @@ describe("E3-W07 step 7 · the refund warning (R-04-23)", () => {
     fireEvent.click(screen.getByRole("button", { name: "REBUTJA (amb motiu)" }));
     const modal = screen.getByRole("dialog", { name: "Rebutja la preinscripció" });
     expect(
-      within(modal).getByText("Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació"),
+      within(modal).getByText(
+        "Hi ha un pagament cobrat: caldrà retornar-lo. Si es va pagar amb targeta, es reemborsa des de la fitxa de l'abonat, a «Pagaments a l'acte».",
+      ),
     ).toBeVisible();
     expect(within(modal).getByRole("button", { name: "REBUTJA (amb motiu)" })).toBeDisabled();
     fireEvent.change(within(modal).getByLabelText("Motiu del rebuig"), {

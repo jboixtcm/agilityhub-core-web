@@ -9,6 +9,8 @@ docs
 roadmap
 pnpm-lock.yaml
 packages/api-client/src/generated
+# the api's OpenAPI snapshot, copied byte for byte (AGENTS rule 4: never edited by hand)
+packages/api-client/openapi/openapi.json
 # course engine recovered verbatim from the web-planner (E0-W08): keep byte-identical to the origin
 packages/course-core/src
 packages/course-core/tests

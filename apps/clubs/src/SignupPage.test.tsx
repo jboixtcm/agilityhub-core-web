@@ -315,7 +315,7 @@ afterAll(() => {
 });
 
 describe("T-04-29 signup person and draft", () => {
-  it("persists a current draft, expires it after 24 hours and maps identity states", async () => {
+  it("persists a current draft, expires it after 60 minutes without activity and maps identity states", async () => {
     await renderSignup({ path: "/apuntat-hi" });
     fillPerson("12345678A");
 
@@ -345,10 +345,20 @@ describe("T-04-29 signup person and draft", () => {
     // `GET /signup` included), and `cleanup` flushes a pending write: aged after it, the draft
     // stays aged whatever the timing (CI saw it rewritten, «Nora» again).
     cleanup();
-    const saved = savedDraft();
+    // FE-02 (decision of 13 Nov 2026): 60 minutes without activity, no longer 24 hours. The last
+    // write is the last activity: 59 minutes later the draft is still there...
     sessionStorage.setItem(
       DRAFT_KEY,
-      JSON.stringify({ ...saved, savedAt: Date.now() - 24 * 60 * 60 * 1000 - 1 }),
+      JSON.stringify({ ...savedDraft(), savedAt: Date.now() - 59 * 60 * 1000 }),
+    );
+    await renderSignup({ path: "/apuntat-hi" });
+    expect(screen.getByLabelText("Nom", { exact: true })).toHaveValue("Nora");
+
+    // ...and one more minute without any it has expired.
+    cleanup();
+    sessionStorage.setItem(
+      DRAFT_KEY,
+      JSON.stringify({ ...savedDraft(), savedAt: Date.now() - 60 * 60 * 1000 - 1 }),
     );
     await renderSignup({ path: "/apuntat-hi" });
     expect(screen.getByLabelText("Nom", { exact: true })).toHaveValue("");
@@ -876,13 +886,12 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
     expect(body.payment).toMatchObject({ holderTaxId: "12345678Z", holderName: "Nora Soler Pons" });
   });
 
-  it("drops the IBAN from the session draft when the method changes away from SEPA", async () => {
+  it("drops the IBAN when the method changes away from SEPA (the session draft never holds it)", async () => {
     seedDraft();
     await renderSignup({ path: "/apuntat-hi/pagament" });
     fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
-    await waitFor(() => {
-      expect(sessionStorage.getItem(DRAFT_KEY)).toContain(VALID_IBAN);
-    });
+    // FE-02 (decision of 13 Nov 2026): the IBAN stays on the page, never in the session draft.
+    expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
     fireEvent.click(
       within(screen.getByRole("group", { name: "Pagament dels rebuts mensuals" })).getByRole(
         "button",
@@ -890,8 +899,9 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
       ),
     );
     await waitFor(() => {
-      expect(sessionStorage.getItem(DRAFT_KEY)).not.toContain(VALID_IBAN);
+      expect((savedDraft().payment as Record<string, unknown>).type).toBe("MANUAL");
     });
+    expect(sessionStorage.getItem(DRAFT_KEY)).not.toContain(VALID_IBAN);
     fireEvent.click(screen.getByRole("button", { name: "Domiciliació" }));
     expect(screen.getByLabelText("IBAN")).toHaveValue("");
   });
@@ -1143,11 +1153,11 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
       payment: {
         firstMonthOption: "TODAY",
         holderName: "Nora Soler Pons",
-        iban: VALID_IBAN,
         type: "SEPA_DD",
       },
     });
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
     acceptPrivacy();
     submitSignup();
     await waitFor(() => {
@@ -1168,11 +1178,16 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
       scenario: "signupStripe",
     });
     expect(screen.getByText(/El pagament no s'ha completat/u)).toBeVisible();
-    expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
+    // FE-02 (decision of 13 Nov 2026): the draft never kept the IBAN the signup sent, so the sent
+    // signup no longer shows it (never as an empty field); the rest of the data is there.
+    expect(screen.queryByLabelText("IBAN")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Titular del compte")).toHaveValue("Nora Soler Pons");
+    expect((await lastBody(recorded, "/signup")).payment).toMatchObject({ iban: VALID_IBAN });
     expect(screen.getByLabelText("Accepto la política de privacitat")).toBeChecked();
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    // PAY-04: another key closes the open checkout and opens a new one at once (S04 R-04-26).
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
     });
     expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
     const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
@@ -1183,6 +1198,108 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
       signupToken: "mock-signup-token",
     });
     expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
+  });
+});
+
+describe("PAY-04 (decision of 13 Nov 2026): back from Stripe Checkout, the applicant pays again at once", () => {
+  /** Signs up with a card checkout, then comes back by Stripe's cancel URL. */
+  async function cancelFirstCheckout(
+    navigate: ReturnType<typeof vi.fn<(path: string) => void>>,
+    cancelPath: string,
+  ) {
+    seedDraft({
+      payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", type: "SEPA_DD" },
+    });
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
+    acceptPrivacy();
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+    });
+    await waitFor(() => {
+      expect(sessionStorage.getItem(CHECKOUT_RETURN_KEY)).toBe("cs_mock_signup");
+    });
+    cleanup();
+    navigate.mockClear();
+    await renderSignup({ navigate, path: cancelPath, scenario: "signupStripe" });
+  }
+
+  it("the notice offers paying again now; the retry opens a new checkout and the return reads it", async () => {
+    const recorded = recordRequests();
+    const navigate = vi.fn<(path: string) => void>();
+    await cancelFirstCheckout(navigate, "/apuntat-hi/pagament?cs=cancel");
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "El pagament no s'ha completat. Pots tornar a pagar ara mateix.",
+    );
+    expect(screen.queryByText(/correu/u)).not.toBeInTheDocument();
+    const payNow = screen.getByRole("button", { name: "PAGA ARA" });
+    expect(payNow).toBeEnabled();
+    fireEvent.click(payNow);
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
+    });
+    const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
+    expect(checkouts).toHaveLength(2);
+    expect(checkouts[1]?.key).not.toBe(checkouts[0]?.key);
+    expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
+    // Stripe's success URL then reads the new checkout, not the one that was closed.
+    expect(sessionStorage.getItem(CHECKOUT_RETURN_KEY)).toBe("cs_mock_signup_2");
+    cleanup();
+    await renderSignup({
+      navigate,
+      path: "/apuntat-hi/enviada?cs=success",
+      scenario: "signupStripe",
+    });
+    await waitFor(() => {
+      expect(requestsTo(recorded, "GET", "/checkout-sessions/cs_mock_signup_2")).not.toHaveLength(
+        0,
+      );
+    });
+    expect(requestsTo(recorded, "GET", "/checkout-sessions/cs_mock_signup")).toHaveLength(0);
+  });
+
+  it("the notice in es and en", async () => {
+    const navigate = vi.fn<(path: string) => void>();
+    await cancelFirstCheckout(navigate, "/apuntat-hi/pagament?cs=cancel&lang=es");
+    expect(
+      await screen.findByText("El pago no se ha completado. Puedes volver a pagar ahora mismo."),
+    ).toBeVisible();
+    const english = await createClubsI18n({
+      branding: brandingFor("signupStripe"),
+      browserLanguages: ["en"],
+      initialNamespaces: ["signup"],
+      storage: undefined,
+    });
+    await english.changeLanguage("en");
+    expect(english.t("signup:payment.cancelled")).toBe(
+      "The payment was not completed. You can pay again right away.",
+    );
+  });
+
+  it("a retry the api refuses with 409 INVALID_STATE (the open checkout could not be closed) stays on 19 and can be tried again", async () => {
+    const recorded = recordRequests();
+    const navigate = vi.fn<(path: string) => void>();
+    await cancelFirstCheckout(navigate, "/apuntat-hi/pagament?cs=cancel");
+    server.use(
+      http.post("*/api/v1/checkout-sessions", () => apiErrorResponse("INVALID_STATE", 409)),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    expect(
+      await screen.findByText("Aquest element no està en un estat vàlid per a aquesta operació."),
+    ).toBeVisible();
+    expect(navigate).not.toHaveBeenCalled();
+    expect(screen.getByRole("button", { name: "PAGA ARA" })).toBeEnabled();
+    server.resetHandlers();
+    fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith(expect.stringMatching(/^https:\/\/checkout\.test\//u));
+    });
+    const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
+    expect(checkouts).toHaveLength(3);
+    // The answered 409 retired its key: the next press is a new request.
+    expect(checkouts[2]?.key).not.toBe(checkouts[1]?.key);
+    expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
   });
 });
 
@@ -1674,12 +1791,12 @@ describe("E3-W06 round 2", () => {
       payment: {
         firstMonthOption: "TODAY",
         holderName: "Nora Soler Pons",
-        iban: VALID_IBAN,
         type: "SEPA_DD",
       },
     });
     const navigate = vi.fn();
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
+    fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
     acceptPrivacy();
     submitSignup();
     await waitFor(() => {
@@ -1694,7 +1811,8 @@ describe("E3-W06 round 2", () => {
       path: "/apuntat-hi/pagament?cs=cancel",
       scenario: "signupStripe",
     });
-    expect(screen.getByLabelText("IBAN")).toHaveAttribute("readonly");
+    // FE-02: the sent IBAN was never kept in the draft, so the read-only 19 does not show it.
+    expect(screen.queryByLabelText("IBAN")).not.toBeInTheDocument();
     expect(screen.getByLabelText("Titular del compte")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("NIF del titular (opcional)")).toHaveAttribute("readonly");
     for (const group of screen.getAllByRole("group")) {
@@ -1713,16 +1831,20 @@ describe("E3-W06 round 2", () => {
         { name: "Efectiu" },
       ),
     );
-    expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
+    expect(screen.getByLabelText("Titular del compte")).toHaveValue("Nora Soler Pons");
     expect((savedDraft().payment as Record<string, unknown>).type).toBe("SEPA_DD");
     expect((savedDraft().payment as Record<string, unknown>).firstMonthOption).toBe("TODAY");
 
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
     });
     expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(1);
-    expect(firstBody.payment).toMatchObject({ firstMonthOption: "TODAY", type: "SEPA_DD" });
+    expect(firstBody.payment).toMatchObject({
+      firstMonthOption: "TODAY",
+      iban: VALID_IBAN,
+      type: "SEPA_DD",
+    });
     expect(await lastBody(recorded, "/checkout-sessions")).toMatchObject({
       memberId: "member-signup-357",
       signupToken: "mock-signup-token",
@@ -1737,8 +1859,9 @@ describe("E3-W06 round 2", () => {
 
   it("#3 the fingerprint is a SHA-256 digest and the IBAN leaves the draft after a failed submission", async () => {
     server.use(http.post("*/api/v1/signup", () => HttpResponse.error()));
-    seedDraft({ payment: { firstMonthOption: "TODAY", iban: VALID_IBAN, type: "SEPA_DD" } });
+    seedDraft({ payment: { firstMonthOption: "TODAY", type: "SEPA_DD" } });
     await renderSignup({ path: "/apuntat-hi/pagament" });
+    fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
     acceptPrivacy();
     submitSignup();
     expect(await screen.findByText("No s'ha pogut completar l'acció.")).toBeVisible();
@@ -2657,7 +2780,7 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     await renderSignup({ navigate, path: reloaded, scenario: "signupStripe" });
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
+      expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup_2");
     });
     const checkouts = requestsTo(recorded, "POST", "/checkout-sessions");
     expect(checkouts).toHaveLength(3);
@@ -3024,5 +3147,49 @@ describe("Josep November 6 signup feedback", () => {
     await renderSignup({ path: "/apuntat-hi?lang=es" });
     await screen.findByRole("heading", { name: "Apúntate" });
     expect(screen.getByRole("combobox", { name: "Idioma" })).toHaveValue("es");
+  });
+});
+
+describe("FE-02 (pre-production audit, decision of 13 Nov 2026): the session draft never keeps the IBAN", () => {
+  it("keeps the IBAN typed on 19 out of the session draft, and a reload asks for it again", async () => {
+    seedDraft();
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    fireEvent.change(screen.getByLabelText("IBAN"), { target: { value: VALID_IBAN } });
+    fireEvent.change(screen.getByLabelText("Titular del compte"), {
+      target: { value: "Nora Soler" },
+    });
+    // The draft written after both changes has the holder and never the IBAN.
+    await waitFor(() => {
+      expect((savedDraft().payment as Record<string, unknown>).holderName).toBe("Nora Soler");
+    });
+    const stored = sessionStorage.getItem(DRAFT_KEY) ?? "";
+    expect(stored).not.toContain(VALID_IBAN);
+    expect(stored).not.toContain(VALID_IBAN.slice(4));
+    expect(savedDraft().payment).not.toHaveProperty("iban");
+    expect(screen.getByLabelText("IBAN")).toHaveValue(VALID_IBAN);
+
+    cleanup();
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(screen.getByLabelText("IBAN")).toHaveValue("");
+    expect(screen.getByLabelText("Titular del compte")).toHaveValue("Nora Soler");
+  });
+
+  it("never reads back an IBAN that a draft saved by an earlier build still holds", async () => {
+    seedDraft({
+      payment: {
+        firstMonthOption: "TODAY",
+        holderName: "Nora Soler Pons",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
+    });
+    await renderSignup({ path: "/apuntat-hi/pagament" });
+    expect(screen.getByLabelText("IBAN")).toHaveValue("");
+    expect(screen.getByLabelText("Titular del compte")).toHaveValue("Nora Soler Pons");
+    // The page writes its draft again (the answer of `GET /signup`): without the IBAN.
+    await waitFor(() => {
+      expect((savedDraft().payment as Record<string, unknown>).initialMethod).toBeDefined();
+    });
+    expect(sessionStorage.getItem(DRAFT_KEY)).not.toContain(VALID_IBAN);
   });
 });

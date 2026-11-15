@@ -114,6 +114,8 @@
     "reviewPaymentDay": "Si cambias este valor, revisa también el texto del día de pago del alta.",
     "removeHoliday": "Eliminar el festivo {index}",
     "reset": "Restablecer el valor de producto",
+    "resetChange": "Valor actual: {current} → valor de producto: {productValue}",
+    "resetConfirm": "Este parámetro volverá al valor de producto. Se aplica a partir de ahora.",
     "time": "Hora"
   },
   "enum": {
@@ -383,6 +385,10 @@
           "help": "Esquema del archivo de remesa SEPA.",
           "label": "Esquema SEPA"
         },
+        "settlementBusinessDays": {
+          "help": "Días hábiles bancarios (TARGET) que deben pasar después de la fecha de cobro para que los recibos de una remesa enviada se den por cobrados, si no se han marcado como impagados; con 0, el mismo día de cobro.",
+          "label": "Margen para dar la remesa por cobrada"
+        },
         "useFrst": {
           "help": "Usa la secuencia inicial antes de los cobros recurrentes.",
           "label": "Secuencia inicial SEPA"
@@ -411,6 +417,10 @@
       "upfrontCutoffDay": {
         "help": "Día límite para pedir un alta para el mes siguiente.",
         "label": "Día límite de altas del mes siguiente"
+      },
+      "totalDifferenceConfirmPercent": {
+        "help": "Si el total del mes cambia más de este porcentaje respecto al mes anterior, generar los recibos pide una segunda confirmación; con 0, cualquier diferencia la pide.",
+        "label": "Diferencia para pedir una segunda confirmación"
       }
     },
     "bookings": {
@@ -723,6 +733,14 @@
           "help": "Límite mensual de seguridad de los SMS.",
           "label": "Límite mensual de SMS"
         },
+        "quietHoursEnd": {
+          "help": "Hora (del club) en la que salen los SMS que esperaban.",
+          "label": "Final de las horas sin SMS"
+        },
+        "quietHoursStart": {
+          "help": "A partir de esta hora (hora del club) los SMS no urgentes esperan hasta el final de la franja; una oferta de plaza con plazo no espera. Igual que el final: sin franja.",
+          "label": "Inicio de las horas sin SMS"
+        },
         "senderId": {
           "help": "Identificador que aparece como remitente de los SMS.",
           "label": "Remitente de los SMS"
@@ -931,6 +949,12 @@
       "classReminders": "{count, plural, one {# recordatorio de clase} other {# recordatorios de clase}}",
       "trainingReminders": "{count, plural, one {# recordatorio de entrenamiento} other {# recordatorios de entrenamiento}}",
       "WOULD_REMIND": "{count, plural, one {# recordatorio previsto} other {# recordatorios previstos}}",
+      "WOULD_ERASE_RETENTION": "{count, plural, one {# abonado de baja a suprimir} other {# abonados de baja a suprimir}}",
+      "WOULD_ERASE_REJECTED_SIGNUP": "{count, plural, one {# alta rechazada a suprimir} other {# altas rechazadas a suprimir}}",
+      "WOULD_PURGE_AUDIT_ENTRIES": "{count, plural, one {# entrada de auditoría a borrar} other {# entradas de auditoría a borrar}}",
+      "WOULD_DELETE_REMITTANCE_FILE": "{count, plural, one {# fichero de remesa a borrar} other {# ficheros de remesa a borrar}}",
+      "WOULD_EXPIRE_EXPORT": "{count, plural, one {# exportación caducada a borrar} other {# exportaciones caducadas a borrar}}",
+      "WOULD_PURGE_ERASED_TRACES": "{count, plural, one {# rastro de abonados suprimidos a borrar} other {# rastros de abonados suprimidos a borrar}}",
       "opened": "{count, plural, one {# semana abierta} other {# semanas abiertas}}",
       "swept": "{count, plural, one {# entrada de espera cerrada} other {# entradas de espera cerradas}}",
       "finished": "{count, plural, one {# clase cerrada} other {# clases cerradas}}",
@@ -959,6 +983,7 @@
     "disableConfirm": "Los efectos de este proceso dejarán de aplicarse hasta que lo vuelvas a activar.",
     "runTitle": "Ejecutar «{name}» ahora",
     "runConfirm": "El proceso se ejecutará ahora, aunque esté desactivado, y quedará constancia en la auditoría.",
+    "confirmPlan": "La simulación que se acaba de hacer prevé:",
     "cancel": "Cancelar",
     "dryRunTitle": "Simulación: qué haría ahora · {name}",
     "dryRunNote": "Simulación: no se ha aplicado ningún cambio.",

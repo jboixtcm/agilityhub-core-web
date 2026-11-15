@@ -78,6 +78,32 @@ export function counterTexts(t: Translate, counters: Readonly<Record<string, num
 }
 
 /**
+ * PRIV-02 (S14 R-14-16, S15 R-15-09): the process whose real manual run deletes personal data. Its
+ * [Executa ara] simulates first, shows the plan's counts and sends them back as the run's
+ * `confirmation`; the api runs nothing if they no longer match (`409 SIMULATION_STALE`).
+ */
+export const CONFIRMED_RUN_PROCESS = "retention-sweep";
+
+/**
+ * The counts a confirmed run shows (PRIV-02): the dry run's `WOULD_…` counters other than zero,
+ * without the platform pass's (`…_platform…`) and without `WOULD_PURGE_AUDIT`, the one item that
+ * purges the audit entries `WOULD_PURGE_AUDIT_ENTRIES` counts.
+ */
+export function plannedCounters(
+  counters: Readonly<Record<string, number>>,
+): Record<string, number> {
+  return Object.fromEntries(
+    Object.entries(counters).filter(
+      ([key, value]) =>
+        key.startsWith("WOULD_") &&
+        !key.includes("_platform") &&
+        key !== "WOULD_PURGE_AUDIT" &&
+        value !== 0,
+    ),
+  );
+}
+
+/**
  * A failure by its code; a trigger still in progress (it keeps its key) reads the shared
  * `common:inProgress` (CONVENCIONS_API §7, E80).
  */
@@ -86,6 +112,29 @@ function errorText(t: Translate, cause: unknown): string {
   return isApiError(cause)
     ? t(`errors:${cause.code}`, { defaultValue: t("errors:INTERNAL_ERROR") })
     : t("errors:INTERNAL_ERROR");
+}
+
+/**
+ * PRIV-02: what a confirmed run's dialog shows of its dry run, «La simulació que s'acaba de fer
+ * preveu:» and one line per planned count (`plannedCounters`), or that there is nothing to do.
+ */
+export function PlannedCounts({ counters }: { counters: Readonly<Record<string, number>> }) {
+  const { t } = useTranslation(["admin-settings"]);
+  const planned = Object.entries(plannedCounters(counters));
+  return (
+    <>
+      <p>{t("admin-settings:jobs.confirmPlan")}</p>
+      {planned.length === 0 ? (
+        <p>{t("admin-settings:jobs.noItems")}</p>
+      ) : (
+        <ul aria-label={t("admin-settings:jobs.confirmPlan")}>
+          {planned.map(([key, value]) => (
+            <li key={key}>{counterTexts(t, { [key]: value })[0]}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
 }
 
 /** The run history's page size (CONVENCIONS_API §4 sizes). */
@@ -576,13 +625,27 @@ function RunEffects({
 }
 
 interface Pending {
-  kind: "dryRun" | "run" | "switch";
+  /** `plan`: the dry run [Executa ara] makes before a confirmed run (PRIV-02). */
+  kind: "dryRun" | "plan" | "run" | "switch";
   name: string;
 }
 
 interface Confirm {
   job: JobSummary;
   kind: "disable" | "run";
+  /**
+   * PRIV-02: the dry run a confirmed run confirms; absent once the api said the plan changed
+   * (`409 SIMULATION_STALE`), until it is simulated again.
+   */
+  plan?: JobRun;
+}
+
+/** The confirmation of a run of `run`'s plan (`JobRunConfirmation`, PRIV-02). */
+export function runConfirmation(run: JobRun): {
+  counters: Record<string, number>;
+  dryRunId: string;
+} {
+  return { counters: run.effects.counters, dryRunId: run.runId };
 }
 
 /**
@@ -628,9 +691,10 @@ export function JobsCard({
   // `HELD_KEY_TTL_MS` at most: a run asked for later is a new one (E7-W06 review #5).
   const triggerKeys = useSubmissionKeys({ ttlMs: HELD_KEY_TTL_MS });
   // Closing [Executa ara]'s confirmation gives up its unanswered run: the next one is a new run
-  // with a new key (E7-W06 review #5).
+  // with a new key (E7-W06 review #5). A confirmed run's key is per dry run, owned by the same
+  // `{name}|false` (PRIV-02).
   const closeConfirm = () => {
-    if (confirm?.kind === "run") triggerKeys.forget(`${confirm.job.name}|false`);
+    if (confirm?.kind === "run") triggerKeys.drop(`${confirm.job.name}|false`);
     setConfirm(undefined);
   };
   const refetch = useCallback(() => {
@@ -743,22 +807,61 @@ export function JobsCard({
     }
   };
 
-  const trigger = async (job: JobSummary, dryRun: boolean) => {
+  /**
+   * PRIV-02: [Executa ara] of the confirmed process simulates first (with [Simula]'s key) and asks
+   * with the plan's counts; a dry run that did not succeed shows as [Simula]'s and offers no run.
+   */
+  const planRun = async (job: JobSummary, inModal: boolean) => {
+    setPending({ kind: "plan", name: job.name });
+    setFeedback(undefined);
+    setModalError(undefined);
+    try {
+      const result = await triggerKeys.send(`${job.name}|true`, (key) =>
+        client.POST("/jobs/{name}/trigger", {
+          body: { dryRun: true },
+          headers: { "Idempotency-Key": key },
+          params: { path: { name: job.name } },
+        }),
+      );
+      const run = result.data;
+      if (run === undefined) throw new TypeError("The run response did not contain data");
+      if (run.status === "SUCCEEDED") {
+        setConfirm({ job, kind: "run", plan: run });
+      } else {
+        triggerKeys.drop(`${job.name}|false`);
+        setConfirm(undefined);
+        setPlan({ job, run });
+      }
+    } catch (cause) {
+      failed(cause, inModal);
+    } finally {
+      setPending(undefined);
+    }
+  };
+
+  const trigger = async (job: JobSummary, dryRun: boolean, confirmed?: JobRun) => {
     setPending({ kind: dryRun ? "dryRun" : "run", name: job.name });
     setFeedback(undefined);
     setModalError(undefined);
     // One Idempotency-Key per payload, kept only while the api has not answered (an answer lost
     // to the network, a 5xx, or IN_PROGRESS: the first request still runs, E79, E85): a retry then
     // replays that run instead of running the process twice. Only this request's own key is
-    // retired by its answer (a later submission may hold another).
+    // retired by its answer (a later submission may hold another). A confirmed run's payload is
+    // its dry run's (PRIV-02).
     const payload = `${job.name}|${String(dryRun)}`;
     try {
-      const result = await triggerKeys.send(payload, (key) =>
-        client.POST("/jobs/{name}/trigger", {
-          body: { dryRun },
-          headers: { "Idempotency-Key": key },
-          params: { path: { name: job.name } },
-        }),
+      const result = await triggerKeys.send(
+        confirmed === undefined ? payload : `${payload}|${confirmed.runId}`,
+        (key) =>
+          client.POST("/jobs/{name}/trigger", {
+            body: {
+              dryRun,
+              ...(confirmed === undefined ? {} : { confirmation: runConfirmation(confirmed) }),
+            },
+            headers: { "Idempotency-Key": key },
+            params: { path: { name: job.name } },
+          }),
+        payload,
       );
       const run = result.data;
       if (run === undefined) throw new TypeError("The run response did not contain data");
@@ -781,6 +884,11 @@ export function JobsCard({
       }
     } catch (cause) {
       failed(cause, !dryRun);
+      // PRIV-02: the plan changed (or the dry run is too old): nothing ran; the confirmation now
+      // offers [Simula] only, and asks again with the new counts.
+      if (confirmed !== undefined && isApiError(cause, "SIMULATION_STALE")) {
+        setConfirm({ job, kind: "run" });
+      }
     } finally {
       setPending(undefined);
     }
@@ -881,9 +989,12 @@ export function JobsCard({
                   <Button
                     aria-label={t("admin-settings:jobs.runLabel", { name: jobName(job) })}
                     disabled={busy}
+                    loading={pending?.kind === "plan" && pending.name === job.name}
+                    loadingLabel={t("admin-settings:jobs.running")}
                     onClick={() => {
                       setModalError(undefined);
-                      setConfirm({ job, kind: "run" });
+                      if (job.name === CONFIRMED_RUN_PROCESS) void planRun(job, false);
+                      else setConfirm({ job, kind: "run" });
                     }}
                     variant="ghost"
                   >
@@ -918,25 +1029,41 @@ export function JobsCard({
             ? t("admin-settings:jobs.disableConfirm")
             : t("admin-settings:jobs.runConfirm")}
         </p>
+        {/* PRIV-02: the counts of the dry run this run confirms. */}
+        {confirm?.plan === undefined ? null : (
+          <PlannedCounts counters={confirm.plan.effects.counters} />
+        )}
         {modalError === undefined ? null : <p role="alert">{modalError}</p>}
         <div className="jobs-card__modal-actions">
           <Button disabled={pending !== undefined} onClick={closeConfirm} variant="ghost">
             {t("admin-settings:jobs.cancel")}
           </Button>
-          <Button
-            loading={pending !== undefined}
-            loadingLabel={t("admin-settings:jobs.running")}
-            onClick={() => {
-              if (confirm === undefined) return;
-              if (confirm.kind === "disable") void setEnabled(confirm.job, false);
-              else void trigger(confirm.job, false);
-            }}
-            variant={confirm?.kind === "disable" ? "danger" : "primary"}
-          >
-            {confirm?.kind === "disable"
-              ? t("admin-settings:jobs.disable")
-              : t("admin-settings:jobs.run")}
-          </Button>
+          {confirm?.kind === "run" &&
+          confirm.job.name === CONFIRMED_RUN_PROCESS &&
+          confirm.plan === undefined ? (
+            <Button
+              loading={pending !== undefined}
+              loadingLabel={t("admin-settings:jobs.running")}
+              onClick={() => void planRun(confirm.job, true)}
+            >
+              {t("admin-settings:jobs.dryRun")}
+            </Button>
+          ) : (
+            <Button
+              loading={pending !== undefined}
+              loadingLabel={t("admin-settings:jobs.running")}
+              onClick={() => {
+                if (confirm === undefined) return;
+                if (confirm.kind === "disable") void setEnabled(confirm.job, false);
+                else void trigger(confirm.job, false, confirm.plan);
+              }}
+              variant={confirm?.kind === "disable" ? "danger" : "primary"}
+            >
+              {confirm?.kind === "disable"
+                ? t("admin-settings:jobs.disable")
+                : t("admin-settings:jobs.run")}
+            </Button>
+          )}
         </div>
       </Modal>
 

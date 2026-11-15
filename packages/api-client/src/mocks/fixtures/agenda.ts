@@ -104,6 +104,7 @@ function row(
     bookingId,
     dogId: dog[0],
     dogName: dog[1],
+    dogPhotoThumbnailUrl: null,
     dogPhotoUrl: null,
     final: false,
     handlerName: null,

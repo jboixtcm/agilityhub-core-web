@@ -1,7 +1,23 @@
 import { isApiError } from "@agilityhub/api-client";
 import { type AccountSession, type AuthClient, useSession } from "@agilityhub/auth";
-import { LOCALE_STORAGE_KEY, productLocales, type Locale } from "@agilityhub/i18n";
-import { Badge, Button, Card, Icon, Input, Modal, PasswordInput, Select } from "@agilityhub/ui";
+import {
+  formatPlainDate,
+  LOCALE_STORAGE_KEY,
+  normalizeLocale,
+  productLocales,
+  type Locale,
+} from "@agilityhub/i18n";
+import {
+  Badge,
+  Button,
+  Card,
+  Icon,
+  Input,
+  LimitedMarkdown,
+  Modal,
+  PasswordInput,
+  Select,
+} from "@agilityhub/ui";
 import {
   type ReactNode,
   type SyntheticEvent,
@@ -12,6 +28,8 @@ import {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+
+import { PRIVACY_POLICY, type PrivacyPolicy } from "./privacy/privacy-policy";
 
 type Navigate = (destination: string) => void;
 type Translate = ReturnType<typeof useTranslation>["t"];
@@ -136,7 +154,14 @@ function loginError(error: unknown, t: Translate): string {
 
 function passwordError(error: unknown, t: Translate): string {
   if (isApiError(error, "PASSWORD_TOO_SHORT")) {
-    return t("errors:PASSWORD_TOO_SHORT");
+    // AUTH-01 (S01 R-01-05): the minimum the api applied, 12 for a staff account.
+    const minLength: unknown =
+      typeof error.details === "object" && error.details !== null && "minLength" in error.details
+        ? error.details.minLength
+        : undefined;
+    return typeof minLength === "number"
+      ? t("common:password.tooShort", { minLength })
+      : t("errors:PASSWORD_TOO_SHORT");
   }
   if (isApiError(error, "PASSWORD_MISMATCH")) {
     return t("errors:PASSWORD_MISMATCH");
@@ -439,6 +464,9 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
   const { t } = useTranslation("id");
   const [token] = useState(() => new URLSearchParams(window.location.search).get("t"));
   const [failure, setFailure] = useState(token === null || token === "");
+  // AUTH-06 (pre-production audit): the link is redeemed when the person presses «Entra», never
+  // when the page loads (a mail scanner that opens the link no longer spends it).
+  const [redeeming, setRedeeming] = useState(false);
   const started = useRef(false);
 
   useEffect(() => {
@@ -447,7 +475,8 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
     }
     started.current = true;
     // E11-W02 round 2 (INC-41): the one-time token leaves the address bar (and the history, a
-    // shared screen, a copied address) as soon as it is read; the rest of the query stays.
+    // shared screen, a copied address) as soon as it is read, before anything else; the rest of
+    // the query stays. It is kept in memory only.
     const address = new URL(window.location.href);
     if (address.searchParams.has("t")) {
       address.searchParams.delete("t");
@@ -457,9 +486,13 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
         `${address.pathname}${address.search}${address.hash}`,
       );
     }
-    if (token === null || token === "") {
+  }, []);
+
+  const redeem = () => {
+    if (token === null || token === "" || redeeming) {
       return;
     }
+    setRedeeming(true);
     void authClient
       .exchangeMagicLink(token)
       .then(async () => {
@@ -470,20 +503,37 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
       .catch(() => {
         setFailure(true);
       });
-  }, [authClient, navigate, token]);
+  };
 
+  const confirming = !failure && !redeeming;
   return (
     <main className="id-page id-page--centered">
       <Card className="id-status-card">
         <Icon aria-hidden="true" name={failure ? "warn" : "link"} />
         <PageIntro
-          description={failure ? t("id:magic.invalidDescription") : t("id:magic.description")}
-          title={failure ? t("id:magic.invalidTitle") : t("id:magic.title")}
+          description={
+            failure
+              ? t("id:magic.invalidDescription")
+              : confirming
+                ? t("id:magic.confirmDescription")
+                : t("id:magic.description")
+          }
+          title={
+            failure
+              ? t("id:magic.invalidTitle")
+              : confirming
+                ? t("id:magic.confirmTitle")
+                : t("id:magic.title")
+          }
         />
         {failure ? (
           <a className="ah-button ah-button--primary" href="/login">
             {t("id:magic.tryAgain")}
           </a>
+        ) : confirming ? (
+          <Button onClick={redeem} type="button">
+            {t("id:login.submit")}
+          </Button>
         ) : (
           <p aria-live="polite">{t("id:magic.validating")}</p>
         )}
@@ -989,6 +1039,32 @@ function NotFoundPage() {
   );
 }
 
+/**
+ * PRIV-01: the platform's privacy policy (S01 §2, `apps/id` `/privacy`) in the language the page
+ * shows, from its versioned content file. Public: the onboarding consent links it.
+ */
+export function PrivacyPage({ policy = PRIVACY_POLICY }: { policy?: PrivacyPolicy }) {
+  const { i18n, t } = useTranslation("id");
+  const locale = normalizeLocale(i18n.resolvedLanguage);
+  const description =
+    policy.effectiveDate === null
+      ? t("id:privacy.version", { version: policy.version })
+      : t("id:privacy.versionAndDate", {
+          date: formatPlainDate(policy.effectiveDate, locale, "long"),
+          version: policy.version,
+        });
+  return (
+    <main className="id-page id-page--narrow">
+      <div className="id-page__wide">
+        <PageIntro description={description} title={t("id:privacy.title")} />
+        <Card className="id-content-card">
+          <LimitedMarkdown>{policy.text[locale]}</LimitedMarkdown>
+        </Card>
+      </div>
+    </main>
+  );
+}
+
 export function App({
   authClient,
   navigate = defaultNavigate,
@@ -1038,6 +1114,8 @@ export function App({
     page = <ProductsPage authClient={authClient} navigate={navigate} />;
   } else if (pathname === "/logout") {
     page = <LogoutPage authClient={authClient} navigate={navigate} />;
+  } else if (pathname === "/privacy") {
+    page = <PrivacyPage />;
   } else {
     page = <NotFoundPage />;
   }

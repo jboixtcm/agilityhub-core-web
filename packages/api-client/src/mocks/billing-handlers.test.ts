@@ -8,6 +8,11 @@ import { createApiClient } from "../client";
 import type { components } from "../generated/schema";
 
 import {
+  defaultCollectionDate,
+  isTargetBusinessDay,
+  targetBusinessDaysAfter,
+} from "./fixtures/billing";
+import {
   BILLING_MOCK_NOW,
   billingState,
   ERASED_MEMBER_ID,
@@ -485,6 +490,43 @@ describe("S12 R-12-11 / R-12-12 · POST /billing/runs («2 · GENERA REMESA SEPA
     expect(later.response.status).toBe(201);
     expect(later.data?.run.collectionDate).toBe("2026-09-02");
     expect(later.data?.remittance?.requestedCollectionDate).toBe("2026-09-02");
+  });
+
+  it("SEPA-05 (R-12-12): a chosen day off the TARGET calendar → 400 NOT_BUSINESS_DAY {nextBusinessDay}; the default and the lead time follow the calendar", async () => {
+    expect((await rollback(await liveRunId())).response.status).toBe(200);
+    const simulation = await simulationId();
+    expect((await month()).simulation?.kpis.collectionDate).toBe("2026-09-01");
+    for (const [chosen, next] of [
+      ["2026-09-05", "2026-09-07"],
+      ["2026-12-25", "2026-12-28"],
+    ] as const) {
+      expect(
+        await failure(
+          generate({ collectionDate: chosen, period: SEPTEMBER, simulationId: simulation }),
+        ),
+      ).toEqual({
+        code: "VALIDATION_ERROR",
+        details: {
+          field: "collectionDate",
+          fieldErrors: [{ code: "NOT_BUSINESS_DAY", field: "collectionDate" }],
+          nextBusinessDay: next,
+        },
+        status: 400,
+      });
+    }
+    expect(isTargetBusinessDay("2027-03-26")).toBe(false); // Good Friday 2027
+    expect(isTargetBusinessDay("2027-03-29")).toBe(false); // Easter Monday 2027
+    expect(isTargetBusinessDay("2027-03-30")).toBe(true);
+    expect(defaultCollectionDate("2027-01")).toBe("2027-01-04");
+    expect(defaultCollectionDate("2026-11")).toBe("2026-11-02");
+    expect(targetBusinessDaysAfter("2026-12-23", 2)).toBe("2026-12-28");
+    const chosen = await generate({
+      collectionDate: "2026-09-04",
+      period: SEPTEMBER,
+      simulationId: simulation,
+    });
+    expect(chosen.response.status).toBe(201);
+    expect(chosen.data?.remittance?.requestedCollectionDate).toBe("2026-09-04");
   });
 
   it("T-12-32 billingManualOnly: the run issues every receipt PENDING by hand and no remittance", async () => {
@@ -1115,7 +1157,12 @@ describe("S12 R-12-19 · POST /invoices/{id}/cancellation and the manual receipt
         await failure(createManual({ lines, memberId: "member-laura", note: "", period })),
       ).toEqual({ code: "VALIDATION_ERROR", details: { field: "period" }, status: 400 });
     }
-    const created = await createManual({ lines, memberId: "member-laura", note: "", period: "2026-11" });
+    const created = await createManual({
+      lines,
+      memberId: "member-laura",
+      note: "",
+      period: "2026-11",
+    });
     expect(created.data).toMatchObject({ number: 1080, period: "2026-11" });
     expect((await adjustment("member-laura")).data?.period).toBe("2026-08");
   });
@@ -1303,18 +1350,46 @@ describe("S12 R-12-15 · the remittances page (GET /remittances, file, submissio
       total: eur(624000),
     });
     expect(data?.creditor.maskedIban).toContain("****");
-    for (const item of [items[0], items[2]]) {
+    // SEPA-06: `remesa-{period}-{seq}.xml`, `seq` from the `MsgId`, and a ROLLED_BACK one's name
+    // says it is cancelled (was `remesa-{period}.xml` for both).
+    for (const [item, fileName] of [
+      [items[0], "remesa-2026-09-1.xml"],
+      [items[2], "remesa-2026-08-1-ANULLADA-NO-PUJAR.xml"],
+    ] as const) {
       const file = await client.GET("/remittances/{id}/file", {
         params: { path: { id: item?.id ?? "" } },
       });
       expectValid("RemittanceFile", file.data);
-      // The snapshot's attachment name (b67a07b): `remesa-{period}.xml`.
-      expect(file.data?.fileName).toBe(`remesa-${item?.period ?? ""}.xml`);
-      expect(file.data?.downloadUrl).toMatch(/\/remesa-2026-0[89]\.xml\?/u);
+      expect(file.data?.fileName).toBe(fileName);
+      expect(file.data?.downloadUrl).toContain(`/${fileName}?`);
     }
     expect(
       await failure(client.GET("/remittances/{id}", { params: { path: { id: UNKNOWN_ID } } })),
     ).toEqual({ code: "NOT_FOUND", details: {}, status: 404 });
+  });
+
+  it("SEPA-06: a month generated again never reuses a file name, and the rolled-back file is named cancelled", async () => {
+    const first = (await month()).remittance?.id ?? "";
+    expect((await rollback(await liveRunId())).response.status).toBe(200);
+    const generated = await generate({ period: SEPTEMBER, simulationId: await simulationId() });
+    const second = generated.data?.remittance?.id ?? "";
+    expect(second).not.toBe(first);
+    const names = async (id: string) => {
+      const file = await client.GET("/remittances/{id}/file", { params: { path: { id } } });
+      const sheet = await client.GET("/remittances/{id}/spreadsheet", {
+        params: { path: { id } },
+        parseAs: "blob",
+      });
+      return [file.data?.fileName, sheet.response.headers.get("Content-Disposition")];
+    };
+    expect(await names(first)).toEqual([
+      "remesa-2026-09-1-ANULLADA-NO-PUJAR.xml",
+      'attachment; filename="remesa-2026-09-1-ANULLADA-NO-PUJAR.xlsx"',
+    ]);
+    expect(await names(second)).toEqual([
+      "remesa-2026-09-2.xml",
+      'attachment; filename="remesa-2026-09-2.xlsx"',
+    ]);
   });
 
   it("T-12-30 [Marca com a enviada al banc] → 200 SUBMITTED; again → 409 INVALID_STATE; the run is no longer rollbackable {REMITTANCE_SUBMITTED}", async () => {
@@ -1387,6 +1462,14 @@ describe("S12 the receipt PDF and the accounting export (T-12-19, T-12-20)", () 
     const bytes = new Uint8Array(data ?? new ArrayBuffer(0));
     expect([...bytes.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
     expect(new TextDecoder().decode(bytes)).toContain("número;data;mes;");
+    // SEPA-09: 18 columns, the last two the api's «Estat de l’últim cobrament» and «Data de devolució».
+    const header = (new TextDecoder().decode(bytes).split("\n")[0] ?? "").split(";");
+    expect(header).toHaveLength(18);
+    expect(header.slice(-3)).toEqual([
+      "referència",
+      "Estat de l’últim cobrament",
+      "Data de devolució",
+    ]);
     expect(
       await failure(
         client.GET("/billing/exports", {
@@ -1453,5 +1536,188 @@ describe("E11-W06 W9 (S12 §6, INC-68, E138) · billingPriceOverlap", () => {
     expect(await failure(generate({ period: october, simulationId: kept }))).toEqual(overlap);
     use("admin");
     expect((await simulate(october)).response.status).toBe(201);
+  });
+});
+
+describe("SEPA-04 (owner decision of 13 Nov 2026) · undo «sent to the bank» and bulk returns", () => {
+  const undo = (id: string, reason = "El banc ha refusat el fitxer") =>
+    client.POST("/remittances/{id}/submission-undo", {
+      body: { reason },
+      params: { header: { "Idempotency-Key": newKey() }, path: { id } },
+    });
+  const returns = (
+    id: string,
+    invoiceIds: string[],
+    extra: { at?: string; includeInNextRun?: boolean } = {},
+  ) =>
+    client.POST("/remittances/{id}/returns", {
+      body: { at: extra.at ?? TODAY, invoiceIds, reason: "Devolució bancària", ...extra },
+      params: { header: { "Idempotency-Key": newKey() }, path: { id } },
+    });
+
+  it("(a) only a SUBMITTED remittance before its collection date with no receipt moved goes back to GENERATED", async () => {
+    const september = (await month()).remittance?.id ?? "";
+    expect(await failure(undo(september))).toMatchObject({
+      code: "INVALID_STATE",
+      details: { status: "GENERATED" },
+      status: 409,
+    });
+    // September's run has two bank returns: once sent, its undo names them.
+    expect((await submit(september)).response.status).toBe(200);
+    const changed = await failure(undo(september));
+    expect(changed).toMatchObject({
+      code: "INVALID_STATE",
+      details: { reason: "INVOICE_CHANGED" },
+      status: 409,
+    });
+    expect((changed.details as { invoiceIds: string[] }).invoiceIds).toHaveLength(2);
+    // October: generated, sent, nothing moved → GENERATED again, without its submission.
+    const generated = await generate({
+      period: "2026-10",
+      simulationId: await simulationId("2026-10"),
+    });
+    const october = generated.data?.remittance?.id ?? "";
+    expect((await submit(october)).response.status).toBe(200);
+    expect(await failure(undo(october, " "))).toMatchObject({
+      code: "VALIDATION_ERROR",
+      status: 400,
+    });
+    const undone = await undo(october);
+    expectValid("Remittance", undone.data);
+    expect(undone.data).toMatchObject({
+      status: "GENERATED",
+      submittedAt: null,
+      submittedByAccountId: null,
+    });
+    // The August remittance went to the bank and its collection date (01/08) has come.
+    const august = (await month("2026-08")).remittance?.id ?? "";
+    expect(await failure(undo(august))).toMatchObject({
+      code: "INVALID_STATE",
+      details: { reason: "COLLECTION_DATE_PASSED" },
+      status: 409,
+    });
+  });
+
+  it("(b) several returns of one remittance, all or none: another remittance's receipt 400 {invoiceIds}, a moved one 409, a manual one presented again 400 {includeInNextRun}", async () => {
+    const september = (await month()).remittance?.id ?? "";
+    const laura = await receipt("2026-0912");
+    const other = await receipt("2026-0914");
+    const august = (
+      await list({
+        filter: ["period:eq:2026-08", "paymentMethodType:eq:SEPA_DD", "status:eq:PAID"],
+        size: 20,
+      })
+    ).data?.items[0]?.id;
+    expect(august).toBeDefined();
+    expect(await failure(returns(september, [laura.id, august ?? ""]))).toMatchObject({
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors: [expect.objectContaining({ field: "invoiceIds" })] },
+      status: 400,
+    });
+    expect(await failure(returns(september, [laura.id], { at: "2026-08-27" }))).toMatchObject({
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors: [expect.objectContaining({ field: "at" })] },
+      status: 400,
+    });
+    // Nothing moved by the refusals.
+    expect((await readInvoice(laura.id)).data?.status).toBe("COLLECTING");
+
+    const done = await returns(september, [laura.id, other.id], { includeInNextRun: true });
+    expectValid("RemittanceReturnsResult", done.data);
+    expect(done.data?.returned).toBe(2);
+    for (const invoice of done.data?.invoices ?? []) {
+      expect(invoice).toMatchObject({ includeInNextRun: true, status: "FAILED" });
+      expect(invoice.collections.at(-1)).toMatchObject({
+        failureCode: "BANK_RETURN",
+        remittanceId: september,
+        status: "FAILED",
+      });
+    }
+    // Returned already: the whole request is refused.
+    expect(await failure(returns(september, [laura.id]))).toMatchObject({
+      code: "INVALID_STATE",
+      status: 409,
+    });
+
+    // A manual receipt carried by October's remittance is never presented again.
+    const marc = await receipt("2026-0913");
+    const manual = await createManual({
+      includeInNextRun: true,
+      lines: [{ base: eur(1500), description: "Material", taxPercent: 0 }],
+      memberId: marc.memberId,
+      note: "",
+    });
+    const generated = await generate({
+      period: "2026-10",
+      simulationId: await simulationId("2026-10"),
+    });
+    const october = generated.data?.remittance?.id ?? "";
+    expect(
+      await failure(returns(october, [manual.data?.id ?? ""], { includeInNextRun: true })),
+    ).toMatchObject({
+      code: "VALIDATION_ERROR",
+      details: { fieldErrors: [expect.objectContaining({ field: "includeInNextRun" })] },
+      status: 400,
+    });
+    const plain = await returns(october, [manual.data?.id ?? ""]);
+    expect(plain.data?.invoices[0]).toMatchObject({ includeInNextRun: false, status: "FAILED" });
+  });
+
+  it("(b) POST /invoices/{id}/failure keeps a periodic receipt waiting only when asked; a manual one cannot", async () => {
+    const laura = await receipt("2026-0912");
+    const waiting = await client.POST("/invoices/{id}/failure", {
+      body: { at: TODAY, includeInNextRun: true, reason: "Compte tancat", version: laura.version },
+      params: { header: { "Idempotency-Key": newKey() }, path: { id: laura.id } },
+    });
+    expect(waiting.data).toMatchObject({ includeInNextRun: true, status: "FAILED" });
+    const other = await receipt("2026-0914");
+    expect((await markFailed(other)).data).toMatchObject({
+      includeInNextRun: false,
+      status: "FAILED",
+    });
+  });
+});
+
+describe("PAY-02 (owner decision of 13 Nov 2026) · GET /billing/stripe-events", () => {
+  const events = (query: { fields?: string; filter?: string[]; sort?: string[] } = {}) =>
+    client.GET("/billing/stripe-events", { params: { query } });
+
+  it("lists the club's FAILED events newest first as the snapshot's page; `fields` and the receivedAt sort apply; a filter or a q is 400 INVALID_FILTER", async () => {
+    const page = await events();
+    expectValid("StripeEventPage", page.data);
+    expect(page.data?.items.map((item) => item.id)).toEqual([
+      "evt_mock_refund_outage",
+      "evt_mock_checkout_retrying",
+      "evt_mock_setup_stopped",
+    ]);
+    expect(page.data?.items[2]).toMatchObject({
+      attempts: 10,
+      processedAt: "2026-08-25T09:03:00Z",
+    });
+    const ascending = await events({ fields: "id,receivedAt", sort: ["receivedAt,asc"] });
+    expect(ascending.data?.items[0]).toEqual({
+      id: "evt_mock_setup_stopped",
+      receivedAt: "2026-08-24T09:12:00Z",
+    });
+    expect(await failure(events({ filter: ["type:eq:charge.refunded"] }))).toMatchObject({
+      code: "INVALID_FILTER",
+      status: 400,
+    });
+    expect(
+      await failure(
+        client.GET("/billing/stripe-events", {
+          params: { query: { q: "evt" } as unknown as { fields?: string } },
+        }),
+      ),
+    ).toMatchObject({ code: "INVALID_FILTER", status: 400 });
+  });
+
+  it("is ADMIN only: a MEMBER gets 403, BILLING off 404 MODULE_DISABLED, another club's admin an empty list", async () => {
+    use("member");
+    expect((await failure(events())).status).toBe(403);
+    use("adminNoBilling");
+    expect(await failure(events())).toMatchObject({ code: "MODULE_DISABLED", status: 404 });
+    use("billingOtherClub");
+    expect((await events()).data?.items).toEqual([]);
   });
 });

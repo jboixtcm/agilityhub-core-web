@@ -287,7 +287,8 @@
       "leave": "Baixa (amb data)",
       "resend": "Envia la benvinguda",
       "unblock": "Desbloqueja les reserves",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "changeLogin": "Canvia l'adreça d'accés"
     },
     "activeSince": "alta des de {year}",
     "billingMode": {
@@ -318,7 +319,8 @@
       "preferences": "Les preferències d'avisos s'han desat.",
       "roles": "Els rols d'accés s'han actualitzat.",
       "saved": "Les dades de l'abonat s'han desat.",
-      "unblocked": "Les reserves s'han desbloquejat."
+      "unblocked": "Les reserves s'han desbloquejat.",
+      "loginEmailSent": "S'ha sol·licitat l'enllaç de confirmació per a {email}. L'adreça d'accés canviarà quan l'abonat l'obri."
     },
     "fields": {
       "address": "Adreça",
@@ -349,7 +351,8 @@
       "remarks": "Observacions visibles",
       "roles": "Rols d'accés",
       "street": "Carrer i número",
-      "monthlyAmount": "Import mensual"
+      "monthlyAmount": "Import mensual",
+      "login": "Adreça d'accés"
     },
     "imageNotice": "No autoritza l'ús de la seva imatge: no publiquis fotos on surti {gender, select, FEMALE {ella} OTHER {aquesta persona} other {ell}}.",
     "readmissionPending": "Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.",
@@ -396,6 +399,25 @@
         "date": "Data del proper rebut",
         "range": "Tria una data entre el {from} i el {to}.",
         "notBefore": "La data no pot ser anterior al {date}."
+      },
+      "refund": {
+        "action": "Reemborsa",
+        "actionFor": "Reemborsa {concept} ({amount})",
+        "title": "Reemborsa un pagament amb targeta",
+        "summary": "{concept}: pagat amb targeta {paid}; queda per reemborsar {left}.",
+        "amount": "Import a reemborsar",
+        "amountHelp": "En blanc, es reemborsa tot el que queda ({left}).",
+        "amountInvalid": "Escriu un import positiu que no superi {left}.",
+        "reasonRequired": "Escriu el motiu del reemborsament.",
+        "continue": "Continua",
+        "confirmTitle": "Confirma el reemborsament",
+        "confirmBody": "Es reemborsaran {amount} a {member} pel pagament «{concept}». Stripe els retornarà a la targeta amb què es va pagar, i no es pot desfer.",
+        "confirmReason": "Motiu: {reason}",
+        "confirm": "Reemborsa {amount}",
+        "back": "Enrere",
+        "requested": "Reemborsament de {amount} sol·licitat: es confirmarà quan Stripe el processi.",
+        "stale": "Aquest pagament ha canviat i ja no es pot reemborsar així. S'ha tornat a llegir la llista.",
+        "line": "Reemborsament de {amount} el {date}: {reason}"
       }
     },
     "language": "idioma: {locale}",
@@ -406,7 +428,7 @@
       "adminOnly": "canvi només admin",
       "holder": "Titular del compte",
       "iban": "IBAN nou",
-      "ibanHelp": "El número complet queda ocult i no es torna a mostrar.",
+      "ibanHelp": "Es veu mentre l'escrius. Un cop desat, queda ocult i no es torna a mostrar.",
       "sepa": "Domiciliació",
       "title": "Mètode de pagament"
     },
@@ -459,6 +481,7 @@
           "upfrontOpen": "Hi ha pagaments inicials oberts.",
           "futureBookings": "Hi ha reserves futures actives.",
           "otherMembershipsActive": "El compte té una altra afiliació activa.",
+          "sepaRefundWindow": "Un cobrament SEPA encara es pot retornar (8 setmanes): la supressió s'executarà quan es tanqui el termini.",
           "other": "La supressió està bloquejada."
         }
       }
@@ -508,7 +531,16 @@
     "reactivate": "Reactiva l’abonat",
     "leftSince": "Baixa des del {date}",
     "joinedOn": "(alta: {date})",
-    "left": "Baixa"
+    "left": "Baixa",
+    "login": {
+      "bounced": "rebot",
+      "complained": "queixa",
+      "bouncedHelp": "Aquesta adreça rebota o no existeix: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda.",
+      "complainedHelp": "Des d'aquesta adreça s'ha marcat un correu del club com a correu brossa: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda.",
+      "accessEmailFailed": "enviament fallit",
+      "accessEmailFailedHelp": "L'últim correu d'accés no ha arribat ({date}), tampoc en tornar-lo a provar."
+    },
+    "rateLimited": "Massa enviaments seguits. Torna-ho a provar d'aquí a {minutes, plural, one {# minut} other {# minuts}}."
   },
   "roles": {
     "admin": "administrador",
@@ -630,7 +662,7 @@
     "familyDecisionRequired": "Tria el grup del titular o «Sense grup».",
     "resolved": "Aquesta preinscripció ja s'ha resolt",
     "resolvedLink": "Obre la fitxa de l'abonat",
-    "refundWarning": "Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació",
+    "refundWarning": "Hi ha un pagament cobrat: caldrà retornar-lo. Si es va pagar amb targeta, es reemborsa des de la fitxa de l'abonat, a «Pagaments a l'acte».",
     "invoiceInvalid": "La data del proper rebut no és vàlida.",
     "gender": {
       "FEMALE": "Femení",
@@ -789,5 +821,17 @@
     "dissolveConfirm": "Cada abonat tornarà a tenir la seva facturació i els seus gossos. Vols dissoldre el grup?",
     "helpWithoutBilling": "Agrupa dos o més abonats i tria un únic responsable. Tots els membres poden operar amb els gossos del grup.",
     "dissolveConfirmWithoutBilling": "Cada abonat tornarà a poder operar només amb els seus gossos. Vols dissoldre el grup?"
+  },
+  "loginEmail": {
+    "current": "Adreça actual",
+    "new": "Adreça nova",
+    "help": "Hi enviarem un enllaç de confirmació. L'adreça d'accés canviarà quan l'abonat l'obri; a l'adreça actual no s'envia cap avís.",
+    "submit": "Envia l'enllaç de confirmació",
+    "change": "Adreça actual: {current} → adreça nova: {next}",
+    "confirmDescription": "S'enviarà un enllaç a {next}. Fins que l'abonat no l'obri, l'adreça d'accés no canvia.",
+    "send": "Envia l'enllaç",
+    "unchanged": "Aquesta ja és l'adreça d'accés actual.",
+    "invalid": "Escriu una adreça de correu vàlida.",
+    "forbidden": "Aquest compte també es fa servir fora del club: la seva adreça d'accés no es pot canviar des d'aquí."
   }
 }

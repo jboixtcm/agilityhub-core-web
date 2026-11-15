@@ -677,149 +677,153 @@ export function UniversalList<Row>({
           </select>
         )}
 
-        <details className="ah-universal-list__menu ah-universal-list__filter-menu">
-          <summary
-            className={universalFilters.length > 0 ? "ah-universal-list__summary--active" : ""}
-          >
-            <Icon aria-hidden="true" name="filter" />
-            {universalFilters.length === 0
-              ? labels.filter
-              : `${labels.filter} (${String(universalFilters.length)}): ${formatActiveFilter(universalFilters)}`}
-            <span aria-hidden="true">▾</span>
-          </summary>
-          <div className="ah-universal-list__menu-panel">
-            {universalFilters.map((filter) => (
-              <div className="ah-universal-list__active-filter" key={filter.field}>
-                <span>{`${filter.fieldLabel} = «${filter.valueLabel}»`}</span>
-                <button
-                  aria-label={labels.removeFilter(filter.fieldLabel)}
+        {/* A list whose contract filters nothing (PAY-02's failed Stripe events) has no filter menu:
+            any filter would be `400 INVALID_FILTER`. */}
+        {filterColumns.length === 0 ? null : (
+          <details className="ah-universal-list__menu ah-universal-list__filter-menu">
+            <summary
+              className={universalFilters.length > 0 ? "ah-universal-list__summary--active" : ""}
+            >
+              <Icon aria-hidden="true" name="filter" />
+              {universalFilters.length === 0
+                ? labels.filter
+                : `${labels.filter} (${String(universalFilters.length)}): ${formatActiveFilter(universalFilters)}`}
+              <span aria-hidden="true">▾</span>
+            </summary>
+            <div className="ah-universal-list__menu-panel">
+              {universalFilters.map((filter) => (
+                <div className="ah-universal-list__active-filter" key={filter.field}>
+                  <span>{`${filter.fieldLabel} = «${filter.valueLabel}»`}</span>
+                  <button
+                    aria-label={labels.removeFilter(filter.fieldLabel)}
+                    onClick={() => {
+                      onStateChange({
+                        ...state,
+                        filters: state.filters.filter((item) => item.field !== filter.field),
+                        page: 0,
+                      });
+                    }}
+                    type="button"
+                  >
+                    <Icon aria-hidden="true" name="x" />
+                  </button>
+                </div>
+              ))}
+              <label>
+                <span>{labels.filterField}</span>
+                <select onChange={changeFilterField} value={filterField}>
+                  {filterColumns.map((column) => (
+                    <option key={column.key} value={column.key}>
+                      {column.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>{labels.filterOperator}</span>
+                <select
+                  onChange={(event) => {
+                    if (isFilterOperator(event.currentTarget.value)) {
+                      const operator = event.currentTarget.value;
+                      setFilterOperator(operator);
+                      setFilterValue("");
+                      setRangeStart("");
+                      setRangeEnd("");
+                      setFilterValuesLoading(
+                        operator !== "exists" && !(operator === "between" && range !== undefined),
+                      );
+                    }
+                  }}
+                  value={filterOperator}
+                >
+                  {offeredFilterOperators(selectedFilterColumn).map((operator) => (
+                    <option key={operator} value={operator}>
+                      {labels.operators[operator]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {!valueRequired ? null : typedValueActive && !rangeActive ? (
+                <label>
+                  <span>{labels.filterValue}</span>
+                  <input
+                    type="date"
+                    value={filterValue}
+                    onChange={(event) => {
+                      setFilterValue(event.currentTarget.value);
+                    }}
+                  />
+                </label>
+              ) : !rangeActive ? (
+                <label>
+                  <span>{labels.filterValue}</span>
+                  <select
+                    aria-busy={filterValuesLoading || undefined}
+                    disabled={filterValuesLoading || filterValues.length === 0}
+                    onChange={(event) => {
+                      setFilterValue(event.currentTarget.value);
+                    }}
+                    value={filterValue}
+                  >
+                    {filterValuesLoading ? (
+                      <option>{labels.loadingFilterValues}</option>
+                    ) : (
+                      filterValues.map((value) => (
+                        <option key={value.value} value={value.value}>
+                          {value.count === undefined
+                            ? value.label
+                            : `${value.label} (${String(value.count)})`}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </label>
+              ) : (
+                <>
+                  <label>
+                    <span>{range.startLabel}</span>
+                    <input
+                      max={rangeEnd === "" ? undefined : rangeEnd}
+                      onChange={(event) => {
+                        setRangeStart(event.currentTarget.value);
+                      }}
+                      type={range.inputType ?? "date"}
+                      value={rangeStart}
+                    />
+                  </label>
+                  <label>
+                    <span>{range.endLabel}</span>
+                    <input
+                      min={rangeStart === "" ? undefined : rangeStart}
+                      onChange={(event) => {
+                        setRangeEnd(event.currentTarget.value);
+                      }}
+                      type={range.inputType ?? "date"}
+                      value={rangeEnd}
+                    />
+                  </label>
+                </>
+              )}
+              <div className="ah-universal-list__menu-actions">
+                <Button disabled={!canAddFilter} onClick={addFilter}>
+                  {labels.addFilter}
+                </Button>
+                <Button
                   onClick={() => {
                     onStateChange({
                       ...state,
-                      filters: state.filters.filter((item) => item.field !== filter.field),
+                      filters: state.filters.filter((filter) => filter.field === statusField),
                       page: 0,
                     });
                   }}
-                  type="button"
+                  variant="ghost"
                 >
-                  <Icon aria-hidden="true" name="x" />
-                </button>
+                  {labels.clearFilters}
+                </Button>
               </div>
-            ))}
-            <label>
-              <span>{labels.filterField}</span>
-              <select onChange={changeFilterField} value={filterField}>
-                {filterColumns.map((column) => (
-                  <option key={column.key} value={column.key}>
-                    {column.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span>{labels.filterOperator}</span>
-              <select
-                onChange={(event) => {
-                  if (isFilterOperator(event.currentTarget.value)) {
-                    const operator = event.currentTarget.value;
-                    setFilterOperator(operator);
-                    setFilterValue("");
-                    setRangeStart("");
-                    setRangeEnd("");
-                    setFilterValuesLoading(
-                      operator !== "exists" && !(operator === "between" && range !== undefined),
-                    );
-                  }
-                }}
-                value={filterOperator}
-              >
-                {offeredFilterOperators(selectedFilterColumn).map((operator) => (
-                  <option key={operator} value={operator}>
-                    {labels.operators[operator]}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {!valueRequired ? null : typedValueActive && !rangeActive ? (
-              <label>
-                <span>{labels.filterValue}</span>
-                <input
-                  type="date"
-                  value={filterValue}
-                  onChange={(event) => {
-                    setFilterValue(event.currentTarget.value);
-                  }}
-                />
-              </label>
-            ) : !rangeActive ? (
-              <label>
-                <span>{labels.filterValue}</span>
-                <select
-                  aria-busy={filterValuesLoading || undefined}
-                  disabled={filterValuesLoading || filterValues.length === 0}
-                  onChange={(event) => {
-                    setFilterValue(event.currentTarget.value);
-                  }}
-                  value={filterValue}
-                >
-                  {filterValuesLoading ? (
-                    <option>{labels.loadingFilterValues}</option>
-                  ) : (
-                    filterValues.map((value) => (
-                      <option key={value.value} value={value.value}>
-                        {value.count === undefined
-                          ? value.label
-                          : `${value.label} (${String(value.count)})`}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </label>
-            ) : (
-              <>
-                <label>
-                  <span>{range.startLabel}</span>
-                  <input
-                    max={rangeEnd === "" ? undefined : rangeEnd}
-                    onChange={(event) => {
-                      setRangeStart(event.currentTarget.value);
-                    }}
-                    type={range.inputType ?? "date"}
-                    value={rangeStart}
-                  />
-                </label>
-                <label>
-                  <span>{range.endLabel}</span>
-                  <input
-                    min={rangeStart === "" ? undefined : rangeStart}
-                    onChange={(event) => {
-                      setRangeEnd(event.currentTarget.value);
-                    }}
-                    type={range.inputType ?? "date"}
-                    value={rangeEnd}
-                  />
-                </label>
-              </>
-            )}
-            <div className="ah-universal-list__menu-actions">
-              <Button disabled={!canAddFilter} onClick={addFilter}>
-                {labels.addFilter}
-              </Button>
-              <Button
-                onClick={() => {
-                  onStateChange({
-                    ...state,
-                    filters: state.filters.filter((filter) => filter.field === statusField),
-                    page: 0,
-                  });
-                }}
-                variant="ghost"
-              >
-                {labels.clearFilters}
-              </Button>
             </div>
-          </div>
-        </details>
+          </details>
+        )}
 
         <details className="ah-universal-list__menu">
           <summary>

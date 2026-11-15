@@ -6,7 +6,8 @@
     "next": "mes ›",
     "previousMonth": "Mes anterior",
     "nextMonth": "Mes següent",
-    "remittances": "Remeses ›"
+    "remittances": "Remeses ›",
+    "stripeEvents": "Esdeveniments Stripe fallits ›"
   },
   "actions": {
     "simulate": "1 · SIMULA EL MES",
@@ -19,6 +20,9 @@
     "rollback": "Retrocedeix la remesa",
     "chargeCards": "COBRA LES TARGETES",
     "markPaidSelection": "Marcar cobrat (selecció)",
+    "markPaidSelectionWhy": "Només es poden marcar com a cobrats els rebuts pendents o impagats que no siguin de targeta.",
+    "markFailedSelection": "Marca impagats (selecció)",
+    "markFailedSelectionWhy": "Només es poden marcar com a impagats els rebuts domiciliats, remesats o cobrats, d'una mateixa remesa.",
     "accountingExport": "Exporta per a comptabilitat",
     "manualInvoice": "Rebut manual",
     "refresh": "Actualitza",
@@ -54,11 +58,32 @@
     "reference": "Referència (opcional)",
     "markPaid": "Marca cobrat",
     "markingPaid": "Marcant cobrat…",
+    "markFailedTitle": "Marca impagats",
+    "markFailedBody": "{count, plural, one {Es marcarà # rebut de la remesa com a impagat (retornat pel banc).} other {Es marcaran # rebuts de la remesa com a impagats (retornats pel banc).}}",
+    "presentAgain": "Torna'ls a presentar a la propera remesa",
+    "markFailed": "Marca impagats",
+    "markingFailed": "Marcant impagats…",
     "submissionTitle": "Marca com a enviada al banc · {month}",
     "submissionBody": "La remesa quedarà marcada com a enviada al banc. A partir d'aquí ja no es podrà retrocedir.",
     "submittedAt": "Data d'enviament al banc",
     "submit": "Marca com a enviada",
-    "submitting": "Desant…"
+    "submitting": "Desant…",
+    "undoSubmissionTitle": "Desfés «enviada al banc» · {month}",
+    "undoSubmissionBody": "La remesa tornarà a quedar com a generada: la podràs tornar a marcar com a enviada o retrocedir. Fes-ho només si el banc no ha acceptat el fitxer o si es va marcar per error.",
+    "undoSubmission": "Desfés «enviada»",
+    "undoingSubmission": "Desfent…",
+    "collectionDate": "Data de cobrament",
+    "collectionDateHelp": "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
+    "collectionDateNotBusinessDay": "El {date} no és un dia hàbil bancari (TARGET): el següent és el {next}.",
+    "comparison": "Respecte del mes anterior ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
+    "comparisonAmount": "Respecte del mes anterior ({previousMonth}: {previousTotal}): {difference}.",
+    "comparisonNone": "No hi ha cap mes anterior per comparar.",
+    "comparisonMissing": "Aquesta simulació no compara el total amb el del mes anterior.",
+    "secondTitle": "Segona confirmació",
+    "secondBody": "El total d'aquest mes canvia un {differencePercent} respecte del mes anterior ({previousMonth}). El club demana una segona confirmació quan la diferència passa del {thresholdPercent}. Vols generar els rebuts igualment?",
+    "secondBodyNone": "No hi ha cap total del mes anterior per comparar-hi el d'aquest mes. Vols generar els rebuts igualment?",
+    "secondBodyMissing": "Aquesta simulació no compara el total amb el del mes anterior. Vols generar els rebuts igualment?",
+    "secondConfirm": "Sí, genera els rebuts"
   },
   "simulation": {
     "incidentsTitle": "Pas 1 — Simulació: incidències primer",
@@ -194,6 +219,7 @@
     "payTitle": "Marca cobrat",
     "failTitle": "Marca impagat",
     "failAt": "Data de l'impagat",
+    "presentAgain": "Torna'l a presentar a la propera remesa",
     "retryTitle": "Reintenta amb targeta",
     "retryBody": "Es tornaran a cobrar {total} a la targeta ···· {last4}.",
     "refundTitle": "Reemborsa",
@@ -269,8 +295,12 @@
     "emptyDescription": "Encara no s'ha generat cap remesa.",
     "download": "Descarrega l'XML",
     "downloadExcel": "Excel de la remesa",
+    "cancelledFile": "Anul·lada — no la pugis al banc",
+    "downloadCancelled": "Descarrega l'XML (anul·lada, no la pugis al banc)",
+    "downloadExcelCancelled": "Excel de la remesa (anul·lada, no la pugis al banc)",
     "downloading": "Descarregant…",
     "markSubmitted": "Marca com a enviada al banc",
+    "undoSubmission": "Desfés «enviada al banc»",
     "open": "Obre la remesa: {month}",
     "drawerTitle": "Remesa · {month}",
     "close": "Tanca la remesa",
@@ -286,7 +316,29 @@
     "creditorId": "Identificador de creditor",
     "creditorIban": "Compte del creditor",
     "creditorBic": "BIC",
-    "submitted": "Remesa marcada com a enviada al banc."
+    "submitted": "Remesa marcada com a enviada al banc.",
+    "submissionUndone": "La remesa torna a estar generada: ja no consta com a enviada al banc."
+  },
+  "stripeEvents": {
+    "title": "Esdeveniments Stripe fallits",
+    "caption": "Esdeveniments de Stripe que no s'han pogut processar",
+    "help": "Esdeveniments que Stripe ha enviat i que no s'han pogut processar. Es tornen a provar sols durant unes 24 hores; un esdeveniment aturat es torna a processar reenviant-lo des del tauler de Stripe.",
+    "columns": {
+      "id": "Esdeveniment",
+      "type": "Tipus",
+      "receivedAt": "Rebut el",
+      "attempts": "Intents",
+      "state": "Estat"
+    },
+    "retrying": "es tornarà a provar el {date}",
+    "stopped": "aturat el {date}",
+    "copy": "Copia",
+    "copied": "Copiat",
+    "copyId": "Copia l'identificador {id}",
+    "copiedId": "Copiat l'identificador {id}",
+    "emptyTitle": "Cap esdeveniment fallit",
+    "emptyDescription": "Tots els esdeveniments de Stripe s'han processat.",
+    "loadError": "No s'han pogut carregar els esdeveniments de Stripe."
   },
   "errors": {
     "loadRun": "No s'ha pogut actualitzar l'estat dels cobraments.",
@@ -306,7 +358,12 @@
     "trace": "Referència de l'error: {traceId}",
     "chargingSlow": "Els cobraments amb targeta encara s'estan processant.",
     "dateAfterToday": "La data no pot ser posterior a avui.",
-    "submittedAtRange": "La data ha de ser entre el {earliest} i avui."
+    "submittedAtRange": "La data ha de ser entre el {earliest} i avui.",
+    "undoCollectionDatePassed": "Ja ha arribat la data de cobrament de la remesa: ja no es pot desfer.",
+    "undoInvoiceChanged": "{count, plural, one {Un rebut de la remesa ja ha canviat (impagat, cobrat o anul·lat): la remesa ja no es pot desfer.} other {# rebuts de la remesa ja han canviat (impagats, cobrats o anul·lats): la remesa ja no es pot desfer.}}",
+    "reasonRequired": "Escriu el motiu (fins a 500 caràcters).",
+    "returnsOtherRemittance": "Algun dels rebuts triats no és d'aquesta remesa: no se n'ha marcat cap.",
+    "presentAgainPeriodicOnly": "Només els rebuts periòdics es poden tornar a presentar a la propera remesa."
   },
   "toasts": {
     "simulated": "Mes simulat.",
@@ -316,6 +373,7 @@
     "chargesSkipped": "{count, plural, one {# rebut omès} other {# rebuts omesos}}: {reasons}",
     "charging": "Cobrant les targetes…",
     "markedPaid": "{count, plural, one {# rebut marcat com a cobrat} other {# rebuts marcats com a cobrats}}",
+    "markedFailed": "{count, plural, one {# rebut marcat com a impagat} other {# rebuts marcats com a impagats}}",
     "dismiss": "Tanca l'avís"
   },
   "concepts": {

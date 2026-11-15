@@ -1,0 +1,20 @@
+.recent-login {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.recent-login p {
+  margin: 0;
+}
+
+.recent-login__description {
+  color: var(--ah-color-text-muted);
+  line-height: 1.5;
+}
+
+.recent-login__actions {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+  gap: var(--ah-space-3);
+}

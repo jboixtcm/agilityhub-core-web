@@ -549,6 +549,8 @@ test("E11-W08 · the platform account signs in to the console on the product hos
         "urn:agilityhub:grant:magic-link",
   );
   await linkPage.goto(`${productUrl}${link?.pathname ?? ""}${link?.search ?? ""}`);
+  // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+  await linkPage.getByRole("button", { name: "ENTRA", exact: true }).click();
   expect((await exchanged).status()).toBe(200);
   await linkPage.waitForURL(`${productUrl}/consola/clubs`);
   await expect(linkPage.getByRole("heading", { level: 1, name: "Consola de clubs" })).toBeVisible();

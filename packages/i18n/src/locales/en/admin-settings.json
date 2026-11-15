@@ -114,6 +114,8 @@
     "reviewPaymentDay": "If you change this value, also review the signup payment-day text.",
     "removeHoliday": "Remove holiday {index}",
     "reset": "Restore product default",
+    "resetChange": "Current value: {current} → product default: {productValue}",
+    "resetConfirm": "This setting will go back to the product default. It applies from now on.",
     "time": "Time"
   },
   "enum": {
@@ -383,6 +385,10 @@
           "help": "Schema used for the SEPA collection file.",
           "label": "SEPA schema"
         },
+        "settlementBusinessDays": {
+          "help": "Bank business days (TARGET) after the collection date before the receipts of a sent remittance count as paid, unless they were marked unpaid; with 0, on the collection date itself.",
+          "label": "Margin before a remittance counts as collected"
+        },
         "useFrst": {
           "help": "Uses the first-payment sequence before recurring collections.",
           "label": "SEPA first-payment sequence"
@@ -411,6 +417,10 @@
       "upfrontCutoffDay": {
         "help": "Deadline for requesting a registration for the following month.",
         "label": "Following-month registration deadline"
+      },
+      "totalDifferenceConfirmPercent": {
+        "help": "If the month's total changes by more than this percentage from the previous month, generating the receipts asks for a second confirmation; with 0, any difference does.",
+        "label": "Difference that asks for a second confirmation"
       }
     },
     "bookings": {
@@ -723,6 +733,14 @@
           "help": "Monthly SMS safety limit.",
           "label": "Monthly SMS limit"
         },
+        "quietHoursEnd": {
+          "help": "Time (club time) at which the SMS that were waiting are sent.",
+          "label": "End of the no-SMS hours"
+        },
+        "quietHoursStart": {
+          "help": "From this time (club time) non-urgent SMS wait until the end of the window; a seat offer with a deadline does not wait. Set it equal to the end for no window.",
+          "label": "Start of the no-SMS hours"
+        },
         "senderId": {
           "help": "Identifier shown as the SMS sender.",
           "label": "SMS sender"
@@ -931,6 +949,12 @@
       "classReminders": "{count, plural, one {# class reminder} other {# class reminders}}",
       "trainingReminders": "{count, plural, one {# training reminder} other {# training reminders}}",
       "WOULD_REMIND": "{count, plural, one {# planned reminder} other {# planned reminders}}",
+      "WOULD_ERASE_RETENTION": "{count, plural, one {# former member to erase} other {# former members to erase}}",
+      "WOULD_ERASE_REJECTED_SIGNUP": "{count, plural, one {# rejected sign-up to erase} other {# rejected sign-ups to erase}}",
+      "WOULD_PURGE_AUDIT_ENTRIES": "{count, plural, one {# audit entry to delete} other {# audit entries to delete}}",
+      "WOULD_DELETE_REMITTANCE_FILE": "{count, plural, one {# remittance file to delete} other {# remittance files to delete}}",
+      "WOULD_EXPIRE_EXPORT": "{count, plural, one {# expired export to delete} other {# expired exports to delete}}",
+      "WOULD_PURGE_ERASED_TRACES": "{count, plural, one {# trace of erased members to delete} other {# traces of erased members to delete}}",
       "opened": "{count, plural, one {# week opened} other {# weeks opened}}",
       "swept": "{count, plural, one {# waiting entry closed} other {# waiting entries closed}}",
       "finished": "{count, plural, one {# class closed} other {# classes closed}}",
@@ -959,6 +983,7 @@
     "disableConfirm": "The effects of this process will stop applying until you turn it on again.",
     "runTitle": "Run «{name}» now",
     "runConfirm": "The process will run now, even if it is turned off, and the audit log will record it.",
+    "confirmPlan": "The simulation just made plans:",
     "cancel": "Cancel",
     "dryRunTitle": "Simulation: what it would do now · {name}",
     "dryRunNote": "Simulation: no change has been applied.",

@@ -287,7 +287,8 @@
       "leave": "Leave (with date)",
       "resend": "Send welcome email",
       "unblock": "Unblock bookings",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "changeLogin": "Change login email"
     },
     "activeSince": "active since {year}",
     "billingMode": {
@@ -318,7 +319,8 @@
       "preferences": "Notification preferences were saved.",
       "roles": "Access roles were updated.",
       "saved": "The member details were saved.",
-      "unblocked": "Bookings were unblocked."
+      "unblocked": "Bookings were unblocked.",
+      "loginEmailSent": "Confirmation link requested for {email}. The login email will change when the member opens it."
     },
     "fields": {
       "address": "Address",
@@ -349,7 +351,8 @@
       "remarks": "Visible remarks",
       "roles": "Access roles",
       "street": "Street and number",
-      "monthlyAmount": "Monthly amount"
+      "monthlyAmount": "Monthly amount",
+      "login": "Login email"
     },
     "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} OTHER {Does not authorise use of their image: do not publish photos showing them.} other {Does not authorise use of his image: do not publish photos showing him.}}",
     "readmissionPending": "This member has a pending readmission: validate or reject it from the dashboard before changing the record.",
@@ -396,6 +399,25 @@
         "date": "Next invoice date",
         "range": "Choose a date between {from} and {to}.",
         "notBefore": "The date cannot be before {date}."
+      },
+      "refund": {
+        "action": "Refund",
+        "actionFor": "Refund {concept} ({amount})",
+        "title": "Refund a card payment",
+        "summary": "{concept}: paid by card {paid}; left to refund {left}.",
+        "amount": "Amount to refund",
+        "amountHelp": "Leave it blank to refund everything that is left ({left}).",
+        "amountInvalid": "Enter a positive amount no greater than {left}.",
+        "reasonRequired": "Enter the reason for the refund.",
+        "continue": "Continue",
+        "confirmTitle": "Confirm the refund",
+        "confirmBody": "{amount} will be refunded to {member} for the payment «{concept}». Stripe returns it to the card it was paid with, and it cannot be undone.",
+        "confirmReason": "Reason: {reason}",
+        "confirm": "Refund {amount}",
+        "back": "Back",
+        "requested": "Refund of {amount} requested: it will be confirmed once Stripe processes it.",
+        "stale": "This payment has changed and can no longer be refunded this way. The list has been read again.",
+        "line": "Refund of {amount} on {date}: {reason}"
       }
     },
     "language": "language: {locale}",
@@ -406,7 +428,7 @@
       "adminOnly": "admin only",
       "holder": "Account holder",
       "iban": "New IBAN",
-      "ibanHelp": "The full number is hidden and is not shown again.",
+      "ibanHelp": "You can see it while you type it. Once saved, it is hidden and never shown again.",
       "sepa": "Direct debit",
       "title": "Payment method"
     },
@@ -459,6 +481,7 @@
           "upfrontOpen": "There are open upfront payments.",
           "futureBookings": "There are active future bookings.",
           "otherMembershipsActive": "The account has another active membership.",
+          "sepaRefundWindow": "A SEPA direct debit can still be refunded (8 weeks): the erasure will run once that period closes.",
           "other": "Erasure is blocked."
         }
       }
@@ -508,7 +531,16 @@
     "reactivate": "Reactivate member",
     "leftSince": "Left on {date}",
     "joinedOn": "(joined: {date})",
-    "left": "Left"
+    "left": "Left",
+    "login": {
+      "bounced": "bounce",
+      "complained": "complaint",
+      "bouncedHelp": "This address bounces or does not exist: sign-in links, password recovery and the welcome email do not reach it.",
+      "complainedHelp": "A club email was marked as spam from this address: sign-in links, password recovery and the welcome email do not reach it.",
+      "accessEmailFailed": "delivery failed",
+      "accessEmailFailedHelp": "The last sign-in email was not delivered ({date}), not even on a second attempt."
+    },
+    "rateLimited": "Too many emails in a row. Try again in {minutes, plural, one {# minute} other {# minutes}}."
   },
   "roles": {
     "admin": "administrator",
@@ -630,7 +662,7 @@
     "familyDecisionRequired": "Choose the holder's group or «No group».",
     "resolved": "This signup has already been resolved",
     "resolvedLink": "Open the member record",
-    "refundWarning": "A payment has been collected: it must be refunded from Billing",
+    "refundWarning": "A payment has been collected: it must be refunded. If it was paid by card, refund it from the member's record, under «Upfront payments».",
     "invoiceInvalid": "The next invoice date is not valid.",
     "gender": {
       "FEMALE": "Female",
@@ -789,5 +821,17 @@
     "dissolveConfirm": "Each member will return to their own billing and dogs. Dissolve the group?",
     "helpWithoutBilling": "Group two or more members and choose one responsible member. All members can manage the group’s dogs.",
     "dissolveConfirmWithoutBilling": "Each member will only be able to manage their own dogs again. Dissolve the group?"
+  },
+  "loginEmail": {
+    "current": "Current address",
+    "new": "New address",
+    "help": "We will send a confirmation link there. The login email changes when the member opens it; no notice is sent to the current address.",
+    "submit": "Send confirmation link",
+    "change": "Current address: {current} → new address: {next}",
+    "confirmDescription": "A link will be sent to {next}. Until the member opens it, the login email does not change.",
+    "send": "Send link",
+    "unchanged": "This is already the current login email.",
+    "invalid": "Enter a valid email address.",
+    "forbidden": "This account is also used outside the club: its login email cannot be changed from here."
   }
 }

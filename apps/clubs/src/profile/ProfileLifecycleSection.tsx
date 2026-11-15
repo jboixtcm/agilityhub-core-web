@@ -98,9 +98,9 @@ export function ProfileLifecycleSection({
     latestInvoice?.status === "FAILED" && latestInvoice.paymentMethod.type === "CARD"
       ? latestInvoice
       : undefined;
+  // PAY-09 (S12 R-12-22): the card setup is offered only to a member who pays by card now.
   const invalidCard =
-    failedCard !== undefined ||
-    (paymentMethod?.type === "CARD" && paymentMethod.invalid === true);
+    paymentMethod?.type === "CARD" && (failedCard !== undefined || paymentMethod.invalid === true);
 
   return (
     <>

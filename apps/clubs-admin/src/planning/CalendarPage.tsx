@@ -62,6 +62,7 @@ import {
 } from "./calendar-shared";
 import { CancelClassModal, type CancellationReason, type ClassHeading } from "./CancelClassModal";
 import { CreateClassDrawer } from "./CreateClassDrawer";
+import { RestoreClassModal } from "./RestoreClassModal";
 import { RingBlockDrawer, type RingBlockDrawerMode } from "./RingBlockDrawer";
 import { SELECTED_CARD_ID, SelectedClassCard } from "./SelectedClassCard";
 import {
@@ -271,6 +272,8 @@ export function CalendarPage({
   // refusal included; closing the dialog drops its keys (CONVENCIONS_API §7, E74, E85).
   const cancellationKeys = useSubmissionKeys();
   const cancellationFlows = useRef(0);
+  /** SCH-01: the cancelled class whose restoration is being confirmed. */
+  const [restoring, setRestoring] = useState<ClassSession>();
   const [createOpen, setCreateOpen] = useState(false);
   const [blockDrawer, setBlockDrawer] = useState<RingBlockDrawerMode>();
 
@@ -508,6 +511,28 @@ export function CalendarPage({
     });
     cancellationKeys.drop(flow);
     setCancellation(undefined);
+    reloadAll();
+  };
+
+  // SCH-01: no `Idempotency-Key` (the route is idempotent by state). The class comes back ACTIVE,
+  // so it is shown selected under «Actives», as a created class is.
+  const confirmRestoration = async () => {
+    if (restoring === undefined) return;
+    const session = restoring;
+    try {
+      await client.POST("/class-sessions/{id}/restoration", {
+        body: {},
+        params: { path: { id: session.id } },
+      });
+    } catch (error) {
+      if (errorCode(error) === "INVALID_STATE") calendar.reload();
+      throw error;
+    }
+    setRestoring(undefined);
+    setFeedback({ message: t("admin-scheduling:calendar.restored"), tone: "success" });
+    setFilter("actives");
+    setMonday(mondayOf(session.date));
+    setSelectedId(session.id);
     reloadAll();
   };
 
@@ -888,6 +913,13 @@ export function CalendarPage({
             onRegistrantsChanged={() => {
               void calendar.refetch();
             }}
+            {...(readOnly
+              ? {}
+              : {
+                  onRestore: () => {
+                    setRestoring(selected);
+                  },
+                })}
             onSaved={() => {
               setFeedback({ message: t("admin-scheduling:calendar.saved"), tone: "success" });
               weeks.reload();
@@ -1027,6 +1059,15 @@ export function CalendarPage({
           onConfirm={confirmCancellation}
           preview={cancellation.preview}
           reason={cancellation.reason}
+        />
+      )}
+      {readOnly || restoring === undefined ? null : (
+        <RestoreClassModal
+          heading={headingOf(restoring)}
+          onClose={() => {
+            setRestoring(undefined);
+          }}
+          onConfirm={confirmRestoration}
         />
       )}
       {readOnly || !createOpen || cat === undefined || openingHours.data === undefined ? null : (

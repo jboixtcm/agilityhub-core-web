@@ -368,6 +368,35 @@ describe("T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15)", () => {
     expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
   });
 
+  it("WEB-05: a row of the attendance list shows the photo's thumbnail, and the photo of a row without one", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/attendance", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        const sheet = (await original?.json()) as components["schemas"]["AttendanceSheet"];
+        return HttpResponse.json({
+          ...sheet,
+          rows: sheet.rows.map((row) => ({
+            ...row,
+            dogPhotoThumbnailUrl: row.dogName === "Duna" ? thumbnailUrl : null,
+            dogPhotoUrl: photoUrl,
+          })),
+        });
+      }),
+    );
+    await renderAgenda();
+    await openSelectedClass();
+    expect(screen.getByRole("link", { name: "Laura + Duna" }).querySelector("img")).toHaveAttribute(
+      "src",
+      thumbnailUrl,
+    );
+    expect((await panelRow("Pau + Blat")).querySelector(".ah-dog-photo img")).toHaveAttribute(
+      "src",
+      photoUrl,
+    );
+  });
+
   it("the badge cycles «— → present → avisat → no presentat → —» and stops on a final row; [DESA LA LLISTA] sends only the changed rows with the current version and a new key", async () => {
     const requests = recordRequests();
     await renderAgenda();

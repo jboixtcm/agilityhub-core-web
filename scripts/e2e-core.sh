@@ -111,8 +111,19 @@ if [[ "$anchors_only" == true ]]; then
   exit 0
 fi
 
-# Review a specific local image without retagging or replacing the historical default.
-export CORE_IMAGE="${CORE_IMAGE:-ghcr.io/jboixtcm/agilityhub-core-api:main}"
+# REL-08 (pre-production audit): the run names its core image. `:main` lags the api's commits
+# (INC-88), so there is no default and a moving tag is refused: pass the paired api commit's
+# published image (`CORE_IMAGE=ghcr.io/jboixtcm/agilityhub-core-api:sha-<commit>`) or a local
+# image under review (its id or a tag of your own).
+if [[ -z "${CORE_IMAGE:-}" ]]; then
+  echo "e2e-core: set CORE_IMAGE to the api commit's image, e.g. ghcr.io/jboixtcm/agilityhub-core-api:sha-<commit>" >&2
+  exit 2
+fi
+if [[ "$CORE_IMAGE" =~ :(main|latest)$ ]]; then
+  echo "e2e-core: $CORE_IMAGE is a moving tag; name the api commit's sha-<commit> image instead" >&2
+  exit 2
+fi
+export CORE_IMAGE
 core_image="$CORE_IMAGE"
 if ! docker image inspect "$core_image" >/dev/null 2>&1; then
   echo "The published core image is not available locally: $core_image" >&2

@@ -104,10 +104,7 @@ describe("T-12-26 member receipts", () => {
       if (request.method === "POST") posted.push(new URL(request.url).pathname);
     });
     await renderE8(
-      <InvoicesPage
-        client={client}
-        paymentMethod={{ invalid: true, type: "CARD" }}
-      />,
+      <InvoicesPage client={client} paymentMethod={{ invalid: true, type: "CARD" }} />,
       { scenario: "memberCardInvalid" },
     );
     expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
@@ -198,7 +195,10 @@ describe("T-12-26 member receipts", () => {
     server.use(
       http.get("*/api/v1/me/invoices", () =>
         HttpResponse.json({
-          items: [receipt("latest-paid", "2026-09", "PAID"), receipt("older-failed", "2026-08", "FAILED")],
+          items: [
+            receipt("latest-paid", "2026-09", "PAID"),
+            receipt("older-failed", "2026-08", "FAILED"),
+          ],
           page: 0,
           size: 20,
           totalItems: 2,
@@ -317,5 +317,111 @@ describe("T-12-26 member receipts", () => {
     await screen.findByRole("link", { name: /Agost 2026/u });
     expect(document.querySelectorAll('a[href="/rebuts/receipt-a"]')).toHaveLength(1);
     expect(document.querySelectorAll('a[href="/rebuts/receipt-b"]')).toHaveLength(1);
+  });
+
+  describe("PAY-09 (decision of 13 Nov 2026): only a member who pays by card sees the card setup", () => {
+    /** The latest receipt failed by card (the method frozen on the receipt), then the member moved. */
+    function failedCardReceipt() {
+      server.use(
+        http.get("*/api/v1/me/invoices", () =>
+          HttpResponse.json({
+            items: [
+              {
+                displayNumber: "2026-0907",
+                familyGroup: false,
+                id: "receipt-card-failed",
+                issueDate: "2026-09-01",
+                lines: [
+                  {
+                    description: "Quota 2026-09",
+                    origin: "MONTHLY_FEE",
+                    total: { amountMinor: 6000, currency: "EUR" },
+                  },
+                ],
+                paidAt: null,
+                paymentMethod: {
+                  channel: null,
+                  holderName: "Laura Serra Vidal",
+                  last4: "4242",
+                  mandateRef: null,
+                  maskedAccount: "···· 4242",
+                  type: "CARD",
+                },
+                period: "2026-09",
+                refundedTotal: { amountMinor: 0, currency: "EUR" },
+                status: "FAILED",
+                total: { amountMinor: 6000, currency: "EUR" },
+              },
+            ],
+            page: 0,
+            size: 20,
+            totalItems: 1,
+            totalPages: 1,
+          }),
+        ),
+      );
+    }
+
+    it.each([
+      ["SEPA_DD", { type: "SEPA_DD" as const }],
+      ["MANUAL", { type: "MANUAL" as const }],
+    ])(
+      "a %s member whose last card receipt failed sees no banner on receipts nor profile",
+      async (_type, paymentMethod) => {
+        failedCardReceipt();
+        const receipts = await renderE8(
+          <InvoicesPage client={e8Client()} paymentMethod={paymentMethod} />,
+        );
+        await screen.findByRole("link", { name: /Setembre 2026/u });
+        expect(
+          screen.queryByRole("button", { name: "Actualitza la targeta" }),
+        ).not.toBeInTheDocument();
+        receipts.unmount();
+        await renderE8(
+          <ProfileLifecycleSection
+            client={e8Client()}
+            logoutDisabled={false}
+            onLogout={() => undefined}
+            paymentMethod={paymentMethod}
+          />,
+        );
+        await screen.findByRole("link", { name: "Rebuts" });
+        expect(
+          screen.queryByRole("button", { name: "Actualitza la targeta" }),
+        ).not.toBeInTheDocument();
+      },
+    );
+
+    it("a member with no known method sees no banner either; a card payer with that receipt does", async () => {
+      failedCardReceipt();
+      const receipts = await renderE8(<InvoicesPage client={e8Client()} />);
+      await screen.findByRole("link", { name: /Setembre 2026/u });
+      expect(
+        screen.queryByRole("button", { name: "Actualitza la targeta" }),
+      ).not.toBeInTheDocument();
+      receipts.unmount();
+      await renderE8(<InvoicesPage client={e8Client()} paymentMethod={{ type: "CARD" }} />);
+      expect(
+        await screen.findByText("No hem pogut cobrar el rebut de Setembre 2026"),
+      ).toBeVisible();
+      expect(screen.getByRole("button", { name: "Actualitza la targeta" })).toBeVisible();
+    });
+
+    it("a 409 INVALID_STATE from POST /me/card-setup shows the existing error toast", async () => {
+      server.use(
+        http.post("*/api/v1/me/card-setup", () =>
+          HttpResponse.json(
+            { code: "INVALID_STATE", details: {}, message: "INVALID_STATE", traceId: "pay-09" },
+            { status: 409 },
+          ),
+        ),
+      );
+      await renderE8(
+        <InvoicesPage client={e8Client()} paymentMethod={{ invalid: true, type: "CARD" }} />,
+        { scenario: "memberCardInvalid" },
+      );
+      fireEvent.click(await screen.findByRole("button", { name: "Actualitza la targeta" }));
+      expect(await screen.findByText("Ara mateix no es pot actualitzar la targeta.")).toBeVisible();
+    });
   });
 });

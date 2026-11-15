@@ -585,6 +585,7 @@ select {
 }
 
 .profile-notices__row {
+  min-height: 2rem;
   font-size: 0.8125rem;
 }
 
@@ -606,7 +607,25 @@ select {
 }
 
 .profile-notices__switch {
+  position: relative;
   justify-self: center;
+}
+
+/*
+ * WEB-11: each switch of 12 (36 × 20 px) takes taps on a 44 × 44 px area. Its rows are at least
+ * 2rem tall and 0.75rem apart (0.5rem in the push block), so the 0.375rem the area reaches beyond
+ * a row never meets the next row's area or control.
+ */
+.profile-notices__switch::before {
+  position: absolute;
+  inset: -0.75rem -0.25rem;
+  content: "";
+}
+
+/* WEB-02: an iPhone outside the installed app sees the push switch inert (as `.ah-button`). */
+.profile-notices__switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .profile-notices__reminder,
@@ -618,12 +637,21 @@ select {
   font-size: 0.8125rem;
 }
 
+.profile-notices__mobile-row {
+  min-height: 2rem;
+}
+
 .profile-notices__reminder .ah-select {
   width: auto;
   min-height: 2rem;
   padding-block: var(--ah-space-1);
   color: var(--ah-color-text-muted);
   font-size: 0.75rem;
+}
+
+/* WEB-03: how the reminder arrives, right under its selector. */
+.profile-notices__reminder-channel {
+  margin-top: calc(var(--ah-space-2) * -1);
 }
 
 .profile-notices__mobile {
@@ -968,6 +996,7 @@ div.lifecycle-error p {
 }
 
 .self-page__header a {
+  position: relative;
   display: grid;
   min-width: 2rem;
   min-height: 2rem;
@@ -976,6 +1005,13 @@ div.lifecycle-error p {
   line-height: 1;
   text-decoration: none;
   place-items: center;
+}
+
+/* WEB-11: a 44 px hit area (2rem + 2 × 0.375rem) around the back arrow; it looks the same. */
+.self-page__header a::before {
+  position: absolute;
+  inset: -0.375rem;
+  content: "";
 }
 
 .self-page__header h1 {

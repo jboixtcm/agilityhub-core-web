@@ -154,6 +154,9 @@ const memberOverviewFixture: MemberOverview = {
     joinedAt: "2023-02-03T09:00:00Z",
     lastName1: "Serra",
     lastName2: "Vidal",
+    // S03 R-03-06b (AUTH-02, AUTH-03): the account's login e-mail, without a suppression mark nor
+    // a failed access e-mail.
+    login: { accessEmailFailedAt: null, email: "laura.serra@example.test", emailStatus: null },
     memberNumber: 87,
     nextInvoiceDate: "2026-09-01",
     paymentMethod: {
@@ -398,6 +401,8 @@ export function erasedMemberOverview(): MemberOverview {
       lastName1: "#64",
       lastName2: null,
       leaveDate: "2026-07-31",
+      // S03 R-03-06b: no login e-mail after erasure.
+      login: null,
       maskedAccount: null,
       memberNumber: 64,
       nextInvoiceDate: null,

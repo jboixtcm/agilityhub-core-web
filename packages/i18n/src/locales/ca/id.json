@@ -38,6 +38,8 @@
   "magic": {
     "title": "Comprovem l'enllaç",
     "description": "Estem iniciant la sessió i preparant el teu compte.",
+    "confirmTitle": "Entra amb l'enllaç del correu",
+    "confirmDescription": "Prem el botó per entrar al teu compte amb aquest enllaç.",
     "validating": "Validant l'enllaç…",
     "invalidTitle": "Aquest enllaç ja no és vàlid",
     "invalidDescription": "Demana un altre enllaç per tornar a entrar.",
@@ -99,6 +101,11 @@
     "title": "Pàgina no trobada",
     "description": "L'adreça que has obert no correspon a cap pàgina.",
     "back": "TORNA A L'INICI"
+  },
+  "privacy": {
+    "title": "Política de privacitat",
+    "version": "Versió {version}",
+    "versionAndDate": "Versió {version} · En vigor des del {date}"
   },
   "errors": {
     "generic": "No s'ha pogut completar l'acció. Torna-ho a provar."

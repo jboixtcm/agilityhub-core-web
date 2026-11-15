@@ -301,6 +301,24 @@
   gap: var(--ah-space-2);
 }
 
+/* PAY-02: the failed Stripe events (`/facturacio/esdeveniments-stripe`). */
+.billing-stripe-events__help {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+}
+
+.billing-stripe-event {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.billing-stripe-event code {
+  overflow-wrap: anywhere;
+}
+
 /* The confirmations and the receipt drawer. */
 .billing-modal__body,
 .billing-modal__footnote {
@@ -310,6 +328,16 @@
 .billing-modal__footnote {
   color: var(--ah-color-text-muted);
   font-size: 0.8rem;
+}
+
+/* SEPA-10: the comparison with the previous month and the second confirmation's heading. */
+.billing-modal__comparison {
+  color: var(--ah-color-text-muted);
+}
+
+.billing-modal__step {
+  margin: 0 0 var(--ah-space-2);
+  font-size: 1rem;
 }
 
 .billing-modal__list {

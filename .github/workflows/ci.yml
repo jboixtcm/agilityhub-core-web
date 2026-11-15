@@ -9,9 +9,11 @@ on:
 permissions:
   contents: read
 
+# REL-03: only a pull request's older run is cancelled; every push to main keeps its own group,
+# so each deployed commit has a completed run (as the api's CI does).
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   checks:
@@ -35,8 +37,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # FE-08: the production dependency audit, as a report only: it never fails the run. The
+      # accepted advisories, and why: audit-accepted-advisories.json; any other is a warning.
+      - name: Audit production dependencies (report only)
+        continue-on-error: true
+        run: node scripts/audit-report.mjs
+
       - name: Lint, typecheck, test, and build
         run: pnpm turbo run lint typecheck test build --concurrency=2
+
+      # FE-05: the three production builds above carry no mock world (MSW, its fixtures).
+      - name: Check production bundles for mock data
+        run: node scripts/check-production-bundles.mjs
+
+      # CFG-04: each production bundle carries the Content-Security-Policy of its own index.html;
+      # CFG-05: and a robots.txt that disallows every path; REL-02: and its version.json.
+      - name: Check the files every production bundle carries
+        run: node scripts/check-bundle-files.mjs
 
       # E11-W03: the real-core specs are no workspace package, so turbo never typechecked them.
       - name: Typecheck the real-core specs
@@ -70,3 +87,48 @@ jobs:
           path: roadmap/evidence/**/*.png
           if-no-files-found: error
           retention-days: 14
+
+  # REL-03: the production bundles that are deployed. Built only on a push to main and only after
+  # every check above passed, from the release configuration committed in release/
+  # (scripts/build-release-bundles.mjs), and published as this run's artifact: a deploy takes the
+  # three dist folders from here, never from another build (docs/DEPLOYMENT.md). The upload is the
+  # last step, so a run that has the artifact is a green run.
+  release:
+    name: Production bundles
+    needs: checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Enable pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the production bundles
+        run: node scripts/build-release-bundles.mjs
+
+      - name: Read the web version
+        id: web
+        run: echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the production bundles
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-bundles-${{ steps.web.outputs.version }}-${{ github.sha }}
+          path: |
+            apps/clubs/dist
+            apps/clubs-admin/dist
+            apps/id/dist
+          if-no-files-found: error
+          retention-days: 90

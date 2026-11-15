@@ -293,6 +293,11 @@
       "configuredSummary": "configurada",
       "last4": "clave pública …{last4}",
       "lastTest": "última prueba OK {at}",
+      "liveToTest": {
+        "body": "Este club tiene claves live guardadas. Pasar a modo test hace que los pagos sean de prueba.",
+        "confirm": "Pasar a modo test",
+        "title": "Pasar a modo test"
+      },
       "mode": "Modo",
       "modes": {
         "live": "live",

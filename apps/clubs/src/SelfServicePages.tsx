@@ -15,6 +15,7 @@ import {
   Icon,
   Input,
   Modal,
+  resizeDogPhoto,
   Select,
   Skeleton,
   Textarea,
@@ -199,7 +200,8 @@ function DogPhoto({
     }
     setWorking(true);
     try {
-      const fileKey = await uploadFile(client, file, "DOG_PHOTO");
+      // WEB-05: reduced in the browser first (longest side 1600 px).
+      const fileKey = await uploadFile(client, await resizeDogPhoto(file), "DOG_PHOTO");
       const result = await client.PUT("/me/dogs/{id}/photo", {
         body: { fileKey },
         params: { path: { id: dog.id } },

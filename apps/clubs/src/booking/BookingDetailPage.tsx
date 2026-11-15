@@ -11,12 +11,14 @@ import {
   Skeleton,
   type Tone,
 } from "@agilityhub/ui";
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BookingCourseLines } from "../courses/blocks";
+import { useWindowFocus } from "../training/shared";
 
 import "./booking.css";
+import { memberNoticeField, NotifyMemberChoice, useMemberNoticeChoice } from "./NotifyMemberChoice";
 import { type Booking, errorText, localParts, type Translate, useBooking } from "./shared";
 
 type DisplayState = NonNullable<Booking["displayState"]>;
@@ -90,9 +92,37 @@ export function BookingDetailPage({
   const [dialog, setDialog] = useState<{ late: boolean }>();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  // COMM-03: an ADMIN acting as the member may cancel without notifying them (N-36).
+  const noticeChoice = useMemberNoticeChoice();
+  const [notify, setNotify] = useState(true);
   // The answer of this page's own cancellation: only it says «dins el termini» or «tard» (step 6).
   // A booking cancelled elsewhere (a swap, the system, an old one) shows just its state chip.
   const [cancelled, setCancelled] = useState<{ late: boolean }>();
+  // WEB-09 (R-08-10): a dialog opened in time and still open when `cancellableInTimeUntil` passes
+  // warns before the member confirms.
+  const inTimeUntil =
+    booking.status === "ready" ? Date.parse(booking.data.cancellableInTimeUntil) : Number.NaN;
+  const openInTime = dialog?.late === false;
+  useEffect(() => {
+    if (!openInTime || !Number.isFinite(inTimeUntil)) return undefined;
+    const wait = Math.max(inTimeUntil + 1 - Date.now(), 0);
+    // `setTimeout` holds at most 2^31 − 1 ms (~24.8 days); no dialog stays open that long.
+    if (wait > 2_147_483_647) return undefined;
+    const timer = window.setTimeout(() => {
+      setDialog((current) => (current === undefined ? current : { late: true }));
+    }, wait);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [inTimeUntil, openInTime]);
+  // A phone that slept with the dialog open runs that timer late: the app coming back checks too.
+  useWindowFocus(
+    useCallback(() => {
+      if (Date.now() > inTimeUntil) {
+        setDialog((current) => (current?.late === false ? { late: true } : current));
+      }
+    }, [inTimeUntil]),
+  );
 
   if (booking.status === "loading") {
     return (
@@ -175,6 +205,7 @@ export function BookingDetailPage({
 
   const open = () => {
     setError(undefined);
+    setNotify(true);
     // R-08-10: in time while now ≤ `cancellableInTimeUntil`, the instant the api computes (the
     // class start minus the threshold); after it the dialog warns first.
     setDialog({ late: Date.now() > Date.parse(data.cancellableInTimeUntil) });
@@ -185,7 +216,7 @@ export function BookingDetailPage({
     setError(undefined);
     try {
       const response = await client.POST("/bookings/{id}/cancellation", {
-        body: {},
+        body: memberNoticeField(noticeChoice, notify),
         params: { path: { id: data.id } },
       });
       const result = response.data;
@@ -253,6 +284,14 @@ export function BookingDetailPage({
           ) : (
             <p className="booking-note booking-note--neutral">{t("booking:detail.inTimeNotice")}</p>
           )}
+          {noticeChoice ? (
+            <NotifyMemberChoice
+              checked={notify}
+              disabled={pending}
+              id="booking-cancel-notify-member"
+              onChange={setNotify}
+            />
+          ) : null}
           {error === undefined ? null : (
             <p className="booking-note booking-note--danger" role="alert">
               {error}

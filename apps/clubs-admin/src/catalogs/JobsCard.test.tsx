@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { type components, createApiClient } from "@agilityhub/api-client";
 import {
   JOBS_MOCK_NOW,
   mockScenario,
@@ -1002,5 +1002,191 @@ describe("T-15-32 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers 
     expect(keys).toHaveLength(3);
     expect(keys[1]).toBe(keys[0]);
     expect(keys[2]).not.toBe(keys[1]);
+  });
+});
+
+type JobRunBody = components["schemas"]["JobRun"];
+type TriggerBody = components["schemas"]["JobTriggerRequest"];
+
+/** The retention sweep as the api lists it (S15 P9, E11-T01); the E7 mock world has no such row. */
+const RETENTION_SWEEP: components["schemas"]["JobSummary"] = {
+  enabled: true,
+  jobName: "RETENTION_SWEEP",
+  lastRun: null,
+  module: null,
+  name: "retention-sweep",
+  nextScheduledForLocal: "2026-09-01T06:00",
+  schedule: { dayOfMonth: 1, dayOfWeek: null, kind: "MONTHLY", localTime: "06:00" },
+};
+
+/** A dry run's counters as the api sends them: zeros, the one PURGE_AUDIT item and the counts. */
+const PLAN = {
+  WOULD_DELETE_REMITTANCE_FILE: 3,
+  WOULD_ERASE_RETENTION: 2,
+  WOULD_EXPIRE_EXPORT: 0,
+  WOULD_PURGE_AUDIT: 1,
+  WOULD_PURGE_AUDIT_ENTRIES: 340,
+  auditEntriesPurged: 0,
+  membersErased: 0,
+};
+
+/**
+ * `POST /jobs/retention-sweep/trigger` as the api answers it (PRIV-02, S15 R-15-09): a real run
+ * needs `confirmation {dryRunId, counters}` of a SUCCEEDED dry run with the same planned counts
+ * (the `WOULD_…` other than zero), else `409 SIMULATION_STALE {reason}` and nothing runs.
+ */
+function retentionSweepApi(options: { dryRunStatus?: JobRunBody["status"]; planChanges?: number }) {
+  const triggers: { body: TriggerBody; key: string | null }[] = [];
+  const dryRuns: JobRunBody[] = [];
+  let changes = options.planChanges ?? 0;
+  const planned = (counters: Record<string, number>) =>
+    JSON.stringify(
+      Object.entries(counters)
+        .filter(([key, value]) => key.startsWith("WOULD_") && value !== 0)
+        .sort(([left], [right]) => left.localeCompare(right)),
+    );
+  const run = (dryRun: boolean, status: JobRunBody["status"]): JobRunBody => ({
+    actorAccountId: "10000000-0000-4000-8000-000000000001",
+    dryRun,
+    effects: {
+      counters: dryRun ? PLAN : { auditEntriesPurged: 340, membersErased: 2 },
+      items: [],
+    },
+    errors: [],
+    finishedAt: "2026-08-10T06:12:01Z",
+    job: "RETENTION_SWEEP",
+    parametersSnapshot: {},
+    runId: dryRun ? `run-retention-dry-${String(dryRuns.length + 1)}` : "run-retention-real",
+    scheduledFor: "2026-08-10T06:12:00Z",
+    scheduledForLocal: "2026-08-10T08:12",
+    startedAt: "2026-08-10T06:12:00Z",
+    status,
+    timeZone: "Europe/Madrid",
+    trigger: "MANUAL",
+  });
+  const stale = (reason: string) =>
+    HttpResponse.json(
+      { code: "SIMULATION_STALE", details: { reason }, message: "Stale", traceId: "t-stale" },
+      { status: 409 },
+    );
+  server.use(
+    http.get("*/api/v1/jobs", () => HttpResponse.json({ items: [RETENTION_SWEEP] })),
+    http.post("*/api/v1/jobs/retention-sweep/trigger", async ({ request }) => {
+      const body = (await request.json()) as TriggerBody;
+      triggers.push({ body, key: request.headers.get("Idempotency-Key") });
+      if (body.dryRun) {
+        const dry = run(true, options.dryRunStatus ?? "SUCCEEDED");
+        dryRuns.push(dry);
+        return HttpResponse.json(dry);
+      }
+      const confirmation = body.confirmation ?? undefined;
+      const dry = dryRuns.find((item) => item.runId === confirmation?.dryRunId);
+      if (confirmation === undefined || dry?.status !== "SUCCEEDED") {
+        return stale("DRY_RUN_REQUIRED");
+      }
+      if (planned(confirmation.counters) !== planned(dry.effects.counters)) {
+        return stale("COUNTS_MISMATCH");
+      }
+      if (changes > 0) {
+        changes -= 1;
+        return stale("PLAN_CHANGED");
+      }
+      return HttpResponse.json(run(false, "SUCCEEDED"));
+    }),
+  );
+  return triggers;
+}
+
+describe("PRIV-02 (owner decision of 13 Nov 2026) · D11 [Executa ara] of «Retenció de dades» confirms a dry run's counts (S14 R-14-16, S15 R-15-09)", () => {
+  it("simulates first, asks with the plan's counts, and the run sends them back as its confirmation with its key", async () => {
+    const triggers = retentionSweepApi({});
+    const card = await renderCard();
+    const row = await waitForRow(card, "Retenció de dades");
+    fireEvent.click(within(row).getByRole("button", { name: "Executa ara Retenció de dades" }));
+
+    const dialog = await screen.findByRole("dialog", { name: "Executar «Retenció de dades» ara" });
+    expect(triggers.map((trigger) => trigger.body)).toEqual([{ dryRun: true }]);
+    expect(triggers[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(within(dialog).getByText("La simulació que s'acaba de fer preveu:")).toBeVisible();
+    expect(
+      within(dialog)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "3 fitxers de remesa a esborrar",
+      "2 abonats de baixa a suprimir",
+      "340 entrades d'auditoria a esborrar",
+    ]);
+    expect(dialog.textContent).not.toMatch(/WOULD_|membersErased/u);
+
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    await waitFor(() => {
+      expect(triggers).toHaveLength(2);
+    });
+    expect(triggers[1]?.body).toEqual({
+      confirmation: { counters: PLAN, dryRunId: "run-retention-dry-1" },
+      dryRun: false,
+    });
+    expect(triggers[1]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(triggers[1]?.key).not.toBe(triggers[0]?.key);
+    expect(await within(card).findByText(/^Retenció de dades: correcta/u)).toBeVisible();
+    expect(screen.queryByRole("dialog", { name: "Executar «Retenció de dades» ara" })).toBeNull();
+  });
+
+  it("a plan that changed runs nothing: the dialog says to simulate again, offers [Simula] only, and asks again with the new dry run", async () => {
+    const triggers = retentionSweepApi({ planChanges: 1 });
+    const card = await renderCard();
+    const row = await waitForRow(card, "Retenció de dades");
+    fireEvent.click(within(row).getByRole("button", { name: "Executa ara Retenció de dades" }));
+    const dialog = await screen.findByRole("dialog", { name: "Executar «Retenció de dades» ara" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "La simulació no està actualitzada. Torna-la a executar.",
+    );
+    expect(within(dialog).queryByRole("button", { name: "Executa ara" })).toBeNull();
+    expect(within(dialog).queryByRole("listitem")).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Simula" }));
+
+    expect(await within(dialog).findAllByRole("listitem")).toHaveLength(3);
+    expect(within(dialog).queryByRole("alert")).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    await waitFor(() => {
+      expect(triggers).toHaveLength(4);
+    });
+    expect(triggers.map((trigger) => [trigger.body.dryRun, trigger.body.confirmation])).toEqual([
+      [true, undefined],
+      [false, { counters: PLAN, dryRunId: "run-retention-dry-1" }],
+      [true, undefined],
+      [false, { counters: PLAN, dryRunId: "run-retention-dry-2" }],
+    ]);
+    // A new dry run is a new confirmed payload: a new key.
+    expect(triggers[3]?.key).not.toBe(triggers[1]?.key);
+    expect(await within(card).findByText(/^Retenció de dades: correcta/u)).toBeVisible();
+  });
+
+  it("a dry run that did not succeed shows as [Simula]'s and offers no run", async () => {
+    const triggers = retentionSweepApi({ dryRunStatus: "FAILED" });
+    const card = await renderCard();
+    const row = await waitForRow(card, "Retenció de dades");
+    fireEvent.click(within(row).getByRole("button", { name: "Executa ara Retenció de dades" }));
+
+    expect(
+      await screen.findByRole("dialog", { name: "Simulació: què faria ara · Retenció de dades" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("dialog", { name: "Executar «Retenció de dades» ara" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Executa ara" })).toBeNull();
+    expect(triggers.map((trigger) => trigger.body)).toEqual([{ dryRun: true }]);
+  });
+
+  it("closing the confirmation sends nothing more: only the dry run was made", async () => {
+    const triggers = retentionSweepApi({});
+    const card = await renderCard();
+    const row = await waitForRow(card, "Retenció de dades");
+    fireEvent.click(within(row).getByRole("button", { name: "Executa ara Retenció de dades" }));
+    const dialog = await screen.findByRole("dialog", { name: "Executar «Retenció de dades» ara" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(screen.queryByRole("dialog", { name: "Executar «Retenció de dades» ara" })).toBeNull();
+    expect(triggers.map((trigger) => trigger.body)).toEqual([{ dryRun: true }]);
   });
 });

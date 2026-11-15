@@ -1293,9 +1293,13 @@ function signupPaymentMethod(
 const signupReplays = new Map<string, unknown>();
 const submittedSignupIdentities = new Set<string>();
 const submittedDogChips = new Set<string>();
+// PAY-04 (S04 R-04-26): the same key replays its checkout; another key (the retry after leaving
+// Stripe) closes the open one, as the api does at the provider first, and opens a new one at once.
+const signupCheckouts = new Map<string, { checkoutSessionId: string; checkoutUrl: string }>();
 
 function resetSignupMockState(): void {
   signupReplays.clear();
+  signupCheckouts.clear();
   submittedSignupIdentities.clear();
   submittedDogChips.clear();
   signupMockToday = undefined;
@@ -1382,6 +1386,13 @@ function replaceDog(dog: DogDetail): DogDetail {
  * The e2e servers put the club app on 127.0.0.1:4173 (the back office is on :4174).
  */
 const IMPERSONATION_HANDOFF_PREFIX = "mock-impersonation-handoff-";
+/**
+ * FE-03 (pre-production audit, decision of 13 Nov 2026; S01 R-01-13): a handoff code of another
+ * account than the one whose session this host holds. The api refuses it with `409
+ * HANDOFF_SESSION_CONFLICT` (no details, the code left unused, no `Set-Cookie`) while the host's
+ * refresh cookie holds a live session; with none it is redeemed as usual.
+ */
+const OTHER_ACCOUNT_HANDOFF_PREFIX = "mock-other-account-handoff-";
 const CLUBS_APP_ORIGIN = "http://127.0.0.1:4173";
 // The browser mock world restarts on every page load: the redeemed codes and the issuing counter
 // outlive it in the origin's storage, so a code stays spent after the app's full-page navigation
@@ -1973,8 +1984,16 @@ export const handlers = [
     if (body.new !== body.repeat) {
       return apiError("PASSWORD_MISMATCH", "Passwords do not match", 400);
     }
-    if (body.new.length < 8) {
-      return apiError("PASSWORD_TOO_SHORT", "Password is too short", 400);
+    // R-01-05 (AUTH-01): a staff account (ADMIN or INSTRUCTOR of the club, or AGILITYHUB_ADMIN)
+    // needs 12 characters, a member `auth.passwordMinLength` (8); the 400 says which.
+    const { me } = currentMockScenario();
+    const minLength =
+      me.membership?.roles.some((role) => role === "ADMIN" || role === "INSTRUCTOR") === true ||
+      me.account.platformRoles.includes("AGILITYHUB_ADMIN")
+        ? 12
+        : 8;
+    if (Array.from(body.new).length < minLength) {
+      return apiErrorWithDetails("PASSWORD_TOO_SHORT", "Password is too short", 400, { minLength });
     }
     // R-01-05: `current` is required when the account has a password, except once in the
     // session of a RESET link (E49); a LOGIN link's session still sends it.
@@ -2256,13 +2275,18 @@ export const handlers = [
     if (currentMockScenario().signupStripe !== true) {
       return apiError("PAYMENT_PROVIDER_NOT_ENABLED", "Payment provider not enabled", 422);
     }
-    return HttpResponse.json(
-      {
-        checkoutSessionId: "cs_mock_signup",
-        checkoutUrl: "https://checkout.test/cs_mock_signup",
-      },
-      { status: 201 },
-    );
+    const key = request.headers.get("Idempotency-Key") ?? "";
+    const replay = signupCheckouts.get(key);
+    if (replay !== undefined) return HttpResponse.json(replay, { status: 201 });
+    const sequence = signupCheckouts.size + 1;
+    const checkoutSessionId =
+      sequence === 1 ? "cs_mock_signup" : `cs_mock_signup_${String(sequence)}`;
+    const checkout = {
+      checkoutSessionId,
+      checkoutUrl: `https://checkout.test/${checkoutSessionId}`,
+    };
+    if (key !== "") signupCheckouts.set(key, checkout);
+    return HttpResponse.json(checkout, { status: 201 });
   }),
   http.put("*/api/v1/me/dogs/:id/instructor-note", async ({ params, request }) => {
     if (!currentMockScenario().branding.modules.includes("TASKS")) {
@@ -2739,6 +2763,20 @@ export const handlers = [
       if (token === "invalid" || handoffRedeemed(token)) {
         // T-01-12: a code is redeemed once; a second use is `400 HANDOFF_INVALID`.
         return apiError("HANDOFF_INVALID", "Handoff invalid", 400);
+      }
+      // FE-03: after the code's own checks and before `PLATFORM_ONLY`, as the api answers; never
+      // for an «Entra com l'abonat» code. The host holds a session unless it never got a cookie
+      // (`signedOutUntilLogin` before the sign-in, or a non-platform account on the product host).
+      const hostHoldsSession =
+        !refusedOnProductHost &&
+        (scenario.signedOutUntilLogin !== true ||
+          mockBrowserStorage()?.getItem(MOCK_SIGNED_IN_KEY) === "1");
+      if (token.startsWith(OTHER_ACCOUNT_HANDOFF_PREFIX) && hostHoldsSession) {
+        return apiError(
+          "HANDOFF_SESSION_CONFLICT",
+          "Another account's session is on this host",
+          409,
+        );
       }
       if (refusedOnProductHost) return apiError("PLATFORM_ONLY", "Platform accounts only", 403);
       if (token.startsWith(IMPERSONATION_HANDOFF_PREFIX)) {
@@ -3391,6 +3429,31 @@ export const handlers = [
       return apiError("MEMBER_NOT_ACTIVE", "Member not active", 422);
     }
     return HttpResponse.json({ sentTo: member.contactEmails[0]?.email ?? "" }, { status: 202 });
+  }),
+  // S03 R-03-06b (AUTH-02): the link goes to the new address; nothing changes until it is used.
+  http.post("*/api/v1/members/:id/login-email", async ({ params, request }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
+    const member = censusRecordState.memberOverview.member;
+    if (String(params.id) !== member.id) {
+      return apiError("NOT_FOUND", "Member not found", 404);
+    }
+    if (member.status !== "ACTIVE" || member.accountId == null || member.login == null) {
+      return apiError("MEMBER_NOT_ACTIVE", "Member not active", 422);
+    }
+    const body = (await request.json()) as { email?: unknown };
+    const email = typeof body.email === "string" ? body.email.trim() : "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(email)) {
+      return apiErrorWithDetails("VALIDATION_ERROR", "Invalid email", 400, {
+        fieldErrors: [{ code: "EMAIL", field: "email" }],
+      });
+    }
+    if (email.toLowerCase() === member.login.email.toLowerCase()) {
+      return apiErrorWithDetails("VALIDATION_ERROR", "Unchanged email", 400, {
+        fieldErrors: [{ code: "UNCHANGED", field: "email" }],
+      });
+    }
+    return HttpResponse.json({ sentTo: email }, { status: 202 });
   }),
   http.post("*/api/v1/members/:id/impersonation-token", async ({ params, request }) => {
     // S01 R-01-09 and the snapshot: an impersonation token is 403, an erased member 409 MEMBER_ERASED.
@@ -4730,8 +4793,9 @@ export const handlers = [
     const fileName = `facturacio-${period}.${format}`;
     return format === "csv"
       ? new HttpResponse(
-          // UTF-8 with BOM and `;` (R-12-26); the rows themselves are the api's (E8-T02).
-          `\uFEFFnúmero;data;mes;número d'abonat;nom;NIF;concepte;base;% impost;impost;total;mètode;estat;data de cobrament;remesa;referència\n`,
+          // UTF-8 with BOM and `;` (R-12-26); the rows themselves are the api's (E8-T02). SEPA-09:
+          // the api's two last columns, after the sixteen original ones (18 in all).
+          `\uFEFFnúmero;data;mes;número d'abonat;nom;NIF;concepte;base;% impost;impost;total;mètode;estat;data de cobrament;remesa;referència;Estat de l’últim cobrament;Data de devolució\n`,
           {
             headers: {
               "Content-Disposition": `attachment; filename="${fileName}"`,
@@ -4778,6 +4842,8 @@ export const handlers = [
       status: "UP",
       version: "0.0.0-mock",
       builtAt: "2026-09-05T00:00:00Z",
+      // REL-02 (api): required since the adopted snapshot; a mock build records no commit.
+      commit: null,
     }),
   ),
 ];

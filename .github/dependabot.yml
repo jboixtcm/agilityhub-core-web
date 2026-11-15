@@ -4,3 +4,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+  # REL-07: the workflow actions too, as in the api repository.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

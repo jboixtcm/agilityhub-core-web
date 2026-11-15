@@ -95,4 +95,36 @@ describe("A38 (E11-W02 step 1): which clicks the members' app router takes", () 
     expect(assign).toHaveBeenCalledWith("https://checkout.example.test/session");
     expect(replace).toHaveBeenCalledWith("https://admin.example.test/tauler");
   });
+
+  it("FE-09: navigate() opens nothing but a web address", () => {
+    const assign = vi.fn();
+    const replace = vi.fn();
+    const { hash, href, origin, pathname, search } = window.location;
+    vi.spyOn(window, "location", "get").mockReturnValue({
+      assign,
+      hash,
+      href,
+      origin,
+      pathname,
+      replace,
+      search,
+    } as unknown as Location);
+    const heard = vi.fn();
+    window.addEventListener("popstate", heard);
+    for (const target of [
+      "javascript:alert(document.domain)",
+      " JavaScript:alert(1)",
+      "data:text/html,<script>alert(1)</script>",
+      "vbscript:msgbox(1)",
+      "mailto:club@example.test",
+    ]) {
+      navigate(target);
+      navigate(target, { replace: true });
+    }
+    window.removeEventListener("popstate", heard);
+    expect(assign).not.toHaveBeenCalled();
+    expect(replace).not.toHaveBeenCalled();
+    expect(heard).not.toHaveBeenCalled();
+    expect(window.location.pathname).toBe("/");
+  });
 });

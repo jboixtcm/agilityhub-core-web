@@ -6,7 +6,8 @@
     "next": "mes ›",
     "previousMonth": "Mes anterior",
     "nextMonth": "Mes siguiente",
-    "remittances": "Remesas ›"
+    "remittances": "Remesas ›",
+    "stripeEvents": "Eventos de Stripe fallidos ›"
   },
   "actions": {
     "simulate": "1 · SIMULAR EL MES",
@@ -19,6 +20,9 @@
     "rollback": "Revertir la remesa",
     "chargeCards": "COBRAR LAS TARJETAS",
     "markPaidSelection": "Marcar cobrado (selección)",
+    "markPaidSelectionWhy": "Solo se pueden marcar como cobrados los recibos pendientes o impagados que no sean de tarjeta.",
+    "markFailedSelection": "Marcar impagados (selección)",
+    "markFailedSelectionWhy": "Solo se pueden marcar como impagados los recibos domiciliados, remesados o cobrados, de una misma remesa.",
     "accountingExport": "Exportar para contabilidad",
     "manualInvoice": "Recibo manual",
     "refresh": "Actualizar",
@@ -54,11 +58,32 @@
     "reference": "Referencia (opcional)",
     "markPaid": "Marcar cobrado",
     "markingPaid": "Marcando cobrado…",
+    "markFailedTitle": "Marcar impagados",
+    "markFailedBody": "{count, plural, one {Se marcará # recibo de la remesa como impagado (devuelto por el banco).} other {Se marcarán # recibos de la remesa como impagados (devueltos por el banco).}}",
+    "presentAgain": "Volver a presentarlos en la próxima remesa",
+    "markFailed": "Marcar impagados",
+    "markingFailed": "Marcando impagados…",
     "submissionTitle": "Marcar como enviada al banco · {month}",
     "submissionBody": "La remesa quedará marcada como enviada al banco. A partir de ahí ya no se podrá revertir.",
     "submittedAt": "Fecha de envío al banco",
     "submit": "Marcar como enviada",
-    "submitting": "Guardando…"
+    "submitting": "Guardando…",
+    "undoSubmissionTitle": "Deshacer «enviada al banco» · {month}",
+    "undoSubmissionBody": "La remesa volverá a quedar como generada: podrás volver a marcarla como enviada o revertirla. Hazlo solo si el banco no ha aceptado el fichero o si se marcó por error.",
+    "undoSubmission": "Deshacer «enviada»",
+    "undoingSubmission": "Deshaciendo…",
+    "collectionDate": "Fecha de cobro",
+    "collectionDateHelp": "Un día hábil bancario (TARGET), como mínimo dos días hábiles después de hoy.",
+    "collectionDateNotBusinessDay": "El {date} no es un día hábil bancario (TARGET): el siguiente es el {next}.",
+    "comparison": "Respecto al mes anterior ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
+    "comparisonAmount": "Respecto al mes anterior ({previousMonth}: {previousTotal}): {difference}.",
+    "comparisonNone": "No hay ningún mes anterior para comparar.",
+    "comparisonMissing": "Esta simulación no compara el total con el del mes anterior.",
+    "secondTitle": "Segunda confirmación",
+    "secondBody": "El total de este mes cambia un {differencePercent} respecto al mes anterior ({previousMonth}). El club pide una segunda confirmación cuando la diferencia supera el {thresholdPercent}. ¿Quieres generar los recibos igualmente?",
+    "secondBodyNone": "No hay ningún total del mes anterior con el que comparar el de este mes. ¿Quieres generar los recibos igualmente?",
+    "secondBodyMissing": "Esta simulación no compara el total con el del mes anterior. ¿Quieres generar los recibos igualmente?",
+    "secondConfirm": "Sí, generar los recibos"
   },
   "simulation": {
     "incidentsTitle": "Paso 1 — Simulación: incidencias primero",
@@ -194,6 +219,7 @@
     "payTitle": "Marcar cobrado",
     "failTitle": "Marcar impagado",
     "failAt": "Fecha del impago",
+    "presentAgain": "Volver a presentarlo en la próxima remesa",
     "retryTitle": "Reintentar con tarjeta",
     "retryBody": "Se volverán a cobrar {total} a la tarjeta ···· {last4}.",
     "refundTitle": "Reembolsar",
@@ -269,8 +295,12 @@
     "emptyDescription": "Todavía no se ha generado ninguna remesa.",
     "download": "Descargar el XML",
     "downloadExcel": "Excel de la remesa",
+    "cancelledFile": "Anulada — no la subas al banco",
+    "downloadCancelled": "Descargar el XML (anulada, no la subas al banco)",
+    "downloadExcelCancelled": "Excel de la remesa (anulada, no la subas al banco)",
     "downloading": "Descargando…",
     "markSubmitted": "Marcar como enviada al banco",
+    "undoSubmission": "Deshacer «enviada al banco»",
     "open": "Abrir la remesa: {month}",
     "drawerTitle": "Remesa · {month}",
     "close": "Cerrar la remesa",
@@ -286,7 +316,29 @@
     "creditorId": "Identificador de acreedor",
     "creditorIban": "Cuenta del acreedor",
     "creditorBic": "BIC",
-    "submitted": "Remesa marcada como enviada al banco."
+    "submitted": "Remesa marcada como enviada al banco.",
+    "submissionUndone": "La remesa vuelve a estar generada: ya no consta como enviada al banco."
+  },
+  "stripeEvents": {
+    "title": "Eventos de Stripe fallidos",
+    "caption": "Eventos de Stripe que no se han podido procesar",
+    "help": "Eventos que Stripe ha enviado y que no se han podido procesar. Se vuelven a intentar solos durante unas 24 horas; un evento detenido se vuelve a procesar reenviándolo desde el panel de Stripe.",
+    "columns": {
+      "id": "Evento",
+      "type": "Tipo",
+      "receivedAt": "Recibido el",
+      "attempts": "Intentos",
+      "state": "Estado"
+    },
+    "retrying": "se volverá a intentar el {date}",
+    "stopped": "detenido el {date}",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copyId": "Copiar el identificador {id}",
+    "copiedId": "Identificador {id} copiado",
+    "emptyTitle": "Ningún evento fallido",
+    "emptyDescription": "Todos los eventos de Stripe se han procesado.",
+    "loadError": "No se han podido cargar los eventos de Stripe."
   },
   "errors": {
     "loadRun": "No se ha podido actualizar el estado de los cobros.",
@@ -306,7 +358,12 @@
     "trace": "Referencia del error: {traceId}",
     "chargingSlow": "Los cobros con tarjeta todavía se están procesando.",
     "dateAfterToday": "La fecha no puede ser posterior a hoy.",
-    "submittedAtRange": "La fecha debe estar entre el {earliest} y hoy."
+    "submittedAtRange": "La fecha debe estar entre el {earliest} y hoy.",
+    "undoCollectionDatePassed": "Ya ha llegado la fecha de cobro de la remesa: ya no se puede deshacer.",
+    "undoInvoiceChanged": "{count, plural, one {Un recibo de la remesa ya ha cambiado (impagado, cobrado o anulado): la remesa ya no se puede deshacer.} other {# recibos de la remesa ya han cambiado (impagados, cobrados o anulados): la remesa ya no se puede deshacer.}}",
+    "reasonRequired": "Escribe el motivo (hasta 500 caracteres).",
+    "returnsOtherRemittance": "Alguno de los recibos elegidos no es de esta remesa: no se ha marcado ninguno.",
+    "presentAgainPeriodicOnly": "Solo los recibos periódicos se pueden volver a presentar en la próxima remesa."
   },
   "toasts": {
     "simulated": "Mes simulado.",
@@ -316,6 +373,7 @@
     "chargesSkipped": "{count, plural, one {# recibo omitido} other {# recibos omitidos}}: {reasons}",
     "charging": "Cobrando las tarjetas…",
     "markedPaid": "{count, plural, one {# recibo marcado como cobrado} other {# recibos marcados como cobrados}}",
+    "markedFailed": "{count, plural, one {# recibo marcado como impagado} other {# recibos marcados como impagados}}",
     "dismiss": "Cerrar el aviso"
   },
   "concepts": {

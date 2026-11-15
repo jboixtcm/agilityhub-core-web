@@ -11,6 +11,7 @@ import {
   UniversalList,
   universalListSearchParams,
   type UniversalListDefaults,
+  type UniversalListFilterColumn,
   type UniversalListLabels,
   type UniversalListState,
 } from "./universal-list";
@@ -482,6 +483,33 @@ describe("E8-W01 · a selection the screen holds and rows the selection cannot t
       />,
     );
     expect(screen.queryByRole("searchbox", { name: "Cerca" })).toBeNull();
+  });
+
+  it("PAY-02: a list without filter columns (the failed Stripe events) has no filter menu; one with them keeps it", () => {
+    const list = (filterColumns: UniversalListFilterColumn[]) => (
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Esdeveniments"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        exportable={false}
+        filterColumns={filterColumns}
+        labels={listLabels}
+        listKey="no-filter-test"
+        loadFilterValues={() => Promise.resolve([])}
+        onExport={() => undefined}
+        onRetry={() => undefined}
+        onStateChange={() => undefined}
+        rowKey={(row) => row.id}
+        rows={[{ id: "evt-1" }]}
+        searchable={false}
+        state={state}
+        totalPages={1}
+      />
+    );
+    const { rerender } = render(list([]));
+    expect(document.querySelector(".ah-universal-list__filter-menu")).toBeNull();
+    rerender(list([{ key: "id", label: "Id", type: "text" }]));
+    expect(document.querySelector(".ah-universal-list__filter-menu")).not.toBeNull();
   });
 
   it("E10-W01 step 2: a list without saved views (S17's console) has no «Vistes» menu", () => {

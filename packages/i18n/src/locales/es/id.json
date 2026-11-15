@@ -38,6 +38,8 @@
   "magic": {
     "title": "Comprobamos el enlace",
     "description": "Estamos iniciando la sesión y preparando tu cuenta.",
+    "confirmTitle": "Entrar con el enlace del correo",
+    "confirmDescription": "Pulsa el botón para entrar en tu cuenta con este enlace.",
     "validating": "Validando el enlace…",
     "invalidTitle": "Este enlace ya no es válido",
     "invalidDescription": "Solicita otro enlace para volver a entrar.",
@@ -99,6 +101,11 @@
     "title": "Página no encontrada",
     "description": "La dirección que has abierto no corresponde a ninguna página.",
     "back": "VOLVER AL INICIO"
+  },
+  "privacy": {
+    "title": "Política de privacidad",
+    "version": "Versión {version}",
+    "versionAndDate": "Versión {version} · En vigor desde el {date}"
   },
   "errors": {
     "generic": "No se ha podido completar la acción. Vuelve a intentarlo."

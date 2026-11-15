@@ -2,6 +2,7 @@ export * from "./account-locale";
 export * from "./auth-client";
 export * from "./mock-refresh-token";
 export * from "./onboarding";
+export * from "./recent-login";
 export * from "./refresh-interceptor";
 export * from "./return-path";
 export * from "./session";

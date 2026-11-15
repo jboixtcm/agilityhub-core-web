@@ -900,7 +900,8 @@ const scenarios = {
     branding: canic,
     me: {
       ...member,
-      account: { ...member.account, name: "Marc Puig" },
+      // A first access (WEB-01): an account without a password yet, invited to choose one on 02.
+      account: { ...member.account, hasPassword: false, name: "Marc Puig" },
       membership: { ...memberMembership, gender: "MALE" },
     },
     sessions: accountSessions,
@@ -909,7 +910,8 @@ const scenarios = {
     branding: canic,
     me: {
       ...member,
-      account: { ...member.account, name: "Àlex Roca" },
+      // A first access (WEB-01): an account without a password yet, invited to choose one on 02.
+      account: { ...member.account, hasPassword: false, name: "Àlex Roca" },
       membership: { ...memberMembership, gender: "OTHER" },
     },
     sessions: accountSessions,

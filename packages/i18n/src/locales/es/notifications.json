@@ -16,6 +16,8 @@
   },
   "unsubscribe": {
     "title": "Dejar de recibir estos comunicados",
+    "intro": "Dejarás de recibir los comunicados del club por correo.",
+    "confirm": "Darme de baja",
     "working": "Un momento…",
     "done": "Ya no recibirás los comunicados del club por correo.",
     "invalid": "Este enlace ya no es válido.",

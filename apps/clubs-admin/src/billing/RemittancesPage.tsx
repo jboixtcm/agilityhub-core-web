@@ -19,6 +19,7 @@ import {
   Input,
   Modal,
   Skeleton,
+  Textarea,
   Toast,
   type Tone,
   UniversalList,
@@ -39,6 +40,7 @@ import { useSavedViews } from "../activities/shared";
 
 import {
   clubToday,
+  errorDetails,
   errorFields,
   formatMoney,
   type Remittance,
@@ -61,12 +63,32 @@ const DEFAULT_COLUMNS = [
   "actions",
 ];
 /**
- * Every row reads its month (its button), its status and file (its actions) and its creation (the
- * first day [Marca com a enviada al banc] accepts), whatever columns are shown.
+ * Every row reads its month (its button), its status and file (its actions), its creation (the
+ * first day [Marca com a enviada al banc] accepts) and its collection date (until which [Desfés
+ * «enviada al banc»] is offered), whatever columns are shown.
  */
-const ROW_FIELDS = ["period", "status", "fileAvailable", "creationAt"];
+const ROW_FIELDS = [
+  "period",
+  "status",
+  "fileAvailable",
+  "creationAt",
+  "requestedCollectionDate",
+  // SEPA-06: the file name's sequence, for a download whose header names no file.
+  "messageId",
+];
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = { actions: [] };
 const STATUSES: readonly RemittanceStatus[] = ["GENERATED", "SUBMITTED", "ROLLED_BACK"];
+
+/**
+ * SEPA-06 (S12 §2 D6): the api's name of a remittance's file, `remesa-{period}-{seq}` with the
+ * `MsgId`'s sequence and `-ANULLADA-NO-PUJAR` once rolled back — only when its download does not
+ * name the file itself (`Content-Disposition`).
+ */
+function remittanceFileName(item: RemittanceListItem, extension: "xlsx"): string {
+  const sequence = item.messageId?.split("-").at(-1);
+  const cancelled = item.status === "ROLLED_BACK" ? "-ANULLADA-NO-PUJAR" : "";
+  return `remesa-${item.period ?? item.id}${sequence === undefined ? "" : `-${sequence}`}${cancelled}.${extension}`;
+}
 
 function statusTone(status: RemittanceStatus | undefined): Tone {
   return status === "SUBMITTED" ? "success" : status === "ROLLED_BACK" ? "neutral" : "warning";
@@ -81,10 +103,23 @@ function filterValue(value: unknown): string {
 }
 
 /**
+ * [Desfés «enviada al banc»] (R-12-15, SEPA-04): a SUBMITTED remittance before its collection date
+ * (club-local), as the api allows it; the api still refuses one whose receipts moved since.
+ */
+function undoable(item: RemittanceListItem, today: string): boolean {
+  return (
+    item.status === "SUBMITTED" &&
+    item.requestedCollectionDate !== undefined &&
+    today < item.requestedCollectionDate
+  );
+}
+
+/**
  * The remittances page (`/facturacio/remeses`, S12 §2 «D6 (remeses)», no mockup: design system,
  * §13-12): the universal list of `GET /remittances`, [Descarrega l'XML] through the api's signed
- * URL (never rendered here) and [Marca com a enviada al banc] behind a confirmation (R-15). A
- * rolled-back remittance is read-only.
+ * URL (never rendered here), [Marca com a enviada al banc] behind a confirmation (R-15) and, before
+ * the collection date, [Desfés «enviada al banc»] with a reason (SEPA-04). A rolled-back remittance
+ * is read-only.
  */
 export function RemittancesPage({
   client,
@@ -94,10 +129,12 @@ export function RemittancesPage({
   onNavigate: (path: string) => void;
 }) {
   const { t } = useTranslation(["admin-billing", "enums", "errors", "census"]);
+  const branding = useBranding();
   const formats = useClubFormats();
   const locale = useBillingLocale();
   const errorMessage = useBillingErrorMessage();
   const keys = useSubmissionKeys();
+  const today = clubToday(branding.timeZone);
   const [state, setState] = useState(() =>
     readUniversalListState(window.location.search, {
       columns: DEFAULT_COLUMNS,
@@ -114,6 +151,7 @@ export function RemittancesPage({
   }>();
   const [openId, setOpenId] = useState<string>();
   const [submitting, setSubmitting] = useState<RemittanceListItem>();
+  const [undoing, setUndoing] = useState<RemittanceListItem>();
   const [downloading, setDownloading] = useState<string>();
   const [feedback, setFeedback] = useState<{ id: number; text: string; tone: Tone }[]>([]);
   const nextFeedback = useRef(1);
@@ -233,7 +271,7 @@ export function RemittancesPage({
         saveFile(
           data,
           contentDispositionFileName(response.headers.get("Content-Disposition")) ??
-            `remesa-${item.period ?? item.id}.xlsx`,
+            remittanceFileName(item, "xlsx"),
         );
         return;
       }
@@ -372,44 +410,69 @@ export function RemittancesPage({
     {
       key: "actions",
       label: t("admin-billing:remittances.columns.actions"),
-      render: (item) => (
-        <span className="billing-remittance-actions">
-          {item.fileAvailable === true ? (
-            <>
+      render: (item) => {
+        // SEPA-06: a rolled-back remittance's file stays downloadable for the record, marked as
+        // cancelled beside its buttons and in their names, so it is never uploaded to the bank.
+        const cancelled = item.status === "ROLLED_BACK";
+        return (
+          <span className="billing-remittance-actions">
+            {item.fileAvailable === true ? (
+              <>
+                {cancelled ? (
+                  <Badge tone="danger">{t("admin-billing:remittances.cancelledFile")}</Badge>
+                ) : null}
+                <Button
+                  {...(cancelled
+                    ? { "aria-label": t("admin-billing:remittances.downloadCancelled") }
+                    : {})}
+                  disabled={downloading !== undefined}
+                  loading={downloading === item.id}
+                  loadingLabel={t("admin-billing:remittances.downloading")}
+                  onClick={() => void download(item)}
+                  variant="ghost"
+                >
+                  <Icon aria-hidden="true" name="export" />
+                  {t("admin-billing:remittances.download")}
+                </Button>
+                <Button
+                  {...(cancelled
+                    ? { "aria-label": t("admin-billing:remittances.downloadExcelCancelled") }
+                    : {})}
+                  variant="ghost"
+                  disabled={downloading !== undefined}
+                  loading={downloading === "xlsx-" + item.id}
+                  loadingLabel={t("admin-billing:remittances.downloading")}
+                  onClick={() => void download(item, true)}
+                >
+                  <Icon aria-hidden="true" name="export" />
+                  {t("admin-billing:remittances.downloadExcel")}
+                </Button>
+              </>
+            ) : null}
+            {item.status === "GENERATED" ? (
               <Button
-                disabled={downloading !== undefined}
-                loading={downloading === item.id}
-                loadingLabel={t("admin-billing:remittances.downloading")}
-                onClick={() => void download(item)}
+                onClick={() => {
+                  setSubmitting(item);
+                }}
+                variant="secondary"
+              >
+                {t("admin-billing:remittances.markSubmitted")}
+              </Button>
+            ) : null}
+            {undoable(item, today) ? (
+              <Button
+                onClick={() => {
+                  setUndoing(item);
+                }}
                 variant="ghost"
               >
-                <Icon aria-hidden="true" name="export" />
-                {t("admin-billing:remittances.download")}
+                <Icon aria-hidden="true" name="undo" />
+                {t("admin-billing:remittances.undoSubmission")}
               </Button>
-              <Button
-                variant="ghost"
-                disabled={downloading !== undefined}
-                loading={downloading === "xlsx-" + item.id}
-                loadingLabel={t("admin-billing:remittances.downloading")}
-                onClick={() => void download(item, true)}
-              >
-                <Icon aria-hidden="true" name="export" />
-                {t("admin-billing:remittances.downloadExcel")}
-              </Button>
-            </>
-          ) : null}
-          {item.status === "GENERATED" ? (
-            <Button
-              onClick={() => {
-                setSubmitting(item);
-              }}
-              variant="secondary"
-            >
-              {t("admin-billing:remittances.markSubmitted")}
-            </Button>
-          ) : null}
-        </span>
-      ),
+            ) : null}
+          </span>
+        );
+      },
     },
   ];
   const filterColumns: UniversalListFilterColumn[] = [
@@ -514,6 +577,26 @@ export function RemittancesPage({
             setReload((value) => value + 1);
           }}
           remittanceId={submitting.id}
+        />
+      )}
+      {undoing === undefined ? null : (
+        <SubmissionUndoModal
+          client={client}
+          keys={keys}
+          month={monthOf(undoing)}
+          onClose={() => {
+            setUndoing(undefined);
+          }}
+          onConflict={() => {
+            // The remittance or one of its receipts moved meanwhile: the list reads what it is now.
+            setReload((value) => value + 1);
+          }}
+          onUndone={() => {
+            setUndoing(undefined);
+            say(t("admin-billing:remittances.submissionUndone"));
+            setReload((value) => value + 1);
+          }}
+          remittanceId={undoing.id}
         />
       )}
       {openId === undefined ? null : (
@@ -639,6 +722,114 @@ function SubmissionModal({
           onClick={() => void submit()}
         >
           {t("admin-billing:confirm.submit")}
+        </Button>
+        <Button disabled={pending} onClick={onClose} variant="ghost">
+          {t("admin-billing:actions.cancel")}
+        </Button>
+      </div>
+    </Modal>
+  );
+}
+
+/**
+ * [Desfés «enviada al banc»] (R-12-15, SEPA-04): the file never reached the bank (refused, or marked
+ * by mistake). A required reason (the audit entry keeps it), then `POST …/submission-undo {reason}`
+ * with its key: the remittance is GENERATED again, to be marked sent again or rolled back.
+ * `409 INVALID_STATE` names why: the collection date came, or a receipt of it moved.
+ */
+function SubmissionUndoModal({
+  client,
+  keys,
+  month,
+  onClose,
+  onConflict,
+  onUndone,
+  remittanceId,
+}: {
+  client: ApiClient;
+  keys: SubmissionKeys;
+  month: string;
+  onClose: () => void;
+  onConflict: () => void;
+  onUndone: () => void;
+  remittanceId: string;
+}) {
+  const { t } = useTranslation(["admin-billing", "errors"]);
+  const errorMessage = useBillingErrorMessage();
+  const [reason, setReason] = useState("");
+  const [pending, setPending] = useState(false);
+  const [failure, setFailure] = useState<unknown>();
+  const reasonError = errorFields(failure).includes("reason");
+
+  const undo = async () => {
+    if (reason.trim() === "") return;
+    setPending(true);
+    setFailure(undefined);
+    const body = { reason: reason.trim() };
+    try {
+      await keys.send(JSON.stringify(["submission-undo", remittanceId, body]), (key) =>
+        client.POST("/remittances/{id}/submission-undo", {
+          body,
+          params: { header: { "Idempotency-Key": key }, path: { id: remittanceId } },
+        }),
+      );
+      onUndone();
+    } catch (error) {
+      setFailure(error);
+      if (isApiError(error, "INVALID_STATE") || isApiError(error, "STALE_VERSION")) onConflict();
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const details = errorDetails(failure);
+  const changed = Array.isArray(details.invoiceIds) ? details.invoiceIds.length : 0;
+  const message = !isApiError(failure, "INVALID_STATE")
+    ? errorMessage(failure)
+    : details.reason === "COLLECTION_DATE_PASSED"
+      ? t("admin-billing:errors.undoCollectionDatePassed")
+      : details.reason === "INVOICE_CHANGED"
+        ? t("admin-billing:errors.undoInvoiceChanged", { count: changed })
+        : errorMessage(failure);
+
+  return (
+    <Modal
+      closeLabel={t("admin-billing:actions.close")}
+      dismissible={!pending}
+      onClose={onClose}
+      open
+      title={t("admin-billing:confirm.undoSubmissionTitle", { month })}
+    >
+      <p className="billing-modal__body">{t("admin-billing:confirm.undoSubmissionBody")}</p>
+      <FormField
+        {...(reasonError ? { error: t("admin-billing:errors.reasonRequired") } : {})}
+        id="billing-undo-reason"
+        label={t("admin-billing:drawer.reason")}
+      >
+        <Textarea
+          id="billing-undo-reason"
+          maxLength={500}
+          onChange={(event) => {
+            setReason(event.currentTarget.value);
+          }}
+          required
+          value={reason}
+        />
+      </FormField>
+      {failure === undefined || reasonError ? null : (
+        <div className="billing-modal__error" role="alert">
+          {message}
+        </div>
+      )}
+      <div className="billing-modal__actions">
+        <Button
+          disabled={reason.trim() === ""}
+          loading={pending}
+          loadingLabel={t("admin-billing:confirm.undoingSubmission")}
+          onClick={() => void undo()}
+          variant="danger"
+        >
+          {t("admin-billing:confirm.undoSubmission")}
         </Button>
         <Button disabled={pending} onClick={onClose} variant="ghost">
           {t("admin-billing:actions.cancel")}

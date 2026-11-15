@@ -160,6 +160,7 @@
     "saved": "Changes saved",
     "cancelled": "Class cancelled",
     "deleted": "Class deleted",
+    "restored": "Class restored",
     "closedDay": "The club is closed on this day",
     "selected": {
       "title": "Selected class — {day} · {time} · {description} · {ring} · {instructors}",
@@ -172,6 +173,7 @@
       "cancel": "CANCEL THE CLASS",
       "delete": "DELETE",
       "deleteDraft": "Delete",
+      "restore": "RESTORE THE CLASS",
       "close": "Close"
     },
     "ringBookings": {
@@ -255,6 +257,11 @@
     "confirmWaitlist": "CANCEL AND NOTIFY THE WAITING LIST",
     "simpleCancel": "Cancel the class?",
     "simpleDelete": "Delete the class?"
+  },
+  "restoreModal": {
+    "title": "Restore the class — {day} · {time} · {description} · {ring} · {instructors}",
+    "text": "The class becomes active again. The bookings and the waiting list it had when it was cancelled are not recovered, and nobody is notified.",
+    "conflict": "Another class is already on this ring at the same time."
   },
   "registrants": {
     "title": "Booked ({booked}/{capacity})",

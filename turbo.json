@@ -10,10 +10,12 @@
     },
     "test": {
       "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/bundle-files.mjs"],
       "outputs": []
     },
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/bundle-files.mjs"],
       "outputs": ["dist/**"]
     },
     "clubs#test": {
@@ -21,6 +23,12 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/scripts/check-clubs-bundle*.mjs",
+        "$TURBO_ROOT$/scripts/check-production-bundles*.mjs",
+        "$TURBO_ROOT$/scripts/bundle-files*.mjs",
+        "$TURBO_ROOT$/scripts/check-bundle-files.mjs",
+        "$TURBO_ROOT$/scripts/build-release-bundles*.mjs",
+        "$TURBO_ROOT$/scripts/audit-report*.mjs",
+        "$TURBO_ROOT$/audit-accepted-advisories.json",
         "$TURBO_ROOT$/e2e/core/e9-core-helpers.ts"
       ],
       "outputs": []
@@ -42,7 +50,11 @@
     },
     "clubs#build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/scripts/check-clubs-bundle*.mjs"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/scripts/check-clubs-bundle*.mjs",
+        "$TURBO_ROOT$/scripts/bundle-files.mjs"
+      ],
       "outputs": ["dist/**"]
     },
     "e2e": {

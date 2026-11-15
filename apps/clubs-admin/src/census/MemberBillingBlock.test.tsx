@@ -48,11 +48,14 @@ afterAll(() => {
   server.close();
 });
 
-async function renderBlock(brandingOverride: Branding = branding) {
+async function renderBlock(
+  brandingOverride: Branding = branding,
+  { locale = "ca", readOnly = false }: { locale?: "ca" | "en" | "es"; readOnly?: boolean } = {},
+) {
   mockScenario("admin");
   const i18n = await createI18n({
     branding: brandingOverride,
-    browserLanguages: ["ca"],
+    browserLanguages: [locale],
     initialNamespaces: ["admin-census", "enums", "errors"],
     storage: undefined,
   });
@@ -64,6 +67,8 @@ async function renderBlock(brandingOverride: Branding = branding) {
             client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
             dogs={dogs}
             memberId="member-laura"
+            memberName="Laura Serra Vidal"
+            readOnly={readOnly}
           />
         </ToastProvider>
       </BrandingProvider>
@@ -405,5 +410,282 @@ describe("D10 member billing block", () => {
     if (payments === null) throw new Error("Missing upfront section");
     expect(await within(payments).findByRole("alert")).toBeVisible();
     expect(within(payments).getByText("Entrada")).toBeVisible();
+  });
+});
+
+describe("PAY-05 (decision of 13 Nov 2026): D10 refunds a card payment", () => {
+  interface Sent {
+    body: unknown;
+    key: string | null;
+  }
+
+  /** The refund requests the block sends (the mock answers as the api). */
+  function recordRefunds(): Sent[] {
+    const sent: Sent[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method !== "POST" || !request.url.endsWith("/refund")) return;
+      const entry: Sent = { body: undefined, key: request.headers.get("Idempotency-Key") };
+      sent.push(entry);
+      void request
+        .clone()
+        .json()
+        .then((body: unknown) => {
+          entry.body = body;
+        });
+    });
+    return sent;
+  }
+
+  async function upfrontSection() {
+    const section = (await screen.findByRole("heading", { name: "Pagaments a l'acte" })).closest(
+      "section",
+    );
+    if (section === null) throw new Error("Missing upfront section");
+    return section;
+  }
+
+  async function openRefund() {
+    fireEvent.click(await screen.findByRole("button", { name: "Reemborsa Pack (120,00 €)" }));
+    return screen.getByRole("dialog", { name: "Reemborsa un pagament amb targeta" });
+  }
+
+  it("offers [Reemborsa] only on a card payment that is collected, never read-only", async () => {
+    await renderBlock();
+    const section = await upfrontSection();
+    expect(await within(section).findByText("Pack")).toBeVisible();
+    // The cash entry fee has no automatic refund: no action on it.
+    expect(within(section).getAllByRole("button", { name: /^Reemborsa/u })).toHaveLength(1);
+    expect(within(section).getByText("Entrada").closest("li")).not.toContainElement(
+      within(section).getByRole("button", { name: "Reemborsa Pack (120,00 €)" }),
+    );
+    cleanup();
+    await renderBlock(branding, { readOnly: true });
+    expect(await within(await upfrontSection()).findByText("Pack")).toBeVisible();
+    expect(screen.queryByRole("button", { name: /^Reemborsa/u })).not.toBeInTheDocument();
+  });
+
+  it("refunds what is left after a reason and a confirmation naming the member, the concept and the amount", async () => {
+    const sent = recordRefunds();
+    await renderBlock();
+    const dialog = await openRefund();
+    expect(dialog).toHaveTextContent(
+      "Pack: pagat amb targeta 120,00 €; queda per reemborsar 120,00 €.",
+    );
+    expect(within(dialog).getByLabelText("Import a reemborsar")).toHaveValue("");
+    expect(
+      within(dialog).getByText("En blanc, es reemborsa tot el que queda (120,00 €)."),
+    ).toBeVisible();
+    const next = within(dialog).getByRole("button", { name: "Continua" });
+    expect(next).toBeDisabled();
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "   " } });
+    expect(next).toBeDisabled();
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "Pack comprat per error" },
+    });
+    fireEvent.click(next);
+    const heading = within(dialog).getByRole("heading", { name: "Confirma el reemborsament" });
+    expect(heading).toHaveFocus();
+    expect(dialog).toHaveTextContent(
+      "Es reemborsaran 120,00 € a Laura Serra Vidal pel pagament «Pack». Stripe els retornarà a la targeta amb què es va pagar, i no es pot desfer.",
+    );
+    expect(dialog).toHaveTextContent("Motiu: Pack comprat per error");
+    expect(sent).toHaveLength(0);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Reemborsa 120,00 €" }));
+    expect(
+      await screen.findByText(
+        "Reemborsament de 120,00 € sol·licitat: es confirmarà quan Stripe el processi.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(sent).toHaveLength(1);
+    await waitFor(() => {
+      // The amount the confirmation named is sent, also for «what is left».
+      expect(sent[0]?.body).toEqual({
+        amount: { amountMinor: 12000, currency: "EUR" },
+        reason: "Pack comprat per error",
+      });
+    });
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    // The list is read again: the row is refunded, with its refund, and offers nothing more.
+    const row = (await within(await upfrontSection()).findByText("reemborsat")).closest("li");
+    expect(row).toHaveTextContent(
+      "Reemborsament de 120,00 € el 05/10/2026: Pack comprat per error",
+    );
+    expect(screen.queryByRole("button", { name: /^Reemborsa/u })).not.toBeInTheDocument();
+  });
+
+  it("refunds a part; the rest stays refundable", async () => {
+    const sent = recordRefunds();
+    await renderBlock();
+    let dialog = await openRefund();
+    fireEvent.change(within(dialog).getByLabelText("Import a reemborsar"), {
+      target: { value: "40" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "Dues sessions" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    expect(dialog).toHaveTextContent("Es reemborsaran 40,00 € a Laura Serra Vidal");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Reemborsa 40,00 €" }));
+    expect(await screen.findByText(/Reemborsament de 40,00 € sol·licitat/u)).toBeVisible();
+    await waitFor(() => {
+      expect(sent[0]?.body).toEqual({
+        amount: { amountMinor: 4000, currency: "EUR" },
+        reason: "Dues sessions",
+      });
+    });
+    expect(
+      await within(await upfrontSection()).findByText(/Reemborsament de 40,00 € el/u),
+    ).toBeVisible();
+    dialog = await openRefund();
+    expect(dialog).toHaveTextContent("queda per reemborsar 80,00 €.");
+  });
+
+  it("refuses an amount that is not positive or above what is left, and sends nothing on Back or Cancel", async () => {
+    const sent = recordRefunds();
+    await renderBlock();
+    const dialog = await openRefund();
+    const amount = within(dialog).getByLabelText("Import a reemborsar");
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Error" } });
+    for (const value of ["200", "0", "-5", "abc"]) {
+      fireEvent.change(amount, { target: { value } });
+      expect(
+        within(dialog).getByText("Escriu un import positiu que no superi 120,00 €."),
+      ).toBeVisible();
+      expect(within(dialog).getByRole("button", { name: "Continua" })).toBeDisabled();
+    }
+    fireEvent.change(amount, { target: { value: "120" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Enrere" }));
+    expect(within(dialog).getByLabelText("Import a reemborsar")).toHaveValue("120");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(sent).toHaveLength(0);
+  });
+
+  it("puts REFUND_EXCEEDS_PAID on the amount and reads the list again after INVALID_STATE", async () => {
+    const reads: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "GET" && new URL(request.url).pathname === "/api/v1/upfront-payments")
+        reads.push(request.url);
+    });
+    server.use(
+      http.post("*/api/v1/upfront-payments/:id/refund", () =>
+        HttpResponse.json(
+          { code: "REFUND_EXCEEDS_PAID", details: {}, message: "x", traceId: "refund-test" },
+          { status: 422 },
+        ),
+      ),
+    );
+    await renderBlock();
+    let dialog = await openRefund();
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Error" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Reemborsa 120,00 €" }));
+    // Back on the form, on its field: a refund still in flight counts against what is left.
+    expect(
+      await within(dialog).findByText("El reemborsament no pot superar l'import pagat."),
+    ).toBeVisible();
+    expect(within(dialog).getByLabelText("Import a reemborsar")).toBeVisible();
+
+    server.use(
+      http.post("*/api/v1/upfront-payments/:id/refund", () =>
+        HttpResponse.json(
+          { code: "INVALID_STATE", details: { status: "REFUNDED" }, message: "x", traceId: "t" },
+          { status: 409 },
+        ),
+      ),
+    );
+    const before = reads.length;
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Reemborsa 120,00 €" }));
+    dialog = screen.getByRole("dialog", { name: "Reemborsa un pagament amb targeta" });
+    expect(
+      await within(dialog).findByText(
+        "Aquest pagament ha canviat i ja no es pot reemborsar així. S'ha tornat a llegir la llista.",
+      ),
+    ).toBeVisible();
+    expect(within(dialog).getByRole("button", { name: "Reemborsa 120,00 €" })).toBeDisabled();
+    await waitFor(() => {
+      expect(reads.length).toBeGreaterThan(before);
+    });
+  });
+
+  it("speaks es and en", async () => {
+    await renderBlock(branding, { locale: "es" });
+    fireEvent.click(await screen.findByRole("button", { name: "Reembolsar Bono (120,00 €)" }));
+    let dialog = screen.getByRole("dialog", { name: "Reembolsar un pago con tarjeta" });
+    fireEvent.change(within(dialog).getByLabelText("Motivo"), { target: { value: "Error" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continuar" }));
+    expect(within(dialog).getByRole("heading", { name: "Confirmar el reembolso" })).toHaveFocus();
+    expect(dialog).toHaveTextContent(
+      "Se reembolsarán 120,00 € a Laura Serra Vidal por el pago «Bono».",
+    );
+    expect(within(dialog).getByRole("button", { name: "Reembolsar 120,00 €" })).toBeVisible();
+    cleanup();
+    await renderBlock(branding, { locale: "en" });
+    fireEvent.click(await screen.findByRole("button", { name: "Refund Pack (€120.00)" }));
+    dialog = screen.getByRole("dialog", { name: "Refund a card payment" });
+    expect(dialog).toHaveTextContent("Pack: paid by card €120.00; left to refund €120.00.");
+    fireEvent.change(within(dialog).getByLabelText("Reason"), { target: { value: "Mistake" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continue" }));
+    expect(dialog).toHaveTextContent(
+      "€120.00 will be refunded to Laura Serra Vidal for the payment «Pack».",
+    );
+    expect(within(dialog).getByRole("button", { name: "Refund €120.00" })).toBeVisible();
+  });
+});
+
+describe("PAY-06 (decision of 13 Nov 2026): D10 marks a card payment under dispute", () => {
+  it("shows the mark on the disputed row only, read-only, with the amount, the reason and the date", async () => {
+    server.use(
+      http.get("*/api/v1/upfront-payments", () =>
+        HttpResponse.json({
+          items: [
+            {
+              amountDue: { amountMinor: 1500, currency: "EUR" },
+              amountPaid: { amountMinor: 1500, currency: "EUR" },
+              concept: "SINGLE_CLASS",
+              createdAt: "2026-10-20T16:00:00Z",
+              dispute: {
+                amount: { amountMinor: 1500, currency: "EUR" },
+                closedAt: null,
+                openedAt: "2026-11-10T09:00:00Z",
+                providerRef: "dp_test_d10",
+                reason: "duplicate",
+                status: "needs_response",
+              },
+              id: "54000000-0000-4000-8000-000000000201",
+              memberId: "member-laura",
+              provider: { type: "STRIPE" },
+              refunds: [],
+              status: "PAID",
+            },
+            {
+              amountDue: { amountMinor: 3000, currency: "EUR" },
+              amountPaid: { amountMinor: 3000, currency: "EUR" },
+              concept: "ENTRY_FEE",
+              createdAt: "2026-08-11T09:00:00Z",
+              dispute: null,
+              id: "54000000-0000-4000-8000-000000000001",
+              memberId: "member-laura",
+              provider: { channel: "CASH", type: "MANUAL" },
+              refunds: [],
+              status: "PAID",
+            },
+          ],
+        }),
+      ),
+    );
+    await renderBlock();
+    const disputed = (await screen.findByText("Classe individual")).closest("li");
+    if (disputed === null) throw new Error("Missing the disputed row");
+    expect(within(disputed).getByText("En disputa")).toHaveClass("ah-tone--danger");
+    expect(disputed).toHaveTextContent(
+      "El titular ha disputat 15,00 € al banc (cobrament duplicat) el 10/11/2026. Respon la disputa des del tauler de Stripe.",
+    );
+    // The mark changes nothing: the payment stays «cobrat».
+    expect(within(disputed).getByText("cobrat")).toBeVisible();
+    expect(screen.getByText("Entrada").closest("li")).not.toHaveTextContent("disputa");
   });
 });

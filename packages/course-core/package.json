@@ -1,6 +1,6 @@
 {
   "name": "@agilityhub/course-core",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Smarter .txt importer, CourseData schema, geometry helpers and warning engine. Pure TypeScript, no UI deps.",

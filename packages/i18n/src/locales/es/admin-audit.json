@@ -9,6 +9,7 @@
     "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB": "Inscripción a la actividad cancelada por el club",
     "ACTIVITY_UPDATED": "Actividad modificada",
     "ANNOUNCEMENT_SENT": "Comunicado enviado",
+    "ANNOUNCEMENT_RESENT": "Correos fallidos de un comunicado reenviados",
     "ATTENDANCE_OVERRIDDEN": "Asistencia corregida",
     "BOOKING_BLOCK_CLEARED": "Bloqueo de reservas retirado",
     "BOOKING_BLOCK_SET": "Reservas bloqueadas",
@@ -18,6 +19,7 @@
     "CARD_CHARGES_STARTED": "Cobros con tarjeta iniciados",
     "CATALOG_CHANGED": "Catálogo modificado",
     "CLASS_CANCELLED": "Clase anulada",
+    "CLASS_RESTORED": "Clase restaurada",
     "CLASS_RISK_EXEMPTION_CHANGED": "Exención de la revisión de riesgo modificada",
     "CLASS_UPDATED_WITH_BOOKINGS": "Clase con reservas modificada",
     "CLUB_ADMIN_INVITED": "Administrador del club invitado",
@@ -68,6 +70,7 @@
     "REMITTANCE_GENERATED": "Remesa generada",
     "REMITTANCE_ROLLED_BACK": "Remesa revertida",
     "REMITTANCE_SUBMITTED": "Remesa marcada como enviada al banco",
+    "REMITTANCE_SUBMISSION_UNDONE": "Remesa desmarcada como enviada al banco",
     "RING_BLOCK_CANCELLED": "Bloqueo de pista anulado",
     "RING_BLOCK_CREATED": "Bloqueo de pista creado",
     "RING_GEOMETRY_CHANGED": "Geometría de la pista modificada",
@@ -77,12 +80,14 @@
     "SIGNUP_SUBMITTED": "Solicitud de alta enviada",
     "SUPPORT_ACCESS_ENDED": "Acceso de soporte terminado",
     "SUPPORT_ACCESS_STARTED": "Acceso de soporte iniciado",
+    "SUPPORT_WRITE": "Cambio hecho por soporte",
     "TEMPLATE_BAND_DELETED": "Franja de plantilla borrada",
     "TEMPLATE_CLASS_DELETED": "Clase de plantilla eliminada",
     "TRAINING_BOOKED_BY_CLUB": "Entrenamiento reservado por el club",
     "TRAINING_CANCELLED_BY_CLUB": "Entrenamiento cancelado por el club",
     "UPFRONT_PAYMENT_RECORDED": "Pago inicial registrado",
-    "WEEK_VALIDATED": "Semana validada"
+    "WEEK_VALIDATED": "Semana validada",
+    "ACCOUNT_EMAIL_CHANGED": "Dirección de acceso cambiada"
   },
   "asMember": "como el abonado: {name}",
   "caption": "Entradas de auditoría",
@@ -191,5 +196,6 @@
   },
   "rowLabel": "Abrir el cambio «{action}»",
   "search": "Buscar por acción, actor o entidad",
-  "title": "Auditoría"
+  "title": "Auditoría",
+  "withoutNotice": "sin aviso al abonado"
 }

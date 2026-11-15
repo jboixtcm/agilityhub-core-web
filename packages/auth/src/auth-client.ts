@@ -19,6 +19,11 @@ const FOCUS_REFRESH_SLACK_MS = 30_000;
 const RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000, 60_000] as const;
 /** `/me` after a handoff: the first try and two retries (2 s, 5 s) before the page offers a retry. */
 const HANDOFF_ME_ATTEMPTS = 3;
+/**
+ * FE-03 (S01 R-01-13): `409` of a handoff code opened on a host whose refresh cookie holds another
+ * account's session. The code is left unused and the cookie untouched: the app keeps that session.
+ */
+export const HANDOFF_SESSION_CONFLICT = "HANDOFF_SESSION_CONFLICT";
 /** Cookie writers share one queue per identity origin, including different client IDs. */
 const COOKIE_LOCK_PREFIX = "agilityhub.session-cookie:";
 const cookieQueues = new Map<string, Promise<void>>();
@@ -213,6 +218,32 @@ function matchesTokenResponse(value: unknown): boolean {
   );
 }
 
+/**
+ * AUTH-01 (S01 R-01-18): asks the person to confirm it's them before a sensitive action of the
+ * staff. Resolves `true` once this session holds a recent sign-in (the request is then sent once
+ * more), `false` when it does not (the caller gets the original `403 RECENT_LOGIN_REQUIRED`).
+ */
+export type RecentLoginHandler = () => Promise<boolean>;
+
+/** The `sid` claim of an access token (the session it belongs to), when it can be read. */
+function sessionIdOf(accessToken: string): string | undefined {
+  const payload = accessToken.split(".")[1];
+  if (payload === undefined || payload === "") return undefined;
+  try {
+    const base64 = payload.replaceAll("-", "+").replaceAll("_", "/");
+    const claims: unknown = JSON.parse(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "=")));
+    return typeof claims === "object" &&
+      claims !== null &&
+      "sid" in claims &&
+      typeof claims.sid === "string" &&
+      claims.sid !== ""
+      ? claims.sid
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export class AuthClient extends EventTarget {
   private accessToken: null | string = null;
   private readonly apiBaseUrl: string;
@@ -242,6 +273,8 @@ export class AuthClient extends EventTarget {
   private impersonation: "active" | "expired" | null = null;
   /** A handoff code redeemed in this tab whose `/me` has not answered yet (E47). */
   private pendingHandoff: PendingHandoff | null = null;
+  private recentLoginHandler: RecentLoginHandler | undefined;
+  private recentLoginInFlight: Promise<boolean> | null = null;
   private readonly mockRefreshTokenStore: MockRefreshTokenStore | undefined;
   private readonly navigate: (path: string) => void;
   private refreshAt: number | null = null;
@@ -419,6 +452,74 @@ export class AuthClient extends EventTarget {
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
+  }
+
+  /**
+   * AUTH-01 (S01 R-01-18): the «Confirma que ets tu» dialog of the app registers here; the API
+   * client's interceptor asks it when a staff action answers `403 RECENT_LOGIN_REQUIRED`.
+   */
+  setRecentLoginHandler(handler: RecentLoginHandler): () => void {
+    this.recentLoginHandler = handler;
+    return () => {
+      if (this.recentLoginHandler === handler) this.recentLoginHandler = undefined;
+    };
+  }
+
+  /**
+   * One question at a time: requests refused together share it. An impersonated or support
+   * session is never asked (it cannot sign in again here), nor a page without the dialog.
+   */
+  requestRecentLogin(): Promise<boolean> {
+    const handler = this.recentLoginHandler;
+    if (handler === undefined || this.impersonation !== null || this.currentMe === null) {
+      return Promise.resolve(false);
+    }
+    if (this.recentLoginInFlight !== null) return this.recentLoginInFlight;
+    const operation = handler().catch(() => false);
+    this.recentLoginInFlight = operation;
+    void operation.finally(() => {
+      if (this.recentLoginInFlight === operation) this.recentLoginInFlight = null;
+    });
+    return operation;
+  }
+
+  /**
+   * AUTH-01 (S01 R-01-18): signs the same account in again with its password (the password
+   * grant, `username` = its e-mail), which opens a new session with a fresh sign-in time. The new
+   * session takes this one's place without a session change, so the requests waiting for it are
+   * sent with the new token; the profile in use is kept, and the session it replaces is ended
+   * (`DELETE /me/sessions/{sid}`; if that fails, the old one still ends on its own).
+   */
+  async confirmPassword(password: string): Promise<void> {
+    const previous = this.currentMe;
+    const previousToken = this.accessToken;
+    if (previous === null || previousToken === null || this.impersonation !== null) {
+      throw new TypeError("There is no account session to confirm");
+    }
+    const generation = this.sessionGeneration;
+    const tokens = await this.issueToken(
+      new URLSearchParams({
+        client_id: this.clientId,
+        grant_type: "password",
+        password,
+        username: previous.account.email,
+      }),
+    );
+    this.requireSessionGeneration(generation);
+    this.acceptTokens(tokens);
+    const me = await this.loadMe();
+    this.requireSessionGeneration(generation);
+    this.currentMe = me;
+    const profile = previous.membership?.activeProfile;
+    if (profile !== undefined && me.membership?.activeProfile !== profile) {
+      await this.updateProfile(profile, previous.membership?.rememberProfile ?? false);
+    } else {
+      this.dispatchEvent(new Event("signedIn"));
+    }
+    const replaced = sessionIdOf(previousToken);
+    if (replaced !== undefined && replaced !== sessionIdOf(tokens.access_token)) {
+      await this.revokeSession(replaced).catch(() => undefined);
+    }
   }
 
   async exchangeMagicLink(token: string): Promise<Me> {
@@ -1322,6 +1423,14 @@ export class AuthClient extends EventTarget {
       this.requireSessionGeneration(generation);
     } catch (error) {
       this.requireSessionGeneration(generation);
+      if (handoff && isApiError(error, HANDOFF_SESSION_CONFLICT)) {
+        // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused an account's code
+        // because this host's refresh cookie holds another account's session. It is not an
+        // «Entra com l'abonat» code (those are never refused so) and the cookie is untouched:
+        // that session stays, and the usual restore reads it.
+        this.leaveImpersonation();
+        throw error;
+      }
       // E47 (E4-W18 step 1): an «Entra com l'abonat» code tried in this tab and refused, or left
       // unanswered (5xx, offline), leaves the tab anonymous until someone signs in on 01 — never
       // the refresh cookie, which may be the admin's own session.

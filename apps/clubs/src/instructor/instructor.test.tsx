@@ -1,6 +1,7 @@
-import { createApiClient, useStudentSearch } from "@agilityhub/api-client";
+import { createApiClient, type components, useStudentSearch } from "@agilityhub/api-client";
 import {
   ATTENDANCE_MOCK_NOW,
+  handlers,
   mockScenario,
   resetAttendanceMockState,
   resetTrainingMockState,
@@ -20,7 +21,7 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -428,6 +429,38 @@ describe("T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(document.body.innerHTML).toBe(before);
     expect(open).toHaveFocus();
+  });
+
+  it("WEB-05: a row shows the photo's thumbnail and opens the photo itself; a row without a thumbnail shows the photo", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/attendance", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        const sheet = (await original?.json()) as components["schemas"]["AttendanceSheet"];
+        return HttpResponse.json({
+          ...sheet,
+          rows: sheet.rows.map((row) => ({
+            ...row,
+            dogPhotoThumbnailUrl: row.dogName === "Duna" ? thumbnailUrl : null,
+            dogPhotoUrl: photoUrl,
+          })),
+        });
+      }),
+    );
+    await sheetPage();
+    const duna = await screen.findByRole("button", {
+      name: "Mostra la foto de Duna a pantalla completa",
+    });
+    expect(duna.querySelector("img")).toHaveAttribute("src", thumbnailUrl);
+    expect(
+      within(await sheetRow("Marc + Chun-li"))
+        .getByRole("button", { name: "Mostra la foto de Chun-li a pantalla completa" })
+        .querySelector("img"),
+    ).toHaveAttribute("src", photoUrl);
+    fireEvent.click(duna);
+    const dialog = screen.getByRole("dialog", { name: "Tanca la foto de Duna" });
+    expect(dialog.querySelector("img")).toHaveAttribute("src", photoUrl);
   });
 
   it("round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything", async () => {
@@ -910,6 +943,39 @@ describe("T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09)", () 
 });
 
 describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () => {
+  it("WEB-05: asks for the thumbnail beside the photo; a row shows its thumbnail, a row without one its photo", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    const asked: string[][] = [];
+    server.use(
+      http.get("*/api/v1/dogs", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected dogs response");
+        const page = (await original.json()) as components["schemas"]["ListPageDogListItem"];
+        asked.push(new URL(request.url).searchParams.get("fields")?.split(",") ?? []);
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) => ({
+            ...item,
+            photoUrl,
+            ...(item.name === "Duna" ? { photoThumbnailUrl: thumbnailUrl } : {}),
+          })),
+        });
+      }),
+    );
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    const duna = await screen.findByRole("link", { name: "Laura + Duna · C" });
+    expect(duna.querySelector("img")).toHaveAttribute("src", thumbnailUrl);
+    const others = screen
+      .getAllByRole("link")
+      .filter((link) => link !== duna && link.querySelector(".ah-dog-photo") !== null);
+    expect(others.length).toBeGreaterThan(0);
+    for (const link of others) {
+      expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
+    }
+    expect(asked[0]).toEqual(expect.arrayContaining(["photoUrl", "photoThumbnailUrl"]));
+  });
+
   it("lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22", async () => {
     const requests = recordRequests();
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });

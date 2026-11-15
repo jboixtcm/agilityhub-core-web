@@ -168,6 +168,19 @@
       "MAILBOX_FULL": "Mailbox full",
       "RATE_LIMITED": "Receiving server rate limit",
       "TEMPORARY_REJECTION": "Temporary rejection by the receiving server"
+    },
+    "resend": {
+      "help": "This notice belongs to an announcement and its e-mail did not arrive. You can send every failed e-mail of the announcement again.",
+      "action": "Resend failed",
+      "confirmTitle": "Resend the announcement's failed e-mails",
+      "confirmBody": "Every e-mail of this announcement that failed will be sent again now, at the provider's pace. E-mails that arrived, SMS and push notices are not sent again.",
+      "confirm": "Resend failed",
+      "cancel": "Cancel",
+      "sending": "Resending…",
+      "done": "{count, plural, one {# e-mail is back in the queue: it will go out at the provider's pace.} other {# e-mails are back in the queue: they will go out at the provider's pace.}}",
+      "none": "There are no failed e-mails to resend.",
+      "notFound": "This announcement no longer exists.",
+      "error": "The e-mails could not be resent. Try again."
     }
   }
 }

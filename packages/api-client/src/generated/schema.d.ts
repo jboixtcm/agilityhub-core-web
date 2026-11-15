@@ -50,7 +50,7 @@ export interface paths {
         put?: never;
         /**
          * Request account erasure
-         * @description S14 R-14-14. Global account erasure (scope ACCOUNT, every membership); AGILITYHUB_ADMIN only, no request tenant. The checks of every club of the account's members, plus no ACTIVE membership left (OTHER_MEMBERSHIPS_ACTIVE): 422 ERASURE_BLOCKED {reasons[]}. A live request, or an erased account, is 409 ERASURE_ALREADY_REQUESTED; an unknown account 404. An account without members is erased at once (ERASING).
+         * @description S14 R-14-14. Global account erasure (scope ACCOUNT, every membership); AGILITYHUB_ADMIN only, no request tenant. The checks of every club of the account's members, plus no ACTIVE membership left (OTHER_MEMBERSHIPS_ACTIVE): 422 ERASURE_BLOCKED {reasons[]}. PRIV-04: a SEPA collection inside its 8-week refund window in any club makes it BLOCKED [SEPA_REFUND_WINDOW] until the latest window closes instead. A live request, or an erased account, is 409 ERASURE_ALREADY_REQUESTED; an unknown account 404. An account without members is erased at once (ERASING).
          */
         post: operations["requestAccountErasure"];
         delete?: never;
@@ -463,6 +463,26 @@ export interface paths {
         patch: operations["updateAdministrator"];
         trace?: never;
     };
+    "/announcements/{batchId}/resend-failed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * resendFailedAnnouncement
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). «Reenvia els fallits» of an announcement (COMM-07, R-11-13): every e-mail of the batch that ended FAILED goes back to QUEUED, due now with a fresh retry budget, and is sent at the announcements' pace (ANNOUNCEMENT_EMAILS_PER_MINUTE) with every check of a send (a suppressed address ends SKIPPED_NO_CONTACT). Only e-mail: no SMS or push is resent, nothing else changes. 202 with the number put back and the ANNOUNCEMENT_RESENT audit entry on the batch's template (no changes; details {batchId, resent}); resent = 0 writes nothing. batchId is the AnnouncementResult's (the log rows carry it); another club's or an unknown batch → 404. The same Idempotency-Key replays the same answer. Tenant comes from the JWT.
+         */
+        post: operations["resendFailedAnnouncement"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/attachments": {
         parameters: {
             query?: never;
@@ -724,7 +744,7 @@ export interface paths {
         };
         /**
          * exportAccounting
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-26 «Exporta per a comptabilitat» (S14 engine, listKey = accounting): one row per invoice line (number, date, month, member number, name, holder's tax id, concept, base, tax %, tax, total, method, status, collection date, remittance, mandate or PaymentIntent reference), UTF-8 with BOM, `;`, decimals per the admin's locale. 200 file or 202 ExportAccepted for a large one; DATA_EXPORTED audit. format defaults to billing.accountingExportFormat. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-26 «Exporta per a comptabilitat» (S14 engine, listKey = accounting): one row per invoice line (number, date, month, member number, name, holder's tax id, concept, base, tax %, tax, total, method, status, collection date, remittance, mandate or PaymentIntent reference, then — SEPA-09 — the status of the receipt's last collection attempt and its return date failedAt), UTF-8 with BOM, `;`, decimals per the admin's locale. 200 file or 202 ExportAccepted for a large one; DATA_EXPORTED audit. format defaults to billing.accountingExportFormat. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["exportAccounting"];
         put?: never;
@@ -744,7 +764,7 @@ export interface paths {
         };
         /**
          * billingPeriod
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's month (`?mes=YYYY-MM`): its last simulation (step 1), its live run — else its last rolled-back one — with rollbackable and rollbackBlockers computed now (R-12-14), its remittance and the chip counts (all, pending = PENDING, remitted = COLLECTING, paid, failed). A month is not a stored resource: every club reads its own, null parts until they exist. period not YYYY-MM → 400 VALIDATION_ERROR. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's month (`?mes=YYYY-MM`): its last simulation (step 1), its live run — else its last rolled-back one — with rollbackable and rollbackBlockers computed now (R-12-14), its remittance and the chip counts (all, pending = PENDING, remitted = COLLECTING, paid, failed). A month is not a stored resource: every club reads its own, null parts until they exist; the simulation carries its comparison with the previous month's run (SEPA-10). period not YYYY-MM → 400 VALIDATION_ERROR. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["billingPeriod"];
         put?: never;
@@ -766,7 +786,7 @@ export interface paths {
         put?: never;
         /**
          * createBillingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices, billing.* parameters and the club's configuration, with the same unbilled PendingCharges and waiting includeInNextRun receipts (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]), and so are the waiting receipts the simulation listed as incidents (they stay PENDING); the others join the remittance. collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day) and rolls forward to the next TARGET business day. The collection must meet billing.sepa.leadBusinessDays after the presentation day (also rolled forward) → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest}. Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). Two prices of one plan and concept valid on the issue date (INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, nothing written. The same Idempotency-Key answers the same run. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices, billing.* parameters and the club's configuration, with the same unbilled PendingCharges and waiting includeInNextRun receipts (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]), and so are the waiting receipts the simulation listed as incidents (they stay PENDING); the others join the remittance. collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day), moved to the next TARGET business day when that day is not one (a weekend, 1 January, Good Friday, Easter Monday, 1 May, 25 or 26 December; SEPA-05). A date the admin chooses must be a TARGET business day → otherwise 400 VALIDATION_ERROR {field: collectionDate, fieldErrors: [{field: collectionDate, code: NOT_BUSINESS_DAY}], nextBusinessDay}. The date must leave billing.sepa.leadBusinessDays TARGET days after presentation (rolled to the next TARGET day) → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest} (earliest is a business day). Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). Two prices of one plan and concept valid on the issue date (INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, nothing written. The same Idempotency-Key answers the same run. D6 calls it after its confirmation, and after a second explicit one when the simulation's comparison.secondConfirmationRequired (SEPA-10); the request does not carry either. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["createBillingRun"];
         delete?: never;
@@ -846,9 +866,29 @@ export interface paths {
         put?: never;
         /**
          * simulateBilling
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. The waiting manual SEPA_DD receipts with includeInNextRun (R-12-19) the run will remit are in the preview (with their invoiceId and displayNumber) and the KPIs; one whose member has left, no longer pays by SEPA_DD, has no account or signed another mandate since is an incident (NO_BANK_ACCOUNT) and is not remitted. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Two prices of one plan and concept valid on the issue date (a legacy twin, INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}: no price is chosen. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. The waiting manual SEPA_DD receipts with includeInNextRun (R-12-19) the run will remit are in the preview (with their invoiceId and displayNumber) and the KPIs; one whose member has left, no longer pays by SEPA_DD, has no account or signed another mandate since is an incident (NO_BANK_ACCOUNT) and is not remitted. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Two prices of one plan and concept valid on the issue date (a legacy twin, INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}: no price is chosen. SEPA-10: comparison holds the total of the previous month's live run (previousTotal, null without one), the difference and its percentage, thresholdPercent (billing.totalDifferenceConfirmPercent) and secondConfirmationRequired — the difference, up or down, is above the threshold or there is nothing to compare with — which D6's generate confirmation uses to ask a second explicit confirmation. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["simulateBilling"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/billing/stripe-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * stripeEvents
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PAY-02 (R-12-21): the club's Stripe events whose processing failed, universal list (CONVENCIONS_API §4), newest receivedAt first; no filter and no free-text search (a filter or a q → 400 INVALID_FILTER). A failed processing is retried with a growing backoff (1 min, 5 min, 15 min, 30 min, 1 h, 2 h, 4 h, 8 h, 8 h: ten attempts over about 24 hours); an outage of the provider (connection error, 5xx, 401, 403, 429) spends no attempt and waits 5 min. A row: the Stripe event id and type, receivedAt, the attempts spent, and nextAttemptAt while it is retrying or processedAt once its retries ran out. A FAILED event is kept until the retention cleanup (jobs.retention.stripeEventsDays); Stripe delivering it again (a resend from the Stripe dashboard) puts it back in the queue. Tenant comes from the JWT; another club's resource → 404.
+         */
+        get: operations["stripeEvents"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -870,7 +910,7 @@ export interface paths {
         put?: never;
         /**
          * confirmBooking
-         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) books without N-36 to the member, also for a swap's cancellation; recorded in BOOKING_CREATED_BY_CLUB details.notifyMember. R-08-08 confirmation (or R-08-09 atomic swap with swapBookingId). Idempotency-Key (R-08-08): one client UUID per request body. A retry of the same body reuses its key and returns the same response, a stored 409 or 422 included; a different body, such as another swapBookingId chosen after a failed attempt, takes a new key; the same key with another body → 409 IDEMPOTENCY_KEY_REUSED. PAY_TO_BOOK (SINGLE_CLASS) → PAYMENT_PENDING + checkoutUrl. BOOK-02: 422 DOG_ALREADY_BOOKED when the dog holds another live class booking (ACTIVE or PAYMENT_PENDING) whose class overlaps this one in time, or an ACTIVE free-training booking over it; the booking a swap cancels (swapBookingId) does not count; back-to-back classes do not overlap. Tenant comes from the JWT.
          */
         post: operations["confirmBooking"];
         delete?: never;
@@ -950,7 +990,7 @@ export interface paths {
         put?: never;
         /**
          * cancelBooking
-         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). ADMIN without impersonation and without MEMBER → 403. An account with MEMBER and INSTRUCTOR cancels its own (or its family group's) booking as a member (origin APP, cancelReason MEMBER; R-08-19) and another member's as an instructor (origin INSTRUCTOR) (R-01-07). R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token), INSTRUCTOR when bookings.instructorLastMinuteNotice (origin INSTRUCTOR, otherwise 403). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) cancels without N-36 to the member; recorded in BOOKING_CANCELLED_BY_CLUB details.notifyMember. ADMIN without impersonation and without MEMBER → 403. An account with MEMBER and INSTRUCTOR cancels its own (or its family group's) booking as a member (origin APP, cancelReason MEMBER; R-08-19) and another member's as an instructor (origin INSTRUCTOR) (R-01-07). R-08-10: late = now > classStartsAt - bookings.lateCancelThresholdMinutes. Tenant comes from the JWT.
          */
         post: operations["cancelBooking"];
         delete?: never;
@@ -1206,7 +1246,7 @@ export interface paths {
         put?: never;
         /**
          * Create signup checkout session
-         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 enforces capability/ownership/redirect checks, encrypted anonymous replay protection and limits. E5-T28 (A3-06): the session and its rows commit in the signup's retried transaction (a concurrent census write never gives a 500), and the provider session opens after that commit; a provider failure expires the session again. A rejection of the signup expires its open session (A3-01) and gives the rows of other submissions it charged back to DUE; a rejection that lands while the provider opens the session gives 409 INVALID_STATE and no checkoutUrl. A retry with the same Idempotency-Key after a lost answer returns the same checkout session. E8-T01 (S12 §6): bookingId (S08 R-08-18, a PAY_TO_BOOK booking) and upfrontPaymentIds (the member's DUE rows, e.g. a pack from the app) are published; E8-T04 serves them. A request with either first passes the same role, member and club checks as the signup checkout, then checks booking and payment ownership (404 NOT_FOUND). E8-T04 opens the checkout after the local transaction commits.
+         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 enforces capability/ownership/redirect checks, encrypted anonymous replay protection and limits. E5-T28 (A3-06): the session and its rows commit in the signup's retried transaction (a concurrent census write never gives a 500), and the provider session opens after that commit; a provider failure expires the session again. A rejection of the signup expires its open session (A3-01) and gives the rows of other submissions it charged back to DUE; a rejection that lands while the provider opens the session gives 409 INVALID_STATE and no checkoutUrl. A retry with the same Idempotency-Key after a lost answer returns the same checkout session. PAY-04: another Idempotency-Key for rows that wait for the member's own open signup checkout (the applicant backed out of the provider's page and pays again) first expires that checkout at the provider, then on our side, and opens a new one at once; a checkout the provider does not expire (paid meanwhile, or the provider does not answer) stays open → 409 INVALID_STATE. E8-T01 (S12 §6): bookingId (S08 R-08-18, a PAY_TO_BOOK booking) and upfrontPaymentIds (the member's DUE rows, e.g. a pack from the app) are published; E8-T04 serves them. A request with either first passes the same role, member and club checks as the signup checkout, then checks booking and payment ownership (404 NOT_FOUND). E8-T04 opens the checkout after the local transaction commits.
          */
         post: operations["create_1"];
         delete?: never;
@@ -1358,7 +1398,7 @@ export interface paths {
         put?: never;
         /**
          * cancelClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. PLAN-02: refused with 409 INVALID_STATE once the class has started (startsAt at or before now), whatever the reason (CLUB_MANUAL or DELETED) or state; nothing changes.
          */
         post: operations["cancelClass"];
         delete?: never;
@@ -1381,6 +1421,26 @@ export interface paths {
         get: operations["classCancellationPreview"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/class-sessions/{id}/restoration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * restoreClass
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. SCH-01: a CANCELLED class whose start is still ahead and whose cancellation.reason is not DELETED becomes ACTIVE again, with cancellation null; anything else is 409 INVALID_STATE (a repeat included). The bookings, waiting-list entries and holds the cancellation removed are not restored and nobody is notified: counters stay {booked: 0, waiting: 0}. The ring must still be free: another DRAFT/ACTIVE class of the ring at that time is 409 CLASS_CONFLICT, an ACTIVE ring block 422 RING_BLOCKED, a live training booking 422 RING_HAS_BOOKINGS {bookings[]} (never cancelled). Audited as CLASS_RESTORED.
+         */
+        post: operations["restoreClass"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2026,7 +2086,7 @@ export interface paths {
         head?: never;
         /**
          * Update dog level
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING. COMM-03: notifyMember false changes the level without N-09 to the member; recorded in DOG_LEVEL_CHANGED details.notifyMember.
          */
         patch: operations["updateDogLevel"];
         trace?: never;
@@ -2125,6 +2185,26 @@ export interface paths {
          * @description Roles: ANON (any caller; the token authorises). A valid token (signed, 30 days) turns emailByCategory.CLUB_NEWS off for its member and publishes EmailUnsubscribed{memberId}; using it again changes nothing. An expired, tampered or another club's token → UNSUBSCRIBE_TOKEN_INVALID (422). Transactional e-mails never carry the link. The club comes from the host.
          */
         post: operations["unsubscribeEmail"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/email-unsubscribes/one-click": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * unsubscribeEmailOneClick
+         * @description Roles: ANON (any caller; the token authorises). COMM-08, RFC 8058 one-click: the URL of a CLUB_NEWS e-mail's List-Unsubscribe header, sent with List-Unsubscribe-Post: List-Unsubscribe=One-Click. The mailbox provider posts the form body List-Unsubscribe=One-Click (application/x-www-form-urlencoded or multipart/form-data) with the signed token in the query (t); no cookie or bearer is read. It does what POST /email-unsubscribes does with the same token: emailByCategory.CLUB_NEWS off, EmailUnsubscribed{memberId} once; using it again changes nothing. A missing token or a body other than List-Unsubscribe=One-Click → VALIDATION_ERROR (400); an expired, tampered or another club's token → UNSUBSCRIBE_TOKEN_INVALID (422). The club comes from the host.
+         */
+        post: operations["unsubscribeEmailOneClick"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2436,7 +2516,7 @@ export interface paths {
         };
         /**
          * health
-         * @description ANON, global (no tenant, no locale, no data; an Authorization header is never read). 200 {status: UP} only when a Mongo ping answers within 1 s; otherwise 503 with the same envelope and status DOWN. version and builtAt come from the build.
+         * @description ANON, global (no tenant, no locale, no data; an Authorization header is never read). 200 {status: UP} only when a Mongo ping answers within 1 s; otherwise 503 with the same envelope and status DOWN. version, builtAt and commit come from the build.
          */
         get: operations["health"];
         put?: never;
@@ -2798,7 +2878,7 @@ export interface paths {
         put?: never;
         /**
          * markInvoiceFailed
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-17 «impagat (manual)»: a COLLECTING SEPA invoice, or a PAID one with a SEPA collection (a later bank return) → Collection FAILED{BANK_RETURN} (appended), invoice FAILED with the reason, InvoiceFailed → N-10 to the admins, INVOICE_MARKED_FAILED audit. No automatic claim or booking block (BR-08). at is a club-local day, not after today. Another state → 409 INVALID_STATE {status}. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-17 «impagat (manual)»: a COLLECTING SEPA invoice, or a PAID one with a SEPA collection (a later bank return) → Collection FAILED{BANK_RETURN} (appended), invoice FAILED with the reason, InvoiceFailed → N-10 to the admins, INVOICE_MARKED_FAILED audit. No automatic claim or booking block (BR-08). at is a club-local day, not after today. SEPA-04: includeInNextRun true → a returned PERIODIC receipt waits, FAILED, for the next run's remittance (R-12-19); a manual one → 400 VALIDATION_ERROR {field: includeInNextRun}; absent or false → it waits for none. Several returns of one remittance: POST /remittances/{id}/returns. Another state → 409 INVALID_STATE {status}. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["markInvoiceFailed"];
         delete?: never;
@@ -2958,7 +3038,7 @@ export interface paths {
         put?: never;
         /**
          * triggerJob
-         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). An optional Idempotency-Key answers its own run to a retry whose answer was lost, without running again (CONVENCIONS_API §7, E75). Tenant comes from the JWT.
+         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). PRIV-02: a real run of retention-sweep needs confirmation {dryRunId, counters}: a SUCCEEDED dry run of it in this club from the last 30 minutes and the effects.counters it showed; its WOULD_ counts must match, and so must those of a plan made when it runs, or nothing runs: 409 SIMULATION_STALE {reason: DRY_RUN_REQUIRED | COUNTS_MISMATCH | PLAN_CHANGED}. An optional Idempotency-Key answers its own run to a retry whose answer was lost, without running again (CONVENCIONS_API §7, E75). Tenant comes from the JWT.
          */
         post: operations["triggerJob"];
         delete?: never;
@@ -3230,7 +3310,7 @@ export interface paths {
         put?: never;
         /**
          * myCardSetup
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. R-12-22 [Actualitza la targeta] (N-35's retry_link): a Stripe Checkout session in mode=setup for the caller; setup_intent.succeeded saves the new card (CARD.invalid = false) and sends N-38. STRIPE not enabled → 422 PAYMENT_PROVIDER_NOT_ENABLED. successUrl/cancelUrl on the club's app host. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. R-12-22 [Actualitza la targeta] (N-35's retry_link): a Stripe Checkout session in mode=setup for the caller; setup_intent.succeeded saves the new card (CARD.invalid = false) and sends N-38. Only a caller whose current payment method is CARD (PAY-09); SEPA_DD, MANUAL or no method → 409 INVALID_STATE (they move to card through the admin's card-setup link). STRIPE not enabled → 422 PAYMENT_PROVIDER_NOT_ENABLED. successUrl/cancelUrl on the club's app host. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["myCardSetup"];
         delete?: never;
@@ -3785,7 +3865,7 @@ export interface paths {
         get?: never;
         /**
          * Set or change the current account password
-         * @description Account token, never impersonated. R-01-05: current is required only when a password already exists, except once in a session opened by a RESET magic link, within 15 minutes of the link's exchange (ruling E49); a LOGIN link never allows it.
+         * @description Account token, never impersonated. R-01-05: current is required only when a password already exists, except once in a session opened by a RESET magic link, within 15 minutes of the link's exchange (ruling E49); a LOGIN link never allows it. AUTH-01: the new password has at least auth.passwordMinLength characters (code points), and at least 12 for a staff account (ADMIN or INSTRUCTOR in a club, or AGILITYHUB_ADMIN); PASSWORD_TOO_SHORT carries details.minLength, the account's minimum. Existing passwords stay valid.
          */
         put: operations["password"];
         post?: never;
@@ -3952,7 +4032,7 @@ export interface paths {
         };
         /**
          * List members
-         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields. S13 R-13-17 (E8-T01): the ADMIN-only filters leaveSource (MEMBER · ADMIN · PACK_EXPIRED · MIGRATED), inactivityUntil (date; with INACTIVITY) and hasPendingRequest are published; they are evaluated from the tenant-scoped lifecycle documents.
+         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. AUTHZ-02: an INSTRUCTOR lists ACTIVE and PENDING members only (pages, counts and filter values) and never the postal address: no address key, and the city and postalCode columns and filters and the city sort are refused (400 INVALID_FILTER). Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields. S13 R-13-17 (E8-T01): the ADMIN-only filters leaveSource (MEMBER · ADMIN · PACK_EXPIRED · MIGRATED), inactivityUntil (date; with INACTIVITY) and hasPendingRequest are published; they are evaluated from the tenant-scoped lifecycle documents.
          */
         get: operations["listMembers"];
         put?: never;
@@ -3996,7 +4076,7 @@ export interface paths {
         };
         /**
          * Member filter values
-         * @description R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply.
+         * @description R-03-22. Top 50 facet values after q and filters on other fields; role and module restrictions apply (AUTHZ-02: an INSTRUCTOR counts ACTIVE and PENDING members only).
          */
         get: operations["memberFilterValues"];
         put?: never;
@@ -4016,7 +4096,7 @@ export interface paths {
         };
         /**
          * Get member
-         * @description S03 §6, R-03-31. ADMIN: Member; INSTRUCTOR: MemberInstructorView. Other-club resources return NOT_FOUND.
+         * @description S03 §6, R-03-31. ADMIN: Member; INSTRUCTOR: MemberInstructorView, without the postal address; an ex-member (status LEFT or INACTIVE) is NOT_FOUND for an INSTRUCTOR (AUTHZ-02). Other-club resources return NOT_FOUND.
          */
         get: operations["getMember"];
         put?: never;
@@ -4026,7 +4106,7 @@ export interface paths {
         head?: never;
         /**
          * Update member
-         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission. The remarks and internal notes stay the LEFT record's: changing them answers the same 409 (READMISSION_PENDING, INC-39); sending the ones it has is no edit.
+         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission. The remarks and internal notes stay the LEFT record's: changing them answers the same 409 (READMISSION_PENDING, INC-39); sending the ones it has is no edit. AUTH-01: a request carrying paymentMethod (a pending member's bank account) needs a sign-in of the last 15 minutes: 403 RECENT_LOGIN_REQUIRED {maxAgeMinutes} otherwise.
          */
         patch: operations["updateMember"];
         trace?: never;
@@ -4042,7 +4122,7 @@ export interface paths {
         put?: never;
         /**
          * Resend access
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. S03 R-03-06 (WEB-01): D10's «Envia la benvinguda», the welcome e-mail (N-27, variant ADMIN_WELCOME, a link valid auth.welcomeLinkDays) to an ACTIVE member's account, sent only when an ADMIN asks, one member at a time. 429 RATE_LIMITED (details.retryAfter) per address and per club, not per the administrator's IP.
          */
         post: operations["resendAccess"];
         delete?: never;
@@ -4190,7 +4270,7 @@ export interface paths {
         put?: never;
         /**
          * Request member erasure
-         * @description S14 R-14-14. Checks first (LEFT member, no open invoice or upfront payment, no future booking): any failure is 422 ERASURE_BLOCKED {reasons[]} and nothing is created. SCHEDULED at max(now, leaveDate + rgpd.erasureMinDaysAfterLeave); one live request per member (409 ERASURE_ALREADY_REQUESTED); an erased member is 409 MEMBER_ERASED. Emits AccountErasureRequested (N-52 to the account), audited ERASURE_REQUESTED. Tenant comes from the JWT; another club's member is 404. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-14. Checks first (LEFT member, no open invoice or upfront payment, no future booking): any failure is 422 ERASURE_BLOCKED {reasons[]} and nothing is created. SCHEDULED at max(now, leaveDate + rgpd.erasureMinDaysAfterLeave). PRIV-04: a SEPA collection of the member still inside its 8-week refund window refuses nothing; the request is created BLOCKED with blockReasons [SEPA_REFUND_WINDOW], executeAt no earlier than the first day the window is closed, and the daily run erases it then. One live request per member (409 ERASURE_ALREADY_REQUESTED); an erased member is 409 MEMBER_ERASED. Emits AccountErasureRequested (N-52 to the account), audited ERASURE_REQUESTED. Tenant comes from the JWT; another club's member is 404. ADMIN endpoints reject impersonation.
          */
         post: operations["requestMemberErasure"];
         /**
@@ -4237,6 +4317,26 @@ export interface paths {
          * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-10 direct leave from D10: an APPROVED LeaveRequest{source ADMIN, origin BACKOFFICE} with the same effects as an approval; a PENDING one becomes CANCELLED{ADMIN}. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE) without a planned leave (409 LEAVE_ALREADY_SCHEDULED). Another club's member → 404; an erased one → 409 MEMBER_ERASED.
          */
         post: operations["scheduleLeave"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/members/{id}/login-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Change login e-mail
+         * @description S03 R-03-06b (AUTH-02). Tenant comes from the JWT. ADMIN endpoints reject impersonation; a support access is refused (403 SUPPORT_RESTRICTED, S17 R-17-10); erased members reject mutations. Mails a link to the NEW address only (N-25, variant EMAIL_CHANGE, valid auth.welcomeLinkDays); nothing is sent to the current one and nothing changes yet. When the link is used (the magic-link grant, /activacio), the account's login e-mail becomes the new address, verified, its emailStatus is cleared and ACCOUNT_EMAIL_CHANGED is audited as the requesting ADMIN's. A newer request supersedes an unused one. Only an ACTIVE member with an account (422 MEMBER_NOT_ACTIVE); only an account that is this club's alone, without a platform role (403 FORBIDDEN); the new address must differ from the current one (400 VALIDATION_ERROR, fieldErrors email · UNCHANGED); the limits of /auth/magic-link apply to the new address, per address and per IP (429 RATE_LIMITED). An address that already belongs to another account gets no link, with the same 202 (no existence is revealed); a link whose address was taken in between answers MAGIC_LINK_INVALID and changes nothing.
+         */
+        post: operations["changeLoginEmail"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4362,7 +4462,7 @@ export interface paths {
         head?: never;
         /**
          * Update payment method
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method. A pending readmission's method is edited with PATCH /members/{id}.A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method. A pending readmission's method is edited with PATCH /members/{id}.A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING. COMM-03: notifyMember false changes the method without N-38 to the member; recorded in MEMBER_PAYMENT_METHOD_CHANGED details.notifyMember.
          */
         patch: operations["updatePaymentMethod"];
         trace?: never;
@@ -5138,7 +5238,7 @@ export interface paths {
         put?: never;
         /**
          * platformTriggerJob
-         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED. An optional Idempotency-Key answers its own run to a retry (CONVENCIONS_API §7, E75).
+         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED. PRIV-02: a real run of retention-sweep needs confirmation {dryRunId, counters}: a SUCCEEDED dry run of it in this club from the last 30 minutes and the effects.counters it showed; its WOULD_ counts must match, and so must those of a plan made when it runs, or nothing runs: 409 SIMULATION_STALE {reason: DRY_RUN_REQUIRED | COUNTS_MISMATCH | PLAN_CHANGED}. An optional Idempotency-Key answers its own run to a retry (CONVENCIONS_API §7, E75).
          */
         post: operations["platformTriggerJob"];
         delete?: never;
@@ -5465,7 +5565,7 @@ export interface paths {
         get?: never;
         /**
          * updatePlatformProvider
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Provider selects the configuration variant. Secrets and IBAN are write-only; existing secrets are preserved when omitted.
+         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Provider selects the configuration variant. Secrets and IBAN are write-only; existing secrets are preserved when omitted. PAY-10: a STRIPE save with a new secretKey first runs the connection test with that key (as POST …/payment-providers/stripe/test, before anything is written): a key Stripe refuses or cannot be reached with → 422 STRIPE_CONNECTION_FAILED and nothing is saved; a passed test is recorded (lastTestAt, accountIdMasked). On the prod profile, a club whose saved Stripe keys are live switches to mode test only with testModeOverride: true; otherwise 422 PROVIDER_CONFIG_INVALID {field: mode, reason: LIVE_KEYS_SAVED}.
          */
         put: operations["updatePlatformProvider"];
         post?: never;
@@ -5922,7 +6022,7 @@ export interface paths {
         put?: never;
         /**
          * subscribePush
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (its hash; one ACTIVE subscription per endpoint and club), ACTIVE again if it had expired. A subscription never changes owner (E76): when another account's is active on this browser it ends (EXPIRED, PushUnsubscribed for that account) and the caller gets a subscription of its own, a new id. deviceLabel from the User-Agent when absent («iPhone · Safari»); PushSubscribed{accountId, endpoint = its SHA-256} when something changed. An endpoint that is no https URL, or keys that are not base64url of a point on P-256 (65 bytes, uncompressed) and a 16-byte secret → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Tenant comes from the JWT.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (its hash; one ACTIVE subscription per endpoint and club), ACTIVE again if it had expired. A subscription never changes owner (E76): when another account's is active on this browser it ends (EXPIRED, PushUnsubscribed for that account) and the caller gets a subscription of its own, a new id. deviceLabel from the User-Agent when absent («iPhone · Safari»); PushSubscribed{accountId, endpoint = its SHA-256} when something changed. An endpoint that is no https URL of a DNS name of two labels or more on the HTTPS port (an IP literal, localhost or another port is refused), or keys that are not base64url of a point on P-256 (65 bytes, uncompressed) and a 16-byte secret → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Tenant comes from the JWT.
          */
         post: operations["subscribePush"];
         delete?: never;
@@ -5960,7 +6060,7 @@ export interface paths {
         };
         /**
          * remittances
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6 «Remeses»: the club's remittances, universal list (CONVENCIONS_API §4), newest creationAt first, filters period and status; no free-text search (a q → 400 INVALID_FILTER). A row: month, creation date, collection date, invoice count, total, status, fileAvailable (the XML can be downloaded) and submittedAt. A rolled-back remittance stays listed with its file (R-12-14). A club without SEPA_XML has none: an empty page, never an error (R-12-28). Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6 «Remeses»: the club's remittances, universal list (CONVENCIONS_API §4), newest creationAt first, filters period and status; no free-text search (a q → 400 INVALID_FILTER). A row: month, creation date, collection date, invoice count, total, status, fileAvailable (the XML can be downloaded) and submittedAt. A rolled-back remittance stays listed with its file (R-12-14), whose download is named as cancelled (SEPA-06). A club without SEPA_XML has none: an empty page, never an error (R-12-28). Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittances"];
         put?: never;
@@ -6000,11 +6100,31 @@ export interface paths {
         };
         /**
          * remittanceFile
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. [Descarrega l'XML]: a signed URL of the pain.008 file valid for five minutes (also of a ROLLED_BACK one, whose file is kept); its download answers Content-Type application/xml and Content-Disposition attachment; filename="remesa-{period}.xml" (CONVENCIONS_API §5) and authorises itself (no bearer). Issuing the link is the file access, audited DATA_EXPORTED. A remittance without a file → 404. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. [Descarrega l'XML]: a signed URL of the pain.008 file valid for five minutes (also of a ROLLED_BACK one, whose file is kept); its download answers Content-Type application/xml and Content-Disposition attachment; filename="remesa-{period}-{seq}.xml" (CONVENCIONS_API §5), seq being the sequence of the remittance's MsgId ({clubSlug}-{period}-{seq}), so a month generated again after a rollback never reuses a name (SEPA-06); a ROLLED_BACK remittance's is remesa-{period}-{seq}-ANULLADA-NO-PUJAR.xml (cancelled, do not upload it to the bank). fileName is that name. The download authorises itself (no bearer). Issuing the link is the file access, audited DATA_EXPORTED. A remittance without a file → 404. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittanceFile"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/remittances/{id}/returns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * markRemittanceReturns
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. SEPA-04 (b), R-12-17 [Marca impagats (selecció)]: several bank returns of this remittance in one request, all or none — each receipt as POST /invoices/{id}/failure makes it (a COLLECTING SEPA receipt, or a PAID one with a SEPA collection: Collection FAILED{BANK_RETURN} appended, FAILED with the reason, InvoiceFailed{summarized: true}, its own INVOICE_MARKED_FAILED audit), and the admins get ONE N-10 for the request (InvoicesFailed) instead of one per receipt. A receipt whose SEPA collection is not of this remittance → 400 VALIDATION_ERROR {field: invoiceIds}; one in another state → 409 INVALID_STATE {status}; another club's → 404. at is a club-local day, not after today. includeInNextRun true → the returned PERIODIC receipts wait, FAILED, for the next run's remittance (R-12-19); a manual one → 400 VALIDATION_ERROR {field: includeInNextRun}. The same Idempotency-Key answers the same result. Tenant comes from the JWT; another club's resource → 404.
+         */
+        post: operations["markRemittanceReturns"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6020,7 +6140,7 @@ export interface paths {
         };
         /**
          * downloadRemittanceSpreadsheet
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Excel file with one row per bank debit, from the stored remittance.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Excel file with one row per bank debit, from the stored remittance, named remesa-{period}-{seq}.xlsx as its XML (SEPA-06: seq is the MsgId's; a ROLLED_BACK one's name ends -ANULLADA-NO-PUJAR).
          */
         get: operations["spreadsheet"];
         put?: never;
@@ -6045,6 +6165,26 @@ export interface paths {
          * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-15 [Marca com a enviada al banc]: GENERATED → SUBMITTED with submittedAt (the club-local day the XML went to the bank: not after today, not before the remittance's day → otherwise 400 VALIDATION_ERROR {field: submittedAt}) and submittedByAccountId; REMITTANCE_SUBMITTED audit. From then on the run cannot be rolled back (409 RUN_NOT_ROLLBACKABLE {reasons: [REMITTANCE_SUBMITTED]}) and an unpaid debit follows R-12-17. Not GENERATED → 409 INVALID_STATE. The same Idempotency-Key answers the same remittance. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["submitRemittance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/remittances/{id}/submission-undo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * undoRemittanceSubmission
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. SEPA-04 (a), R-12-15 [Desfés «enviada al banc»]: the file did not reach the bank (refused, or marked by mistake): SUBMITTED → GENERATED, submittedAt and submittedByAccountId removed; REMITTANCE_SUBMISSION_UNDONE audit with the reason. Only before the remittance's collection date (club-local) → otherwise 409 INVALID_STATE {reason: COLLECTION_DATE_PASSED}; and only while every receipt of the remittance is still COLLECTING in it with its attempt here open and last (none marked returned or paid, cancelled or charged by card since) → otherwise 409 INVALID_STATE {reason: INVOICE_CHANGED, invoiceIds}. Not SUBMITTED → 409 INVALID_STATE {status}. The run can then be rolled back (R-12-14). The same Idempotency-Key answers the same remittance. Tenant comes from the JWT; another club's resource → 404.
+         */
+        post: operations["undoRemittanceSubmission"];
         delete?: never;
         options?: never;
         head?: never;
@@ -6706,7 +6846,7 @@ export interface paths {
         put?: never;
         /**
          * bookTraining
-         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE, override{limit, reason} allowed). R-09-06 transaction; the partial unique index {clubId, ringId, startsAt, seatIndex} on ACTIVE is the final guard; without ringId («Qualsevol») the first FREE ring in catalog order. details: TRAINING_LIMIT_REACHED{limit, used, weekStart, weekEnd, cancellableBookings[]}, SLOT_TAKEN{ringId, startsAt, reason, freeRings[]}, SLOT_OUT_OF_WINDOW{from, to}. A repeated Idempotency-Key returns the same response, also a 409/422. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token: origin BACKOFFICE, override{limit, reason} allowed). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) books without N-47 to the member; recorded in TRAINING_BOOKED_BY_CLUB details.notifyMember. R-09-06 transaction; the partial unique index {clubId, ringId, startsAt, seatIndex} on ACTIVE is the final guard; without ringId («Qualsevol») the first FREE ring in catalog order. details: TRAINING_LIMIT_REACHED{limit, used, weekStart, weekEnd, cancellableBookings[]}, SLOT_TAKEN{ringId, startsAt, reason, freeRings[]}, SLOT_OUT_OF_WINDOW{from, to}. A repeated Idempotency-Key returns the same response, also a 409/422. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         post: operations["bookTraining"];
         delete?: never;
@@ -6786,7 +6926,7 @@ export interface paths {
         put?: never;
         /**
          * cancelTraining
-         * @description Roles: MEMBER (own or family group, also the impersonation token). R-09-10: until startsAt - training.cancelThresholdMinutes; later only with the impersonation token and a reason (ADMIN_LATE, audited). A booking block never prevents it; a second call is INVALID_STATE. details TRAINING_CANCEL_TOO_LATE{thresholdMinutes, minutesBefore}. An optional Idempotency-Key replays the same 200. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token). COMM-03: notifyMember false (an ADMIN's impersonation token only, otherwise 403 FORBIDDEN) cancels without N-47 to the member; recorded in TRAINING_CANCELLED_BY_CLUB details.notifyMember. R-09-10: until startsAt - training.cancelThresholdMinutes; later only with the impersonation token and a reason (ADMIN_LATE, audited). A booking block never prevents it; a second call is INVALID_STATE. details TRAINING_CANCEL_TOO_LATE{thresholdMinutes, minutesBefore}. An optional Idempotency-Key replays the same 200. Requires FREE_TRAINING. Tenant comes from the JWT.
          */
         post: operations["cancelTraining"];
         delete?: never;
@@ -6930,7 +7070,7 @@ export interface paths {
         put?: never;
         /**
          * claimSeat
-         * @description Roles: MEMBER (own or family group, also the impersonation token). R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token). COMM-03: notifyMember as POST /bookings. R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. BOOK-02: 422 DOG_ALREADY_BOOKED as POST /bookings (the dog's overlapping class or training booking; a swapped one does not count). Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
          */
         post: operations["claimSeat"];
         delete?: never;
@@ -7334,7 +7474,7 @@ export interface paths {
         put?: never;
         /**
          * Issue tokens using an OAuth2 or AgilityHub grant
-         * @description ANON with client authentication. Club context comes from the host, never request data. On the console's product host (a platform host other than the ID's, which resolves no club) clubs-admin's password, magic-link, handoff and refresh grants issue a session without club context (platformRoles, no clubId/roles, aud clubs-admin, ah_refresh on that host) to an account holding AGILITYHUB_ADMIN, and 403 PLATFORM_ONLY to any other account. It issues and renews only those sessions: a refresh token or an authorization code bound to a club is 400 VALIDATION_ERROR (oauth2Error invalid_grant) there, never renewed with its club; every grant of any other client there is 404 UNKNOWN_HOST and leaves its link or code unused. Password and magic-link grants issue sessions; refresh tokens rotate on every use. Handoff codes issue a destination session once within 60 seconds. Authorization-code grants support S256 PKCE, scoped claims and confidential clients. COOKIE clients receive ah_refresh (HttpOnly, Secure, SameSite=Strict, host-only, Path=/oauth2/token); refresh_token is omitted from JSON. Cookie refresh requires explicit client_id and a same-host Origin or Referer. BODY clients retain JSON refresh tokens. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
+         * @description ANON with client authentication. Club context comes from the host, never request data. On the console's product host (a platform host other than the ID's, which resolves no club) clubs-admin's password, magic-link, handoff and refresh grants issue a session without club context (platformRoles, no clubId/roles, aud clubs-admin, ah_refresh on that host) to an account holding AGILITYHUB_ADMIN, and 403 PLATFORM_ONLY to any other account. It issues and renews only those sessions: a refresh token or an authorization code bound to a club is 400 VALIDATION_ERROR (oauth2Error invalid_grant) there, never renewed with its club; every grant of any other client there is 404 UNKNOWN_HOST and leaves its link or code unused. Password and magic-link grants issue sessions; refresh tokens rotate on every use. AUTH-01: a clubs-admin session (club back office and console) ends 12 hours after it began, however often it is refreshed: its refresh token and access tokens never outlive that end, and a later refresh is 400 REFRESH_EXPIRED; other clients slide auth.sessionDays. Handoff codes issue a destination session once within 60 seconds. Authorization-code grants support S256 PKCE, scoped claims and confidential clients. COOKIE clients receive ah_refresh (HttpOnly, Secure, SameSite=Strict, host-only, Path=/oauth2/token); refresh_token is omitted from JSON. Cookie refresh requires explicit client_id and a same-host Origin or Referer. BODY clients retain JSON refresh tokens. client_secret is required for confidential clients; code_verifier for public authorization-code clients.
          */
         post: operations["token"];
         delete?: never;
@@ -7414,7 +7554,7 @@ export interface paths {
         put?: never;
         /**
          * receiveStripeEvent
-         * @description Roles: Stripe (signature), no bearer token. R-12-21: before anything else the Stripe-Signature header (t={unix seconds},v1={hex HMAC-SHA256 of "{t}.{raw body}"}) is verified with the club's webhook secret, with Stripe's 5-minute tolerance on t; a missing, wrong or stale signature, a tampered body, an unknown club or a club without a webhook secret → 401 WEBHOOK_SIGNATURE_INVALID and a SecurityEvent, nothing else stored. Then a club without BILLING → 404 MODULE_DISABLED, without an enabled STRIPE provider → 404. The event is stored once per eventId (a second delivery → 200 with no effect) and processed in a transaction by type (checkout.session.completed/expired, payment_intent.succeeded/payment_failed, charge.refunded, setup_intent.succeeded, payment_method.detached, customer.deleted); an out-of-order event is IGNORED. 2xx as soon as the event is stored. Durable receipt, transactional processing and internal recovery (E8-T04).
+         * @description Roles: Stripe (signature), no bearer token. R-12-21: before anything else the Stripe-Signature header (t={unix seconds},v1={hex HMAC-SHA256 of "{t}.{raw body}"}) is verified with the club's webhook secret, with Stripe's 5-minute tolerance on t; a missing, wrong or stale signature, a tampered body, an unknown club or a club without a webhook secret → 401 WEBHOOK_SIGNATURE_INVALID and a SecurityEvent, nothing else stored. Then a club without BILLING → 404 MODULE_DISABLED, without an enabled STRIPE provider → 404. The event is stored once per eventId (a second delivery → 200 with no effect, unless the stored event is FAILED: then it goes back in the queue and is processed again, PAY-02) and processed in a transaction by type (checkout.session.completed/expired, payment_intent.succeeded/payment_failed, charge.refunded, setup_intent.succeeded, payment_method.detached, customer.deleted); an out-of-order event is IGNORED. 2xx as soon as the event is stored. Durable receipt, transactional processing and internal recovery (E8-T04): a failed processing is retried with a growing backoff over about 24 hours, an outage of the provider spending no attempt (PAY-02; GET /billing/stripe-events lists the FAILED events).
          */
         post: operations["receiveStripeEvent"];
         delete?: never;
@@ -7972,6 +8112,14 @@ export interface components {
             dryRun: boolean;
             recipients: components["schemas"]["AnnouncementRecipients"];
         };
+        AnnouncementResendResult: {
+            batchId: string;
+            /**
+             * Format: int32
+             * @description The batch's failed e-mails put back in the queue (0: nothing to resend, nothing written)
+             */
+            resent: number;
+        };
         AnnouncementResult: {
             /** @description null on dryRun */
             batchId?: string | null;
@@ -8064,6 +8212,8 @@ export interface components {
             bookingId: string;
             dogId: string;
             dogName: string;
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for the row; null when there is none (no photo, or one the server cannot reduce, such as WebP): show dogPhotoUrl, which the enlarged photo keeps */
+            dogPhotoThumbnailUrl?: string | null;
             /** @description Short-lived signed URL */
             dogPhotoUrl?: string | null;
             /** @description This row cannot currently be corrected. A saved NOTIFIED can be restored by an administrator or an instructor assigned to this class while their attendance window remains open. */
@@ -8129,7 +8279,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "REMITTANCE_SUBMISSION_UNDONE" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "ACCOUNT_EMAIL_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "CLASS_RESTORED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "SUPPORT_WRITE" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "ANNOUNCEMENT_RESENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -8266,7 +8416,7 @@ export interface components {
         BillingRunRequest: {
             /**
              * Format: date
-             * @description Default: billing.sepa.collectionDayOfMonth of the billed month (R-12-12)
+             * @description Default: billing.sepa.collectionDayOfMonth of the billed month, moved to the next TARGET business day when it is not one (R-12-12, SEPA-05). A date given must be a TARGET business day and leave two TARGET business days after today
              */
             collectionDate?: string;
             period: string;
@@ -8286,6 +8436,8 @@ export interface components {
             /** Format: date-time */
             at: string;
             cashMembers: components["schemas"]["CashMember"][];
+            /** @description SEPA-10; absent for a simulation stored before it: D6 asks the second confirmation */
+            comparison?: components["schemas"]["SimulationComparison"];
             /** Format: uuid */
             id: string;
             incidents: components["schemas"]["BillingIncident"][];
@@ -8443,6 +8595,8 @@ export interface components {
         BookingCancellationRequest: {
             /** @description Text of the club (25) */
             message?: string | null;
+            /** @description COMM-03: false = do not notify the member (no N-36); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
         };
         BookingCharge: {
             /** @enum {string} */
@@ -8510,6 +8664,8 @@ export interface components {
             state?: "PAYMENT_PENDING" | "ACTIVE" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB";
         };
         BookingRequest: {
+            /** @description COMM-03: false = do not notify the member (no N-36); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Explicit confirmation of a weekly-limit exception by an administrator acting for the member */
             overrideWeeklyLimit?: boolean;
             seatHoldId: string;
@@ -9277,6 +9433,8 @@ export interface components {
         /** @enum {string} */
         CheckoutStatus: "PENDING" | "PAID" | "EXPIRED";
         ClaimRequest: {
+            /** @description COMM-03: false = do not notify the member (no N-36); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Explicit confirmation of a weekly-limit exception by an administrator acting for the member */
             overrideWeeklyLimit?: boolean;
             seatHoldId: string;
@@ -9966,6 +10124,8 @@ export interface components {
             attempt: number;
             /** Format: date-time */
             createdAt: string;
+            /** @description PAY-06: the Stripe dispute (chargeback) of this card attempt; null without one */
+            dispute?: components["schemas"]["PaymentDispute"] | null;
             failureCode?: string | null;
             failureMessage?: string | null;
             /** Format: uuid */
@@ -10661,6 +10821,8 @@ export interface components {
         };
         DogLevelRequest: {
             levelId: string;
+            /** @description COMM-03: false = do not notify the member (no N-09). Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
         };
         DogListItem: {
             /** Format: double */
@@ -10685,6 +10847,8 @@ export interface components {
             owner?: components["schemas"]["OwnerSummary"];
             pack?: components["schemas"]["PackSummary"];
             pendingDocuments?: string[];
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for list rows; absent or null when there is none (no photo, or one the server cannot reduce, such as WebP): show photoUrl */
+            photoThumbnailUrl?: string | null;
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
             /** Format: date-time */
@@ -10720,6 +10884,8 @@ export interface components {
             id: string;
             level?: components["schemas"]["LevelSummary"];
             name: string;
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for list rows; absent or null when there is none (no photo, or one the server cannot reduce, such as WebP): show photoUrl */
+            photoThumbnailUrl?: string | null;
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
         };
@@ -10783,6 +10949,11 @@ export interface components {
             CLUB_NEWS?: boolean | null;
             OPERATIONAL?: boolean | null;
             PERSONAL?: boolean | null;
+        };
+        /** @description RFC 8058 one-click body, form-encoded or multipart: exactly List-Unsubscribe=One-Click */
+        EmailOneClickUnsubscribeForm: {
+            /** @enum {string} */
+            "List-Unsubscribe": "One-Click";
         };
         EmailUnsubscribeRequest: {
             /** @description The signed token of the «Deixar de rebre aquests comunicats» link (30 days) */
@@ -11144,6 +11315,8 @@ export interface components {
         HealthResponse: {
             /** Format: date-time */
             builtAt: string;
+            /** @description REL-02: the git commit the running build was made from (the image build records it); null when the build did not record one. */
+            commit: string | null;
             /** @enum {string} */
             status: "UP" | "DOWN";
             version: string;
@@ -11705,6 +11878,8 @@ export interface components {
         InvoiceFailureRequest: {
             /** Format: date */
             at: string;
+            /** @description SEPA-04 (R-12-17, R-12-19): true → the returned periodic receipt waits, FAILED, for the next run's remittance, which presents it again with the member's current mandate; absent or false → it waits for no remittance (marked paid or cancelled by hand). true on a manual receipt → 400 VALIDATION_ERROR {field: includeInNextRun} */
+            includeInNextRun?: boolean | null;
             reason: string;
             /** Format: int64 */
             version: number;
@@ -11892,6 +12067,15 @@ export interface components {
             /** @enum {string} */
             trigger: "SCHEDULE" | "CATCH_UP" | "MANUAL";
         };
+        /** @description PRIV-02: the dry run the caller saw and its effects.counters as it showed them; only the WOULD_ counters other than zero are compared, with the dry run's and with those of a plan made at execution time */
+        JobRunConfirmation: {
+            /** @description The dry run's effects.counters */
+            counters: {
+                [key: string]: number;
+            };
+            /** @description runId of the dry run */
+            dryRunId: string;
+        };
         JobRunListItem: {
             counters?: {
                 [key: string]: number;
@@ -11954,6 +12138,8 @@ export interface components {
             name: string;
         };
         JobTriggerRequest: {
+            /** @description PRIV-02: a real run of a process that deletes personal data (retention-sweep) confirms a dry run of the same process made in the last 30 minutes and the counts it showed; ignored for a dry run and for the other processes */
+            confirmation?: components["schemas"]["JobRunConfirmation"] | null;
             dryRun: boolean;
         };
         JwkSet: {
@@ -12443,6 +12629,10 @@ export interface components {
             close: string;
             open: string;
         };
+        LoginEmailChangeRequest: {
+            /** Format: email */
+            email: string;
+        };
         MagicLinkRequest: {
             client_id: string;
             /** Format: email */
@@ -12765,6 +12955,8 @@ export interface components {
             lastName2?: string | null;
             /** Format: date */
             leaveDate?: string | null;
+            /** @description S03 R-03-06b (AUTH-02): the login e-mail of the member's account and its suppression mark; null without an account or after erasure */
+            login?: components["schemas"]["MemberLogin"] | null;
             maskedAccount?: string | null;
             /** Format: int32 */
             memberNumber?: number | null;
@@ -12857,9 +13049,8 @@ export interface components {
             /** @description CLASS always; TRAINING with FREE_TRAINING; ACTIVITY with ACTIVITIES */
             types: ("CLASS" | "TRAINING" | "ACTIVITY")[];
         };
-        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason. */
+        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes, booking-block reason and (AUTHZ-02) the postal address; only ACTIVE and PENDING members. */
         MemberInstructorListItem: {
-            address?: components["schemas"]["Address"];
             bookingBlocked?: boolean;
             contactEmails?: components["schemas"]["ContactEmail"][];
             displayStatus?: components["schemas"]["DisplayStatus"];
@@ -12878,9 +13069,8 @@ export interface components {
             /** Format: int64 */
             version?: number;
         };
-        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes and booking-block reason. */
+        /** @description R-03-31: excludes paymentMethod, nextInvoiceDate, consents, internalNotes, booking-block reason and (AUTHZ-02) the postal address; only ACTIVE and PENDING members. */
         MemberInstructorView: {
-            address?: components["schemas"]["Address"];
             bookingBlocked: boolean;
             contactEmails: components["schemas"]["ContactEmail"][];
             displayStatus: components["schemas"]["DisplayStatus"];
@@ -12952,6 +13142,20 @@ export interface components {
         MemberListSignup: {
             /** Format: date-time */
             submittedAt: string;
+        };
+        MemberLogin: {
+            /**
+             * Format: date-time
+             * @description AUTH-03 (S03 R-03-06b): when the account's last access or recovery e-mail (N-25, N-27) finally failed, after its one retry; null: none, or a later one was accepted by the provider
+             */
+            accessEmailFailedAt?: string | null;
+            /** Format: email */
+            email: string;
+            /**
+             * @description BOUNCED (hard bounce or invalid address) or COMPLAINED (spam complaint): no system e-mail (sign-in links, recovery, welcome) reaches this address; null: none
+             * @enum {string|null}
+             */
+            emailStatus?: "BOUNCED" | "COMPLAINED" | null;
         };
         MemberMergePreview: {
             blockers: string[];
@@ -13496,7 +13700,7 @@ export interface components {
         OnboardingState: {
             /** @description Keys and required flags from signup.onboardingFields */
             fields: components["schemas"]["OnboardingField"][];
-            /** @description Existing image permission, absent when no decision is recorded */
+            /** @description The image box's initial state. PRIV-05: true only when the permission in force was granted by this account itself (its onboarding, or a sign-up or readmission sent from its app); false when it is refused; null when nothing is recorded or the grant was recorded by the migration, by staff or by a public sign-up. The stored value is kept until the member sends imageConsent. */
             imageConsent?: boolean | null;
             pending: boolean;
             /** Format: int32 */
@@ -13539,6 +13743,8 @@ export interface components {
             name: string;
             pack?: components["schemas"]["PackSummary"];
             pendingDocuments: string[];
+            /** @description WEB-05: short-lived signed URL of the photo's small rendition (JPEG, longest side 256 px) for list rows; absent or null when there is none (no photo, or one the server cannot reduce, such as WebP): show photoUrl */
+            photoThumbnailUrl?: string | null;
             /** @description Short-lived signed dog photo URL */
             photoUrl?: string;
             /** @enum {string} */
@@ -13758,6 +13964,17 @@ export interface components {
             /** Format: password */
             repeat: string;
         };
+        /** @description PAY-06 (S12 R-12-21): the Stripe dispute (chargeback) of a card payment, the flag D6 and D10 show, as the last charge.dispute.* event left it. providerRef is Stripe's dispute id (dp_…); status and reason are Stripe's (status: warning_needs_response · warning_under_review · warning_closed · needs_response · under_review · won · lost; reason: fraudulent, duplicate, product_not_received, …). openedAt is when Core learnt of it, closedAt when Stripe closed it (won, lost, warning_closed). The club answers it in Stripe's dashboard; no payment, pack, booking or invoice state changes with it. */
+        PaymentDispute: {
+            amount: components["schemas"]["Money"];
+            /** Format: date-time */
+            closedAt?: string | null;
+            /** Format: date-time */
+            openedAt: string;
+            providerRef: string;
+            reason?: string | null;
+            status: string;
+        };
         PaymentMethodPatch: {
             card?: components["schemas"]["CardInput"];
             manual?: components["schemas"]["ManualInput"];
@@ -13767,6 +13984,15 @@ export interface components {
         };
         /** @enum {string} */
         PaymentMethodType: "SEPA_DD" | "CARD" | "MANUAL";
+        PaymentMethodUpdate: {
+            card?: components["schemas"]["CardInput"];
+            manual?: components["schemas"]["ManualInput"];
+            /** @description COMM-03: false = do not notify the member (no N-38). Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
+            sepa?: components["schemas"]["SepaInput"];
+            /** @enum {string} */
+            type: "SEPA_DD" | "CARD" | "MANUAL";
+        };
         /** @description No full IBAN, card credentials or setup intent IDs. */
         PaymentMethodView: {
             channel?: string | null;
@@ -13859,6 +14085,8 @@ export interface components {
             /** Format: date-time */
             at: string;
             cashMembers: components["schemas"]["CashMember"][];
+            /** @description SEPA-10; absent for a simulation stored before it: D6 asks the second confirmation */
+            comparison?: components["schemas"]["SimulationComparison"];
             /** Format: uuid */
             id: string;
             incidents: components["schemas"]["BillingIncident"][];
@@ -14415,6 +14643,8 @@ export interface components {
             publishableKey?: string;
             secretKey?: string;
             suffix?: string;
+            /** @description PAY-10, STRIPE on the prod profile: true confirms switching a club whose saved keys are live to mode test (otherwise 422 PROVIDER_CONFIG_INVALID {field: mode, reason: LIVE_KEYS_SAVED}). Ignored elsewhere. */
+            testModeOverride?: boolean;
             /** Format: int64 */
             version: number;
             webhookSecret?: string;
@@ -14886,6 +15116,20 @@ export interface components {
             totalItems: number;
             /** Format: int32 */
             totalPages: number;
+        };
+        RemittanceReturnsRequest: {
+            /** Format: date */
+            at: string;
+            /** @description SEPA-04 (R-12-17, R-12-19): true → the returned periodic receipt waits, FAILED, for the next run's remittance, which presents it again with the member's current mandate; absent or false → it waits for no remittance (marked paid or cancelled by hand). true on a manual receipt → 400 VALIDATION_ERROR {field: includeInNextRun} */
+            includeInNextRun?: boolean | null;
+            invoiceIds: string[];
+            reason: string;
+        };
+        /** @description SEPA-04: POST /remittances/{id}/returns: how many receipts of the remittance were marked returned */
+        RemittanceReturnsResult: {
+            invoices: components["schemas"]["Invoice"][];
+            /** Format: int32 */
+            returned: number;
         };
         /** @enum {string} */
         RemittanceStatus: "GENERATED" | "SUBMITTED" | "ROLLED_BACK";
@@ -16052,13 +16296,30 @@ export interface components {
         };
         /** @enum {string} */
         SignupWarning: "CARD_INVALID" | "NO_IMAGE_CONSENT" | "ACCOUNT_NOT_PROVIDED" | "DOCUMENT_PENDING" | "FAMILY_HOLDER_NOT_FOUND" | "UPFRONT_UNPAID" | "READMISSION" | "CHECKOUT_PENDING" | "PAID_EXCEEDS_QUOTE";
+        /** @description SEPA-10 (R-12-11): the simulated total (kpis.total) against the total of the previous month's live run, as simulated. D6's generate confirmation shows it and, when secondConfirmationRequired, asks for a second explicit confirmation before POST /billing/runs: the difference, up or down, is more than thresholdPercent of previousTotal, or there is no previous total to compare with */
+        SimulationComparison: {
+            /** @description kpis.total − previousTotal, signed; null without previousTotal */
+            difference?: components["schemas"]["Money"] | null;
+            /** @description difference as a percentage of previousTotal, one decimal, signed; null without a positive previousTotal */
+            differencePercent?: number | null;
+            /** @description The month before the simulated one */
+            previousPeriod: string;
+            /** @description The previous month's live run total over all its providers; null without one (or in another currency) */
+            previousTotal?: components["schemas"]["Money"] | null;
+            secondConfirmationRequired: boolean;
+            /**
+             * Format: int32
+             * @description billing.totalDifferenceConfirmPercent when simulated
+             */
+            thresholdPercent: number;
+        };
         SimulationKpis: {
             byProvider: components["schemas"]["ByProvider"];
             /** Format: int32 */
             cashPending: number;
             /**
              * Format: date
-             * @description Default collection date in the billed month, club-local; null for a simulation stored before E90
+             * @description Default collection date: the day of the billed month, or the next TARGET business day when that day is not one (SEPA-05), club-local; null for a simulation stored before E90
              */
             collectionDate?: string | null;
             /** Format: int32 */
@@ -16153,6 +16414,31 @@ export interface components {
         StaleAttendanceDetails: {
             current: components["schemas"]["AttendanceSheet"];
         };
+        /** @description A row of the failed Stripe events list (CONVENCIONS_API §4, PAY-02): only the row id is required. id is Stripe's event id (evt_…). attempts: the processing attempts it spent (an outage of the provider spends none). nextAttemptAt: when it runs again, while it is retrying; processedAt: when its retries ran out, after which it stays FAILED until Stripe delivers it again or the retention cleanup deletes it. */
+        StripeEventListItem: {
+            /** Format: int32 */
+            attempts?: number;
+            id: string;
+            /** Format: date-time */
+            nextAttemptAt?: string;
+            /** Format: date-time */
+            processedAt?: string;
+            /** Format: date-time */
+            receivedAt?: string;
+            type?: string;
+        };
+        StripeEventPage: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["StripeEventListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
         /** @description Stripe's event envelope (https://docs.stripe.com/api/events/object); any other key is accepted and ignored */
         StripeWebhookEvent: {
             /**
@@ -16171,6 +16457,10 @@ export interface components {
              * @description The club-local day the XML was uploaded to the bank (R-12-15)
              */
             submittedAt: string;
+        };
+        SubmissionUndoRequest: {
+            /** @description SEPA-04 (R-12-15): why the remittance is no longer taken as sent, e.g. the bank refused the file or it was marked by mistake; kept in the audit entry */
+            reason: string;
         };
         SupportAccess: {
             /** Format: date-time */
@@ -16522,6 +16812,8 @@ export interface components {
         };
         TrainingBookingRequest: {
             dogId: string;
+            /** @description COMM-03: false = do not notify the member (no N-47); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Impersonation only (R-09-16); otherwise 403 OVERRIDE_NOT_ALLOWED */
             override?: components["schemas"]["TrainingOverride"] | null;
             /** @description Absent = «Qualsevol»: first FREE ring by catalog order (R-09-07) */
@@ -16543,6 +16835,8 @@ export interface components {
             thresholdMinutes: number;
         };
         TrainingCancellationRequest: {
+            /** @description COMM-03: false = do not notify the member (no N-47); only an ADMIN acting for the member (impersonation token), otherwise 403 FORBIDDEN. Absent or true: notify. Recorded in the audit entry */
+            notifyMember?: boolean | null;
             /** @description Required for a late cancellation with the impersonation token (ADMIN_LATE, R-09-10) */
             reason?: string | null;
         };
@@ -16679,6 +16973,8 @@ export interface components {
             concept: components["schemas"]["UpfrontConcept"];
             /** Format: date-time */
             createdAt: string;
+            /** @description PAY-06: the Stripe dispute (chargeback) of this card payment; null without one */
+            dispute?: components["schemas"]["PaymentDispute"] | null;
             /** Format: uuid */
             dogId?: string | null;
             /** Format: uuid */
@@ -17872,7 +18168,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -19768,7 +20064,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -20550,6 +20846,124 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    resendFailedAnnouncement: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                batchId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description AnnouncementResendResult */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnnouncementResendResult"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -21421,7 +21835,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -21568,7 +21982,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -22561,7 +22975,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -23377,6 +23791,138 @@ export interface operations {
             };
         };
     };
+    stripeEvents: {
+        parameters: {
+            query?: {
+                /** @description Zero-based page index. */
+                page?: number;
+                /** @description Requested page size: 20, 50, 200 or 1000 (CONVENCIONS_API §4); any other value is 400 INVALID_FILTER. */
+                size?: 20 | 50 | 200 | 1000;
+                /** @description Repeat field,asc or field,desc; only x-sortable fields. */
+                sort?: string[];
+                /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
+                filter?: string[];
+                /** @description Comma-separated keys of this operation's x-fields; any other key is INVALID_FILTER. A list sends the row id and the requested keys only. An export takes the requested keys that are columns (x-columns) as its columns when columns is absent; none of them is INVALID_FILTER. */
+                fields?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description StripeEventPage */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StripeEventPage"];
+                };
+            };
+            /** @description INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     bookings: {
         parameters: {
             query?: {
@@ -23552,7 +24098,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OVERRIDE_NOT_ALLOWED */
+            /** @description OVERRIDE_NOT_ALLOWED, FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -23572,7 +24118,7 @@ export interface operations {
             };
             /** @description SEAT_HOLD_EXPIRED, CLASS_FULL, BOOKING_LIMIT_REACHED, ALREADY_BOOKED, SEAT_TAKEN, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
-            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY */
+            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, DOG_ALREADY_BOOKED, PACK_EMPTY */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -24045,7 +24591,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -27036,6 +27582,133 @@ export interface operations {
                 };
             };
             /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    restoreClass: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmptyRequest"];
+            };
+        };
+        responses: {
+            /** @description ClassSession */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassSession"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, CLASS_CONFLICT */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RING_BLOCKED, RING_HAS_BOOKINGS */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -30634,7 +31307,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -30781,7 +31454,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -32871,6 +33544,135 @@ export interface operations {
             };
         };
     };
+    unsubscribeEmailOneClick: {
+        parameters: {
+            query: {
+                /** @description The signed token of the List-Unsubscribe URL (30 days) */
+                t: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/x-www-form-urlencoded": components["schemas"]["EmailOneClickUnsubscribeForm"];
+                "multipart/form-data": components["schemas"]["EmailOneClickUnsubscribeForm"];
+            };
+        };
+        responses: {
+            /** @description EmailUnsubscribeResult */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailUnsubscribeResult"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description UNSUBSCRIBE_TOKEN_INVALID */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     exports: {
         parameters: {
             query?: {
@@ -32909,7 +33711,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -33032,7 +33834,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -33158,7 +33960,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -36407,7 +37209,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -37311,7 +38113,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -38909,7 +39711,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description JOB_ALREADY_RUNNING, SIMULATION_STALE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
             /** @description Too Many Requests */
             429: {
@@ -41017,7 +41819,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description MEMBER_ERASED, INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
             /** @description PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
@@ -41234,7 +42036,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -44792,7 +45594,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description PASSWORD_TOO_SHORT, PASSWORD_MISMATCH, PASSWORD_COMPROMISED */
+            /** @description PASSWORD_TOO_SHORT {minLength}, PASSWORD_MISMATCH, PASSWORD_COMPROMISED */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -46201,7 +47003,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -46348,7 +47150,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -46723,7 +47525,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -47602,7 +48404,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -48434,6 +49236,133 @@ export interface operations {
             };
         };
     };
+    changeLoginEmail: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginEmailChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description AccessResendResponse: sentTo is the new address */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccessResendResponse"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, SUPPORT_RESTRICTED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_NOT_ACTIVE */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     merge: {
         parameters: {
             query?: never;
@@ -49192,7 +50121,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PaymentMethodPatch"];
+                "application/json": components["schemas"]["PaymentMethodUpdate"];
             };
         };
         responses: {
@@ -49223,7 +50152,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -51498,7 +52427,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -55629,7 +56558,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description JOB_ALREADY_RUNNING, SIMULATION_STALE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
             /** @description Too Many Requests */
             429: {
@@ -55719,7 +56648,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED, SUPPORT_RESTRICTED */
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, SUPPORT_RESTRICTED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -57812,7 +58741,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -57839,7 +58768,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description PROVIDER_CONFIG_INVALID */
+            /** @description PROVIDER_CONFIG_INVALID, STRIPE_CONNECTION_FAILED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -57938,7 +58867,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            /** @description FORBIDDEN, IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -61598,7 +62527,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -61625,6 +62554,128 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    markRemittanceReturns: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemittanceReturnsRequest"];
+            };
+        };
+        responses: {
+            /** @description RemittanceReturnsResult */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemittanceReturnsResult"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -61721,7 +62772,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -61820,6 +62871,128 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["SubmissionRequest"];
+            };
+        };
+        responses: {
+            /** @description Remittance */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Remittance"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    undoRemittanceSubmission: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmissionUndoRequest"];
             };
         };
         responses: {
@@ -67553,7 +68726,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OVERRIDE_NOT_ALLOWED */
+            /** @description OVERRIDE_NOT_ALLOWED, FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -67692,7 +68865,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IMPERSONATION_DENIED */
+            /** @description IMPERSONATION_DENIED, RECENT_LOGIN_REQUIRED */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -68071,7 +69244,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -69051,7 +70224,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OVERRIDE_NOT_ALLOWED */
+            /** @description OVERRIDE_NOT_ALLOWED, FORBIDDEN */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -69071,7 +70244,7 @@ export interface operations {
             };
             /** @description SEAT_TAKEN, SEAT_HOLD_EXPIRED, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
-            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, INACTIVITY_PERIOD, MEMBER_LEAVING, SWAP_NOT_ALLOWED */
+            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, INACTIVITY_PERIOD, MEMBER_LEAVING, SWAP_NOT_ALLOWED, DOG_ALREADY_BOOKED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -72124,7 +73297,7 @@ export interface operations {
             /** @description TokenResponse; refresh_token only for BODY clients; id_token depends on grant and scope */
             200: {
                 headers: {
-                    /** @description COOKIE clients: ah_refresh; HttpOnly; Secure; SameSite=Strict; Path=/oauth2/token; Max-Age=auth.sessionDays in seconds. Secure relaxed only for local HTTP. */
+                    /** @description COOKIE clients: ah_refresh; HttpOnly; Secure; SameSite=Strict; Path=/oauth2/token; Max-Age=the refresh token's lifetime in seconds: auth.sessionDays, at most until 12 hours after the sign-in for clubs-admin (AUTH-01). Secure relaxed only for local HTTP. */
                     "Set-Cookie"?: string;
                     [name: string]: unknown;
                 };
@@ -72168,7 +73341,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description HANDOFF_SESSION_CONFLICT (FE-03, R-01-13): a handoff code of an account, not an impersonation launch code, redeemed with this host's ah_refresh cookie of the same client holding a live session (not revoked, not expired, current family version) of another account. The code stays unused, no tokens are issued and no Set-Cookie is sent; the body names neither account. The same account's session, no cookie or a dead one: the exchange goes on as usual */
             409: {
                 headers: {
                     [name: string]: unknown;

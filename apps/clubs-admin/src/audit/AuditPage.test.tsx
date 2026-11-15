@@ -14,7 +14,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
 import { DogsPage, MembersPage } from "../census/CensusListPage";
 
-import { MemberAuditPage } from "./AuditPage";
+import { AuditTrail, MemberAuditPage } from "./AuditPage";
 import { ExportJobsProvider } from "./ExportsDrawer";
 import { LastChange } from "./LastChange";
 
@@ -433,5 +433,140 @@ describe("T-14-26 / R-14-11 E11-W05 step 5 (e): the «Data» range ends at the e
     expect(await list("2026-08-02T22:00:00Z,2026-08-03T10:14:59.999Z")).not.toContain(
       "2026-08-03T10:15:00Z",
     );
+  });
+});
+
+describe("COMM-03 (decision of 13 Nov 2026): D9 names an action made without the member's notice", () => {
+  const entry = {
+    action: "DOG_LEVEL_CHANGED",
+    actorName: "Jordi",
+    actorRole: "ADMIN",
+    at: "2026-11-13T10:02:00Z",
+    changes: [],
+    details: { notifyMember: false },
+    entityId: "00000000-0000-4000-8000-000000000301",
+    entityLabel: "Duna",
+    entityType: "Dog",
+    id: "00000000-0000-4000-8000-000000000302",
+    memberId: "00000000-0000-4000-8000-000000000087",
+    origin: "BACKOFFICE",
+  } as const;
+
+  it("shows «sense avís a l'abonat» in the details column and in the change's drawer", async () => {
+    server.use(
+      http.get("*/api/v1/members/:id/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [entry],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/audit-entries/:id", () => HttpResponse.json(entry)),
+    );
+    window.history.replaceState(
+      null,
+      "",
+      "/abonats/member-laura/auditoria?fields=at,action,details",
+    );
+    await renderAudit();
+    const action = await screen.findByRole("link", { name: "Nivell del gos modificat" });
+    const row = action.closest("tr");
+    if (row === null) throw new TypeError("No audit row");
+    expect(within(row).getByText("sense avís a l'abonat")).toHaveClass("ah-badge");
+
+    fireEvent.click(action);
+    const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
+    expect(await within(drawer).findByText("sense avís a l'abonat")).toHaveClass("ah-badge");
+  });
+
+  it("says nothing of the kind for an action that notified the member", async () => {
+    const notified = { ...entry, details: {} };
+    server.use(
+      http.get("*/api/v1/members/:id/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [notified],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/audit-entries/:id", () => HttpResponse.json(notified)),
+    );
+    window.history.replaceState(
+      null,
+      "",
+      "/abonats/member-laura/auditoria?fields=at,action,details",
+    );
+    await renderAudit();
+    fireEvent.click(await screen.findByRole("link", { name: "Nivell del gos modificat" }));
+    const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
+    await within(drawer).findByText("Duna");
+    expect(screen.queryByText("sense avís a l'abonat")).toBeNull();
+  });
+});
+
+describe("AUTHZ-05 (decision of 13 Nov 2026): D9 shows a support write's method and route", () => {
+  // `SUPPORT_WRITE` as the api writes it for an unaudited write made with a support token.
+  const entry = {
+    action: "SUPPORT_WRITE",
+    actorRole: "PLATFORM",
+    at: "2026-11-13T10:05:00Z",
+    changes: [],
+    details: { method: "POST", path: "/saved-views", route: "/saved-views", status: 201 },
+    entityId: "00000000-0000-4000-8000-000000000401",
+    entityType: "ImpersonationGrant",
+    id: "00000000-0000-4000-8000-000000000402",
+    origin: "PLATFORM_SUPPORT",
+  } as const;
+
+  it("the club's audit row and the change's drawer show details.method and details.route", async () => {
+    server.use(
+      http.get("*/api/v1/audit-entries", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [entry],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/audit-entries/:id", () => HttpResponse.json(entry)),
+    );
+    window.history.replaceState(null, "", "/auditoria?fields=at,action,origin,details");
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-audit", "admin-census", "census", "errors"],
+      storage: undefined,
+    });
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ExportJobsProvider client={client}>
+            <AuditTrail client={client} />
+          </ExportJobsProvider>
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+
+    const action = await screen.findByRole("link", { name: "Canvi fet pel suport" });
+    const row = action.closest("tr");
+    if (row === null) throw new TypeError("No audit row");
+    expect(within(row).getByText("Suport de plataforma")).toHaveClass("ah-badge");
+    expect(row).toHaveTextContent('"method":"POST"');
+    expect(row).toHaveTextContent('"route":"/saved-views"');
+
+    fireEvent.click(action);
+    const drawer = await screen.findByRole("dialog", { name: "Detall del canvi" });
+    const details = await within(drawer).findByText(/"method": "POST"/u);
+    expect(details).toHaveTextContent('"route": "/saved-views"');
+    expect(details).toHaveTextContent('"path": "/saved-views"');
   });
 });

@@ -30,7 +30,8 @@ function summaryOf(club: PlatformClub, provider: Provider): ProviderSummary {
 
 /**
  * `PUT /platform/clubs/{id}/payment-providers/{provider}` and `DELETE …?version=` with the club's
- * version (R-17-05). The answer is the provider's summary, so the record is read again after it.
+ * version (R-17-05). The answer is the provider's summary, so the record is read again after it;
+ * `save` gives that summary (undefined when the write was refused).
  */
 function useProviderWrite(
   { client, club, onReload }: Pick<ConsoleTabProps, "client" | "club" | "onReload">,
@@ -47,7 +48,7 @@ function useProviderWrite(
       return result.data;
     }, onReload);
     if (saved !== undefined) await onReload();
-    return saved !== undefined;
+    return saved;
   };
   const remove = async () => {
     const removed = await write.run(async () => {
@@ -155,7 +156,7 @@ function SepaCard(props: ConsoleTabProps) {
   const fields = fieldErrorMap(t, write.error);
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const ok = await write.save({
+    const saved = await write.save({
       creditorId: creditorId.trim(),
       creditorName: creditorName.trim(),
       enabled,
@@ -163,7 +164,7 @@ function SepaCard(props: ConsoleTabProps) {
       ...(iban.trim() === "" ? {} : { iban: iban.replaceAll(" ", "").toUpperCase() }),
       suffix: suffix.trim(),
     });
-    if (ok) setIban("");
+    if (saved !== undefined) setIban("");
   };
   return (
     <SectionCard title={t("console:payments.sepa.title")}>
@@ -250,8 +251,26 @@ function SepaCard(props: ConsoleTabProps) {
 }
 
 /**
+ * PAY-10 (S17 R-17-05): on the prod profile, a club whose saved Stripe keys are live is switched to
+ * test mode only once confirmed (`422 PROVIDER_CONFIG_INVALID {field: mode, reason: LIVE_KEYS_SAVED}`).
+ */
+function isLiveKeysSaved(error: unknown): boolean {
+  if (!isApiError(error, "PROVIDER_CONFIG_INVALID")) return false;
+  const details: unknown = error.details;
+  return (
+    typeof details === "object" &&
+    details !== null &&
+    (details as Record<string, unknown>).reason === "LIVE_KEYS_SAVED"
+  );
+}
+
+/**
  * Stripe: the keys are write-only («configurada · live · última prova OK 03-09»), the publishable
  * key is sent again with each save (its last four are read), and [Prova la connexió] pings it.
+ * PAY-10: a save with a new secret key runs the same test, so a refused key answers `422
+ * STRIPE_CONNECTION_FAILED` (the typed values stay) and a passed one shows its account; saved live
+ * keys switch to test mode only after a danger confirmation, which sends the same body again with
+ * `testModeOverride: true`.
  */
 function StripeCard(props: ConsoleTabProps) {
   const { client, club, onReload } = props;
@@ -270,14 +289,32 @@ function StripeCard(props: ConsoleTabProps) {
     `${club.id}:${String(club.version)}`,
   );
   const { enabled, mode } = form.draft;
-  const [tested, setTested] = useState<components["schemas"]["ProviderConnectionTest"]>();
+  // The account a connection test reached: [Prova la connexió]'s, or the one a key save ran.
+  const [connection, setConnection] = useState<{ account: string; mode: "live" | "test" }>();
+  // The body of the last save, sent again with `testModeOverride` once the switch is confirmed.
+  const [sent, setSent] = useState<Omit<ProviderRequest, "version">>();
+  const liveKeysSaved = sent !== undefined && isLiveKeysSaved(write.error);
   const fields = fieldErrorMap(t, write.error);
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const lastTest = formatClubDateTime(summary.lastTestAt, club.timeZone, locale);
 
+  const send = async (body: Omit<ProviderRequest, "version">) => {
+    setConnection(undefined);
+    setSent(body);
+    const saved = await write.save(body);
+    if (saved === undefined) return;
+    setSecretKey("");
+    setWebhookSecret("");
+    setPublishableKey("");
+    // PAY-10: a new secret key was tested on save; the summary names the account it reached.
+    if (saved.accountIdMasked != null && saved.mode != null) {
+      setConnection({ account: saved.accountIdMasked, mode: saved.mode });
+    }
+  };
+
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const ok = await write.save({
+    await send({
       enabled,
       mode,
       publishableKey: publishableKey.trim(),
@@ -285,15 +322,19 @@ function StripeCard(props: ConsoleTabProps) {
       ...(secretKey.trim() === "" ? {} : { secretKey: secretKey.trim() }),
       ...(webhookSecret.trim() === "" ? {} : { webhookSecret: webhookSecret.trim() }),
     });
-    if (ok) {
-      setSecretKey("");
-      setWebhookSecret("");
-      setPublishableKey("");
-    }
+  };
+
+  const keepLiveMode = () => {
+    write.clear();
+  };
+
+  const confirmTestMode = () => {
+    if (sent === undefined) return;
+    void send({ ...sent, testModeOverride: true });
   };
 
   const runTest = async () => {
-    setTested(undefined);
+    setConnection(undefined);
     const result = await test.run(async () => {
       const response = await client.POST("/platform/clubs/{id}/payment-providers/stripe/test", {
         params: { path: { id: club.id } },
@@ -302,7 +343,7 @@ function StripeCard(props: ConsoleTabProps) {
       return response.data;
     });
     if (result !== undefined) {
-      setTested(result);
+      setConnection({ account: result.accountName, mode: result.mode });
       // `lastTestAt` changed: the summary is read again.
       await onReload();
     }
@@ -397,7 +438,12 @@ function StripeCard(props: ConsoleTabProps) {
           </div>
         </fieldset>
         <FormMessage
-          message={write.error === undefined ? undefined : consoleErrorMessage(t, write.error)}
+          message={
+            // The confirmation below says why a switch to test mode was not saved.
+            write.error === undefined || liveKeysSaved
+              ? undefined
+              : consoleErrorMessage(t, write.error)
+          }
           tone="danger"
         />
         <FormMessage message={write.done ? t("console:common.saved") : undefined} tone="success" />
@@ -413,11 +459,11 @@ function StripeCard(props: ConsoleTabProps) {
         />
         <FormMessage
           message={
-            tested === undefined
+            connection === undefined
               ? undefined
               : t("console:payments.stripe.testOk", {
-                  account: tested.accountName,
-                  mode: t(`console:payments.stripe.modes.${tested.mode}`),
+                  account: connection.account,
+                  mode: t(`console:payments.stripe.modes.${connection.mode}`),
                 })
           }
           tone="success"
@@ -444,6 +490,22 @@ function StripeCard(props: ConsoleTabProps) {
           </Button>
         </div>
       </form>
+      <Modal
+        closeLabel={t("console:common.close")}
+        onClose={keepLiveMode}
+        open={liveKeysSaved}
+        title={t("console:payments.stripe.liveToTest.title")}
+      >
+        <p>{t("console:payments.stripe.liveToTest.body")}</p>
+        <div className="console-actions">
+          <Button onClick={keepLiveMode} variant="ghost">
+            {t("console:common.cancel")}
+          </Button>
+          <Button onClick={confirmTestMode} variant="danger">
+            {t("console:payments.stripe.liveToTest.confirm")}
+          </Button>
+        </div>
+      </Modal>
     </SectionCard>
   );
 }

@@ -454,6 +454,15 @@
   margin: 0;
 }
 
+/* COMM-07: «Reenvia els fallits» of the notice's announcement, under its deliveries. */
+.messaging-log__resend {
+  display: grid;
+  gap: var(--ah-space-2);
+  justify-items: start;
+  padding-top: var(--ah-space-3);
+  border-top: 1px solid var(--ah-color-border);
+}
+
 /* Six delivery columns in the drawer: compact cells (the table still scrolls sideways if needed). */
 .messaging-log__detail .ah-data-table th,
 .messaging-log__detail .ah-data-table td {

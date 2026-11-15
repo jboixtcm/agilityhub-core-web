@@ -280,6 +280,61 @@ describe("T-14-18 · D10 requests and cancels a member erasure (R-14-14)", () =>
     expect(screen.queryByRole("button", { name: "Anul·la la supressió" })).toBeNull();
   });
 
+  it("PRIV-04: a request waiting for a SEPA refund window says why in ca, es and en, from the read and from a 201 BLOCKED", async () => {
+    for (const [language, text, generic] of [
+      [
+        "ca",
+        "Un cobrament SEPA encara es pot retornar (8 setmanes): la supressió s'executarà quan es tanqui el termini.",
+        "La supressió està bloquejada.",
+      ],
+      [
+        "es",
+        "Un cobro SEPA todavía se puede devolver (8 semanas): la supresión se ejecutará cuando se cierre el plazo.",
+        "La supresión está bloqueada.",
+      ],
+      [
+        "en",
+        "A SEPA direct debit can still be refunded (8 weeks): the erasure will run once that period closes.",
+        "Erasure is blocked.",
+      ],
+    ] as const) {
+      mockScenario("memberLeft");
+      server.use(
+        http.get("*/api/v1/members/:id/erasure", () =>
+          HttpResponse.json(liveErasure("BLOCKED", ["SEPA_REFUND_WINDOW"])),
+        ),
+      );
+      await renderPrivacy("LEFT", language);
+      expect(await screen.findByText(text)).toBeVisible();
+      expect(screen.queryByText(generic)).toBeNull();
+      cleanup();
+      server.resetHandlers();
+    }
+
+    // The api creates it BLOCKED at once (no 422): the card shows the answer with its reason.
+    mockScenario("memberLeft");
+    server.use(
+      http.post("*/api/v1/members/:id/erasure", () =>
+        HttpResponse.json(liveErasure("BLOCKED", ["SEPA_REFUND_WINDOW"]), { status: 201 }),
+      ),
+    );
+    await renderPrivacy();
+    fireEvent.click(await screen.findByRole("button", { name: "Suprimeix les dades (RGPD)" }));
+    const dialog = screen.getByRole("dialog", { name: "Suprimeix les dades (RGPD)" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "PROGRAMA LA SUPRESSIÓ" }));
+    expect(
+      await screen.findByText(
+        "Un cobrament SEPA encara es pot retornar (8 setmanes): la supressió s'executarà quan es tanqui el termini.",
+      ),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        /^La supressió prevista per al .+ està bloquejada: es torna a provar cada dia\.$/u,
+      ),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Anul·la la supressió" })).toBeEnabled();
+  });
+
   it("a failed first read shows the error with [Torna-ho a provar] and no request button until it reads", async () => {
     mockScenario("memberLeft");
     let reads = 0;

@@ -41,13 +41,21 @@ afterAll(() => {
 });
 
 describe("E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08)", () => {
-  it("200: sends the token once and confirms, with a way to the «Avisos» of 12 for a session", async () => {
+  it("200, COMM-08: nothing is sent on load; the press sends the token once and confirms, with a way to the «Avisos» of 12 for a session", async () => {
     await renderApp(`/comunicats/baixa?t=${UNSUBSCRIBE_TOKENS.valid}`);
     expect(
-      await screen.findByText("Ja no rebràs els comunicats del club per correu."),
+      await screen.findByRole("heading", { name: "Deixar de rebre aquests comunicats" }),
     ).toBeVisible();
+    expect(screen.getByText("Deixaràs de rebre els comunicats del club per correu.")).toBeVisible();
+    const confirm = screen.getByRole("button", { name: "Deixa de rebre'ls" });
+    // A scanner or a forwarded copy that only opens the page unsubscribes nobody.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(posts).toEqual([]);
+    confirm.focus();
+    expect(confirm).toHaveFocus();
+    fireEvent.click(confirm);
     expect(
-      screen.getByRole("heading", { name: "Deixar de rebre aquests comunicats" }),
+      await screen.findByText("Ja no rebràs els comunicats del club per correu."),
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Canvia els teus avisos al perfil" })).toHaveAttribute(
       "href",
@@ -56,20 +64,49 @@ describe("E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R
     await waitFor(() => {
       expect(posts).toEqual([{ token: UNSUBSCRIBE_TOKENS.valid }]);
     });
+    expect(screen.queryByRole("button", { name: "Deixa de rebre'ls" })).toBeNull();
     // The page never prints the token.
     expect(document.body.textContent).not.toContain(UNSUBSCRIBE_TOKENS.valid);
   });
 
-  it("422 UNSUBSCRIBE_TOKEN_INVALID: the link is no longer valid, change it on 12", async () => {
+  it("COMM-08: the button waits for the answer and cannot send twice", async () => {
+    let release: (() => void) | undefined;
+    server.use(
+      http.post("*/api/v1/email-unsubscribes", async () => {
+        await new Promise<void>((resolve) => {
+          release = resolve;
+        });
+        return undefined;
+      }),
+    );
+    await renderApp(`/comunicats/baixa?t=${UNSUBSCRIBE_TOKENS.valid}`);
+    const confirm = await screen.findByRole("button", { name: "Deixa de rebre'ls" });
+    fireEvent.click(confirm);
+    expect(await screen.findByRole("status")).toHaveTextContent("Un moment…");
+    expect(confirm).toBeDisabled();
+    fireEvent.click(confirm);
+    await waitFor(() => {
+      expect(release).toBeTypeOf("function");
+    });
+    release?.();
+    expect(
+      await screen.findByText("Ja no rebràs els comunicats del club per correu."),
+    ).toBeVisible();
+    expect(posts).toEqual([{ token: UNSUBSCRIBE_TOKENS.valid }]);
+  });
+
+  it("422 UNSUBSCRIBE_TOKEN_INVALID after the press: the link is no longer valid, change it on 12", async () => {
     await renderApp(`/comunicats/baixa?t=${UNSUBSCRIBE_TOKENS.expired}`);
+    fireEvent.click(await screen.findByRole("button", { name: "Deixa de rebre'ls" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Aquest enllaç ja no és vàlid.");
     expect(screen.getByRole("link", { name: "Canvia els teus avisos al perfil" })).toBeVisible();
     expect(screen.queryByRole("button")).toBeNull();
   });
 
-  it("a link without its token is invalid and sends nothing", async () => {
+  it("a link without its token is invalid, offers no button and sends nothing", async () => {
     await renderApp("/comunicats/baixa");
     expect(await screen.findByRole("alert")).toHaveTextContent("Aquest enllaç ja no és vàlid.");
+    expect(screen.queryByRole("button")).toBeNull();
     expect(posts).toEqual([]);
   });
 
@@ -82,6 +119,7 @@ describe("E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R
       }),
     );
     await renderApp(`/comunicats/baixa?t=${UNSUBSCRIBE_TOKENS.valid}`);
+    fireEvent.click(await screen.findByRole("button", { name: "Deixa de rebre'ls" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("No s'ha pogut completar la baixa.");
     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
     expect(

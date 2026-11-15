@@ -34,14 +34,18 @@ export function createLoaderBackend<N extends string>(
         return;
       }
 
-      void load(baseLanguage, namespace).then(
-        ({ default: messages }) => {
-          callback(null, messages);
-        },
-        (error: unknown) => {
-          callback(error instanceof Error ? error : new Error(String(error)), false);
-        },
-      );
+      // WEB-10: a locale chunk that fails to load (a dropped connection on a first visit) is asked
+      // once more before its keys show raw.
+      void load(baseLanguage, namespace)
+        .catch(() => load(baseLanguage, namespace))
+        .then(
+          ({ default: messages }) => {
+            callback(null, messages);
+          },
+          (error: unknown) => {
+            callback(error instanceof Error ? error : new Error(String(error)), false);
+          },
+        );
     },
   };
 }

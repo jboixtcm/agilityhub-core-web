@@ -48,7 +48,7 @@
     "dog": "{name} {isAddDog, select, true {(nou gos)} other {({breed})}}",
     "validateLabel": "VALIDA: {name}",
     "submitted": "enviada el {date}",
-    "refundRequired": "Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació"
+    "refundRequired": "Hi ha un pagament cobrat: caldrà retornar-lo. Si es va pagar amb targeta, es reemborsa des de la fitxa de l'abonat, a «Pagaments a l'acte»."
   },
   "chart": {
     "title": "Gossos per nivell — {count} actius",

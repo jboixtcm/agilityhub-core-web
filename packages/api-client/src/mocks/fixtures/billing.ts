@@ -26,7 +26,9 @@ type PeriodRemittance = components["schemas"]["PeriodRemittance"];
 type Remittance = components["schemas"]["Remittance"];
 type RemittanceListItem = components["schemas"]["RemittanceListItem"];
 type RollbackBlocker = components["schemas"]["RollbackBlocker"];
+type SimulationComparison = components["schemas"]["SimulationComparison"];
 type SimulationKpis = components["schemas"]["SimulationKpis"];
+type StripeEventListItem = components["schemas"]["StripeEventListItem"];
 
 export type BillingProvider = "MANUAL" | "SEPA_XML" | "STRIPE";
 
@@ -444,6 +446,44 @@ export function simulationKpis(world: BillingWorld, period: string): SimulationK
   };
 }
 
+/** `billing.totalDifferenceConfirmPercent` (CATALEG_PARAMETRES default, SEPA-10). */
+export const TOTAL_DIFFERENCE_CONFIRM_PERCENT = 20;
+
+/**
+ * SEPA-10 (R-12-11): the simulated total against the previous month's live run, over all its
+ * providers, as the api's `TotalComparison`: a second confirmation when the difference, up or down,
+ * is more than the threshold of the previous total, or when there is no positive previous total.
+ */
+function simulationComparison(
+  world: BillingWorld,
+  period: string,
+  total: Money,
+): SimulationComparison {
+  const previousPeriod = shiftPeriod(period, -1);
+  const previous = world.runs.find(
+    (stored) => stored.run.period === previousPeriod && stored.run.status !== "ROLLED_BACK",
+  );
+  const thresholdPercent = TOTAL_DIFFERENCE_CONFIRM_PERCENT;
+  if (previous === undefined) {
+    return { previousPeriod, secondConfirmationRequired: true, thresholdPercent };
+  }
+  const previousMinor = Object.values(previous.run.byProvider).reduce(
+    (sum, totals) => sum + totals.total.amountMinor,
+    0,
+  );
+  const differenceMinor = total.amountMinor - previousMinor;
+  return {
+    difference: eur(differenceMinor),
+    differencePercent:
+      previousMinor > 0 ? Math.round((differenceMinor * 1000) / previousMinor) / 10 : null,
+    previousPeriod,
+    previousTotal: eur(previousMinor),
+    secondConfirmationRequired:
+      previousMinor <= 0 || Math.abs(differenceMinor) * 100 > thresholdPercent * previousMinor,
+    thresholdPercent,
+  };
+}
+
 export function buildSimulation(
   world: BillingWorld,
   period: string,
@@ -467,10 +507,12 @@ export function buildSimulation(
     id: uuid(5, world.sequence),
     incidents: [...incidentsOf(world.variant)],
     invoicesPreview: preview,
-    // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1), null without SEPA.
+    comparison: simulationComparison(world, period, simulationKpis(world, period).total),
+    // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1, moved to the next
+    // TARGET business day, SEPA-05), null without SEPA.
     kpis: {
       ...simulationKpis(world, period),
-      collectionDate: world.providers.includes("SEPA_XML") ? `${period}-01` : null,
+      collectionDate: world.providers.includes("SEPA_XML") ? defaultCollectionDate(period) : null,
     },
     period,
   };
@@ -524,6 +566,8 @@ function collection(
   return {
     amount: invoice.total,
     attempt: 1,
+    // PAY-06: the api sends `dispute: null` on a collection nobody disputed.
+    dispute: null,
     failureCode: null,
     failureMessage: null,
     id: uuid(3, world.sequence),
@@ -712,9 +756,13 @@ export function generateRun(
           creditor: { ...CREDITOR },
           fileAvailable: true,
           id: remittanceId,
-          messageId: `canic-${options.period}-${String(world.runs.length + 1)}`,
+          // `{clubSlug}-{period}-{seq}`: one more for each remittance of the month, rolled-back ones
+          // included, as the api's `SepaRemittanceWriter` numbers it (SEPA-06).
+          messageId: `canic-${options.period}-${String(
+            world.remittances.filter((item) => item.period === options.period).length + 1,
+          )}`,
           period: options.period,
-          requestedCollectionDate: options.collectionDate ?? `${options.period}-01`,
+          requestedCollectionDate: options.collectionDate ?? defaultCollectionDate(options.period),
           runId,
           sequenceBreakdown: { FRST: 0, RCUR: sepaInvoices.length },
           status: "GENERATED",
@@ -733,7 +781,9 @@ export function generateRun(
     previousNextNumber,
     run: {
       byProvider,
-      collectionDate: sepa ? (options.collectionDate ?? `${options.period}-01`) : null,
+      collectionDate: sepa
+        ? (options.collectionDate ?? defaultCollectionDate(options.period))
+        : null,
       createdByAccountId: ADMIN_ACCOUNT_ID,
       finishedAt: null,
       id: runId,
@@ -906,10 +956,79 @@ export function periodRemittance(remittance: Remittance, today: string): PeriodR
   };
 }
 
+/**
+ * SEPA-06 (S12 §2 D6, R-12-14): a remittance file's download name, as the api's
+ * `RemittanceService.fileName` gives it — `remesa-{period}-{seq}.{extension}`, `seq` being the last
+ * part of its `MsgId`, and `-ANULLADA-NO-PUJAR` before the extension once it is rolled back.
+ */
+export function remittanceFileName(
+  remittance: Pick<Remittance, "messageId" | "period" | "status">,
+  extension: "xlsx" | "xml",
+): string {
+  const sequence = remittance.messageId.split("-").at(-1) ?? "";
+  const cancelled = remittance.status === "ROLLED_BACK" ? "-ANULLADA-NO-PUJAR" : "";
+  return `remesa-${remittance.period}-${sequence}${cancelled}.${extension}`;
+}
+
 function addDaysToDate(date: string, days: number): string {
   const day = new Date(`${date}T00:00:00Z`);
   day.setUTCDate(day.getUTCDate() + days);
   return day.toISOString().slice(0, 10);
+}
+
+/** Easter Sunday of `year` (Gregorian computus), `YYYY-MM-DD`. */
+function easterSunday(year: number): string {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return `${String(year)}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/**
+ * R-12-12 (SEPA-05): a TARGET business day, as the api's `TargetCalendar` — not a weekend, nor
+ * 1 January, Good Friday, Easter Monday, 1 May, 25 or 26 December.
+ */
+export function isTargetBusinessDay(date: string): boolean {
+  const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
+  if (weekday === 0 || weekday === 6) return false;
+  const monthDay = date.slice(5);
+  if (["01-01", "05-01", "12-25", "12-26"].includes(monthDay)) return false;
+  const easter = easterSunday(Number(date.slice(0, 4)));
+  return date !== addDaysToDate(easter, -2) && date !== addDaysToDate(easter, 1);
+}
+
+/** The day itself or the next TARGET business day (`TargetCalendar.onOrAfter`). */
+export function targetBusinessDayOnOrAfter(date: string): string {
+  let current = date;
+  while (!isTargetBusinessDay(current)) current = addDaysToDate(current, 1);
+  return current;
+}
+
+/** `days` TARGET business days after `date` (the bank's lead time, R-12-12). */
+export function targetBusinessDaysAfter(date: string, days: number): string {
+  let current = date;
+  let left = days;
+  while (left > 0) {
+    current = addDaysToDate(current, 1);
+    if (isTargetBusinessDay(current)) left -= 1;
+  }
+  return current;
+}
+
+/** The run's default collection date: day 1 (the Cànic's) of the billed month, rolled (SEPA-05). */
+export function defaultCollectionDate(period: string): string {
+  return targetBusinessDayOnOrAfter(`${period}-01`);
 }
 
 export function remittanceListItem(remittance: Remittance): RemittanceListItem {
@@ -1088,6 +1207,35 @@ export const BILLING_INCIDENT_CODES: readonly BillingIncidentCode[] = [
   "CARD_INVALID",
   "CURRENCY_MISMATCH",
   "PROVIDER_DISABLED",
+];
+
+/**
+ * PAY-02 (R-12-21): the club's Stripe events whose processing failed (`GET /billing/stripe-events`),
+ * newest first — one still retried after three attempts, one an outage put back without spending
+ * any, and one stopped after its ten attempts. Fictional `evt_` ids.
+ */
+export const FAILED_STRIPE_EVENTS: readonly StripeEventListItem[] = [
+  {
+    attempts: 0,
+    id: "evt_mock_refund_outage",
+    nextAttemptAt: "2026-08-26T08:05:00Z",
+    receivedAt: "2026-08-26T07:55:00Z",
+    type: "charge.refunded",
+  },
+  {
+    attempts: 3,
+    id: "evt_mock_checkout_retrying",
+    nextAttemptAt: "2026-08-26T08:25:00Z",
+    receivedAt: "2026-08-26T07:40:00Z",
+    type: "checkout.session.completed",
+  },
+  {
+    attempts: 10,
+    id: "evt_mock_setup_stopped",
+    processedAt: "2026-08-25T09:03:00Z",
+    receivedAt: "2026-08-24T09:12:00Z",
+    type: "setup_intent.succeeded",
+  },
 ];
 
 export { ADMIN_ACCOUNT_ID as BILLING_ADMIN_ACCOUNT_ID, displayNumber, uuid as billingUuid };

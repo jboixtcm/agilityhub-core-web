@@ -1,11 +1,11 @@
-import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario } from "@agilityhub/api-client/mocks";
+import { createApiClient, type components } from "@agilityhub/api-client";
+import { handlers, mockScenario } from "@agilityhub/api-client/mocks";
 import brandingFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from "vitest";
 
@@ -144,4 +144,37 @@ it("offers a retry when level options fail without losing student results", asyn
   fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
   expect(await screen.findByRole("option", { name: "Nivell C" })).toBeVisible();
   expect(screen.queryByText("No s’han pogut carregar els nivells.")).toBeNull();
+});
+
+it("WEB-05: asks for the thumbnail beside the photo; a row shows its thumbnail, a row without one its photo", async () => {
+  const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+  const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+  const asked: string[][] = [];
+  server.use(
+    http.get("*/api/v1/dogs", async ({ request }) => {
+      const original = await getResponse(handlers, request);
+      if (original === undefined) throw new Error("Expected dogs response");
+      const page = (await original.json()) as components["schemas"]["ListPageDogListItem"];
+      asked.push(new URL(request.url).searchParams.get("fields")?.split(",") ?? []);
+      return HttpResponse.json({
+        ...page,
+        items: page.items.map((item) => ({
+          ...item,
+          photoUrl,
+          ...(item.name === "Duna" ? { photoThumbnailUrl: thumbnailUrl } : {}),
+        })),
+      });
+    }),
+  );
+  await openStudents();
+  const duna = await screen.findByRole("link", { name: "Laura + Duna · C" });
+  expect(duna.querySelector("img")).toHaveAttribute("src", thumbnailUrl);
+  const others = screen
+    .getAllByRole("link")
+    .filter((link) => link !== duna && link.querySelector(".ah-dog-photo") !== null);
+  expect(others.length).toBeGreaterThan(0);
+  for (const link of others) {
+    expect(link.querySelector("img")).toHaveAttribute("src", photoUrl);
+  }
+  expect(asked[0]).toEqual(expect.arrayContaining(["photoUrl", "photoThumbnailUrl"]));
 });

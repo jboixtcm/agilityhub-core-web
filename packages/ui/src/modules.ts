@@ -43,7 +43,13 @@ export const moduleUi = {
   },
   BILLING: {
     menuEntries: ["billing"],
-    routes: ["/facturacio", "/facturacio/remeses", "/rebuts", "/rebuts/:id"],
+    routes: [
+      "/facturacio",
+      "/facturacio/remeses",
+      "/facturacio/esdeveniments-stripe",
+      "/rebuts",
+      "/rebuts/:id",
+    ],
     tabs: [],
   },
   PACKS: { menuEntries: [], routes: [], tabs: [] },

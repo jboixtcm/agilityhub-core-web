@@ -52,8 +52,12 @@ export function takeNavigation(): Navigation {
   return navigation;
 }
 
-/** Opens `path`: in place when it is a screen of this app, as a document load otherwise. */
+/**
+ * Opens `path`: in place when it is a screen of this app, as a document load otherwise. Only a web
+ * address is ever opened (FE-09): a `javascript:`, `data:` or other scheme does nothing.
+ */
 export function navigate(path: string, { replace = false, state = null }: NavigateOptions = {}) {
+  if (!/^https?:$/u.test(new URL(path, window.location.href).protocol)) return;
   const url = appUrl(path);
   if (url === null) {
     if (replace) window.location.replace(path);

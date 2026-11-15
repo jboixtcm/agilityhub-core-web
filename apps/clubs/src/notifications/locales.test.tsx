@@ -6,7 +6,7 @@ import {
   resetNotificationMockState,
 } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { cleanup, screen } from "@testing-library/react";
+import { cleanup, fireEvent, screen } from "@testing-library/react";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { canic, renderApp, without } from "../booking/test-utils";
@@ -73,6 +73,8 @@ const CASES = [
     profileTitle: "Mi perfil",
     pushDenied: "Activa las notificaciones en el navegador para recibirlas en el móvil",
     unsubscribed: "Ya no recibirás los comunicados del club por correo.",
+    unsubscribeIntro: "Dejarás de recibir los comunicados del club por correo.",
+    unsubscribeConfirm: "Darme de baja",
     unsubscribeInvalid: "Este enlace ya no es válido.",
   },
   {
@@ -88,6 +90,8 @@ const CASES = [
     profileTitle: "My profile",
     pushDenied: "Allow notifications in your browser to receive them on your phone",
     unsubscribed: "You will no longer receive the club's announcements by email.",
+    unsubscribeIntro: "You will stop receiving the club's announcements by email.",
+    unsubscribeConfirm: "Unsubscribe",
     unsubscribeInvalid: "This link is no longer valid.",
   },
 ] as const;
@@ -143,10 +147,14 @@ describe("E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and
   it.each(CASES)(
     "E7-W02 round 2 #6 ($locale): the e-mail unsubscribe page, valid and expired",
     async (literal) => {
+      // COMM-08: the page asks before it unsubscribes.
       await renderApp("/comunicats/baixa?t=mock-unsubscribe-valid", { locale: literal.locale });
+      expect(await screen.findByText(literal.unsubscribeIntro)).toBeVisible();
+      fireEvent.click(screen.getByRole("button", { name: literal.unsubscribeConfirm }));
       expect(await screen.findByText(literal.unsubscribed)).toBeVisible();
       cleanup();
       await renderApp("/comunicats/baixa?t=mock-unsubscribe-expired", { locale: literal.locale });
+      fireEvent.click(await screen.findByRole("button", { name: literal.unsubscribeConfirm }));
       expect(await screen.findByText(literal.unsubscribeInvalid)).toBeVisible();
     },
   );

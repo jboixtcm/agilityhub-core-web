@@ -25,25 +25,30 @@ function requestLines(): string[] {
   return lines;
 }
 
-async function renderLog(path = "/notificacions") {
+async function renderLog(path = "/notificacions", locale: "ca" | "en" | "es" = "ca") {
   mockScenario("admin");
   window.history.replaceState(null, "", path);
+  // COMM-07's es and en cases: a club that offers the three languages.
+  const branding: Branding = locale === "ca" ? canic : { ...canic, locales: ["ca", "es", "en"] };
   const i18n = await createI18n({
-    branding: canic,
-    browserLanguages: ["ca"],
+    branding,
+    browserLanguages: [locale],
     initialNamespaces: ["admin-messaging", "census", "enums", "errors"],
     storage: undefined,
   });
   render(
     <I18nextProvider i18n={i18n}>
-      <BrandingProvider branding={canic}>
+      <BrandingProvider branding={branding}>
         <NotificationLogPage
           client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
         />
       </BrandingProvider>
     </I18nextProvider>,
   );
-  await screen.findByRole("heading", { level: 1, name: "Avisos enviats" });
+  await screen.findByRole("heading", {
+    level: 1,
+    name: { ca: "Avisos enviats", en: "Sent notifications", es: "Avisos enviados" }[locale],
+  });
 }
 
 const rows = () =>
@@ -366,5 +371,230 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     expect(maskedTarget("+34655100101")).toBe("··· 101");
     expect(maskedTarget("push-subscription-7f3a")).toBe("···");
     expect(maskedTarget(null)).toBeUndefined();
+  });
+});
+
+describe("COMM-07 (decision of 13 Nov 2026): «Reenvia els fallits» of an announcement", () => {
+  type Detail = components["schemas"]["NotificationDetail"];
+  type ListItem = components["schemas"]["NotificationListItem"];
+  const BATCH = "batch-test-comm07";
+
+  /** One announcement notice whose e-mail ended FAILED, and one failed notice of another code. */
+  function announcementWorld(answer: () => Response) {
+    let emailStatus: "FAILED" | "QUEUED" = "FAILED";
+    const sent: { body: string; key: string | null; path: string }[] = [];
+    const detail = (id: string): Detail => ({
+      audience: "MEMBER",
+      body: "Text del comunicat.",
+      category: "CLUB_NEWS",
+      channels: [],
+      code: id === "notice-announcement" ? "N-24" : "N-09",
+      createdAt: "2026-11-10T09:00:00Z",
+      deliveries: [
+        {
+          attempts: emailStatus === "FAILED" ? 5 : 0,
+          channel: "EMAIL",
+          deliveredAt: null,
+          failedAt: emailStatus === "FAILED" ? "2026-11-10T10:21:00Z" : null,
+          lastError: "Brevo HTTP 402 not_enough_credits",
+          nextAttemptAt: null,
+          providerRef: null,
+          sentAt: null,
+          status: id === "notice-announcement" ? emailStatus : "FAILED",
+          target: "laura@example.test",
+        },
+      ],
+      eventType: id === "notice-announcement" ? "AnnouncementSent" : "MemberPaymentMethodChanged",
+      id,
+      locale: "ca",
+      readAt: null,
+      recipient: { displayName: "Laura Serra Vidal", email: null, memberId: "member-laura" },
+      smsBody: null,
+      subject: { memberId: "member-laura" },
+      templateId: "tpl-n-24",
+      templateVersion: 1,
+      title: id === "notice-announcement" ? "Comunicat del club" : "Mètode de pagament canviat",
+    });
+    const row = (id: string, batchId: string | null): ListItem => ({
+      audience: "MEMBER",
+      batchId,
+      category: "CLUB_NEWS",
+      channels: [{ channel: "EMAIL", status: "FAILED" }],
+      code: id === "notice-announcement" ? "N-24" : "N-09",
+      createdAt: "2026-11-10T09:00:00Z",
+      id,
+      readAt: null,
+      recipient: { displayName: "Laura Serra Vidal", email: null, memberId: "member-laura" },
+      title: id === "notice-announcement" ? "Comunicat del club" : "Mètode de pagament canviat",
+    });
+    server.use(
+      http.get("*/api/v1/notifications", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [row("notice-announcement", BATCH), row("notice-other", null)],
+          page: 0,
+          size: 50,
+          totalItems: 2,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/notifications/:id", ({ params }) =>
+        HttpResponse.json(detail(String(params.id))),
+      ),
+      http.post("*/api/v1/announcements/:batchId/resend-failed", async ({ params, request }) => {
+        sent.push({
+          body: await request.text(),
+          key: request.headers.get("Idempotency-Key"),
+          path: `/announcements/${String(params.batchId)}/resend-failed`,
+        });
+        const response = answer();
+        if (response.status === 202) emailStatus = "QUEUED";
+        return response;
+      }),
+    );
+    return sent;
+  }
+
+  async function openNotice(code: string) {
+    await waitFor(() => {
+      expect(rows()).toHaveLength(2);
+    });
+    const row = rows().find((item) => item.textContent.includes(code));
+    if (row === undefined) throw new Error(`No ${code} row`);
+    fireEvent.click(within(row).getByText(code));
+    return screen.findByRole("dialog", { name: `Avís ${code}` });
+  }
+
+  it("a notice of an announcement whose e-mail failed offers it; the confirmation sends the batch's request with a key and says how many", async () => {
+    const lines = requestLines();
+    const sent = announcementWorld(() =>
+      HttpResponse.json({ batchId: BATCH, resent: 2 }, { status: 202 }),
+    );
+    await renderLog();
+    const drawer = await openNotice("N-24");
+    expect(
+      await within(drawer).findByText(
+        "Aquest avís és d'un comunicat i el correu no ha arribat. Pots tornar a enviar tots els correus del comunicat que han fallat.",
+      ),
+    ).toBeVisible();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Reenvia els fallits" }));
+    const confirm = screen.getByRole("dialog", {
+      name: "Reenvia els correus fallits del comunicat",
+    });
+    expect(confirm).toHaveTextContent(
+      "Es tornaran a enviar ara tots els correus d'aquest comunicat que han fallat, al ritme del proveïdor. Els correus que ja van arribar, els SMS i els avisos push no es tornen a enviar.",
+    );
+    expect(sent).toHaveLength(0);
+    const before = lines.filter((line) => line.startsWith("GET /notifications?")).length;
+    fireEvent.click(within(confirm).getByRole("button", { name: "Reenvia els fallits" }));
+    expect(
+      await within(drawer).findByText(
+        "2 correus tornen a la cua: sortiran al ritme del proveïdor.",
+      ),
+    ).toBeVisible();
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toMatchObject({ body: "", path: `/announcements/${BATCH}/resend-failed` });
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    // The list's request asks for every row's batch, and the list and the notice are read again.
+    expect(lines.find((line) => line.startsWith("GET /notifications?"))).toContain("batchId");
+    await waitFor(() => {
+      expect(lines.filter((line) => line.startsWith("GET /notifications?")).length).toBeGreaterThan(
+        before,
+      );
+    });
+    // The e-mail is queued now: the action is gone, the outcome stays.
+    await waitFor(() => {
+      expect(within(drawer).queryByRole("button", { name: "Reenvia els fallits" })).toBeNull();
+    });
+    expect(within(drawer).getByRole("status")).toHaveTextContent("2 correus tornen a la cua");
+  });
+
+  it("is not offered on a failed e-mail outside any announcement, nor on an announcement notice whose e-mail did not fail", async () => {
+    announcementWorld(() => HttpResponse.json({ batchId: BATCH, resent: 0 }, { status: 202 }));
+    await renderLog();
+    const drawer = await openNotice("N-09");
+    await within(drawer).findByText("Mètode de pagament canviat");
+    expect(within(drawer).queryByRole("button", { name: "Reenvia els fallits" })).toBeNull();
+    cleanup();
+    server.resetHandlers();
+    // The mock's announcement (N-24, batch of 9 August): its e-mail was skipped by preference.
+    await renderLog();
+    await waitFor(() => {
+      expect(rows().length).toBeGreaterThan(0);
+    });
+    const row = rows().find((item) => item.textContent.includes("N-24"));
+    if (row === undefined) throw new Error("No N-24 row");
+    fireEvent.click(within(row).getByText("N-24"));
+    const seeded = await screen.findByRole("dialog", { name: "Avís N-24" });
+    await within(seeded).findByText("Comunicat del club");
+    expect(within(seeded).queryByRole("button", { name: "Reenvia els fallits" })).toBeNull();
+  });
+
+  it("nothing to resend, an unknown announcement and Cancel", async () => {
+    let answer = () => HttpResponse.json({ batchId: BATCH, resent: 0 }, { status: 202 });
+    const sent = announcementWorld(() => answer());
+    await renderLog();
+    const drawer = await openNotice("N-24");
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Reenvia els fallits" }));
+    let confirm = screen.getByRole("dialog", { name: "Reenvia els correus fallits del comunicat" });
+    fireEvent.click(within(confirm).getByRole("button", { name: "Cancel·la" }));
+    expect(sent).toHaveLength(0);
+    answer = () =>
+      HttpResponse.json(
+        { code: "NOT_FOUND", details: {}, message: "NOT_FOUND", traceId: "comm-07" },
+        { status: 404 },
+      );
+    fireEvent.click(within(drawer).getByRole("button", { name: "Reenvia els fallits" }));
+    confirm = screen.getByRole("dialog", { name: "Reenvia els correus fallits del comunicat" });
+    fireEvent.click(within(confirm).getByRole("button", { name: "Reenvia els fallits" }));
+    expect(await within(confirm).findByRole("alert")).toHaveTextContent(
+      "Aquest comunicat ja no existeix.",
+    );
+    answer = () => HttpResponse.json({ batchId: BATCH, resent: 0 }, { status: 202 });
+    fireEvent.click(within(confirm).getByRole("button", { name: "Reenvia els fallits" }));
+    expect(
+      await within(drawer).findByText("No hi ha cap correu fallit per reenviar."),
+    ).toBeVisible();
+    // A new press after an answer is a new request: its own key.
+    expect(sent).toHaveLength(2);
+    expect(sent[1]?.key).not.toBe(sent[0]?.key);
+  });
+
+  it("speaks es and en", async () => {
+    /** Opens the N-24 row of the list, whatever the language. */
+    async function openAnnouncement() {
+      await waitFor(() => {
+        expect(screen.getAllByRole("row").some((row) => row.textContent.includes("N-24"))).toBe(
+          true,
+        );
+      });
+      const row = screen.getAllByRole("row").find((item) => item.textContent.includes("N-24"));
+      if (row === undefined) throw new Error("No N-24 row");
+      fireEvent.click(within(row).getByText("N-24"));
+      return screen.findByRole("dialog", { name: /N-24/u });
+    }
+    announcementWorld(() => HttpResponse.json({ batchId: BATCH, resent: 1 }, { status: 202 }));
+    await renderLog("/notificacions", "es");
+    let drawer = await openAnnouncement();
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Reenviar los fallidos" }));
+    let confirm = screen.getByRole("dialog", {
+      name: "Reenviar los correos fallidos del comunicado",
+    });
+    fireEvent.click(within(confirm).getByRole("button", { name: "Reenviar los fallidos" }));
+    expect(
+      await within(drawer).findByText("1 correo vuelve a la cola: saldrá al ritmo del proveedor."),
+    ).toBeVisible();
+    cleanup();
+    announcementWorld(() => HttpResponse.json({ batchId: BATCH, resent: 3 }, { status: 202 }));
+    await renderLog("/notificacions", "en");
+    drawer = await openAnnouncement();
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Resend failed" }));
+    confirm = screen.getByRole("dialog", { name: "Resend the announcement's failed e-mails" });
+    fireEvent.click(within(confirm).getByRole("button", { name: "Resend failed" }));
+    expect(
+      await within(drawer).findByText(
+        "3 e-mails are back in the queue: they will go out at the provider's pace.",
+      ),
+    ).toBeVisible();
   });
 });

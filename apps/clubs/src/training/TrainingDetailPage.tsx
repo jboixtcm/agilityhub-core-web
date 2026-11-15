@@ -6,6 +6,11 @@ import { useTranslation } from "react-i18next";
 
 import { BookingBar, thresholdText } from "../booking/BookingDetailPage";
 import "../booking/booking.css";
+import {
+  memberNoticeField,
+  NotifyMemberChoice,
+  useMemberNoticeChoice,
+} from "../booking/NotifyMemberChoice";
 import { errorText, navigateInApp, type Translate } from "../booking/shared";
 
 import "./training.css";
@@ -75,6 +80,9 @@ export function TrainingDetailPage({
   const [dialog, setDialog] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  // COMM-03: an ADMIN acting as the member may cancel without notifying them (N-47).
+  const noticeChoice = useMemberNoticeChoice();
+  const [notify, setNotify] = useState(true);
   // One `Idempotency-Key` per cancellation (the booking and its body): a retry while the api has
   // not answered it (offline, a 5xx, IN_PROGRESS) sends the same key; its answer retires it
   // (CONVENCIONS_API §7, E74, E85).
@@ -131,7 +139,7 @@ export function TrainingDetailPage({
   const cancel = async () => {
     setPending(true);
     setError(undefined);
-    const body = {};
+    const body = memberNoticeField(noticeChoice, notify);
     try {
       await cancellations.send(JSON.stringify({ body, id: data.id }), (key) =>
         client.POST("/training-bookings/{id}/cancellation", {
@@ -191,6 +199,7 @@ export function TrainingDetailPage({
         <Button
           onClick={() => {
             setError(undefined);
+            setNotify(true);
             setDialog(true);
           }}
         >
@@ -212,6 +221,14 @@ export function TrainingDetailPage({
           open
           title={t("training:detail.cancelDialog")}
         >
+          {noticeChoice ? (
+            <NotifyMemberChoice
+              checked={notify}
+              disabled={pending}
+              id="training-cancel-notify-member"
+              onChange={setNotify}
+            />
+          ) : null}
           {error === undefined ? null : (
             <p className="booking-note booking-note--danger" role="alert">
               {error}

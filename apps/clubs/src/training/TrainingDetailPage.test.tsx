@@ -46,9 +46,7 @@ describe("S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-1
     expect(screen.getByText("confirmada")).toBeVisible();
     expect(screen.getByText("Reservada pel club el diumenge 02/08 a les 20:05")).toBeVisible();
     expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).not.toBeInTheDocument();
-    expect(
-      screen.getByText(/El termini per anul·lar era el/u),
-    ).toBeVisible();
+    expect(screen.getByText(/El termini per anul·lar era el/u)).toBeVisible();
   });
 
   it("cancelled by the club: its state, and nothing to do", async () => {
@@ -234,5 +232,41 @@ describe("E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09
     expect(screen.queryByText(/Ja no es pot anul·lar/u)).not.toBeInTheDocument();
     // Not remounted: the title is the node that was on screen before.
     expect(screen.getByText("Entrenament · amb Rock")).toBe(title);
+  });
+});
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» when an ADMIN cancels a training for the member", () => {
+  it("is offered ticked to an ADMIN acting as the member; unticked, the cancellation carries notifyMember: false", async () => {
+    const requests = recordRequests();
+    await renderApp("/entrenaments/training-rock-tue4", { scenario: "impersonated" });
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la reserva d'aquest entrenament?",
+    });
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    await waitFor(() => {
+      expect(requests.bodies.get("/training-bookings/training-rock-tue4/cancellation")).toEqual([
+        { notifyMember: false },
+      ]);
+    });
+  });
+
+  it("the member gets no choice and cancels with an empty body, as before", async () => {
+    const requests = recordRequests();
+    await openDetail("training-rock-tue4");
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la reserva d'aquest entrenament?",
+    });
+    expect(within(dialog).queryByRole("checkbox", { name: "Avisa l'abonat" })).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    await waitFor(() => {
+      expect(requests.bodies.get("/training-bookings/training-rock-tue4/cancellation")).toEqual([
+        {},
+      ]);
+    });
   });
 });

@@ -12,6 +12,8 @@ import {
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { validIban } from "../census/iban";
+
 import { isReadmissionPending, loadDogDocumentTypes, signupPerson } from "./readmission";
 
 type SignupView = components["schemas"]["MemberSignupView"];
@@ -666,6 +668,7 @@ export function SignupEditDrawer({
   const [dogEdits, setDogEdits] = useState<Readonly<Record<string, Partial<DogForm>>>>({});
   const [working, setWorking] = useState(false);
   const [error, setError] = useState<{ stale: boolean; text: string }>();
+  const [ibanError, setIbanError] = useState<string>();
   // E38: what each reused dog's document PATCH sent and the version it answered, kept until the
   // view read again carries that version, so a change made meanwhile builds on it.
   const [sentDocuments, setSentDocuments] = useState<Readonly<Record<string, SentDocuments>>>({});
@@ -696,6 +699,7 @@ export function SignupEditDrawer({
     setPersonEdits({});
     setDogEdits({});
     setError(undefined);
+    setIbanError(undefined);
   };
 
   const close = () => {
@@ -726,6 +730,18 @@ export function SignupEditDrawer({
 
   const save = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // WEB-07 (decision of 13 Nov 2026): an IBAN `memberPatch` would send is checked first.
+    if (
+      !addDogMode &&
+      billing &&
+      person.paymentType === "SEPA_DD" &&
+      person.iban.trim() !== "" &&
+      !validIban(person.iban)
+    ) {
+      setIbanError(t("errors:INVALID_IBAN"));
+      document.getElementById("signup-edit-iban")?.focus();
+      return;
+    }
     setWorking(true);
     setError(undefined);
     let saved = false;
@@ -768,13 +784,19 @@ export function SignupEditDrawer({
   };
 
   const personInput = (key: PersonTextKey, label: string, type = "text", required = false) => (
-    <FormField id={`signup-edit-${key}`} key={key} label={label}>
+    <FormField
+      {...(key === "iban" && ibanError !== undefined ? { error: ibanError } : {})}
+      id={`signup-edit-${key}`}
+      key={key}
+      label={label}
+    >
       <Input
         autoComplete={key === "iban" || key === "holderTaxId" ? "off" : undefined}
         id={`signup-edit-${key}`}
         onChange={(event) => {
           const input = event.currentTarget.value;
           setPersonEdits((current) => ({ ...current, [key]: input }));
+          if (key === "iban") setIbanError(undefined);
         }}
         required={required}
         type={type}

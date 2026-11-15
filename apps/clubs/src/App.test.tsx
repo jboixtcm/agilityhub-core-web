@@ -23,12 +23,14 @@ import {
 import { LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { App, MOBILE_ROUTES, MobileNavigation } from "./App";
+import { PUSH_SUBSCRIPTION_STORAGE_KEY } from "./notifications/push";
+import { markWorkerUpdated, resetWorkerUpdate } from "./pwa/update";
 import { isCountryFieldValid } from "./SelfServicePages";
 
 const canicBranding: Branding = {
@@ -478,6 +480,7 @@ describe("E11-W06 W1 (S11 R-11-11, S01 §2 01/02): a deep link survives the sign
     // The e-mail's link opens a new tab: no `?next=` there, the path kept for it.
     window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     fireEvent.click(await screen.findByRole("button", { name: "CONTINUAR" }));
     await waitFor(() => {
       expect(window.location.pathname).toBe("/reserves/b1");
@@ -843,6 +846,25 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     ).toBe(false);
   });
 
+  it("FE-06 (R-11-07): the logout of an account without an app profile sends this device's push DELETE first, as 12's does", async () => {
+    mockScenario("admin");
+    await overrideMembership({ profiles: ["ADMIN"], roles: ["ADMIN"] });
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-7" }));
+    const logout = vi.spyOn(client, "logout");
+    window.history.pushState(null, "", "/perfil-acces");
+    await renderApplication(client);
+    const recorded = recordApiRequests();
+    fireEvent.click(await screen.findByRole("button", { name: "Tanca la sessió" }));
+    await waitFor(() => {
+      expect(logout).toHaveBeenCalledTimes(1);
+    });
+    recorded.stop();
+    expect(recorded.requests).toContain("DELETE /api/v1/push-subscriptions/push-7");
+    expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNull();
+  });
+
   it("2026-11-01: a removed remembered member profile falls back to the remaining instructor profile", async () => {
     mockScenario("instructor");
     await overrideMembership({
@@ -912,14 +934,17 @@ describe("T-01-18 access screen", () => {
     expect(
       screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    // WEB-01 (decision of 13 Nov 2026): reworded so an existing member does not take it for the way in.
+    expect(
+      screen.getByRole("link", { name: "No ets soci del club? Fes-te'n soci →" }),
+    ).toBeVisible();
     // INC-11 (mockup 01): the question in grey, the action as a link in the club's colour.
     const forgot = screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" });
     expect(within(forgot).getByText("Recupera-la")).toHaveClass("auth-link");
     expect(within(forgot).getByText("Has oblidat la contrasenya?")).not.toHaveClass("auth-link");
-    const join = screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" });
-    expect(within(join).getByText("Apunta-t'hi →")).toHaveClass("auth-link");
-    expect(within(join).getByText("Encara no hi ets?")).not.toHaveClass("auth-link");
+    const join = screen.getByRole("link", { name: "No ets soci del club? Fes-te'n soci →" });
+    expect(within(join).getByText("Fes-te'n soci →")).toHaveClass("auth-link");
+    expect(within(join).getByText("No ets soci del club?")).not.toHaveClass("auth-link");
     // E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the public footer and the registered office below it.
     // The Cànic fixture carries the club's real legal identity, as the seed does (S02 R-02-10).
     expect(screen.getByText("Club Agility Cànic · G63189617 · Cabrera de Mar")).toBeVisible();
@@ -958,7 +983,7 @@ describe("T-01-18 access screen", () => {
     window.history.pushState(null, "", "/entrar");
     mockScenario("minimal");
     await renderApplication(authClient(), minimalBranding);
-    expect(screen.queryByRole("link", { name: /Apunta-t'hi/u })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Fes-te'n soci/u })).not.toBeInTheDocument();
     expect(screen.getByText("Club Mínim", { selector: ".auth-logo__name" })).toBeVisible();
     expect(screen.getByRole("contentinfo")).toHaveTextContent("Club Mínim");
     expect(screen.getByRole("contentinfo")).not.toHaveTextContent("·");
@@ -1001,6 +1026,7 @@ describe("T-01-19 activation screen", () => {
       mockScenario(scenario);
       window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
       await renderApplication(authClient());
+      fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
       expect(await screen.findByRole("heading", { name: heading })).toBeVisible();
       expect(screen.getByRole("button", { name: "CONTINUAR" })).toBeVisible();
       expect(screen.getByText("Compte activat")).toBeVisible();
@@ -1015,6 +1041,7 @@ describe("T-01-19 activation screen", () => {
     mockScenario("activationReset");
     window.history.pushState(null, "", "/activacio?token=valid&purpose=RESET");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     expect(screen.queryByText("Compte activat")).not.toBeInTheDocument();
     cleanup();
@@ -1022,10 +1049,108 @@ describe("T-01-19 activation screen", () => {
     mockScenario("invalidMagicLink");
     window.history.pushState(null, "", "/activacio?token=invalid&purpose=LOGIN");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(
       await screen.findByRole("heading", { name: "Aquest enllaç ja no és vàlid" }),
     ).toBeVisible();
     expect(screen.getByRole("button", { name: "Envia-me'n un de nou" })).toBeVisible();
+  });
+});
+
+describe("WEB-01 (pre-production audit, decision of 13 Nov 2026): the members' first access", () => {
+  it("01 says in plain words that a first-time member enters by the link, and describes the link's button with it", async () => {
+    window.history.pushState(null, "", "/entrar");
+    await renderApplication(authClient());
+    const line = screen.getByText(
+      "Primer cop? Escriu el teu correu i t'enviarem un enllaç per entrar.",
+    );
+    expect(line).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" }),
+    ).toHaveAccessibleDescription(line.textContent);
+  });
+
+  it("02 invites an account without a password to choose one after entering by a link, and lets it continue without", async () => {
+    mockScenario("activationMale");
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("heading", { name: "Benvingut, Marc!" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Si vols, tria una contrasenya per a futurs accessos" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        "La contrasenya és opcional: sempre pots entrar amb l'enllaç del correu. La sessió queda oberta en aquest dispositiu.",
+      ),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "CONTINUAR" })).toBeEnabled();
+  });
+
+  it("02 offers no password form to an account that already has one when it enters by a LOGIN link", async () => {
+    mockScenario("member");
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("button", { name: "CONTINUAR" })).toBeVisible();
+    expect(
+      screen.queryByRole("heading", {
+        name: "Si vols, tria una contrasenya per a futurs accessos",
+      }),
+    ).toBeNull();
+    expect(screen.queryByLabelText("nova contrasenya")).toBeNull();
+    expect(screen.queryByText(/La contrasenya és opcional/u)).toBeNull();
+  });
+});
+
+describe("AUTH-06 (pre-production audit): the activation link's token leaves the address", () => {
+  it("drops `token` and `t` from the address before anything else and keeps `purpose`", async () => {
+    mockScenario("activationReset");
+    const client = authClient();
+    const addresses: string[] = [];
+    const exchange = client.exchangeMagicLink.bind(client);
+    const spy = vi.spyOn(client, "exchangeMagicLink").mockImplementation((token) => {
+      addresses.push(`${window.location.pathname}${window.location.search}`);
+      return exchange(token);
+    });
+    window.history.pushState(null, "", "/activacio?token=valid&t=valid&purpose=RESET#form");
+    await renderApplication(client);
+
+    await screen.findByRole("button", { name: "ENTRA" });
+    expect(`${window.location.pathname}${window.location.search}${window.location.hash}`).toBe(
+      "/activacio?purpose=RESET#form",
+    );
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
+    expect(addresses).toEqual(["/activacio?purpose=RESET"]);
+    expect(spy).toHaveBeenCalledWith("valid");
+    expect(`${window.location.pathname}${window.location.search}${window.location.hash}`).toBe(
+      "/activacio?purpose=RESET#form",
+    );
+  });
+
+  it("redeems the link only when the person presses «Entra», never when the page loads (decision of 13 Nov 2026)", async () => {
+    mockScenario("activationFemale");
+    const client = authClient();
+    const spy = vi.spyOn(client, "exchangeMagicLink");
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(client);
+
+    expect(
+      await screen.findByRole("heading", { name: "Entra amb l'enllaç del correu" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Prem el botó per iniciar la sessió en aquest dispositiu."),
+    ).toBeVisible();
+    // The page has loaded and settled: nothing has been redeemed.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(spy).not.toHaveBeenCalled();
+    expect(screen.queryByRole("heading", { name: "Benvinguda, Estel!" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    expect(await screen.findByRole("heading", { name: "Benvinguda, Estel!" })).toBeVisible();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith("valid");
   });
 });
 
@@ -1734,6 +1859,61 @@ describe("T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat
   });
 });
 
+describe("FE-03 (pre-production audit, decision of 13 Nov 2026): a handoff link for another account on a device that already holds a session", () => {
+  afterEach(() => {
+    sessionStorage.clear();
+    resetAuthMockState();
+    window.history.pushState(null, "", "/");
+  });
+
+  it("is refused by the api (409 HANDOFF_SESSION_CONFLICT): the device's session stays, the page says why and «CONTINUAR» enters that session", async () => {
+    const token = recordTokenGrants();
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === "urn:agilityhub:grant:handoff"
+          ? HttpResponse.json(
+              {
+                code: "HANDOFF_SESSION_CONFLICT",
+                details: {},
+                message: "Another account holds this host's session",
+                traceId: "t",
+              },
+              { status: 409 },
+            )
+          : undefined;
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-other-account-code");
+    const client = authClient();
+    const navigate = vi.fn();
+    await renderApplication(client, canicBranding, "ca", navigate);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Aquest enllaç obre un altre compte i en aquest dispositiu ja tens una sessió iniciada, que mantenim. Si vols entrar amb un altre compte, tanca primer la sessió.",
+    );
+    expect(screen.queryByText("Aquest enllaç ja no és vàlid")).toBeNull();
+    expect(window.location.search).toBe("");
+    // The tab is not ended as a refused «Entra com l'abonat» code would be (E47): the code was an
+    // account's, so the device's own session (its cookie) is read and kept.
+    await waitFor(() => {
+      expect(client.getMe()?.account.email).toBe(currentMockScenario().me.account.email);
+    });
+    expect(client.isImpersonated()).toBe(false);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+    expect(navigate).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUAR" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalled();
+    });
+    expect(String(navigate.mock.calls[0]?.[0])).not.toBe("/entrar");
+    expect(client.getMe()?.account.email).toBe(currentMockScenario().me.account.email);
+    expect(token.grants).toEqual(["urn:agilityhub:grant:handoff", "refresh_token"]);
+    token.stop();
+  });
+});
+
 describe("T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link", () => {
   afterEach(() => {
     resetAuthMockState();
@@ -1772,6 +1952,7 @@ describe("T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET 
     const password = recordPasswordBodies();
     window.history.pushState(null, "", "/activacio?token=reset-link&purpose=RESET");
     await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
 
     expect(await screen.findByRole("heading", { name: "Ja hi ets" })).toBeVisible();
     expect(screen.queryByLabelText("contrasenya actual")).not.toBeInTheDocument();
@@ -2025,6 +2206,58 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
       expect(complete).toHaveBeenCalledOnce();
     });
     expect(complete.mock.calls[0]?.[0]).not.toHaveProperty("imageConsent");
+  });
+
+  it("PRIV-05: a grant the member's own account did not give leaves the image box unticked and keeps it", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const state = await client.getOnboarding();
+    // The api answers null for a grant set by the migration, by staff or by a public sign-up.
+    vi.spyOn(client, "getOnboarding").mockResolvedValue({ ...state, imageConsent: null });
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    expect(
+      await screen.findByRole("checkbox", { name: "Autoritzo l’ús de la meva imatge (opcional)" }),
+    ).not.toBeChecked();
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    // Nothing is sent for the untouched box, so the stored value is kept.
+    expect(complete.mock.calls[0]?.[0]).not.toHaveProperty("imageConsent");
+  });
+
+  it("PRIV-05: the member's own tick of an unticked box is sent as their grant", async () => {
+    mockScenario("onboarding");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    const state = await client.getOnboarding();
+    vi.spyOn(client, "getOnboarding").mockResolvedValue({ ...state, imageConsent: null });
+    const complete = vi
+      .spyOn(client, "completeOnboarding")
+      .mockImplementation(() => new Promise<never>(() => undefined));
+    window.history.pushState(null, "", "/benvinguda");
+    await renderApplication(client);
+    const image = await screen.findByRole("checkbox", {
+      name: "Autoritzo l’ús de la meva imatge (opcional)",
+    });
+    expect(image).not.toBeChecked();
+    fireEvent.click(image);
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "He llegit i accepto la política de privacitat" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    await waitFor(() => {
+      expect(complete).toHaveBeenCalledOnce();
+    });
+    expect(complete.mock.calls[0]?.[0]).toMatchObject({ imageConsent: true });
   });
 
   it("completes pending profile data without requesting an already accepted policy", async () => {
@@ -3008,6 +3241,77 @@ describe("T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-
     expect(api.parameterReads()).toEqual([]);
     api.stop();
   });
+
+  it("WEB-05: a camera photo goes up reduced in the browser (1600 px, JPEG, never WebP)", async () => {
+    // jsdom decodes and draws nothing: a 4032 × 3024 picture and a canvas that encodes WebP and
+    // JPEG; the reduced photo is asked as JPEG, the type the api makes the lists' thumbnail from.
+    const close = vi.fn();
+    vi.stubGlobal(
+      "createImageBitmap",
+      vi.fn(() => Promise.resolve({ close, height: 3024, width: 4032 })),
+    );
+    const context = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+      () =>
+        ({
+          drawImage: vi.fn(),
+          fillRect: vi.fn(),
+          fillStyle: "",
+          imageSmoothingQuality: "low",
+        }) as never,
+    );
+    const drawn: string[] = [];
+    const encode = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type,
+    ) {
+      drawn.push(`${String(this.width)}×${String(this.height)} ${type ?? ""}`);
+      callback(new Blob(["reduced"], { type: type ?? "image/png" }));
+    });
+    const uploaded: Blob[] = [];
+    server.use(
+      http.put("https://uploads.example.test/:fileKey", async ({ request }) => {
+        uploaded.push(await request.blob());
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const api = recordApi();
+    try {
+      await openMyDogs();
+      fireEvent.change(screen.getByLabelText("Canvia la foto de Duna"), {
+        target: {
+          files: [new File(["a 3 MB camera picture"], "IMG_0042.JPG", { type: "image/jpeg" })],
+        },
+      });
+      await waitFor(() => {
+        expect(
+          api.recorded.some(
+            (request) =>
+              request.method === "PUT" && /^\/me\/dogs\/[^/]+\/photo$/u.test(request.path),
+          ),
+        ).toBe(true);
+      });
+      expect(drawn).toEqual(["1600×1200 image/jpeg"]);
+      const grant = api.recorded.find(
+        (request) => request.method === "POST" && request.path === "/attachments/upload-url",
+      );
+      expect(grant?.body).toEqual({
+        fileName: "IMG_0042.jpg",
+        mimeType: "image/jpeg",
+        purpose: "DOG_PHOTO",
+        sizeBytes: "reduced".length,
+      });
+      // The signed PUT carries the reduced file's type (jsdom's File does not cross into the
+      // request body, so its bytes are checked through the grant's `sizeBytes` above).
+      expect(uploaded.map((file) => file.type)).toEqual(["image/jpeg"]);
+      expect(close).toHaveBeenCalledOnce();
+    } finally {
+      api.stop();
+      context.mockRestore();
+      encode.mockRestore();
+      vi.unstubAllGlobals();
+    }
+  });
 });
 
 describe("T-03-41 mobile own data", () => {
@@ -3065,22 +3369,31 @@ describe("T-03-41 mobile own data", () => {
   });
 });
 
+// WEB-01 (pre-production audit, decision of 13 Nov 2026): the members' first access is the sign-in
+// link, in every build. These two cases asserted the build flags that hid it (the internal access
+// of 26-10 and the recovery-only build); they now assert that the flags no longer change 01.
 it.each(["/login", "/entrar"])(
-  "Internal access %s: the club app keeps password entry on its own page without email actions",
+  "WEB-01: %s keeps password entry on its own page and, whatever the build flags, the first-access line, the sign-in link and the recovery",
   async (path) => {
     vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
     window.history.pushState(null, "", path);
     await renderApplication(authClient());
     expect(screen.getByLabelText("Contrasenya")).toBeVisible();
     expect(screen.getByRole("button", { name: "ENTRA" })).toBeVisible();
-    expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
-    expect(screen.queryByRole("button", { name: /Has oblidat la contrasenya/u })).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Primer cop? Escriu el teu correu i t'enviarem un enllaç per entrar."),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: /Has oblidat la contrasenya/u })).toBeVisible();
+    expect(screen.queryByText(/demana ajuda a l’administració/u)).toBeNull();
     expect(document.body.textContent).not.toMatch(/AgilityHub/u);
     expect(window.location.pathname).toBe(path);
   },
 );
 
-it("T-01-08 recovery-only login sends RESET without exposing passwordless login", async () => {
+it("T-01-08 WEB-01: with the old recovery-only flags, 01 sends RESET from the recovery and LOGIN from the sign-in link", async () => {
   vi.stubEnv("VITE_EMAIL_LOGIN_ENABLED", "false");
   vi.stubEnv("VITE_EMAIL_RECOVERY_ENABLED", "true");
   window.history.pushState(null, "", "/entrar");
@@ -3088,7 +3401,6 @@ it("T-01-08 recovery-only login sends RESET without exposing passwordless login"
   const request = vi.spyOn(client, "requestMagicLink").mockResolvedValue(undefined);
   await renderApplication(client);
   expect(screen.getByLabelText("Contrasenya")).toBeVisible();
-  expect(screen.queryByRole("button", { name: "Envia'm un enllaç per entrar" })).toBeNull();
   expect(screen.queryByText(/demana ajuda a l’administració/u)).toBeNull();
   fireEvent.change(screen.getByLabelText("Correu electrònic"), {
     target: { value: "laura@example.test" },
@@ -3096,4 +3408,101 @@ it("T-01-08 recovery-only login sends RESET without exposing passwordless login"
   fireEvent.click(screen.getByRole("button", { name: /Has oblidat la contrasenya/u }));
   expect(request).toHaveBeenCalledWith("laura@example.test", "RESET");
   expect(await screen.findByRole("status")).toHaveTextContent(/Si el correu/u);
+  fireEvent.click(
+    screen.getByRole("button", { name: "Envia'm un enllaç per entrar sense contrasenya" }),
+  );
+  await waitFor(() => {
+    expect(request).toHaveBeenCalledWith("laura@example.test", "LOGIN");
+  });
+});
+
+describe("AUTH-01 (S01 R-01-05 and R-01-18, decision of 13 Nov 2026)", () => {
+  afterEach(() => {
+    window.history.pushState(null, "", "/");
+  });
+
+  async function changePassword(value: string) {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    fireEvent.click(await screen.findByRole("button", { name: "Canvia la contrasenya" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia la contrasenya" });
+    fireEvent.change(within(dialog).getByLabelText("contrasenya actual"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("nova contrasenya"), { target: { value } });
+    fireEvent.change(within(dialog).getByLabelText("repeteix-la"), { target: { value } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "DESA LA CONTRASENYA" }));
+    return within(dialog).findByRole("alert");
+  }
+
+  it("a member's password shorter than 8 is refused with the minimum the api applied", async () => {
+    mockScenario("member");
+    expect(await changePassword("duna26!")).toHaveTextContent(
+      "La contrasenya ha de tenir com a mínim 8 caràcters.",
+    );
+  });
+
+  it("a staff account's password is refused under 12 with that minimum", async () => {
+    mockScenario("member");
+    // As the api answers an account with ADMIN or INSTRUCTOR in a club (R-01-05).
+    server.use(
+      http.put("*/api/v1/me/password", () =>
+        HttpResponse.json(
+          {
+            code: "PASSWORD_TOO_SHORT",
+            details: { minLength: 12 },
+            message: "Password is too short",
+            traceId: "t",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    expect(await changePassword("duna2026!")).toHaveTextContent(
+      "La contrasenya ha de tenir com a mínim 12 caràcters.",
+    );
+  });
+
+  it("the member app answers the api's request for a recent sign-in with «Confirma que ets tu»", async () => {
+    mockScenario("admin");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    let confirmed: Promise<boolean> | undefined;
+    act(() => {
+      confirmed = client.requestRecentLogin();
+    });
+    const dialog = await screen.findByRole("dialog", { name: "Confirma que ets tu" });
+    fireEvent.change(within(dialog).getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    await expect(confirmed).resolves.toBe(true);
+  });
+});
+
+describe("FE-07 «Hi ha una versió nova · Recarrega» in the member app", () => {
+  afterEach(() => {
+    resetWorkerUpdate();
+  });
+
+  it("a new worker that takes over shows the offer instead of reloading the page under the member", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/estadistiques");
+    await renderApplication(client);
+    await screen.findByText(brandingCanicFixture.club.name);
+    expect(screen.queryByText("Hi ha una versió nova")).toBeNull();
+
+    act(() => {
+      markWorkerUpdated();
+    });
+    expect(await screen.findByText("Hi ha una versió nova")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Recarrega" })).toBeVisible();
+    // The page stays where it was: nothing reloaded it.
+    expect(window.location.pathname).toBe("/estadistiques");
+  });
 });

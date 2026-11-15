@@ -114,6 +114,8 @@
     "reviewPaymentDay": "Si canvies aquest valor, revisa també el text del dia de pagament de l'alta.",
     "removeHoliday": "Elimina el festiu {index}",
     "reset": "Restableix el valor de producte",
+    "resetChange": "Valor actual: {current} → valor de producte: {productValue}",
+    "resetConfirm": "Aquest paràmetre tornarà al valor de producte. S'aplica a partir d'ara.",
     "time": "Hora"
   },
   "enum": {
@@ -383,6 +385,10 @@
           "help": "Esquema del fitxer de remesa SEPA.",
           "label": "Esquema SEPA"
         },
+        "settlementBusinessDays": {
+          "help": "Dies hàbils bancaris (TARGET) que han de passar després de la data de cobrament perquè els rebuts d'una remesa enviada es donin per cobrats, si no s'han marcat com a impagats; amb 0, el mateix dia de cobrament.",
+          "label": "Marge per donar la remesa per cobrada"
+        },
         "useFrst": {
           "help": "Usa la seqüència inicial abans dels cobraments recurrents.",
           "label": "Seqüència inicial SEPA"
@@ -411,6 +417,10 @@
       "upfrontCutoffDay": {
         "help": "Dia límit per demanar una alta per al mes següent.",
         "label": "Dia límit d'altes del mes següent"
+      },
+      "totalDifferenceConfirmPercent": {
+        "help": "Si el total del mes canvia més d'aquest percentatge respecte del mes anterior, generar els rebuts demana una segona confirmació; amb 0, qualsevol diferència la demana.",
+        "label": "Diferència per demanar una segona confirmació"
       }
     },
     "bookings": {
@@ -723,6 +733,14 @@
           "help": "Límit mensual de seguretat dels SMS.",
           "label": "Límit mensual d'SMS"
         },
+        "quietHoursEnd": {
+          "help": "Hora (del club) en què surten els SMS que esperaven.",
+          "label": "Final de les hores sense SMS"
+        },
+        "quietHoursStart": {
+          "help": "A partir d'aquesta hora (hora del club) els SMS no urgents esperen fins al final de la franja; una oferta de plaça amb termini no espera. Igual que el final: sense franja.",
+          "label": "Inici de les hores sense SMS"
+        },
         "senderId": {
           "help": "Identificador que apareix com a remitent dels SMS.",
           "label": "Remitent dels SMS"
@@ -931,6 +949,12 @@
       "classReminders": "{count, plural, one {# recordatori de classe} other {# recordatoris de classe}}",
       "trainingReminders": "{count, plural, one {# recordatori d'entrenament} other {# recordatoris d'entrenament}}",
       "WOULD_REMIND": "{count, plural, one {# recordatori previst} other {# recordatoris previstos}}",
+      "WOULD_ERASE_RETENTION": "{count, plural, one {# abonat de baixa a suprimir} other {# abonats de baixa a suprimir}}",
+      "WOULD_ERASE_REJECTED_SIGNUP": "{count, plural, one {# alta rebutjada a suprimir} other {# altes rebutjades a suprimir}}",
+      "WOULD_PURGE_AUDIT_ENTRIES": "{count, plural, one {# entrada d'auditoria a esborrar} other {# entrades d'auditoria a esborrar}}",
+      "WOULD_DELETE_REMITTANCE_FILE": "{count, plural, one {# fitxer de remesa a esborrar} other {# fitxers de remesa a esborrar}}",
+      "WOULD_EXPIRE_EXPORT": "{count, plural, one {# exportació caducada a esborrar} other {# exportacions caducades a esborrar}}",
+      "WOULD_PURGE_ERASED_TRACES": "{count, plural, one {# rastre d'abonats suprimits a esborrar} other {# rastres d'abonats suprimits a esborrar}}",
       "opened": "{count, plural, one {# setmana oberta} other {# setmanes obertes}}",
       "swept": "{count, plural, one {# entrada d'espera tancada} other {# entrades d'espera tancades}}",
       "finished": "{count, plural, one {# classe tancada} other {# classes tancades}}",
@@ -959,6 +983,7 @@
     "disableConfirm": "Els efectes d'aquest procés deixaran d'aplicar-se fins que el tornis a activar.",
     "runTitle": "Executar «{name}» ara",
     "runConfirm": "El procés s'executarà ara, encara que estigui desactivat, i en quedarà constància a l'auditoria.",
+    "confirmPlan": "La simulació que s'acaba de fer preveu:",
     "cancel": "Cancel·la",
     "dryRunTitle": "Simulació: què faria ara · {name}",
     "dryRunNote": "Simulació: no s'ha aplicat cap canvi.",
