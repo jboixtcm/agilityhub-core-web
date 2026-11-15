@@ -91,7 +91,7 @@ export const moduleUi = {
     tabs: [],
   },
   LEARN_LINK: { menuEntries: ["learn"], routes: [], tabs: [] },
-  STATS: { menuEntries: [], routes: ["/estadistiques"], tabs: [] },
+  STATS: { menuEntries: ["competition-statistics"], routes: ["/estadistiques"], tabs: [] },
   SOCIAL_LEAGUE: { menuEntries: [], routes: ["/estadistiques/lliga"], tabs: [] },
 } as const satisfies Record<ClubModule, ModuleUiRegistration>;
 

@@ -94,6 +94,7 @@ import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
  * course lines) never suspends and hides it again under the shell's loading state. They load
  * alongside the chunk; one that fails only leaves its keys, as before.
  */
+const CompetitionStatisticsPage = lazy(() => import("./statistics/CompetitionStatisticsPage"));
 const screens = () =>
   Promise.all([
     import("./screens"),
@@ -1697,6 +1698,14 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
           <span>{t("auth:profile.dogs")}</span>
           <Icon aria-hidden="true" name="chev" />
         </a>
+        {(impersonated || me.membership.roles.includes("MEMBER")) &&
+        isModuleUiItemEnabled(branding.modules, "menuEntries", "competition-statistics") ? (
+          <a href="/estadistiques">
+            <Icon aria-hidden="true" name="clipboard" />
+            <span>{t("shell:nav.competitionStatistics")}</span>
+            <Icon aria-hidden="true" name="chev" />
+          </a>
+        ) : null}
         {learnLink ? (
           <a href="https://learn.agilitydoghub.com" rel="noopener noreferrer" target="_blank">
             <Icon aria-hidden="true" name="link" />
@@ -2238,6 +2247,12 @@ function AppContent({
           key={pathname}
         />
       </InstructorRoute>
+    ) : pathname === "/estadistiques" ? (
+      <RequireModule module="STATS">
+        <MemberSelfServiceRoute>
+          <CompetitionStatisticsPage client={apiClient} />
+        </MemberSelfServiceRoute>
+      </RequireModule>
     ) : pathname === "/historic" ? (
       // Screen 25 (S10 §2).
       <MemberHistoryRoute client={apiClient} />

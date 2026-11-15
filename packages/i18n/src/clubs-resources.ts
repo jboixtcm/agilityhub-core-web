@@ -31,6 +31,7 @@ export const clubsNamespaces = [
   "shell",
   "signup",
   "training",
+  "statistics",
 ] as const satisfies readonly Namespace[];
 
 export type ClubsNamespace = (typeof clubsNamespaces)[number];
@@ -59,6 +60,7 @@ export const clubsLoaders = {
     notifications: () => import("./locales/ca/notifications.json"),
     shell: () => Promise.resolve({ default: caShell }),
     signup: () => import("./locales/ca/signup.json"),
+    statistics: () => import("./locales/ca/statistics.json"),
     training: () => import("./locales/ca/training.json"),
   },
   en: {
@@ -79,6 +81,7 @@ export const clubsLoaders = {
     notifications: () => import("./locales/en/notifications.json"),
     shell: () => Promise.resolve({ default: enShell }),
     signup: () => import("./locales/en/signup.json"),
+    statistics: () => import("./locales/en/statistics.json"),
     training: () => import("./locales/en/training.json"),
   },
   es: {
@@ -99,6 +102,7 @@ export const clubsLoaders = {
     notifications: () => import("./locales/es/notifications.json"),
     shell: () => Promise.resolve({ default: esShell }),
     signup: () => import("./locales/es/signup.json"),
+    statistics: () => import("./locales/es/statistics.json"),
     training: () => import("./locales/es/training.json"),
   },
 } as const satisfies LoaderTable<ClubsNamespace>;

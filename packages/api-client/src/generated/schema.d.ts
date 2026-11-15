@@ -1627,6 +1627,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/competition-imports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * competitionImports
+         * @description Last successfully imported snapshot per source and season, newest first. Requires STATS.
+         */
+        get: operations["competitionImports"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/competition-imports/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * previewCompetitionImport
+         * @description FCAG public classification URL or saved HTML; FLOW_AGILITY individual run print HTML (saved or fetched using the club session provisioned on the server), or reviewed interchange CSV. Preview expires after 24 hours. Only a unique exact licence suggests a dog. No result changes until confirmation. Maximum 2 MB and 2000 rows.
+         */
+        post: operations["previewCompetitionImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/competition-imports/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * confirmCompetitionImport
+         * @description Atomically replace this source/season with the selected preview rows. Map result key to a licensed dog of this club; omitted rows are skipped. Replaying a confirmed preview with identical assignments returns its receipt. Stale previews cannot overwrite newer imports.
+         */
+        post: operations["confirmCompetitionImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/country-profile": {
         parameters: {
             query?: never;
@@ -1945,6 +2005,26 @@ export interface paths {
          * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. The documents of a pending dog change only for the types sent. A type's files are the ones sent: a fileKey that GET /members/{id}/signup shows for that type keeps its file, and any other fileKey is a new file, the ADMIN's own POST /attachments/upload-url with purpose = DOG_DOCUMENT (R-04-19, amended 26-09); see DogPatch.documents. With signup.requireDogDocumentAtSignup, a VACCINATION_CARD without files answers 422 DOG_DOCUMENT_REQUIRED only when the request changes the card's keys (sending back a PENDING card is no change), and never when the reused dog of a pending readmission has its own card with a file. The reused dog of a pending readmission (S04 R-04-06, E38): name, sex, breed, birth month, notes to instructors and documents edit the submitted values, not the dog record (documents merged by type; a type sent without files withdraws the submitted one); the rest of the record is frozen: the chip (the readmission matched on it), handlerName and licenses cannot change: 409 INVALID_STATE with details.reason = READMISSION_PENDING. The response is the dog record, which keeps its own values until validation: D2 re-reads GET /members/{id}/signup for the submitted ones.
          */
         patch: operations["updateDog"];
+        trace?: never;
+    };
+    "/dogs/{id}/competition-statistics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * dogCompetitionStatistics
+         * @description Staff read of a dog of the authenticated club.
+         */
+        get: operations["dogCompetitionStatistics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/dogs/{id}/deactivation": {
@@ -3393,6 +3473,26 @@ export interface paths {
          * @description R-04-25. MEMBER; accepts valid impersonation with actor attribution. Idempotency-Key required. Verifies member ownership and ACTIVE status. With BILLING, a quote that would read a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138): the requested plan (the member's own, which GET /signup no longer lists as current) or the family fare the added dog moves the member to → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId} on that plan, and nothing is written.
          */
         post: operations["addDog_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/dogs/{id}/competition-statistics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * myCompetitionStatistics
+         * @description The member's own dog only. Explicit official FCAG net points and RSCE point classifications. Missing imports remain empty; no inferred official points.
+         */
+        get: operations["myCompetitionStatistics"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -10173,6 +10273,118 @@ export interface components {
             text: string;
             textMuted: string;
             warning: string;
+        };
+        CompetitionConfirmation: {
+            assignments: {
+                [key: string]: string;
+            };
+        };
+        CompetitionDogOption: {
+            id: string;
+            license: string;
+            name: string;
+        };
+        CompetitionEntry: {
+            category: string;
+            clubName?: string | null;
+            /** Format: date */
+            date?: string | null;
+            /** @enum {string|null} */
+            discipline?: "AGILITY" | "JUMPING" | null;
+            division?: string | null;
+            dogName: string;
+            /** Format: int32 */
+            faults?: number | null;
+            grade?: string | null;
+            handlerName?: string | null;
+            key: string;
+            license: string;
+            /** @enum {string|null} */
+            point?: "NONE" | "P" | "PA" | "PV" | null;
+            points?: number | null;
+            /** Format: int32 */
+            position?: number | null;
+            qualification?: string | null;
+            /** Format: int32 */
+            refusals?: number | null;
+            runId?: string | null;
+            season: string;
+            speedMps?: number | null;
+            timeSeconds?: number | null;
+            totalPenalty?: number | null;
+            trial?: string | null;
+            trialId?: string | null;
+        };
+        CompetitionImportRequest: {
+            content?: string;
+            /** @enum {string} */
+            source: "FCAG" | "FLOW_AGILITY";
+            sourceUrl: string;
+        };
+        CompetitionPreview: {
+            dogs: components["schemas"]["CompetitionDogOption"][];
+            /** Format: date-time */
+            expiresAt: string;
+            id: string;
+            rows: components["schemas"]["CompetitionPreviewRow"][];
+            season: string;
+            /** @enum {string} */
+            source: "FCAG" | "FLOW_AGILITY";
+            sourceUrl: string;
+        };
+        CompetitionPreviewRow: {
+            entry: components["schemas"]["CompetitionEntry"];
+            match: string;
+            suggestedDogId?: string | null;
+        };
+        CompetitionReceipt: {
+            id: string;
+            /** Format: date-time */
+            importedAt: string;
+            /** Format: int32 */
+            importedRows: number;
+            /** Format: int64 */
+            revision: number;
+            season: string;
+            /** @enum {string} */
+            source: "FCAG" | "FLOW_AGILITY";
+            sourceUrl: string;
+        };
+        CompetitionResult: {
+            /** Format: date-time */
+            importedAt: string;
+            result: components["schemas"]["CompetitionEntry"];
+            /** @enum {string} */
+            source: "FCAG" | "FLOW_AGILITY";
+            sourceUrl: string;
+        };
+        CompetitionRunSummary: {
+            averageSpeedMps?: number | null;
+            /** Format: int32 */
+            clearRuns: number;
+            /** @enum {string} */
+            discipline: "AGILITY" | "JUMPING";
+            /** Format: int32 */
+            p: number;
+            /** Format: int32 */
+            pa: number;
+            /** Format: int32 */
+            pv: number;
+            /** Format: int32 */
+            runs: number;
+        };
+        CompetitionStatistics: {
+            dogId: string;
+            /** Format: date-time */
+            lastImportedAt?: string | null;
+            results: components["schemas"]["CompetitionResult"][];
+            /** Format: int32 */
+            scoredTrials: number;
+            season: string;
+            standings: components["schemas"]["CompetitionResult"][];
+            summaries: components["schemas"]["CompetitionRunSummary"][];
+            /** Format: int32 */
+            year: number;
         };
         ConsentHistoryEntry: {
             /** Format: date-time */
@@ -29379,6 +29591,369 @@ export interface operations {
             };
         };
     };
+    competitionImports: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompetitionReceipt"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    previewCompetitionImport: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompetitionImportRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompetitionPreview"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    confirmCompetitionImport: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompetitionConfirmation"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompetitionReceipt"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     countryProfile: {
         parameters: {
             query?: never;
@@ -31857,6 +32432,132 @@ export interface operations {
                 };
             };
             /** @description DOCUMENT_TYPE_UNKNOWN, DOG_DOCUMENT_REQUIRED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    dogCompetitionStatistics: {
+        parameters: {
+            query?: {
+                year?: number;
+                season?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompetitionStatistics"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -42305,6 +43006,132 @@ export interface operations {
             /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION, PRICE_OVERLAP */
             409: components["responses"]["StaleVersion"];
             /** @description PAYMENT_METHOD_NOT_AVAILABLE, MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    myCompetitionStatistics: {
+        parameters: {
+            query?: {
+                year?: number;
+                season?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompetitionStatistics"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;

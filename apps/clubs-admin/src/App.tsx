@@ -86,6 +86,7 @@ import { CalendarPage } from "./planning/CalendarPage";
 import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
+import CompetitionImportsPage from "./statistics/CompetitionImportsPage";
 import { SUPPORT_PATH } from "./support/support-access";
 import { SupportBanner, SupportEndedPage, SupportEntryPage } from "./support/SupportPages";
 import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
@@ -153,6 +154,7 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/alumnes", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/alumnes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D14 (S10 §2: INSTRUCTOR and ADMIN).
+  { path: "/estadistiques", roles: ["ADMIN"] },
   { path: "/seguiment", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D16, and its «Geometria» block (S16 §2, module COURSES through `modules.ts`).
   { path: "/pistes", roles: ["ADMIN"] },
@@ -292,6 +294,13 @@ export function AdminNavigation({
         },
         { href: "/abonats", icon: "user", id: "members", label: t("shell:nav.members") },
         { href: "/gossos", icon: "paw", id: "dogs", label: t("shell:nav.dogs") },
+        {
+          href: "/estadistiques",
+          icon: "clipboard",
+          id: "competition-statistics",
+          label: t("shell:nav.competitionStatistics"),
+          roles: ["ADMIN"],
+        },
         {
           ...(lifecycleRequests === undefined || lifecycleRequests === 0
             ? {}
@@ -603,6 +612,7 @@ function routeContent(
     // D12 (S10 §2): the week, the attendance panel and E5-W02's ring card (S09 §2 row D12).
     return <WeekAgendaPage client={client} onNavigate={onNavigate} />;
   }
+  if (route.path === "/estadistiques") return <CompetitionImportsPage client={client} />;
   if (route.path === "/seguiment") {
     // D14 (S10 §2), module TASKS through `modules.ts`.
     return <FollowUpPage client={client} onNavigate={onNavigate} />;

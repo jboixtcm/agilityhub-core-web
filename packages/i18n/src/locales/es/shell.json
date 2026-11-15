@@ -86,7 +86,8 @@
     "weeklyTemplate": "Plantilla semanal",
     "deliveryLog": "Registro de envíos",
     "collapse": "Plegar el menú",
-    "expand": "Desplegar el menú"
+    "expand": "Desplegar el menú",
+    "competitionStatistics": "Estadísticas de competición"
   },
   "placeholder": {
     "description": "Esta pantalla estará disponible pronto.",

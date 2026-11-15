@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Competition statistics
+
+- Add member competition statistics and administrator preview/confirm imports behind STATS, with source links, period filters and Catalan/Spanish/English copy.
+- Adopt the branch OpenAPI contract and add fictional provider fixtures and browser/component coverage.
+
 ## 2026-11-13 — Class times and student/administration feedback
 
 - Allow typed start and end times when creating or editing a class, while retaining suggested planning times.
