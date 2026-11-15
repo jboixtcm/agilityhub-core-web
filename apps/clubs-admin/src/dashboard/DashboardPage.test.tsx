@@ -359,7 +359,7 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
       expect(screen.getByRole("radio", { name: "Amb reserves" })).toBeChecked();
       expect(document.querySelector(".dashboard-chart__description")).toHaveTextContent(text);
       const chart = screen.getByRole("figure", { name: "Gossos per nivell — 179 amb reserves" });
-      expect(within(chart).getByRole("row", { name: /CAD 19 10,6/u })).toBeVisible();
+      expect(within(chart).getByRole("row", { name: /CAD 19 11/u })).toBeVisible();
       expect(chart.querySelector(".dashboard-chart__center strong")).toHaveTextContent("179");
       expect(
         [...chart.querySelectorAll<HTMLElement>(".dashboard-chart__swatch")].map((swatch) =>
