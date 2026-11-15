@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/implementation/competition-statistics/web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  22:19:59
+   Duration  3.64s (transform 41%, environment 22%, import 17%, tests 13%, setup 6%)
+

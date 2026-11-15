@@ -170,3 +170,25 @@ evidence: competition-statistics/member-today-375-light.png
 evidence: competition-statistics/responsive-admin-import-768.png
 ```
 
+
+## Request envelope regression (T-STATS-33)
+
+The coordinated release also guards the UTF-8 encoded JSON request envelope against the existing 2 MB public gateway limit, including strings expanded by JSON escaping. Oversized content gets the translated size message before any API request. This preserves the gateway limit.
+
+Command: `pnpm --filter clubs-admin exec vitest run src/statistics/competition.test.tsx`
+
+Exit: 0. Four administrator statistics tests passed. Full output: [request-envelope.log](request-envelope.log).
+
+Last 40 lines:
+
+```text
+
+ RUN  v5.0.0 /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/implementation/competition-statistics/web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  22:19:59
+   Duration  3.64s (transform 41%, environment 22%, import 17%, tests 13%, setup 6%)
+
+```

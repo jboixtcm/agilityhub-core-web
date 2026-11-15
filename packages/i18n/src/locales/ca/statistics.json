@@ -47,7 +47,7 @@
   "template": "Descarrega la plantilla CSV",
   "file": "Fitxer (màxim 2 MB)",
   "content": "Contingut del fitxer",
-  "fileTooLarge": "El fitxer supera els 2 MB.",
+  "fileTooLarge": "El contingut és massa gran per importar-lo. Prova amb l’enllaç dels resultats.",
   "invalidImport": "No s’ha pogut validar la font o la selecció. Revisa l’enllaç, el format i les llicències. Si la previsualització ha caducat, torna-la a preparar. Els resultats anteriors es conserven.",
   "preview": "Previsualitza",
   "review": "Revisa les coincidències",

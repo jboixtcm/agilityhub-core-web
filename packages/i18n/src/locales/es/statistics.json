@@ -47,7 +47,7 @@
   "template": "Descargar la plantilla CSV",
   "file": "Archivo (máximo 2 MB)",
   "content": "Contenido del archivo",
-  "fileTooLarge": "El archivo supera los 2 MB.",
+  "fileTooLarge": "El contenido es demasiado grande para importarlo. Prueba con el enlace de los resultados.",
   "invalidImport": "No se ha podido validar la fuente o la selección. Revisa el enlace, el formato y las licencias. Si la vista previa ha caducado, vuelve a prepararla. Se conservan los resultados anteriores.",
   "preview": "Previsualizar",
   "review": "Revisar coincidencias",

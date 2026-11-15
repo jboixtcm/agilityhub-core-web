@@ -81,6 +81,11 @@ export default function CompetitionImportsPage({ client }: { client: ApiClient }
   }, [client, refresh]);
   async function prepare(request: ImportRequest) {
     if (busy) return;
+    // The public gateway also bounds the JSON envelope, including escaped source text.
+    if (new TextEncoder().encode(JSON.stringify(request)).length > 2_000_000) {
+      setError("FILE_TOO_LARGE");
+      return;
+    }
     setBusy(true);
     setError(null);
     setSuccess(null);
