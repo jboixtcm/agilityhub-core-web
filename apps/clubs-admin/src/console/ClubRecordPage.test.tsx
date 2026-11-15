@@ -514,9 +514,12 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     await waitFor(() => {
       expect(within(stripe).getByLabelText("Clau secreta")).toHaveValue("");
     });
-    expect(within(stripe).getByTestId("stripe-summary")).toHaveTextContent(
-      "configurada · test · clau pública …sole · sense provar",
-    );
+    // PAY-10: saving the secret key ran the connection test, recorded as [Prova la connexió]'s.
+    await waitFor(() => {
+      expect(within(stripe).getByTestId("stripe-summary")).toHaveTextContent(
+        /^configurada · test · clau pública …sole · última prova OK /u,
+      );
+    });
     fireEvent.click(within(stripe).getByRole("button", { name: "Prova la connexió" }));
     expect(
       await within(stripe).findByText(
@@ -526,6 +529,117 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     await waitFor(() => {
       expect(within(stripe).getByTestId("stripe-summary")).toHaveTextContent(/última prova OK/u);
     });
+  });
+
+  it("PAY-10: a key Stripe refuses is not saved and the form keeps what was typed; a key that passes shows the account its test reached", async () => {
+    const writes = captureRequests(
+      (method, url) => method === "PUT" && url.pathname.endsWith("/payment-providers/STRIPE"),
+    );
+    await openTab(CANIC, "pagaments");
+    const stripe = screen.getByRole("heading", { name: "Stripe" }).closest(".console-card");
+    if (!(stripe instanceof HTMLElement)) throw new TypeError("No Stripe card");
+    fireEvent.change(within(stripe).getByLabelText("Mode"), { target: { value: "live" } });
+    fireEvent.change(within(stripe).getByLabelText("Clau pública"), {
+      target: { value: "pk_live_example" },
+    });
+    fireEvent.change(within(stripe).getByLabelText("Clau secreta"), {
+      target: { value: "sk_live_fail_example" },
+    });
+    fireEvent.change(within(stripe).getByLabelText("Secret del webhook"), {
+      target: { value: "whsec_example" },
+    });
+    fireEvent.click(within(stripe).getByRole("button", { name: "DESA" }));
+
+    expect(await within(stripe).findByText("No s'ha pogut connectar amb Stripe.")).toBeVisible();
+    expect(within(stripe).getByLabelText("Mode")).toHaveValue("live");
+    expect(within(stripe).getByLabelText("Clau pública")).toHaveValue("pk_live_example");
+    expect(within(stripe).getByLabelText("Clau secreta")).toHaveValue("sk_live_fail_example");
+    expect(within(stripe).getByLabelText("Secret del webhook")).toHaveValue("whsec_example");
+    expect(within(stripe).queryByTestId("stripe-summary")).toBeNull();
+    expect(stored(CANIC).paymentProviders.STRIPE?.configured).toBe(false);
+
+    fireEvent.change(within(stripe).getByLabelText("Clau secreta"), {
+      target: { value: "sk_live_example" },
+    });
+    fireEvent.click(within(stripe).getByRole("button", { name: "DESA" }));
+    expect(
+      await within(stripe).findByText(
+        `Connexió correcta amb el compte ****${CANIC.slice(-4)} (live).`,
+      ),
+    ).toBeVisible();
+    expect(within(stripe).queryByText("No s'ha pogut connectar amb Stripe.")).toBeNull();
+    await waitFor(() => {
+      expect(within(stripe).getByTestId("stripe-summary")).toHaveTextContent(
+        /^configurada · live · clau pública …mple · última prova OK /u,
+      );
+    });
+    expect(within(stripe).getByLabelText("Clau secreta")).toHaveValue("");
+    expect(writes.map((write) => (write.body as { secretKey?: string }).secretKey)).toEqual([
+      "sk_live_fail_example",
+      "sk_live_example",
+    ]);
+  });
+
+  it("PAY-10: switching saved live keys to test mode asks a danger confirmation; cancel keeps the form, confirm sends the same body with testModeOverride", async () => {
+    const writes = captureRequests(
+      (method, url) => method === "PUT" && url.pathname.endsWith("/payment-providers/STRIPE"),
+    );
+    await openTab(CANIC, "pagaments");
+    const stripe = screen.getByRole("heading", { name: "Stripe" }).closest(".console-card");
+    if (!(stripe instanceof HTMLElement)) throw new TypeError("No Stripe card");
+    fireEvent.change(within(stripe).getByLabelText("Mode"), { target: { value: "live" } });
+    fireEvent.change(within(stripe).getByLabelText("Clau pública"), {
+      target: { value: "pk_live_example" },
+    });
+    fireEvent.change(within(stripe).getByLabelText("Clau secreta"), {
+      target: { value: "sk_live_example" },
+    });
+    fireEvent.change(within(stripe).getByLabelText("Secret del webhook"), {
+      target: { value: "whsec_example" },
+    });
+    fireEvent.click(within(stripe).getByRole("button", { name: "DESA" }));
+    await waitFor(() => {
+      expect(within(stripe).getByTestId("stripe-summary")).toHaveTextContent(/· live ·/u);
+    });
+
+    fireEvent.change(within(stripe).getByLabelText("Mode"), { target: { value: "test" } });
+    fireEvent.change(within(stripe).getByLabelText("Clau pública"), {
+      target: { value: "pk_test_example" },
+    });
+    fireEvent.click(within(stripe).getByRole("button", { name: "DESA" }));
+    let dialog = await screen.findByRole("dialog", { name: "Passar a mode test" });
+    expect(dialog).toHaveTextContent(
+      "Aquest club té claus live desades. Passar a mode test fa que els pagaments siguin de prova.",
+    );
+    // The dialog says why; the refusal's generic text is not shown beside it. Focus is inside it.
+    expect(screen.queryByText("La configuració del proveïdor no és vàlida.")).toBeNull();
+    expect(dialog).toContainElement(document.activeElement as HTMLElement);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    expect(within(stripe).getByLabelText("Mode")).toHaveValue("test");
+    expect(within(stripe).getByLabelText("Clau pública")).toHaveValue("pk_test_example");
+    expect(stored(CANIC).paymentProviders.STRIPE?.mode).toBe("live");
+    expect(writes).toHaveLength(2);
+
+    fireEvent.click(within(stripe).getByRole("button", { name: "DESA" }));
+    dialog = await screen.findByRole("dialog", { name: "Passar a mode test" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Passa a mode test" }));
+    await waitFor(() => {
+      expect(within(stripe).getByTestId("stripe-summary")).toHaveTextContent(/· test ·/u);
+    });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(writes).toHaveLength(4);
+    const [refused, confirmed] = writes.slice(2).map((write) => write.body);
+    expect(refused).toEqual({
+      enabled: true,
+      mode: "test",
+      publishableKey: "pk_test_example",
+      version: stored(CANIC).version - 1,
+    });
+    expect(confirmed).toEqual({ ...(refused as object), testModeOverride: true });
+    expect(stored(CANIC).paymentProviders.STRIPE?.mode).toBe("test");
   });
 
   it("Legal: [Publica una versió nova] saves the three legal fields with the new version (re-consent notice)", async () => {

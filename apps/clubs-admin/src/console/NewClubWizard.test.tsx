@@ -203,6 +203,54 @@ describe("T-17-12 · «Nou club» wizard (S17 §2 «D19 Assistent»)", () => {
     );
   });
 
+  it("PAY-10: a creation the api refuses with 422 STRIPE_CONNECTION_FAILED says so and keeps what was typed", async () => {
+    const posts = captureRequests(
+      (method, url) => method === "POST" && url.pathname.endsWith("/platform/clubs"),
+    );
+    server.use(
+      http.post(`${API_BASE}/platform/clubs`, () =>
+        HttpResponse.json(
+          {
+            code: "STRIPE_CONNECTION_FAILED",
+            details: {},
+            message: "Stripe rejected the key",
+            traceId: "trace-console-pay-10",
+          },
+          { status: 422 },
+        ),
+      ),
+    );
+    const { navigations } = await renderConsole("/consola/clubs/nou");
+    await fillIdentity("Club Agility Serralada");
+    next();
+    await step("Localització", 2);
+    next();
+    await step("Mòduls", 3);
+    next();
+    await step("Pagaments", 4);
+    fireEvent.click(screen.getByRole("switch", { name: "Activa Stripe" }));
+    fireEvent.change(screen.getByLabelText("Mode"), { target: { value: "live" } });
+    fireEvent.change(screen.getByLabelText("Clau pública"), {
+      target: { value: "pk_live_example" },
+    });
+    next();
+    await step("Tema", 5);
+    next();
+    await toAdmin();
+    fireEvent.click(screen.getByRole("button", { name: "CREA EL CLUB" }));
+
+    expect(await screen.findByText("No s'ha pogut connectar amb Stripe.")).toBeVisible();
+    expect(await step("Revisió", 8)).toBeVisible();
+    expect(posts).toHaveLength(1);
+    expect(navigations.some((path) => path.includes("creat=1"))).toBe(false);
+    for (let back = 0; back < 4; back += 1) {
+      fireEvent.click(screen.getByRole("button", { name: "Enrere" }));
+    }
+    await step("Pagaments", 4);
+    expect(screen.getByLabelText("Mode")).toHaveValue("live");
+    expect(screen.getByLabelText("Clau pública")).toHaveValue("pk_live_example");
+  });
+
   it("E10-W01 round 2 #2: on a club's admin host the new club gets the product's theme, never the host's", async () => {
     const posts = captureRequests(
       (method, url) => method === "POST" && url.pathname.endsWith("/platform/clubs"),
