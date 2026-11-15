@@ -1,8 +1,8 @@
 # Fix log — pre-production audit (Nov 2026)
 
-Branch `fix/pre-production-audit`, based on the production commit. One entry per audit finding. Statuses: FIXED, PARTIAL, NEEDS-DECISION (no code touched; question and options stated), NOT-CODE (operational, data or process), INVALID, REVERTED-BY-REVIEW. `OTHER-REPO:` marks a change still needed in the other repository. Finding IDs refer to `PRE_PRODUCTION_AUDIT_2026-11-11.md`.
+Branch `fix/pre-production-audit`, based on the production commit. One entry per audit finding. Statuses: FIXED, PARTIAL, NEEDS-DECISION (no code touched; question and options stated), NO-CHANGE (the owner decided on 13 Nov 2026 to leave it as it is), NOT-CODE (operational, data or process), INVALID, REVERTED-BY-REVIEW. `OTHER-REPO:` marks what the other repository had to do; the closing pass of 14–15 Nov 2026 did the ones that belonged to a decided finding (`Pass 3` paragraphs and `Closing note` lines). Finding IDs refer to `PRE_PRODUCTION_AUDIT_2026-11-11.md`.
 
-Integration tests (`*IT`) need MongoDB and were not run in the environment where these fixes were written; run the full CI before merging.
+The branch was written in three passes: the first (12 Nov 2026) applied what needed no decision; the second (13–14 Nov) implemented the owner's decisions of 13 Nov, each work package followed by a review; the closing pass (14–15 Nov) did the missing other-repository sides and checked the whole repository. State at the final verification of 15 Nov 2026: every workspace type-checks and lints, 252 unit test files (4024 tests) pass, `pnpm i18n:check` passes, the adopted OpenAPI snapshot is byte-identical to the API branch's, and the production builds of `clubs` and `clubs-admin` pass with their bundle checks. Two things stop on purpose until the owner supplies them: the `apps/id` production build (the privacy policy's effective date, PRIV-01) and the CI release job (`release/*.env`, REL-03). Playwright was never run in the environment where these fixes were written. Run the full CI before merging.
 
 ## web-01-high
 
@@ -169,10 +169,11 @@ Tests: 2 new cases in `apps/clubs/src/polish-styles.test.ts`, which now also rea
 Assumption: the spacing comes from the rows' least height, not from a larger card gap, so the header, the reminder and the push block keep their spacing and the mockup moves as little as possible; a label that wraps makes its row taller and only adds space.
 SPEC-CHANGE: docs/specs/S11-comunicacions.md §2 row 12: each switch takes taps on 44 × 44 px and the switch rows are spaced so their areas never overlap (more space than the mockup), plus a «Canvis» line of 13-11-2026.
 
-### WEB-12 — NEEDS-DECISION
+### WEB-12 — NO-CHANGE
 
 No code changed. Verified: `/estadistiques` and `/estadistiques/lliga` are routed to the placeholder and marked "Screens 27 and 27b (reserved for R2)" (`apps/clubs/src/App.tsx:212-214`), with no link to them. The receipts list shows only the `billing:empty` title (`apps/clubs/src/billing/InvoicesPage.tsx:336-337`).
 To decide: keep the two reserved routes or remove them until R2; whether the empty receipts state gets a sentence saying that earlier receipts stay in the previous system (new copy in ca/es/en, no mockup literal). INC-11, INC-41, INC-76 and INC-80 stay for after launch, as the audit recommends.
+Owner decision of 13 Nov 2026: not chosen.
 
 ## web-03-web-security
 
@@ -269,10 +270,11 @@ No SPEC-CHANGE: no spec or catalogue names the dependency audit. No OTHER-REPO.
 Both WhatsApp links of the back office (member record, `apps/clubs-admin/src/census/CensusRecordPage.tsx`; sign-up review, `apps/clubs-admin/src/dashboard/SignupReviewPage.tsx`) are built by one helper, `whatsAppUrl` (`apps/clubs-admin/src/whatsapp.ts`), which keeps only the digits of the prefix and the number. The member record used to keep everything but the first «+».
 Tests: a new case in `apps/clubs/src/router.test.ts` (checked to fail without the guard) and `apps/clubs-admin/src/whatsapp.test.ts` (new, 2 cases); the router, member record and sign-up review suites run and pass, and so does the whole clubs vitest suite (802 tests).
 
-### FE-10 — NEEDS-DECISION
+### FE-10 — NO-CHANGE
 
 No code changed. Verified: «Surt» revokes the impersonation or support token with `credentials: "include"` (`packages/auth/src/auth-client.ts:919-938`, `:978-993`), and the api answers every token revoke except a bookings-only one with the Set-Cookie that clears `ah_refresh` (`api/.../OAuthController.java:163-171`), although neither kind of session uses that cookie (`apps/clubs-admin/src/support/SupportPages.tsx:36`).
 Question: should leaving an impersonation or a support access keep the actor signed in on that host? Options: (a) keep today's behaviour: the actor is signed out there, and a tab left open after «Surt» can only come back anonymous; (b) OTHER-REPO: clear the cookie only on the revoke of a cookie session (never for an `imp` token), and on the web make sure such a tab never restores the actor's own session on reload. Dropping the credentials on the web side alone would keep the cookie but lose that guarantee.
+Owner decision of 13 Nov 2026: keep today's behaviour (no change).
 
 ## cross-repo
 
@@ -372,9 +374,10 @@ Review note: the text promises backups «up to 30 days» at DigitalOcean in the 
 Review note: while the date is unset, CI's «Lint, typecheck, test, and build» step fails on every push, so no `apps/id`, `apps/clubs` or `apps/clubs-admin` build from CI can be deployed until the club's legal review is done and the date is set; an urgent web fix before then needs the date set or a manual build.
 Review note: the api still defaults `PLATFORM_PRIVACY_POLICY_VERSION` to `v1`; until its side sets exactly `2` (the api package of the same decision), acceptances keep being stamped `v1` and the page shows «Versió 2». The club's own policy (`club.legal.privacyPolicyUrl`, the club's external page) is still asked after this one. The erasure wording («at least 30 days … nothing pending») does not mention the 8-week SEPA refund window that PRIV-04 adds on the api side; the legal review may want to.
 
-### AUTH-05 — NEEDS-DECISION
+### AUTH-05 — NO-CHANGE
 
 No code changed. The CSP is the api entry's option (c), still open: a header in Caddy or a `<meta http-equiv>` written by each app's build, enforced or report-only first. Only once the build is chosen does the web write the policy (`default-src 'self'`, the inline branding script's hash, the API, Stripe and image origins) and check it on staging in the three SPAs. Same question as CFG-04.
+Owner decision of 13 Nov 2026: not chosen; the handoff stays as it is (FE-03's refusal of another account's code was decided separately and is FIXED).
 
 ### SEPA-05 — FIXED
 
