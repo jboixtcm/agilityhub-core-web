@@ -1,0 +1,526 @@
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: joint-release-recheck-20261115
+Capture folder of the permanent mock specs: joint-release-recheck-20261115
+Playwright arguments: --workers=1 --pass-with-no-tests --grep=T-16-15|captures inactivity, leave, payment and plan states at 1280|mobile review: census actions and settings remain usable|student grid: view preference and search light|renames and retires a template at 375|mobile review: readable admin header 768|UI closure instructor attendance is readable 1920|Profile information fits 412px in light
+Checkout copied into the container: 88M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 48, added 0
+Progress: resolved 858, reused 0, downloaded 84, added 84
+Progress: resolved 858, reused 0, downloaded 112, added 112
+Progress: resolved 858, reused 0, downloaded 147, added 147
+Progress: resolved 858, reused 0, downloaded 172, added 172
+Progress: resolved 858, reused 0, downloaded 220, added 218
+Progress: resolved 858, reused 0, downloaded 308, added 308
+Progress: resolved 858, reused 0, downloaded 361, added 361
+Progress: resolved 858, reused 0, downloaded 429, added 429
+Progress: resolved 858, reused 0, downloaded 497, added 497
+Progress: resolved 858, reused 0, downloaded 526, added 526
+Progress: resolved 858, reused 0, downloaded 538, added 538
+Progress: resolved 858, reused 0, downloaded 547, added 547
+Progress: resolved 858, reused 0, downloaded 554, added 554
+Progress: resolved 858, reused 0, downloaded 563, added 563
+Progress: resolved 858, reused 0, downloaded 572, added 572
+Progress: resolved 858, reused 0, downloaded 590, added 590
+Progress: resolved 858, reused 0, downloaded 608, added 608
+Progress: resolved 858, reused 0, downloaded 631, added 631
+Progress: resolved 858, reused 0, downloaded 669, added 669
+Progress: resolved 858, reused 0, downloaded 721, added 721
+Progress: resolved 858, reused 0, downloaded 754, added 754
+Progress: resolved 858, reused 0, downloaded 791, added 791
+Progress: resolved 858, reused 0, downloaded 816, added 816
+Progress: resolved 858, reused 0, downloaded 831, added 831
+Progress: resolved 858, reused 0, downloaded 851, added 851
+Progress: resolved 858, reused 0, downloaded 854, added 854
+Progress: resolved 858, reused 0, downloaded 855, added 855
+Progress: resolved 858, reused 0, downloaded 856, added 855
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 32.2s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing aac99771c1d37d55
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@1.0.0 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing c96c911d9c17e060
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@1.0.0 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing f5b35e3675402593
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@1.0.0 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 7e96cc1ee237d0b2
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@1.0.0 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=1 --pass-with-no-tests '--grep=T-16-15|captures inactivity, leave, payment and plan states at 1280|mobile review: census actions and settings remain usable|student grid: view preference and search light|renames and retires a template at 375|mobile review: readable admin header 768|UI closure instructor attendance is readable 1920|Profile information fits 412px in light'
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+clubs:build: cache miss, executing 10e3a515af6513a1
+clubs:build: 
+clubs:build: > clubs@1.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 448 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/robots.txt                                             0.02 kB │ gzip:   0.04 kB
+clubs:build: dist/version.json                                           0.03 kB │ gzip:   0.05 kB
+clubs:build: dist/content-security-policy.txt                            0.23 kB │ gzip:   0.18 kB
+clubs:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs:build: dist/index.html                                             2.93 kB │ gzip:   1.00 kB
+clubs:build: dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CompetitionStatisticsPage-DLajrAEY.css          0.88 kB │ gzip:   0.37 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-BL9npU4k.css                          15.57 kB │ gzip:   3.22 kB
+clubs:build: dist/assets/screens-DjD6Eyao.css                           21.50 kB │ gzip:   3.55 kB
+clubs:build: dist/assets/shared-CC2v8vIJ.css                            43.71 kB │ gzip:   7.35 kB
+clubs:build: dist/assets/index-BWynRJBQ.css                             73.77 kB │ gzip:  13.28 kB
+clubs:build: dist/assets/notifications-BMQNToIf.js                       0.93 kB │ gzip:   0.54 kB
+clubs:build: dist/assets/notifications-D4ql954R.js                       0.94 kB │ gzip:   0.50 kB
+clubs:build: dist/assets/notifications-CB2UmwHa.js                       0.95 kB │ gzip:   0.55 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-C-uW18ag.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B74qC1t-.js                             1.28 kB │ gzip:   0.66 kB
+clubs:build: dist/assets/history-BWrkQfFW.js                             1.34 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/history-BPTgb4_w.js                             1.37 kB │ gzip:   0.70 kB
+clubs:build: dist/assets/home-CiD_uZx5.js                                1.52 kB │ gzip:   0.76 kB
+clubs:build: dist/assets/home-DuPmgVRC.js                                1.58 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/home-DUEt_q5U.js                                1.60 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-x72vHJv9.js                          2.03 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/training-C5U_DqNB.js                            2.08 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/inactivity-BJp8fZBZ.js                          2.13 kB │ gzip:   1.08 kB
+clubs:build: dist/assets/inactivity-BwqNBSeQ.js                          2.15 kB │ gzip:   1.07 kB
+clubs:build: dist/assets/training-ChM_Sijs.js                            2.25 kB │ gzip:   1.12 kB
+clubs:build: dist/assets/training-B5utM-gP.js                            2.25 kB │ gzip:   1.11 kB
+clubs:build: dist/assets/training-egxGchOA.js                            2.91 kB │ gzip:   1.40 kB
+clubs:build: dist/assets/courses-TACQmmua.js                             3.82 kB │ gzip:   1.71 kB
+clubs:build: dist/assets/courses-Cjf27sNl.js                             4.10 kB │ gzip:   1.86 kB
+clubs:build: dist/assets/courses-CfAin0Ix.js                             4.12 kB │ gzip:   1.89 kB
+clubs:build: dist/assets/statistics-DPI5_Vou.js                          4.64 kB │ gzip:   2.15 kB
+clubs:build: dist/assets/statistics-Cew7lo-8.js                          5.09 kB │ gzip:   2.36 kB
+clubs:build: dist/assets/statistics-C02wMCGJ.js                          5.12 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/booking-CzI60T2e.js                             5.35 kB │ gzip:   2.05 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/booking-Cd5Hyvl6.js                             5.74 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/booking-DwxeSAEp.js                             5.77 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/signup-DILpl6Po.js                              5.78 kB │ gzip:   2.61 kB
+clubs:build: dist/assets/signup-CIx_6W3I.js                              6.05 kB │ gzip:   2.88 kB
+clubs:build: dist/assets/signup-DBJD29ZQ.js                              6.11 kB │ gzip:   2.89 kB
+clubs:build: dist/assets/CompetitionStatisticsPage-BvGh_rIa.js           6.91 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/census-Bq4JrRoj.js                              7.02 kB │ gzip:   2.76 kB
+clubs:build: dist/assets/census-DT5uUa0m.js                              7.43 kB │ gzip:   3.04 kB
+clubs:build: dist/assets/auth-B9v2E-8J.js                                7.61 kB │ gzip:   3.00 kB
+clubs:build: dist/assets/census-C86K-ynV.js                              7.64 kB │ gzip:   3.09 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/auth-DFZvHPZ1.js                                8.57 kB │ gzip:   3.33 kB
+clubs:build: dist/assets/auth-DrPq--3H.js                                8.68 kB │ gzip:   3.32 kB
+clubs:build: dist/assets/instructor-Da0qXAqn.js                         10.08 kB │ gzip:   3.63 kB
+clubs:build: dist/assets/enums-CtHLE34W.js                              10.55 kB │ gzip:   4.37 kB
+clubs:build: dist/assets/instructor-BGzUK1YL.js                         10.65 kB │ gzip:   3.92 kB
+clubs:build: dist/assets/instructor-Cbhr5K-u.js                         10.81 kB │ gzip:   3.93 kB
+clubs:build: dist/assets/enums-ZmhzqQ7-.js                              10.93 kB │ gzip:   4.59 kB
+clubs:build: dist/assets/enums-CeQe0pzq.js                              10.98 kB │ gzip:   4.58 kB
+clubs:build: dist/assets/errors-DbO3skLp.js                             22.27 kB │ gzip:   7.29 kB
+clubs:build: dist/assets/errors-DjchtCZd.js                             23.57 kB │ gzip:   7.69 kB
+clubs:build: dist/assets/errors-CWUelEMY.js                             23.60 kB │ gzip:   7.66 kB
+clubs:build: dist/assets/CoursesRoute-guBYWSQl.js                      134.47 kB │ gzip:  37.40 kB
+clubs:build: dist/assets/screens-C5Cs_fHf.js                           233.89 kB │ gzip:  60.03 kB
+clubs:build: dist/assets/shared-Cn4yyDED.js                            260.07 kB │ gzip:  79.61 kB
+clubs:build: dist/assets/index-BQhyh-VZ.js                             268.90 kB │ gzip:  81.29 kB
+clubs:build: dist/assets/CourseViewer3D-W72wTE4O.js                    582.82 kB │ gzip: 151.71 kB
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: ✓ built in 417ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.95 kB │ gzip: 6.02 kB
+clubs:build: 
+clubs:build: ✓ built in 38ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  67 entries (1333.71 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: warnings
+clubs:build:   One of the glob patterns doesn't match any files. Please remove or fix the following: {
+clubs:build:   "globDirectory": "/work/apps/clubs/dist",
+clubs:build:   "globPattern": "pwa/*.{png,webmanifest}",
+clubs:build:   "globIgnores": [
+clubs:build:     "**/browser-*.js",
+clubs:build:     "**/mockServiceWorker.js",
+clubs:build:     "**/CourseViewer3D-*.js",
+clubs:build:     "sw.js",
+clubs:build:     "sw.js"
+clubs:build:   ]
+clubs:build: }
+clubs:build: 
+clubs:build: check-clubs-bundle: 61 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+clubs-admin:build: cache miss, executing 7b7c44dd7781a755
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@1.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 510 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/robots.txt                                             0.02 kB │ gzip:   0.04 kB
+clubs-admin:build: dist/version.json                                           0.03 kB │ gzip:   0.05 kB
+clubs-admin:build: dist/content-security-policy.txt                            0.23 kB │ gzip:   0.18 kB
+clubs-admin:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs-admin:build: dist/index.html                                             2.96 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-B4BC4Pxa.css                       5.83 kB │ gzip:   1.27 kB
+clubs-admin:build: dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+clubs-admin:build: dist/assets/list-helpers-eJp2icTd.css                      41.78 kB │ gzip:   7.04 kB
+clubs-admin:build: dist/assets/index-B5s2yxsM.css                            134.59 kB │ gzip:  21.07 kB
+clubs-admin:build: dist/assets/notifications-CyLRrG98.js                       0.86 kB │ gzip:   0.51 kB
+clubs-admin:build: dist/assets/notifications-Blmp7IrK.js                       0.87 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-Da17sHQS.js                       0.88 kB │ gzip:   0.52 kB
+clubs-admin:build: dist/assets/billing-D0DpjAoT.js                             0.89 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-JPzod3xQ.js                             0.99 kB │ gzip:   0.55 kB
+clubs-admin:build: dist/assets/billing-CsyKuIJF.js                             1.01 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/history-CyWOebF4.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/history-BD6K1kyE.js                             1.14 kB │ gzip:   0.59 kB
+clubs-admin:build: dist/assets/history-Ppbt825V.js                             1.17 kB │ gzip:   0.60 kB
+clubs-admin:build: dist/assets/home-DCkpKyl2.js                                1.40 kB │ gzip:   0.71 kB
+clubs-admin:build: dist/assets/home--3f0I326.js                                1.46 kB │ gzip:   0.77 kB
+clubs-admin:build: dist/assets/home-CG5hHMef.js                                1.48 kB │ gzip:   0.77 kB
+clubs-admin:build: dist/assets/leave-NRVcHjHo.js                               1.51 kB │ gzip:   0.76 kB
+clubs-admin:build: dist/assets/leave-B679LHaT.js                               1.63 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/leave-DgZBMqxx.js                               1.63 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/activities-BVJEFa1Z.js                          1.73 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/activities-BSuc--ol.js                          1.81 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/activities-BULXahB-.js                          1.82 kB │ gzip:   0.89 kB
+clubs-admin:build: dist/assets/training-CvomnQeC.js                            1.84 kB │ gzip:   0.87 kB
+clubs-admin:build: dist/assets/inactivity-BQCkwWJA.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-CA5-KbpM.js                          1.97 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/inactivity-D3rOgEi7.js                          1.99 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/training-DSG9lMt4.js                            2.01 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/training-Cz1fEZ_C.js                            2.02 kB │ gzip:   0.99 kB
+clubs-admin:build: dist/assets/admin-dashboard-Disuw0hN.js                     2.48 kB │ gzip:   1.21 kB
+clubs-admin:build: dist/assets/admin-dashboard-De_MOyZT.js                     2.62 kB │ gzip:   1.33 kB
+clubs-admin:build: dist/assets/admin-dashboard-9j7PexOs.js                     2.65 kB │ gzip:   1.34 kB
+clubs-admin:build: dist/assets/id-DegKJNki.js                                  3.02 kB │ gzip:   1.32 kB
+clubs-admin:build: dist/assets/id--H2BHB_t.js                                  3.20 kB │ gzip:   1.47 kB
+clubs-admin:build: dist/assets/id-CPqfH5Ab.js                                  3.27 kB │ gzip:   1.48 kB
+clubs-admin:build: dist/assets/statistics-CGvqL05i.js                          3.31 kB │ gzip:   1.55 kB
+clubs-admin:build: dist/assets/courses-ChbZtx3h.js                             3.57 kB │ gzip:   1.57 kB
+clubs-admin:build: dist/assets/statistics-DcqJdoEM.js                          3.76 kB │ gzip:   1.75 kB
+clubs-admin:build: dist/assets/statistics-CMu4cNps.js                          3.80 kB │ gzip:   1.75 kB
+clubs-admin:build: dist/assets/courses-Ba2mqEKG.js                             3.84 kB │ gzip:   1.74 kB
+clubs-admin:build: dist/assets/courses-Cq2xuPj7.js                             3.87 kB │ gzip:   1.77 kB
+clubs-admin:build: dist/assets/booking-B9Q2Igni.js                             5.20 kB │ gzip:   1.98 kB
+clubs-admin:build: dist/assets/booking-BardH8_f.js                             5.60 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/booking-Dn_fiXMp.js                             5.62 kB │ gzip:   2.18 kB
+clubs-admin:build: dist/assets/signup-DUsq1MsX.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/signup-DIO1MI8k.js                              5.90 kB │ gzip:   2.81 kB
+clubs-admin:build: dist/assets/signup-BdFJgnKQ.js                              5.96 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/admin-messaging-Cwrljn9V.js                     6.04 kB │ gzip:   2.44 kB
+clubs-admin:build: dist/assets/admin-messaging-Cd_a8z8e.js                     6.34 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-messaging-oSH-o2x1.js                     6.45 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-catalogs-VW5KUV4y.js                      6.49 kB │ gzip:   2.41 kB
+clubs-admin:build: dist/assets/admin-audit-CjhhQ82T.js                         6.58 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-catalogs-BL800Q2Y.js                      6.81 kB │ gzip:   2.66 kB
+clubs-admin:build: dist/assets/census-cbmVHEi-.js                              6.90 kB │ gzip:   2.71 kB
+clubs-admin:build: dist/assets/admin-catalogs-DrXUGJ3w.js                      7.00 kB │ gzip:   2.65 kB
+clubs-admin:build: dist/assets/admin-audit-D9NyfdyL.js                         7.24 kB │ gzip:   2.97 kB
+clubs-admin:build: dist/assets/census-Bt6hTjis.js                              7.31 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-audit-NcNouyce.js                         7.40 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/auth-COEixWe-.js                                7.45 kB │ gzip:   2.94 kB
+clubs-admin:build: dist/assets/census-eHPvwzdR.js                              7.53 kB │ gzip:   3.03 kB
+clubs-admin:build: dist/assets/auth-CkxJB46g.js                                8.41 kB │ gzip:   3.27 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/auth-iFPFc86N.js                                8.90 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/enums-CyAdjBxz.js                               9.62 kB │ gzip:   3.76 kB
+clubs-admin:build: dist/assets/enums-QKzw6JM8.js                               9.99 kB │ gzip:   3.99 kB
+clubs-admin:build: dist/assets/enums-BM6XENQJ.js                              10.05 kB │ gzip:   3.99 kB
+clubs-admin:build: dist/assets/instructor-Cy-kNWH7.js                         10.54 kB │ gzip:   3.61 kB
+clubs-admin:build: dist/assets/instructor-ZnADTepI.js                         11.12 kB │ gzip:   3.90 kB
+clubs-admin:build: dist/assets/instructor-BYvTK6fc.js                         11.27 kB │ gzip:   3.90 kB
+clubs-admin:build: dist/assets/admin-courses-CZecHWtL.js                      13.27 kB │ gzip:   4.81 kB
+clubs-admin:build: dist/assets/admin-courses-ppXzK63q.js                      14.15 kB │ gzip:   5.16 kB
+clubs-admin:build: dist/assets/admin-courses-BAo-G3ig.js                      14.47 kB │ gzip:   5.17 kB
+clubs-admin:build: dist/assets/errors-CurjIVDA.js                             15.08 kB │ gzip:   5.08 kB
+clubs-admin:build: dist/assets/errors-BJUD2HxT.js                             16.38 kB │ gzip:   5.44 kB
+clubs-admin:build: dist/assets/errors-DCMsZbVB.js                             16.41 kB │ gzip:   5.41 kB
+clubs-admin:build: dist/assets/planning-labels-en-DbHc7l8i.js                 17.48 kB │ gzip:   6.06 kB
+clubs-admin:build: dist/assets/planning-labels-ca-XIWfRzeH.js                 18.34 kB │ gzip:   6.53 kB
+clubs-admin:build: dist/assets/planning-labels-es-Dj7U0gCe.js                 18.56 kB │ gzip:   6.57 kB
+clubs-admin:build: dist/assets/console-6BhdMdIP.js                            21.06 kB │ gzip:   7.83 kB
+clubs-admin:build: dist/assets/console-UPRs5cG4.js                            22.29 kB │ gzip:   8.53 kB
+clubs-admin:build: dist/assets/console-DBI1DSl2.js                            22.97 kB │ gzip:   8.61 kB
+clubs-admin:build: dist/assets/admin-census-BeKoP5Xm.js                       27.70 kB │ gzip:   9.58 kB
+clubs-admin:build: dist/assets/admin-census-Fpf1y5UR.js                       29.51 kB │ gzip:  10.41 kB
+clubs-admin:build: dist/assets/admin-census-B4qKxRCp.js                       30.03 kB │ gzip:  10.41 kB
+clubs-admin:build: dist/assets/settings-labels-en-DoC72XGa.js                 46.68 kB │ gzip:  14.59 kB
+clubs-admin:build: dist/assets/settings-labels-ca-mFfxOvzM.js                 49.37 kB │ gzip:  15.60 kB
+clubs-admin:build: dist/assets/settings-labels-es-DrtesmdF.js                 50.26 kB │ gzip:  15.73 kB
+clubs-admin:build: dist/assets/ConsolePage-CkKPXL7n.js                       118.46 kB │ gzip:  28.27 kB
+clubs-admin:build: dist/assets/CoursesRoute-DuOxH0tQ.js                      231.55 kB │ gzip:  64.10 kB
+clubs-admin:build: dist/assets/list-helpers-Bd0R9sbs.js                      239.85 kB │ gzip:  74.76 kB
+clubs-admin:build: dist/assets/CourseViewer3D-BnO3hVgA.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-CQ10zpcd.js                           1,020.42 kB │ gzip: 256.48 kB
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: ✓ built in 500ms
+id:build: cache miss, executing 70a771fa2265a877
+id:build: 
+id:build: > id@1.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 275 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/robots.txt                                           0.02 kB │ gzip:   0.04 kB
+id:build: dist/version.json                                         0.03 kB │ gzip:   0.05 kB
+id:build: dist/content-security-policy.txt                          0.17 kB │ gzip:   0.12 kB
+id:build: dist/favicon.svg                                          0.43 kB │ gzip:   0.27 kB
+id:build: dist/index.html                                           0.45 kB │ gzip:   0.29 kB
+id:build: dist/assets/sprite-CB0BjrsS.svg                           8.35 kB │ gzip:   1.97 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CI3yuPkm.css                           58.78 kB │ gzip:  10.59 kB
+id:build: dist/assets/id-CJRZp3mw.js                                3.27 kB │ gzip:   1.43 kB
+id:build: dist/assets/id-BJYjKe-T.js                                3.45 kB │ gzip:   1.58 kB
+id:build: dist/assets/id-DjSSeJdO.js                                3.52 kB │ gzip:   1.59 kB
+id:build: dist/assets/common-B1j-oU_u.js                            3.59 kB │ gzip:   1.66 kB
+id:build: dist/assets/common-n9mbifgF.js                            3.73 kB │ gzip:   1.82 kB
+id:build: dist/assets/common-CcELndgu.js                            3.82 kB │ gzip:   1.85 kB
+id:build: dist/assets/errors-DbO3skLp.js                           22.27 kB │ gzip:   7.29 kB
+id:build: dist/assets/errors-DjchtCZd.js                           23.57 kB │ gzip:   7.69 kB
+id:build: dist/assets/errors-CWUelEMY.js                           23.60 kB │ gzip:   7.66 kB
+id:build: dist/assets/PrivacyPage-CUTY7F5Q.js                      33.69 kB │ gzip:  12.12 kB
+id:build: dist/assets/index-huxx8Oty.js                           346.56 kB │ gzip: 106.55 kB
+id:build: 
+id:build: ✓ built in 202ms
+clubs:e2e: cache bypass, force executing c25ad53736a96894
+clubs:e2e: 
+clubs:e2e: > clubs@1.0.0 e2e /work/apps/clubs
+clubs:e2e: > playwright test --workers\=1 --pass-with-no-tests '--grep=T-16-15|captures inactivity, leave, payment and plan states at 1280|mobile review: census actions and settings remain usable|student grid: view preference and search light|renames and retires a template at 375|mobile review: readable admin header 768|UI closure instructor attendance is readable 1920|Profile information fits 412px in light'
+clubs:e2e: 
+clubs:e2e: [WebServer] (node:818) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs:e2e: 
+clubs:e2e: Running 2 tests using 1 worker
+clubs:e2e: ··
+clubs:e2e:   2 passed (12.4s)
+clubs-admin:e2e: cache bypass, force executing f0ae7070dc968135
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@1.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test --workers\=1 --pass-with-no-tests '--grep=T-16-15|captures inactivity, leave, payment and plan states at 1280|mobile review: census actions and settings remain usable|student grid: view preference and search light|renames and retires a template at 375|mobile review: readable admin header 768|UI closure instructor attendance is readable 1920|Profile information fits 412px in light'
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:1579) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 16 tests using 1 worker
+clubs-admin:e2e: ················
+clubs-admin:e2e:   16 passed (2.4m)
+id:e2e: cache bypass, force executing 70cf092260cdf31f
+id:e2e: 
+id:e2e: > id@1.0.0 e2e /work/apps/id
+id:e2e: > playwright test --workers\=1 --pass-with-no-tests '--grep=T-16-15|captures inactivity, leave, payment and plan states at 1280|mobile review: census actions and settings remain usable|student grid: view preference and search light|renames and retires a template at 375|mobile review: readable admin header 768|UI closure instructor attendance is readable 1920|Profile information fits 412px in light'
+id:e2e: 
+id:e2e: 
+id:e2e: 
+
+ Tasks:    10 successful, 10 total
+Cached:    0 cached, 10 total
+  Time:    3m15.386s 
+
+evidence: joint-release-recheck-20261115/header-webkit-768.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-3d-375-dark.png
+evidence: joint-release-recheck-20261115/info-faq-webkit-ui-412-light.png
+evidence: joint-release-recheck-20261115/student-list-webkit-light-375.png
+evidence: joint-release-recheck-20261115/info-faq-chromium-412-light.png
+evidence: joint-release-recheck-20261115/page-gossos-chromium-375.png
+evidence: joint-release-recheck-20261115/info-document-chromium-412-light.png
+evidence: joint-release-recheck-20261115/profile-webkit-ui-412-light.png
+evidence: joint-release-recheck-20261115/merge-webkit-375.png
+evidence: joint-release-recheck-20261115/admin-D18-importa-1280-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-3d-1280-dark.png
+evidence: joint-release-recheck-20261115/add-dog-webkit-375.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-2d-375-light.png
+evidence: joint-release-recheck-20261115/page-parametres-webkit-375.png
+evidence: joint-release-recheck-20261115/info-document-webkit-ui-412-light.png
+evidence: joint-release-recheck-20261115/admin-D18-biblioteca-1280-light.png
+evidence: joint-release-recheck-20261115/profile-chromium-412-light.png
+evidence: joint-release-recheck-20261115/page-gossos-webkit-375.png
+evidence: joint-release-recheck-20261115/admin-D7-col-locacions-375-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-importa-375-light.png
+evidence: joint-release-recheck-20261115/student-grid-webkit-light-375.png
+evidence: joint-release-recheck-20261115/page-abonats-webkit-375.png
+evidence: joint-release-recheck-20261115/admin-D16-geometria-375-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-col-locacio-375-light.png
+evidence: joint-release-recheck-20261115/admin-D18-registra-375-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-2d-1280-dark.png
+evidence: joint-release-recheck-20261115/add-dog-chromium-375.png
+evidence: joint-release-recheck-20261115/page-tauler-chromium-375.png
+evidence: joint-release-recheck-20261115/admin-D7-col-locacions-375-light.png
+evidence: joint-release-recheck-20261115/admin-D16-geometria-1280-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-registra-375-light.png
+evidence: joint-release-recheck-20261115/student-list-chromium-light-375.png
+evidence: joint-release-recheck-20261115/student-grid-chromium-light-375.png
+evidence: joint-release-recheck-20261115/add-dog-bottom-webkit-375.png
+evidence: joint-release-recheck-20261115/user-menu-webkit-768.png
+evidence: joint-release-recheck-20261115/user-menu-chromium-768.png
+evidence: joint-release-recheck-20261115/admin-D7-col-locacions-1280-dark.png
+evidence: joint-release-recheck-20261115/add-dog-bottom-chromium-375.png
+evidence: joint-release-recheck-20261115/student-grid-chromium-light-1280.png
+evidence: joint-release-recheck-20261115/page-calendari-webkit-375.png
+evidence: joint-release-recheck-20261115/page-calendari-chromium-375.png
+evidence: joint-release-recheck-20261115/student-list-chromium-light-1280.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-2d-375-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-col-locacio-1280-dark.png
+evidence: joint-release-recheck-20261115/merge-chromium-375.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-3d-1280-light.png
+evidence: joint-release-recheck-20261115/admin-D18-registra-1280-dark.png
+evidence: joint-release-recheck-20261115/page-tauler-webkit-375.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-3d-375-light.png
+evidence: joint-release-recheck-20261115/admin-D18-col-locacio-375-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-biblioteca-375-dark.png
+evidence: joint-release-recheck-20261115/page-abonats-chromium-375.png
+evidence: joint-release-recheck-20261115/admin-D18-importa-375-dark.png
+evidence: joint-release-recheck-20261115/admin-D18-biblioteca-375-light.png
+evidence: joint-release-recheck-20261115/admin-D18-importa-1280-light.png
+evidence: joint-release-recheck-20261115/student-grid-webkit-light-1280.png
+evidence: joint-release-recheck-20261115/admin-D18-biblioteca-1280-dark.png
+evidence: joint-release-recheck-20261115/page-parametres-chromium-375.png
+evidence: joint-release-recheck-20261115/admin-D18-recorregut-2d-1280-light.png
+evidence: joint-release-recheck-20261115/admin-D16-geometria-375-light.png
+evidence: joint-release-recheck-20261115/admin-D18-registra-1280-light.png
+evidence: joint-release-recheck-20261115/student-list-webkit-light-1280.png
+evidence: joint-release-recheck-20261115/agenda-selected-webkit-1920.png
+evidence: joint-release-recheck-20261115/agenda-selected-chromium-1920.png
+evidence: joint-release-recheck-20261115/admin-D18-col-locacio-1280-light.png
+evidence: joint-release-recheck-20261115/admin-D16-geometria-1280-light.png
+evidence: joint-release-recheck-20261115/header-chromium-768.png
+evidence: joint-release-recheck-20261115/admin-D7-col-locacions-1280-light.png

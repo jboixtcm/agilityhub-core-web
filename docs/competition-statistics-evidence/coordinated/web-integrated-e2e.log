@@ -1,0 +1,1387 @@
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: joint-release-20261115
+Capture folder of the permanent mock specs: joint-release-20261115
+Playwright arguments: --workers=2
+Checkout copied into the container: 35M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 39, added 39
+Progress: resolved 858, reused 0, downloaded 78, added 78
+Progress: resolved 858, reused 0, downloaded 100, added 100
+Progress: resolved 858, reused 0, downloaded 104, added 104
+Progress: resolved 858, reused 0, downloaded 152, added 152
+Progress: resolved 858, reused 0, downloaded 178, added 178
+Progress: resolved 858, reused 0, downloaded 248, added 248
+Progress: resolved 858, reused 0, downloaded 297, added 297
+Progress: resolved 858, reused 0, downloaded 328, added 328
+Progress: resolved 858, reused 0, downloaded 396, added 396
+Progress: resolved 858, reused 0, downloaded 430, added 430
+Progress: resolved 858, reused 0, downloaded 443, added 443
+Progress: resolved 858, reused 0, downloaded 476, added 476
+Progress: resolved 858, reused 0, downloaded 511, added 510
+Progress: resolved 858, reused 0, downloaded 522, added 522
+Progress: resolved 858, reused 0, downloaded 533, added 533
+Progress: resolved 858, reused 0, downloaded 542, added 542
+Progress: resolved 858, reused 0, downloaded 543, added 543
+Progress: resolved 858, reused 0, downloaded 546, added 546
+Progress: resolved 858, reused 0, downloaded 548, added 548
+Progress: resolved 858, reused 0, downloaded 550, added 550
+Progress: resolved 858, reused 0, downloaded 552, added 552
+Progress: resolved 858, reused 0, downloaded 554, added 554
+Progress: resolved 858, reused 0, downloaded 555, added 554
+Progress: resolved 858, reused 0, downloaded 558, added 558
+Progress: resolved 858, reused 0, downloaded 560, added 560
+Progress: resolved 858, reused 0, downloaded 561, added 560
+Progress: resolved 858, reused 0, downloaded 565, added 565
+Progress: resolved 858, reused 0, downloaded 567, added 567
+Progress: resolved 858, reused 0, downloaded 568, added 567
+Progress: resolved 858, reused 0, downloaded 572, added 572
+Progress: resolved 858, reused 0, downloaded 577, added 577
+Progress: resolved 858, reused 0, downloaded 581, added 581
+Progress: resolved 858, reused 0, downloaded 587, added 587
+Progress: resolved 858, reused 0, downloaded 592, added 592
+Progress: resolved 858, reused 0, downloaded 598, added 598
+Progress: resolved 858, reused 0, downloaded 603, added 603
+Progress: resolved 858, reused 0, downloaded 612, added 612
+Progress: resolved 858, reused 0, downloaded 615, added 615
+Progress: resolved 858, reused 0, downloaded 627, added 627
+Progress: resolved 858, reused 0, downloaded 634, added 633
+Progress: resolved 858, reused 0, downloaded 642, added 642
+Progress: resolved 858, reused 0, downloaded 655, added 655
+Progress: resolved 858, reused 0, downloaded 660, added 660
+Progress: resolved 858, reused 0, downloaded 672, added 672
+Progress: resolved 858, reused 0, downloaded 673, added 673
+Progress: resolved 858, reused 0, downloaded 675, added 675
+Progress: resolved 858, reused 0, downloaded 687, added 687
+Progress: resolved 858, reused 0, downloaded 695, added 695
+Progress: resolved 858, reused 0, downloaded 718, added 718
+Progress: resolved 858, reused 0, downloaded 723, added 723
+Progress: resolved 858, reused 0, downloaded 729, added 729
+Progress: resolved 858, reused 0, downloaded 731, added 731
+Progress: resolved 858, reused 0, downloaded 734, added 734
+Progress: resolved 858, reused 0, downloaded 737, added 737
+Progress: resolved 858, reused 0, downloaded 744, added 744
+Progress: resolved 858, reused 0, downloaded 764, added 764
+Progress: resolved 858, reused 0, downloaded 773, added 773
+Progress: resolved 858, reused 0, downloaded 778, added 778
+Progress: resolved 858, reused 0, downloaded 783, added 783
+Progress: resolved 858, reused 0, downloaded 797, added 797
+Progress: resolved 858, reused 0, downloaded 798, added 798
+Progress: resolved 858, reused 0, downloaded 809, added 809
+Progress: resolved 858, reused 0, downloaded 810, added 809
+Progress: resolved 858, reused 0, downloaded 826, added 826
+Progress: resolved 858, reused 0, downloaded 835, added 835
+Progress: resolved 858, reused 0, downloaded 845, added 845
+Progress: resolved 858, reused 0, downloaded 846, added 845
+Progress: resolved 858, reused 0, downloaded 854, added 854
+Progress: resolved 858, reused 0, downloaded 856, added 856
+Progress: resolved 858, reused 0, downloaded 857, added 856
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 1m 18.6s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing 166a8bb54f9beb22
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@1.0.0 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 6b89d7dab6e276b5
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@1.0.0 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing c54267169f0ac491
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@1.0.0 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing e14c283804f5e31d
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@1.0.0 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=2
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+@agilityhub/course-ui:e2e: ····
+@agilityhub/course-ui:e2e:   4 passed (8.4s)
+clubs-admin:build: cache miss, executing 13fd525652d53a0e
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@1.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 510 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/robots.txt                                             0.02 kB │ gzip:   0.04 kB
+clubs-admin:build: dist/version.json                                           0.03 kB │ gzip:   0.05 kB
+clubs-admin:build: dist/content-security-policy.txt                            0.23 kB │ gzip:   0.18 kB
+clubs-admin:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs-admin:build: dist/index.html                                             2.96 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-B4BC4Pxa.css                       5.83 kB │ gzip:   1.27 kB
+clubs-admin:build: dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+clubs-admin:build: dist/assets/list-helpers-eJp2icTd.css                      41.78 kB │ gzip:   7.04 kB
+clubs-admin:build: dist/assets/index-B5s2yxsM.css                            134.59 kB │ gzip:  21.07 kB
+clubs-admin:build: dist/assets/notifications-CyLRrG98.js                       0.86 kB │ gzip:   0.51 kB
+clubs-admin:build: dist/assets/notifications-Blmp7IrK.js                       0.87 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-Da17sHQS.js                       0.88 kB │ gzip:   0.52 kB
+clubs-admin:build: dist/assets/billing-D0DpjAoT.js                             0.89 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-JPzod3xQ.js                             0.99 kB │ gzip:   0.55 kB
+clubs-admin:build: dist/assets/billing-CsyKuIJF.js                             1.01 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/history-CyWOebF4.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/history-BD6K1kyE.js                             1.14 kB │ gzip:   0.59 kB
+clubs-admin:build: dist/assets/history-Ppbt825V.js                             1.17 kB │ gzip:   0.60 kB
+clubs-admin:build: dist/assets/home-DCkpKyl2.js                                1.40 kB │ gzip:   0.71 kB
+clubs-admin:build: dist/assets/home--3f0I326.js                                1.46 kB │ gzip:   0.77 kB
+clubs-admin:build: dist/assets/home-CG5hHMef.js                                1.48 kB │ gzip:   0.77 kB
+clubs-admin:build: dist/assets/leave-NRVcHjHo.js                               1.51 kB │ gzip:   0.76 kB
+clubs-admin:build: dist/assets/leave-B679LHaT.js                               1.63 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/leave-DgZBMqxx.js                               1.63 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/activities-BVJEFa1Z.js                          1.73 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/activities-BSuc--ol.js                          1.81 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/activities-BULXahB-.js                          1.82 kB │ gzip:   0.89 kB
+clubs-admin:build: dist/assets/training-CvomnQeC.js                            1.84 kB │ gzip:   0.87 kB
+clubs-admin:build: dist/assets/inactivity-BQCkwWJA.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-CA5-KbpM.js                          1.97 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/inactivity-D3rOgEi7.js                          1.99 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/training-DSG9lMt4.js                            2.01 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/training-Cz1fEZ_C.js                            2.02 kB │ gzip:   0.99 kB
+clubs-admin:build: dist/assets/admin-dashboard-Disuw0hN.js                     2.48 kB │ gzip:   1.21 kB
+clubs-admin:build: dist/assets/admin-dashboard-De_MOyZT.js                     2.62 kB │ gzip:   1.33 kB
+clubs-admin:build: dist/assets/admin-dashboard-9j7PexOs.js                     2.65 kB │ gzip:   1.34 kB
+clubs-admin:build: dist/assets/id-DegKJNki.js                                  3.02 kB │ gzip:   1.32 kB
+clubs-admin:build: dist/assets/id--H2BHB_t.js                                  3.20 kB │ gzip:   1.47 kB
+clubs-admin:build: dist/assets/id-CPqfH5Ab.js                                  3.27 kB │ gzip:   1.48 kB
+clubs-admin:build: dist/assets/statistics-CGvqL05i.js                          3.31 kB │ gzip:   1.55 kB
+clubs-admin:build: dist/assets/courses-ChbZtx3h.js                             3.57 kB │ gzip:   1.57 kB
+clubs-admin:build: dist/assets/statistics-DcqJdoEM.js                          3.76 kB │ gzip:   1.75 kB
+clubs-admin:build: dist/assets/statistics-CMu4cNps.js                          3.80 kB │ gzip:   1.75 kB
+clubs-admin:build: dist/assets/courses-Ba2mqEKG.js                             3.84 kB │ gzip:   1.74 kB
+clubs-admin:build: dist/assets/courses-Cq2xuPj7.js                             3.87 kB │ gzip:   1.77 kB
+clubs-admin:build: dist/assets/booking-B9Q2Igni.js                             5.20 kB │ gzip:   1.98 kB
+clubs-admin:build: dist/assets/booking-BardH8_f.js                             5.60 kB │ gzip:   2.19 kB
+clubs-admin:build: dist/assets/booking-Dn_fiXMp.js                             5.62 kB │ gzip:   2.18 kB
+clubs-admin:build: dist/assets/signup-DUsq1MsX.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/signup-DIO1MI8k.js                              5.90 kB │ gzip:   2.81 kB
+clubs-admin:build: dist/assets/signup-BdFJgnKQ.js                              5.96 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/admin-messaging-Cwrljn9V.js                     6.04 kB │ gzip:   2.44 kB
+clubs-admin:build: dist/assets/admin-messaging-Cd_a8z8e.js                     6.34 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-messaging-oSH-o2x1.js                     6.45 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-catalogs-VW5KUV4y.js                      6.49 kB │ gzip:   2.41 kB
+clubs-admin:build: dist/assets/admin-audit-CjhhQ82T.js                         6.58 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-catalogs-BL800Q2Y.js                      6.81 kB │ gzip:   2.66 kB
+clubs-admin:build: dist/assets/census-cbmVHEi-.js                              6.90 kB │ gzip:   2.71 kB
+clubs-admin:build: dist/assets/admin-catalogs-DrXUGJ3w.js                      7.00 kB │ gzip:   2.65 kB
+clubs-admin:build: dist/assets/admin-audit-D9NyfdyL.js                         7.24 kB │ gzip:   2.97 kB
+clubs-admin:build: dist/assets/census-Bt6hTjis.js                              7.31 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-audit-NcNouyce.js                         7.40 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/auth-COEixWe-.js                                7.45 kB │ gzip:   2.94 kB
+clubs-admin:build: dist/assets/census-eHPvwzdR.js                              7.53 kB │ gzip:   3.03 kB
+clubs-admin:build: dist/assets/auth-CkxJB46g.js                                8.41 kB │ gzip:   3.27 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/auth-iFPFc86N.js                                8.90 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/enums-CyAdjBxz.js                               9.62 kB │ gzip:   3.76 kB
+clubs-admin:build: dist/assets/enums-QKzw6JM8.js                               9.99 kB │ gzip:   3.99 kB
+clubs-admin:build: dist/assets/enums-BM6XENQJ.js                              10.05 kB │ gzip:   3.99 kB
+clubs-admin:build: dist/assets/instructor-Cy-kNWH7.js                         10.54 kB │ gzip:   3.61 kB
+clubs-admin:build: dist/assets/instructor-ZnADTepI.js                         11.12 kB │ gzip:   3.90 kB
+clubs-admin:build: dist/assets/instructor-BYvTK6fc.js                         11.27 kB │ gzip:   3.90 kB
+clubs-admin:build: dist/assets/admin-courses-CZecHWtL.js                      13.27 kB │ gzip:   4.81 kB
+clubs-admin:build: dist/assets/admin-courses-ppXzK63q.js                      14.15 kB │ gzip:   5.16 kB
+clubs-admin:build: dist/assets/admin-courses-BAo-G3ig.js                      14.47 kB │ gzip:   5.17 kB
+clubs-admin:build: dist/assets/errors-CurjIVDA.js                             15.08 kB │ gzip:   5.08 kB
+clubs-admin:build: dist/assets/errors-BJUD2HxT.js                             16.38 kB │ gzip:   5.44 kB
+clubs-admin:build: dist/assets/errors-DCMsZbVB.js                             16.41 kB │ gzip:   5.41 kB
+clubs-admin:build: dist/assets/planning-labels-en-DbHc7l8i.js                 17.48 kB │ gzip:   6.06 kB
+clubs-admin:build: dist/assets/planning-labels-ca-XIWfRzeH.js                 18.34 kB │ gzip:   6.53 kB
+clubs-admin:build: dist/assets/planning-labels-es-Dj7U0gCe.js                 18.56 kB │ gzip:   6.57 kB
+clubs-admin:build: dist/assets/console-6BhdMdIP.js                            21.06 kB │ gzip:   7.83 kB
+clubs-admin:build: dist/assets/console-UPRs5cG4.js                            22.29 kB │ gzip:   8.53 kB
+clubs-admin:build: dist/assets/console-DBI1DSl2.js                            22.97 kB │ gzip:   8.61 kB
+clubs-admin:build: dist/assets/admin-census-BeKoP5Xm.js                       27.70 kB │ gzip:   9.58 kB
+clubs-admin:build: dist/assets/admin-census-Fpf1y5UR.js                       29.51 kB │ gzip:  10.41 kB
+clubs-admin:build: dist/assets/admin-census-B4qKxRCp.js                       30.03 kB │ gzip:  10.41 kB
+clubs-admin:build: dist/assets/settings-labels-en-DoC72XGa.js                 46.68 kB │ gzip:  14.59 kB
+clubs-admin:build: dist/assets/settings-labels-ca-mFfxOvzM.js                 49.37 kB │ gzip:  15.60 kB
+clubs-admin:build: dist/assets/settings-labels-es-DrtesmdF.js                 50.26 kB │ gzip:  15.73 kB
+clubs-admin:build: dist/assets/ConsolePage-CkKPXL7n.js                       118.46 kB │ gzip:  28.27 kB
+clubs-admin:build: dist/assets/CoursesRoute-DuOxH0tQ.js                      231.55 kB │ gzip:  64.10 kB
+clubs-admin:build: dist/assets/list-helpers-Bd0R9sbs.js                      239.85 kB │ gzip:  74.76 kB
+clubs-admin:build: dist/assets/CourseViewer3D-BnO3hVgA.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-CQ10zpcd.js                           1,020.42 kB │ gzip: 256.48 kB
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: ✓ built in 649ms
+clubs:build: cache miss, executing 03cff3b001008a1f
+clubs:build: 
+clubs:build: > clubs@1.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 448 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/robots.txt                                             0.02 kB │ gzip:   0.04 kB
+clubs:build: dist/version.json                                           0.03 kB │ gzip:   0.05 kB
+clubs:build: dist/content-security-policy.txt                            0.23 kB │ gzip:   0.18 kB
+clubs:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs:build: dist/index.html                                             2.93 kB │ gzip:   1.00 kB
+clubs:build: dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CompetitionStatisticsPage-DLajrAEY.css          0.88 kB │ gzip:   0.37 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-BL9npU4k.css                          15.57 kB │ gzip:   3.22 kB
+clubs:build: dist/assets/screens-DjD6Eyao.css                           21.50 kB │ gzip:   3.55 kB
+clubs:build: dist/assets/shared-CC2v8vIJ.css                            43.71 kB │ gzip:   7.35 kB
+clubs:build: dist/assets/index-BWynRJBQ.css                             73.77 kB │ gzip:  13.28 kB
+clubs:build: dist/assets/notifications-BMQNToIf.js                       0.93 kB │ gzip:   0.54 kB
+clubs:build: dist/assets/notifications-D4ql954R.js                       0.94 kB │ gzip:   0.50 kB
+clubs:build: dist/assets/notifications-CB2UmwHa.js                       0.95 kB │ gzip:   0.55 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-C-uW18ag.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B74qC1t-.js                             1.28 kB │ gzip:   0.66 kB
+clubs:build: dist/assets/history-BWrkQfFW.js                             1.34 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/history-BPTgb4_w.js                             1.37 kB │ gzip:   0.70 kB
+clubs:build: dist/assets/home-CiD_uZx5.js                                1.52 kB │ gzip:   0.76 kB
+clubs:build: dist/assets/home-DuPmgVRC.js                                1.58 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/home-DUEt_q5U.js                                1.60 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-x72vHJv9.js                          2.03 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/training-C5U_DqNB.js                            2.08 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/inactivity-BJp8fZBZ.js                          2.13 kB │ gzip:   1.08 kB
+clubs:build: dist/assets/inactivity-BwqNBSeQ.js                          2.15 kB │ gzip:   1.07 kB
+clubs:build: dist/assets/training-ChM_Sijs.js                            2.25 kB │ gzip:   1.12 kB
+clubs:build: dist/assets/training-B5utM-gP.js                            2.25 kB │ gzip:   1.11 kB
+clubs:build: dist/assets/training-egxGchOA.js                            2.91 kB │ gzip:   1.40 kB
+clubs:build: dist/assets/courses-TACQmmua.js                             3.82 kB │ gzip:   1.71 kB
+clubs:build: dist/assets/courses-Cjf27sNl.js                             4.10 kB │ gzip:   1.86 kB
+clubs:build: dist/assets/courses-CfAin0Ix.js                             4.12 kB │ gzip:   1.89 kB
+clubs:build: dist/assets/statistics-DPI5_Vou.js                          4.64 kB │ gzip:   2.15 kB
+clubs:build: dist/assets/statistics-Cew7lo-8.js                          5.09 kB │ gzip:   2.36 kB
+clubs:build: dist/assets/statistics-C02wMCGJ.js                          5.12 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/booking-CzI60T2e.js                             5.35 kB │ gzip:   2.05 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/booking-Cd5Hyvl6.js                             5.74 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/booking-DwxeSAEp.js                             5.77 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/signup-DILpl6Po.js                              5.78 kB │ gzip:   2.61 kB
+clubs:build: dist/assets/signup-CIx_6W3I.js                              6.05 kB │ gzip:   2.88 kB
+clubs:build: dist/assets/signup-DBJD29ZQ.js                              6.11 kB │ gzip:   2.89 kB
+clubs:build: dist/assets/CompetitionStatisticsPage-BvGh_rIa.js           6.91 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/census-Bq4JrRoj.js                              7.02 kB │ gzip:   2.76 kB
+clubs:build: dist/assets/census-DT5uUa0m.js                              7.43 kB │ gzip:   3.04 kB
+clubs:build: dist/assets/auth-B9v2E-8J.js                                7.61 kB │ gzip:   3.00 kB
+clubs:build: dist/assets/census-C86K-ynV.js                              7.64 kB │ gzip:   3.09 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/auth-DFZvHPZ1.js                                8.57 kB │ gzip:   3.33 kB
+clubs:build: dist/assets/auth-DrPq--3H.js                                8.68 kB │ gzip:   3.32 kB
+clubs:build: dist/assets/instructor-Da0qXAqn.js                         10.08 kB │ gzip:   3.63 kB
+clubs:build: dist/assets/enums-CtHLE34W.js                              10.55 kB │ gzip:   4.37 kB
+clubs:build: dist/assets/instructor-BGzUK1YL.js                         10.65 kB │ gzip:   3.92 kB
+clubs:build: dist/assets/instructor-Cbhr5K-u.js                         10.81 kB │ gzip:   3.93 kB
+clubs:build: dist/assets/enums-ZmhzqQ7-.js                              10.93 kB │ gzip:   4.59 kB
+clubs:build: dist/assets/enums-CeQe0pzq.js                              10.98 kB │ gzip:   4.58 kB
+clubs:build: dist/assets/errors-DbO3skLp.js                             22.27 kB │ gzip:   7.29 kB
+clubs:build: dist/assets/errors-DjchtCZd.js                             23.57 kB │ gzip:   7.69 kB
+clubs:build: dist/assets/errors-CWUelEMY.js                             23.60 kB │ gzip:   7.66 kB
+clubs:build: dist/assets/CoursesRoute-guBYWSQl.js                      134.47 kB │ gzip:  37.40 kB
+clubs:build: dist/assets/screens-C5Cs_fHf.js                           233.89 kB │ gzip:  60.03 kB
+clubs:build: dist/assets/shared-Cn4yyDED.js                            260.07 kB │ gzip:  79.61 kB
+clubs:build: dist/assets/index-BQhyh-VZ.js                             268.90 kB │ gzip:  81.29 kB
+clubs:build: dist/assets/CourseViewer3D-W72wTE4O.js                    582.82 kB │ gzip: 151.71 kB
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: ✓ built in 372ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.95 kB │ gzip: 6.02 kB
+clubs:build: 
+clubs:build: ✓ built in 37ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  67 entries (1333.71 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: warnings
+clubs:build:   One of the glob patterns doesn't match any files. Please remove or fix the following: {
+clubs:build:   "globDirectory": "/work/apps/clubs/dist",
+clubs:build:   "globPattern": "pwa/*.{png,webmanifest}",
+clubs:build:   "globIgnores": [
+clubs:build:     "**/browser-*.js",
+clubs:build:     "**/mockServiceWorker.js",
+clubs:build:     "**/CourseViewer3D-*.js",
+clubs:build:     "sw.js",
+clubs:build:     "sw.js"
+clubs:build:   ]
+clubs:build: }
+clubs:build: 
+clubs:build: check-clubs-bundle: 61 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+id:build: cache miss, executing d89a331ab6b1e4db
+id:build: 
+id:build: > id@1.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 275 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/robots.txt                                           0.02 kB │ gzip:   0.04 kB
+id:build: dist/version.json                                         0.03 kB │ gzip:   0.05 kB
+id:build: dist/content-security-policy.txt                          0.17 kB │ gzip:   0.12 kB
+id:build: dist/favicon.svg                                          0.43 kB │ gzip:   0.27 kB
+id:build: dist/index.html                                           0.45 kB │ gzip:   0.29 kB
+id:build: dist/assets/sprite-CB0BjrsS.svg                           8.35 kB │ gzip:   1.97 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CI3yuPkm.css                           58.78 kB │ gzip:  10.59 kB
+id:build: dist/assets/id-CJRZp3mw.js                                3.27 kB │ gzip:   1.43 kB
+id:build: dist/assets/id-BJYjKe-T.js                                3.45 kB │ gzip:   1.58 kB
+id:build: dist/assets/id-DjSSeJdO.js                                3.52 kB │ gzip:   1.59 kB
+id:build: dist/assets/common-B1j-oU_u.js                            3.59 kB │ gzip:   1.66 kB
+id:build: dist/assets/common-n9mbifgF.js                            3.73 kB │ gzip:   1.82 kB
+id:build: dist/assets/common-CcELndgu.js                            3.82 kB │ gzip:   1.85 kB
+id:build: dist/assets/errors-DbO3skLp.js                           22.27 kB │ gzip:   7.29 kB
+id:build: dist/assets/errors-DjchtCZd.js                           23.57 kB │ gzip:   7.69 kB
+id:build: dist/assets/errors-CWUelEMY.js                           23.60 kB │ gzip:   7.66 kB
+id:build: dist/assets/PrivacyPage-CUTY7F5Q.js                      33.69 kB │ gzip:  12.12 kB
+id:build: dist/assets/index-huxx8Oty.js                           346.56 kB │ gzip: 106.55 kB
+id:build: 
+id:build: ✓ built in 177ms
+clubs-admin:e2e: cache bypass, force executing 9b3605e4c70b490c
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@1.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test --workers\=2
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:1005) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 237 tests using 2 workers
+clubs-admin:e2e: ··················································FF····························
+clubs-admin:e2e: ···························································F····················
+clubs-admin:e2e: ····TT·F···················································F·······F·········
+clubs-admin:e2e: 
+clubs-admin:e2e:   1) [chromium] › e2e/courses-gallery.spec.ts:117:7 › E9-W05 S16 backoffice screens · 375 px · light › T-16-15 D18, the course page, the placement editor, registering, D16 and D7 (light, 375) 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('img', { name: 'Recorregut col·locat a Muntanya' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('img', { name: 'Recorregut col·locat a Muntanya' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('img', { name: 'Recorregut col·locat a Muntanya' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       151 |         await expect(
+clubs-admin:e2e:       152 |           page.getByRole("img", { name: "Recorregut col·locat a Muntanya" }),
+clubs-admin:e2e:     > 153 |         ).toBeVisible();
+clubs-admin:e2e:           |           ^
+clubs-admin:e2e:       154 |         await shot(page, "D18-col-locacio", width, mode);
+clubs-admin:e2e:       155 |         await page.getByRole("button", { name: "Registra-ho com a muntat" }).first().click();
+clubs-admin:e2e:       156 |         await expect(page.getByRole("dialog", { name: "Registra-ho com a muntat" })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/courses-gallery.spec.ts:153:11
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/courses-gallery-E9-W05-S16-a51f9-ering-D16-and-D7-light-375--chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/courses-gallery-E9-W05-S16-a51f9-ering-D16-and-D7-light-375--chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/courses-gallery-E9-W05-S16-a51f9-ering-D16-and-D7-light-375--chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   2) [chromium] › e2e/courses.spec.ts:68:3 › E9-W03 D18 «Biblioteca de recorreguts» and D16 «Geometria» (S16) › T-16-15 import a Smarter file → its page (2D, 3D) → place it with live warnings → build sheet → register as set up 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Biblioteca de recorreguts', level: 1 })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Biblioteca de recorreguts', level: 1 }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Biblioteca de recorreguts', level: 1 })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       42 |   await expect(
+clubs-admin:e2e:       43 |     page.getByRole("heading", { level: 1, name: "Biblioteca de recorreguts" }),
+clubs-admin:e2e:     > 44 |   ).toBeVisible();
+clubs-admin:e2e:          |     ^
+clubs-admin:e2e:       45 | }
+clubs-admin:e2e:       46 |
+clubs-admin:e2e:       47 | test.beforeAll(() => {
+clubs-admin:e2e:         at openLibrary (/work/apps/clubs-admin/e2e/courses.spec.ts:44:5)
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/courses.spec.ts:72:5
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/courses-E9-W03-D18-«Biblio-40701--sheet-→-register-as-set-up-chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/courses-E9-W03-D18-«Biblio-40701--sheet-→-register-as-set-up-chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/courses-E9-W03-D18-«Biblio-40701--sheet-→-register-as-set-up-chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   3) [chromium] › e2e/inactivity-leave.spec.ts:41:3 › E8-W03 D10 lifecycle drawers › T-13-31 captures inactivity, leave, payment and plan states at 1280 px 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('dialog', { name: 'Mètode de pagament' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('dialog', { name: 'Mètode de pagament' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('dialog', { name: 'Mètode de pagament' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       74 |
+clubs-admin:e2e:       75 |     await page.goto(`${baseUrl}/abonats/member-laura?calaix=pagament`);
+clubs-admin:e2e:     > 76 |     await expect(page.getByRole("dialog", { name: "Mètode de pagament" })).toBeVisible();
+clubs-admin:e2e:          |                                                                            ^
+clubs-admin:e2e:       77 |     await capture(page, "D10-calaix-metode-pagament-1280.png");
+clubs-admin:e2e:       78 |
+clubs-admin:e2e:       79 |     await page.goto(`${baseUrl}/abonats/member-laura?calaix=modalitat`);
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/inactivity-leave.spec.ts:76:76
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/inactivity-leave-E8-W03-D1-aa7ca--and-plan-states-at-1280-px-chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/inactivity-leave-E8-W03-D1-aa7ca--and-plan-states-at-1280-px-chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/inactivity-leave-E8-W03-D1-aa7ca--and-plan-states-at-1280-px-chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   4) [chromium] › e2e/mobile-review.spec.ts:170:1 › T-02-14 mobile review: census actions and settings remain usable 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: locator('h1').first()
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" locator('h1').first() with timeout 5000ms
+clubs-admin:e2e:       - waiting for locator('h1').first()
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       176 |   for (const route of ["tauler", "abonats", "gossos", "calendari", "parametres"]) {
+clubs-admin:e2e:       177 |     await page.goto(`${baseUrl}/${route}`);
+clubs-admin:e2e:     > 178 |     await expect(page.locator("h1").first()).toBeVisible();
+clubs-admin:e2e:           |                                              ^
+clubs-admin:e2e:       179 |     await fits(page);
+clubs-admin:e2e:       180 |     await capture(page, `page-${route}-${browserName}-375.png`);
+clubs-admin:e2e:       181 |   }
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/mobile-review.spec.ts:178:46
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/mobile-review-T-02-14-mobi-a785d--and-settings-remain-usable-chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/mobile-review-T-02-14-mobi-a785d--and-settings-remain-usable-chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/mobile-review-T-02-14-mobi-a785d--and-settings-remain-usable-chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   5) [chromium] › e2e/mobile-review.spec.ts:213:3 › T-10-28 student grid: view preference and search light 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toHaveAttribute(expected) failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('button', { name: 'Vista de llista' })
+clubs-admin:e2e:     Expected: "true"
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toHaveAttribute" getByRole('button', { name: 'Vista de llista' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('button', { name: 'Vista de llista' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       232 |     await expect(items).toHaveCount(expandedCount);
+clubs-admin:e2e:       233 |     await page.reload();
+clubs-admin:e2e:     > 234 |     await expect(list).toHaveAttribute("aria-pressed", "true");
+clubs-admin:e2e:           |                        ^
+clubs-admin:e2e:       235 |     await page.getByRole("combobox", { name: "Nivell", exact: true }).selectOption("level-c");
+clubs-admin:e2e:       236 |     const inactive = page.waitForRequest((request) => {
+clubs-admin:e2e:       237 |       const url = new URL(request.url());
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/mobile-review.spec.ts:234:24
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/mobile-review-T-10-28-stud-7ed07-preference-and-search-light-chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/mobile-review-T-10-28-stud-7ed07-preference-and-search-light-chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/mobile-review-T-10-28-stud-7ed07-preference-and-search-light-chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   6) [chromium] › e2e/planning-templates.spec.ts:212:5 › T-06-26 template management › renames and retires a template at 375px 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(page).toHaveURL(expected) failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Expected pattern: /template=template-setmana-b$/u
+clubs-admin:e2e:     Received string:  ""
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toHaveURL" with timeout 5000ms
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       255 |       expect((await removal).postDataJSON()).toMatchObject({ active: false, version: 2 });
+clubs-admin:e2e:       256 |       await expect(confirmation).toHaveCount(0);
+clubs-admin:e2e:     > 257 |       await expect(page).toHaveURL(/template=template-setmana-b$/u);
+clubs-admin:e2e:           |                          ^
+clubs-admin:e2e:       258 |       await expect(
+clubs-admin:e2e:       259 |         page.getByRole("table", { name: "Quadre setmanal de la plantilla «Setmana B»" }),
+clubs-admin:e2e:       260 |       ).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/planning-templates.spec.ts:257:26
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/planning-templates-T-06-26-9a4cd-retires-a-template-at-375px-chromium/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/planning-templates-T-06-26-9a4cd-retires-a-template-at-375px-chromium/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/planning-templates-T-06-26-9a4cd-retires-a-template-at-375px-chromium/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   7) [webkit-ui] › e2e/mobile-review.spec.ts:68:3 › T-02-14 mobile review: readable admin header 768 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Plantilles', exact: true })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Plantilles', exact: true }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Plantilles', exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       73 |     await login(page);
+clubs-admin:e2e:       74 |     await page.goto(`${baseUrl}/plantilles`);
+clubs-admin:e2e:     > 75 |     await expect(page.getByRole("heading", { name: "Plantilles", exact: true })).toBeVisible();
+clubs-admin:e2e:          |                                                                                  ^
+clubs-admin:e2e:       76 |     await fits(page);
+clubs-admin:e2e:       77 |     await expect(page.getByRole("button", { name: "Canvia el nom", exact: true })).toBeEnabled();
+clubs-admin:e2e:       78 |     await expect(page.locator(".planning-class-form")).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/mobile-review.spec.ts:75:82
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/mobile-review-T-02-14-mobi-55159-w-readable-admin-header-768-webkit-ui/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/mobile-review-T-02-14-mobi-55159-w-readable-admin-header-768-webkit-ui/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/mobile-review-T-02-14-mobi-55159-w-readable-admin-header-768-webkit-ui/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   8) [webkit-ui] › e2e/ui-closure.spec.ts:12:3 › UI closure instructor attendance is readable 1920 ─
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByText('Setmana actual')
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByText('Setmana actual') with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByText('Setmana actual')
+clubs-admin:e2e:         - waiting for "http://127.0.0.1:4174/agenda" navigation to finish...
+clubs-admin:e2e:         - navigated to "http://127.0.0.1:4174/agenda"
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       25 |     await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
+clubs-admin:e2e:       26 |     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
+clubs-admin:e2e:     > 27 |     await expect(page.getByText("Setmana actual")).toBeVisible();
+clubs-admin:e2e:          |                                                    ^
+clubs-admin:e2e:       28 |     const filterColors = await page
+clubs-admin:e2e:       29 |       .locator(".week-agenda__filter--instructor select")
+clubs-admin:e2e:       30 |       .evaluate((select) => {
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/ui-closure.spec.ts:27:52
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/ui-closure-UI-closure-instructor-attendance-is-readable-1920-webkit-ui/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/ui-closure-UI-closure-instructor-attendance-is-readable-1920-webkit-ui/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/ui-closure-UI-closure-instructor-attendance-is-readable-1920-webkit-ui/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   8 failed
+clubs-admin:e2e:     [chromium] › e2e/courses-gallery.spec.ts:117:7 › E9-W05 S16 backoffice screens · 375 px · light › T-16-15 D18, the course page, the placement editor, registering, D16 and D7 (light, 375) 
+clubs-admin:e2e:     [chromium] › e2e/courses.spec.ts:68:3 › E9-W03 D18 «Biblioteca de recorreguts» and D16 «Geometria» (S16) › T-16-15 import a Smarter file → its page (2D, 3D) → place it with live warnings → build sheet → register as set up 
+clubs-admin:e2e:     [chromium] › e2e/inactivity-leave.spec.ts:41:3 › E8-W03 D10 lifecycle drawers › T-13-31 captures inactivity, leave, payment and plan states at 1280 px 
+clubs-admin:e2e:     [chromium] › e2e/mobile-review.spec.ts:170:1 › T-02-14 mobile review: census actions and settings remain usable 
+clubs-admin:e2e:     [chromium] › e2e/mobile-review.spec.ts:213:3 › T-10-28 student grid: view preference and search light 
+clubs-admin:e2e:     [chromium] › e2e/planning-templates.spec.ts:212:5 › T-06-26 template management › renames and retires a template at 375px 
+clubs-admin:e2e:     [webkit-ui] › e2e/mobile-review.spec.ts:68:3 › T-02-14 mobile review: readable admin header 768 
+clubs-admin:e2e:     [webkit-ui] › e2e/ui-closure.spec.ts:12:3 › UI closure instructor attendance is readable 1920 ──
+clubs-admin:e2e:   229 passed (11.9m)
+clubs-admin:e2e:  ELIFECYCLE  Command failed with exit code 1.
+clubs-admin#e2e:  WARNING  command finished with error, but continuing...
+clubs:e2e: cache bypass, force executing bf85a184ef67e946
+clubs:e2e: 
+clubs:e2e: > clubs@1.0.0 e2e /work/apps/clubs
+clubs:e2e: > playwright test --workers\=2
+clubs:e2e: 
+clubs:e2e: [WebServer] (node:10841) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs:e2e: 
+clubs:e2e: Running 188 tests using 2 workers
+clubs:e2e: ················································································
+clubs:e2e: ················································································
+clubs:e2e: ············F···············
+clubs:e2e: 
+clubs:e2e:   1) [webkit-ui] › e2e/info-profile.spec.ts:38:5 › T-05-CP-07 Profile information fits 412px in light 
+clubs:e2e: 
+clubs:e2e:     Error: expect(page).toHaveURL(expected) failed
+clubs:e2e: 
+clubs:e2e:     Expected pattern: /\/info$/u
+clubs:e2e:     Received string:  "http://127.0.0.1:4173/perfil"
+clubs:e2e:     Timeout: 5000ms
+clubs:e2e: 
+clubs:e2e:     Call log:
+clubs:e2e:       - Expect "toHaveURL" with timeout 5000ms
+clubs:e2e:         14 × locator resolved to <html lang="ca" data-theme="light" data-scheme="light" class="ah-large-text">…</html>
+clubs:e2e:            - unexpected value "http://127.0.0.1:4173/perfil"
+clubs:e2e: 
+clubs:e2e: 
+clubs:e2e:       79 |       await page.screenshot({ fullPage: true, path: resolve(evidence, `profile-${suffix}.png`) });
+clubs:e2e:       80 |       await page.getByRole("link", { name: "Informació del club" }).click();
+clubs:e2e:     > 81 |       await expect(page).toHaveURL(/\/info$/u);
+clubs:e2e:          |                          ^
+clubs:e2e:       82 |       await expect(nav.getByRole("link", { name: "Perfil", exact: true })).toHaveAttribute(
+clubs:e2e:       83 |         "aria-current",
+clubs:e2e:       84 |         "page",
+clubs:e2e:         at /work/apps/clubs/e2e/info-profile.spec.ts:81:26
+clubs:e2e: 
+clubs:e2e:     Error Context: ../../test-results/clubs/info-profile-T-05-CP-07-Pr-0664e-rmation-fits-412px-in-light-webkit-ui/error-context.md
+clubs:e2e: 
+clubs:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs:e2e:     ../../test-results/clubs/info-profile-T-05-CP-07-Pr-0664e-rmation-fits-412px-in-light-webkit-ui/trace.zip
+clubs:e2e:     Usage:
+clubs:e2e: 
+clubs:e2e:         pnpm exec playwright show-trace ../../test-results/clubs/info-profile-T-05-CP-07-Pr-0664e-rmation-fits-412px-in-light-webkit-ui/trace.zip
+clubs:e2e: 
+clubs:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs:e2e: 
+clubs:e2e:   1 failed
+clubs:e2e:     [webkit-ui] › e2e/info-profile.spec.ts:38:5 › T-05-CP-07 Profile information fits 412px in light 
+clubs:e2e:   187 passed (7.7m)
+clubs:e2e:  ELIFECYCLE  Command failed with exit code 1.
+clubs#e2e:  WARNING  command finished with error, but continuing...
+id:e2e: cache bypass, force executing fc0f5f8b965c5d4d
+id:e2e: 
+id:e2e: > id@1.0.0 e2e /work/apps/id
+id:e2e: > playwright test --workers\=2
+id:e2e: 
+id:e2e: 
+id:e2e: Running 1 test using 1 worker
+id:e2e: ·
+id:e2e:   1 passed (7.7s)
+clubs-admin#e2e:  ERROR  command (/work/apps/clubs-admin) /usr/bin/pnpm run e2e --workers=2 exited (1)
+clubs#e2e:  ERROR  command (/work/apps/clubs) /usr/bin/pnpm run e2e --workers=2 exited (1)
+
+ Tasks:    8 successful, 10 total
+Cached:    0 cached, 10 total
+  Time:    50m58.544s 
+Failed:    clubs#e2e, clubs-admin#e2e
+
+ ERROR  run failed: command  exited (1)
+evidence: joint-release-20261115/delivery-log-chromium-1280.png
+evidence: joint-release-20261115/responsive-admin-billing-1280.json
+evidence: joint-release-20261115/04-reservar-375.png
+evidence: joint-release-20261115/D4-crear-classe-obertura-0705-1280.png
+evidence: joint-release-20261115/member-confirm-1280-light.png
+evidence: joint-release-20261115/50-D10-dog-dates-1280.png
+evidence: joint-release-20261115/user-menu-chromium-320.png
+evidence: joint-release-20261115/D4-bloqueja-pista-1280.png
+evidence: joint-release-20261115/feedback3-history-1280.png
+evidence: joint-release-20261115/word-inactivity-webkit-375.png
+evidence: joint-release-20261115/task-focus-chromium-1280.png
+evidence: joint-release-20261115/50-D6-price-overlap-1280.png
+evidence: joint-release-20261115/admin-D18-recorregut-3d-375-dark.png
+evidence: joint-release-20261115/category-list-chromium-light-1280.png
+evidence: joint-release-20261115/feedback3-profiles-chromium-1280.png
+evidence: joint-release-20261115/profile-webkit-ui-375-light.png
+evidence: joint-release-20261115/responsive-admin-dashboard-375.png
+evidence: joint-release-20261115/responsive-admin-member-768.png
+evidence: joint-release-20261115/donut-chromium-dark-375-all.png
+evidence: joint-release-20261115/profile-chromium-412-dark.png
+evidence: joint-release-20261115/responsive-admin-member-375.png
+evidence: joint-release-20261115/risk-chromium-light-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-3-768.json
+evidence: joint-release-20261115/responsive-admin-billing-menu-1-1280.png
+evidence: joint-release-20261115/student-list-webkit-light-375.png
+evidence: joint-release-20261115/profile-webkit-ui-320-light.png
+evidence: joint-release-20261115/donut-webkit-light-1280-recent.png
+evidence: joint-release-20261115/16-add-dog-price-twin-375.png
+evidence: joint-release-20261115/info-faq-chromium-412-light.png
+evidence: joint-release-20261115/member-training-375-light.png
+evidence: joint-release-20261115/feedback2-student-chromium-dark.png
+evidence: joint-release-20261115/student-grid-chromium-dark-375.png
+evidence: joint-release-20261115/page-gossos-chromium-375.png
+evidence: joint-release-20261115/agenda-selected-webkit-1512.png
+evidence: joint-release-20261115/responsive-admin-billing-768.png
+evidence: joint-release-20261115/D4-bloqueja-pista-diumenge-tancat-1280.png
+evidence: joint-release-20261115/info-document-chromium-412-light.png
+evidence: joint-release-20261115/hours-webkit-390.png
+evidence: joint-release-20261115/responsive-admin-create-menu-1280.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-1-375.json
+evidence: joint-release-20261115/clubs-registra-muntat-375-light.png
+evidence: joint-release-20261115/profile-chromium-320-dark.png
+evidence: joint-release-20261115/clubs-visor-instructor-3d-375-dark.png
+evidence: joint-release-20261115/attendance-links-375.png
+evidence: joint-release-20261115/member-info-768-light.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-2-768.png
+evidence: joint-release-20261115/clubs-23-visio-global-375-light.png
+evidence: joint-release-20261115/donut-chromium-dark-375-recent.png
+evidence: joint-release-20261115/category-list-webkit-light-1280.png
+evidence: joint-release-20261115/16-add-dog-price-overlap-refused-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-0-375.png
+evidence: joint-release-20261115/category-list-webkit-dark-375.png
+evidence: joint-release-20261115/training-last-slot-webkit-1280.png
+evidence: joint-release-20261115/clubs-10-avui-375-dark.png
+evidence: joint-release-20261115/responsive-admin-member-768.json
+evidence: joint-release-20261115/donut-chromium-light-1280-all.png
+evidence: joint-release-20261115/responsive-admin-library-375.json
+evidence: joint-release-20261115/donut-chromium-light-375-recent.png
+evidence: joint-release-20261115/delivery-log-webkit-375.png
+evidence: joint-release-20261115/profile-webkit-ui-412-light.png
+evidence: joint-release-20261115/user-menu-chromium-375.png
+evidence: joint-release-20261115/word-dogs-webkit-375.png
+evidence: joint-release-20261115/25-buit-375.png
+evidence: joint-release-20261115/user-menu-webkit-375.png
+evidence: joint-release-20261115/clubs-registra-muntat-375-dark.png
+evidence: joint-release-20261115/training-student-links-375.png
+evidence: joint-release-20261115/responsive-admin-dashboard-1280.png
+evidence: joint-release-20261115/member-training-1024-light.png
+evidence: joint-release-20261115/category-list-chromium-light-375.png
+evidence: joint-release-20261115/club-pages-chromium-375.png
+evidence: joint-release-20261115/training-selection-webkit-1280.png
+evidence: joint-release-20261115/clubs-08-entrenaments-375-dark.png
+evidence: joint-release-20261115/header-webkit-375.png
+evidence: joint-release-20261115/history-chromium-dark-1280.png
+evidence: joint-release-20261115/responsive-admin-calendar-selected-1280.json
+evidence: joint-release-20261115/responsive-admin-member-375.json
+evidence: joint-release-20261115/counted-before-swap-chromium-1280.png
+evidence: joint-release-20261115/info-faq-webkit-ui-1280-light.png
+evidence: joint-release-20261115/clubs-23-visio-global-375-dark.png
+evidence: joint-release-20261115/donut-webkit-dark-1280-all.png
+evidence: joint-release-20261115/merge-webkit-375.png
+evidence: joint-release-20261115/training-last-slot-webkit-1024.png
+evidence: joint-release-20261115/risk-chromium-dark-1920.png
+evidence: joint-release-20261115/category-list-webkit-dark-1280.png
+evidence: joint-release-20261115/risk-chromium-light-1920.png
+evidence: joint-release-20261115/member-profile-1512-light.png
+evidence: joint-release-20261115/feedback3-login-webkit-375.png
+evidence: joint-release-20261115/admin-D18-importa-1280-dark.png
+evidence: joint-release-20261115/50-d10-inactividad-modificar-es-375.png
+evidence: joint-release-20261115/50-d10-inactividad-modificar-es-1280.png
+evidence: joint-release-20261115/07-anullada-tard-375.png
+evidence: joint-release-20261115/D4c-anullar-classe-1280.png
+evidence: joint-release-20261115/club-pages-webkit-375.png
+evidence: joint-release-20261115/clubs-registra-muntat-buit-375-dark.png
+evidence: joint-release-20261115/clubs-visor-alumne-375-dark.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-3-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-2-375.png
+evidence: joint-release-20261115/delivery-detail-chromium-375.png
+evidence: joint-release-20261115/risk-webkit-dark-768.png
+evidence: joint-release-20261115/training-last-slot-webkit-1512.png
+evidence: joint-release-20261115/D6-facturacio-confirmacio-1280.png
+evidence: joint-release-20261115/61-D10-next-invoice-drawer-1280.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-finalitzada-375-light.png
+evidence: joint-release-20261115/admin-D18-recorregut-3d-1280-dark.png
+evidence: joint-release-20261115/club-pages-webkit-320.png
+evidence: joint-release-20261115/50-D10-readmission-pending-1280.png
+evidence: joint-release-20261115/planning-form-webkit-375.png
+evidence: joint-release-20261115/responsive-admin-dashboard-768.json
+evidence: joint-release-20261115/member-info-1920-light.png
+evidence: joint-release-20261115/risk-webkit-light-1280.png
+evidence: joint-release-20261115/add-dog-webkit-375.png
+evidence: joint-release-20261115/donut-webkit-dark-1280-recent.png
+evidence: joint-release-20261115/member-today-1024-light.png
+evidence: joint-release-20261115/responsive-admin-billing-375.json
+evidence: joint-release-20261115/admin-D18-recorregut-2d-375-light.png
+evidence: joint-release-20261115/delivery-detail-chromium-1280.png
+evidence: joint-release-20261115/member-confirm-1024-light.png
+evidence: joint-release-20261115/info-faq-webkit-ui-412-dark.png
+evidence: joint-release-20261115/member-home-1024-dark.png
+evidence: joint-release-20261115/entrenaments-bloquejos-1280.png
+evidence: joint-release-20261115/admin-D12-agenda-muntatges-1280-light.png
+evidence: joint-release-20261115/hours-webkit-320.png
+evidence: joint-release-20261115/risk-webkit-light-long-375.png
+evidence: joint-release-20261115/clubs-07-reserva-1280-dark.png
+evidence: joint-release-20261115/member-profile-375-light.png
+evidence: joint-release-20261115/benvinguda-privacy-error-375.png
+evidence: joint-release-20261115/page-parametres-webkit-375.png
+evidence: joint-release-20261115/member-confirm-1920-light.png
+evidence: joint-release-20261115/50-registrar-montado-biblioteca-es-1280.png
+evidence: joint-release-20261115/50-registrar-montado-es-375.png
+evidence: joint-release-20261115/feedback3-profiles-webkit-375.png
+evidence: joint-release-20261115/delivery-history-webkit-375.png
+evidence: joint-release-20261115/history-webkit-light-375.png
+evidence: joint-release-20261115/clubs-08-entrenaments-1280-dark.png
+evidence: joint-release-20261115/06-confirmar-canvi-375.png
+evidence: joint-release-20261115/delivery-history-webkit-1280.png
+evidence: joint-release-20261115/clubs-visor-instructor-3d-375-light.png
+evidence: joint-release-20261115/planning-form-webkit-320.png
+evidence: joint-release-20261115/member-today-1512-light.png
+evidence: joint-release-20261115/responsive-admin-calendar-selected-375.png
+evidence: joint-release-20261115/member-confirm-1024-dark.png
+evidence: joint-release-20261115/risk-webkit-dark-375.png
+evidence: joint-release-20261115/admin-D18-biblioteca-1280-light.png
+evidence: joint-release-20261115/profile-chromium-412-light.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-3-768.png
+evidence: joint-release-20261115/D10-reserves-1280.png
+evidence: joint-release-20261115/D4-dia-1280.png
+evidence: joint-release-20261115/50-visor-personal-es-1280.png
+evidence: joint-release-20261115/responsive-admin-billing-375.png
+evidence: joint-release-20261115/page-gossos-webkit-375.png
+evidence: joint-release-20261115/word-inactivity-webkit-1512.png
+evidence: joint-release-20261115/admin-D7-col-locacions-375-dark.png
+evidence: joint-release-20261115/feedback2-agenda-webkit-light.png
+evidence: joint-release-20261115/responsive-admin-calendar-selected-768.json
+evidence: joint-release-20261115/feedback2-agenda-webkit-dark.png
+evidence: joint-release-20261115/history-webkit-light-1280.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-375-light.png
+evidence: joint-release-20261115/50-espera-after-sign-in-375.png
+evidence: joint-release-20261115/50-D16-ring-bookings-375.png
+evidence: joint-release-20261115/responsive-admin-library-768.json
+evidence: joint-release-20261115/training-selection-chromium-1280.png
+evidence: joint-release-20261115/risk-webkit-light-768.png
+evidence: joint-release-20261115/responsive-instructor-agenda-1280.json
+evidence: joint-release-20261115/admin-D18-importa-375-light.png
+evidence: joint-release-20261115/risk-webkit-light-1920.png
+evidence: joint-release-20261115/delivery-history-chromium-375.png
+evidence: joint-release-20261115/student-grid-webkit-light-375.png
+evidence: joint-release-20261115/29-confirmar-normal-375.png
+evidence: joint-release-20261115/app-remembered-admin-instructor-375.png
+evidence: joint-release-20261115/student-list-chromium-dark-1280.png
+evidence: joint-release-20261115/donut-webkit-dark-375-recent.png
+evidence: joint-release-20261115/student-grid-webkit-dark-1280.png
+evidence: joint-release-20261115/member-profile-1280-light.png
+evidence: joint-release-20261115/training-last-slot-chromium-1024.png
+evidence: joint-release-20261115/page-abonats-webkit-375.png
+evidence: joint-release-20261115/agenda-selected-chromium-1512.png
+evidence: joint-release-20261115/delivery-history-chromium-1280.png
+evidence: joint-release-20261115/member-info-1024-light.png
+evidence: joint-release-20261115/responsive-instructor-navigation-375.png
+evidence: joint-release-20261115/D4-calendari-actives-1280.png
+evidence: joint-release-20261115/member-home-375-dark.png
+evidence: joint-release-20261115/admin-D16-geometria-375-dark.png
+evidence: joint-release-20261115/23-classe-inscrits-375.png
+evidence: joint-release-20261115/D4b-calendari-esborrany-1280.png
+evidence: joint-release-20261115/50-visor-personal-es-375.png
+evidence: joint-release-20261115/profile-chromium-375-light.png
+evidence: joint-release-20261115/risk-chromium-light-1280.png
+evidence: joint-release-20261115/member-home-1280-dark.png
+evidence: joint-release-20261115/word-home-chromium-375.png
+evidence: joint-release-20261115/29-temps-esgotat-375.png
+evidence: joint-release-20261115/clubs-07-reserva-personal-1280-light.png
+evidence: joint-release-20261115/feedback2-ring-mobile-webkit-light.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-0-768.json
+evidence: joint-release-20261115/profile-chromium-1280-dark.png
+evidence: joint-release-20261115/member-home-768-dark.png
+evidence: joint-release-20261115/word-day-chromium-375.png
+evidence: joint-release-20261115/responsive-admin-create-menu-375.png
+evidence: joint-release-20261115/clubs-07-reserva-1280-light.png
+evidence: joint-release-20261115/responsive-admin-billing-1280.png
+evidence: joint-release-20261115/planning-form-chromium-320.png
+evidence: joint-release-20261115/07-detall-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-2-375.json
+evidence: joint-release-20261115/responsive-admin-library-768.png
+evidence: joint-release-20261115/info-document-webkit-ui-375-dark.png
+evidence: joint-release-20261115/admin-D12-agenda-muntatges-1280-dark.png
+evidence: joint-release-20261115/word-dogs-webkit-1512.png
+evidence: joint-release-20261115/member-confirm-1280-dark.png
+evidence: joint-release-20261115/task-focus-chromium-375.png
+evidence: joint-release-20261115/feedback2-agenda-chromium-light.png
+evidence: joint-release-20261115/student-list-webkit-dark-1280.png
+evidence: joint-release-20261115/training-last-slot-webkit-768.png
+evidence: joint-release-20261115/risk-chromium-dark-1280.png
+evidence: joint-release-20261115/03-inici-375.png
+evidence: joint-release-20261115/25-un-gos-375.png
+evidence: joint-release-20261115/D11-simulacio-1280.png
+evidence: joint-release-20261115/word-home-webkit-375.png
+evidence: joint-release-20261115/info-faq-chromium-320-light.png
+evidence: joint-release-20261115/info-faq-chromium-1280-light.png
+evidence: joint-release-20261115/hours-chromium-1280.png
+evidence: joint-release-20261115/member-home-1920-light.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-finalitzada-1280-dark.png
+evidence: joint-release-20261115/training-last-slot-chromium-1512.png
+evidence: joint-release-20261115/D11-processos-1280.png
+evidence: joint-release-20261115/risk-chromium-dark-768.png
+evidence: joint-release-20261115/feedback3-login-chromium-1280.png
+evidence: joint-release-20261115/info-document-chromium-375-dark.png
+evidence: joint-release-20261115/clubs-08-entrenaments-375-light.png
+evidence: joint-release-20261115/feedback2-ring-mobile-webkit-dark.png
+evidence: joint-release-20261115/feedback3-recovery-webkit-1280.png
+evidence: joint-release-20261115/club-pages-webkit-390.png
+evidence: joint-release-20261115/hours-webkit-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-2-1280.json
+evidence: joint-release-20261115/member-home-375-light.png
+evidence: joint-release-20261115/50-D5-unlabelled-channel-1280.png
+evidence: joint-release-20261115/info-document-chromium-412-dark.png
+evidence: joint-release-20261115/D4-calendari-anullades-1280.png
+evidence: joint-release-20261115/member-info-1512-light.png
+evidence: joint-release-20261115/admin-D18-registra-375-dark.png
+evidence: joint-release-20261115/20-console-product-host-1280.png
+evidence: joint-release-20261115/admin-D18-recorregut-2d-1280-dark.png
+evidence: joint-release-20261115/50-d10-inactividad-es-1280.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-1280-dark.png
+evidence: joint-release-20261115/responsive-admin-import-375.json
+evidence: joint-release-20261115/D4-crear-classe-diumenge-tancat-1280.png
+evidence: joint-release-20261115/info-mobile-webkit-ui.png
+evidence: joint-release-20261115/training-last-slot-webkit-1920.png
+evidence: joint-release-20261115/user-menu-chromium-390.png
+evidence: joint-release-20261115/responsive-admin-dashboard-1280.json
+evidence: joint-release-20261115/donut-chromium-light-1280-recent.png
+evidence: joint-release-20261115/responsive-instructor-agenda-1280.png
+evidence: joint-release-20261115/50-chunk-failure-1280.png
+evidence: joint-release-20261115/feedback3-login-chromium-375.png
+evidence: joint-release-20261115/word-day-webkit-375.png
+evidence: joint-release-20261115/clubs-visor-sense-muntatge-personal-1280-dark.png
+evidence: joint-release-20261115/responsive-admin-calendar-selected-768.png
+evidence: joint-release-20261115/category-list-chromium-dark-1280.png
+evidence: joint-release-20261115/clubs-visor-instructor-2d-375-dark.png
+evidence: joint-release-20261115/admin-D12-agenda-muntatges-375-dark.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-2-768.json
+evidence: joint-release-20261115/clubs-10-avui-1280-dark.png
+evidence: joint-release-20261115/agenda-selected-webkit-768.png
+evidence: joint-release-20261115/info-document-webkit-ui-1280-dark.png
+evidence: joint-release-20261115/page-tauler-chromium-375.png
+evidence: joint-release-20261115/50-D16-ring-bookings-1280.png
+evidence: joint-release-20261115/delivery-log-chromium-375.png
+evidence: joint-release-20261115/feedback3-recovery-chromium-1280.png
+evidence: joint-release-20261115/header-chromium-320.png
+evidence: joint-release-20261115/info-document-webkit-ui-320-dark.png
+evidence: joint-release-20261115/info-document-webkit-ui-412-dark.png
+evidence: joint-release-20261115/responsive-admin-import-375.png
+evidence: joint-release-20261115/training-last-slot-webkit-375.png
+evidence: joint-release-20261115/clubs-07-reserva-personal-375-light.png
+evidence: joint-release-20261115/admin-D16-geometria-1280-dark.png
+evidence: joint-release-20261115/feedback3-profiles-chromium-375.png
+evidence: joint-release-20261115/responsive-admin-library-375.png
+evidence: joint-release-20261115/50-D4-review-0800-375.png
+evidence: joint-release-20261115/member-profile-768-light.png
+evidence: joint-release-20261115/responsive-admin-create-menu-375.json
+evidence: joint-release-20261115/responsive-admin-billing-menu-2-1280.png
+evidence: joint-release-20261115/60-D10-next-invoice-375.png
+evidence: joint-release-20261115/header-chromium-1280.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-1-768.json
+evidence: joint-release-20261115/training-last-slot-chromium-1280.png
+evidence: joint-release-20261115/info-document-webkit-ui-375-light.png
+evidence: joint-release-20261115/clubs-07-reserva-375-light.png
+evidence: joint-release-20261115/feedback3-recovery-chromium-375.png
+evidence: joint-release-20261115/50-D2-no-plan-proposal-1280.png
+evidence: joint-release-20261115/user-menu-webkit-390.png
+evidence: joint-release-20261115/D1-risc-1280.png
+evidence: joint-release-20261115/info-faq-webkit-ui-320-light.png
+evidence: joint-release-20261115/29-properament-375.png
+evidence: joint-release-20261115/donut-chromium-dark-1280-all.png
+evidence: joint-release-20261115/clubs-07-reserva-375-dark.png
+evidence: joint-release-20261115/info-faq-chromium-412-dark.png
+evidence: joint-release-20261115/clubs-visor-instructor-2d-1280-dark.png
+evidence: joint-release-20261115/header-chromium-375.png
+evidence: joint-release-20261115/member-training-1512-light.png
+evidence: joint-release-20261115/feedback2-student-webkit-light.png
+evidence: joint-release-20261115/62-D6-submission-due-375.png
+evidence: joint-release-20261115/member-today-1920-light.png
+evidence: joint-release-20261115/member-profile-1920-light.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-finalitzada-375-dark.png
+evidence: joint-release-20261115/risk-webkit-dark-1920.png
+evidence: joint-release-20261115/student-grid-webkit-dark-375.png
+evidence: joint-release-20261115/training-selection-webkit-768.png
+evidence: joint-release-20261115/feedback3-login-webkit-1280.png
+evidence: joint-release-20261115/profile-webkit-ui-320-dark.png
+evidence: joint-release-20261115/word-day-chromium-1512.png
+evidence: joint-release-20261115/info-document-webkit-ui-320-light.png
+evidence: joint-release-20261115/counted-before-swap-chromium-375.png
+evidence: joint-release-20261115/training-selection-webkit-375.png
+evidence: joint-release-20261115/add-dog-bottom-webkit-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-1-375.png
+evidence: joint-release-20261115/clubs-visor-alumne-375-light.png
+evidence: joint-release-20261115/60-D10-next-invoice-1280.png
+evidence: joint-release-20261115/responsive-admin-library-1280.json
+evidence: joint-release-20261115/user-menu-chromium-768.png
+evidence: joint-release-20261115/word-home-webkit-1512.png
+evidence: joint-release-20261115/responsive-admin-calendar-selected-1280.png
+evidence: joint-release-20261115/member-training-1280-light.png
+evidence: joint-release-20261115/header-webkit-320.png
+evidence: joint-release-20261115/member-confirm-375-light.png
+evidence: joint-release-20261115/50-d12-abrir-recorrido-es-1280.png
+evidence: joint-release-20261115/word-dogs-chromium-1512.png
+evidence: joint-release-20261115/remeses-1280.png
+evidence: joint-release-20261115/header-webkit-1280.png
+evidence: joint-release-20261115/clubs-08-entrenaments-1280-light.png
+evidence: joint-release-20261115/member-info-375-light.png
+evidence: joint-release-20261115/responsive-admin-billing-768.json
+evidence: joint-release-20261115/responsive-admin-billing-menu-3-1280.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-0-768.png
+evidence: joint-release-20261115/admin-D7-col-locacions-1280-dark.png
+evidence: joint-release-20261115/risk-webkit-light-375.png
+evidence: joint-release-20261115/clubs-07-reserva-personal-375-dark.png
+evidence: joint-release-20261115/responsive-admin-member-1280.json
+evidence: joint-release-20261115/D6-facturacio-manual-only-1280.png
+evidence: joint-release-20261115/billing-provider-chromium-375.png
+evidence: joint-release-20261115/training-last-slot-chromium-768.png
+evidence: joint-release-20261115/responsive-admin-create-menu-1280.json
+evidence: joint-release-20261115/admin-onboarding-1280.png
+evidence: joint-release-20261115/63-D6-collection-date-passed-1280.png
+evidence: joint-release-20261115/info-document-chromium-375-light.png
+evidence: joint-release-20261115/29-limit-375.png
+evidence: joint-release-20261115/training-selection-chromium-1024.png
+evidence: joint-release-20261115/donut-chromium-light-375-all.png
+evidence: joint-release-20261115/info-faq-webkit-ui-1280-dark.png
+evidence: joint-release-20261115/50-D5-unlabelled-channel-375.png
+evidence: joint-release-20261115/profile-webkit-ui-1280-dark.png
+evidence: joint-release-20261115/D6-facturacio-1280.png
+evidence: joint-release-20261115/risk-chromium-dark-long-375.png
+evidence: joint-release-20261115/info-faq-chromium-1280-dark.png
+evidence: joint-release-20261115/training-last-slot-chromium-375.png
+evidence: joint-release-20261115/page-calendari-webkit-375.png
+evidence: joint-release-20261115/delivery-log-webkit-1280.png
+evidence: joint-release-20261115/21-console-platform-only-1280.png
+evidence: joint-release-20261115/clubs-10-avui-375-light.png
+evidence: joint-release-20261115/info-document-chromium-1280-light.png
+evidence: joint-release-20261115/D6-facturacio-calaix-rebut-1280.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-finalitzada-1280-light.png
+evidence: joint-release-20261115/clubs-registra-muntat-1280-light.png
+evidence: joint-release-20261115/category-list-webkit-light-375.png
+evidence: joint-release-20261115/entrenaments-registre-1280.png
+evidence: joint-release-20261115/clubs-visor-sense-muntatge-personal-375-light.png
+evidence: joint-release-20261115/profile-chromium-320-light.png
+evidence: joint-release-20261115/feedback3-recovery-webkit-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-0-375.json
+evidence: joint-release-20261115/clubs-visor-alumne-1280-light.png
+evidence: joint-release-20261115/member-home-1920-dark.png
+evidence: joint-release-20261115/category-list-chromium-dark-375.png
+evidence: joint-release-20261115/member-home-1280-light.png
+evidence: joint-release-20261115/50-28-id-document-ca-375.png
+evidence: joint-release-20261115/responsive-instructor-navigation-1280.png
+evidence: joint-release-20261115/admin-D18-recorregut-2d-375-dark.png
+evidence: joint-release-20261115/member-home-1512-light.png
+evidence: joint-release-20261115/D6-facturacio-retroces-1280.png
+evidence: joint-release-20261115/training-last-slot-chromium-1920.png
+evidence: joint-release-20261115/delivery-detail-webkit-375.png
+evidence: joint-release-20261115/training-selection-chromium-375.png
+evidence: joint-release-20261115/admin-D18-col-locacio-1280-dark.png
+evidence: joint-release-20261115/61-D10-next-invoice-drawer-375.png
+evidence: joint-release-20261115/history-chromium-light-375.png
+evidence: joint-release-20261115/donut-webkit-light-1280-all.png
+evidence: joint-release-20261115/profile-chromium-375-dark.png
+evidence: joint-release-20261115/agenda-selected-chromium-768.png
+evidence: joint-release-20261115/responsive-admin-create-menu-768.png
+evidence: joint-release-20261115/responsive-admin-import-1280.json
+evidence: joint-release-20261115/student-list-webkit-dark-375.png
+evidence: joint-release-20261115/admin-D4-recorregut-previst-1280-light.png
+evidence: joint-release-20261115/50-30-info-retry-375.png
+evidence: joint-release-20261115/feedback2-ring-mobile-chromium-dark.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-1-768.png
+evidence: joint-release-20261115/50-28-id-document-ca-1280.png
+evidence: joint-release-20261115/member-home-768-light.png
+evidence: joint-release-20261115/23-D10-next-invoice-row-1280.png
+evidence: joint-release-20261115/responsive-admin-navigation-375.png
+evidence: joint-release-20261115/admin-D18-recorregut-3d-1280-light.png
+evidence: joint-release-20261115/25-historic-375.png
+evidence: joint-release-20261115/clubs-registra-muntat-1280-dark.png
+evidence: joint-release-20261115/agenda-selected-webkit-1280.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-3-1280.json
+evidence: joint-release-20261115/admin-D18-registra-1280-dark.png
+evidence: joint-release-20261115/page-tauler-webkit-375.png
+evidence: joint-release-20261115/info-faq-webkit-ui-320-dark.png
+evidence: joint-release-20261115/clubs-23-visio-global-1280-light.png
+evidence: joint-release-20261115/member-profile-1024-light.png
+evidence: joint-release-20261115/responsive-admin-navigation-768.png
+evidence: joint-release-20261115/50-28-id-document-es-375.png
+evidence: joint-release-20261115/billing-provider-chromium-1280.png
+evidence: joint-release-20261115/clubs-visor-instructor-3d-1280-dark.png
+evidence: joint-release-20261115/50-d10-inactividad-es-375.png
+evidence: joint-release-20261115/info-mobile-chromium.png
+evidence: joint-release-20261115/planning-form-webkit-390.png
+evidence: joint-release-20261115/training-selection-webkit-1920.png
+evidence: joint-release-20261115/risk-chromium-dark-375.png
+evidence: joint-release-20261115/50-registrar-montado-es-1280.png
+evidence: joint-release-20261115/donut-webkit-light-375-all.png
+evidence: joint-release-20261115/hours-chromium-390.png
+evidence: joint-release-20261115/clubs-registra-muntat-buit-375-light.png
+evidence: joint-release-20261115/member-today-1280-light.png
+evidence: joint-release-20261115/hours-webkit-1280.png
+evidence: joint-release-20261115/info-document-webkit-ui-1280-light.png
+evidence: joint-release-20261115/feedback2-ring-mobile-chromium-light.png
+evidence: joint-release-20261115/responsive-instructor-agenda-375.png
+evidence: joint-release-20261115/responsive-admin-library-1280.png
+evidence: joint-release-20261115/planning-form-chromium-375.png
+evidence: joint-release-20261115/responsive-admin-dashboard-375.json
+evidence: joint-release-20261115/profile-webkit-ui-375-dark.png
+evidence: joint-release-20261115/63-D6-collection-date-passed-375.png
+evidence: joint-release-20261115/50-21-empty-375.png
+evidence: joint-release-20261115/header-webkit-390.png
+evidence: joint-release-20261115/clubs-visor-sense-muntatge-personal-375-dark.png
+evidence: joint-release-20261115/admin-D18-recorregut-3d-375-light.png
+evidence: joint-release-20261115/50-registrar-montado-biblioteca-es-375.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-3-375.json
+evidence: joint-release-20261115/50-chunk-failure-375.png
+evidence: joint-release-20261115/info-faq-chromium-375-light.png
+evidence: joint-release-20261115/profile-webkit-ui-412-dark.png
+evidence: joint-release-20261115/profile-chromium-1280-light.png
+evidence: joint-release-20261115/member-confirm-768-light.png
+evidence: joint-release-20261115/member-confirm-1920-dark.png
+evidence: joint-release-20261115/D4-inscrits-1280.png
+evidence: joint-release-20261115/word-inactivity-chromium-375.png
+evidence: joint-release-20261115/member-training-768-light.png
+evidence: joint-release-20261115/training-selection-chromium-1512.png
+evidence: joint-release-20261115/clubs-visor-instructor-2d-1280-light.png
+evidence: joint-release-20261115/history-chromium-dark-375.png
+evidence: joint-release-20261115/delivery-detail-webkit-1280.png
+evidence: joint-release-20261115/50-D4-review-0800-1280.png
+evidence: joint-release-20261115/admin-D18-col-locacio-375-dark.png
+evidence: joint-release-20261115/clubs-registra-muntat-buit-1280-light.png
+evidence: joint-release-20261115/member-home-1024-light.png
+evidence: joint-release-20261115/admin-D18-biblioteca-375-dark.png
+evidence: joint-release-20261115/page-abonats-chromium-375.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-1280-light.png
+evidence: joint-release-20261115/training-selection-webkit-1512.png
+evidence: joint-release-20261115/student-list-chromium-dark-375.png
+evidence: joint-release-20261115/risk-webkit-dark-long-375.png
+evidence: joint-release-20261115/member-info-1280-light.png
+evidence: joint-release-20261115/clubs-07-reserva-personal-1280-dark.png
+evidence: joint-release-20261115/info-faq-chromium-320-dark.png
+evidence: joint-release-20261115/training-selection-chromium-768.png
+evidence: joint-release-20261115/feedback2-agenda-chromium-dark.png
+evidence: joint-release-20261115/admin-D4-recorregut-previst-1280-dark.png
+evidence: joint-release-20261115/responsive-instructor-agenda-375.json
+evidence: joint-release-20261115/admin-D4-recorregut-previst-375-light.png
+evidence: joint-release-20261115/clubs-registra-muntat-buit-1280-dark.png
+evidence: joint-release-20261115/50-d12-abrir-recorrido-es-375.png
+evidence: joint-release-20261115/member-training-1920-light.png
+evidence: joint-release-20261115/r2-course-ui-harness-1280-light.png
+evidence: joint-release-20261115/admin-D18-importa-375-dark.png
+evidence: joint-release-20261115/50-user-menu-1280.png
+evidence: joint-release-20261115/benvinguda-375.png
+evidence: joint-release-20261115/member-home-1512-dark.png
+evidence: joint-release-20261115/22-D6-rollback-file-not-sent-375.png
+evidence: joint-release-20261115/club-pages-chromium-390.png
+evidence: joint-release-20261115/donut-webkit-dark-375-all.png
+evidence: joint-release-20261115/50-28-id-document-es-1280.png
+evidence: joint-release-20261115/responsive-admin-calendar-selected-375.json
+evidence: joint-release-20261115/planning-form-chromium-390.png
+evidence: joint-release-20261115/50-21-empty-1280.png
+evidence: joint-release-20261115/responsive-admin-dashboard-768.png
+evidence: joint-release-20261115/clubs-sessio-muntatge-375-dark.png
+evidence: joint-release-20261115/training-selection-webkit-1024.png
+evidence: joint-release-20261115/admin-D18-biblioteca-375-light.png
+evidence: joint-release-20261115/member-confirm-1512-dark.png
+evidence: joint-release-20261115/member-confirm-1512-light.png
+evidence: joint-release-20261115/info-faq-chromium-375-dark.png
+evidence: joint-release-20261115/feedback3-profiles-webkit-1280.png
+evidence: joint-release-20261115/22-D6-rollback-file-not-sent-1280.png
+evidence: joint-release-20261115/risk-chromium-light-long-375.png
+evidence: joint-release-20261115/admin-D18-importa-1280-light.png
+evidence: joint-release-20261115/info-document-chromium-320-light.png
+evidence: joint-release-20261115/agenda-selected-chromium-1280.png
+evidence: joint-release-20261115/history-webkit-dark-1280.png
+evidence: joint-release-20261115/training-selection-chromium-1920.png
+evidence: joint-release-20261115/responsive-admin-import-768.json
+evidence: joint-release-20261115/club-pages-chromium-320.png
+evidence: joint-release-20261115/feedback2-student-chromium-light.png
+evidence: joint-release-20261115/r2-course-ui-harness-1280-dark.png
+evidence: joint-release-20261115/admin-dashboard-1280-dark.png
+evidence: joint-release-20261115/word-day-webkit-1512.png
+evidence: joint-release-20261115/student-grid-webkit-light-1280.png
+evidence: joint-release-20261115/info-document-chromium-320-dark.png
+evidence: joint-release-20261115/admin-D18-biblioteca-1280-dark.png
+evidence: joint-release-20261115/clubs-10-avui-1280-light.png
+evidence: joint-release-20261115/admin-D18-recorregut-2d-1280-light.png
+evidence: joint-release-20261115/info-document-chromium-1280-dark.png
+evidence: joint-release-20261115/history-webkit-dark-375.png
+evidence: joint-release-20261115/responsive-admin-import-1280.png
+evidence: joint-release-20261115/word-home-chromium-1512.png
+evidence: joint-release-20261115/62-D6-submission-due-1280.png
+evidence: joint-release-20261115/info-faq-webkit-ui-375-light.png
+evidence: joint-release-20261115/responsive-admin-member-1280.png
+evidence: joint-release-20261115/clubs-visor-instructor-2d-375-light.png
+evidence: joint-release-20261115/donut-webkit-light-375-recent.png
+evidence: joint-release-20261115/admin-D18-registra-1280-light.png
+evidence: joint-release-20261115/student-list-webkit-light-1280.png
+evidence: joint-release-20261115/member-confirm-375-dark.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-0-1280.png
+evidence: joint-release-20261115/admin-D4-recorregut-previst-375-dark.png
+evidence: joint-release-20261115/history-chromium-light-1280.png
+evidence: joint-release-20261115/admin-dashboard-1280-light.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-0-1280.json
+evidence: joint-release-20261115/agenda-selected-chromium-1920.png
+evidence: joint-release-20261115/admin-D18-col-locacio-1280-light.png
+evidence: joint-release-20261115/clubs-23-visio-global-1280-dark.png
+evidence: joint-release-20261115/hours-chromium-375.png
+evidence: joint-release-20261115/admin-D16-geometria-1280-light.png
+evidence: joint-release-20261115/06-confirmada-tornar-inici-375.png
+evidence: joint-release-20261115/donut-chromium-dark-1280-recent.png
+evidence: joint-release-20261115/risk-webkit-dark-1280.png
+evidence: joint-release-20261115/header-chromium-768.png
+evidence: joint-release-20261115/clubs-visor-instructor-3d-1280-light.png
+evidence: joint-release-20261115/word-dogs-chromium-375.png
+evidence: joint-release-20261115/07-espera-375.png
+evidence: joint-release-20261115/member-confirm-768-dark.png
+evidence: joint-release-20261115/responsive-admin-billing-menu-1-1280.json
+evidence: joint-release-20261115/admin-D12-agenda-muntatges-375-light.png
+evidence: joint-release-20261115/student-grid-chromium-dark-1280.png
+evidence: joint-release-20261115/hours-chromium-320.png
+evidence: joint-release-20261115/feedback2-student-webkit-dark.png
+evidence: joint-release-20261115/risk-chromium-light-768.png
+evidence: joint-release-20261115/r2-course-ui-harness-1280-after-nudge.png
+evidence: joint-release-20261115/user-menu-webkit-320.png
+evidence: joint-release-20261115/header-chromium-390.png
+evidence: joint-release-20261115/word-inactivity-chromium-1512.png
+evidence: joint-release-20261115/admin-D7-col-locacions-1280-light.png
+evidence: joint-release-20261115/member-today-768-light.png
+evidence: joint-release-20261115/clubs-visor-sense-muntatge-personal-1280-light.png
+evidence: joint-release-20261115/clubs-visor-alumne-1280-dark.png
+evidence: joint-release-20261115/info-faq-webkit-ui-375-dark.png
+evidence: joint-release-20261115/profile-webkit-ui-1280-light.png
+evidence: joint-release-20261115/responsive-admin-create-menu-768.json
+evidence: joint-release-20261115/23-D10-next-invoice-row-375.png
+evidence: joint-release-20261115/member-today-375-light.png
+evidence: joint-release-20261115/responsive-admin-import-768.png
