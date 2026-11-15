@@ -1,0 +1,1024 @@
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: competition-statistics
+Capture folder of the permanent mock specs: competition-statistics
+Playwright arguments: --workers=2 --retries=1
+Checkout copied into the container: 879M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 0, downloaded 0, added 0
+Progress: resolved 858, reused 0, downloaded 1, added 0
+Progress: resolved 858, reused 0, downloaded 23, added 23
+Progress: resolved 858, reused 0, downloaded 38, added 38
+Progress: resolved 858, reused 0, downloaded 48, added 48
+Progress: resolved 858, reused 0, downloaded 66, added 66
+Progress: resolved 858, reused 0, downloaded 80, added 80
+Progress: resolved 858, reused 0, downloaded 94, added 94
+Progress: resolved 858, reused 0, downloaded 106, added 106
+Progress: resolved 858, reused 0, downloaded 125, added 125
+Progress: resolved 858, reused 0, downloaded 151, added 151
+Progress: resolved 858, reused 0, downloaded 167, added 167
+Progress: resolved 858, reused 0, downloaded 183, added 183
+Progress: resolved 858, reused 0, downloaded 197, added 197
+Progress: resolved 858, reused 0, downloaded 225, added 225
+Progress: resolved 858, reused 0, downloaded 245, added 245
+Progress: resolved 858, reused 0, downloaded 266, added 266
+Progress: resolved 858, reused 0, downloaded 292, added 292
+Progress: resolved 858, reused 0, downloaded 309, added 309
+Progress: resolved 858, reused 0, downloaded 329, added 329
+Progress: resolved 858, reused 0, downloaded 351, added 351
+Progress: resolved 858, reused 0, downloaded 383, added 383
+Progress: resolved 858, reused 0, downloaded 407, added 407
+Progress: resolved 858, reused 0, downloaded 437, added 437
+Progress: resolved 858, reused 0, downloaded 468, added 468
+Progress: resolved 858, reused 0, downloaded 486, added 486
+Progress: resolved 858, reused 0, downloaded 503, added 503
+Progress: resolved 858, reused 0, downloaded 521, added 521
+Progress: resolved 858, reused 0, downloaded 533, added 533
+Progress: resolved 858, reused 0, downloaded 539, added 539
+Progress: resolved 858, reused 0, downloaded 544, added 544
+Progress: resolved 858, reused 0, downloaded 548, added 548
+Progress: resolved 858, reused 0, downloaded 552, added 552
+Progress: resolved 858, reused 0, downloaded 557, added 557
+Progress: resolved 858, reused 0, downloaded 558, added 557
+Progress: resolved 858, reused 0, downloaded 570, added 570
+Progress: resolved 858, reused 0, downloaded 571, added 571
+Progress: resolved 858, reused 0, downloaded 581, added 581
+Progress: resolved 858, reused 0, downloaded 582, added 582
+Progress: resolved 858, reused 0, downloaded 587, added 587
+Progress: resolved 858, reused 0, downloaded 594, added 594
+Progress: resolved 858, reused 0, downloaded 606, added 606
+Progress: resolved 858, reused 0, downloaded 622, added 622
+Progress: resolved 858, reused 0, downloaded 639, added 639
+Progress: resolved 858, reused 0, downloaded 658, added 658
+Progress: resolved 858, reused 0, downloaded 685, added 685
+Progress: resolved 858, reused 0, downloaded 708, added 708
+Progress: resolved 858, reused 0, downloaded 725, added 725
+Progress: resolved 858, reused 0, downloaded 740, added 739
+Progress: resolved 858, reused 0, downloaded 761, added 761
+Progress: resolved 858, reused 0, downloaded 779, added 779
+Progress: resolved 858, reused 0, downloaded 800, added 800
+Progress: resolved 858, reused 0, downloaded 832, added 832
+Progress: resolved 858, reused 0, downloaded 857, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 857
+Progress: resolved 858, reused 0, downloaded 858, added 858, done
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 1m 2.2s using pnpm v9.15.9
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing e1dd5426932f8cec
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@1.0.0 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing 8bade10f9deb218c
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@1.0.0 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache miss, executing fa31159988273412
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@1.0.0 build /work/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:e2e: cache bypass, force executing 97ff99d082774925
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: > @agilityhub/course-ui@1.0.0 e2e /work/packages/course-ui
+@agilityhub/course-ui:e2e: > playwright test --workers\=2 --retries\=1
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: 
+@agilityhub/course-ui:e2e: Running 4 tests using 1 worker
+@agilityhub/course-ui:e2e: ····
+@agilityhub/course-ui:e2e:   4 passed (16.0s)
+clubs:build: cache miss, executing 7d2f348b565542d2
+clubs:build: 
+clubs:build: > clubs@1.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 448 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/robots.txt                                             0.02 kB │ gzip:   0.04 kB
+clubs:build: dist/version.json                                           0.03 kB │ gzip:   0.05 kB
+clubs:build: dist/content-security-policy.txt                            0.23 kB │ gzip:   0.18 kB
+clubs:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs:build: dist/index.html                                             2.93 kB │ gzip:   1.00 kB
+clubs:build: dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CompetitionStatisticsPage-DLajrAEY.css          0.88 kB │ gzip:   0.37 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-CSyCZIFj.css                          15.17 kB │ gzip:   3.13 kB
+clubs:build: dist/assets/screens-DjD6Eyao.css                           21.50 kB │ gzip:   3.55 kB
+clubs:build: dist/assets/shared-CC2v8vIJ.css                            43.71 kB │ gzip:   7.35 kB
+clubs:build: dist/assets/index-DUAyW343.css                             73.21 kB │ gzip:  13.21 kB
+clubs:build: dist/assets/notifications-BMQNToIf.js                       0.93 kB │ gzip:   0.54 kB
+clubs:build: dist/assets/notifications-D4ql954R.js                       0.94 kB │ gzip:   0.50 kB
+clubs:build: dist/assets/notifications-CB2UmwHa.js                       0.95 kB │ gzip:   0.55 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-BZ3gRodF.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B74qC1t-.js                             1.28 kB │ gzip:   0.66 kB
+clubs:build: dist/assets/history-BWrkQfFW.js                             1.34 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/history-BPTgb4_w.js                             1.37 kB │ gzip:   0.70 kB
+clubs:build: dist/assets/home-CiD_uZx5.js                                1.52 kB │ gzip:   0.76 kB
+clubs:build: dist/assets/home-DuPmgVRC.js                                1.58 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/home-DUEt_q5U.js                                1.60 kB │ gzip:   0.82 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-x72vHJv9.js                          2.03 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/training-C5U_DqNB.js                            2.08 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/inactivity-BJp8fZBZ.js                          2.13 kB │ gzip:   1.08 kB
+clubs:build: dist/assets/inactivity-BwqNBSeQ.js                          2.15 kB │ gzip:   1.07 kB
+clubs:build: dist/assets/training-ChM_Sijs.js                            2.25 kB │ gzip:   1.12 kB
+clubs:build: dist/assets/training-B5utM-gP.js                            2.25 kB │ gzip:   1.11 kB
+clubs:build: dist/assets/training-DeZ-Gbaw.js                            2.91 kB │ gzip:   1.40 kB
+clubs:build: dist/assets/courses-TACQmmua.js                             3.82 kB │ gzip:   1.71 kB
+clubs:build: dist/assets/courses-Cjf27sNl.js                             4.10 kB │ gzip:   1.86 kB
+clubs:build: dist/assets/courses-CfAin0Ix.js                             4.12 kB │ gzip:   1.89 kB
+clubs:build: dist/assets/statistics-B0Ulji_3.js                          4.60 kB │ gzip:   2.14 kB
+clubs:build: dist/assets/statistics-DMIBvKCG.js                          5.03 kB │ gzip:   2.35 kB
+clubs:build: dist/assets/statistics-Dldsj8Fq.js                          5.06 kB │ gzip:   2.34 kB
+clubs:build: dist/assets/booking-CK5FYMac.js                             5.33 kB │ gzip:   2.05 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/booking-BmCOQwrV.js                             5.72 kB │ gzip:   2.25 kB
+clubs:build: dist/assets/booking-DF198YUi.js                             5.75 kB │ gzip:   2.25 kB
+clubs:build: dist/assets/signup-DILpl6Po.js                              5.78 kB │ gzip:   2.61 kB
+clubs:build: dist/assets/signup-CIx_6W3I.js                              6.05 kB │ gzip:   2.88 kB
+clubs:build: dist/assets/signup-DBJD29ZQ.js                              6.11 kB │ gzip:   2.89 kB
+clubs:build: dist/assets/CompetitionStatisticsPage-DDlkQHUY.js           6.91 kB │ gzip:   1.88 kB
+clubs:build: dist/assets/census-Bq4JrRoj.js                              7.02 kB │ gzip:   2.76 kB
+clubs:build: dist/assets/census-DT5uUa0m.js                              7.43 kB │ gzip:   3.04 kB
+clubs:build: dist/assets/auth-B9v2E-8J.js                                7.61 kB │ gzip:   3.00 kB
+clubs:build: dist/assets/census-C86K-ynV.js                              7.64 kB │ gzip:   3.09 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/auth-DFZvHPZ1.js                                8.57 kB │ gzip:   3.33 kB
+clubs:build: dist/assets/auth-DrPq--3H.js                                8.68 kB │ gzip:   3.32 kB
+clubs:build: dist/assets/instructor-Da0qXAqn.js                         10.08 kB │ gzip:   3.63 kB
+clubs:build: dist/assets/enums-CtHLE34W.js                              10.55 kB │ gzip:   4.37 kB
+clubs:build: dist/assets/instructor-BGzUK1YL.js                         10.65 kB │ gzip:   3.92 kB
+clubs:build: dist/assets/instructor-Cbhr5K-u.js                         10.81 kB │ gzip:   3.93 kB
+clubs:build: dist/assets/enums-ZmhzqQ7-.js                              10.93 kB │ gzip:   4.59 kB
+clubs:build: dist/assets/enums-CeQe0pzq.js                              10.98 kB │ gzip:   4.58 kB
+clubs:build: dist/assets/errors-DbO3skLp.js                             22.27 kB │ gzip:   7.29 kB
+clubs:build: dist/assets/errors-DjchtCZd.js                             23.57 kB │ gzip:   7.69 kB
+clubs:build: dist/assets/errors-CWUelEMY.js                             23.60 kB │ gzip:   7.66 kB
+clubs:build: dist/assets/CoursesRoute-Cdw8OWpr.js                      134.47 kB │ gzip:  37.42 kB
+clubs:build: dist/assets/screens-D0vxr-jr.js                           232.91 kB │ gzip:  59.82 kB
+clubs:build: dist/assets/shared-DWlLdfiV.js                            260.13 kB │ gzip:  79.57 kB
+clubs:build: dist/assets/index-DEgtKj5A.js                             268.74 kB │ gzip:  81.28 kB
+clubs:build: dist/assets/CourseViewer3D-CPQFnPps.js                    582.82 kB │ gzip: 151.71 kB
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: ✓ built in 20.19s
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.95 kB │ gzip: 6.02 kB
+clubs:build: 
+clubs:build: ✓ built in 93ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  67 entries (1331.52 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: warnings
+clubs:build:   One of the glob patterns doesn't match any files. Please remove or fix the following: {
+clubs:build:   "globDirectory": "/work/apps/clubs/dist",
+clubs:build:   "globPattern": "pwa/*.{png,webmanifest}",
+clubs:build:   "globIgnores": [
+clubs:build:     "**/browser-*.js",
+clubs:build:     "**/mockServiceWorker.js",
+clubs:build:     "**/CourseViewer3D-*.js",
+clubs:build:     "sw.js",
+clubs:build:     "sw.js"
+clubs:build:   ]
+clubs:build: }
+clubs:build: 
+clubs:build: [PLUGIN_TIMINGS] Plugin hooks ran for 1.9s of this 20.4s build (9%).
+clubs:build: 2 hooks are listed without a time. Their calls overlapped, so the time inside one call includes work from other calls. To find their cost, profile the build with `node --cpu-prof`:
+clubs:build:   - vite:css transform (25 calls)
+clubs:build:   - @tailwindcss/vite:generate:build transform (25 calls)
+clubs:build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+clubs:build: 
+clubs:build: check-clubs-bundle: 61 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+id:build: cache miss, executing 2f1fc6830b8eb519
+id:build: 
+id:build: > id@1.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 275 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/robots.txt                                           0.02 kB │ gzip:   0.04 kB
+id:build: dist/version.json                                         0.03 kB │ gzip:   0.05 kB
+id:build: dist/content-security-policy.txt                          0.17 kB │ gzip:   0.12 kB
+id:build: dist/favicon.svg                                          0.43 kB │ gzip:   0.27 kB
+id:build: dist/index.html                                           0.45 kB │ gzip:   0.29 kB
+id:build: dist/assets/sprite-CB0BjrsS.svg                           8.35 kB │ gzip:   1.97 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CI3yuPkm.css                           58.78 kB │ gzip:  10.59 kB
+id:build: dist/assets/id-CJRZp3mw.js                                3.27 kB │ gzip:   1.43 kB
+id:build: dist/assets/id-BJYjKe-T.js                                3.45 kB │ gzip:   1.58 kB
+id:build: dist/assets/id-DjSSeJdO.js                                3.52 kB │ gzip:   1.59 kB
+id:build: dist/assets/common-B1j-oU_u.js                            3.59 kB │ gzip:   1.66 kB
+id:build: dist/assets/common-n9mbifgF.js                            3.73 kB │ gzip:   1.82 kB
+id:build: dist/assets/common-CcELndgu.js                            3.82 kB │ gzip:   1.85 kB
+id:build: dist/assets/errors-DbO3skLp.js                           22.27 kB │ gzip:   7.29 kB
+id:build: dist/assets/errors-DjchtCZd.js                           23.57 kB │ gzip:   7.69 kB
+id:build: dist/assets/errors-CWUelEMY.js                           23.60 kB │ gzip:   7.66 kB
+id:build: dist/assets/PrivacyPage-CUTY7F5Q.js                      33.69 kB │ gzip:  12.12 kB
+id:build: dist/assets/index-huxx8Oty.js                           346.56 kB │ gzip: 106.55 kB
+id:build: 
+id:build: ✓ built in 375ms
+clubs-admin:build: cache miss, executing 26d82e8b1a9b5977
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@1.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 510 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/robots.txt                                             0.02 kB │ gzip:   0.04 kB
+clubs-admin:build: dist/version.json                                           0.03 kB │ gzip:   0.05 kB
+clubs-admin:build: dist/content-security-policy.txt                            0.23 kB │ gzip:   0.18 kB
+clubs-admin:build: dist/favicon.svg                                            0.43 kB │ gzip:   0.27 kB
+clubs-admin:build: dist/index.html                                             2.96 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/sprite-CB0BjrsS.svg                             8.35 kB │ gzip:   1.97 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-B4BC4Pxa.css                       5.83 kB │ gzip:   1.27 kB
+clubs-admin:build: dist/assets/ConsolePage-DK-btUEf.css                       12.06 kB │ gzip:   2.20 kB
+clubs-admin:build: dist/assets/list-helpers-eJp2icTd.css                      41.78 kB │ gzip:   7.04 kB
+clubs-admin:build: dist/assets/index-B5s2yxsM.css                            134.59 kB │ gzip:  21.07 kB
+clubs-admin:build: dist/assets/notifications-CyLRrG98.js                       0.86 kB │ gzip:   0.51 kB
+clubs-admin:build: dist/assets/notifications-Blmp7IrK.js                       0.87 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-Da17sHQS.js                       0.88 kB │ gzip:   0.52 kB
+clubs-admin:build: dist/assets/billing-D0DpjAoT.js                             0.89 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-JPzod3xQ.js                             0.99 kB │ gzip:   0.55 kB
+clubs-admin:build: dist/assets/billing-CsyKuIJF.js                             1.01 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/history-CyWOebF4.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/history-BD6K1kyE.js                             1.14 kB │ gzip:   0.59 kB
+clubs-admin:build: dist/assets/history-Ppbt825V.js                             1.17 kB │ gzip:   0.60 kB
+clubs-admin:build: dist/assets/home-DCkpKyl2.js                                1.40 kB │ gzip:   0.71 kB
+clubs-admin:build: dist/assets/home--3f0I326.js                                1.46 kB │ gzip:   0.77 kB
+clubs-admin:build: dist/assets/home-CG5hHMef.js                                1.48 kB │ gzip:   0.77 kB
+clubs-admin:build: dist/assets/leave-NRVcHjHo.js                               1.51 kB │ gzip:   0.76 kB
+clubs-admin:build: dist/assets/leave-B679LHaT.js                               1.63 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/leave-DgZBMqxx.js                               1.63 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/activities-BVJEFa1Z.js                          1.73 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/activities-BSuc--ol.js                          1.81 kB │ gzip:   0.88 kB
+clubs-admin:build: dist/assets/activities-BULXahB-.js                          1.82 kB │ gzip:   0.89 kB
+clubs-admin:build: dist/assets/training-CvomnQeC.js                            1.84 kB │ gzip:   0.87 kB
+clubs-admin:build: dist/assets/inactivity-BQCkwWJA.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-CA5-KbpM.js                          1.97 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/inactivity-D3rOgEi7.js                          1.99 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/training-DSG9lMt4.js                            2.01 kB │ gzip:   1.00 kB
+clubs-admin:build: dist/assets/training-Cz1fEZ_C.js                            2.02 kB │ gzip:   0.99 kB
+clubs-admin:build: dist/assets/admin-dashboard-Disuw0hN.js                     2.48 kB │ gzip:   1.21 kB
+clubs-admin:build: dist/assets/admin-dashboard-De_MOyZT.js                     2.62 kB │ gzip:   1.33 kB
+clubs-admin:build: dist/assets/admin-dashboard-9j7PexOs.js                     2.65 kB │ gzip:   1.34 kB
+clubs-admin:build: dist/assets/id-DegKJNki.js                                  3.02 kB │ gzip:   1.32 kB
+clubs-admin:build: dist/assets/id--H2BHB_t.js                                  3.20 kB │ gzip:   1.47 kB
+clubs-admin:build: dist/assets/id-CPqfH5Ab.js                                  3.27 kB │ gzip:   1.48 kB
+clubs-admin:build: dist/assets/statistics-B29-jAFn.js                          3.28 kB │ gzip:   1.54 kB
+clubs-admin:build: dist/assets/courses-ChbZtx3h.js                             3.57 kB │ gzip:   1.57 kB
+clubs-admin:build: dist/assets/statistics-5HYKWPz2.js                          3.71 kB │ gzip:   1.74 kB
+clubs-admin:build: dist/assets/statistics-Yzf-IWNJ.js                          3.74 kB │ gzip:   1.73 kB
+clubs-admin:build: dist/assets/courses-Ba2mqEKG.js                             3.84 kB │ gzip:   1.74 kB
+clubs-admin:build: dist/assets/courses-Cq2xuPj7.js                             3.87 kB │ gzip:   1.77 kB
+clubs-admin:build: dist/assets/booking-uYYfRl83.js                             5.19 kB │ gzip:   1.98 kB
+clubs-admin:build: dist/assets/booking-CUxZJRef.js                             5.58 kB │ gzip:   2.18 kB
+clubs-admin:build: dist/assets/booking-CSsoqoIZ.js                             5.60 kB │ gzip:   2.18 kB
+clubs-admin:build: dist/assets/signup-DUsq1MsX.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/signup-DIO1MI8k.js                              5.90 kB │ gzip:   2.81 kB
+clubs-admin:build: dist/assets/signup-BdFJgnKQ.js                              5.96 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/admin-messaging-Cwrljn9V.js                     6.04 kB │ gzip:   2.44 kB
+clubs-admin:build: dist/assets/admin-messaging-Cd_a8z8e.js                     6.34 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-messaging-oSH-o2x1.js                     6.45 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-catalogs-VW5KUV4y.js                      6.49 kB │ gzip:   2.41 kB
+clubs-admin:build: dist/assets/admin-audit-CjhhQ82T.js                         6.58 kB │ gzip:   2.67 kB
+clubs-admin:build: dist/assets/admin-catalogs-BL800Q2Y.js                      6.81 kB │ gzip:   2.66 kB
+clubs-admin:build: dist/assets/census-cbmVHEi-.js                              6.90 kB │ gzip:   2.71 kB
+clubs-admin:build: dist/assets/admin-catalogs-DrXUGJ3w.js                      7.00 kB │ gzip:   2.65 kB
+clubs-admin:build: dist/assets/admin-audit-D9NyfdyL.js                         7.24 kB │ gzip:   2.97 kB
+clubs-admin:build: dist/assets/census-Bt6hTjis.js                              7.31 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/admin-audit-NcNouyce.js                         7.40 kB │ gzip:   2.99 kB
+clubs-admin:build: dist/assets/auth-COEixWe-.js                                7.45 kB │ gzip:   2.94 kB
+clubs-admin:build: dist/assets/census-eHPvwzdR.js                              7.53 kB │ gzip:   3.03 kB
+clubs-admin:build: dist/assets/auth-CkxJB46g.js                                8.41 kB │ gzip:   3.27 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/auth-iFPFc86N.js                                8.90 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/enums-CyAdjBxz.js                               9.62 kB │ gzip:   3.76 kB
+clubs-admin:build: dist/assets/enums-QKzw6JM8.js                               9.99 kB │ gzip:   3.99 kB
+clubs-admin:build: dist/assets/enums-BM6XENQJ.js                              10.05 kB │ gzip:   3.99 kB
+clubs-admin:build: dist/assets/instructor-Cy-kNWH7.js                         10.54 kB │ gzip:   3.61 kB
+clubs-admin:build: dist/assets/instructor-ZnADTepI.js                         11.12 kB │ gzip:   3.90 kB
+clubs-admin:build: dist/assets/instructor-BYvTK6fc.js                         11.27 kB │ gzip:   3.90 kB
+clubs-admin:build: dist/assets/admin-courses-CZecHWtL.js                      13.27 kB │ gzip:   4.81 kB
+clubs-admin:build: dist/assets/admin-courses-ppXzK63q.js                      14.15 kB │ gzip:   5.16 kB
+clubs-admin:build: dist/assets/admin-courses-BAo-G3ig.js                      14.47 kB │ gzip:   5.17 kB
+clubs-admin:build: dist/assets/errors-CurjIVDA.js                             15.08 kB │ gzip:   5.08 kB
+clubs-admin:build: dist/assets/errors-BJUD2HxT.js                             16.38 kB │ gzip:   5.44 kB
+clubs-admin:build: dist/assets/errors-DCMsZbVB.js                             16.41 kB │ gzip:   5.41 kB
+clubs-admin:build: dist/assets/planning-labels-en-DbHc7l8i.js                 17.48 kB │ gzip:   6.06 kB
+clubs-admin:build: dist/assets/planning-labels-ca-XIWfRzeH.js                 18.34 kB │ gzip:   6.53 kB
+clubs-admin:build: dist/assets/planning-labels-es-Dj7U0gCe.js                 18.56 kB │ gzip:   6.57 kB
+clubs-admin:build: dist/assets/console-6BhdMdIP.js                            21.06 kB │ gzip:   7.83 kB
+clubs-admin:build: dist/assets/console-UPRs5cG4.js                            22.29 kB │ gzip:   8.53 kB
+clubs-admin:build: dist/assets/console-DBI1DSl2.js                            22.97 kB │ gzip:   8.61 kB
+clubs-admin:build: dist/assets/admin-census-BeKoP5Xm.js                       27.70 kB │ gzip:   9.58 kB
+clubs-admin:build: dist/assets/admin-census-Fpf1y5UR.js                       29.51 kB │ gzip:  10.41 kB
+clubs-admin:build: dist/assets/admin-census-B4qKxRCp.js                       30.03 kB │ gzip:  10.41 kB
+clubs-admin:build: dist/assets/settings-labels-en-DoC72XGa.js                 46.68 kB │ gzip:  14.59 kB
+clubs-admin:build: dist/assets/settings-labels-ca-mFfxOvzM.js                 49.37 kB │ gzip:  15.60 kB
+clubs-admin:build: dist/assets/settings-labels-es-DrtesmdF.js                 50.26 kB │ gzip:  15.73 kB
+clubs-admin:build: dist/assets/ConsolePage-D-XOI2sA.js                       118.46 kB │ gzip:  28.27 kB
+clubs-admin:build: dist/assets/CoursesRoute-B9qCj9rL.js                      231.55 kB │ gzip:  64.10 kB
+clubs-admin:build: dist/assets/list-helpers-DOURYpLO.js                      239.85 kB │ gzip:  74.77 kB
+clubs-admin:build: dist/assets/CourseViewer3D-YmW_Vw7a.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index--Kcn0T_H.js                           1,020.34 kB │ gzip: 256.45 kB
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: ✓ built in 1.15s
+clubs:e2e: cache bypass, force executing 2c95456340be7915
+clubs:e2e: 
+clubs:e2e: > clubs@1.0.0 e2e /work/apps/clubs
+clubs:e2e: > playwright test --workers\=2 --retries\=1
+clubs:e2e: 
+clubs:e2e: [WebServer] (node:1013) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs:e2e: 
+clubs:e2e: Running 162 tests using 2 workers
+clubs:e2e: ················································································
+clubs:e2e: ················································································
+clubs:e2e: ··
+clubs:e2e:   162 passed (5.2m)
+id:e2e: cache bypass, force executing 1c7b0ad0b288d9c6
+id:e2e: 
+id:e2e: > id@1.0.0 e2e /work/apps/id
+id:e2e: > playwright test --workers\=2 --retries\=1
+id:e2e: 
+id:e2e: 
+id:e2e: Running 1 test using 1 worker
+id:e2e: ·
+id:e2e:   1 passed (5.6s)
+clubs-admin:e2e: cache bypass, force executing 56f8e4800fac73ed
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@1.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test --workers\=2 --retries\=1
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:7387) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 237 tests using 2 workers
+clubs-admin:e2e: ················································································
+clubs-admin:e2e: ················································································
+clubs-admin:e2e: ·············································································
+clubs-admin:e2e:   237 passed (9.8m)
+
+ Tasks:    10 successful, 10 total
+Cached:    0 cached, 10 total
+  Time:    17m11.781s 
+
+evidence: competition-statistics/delivery-log-chromium-1280.png
+evidence: competition-statistics/responsive-admin-billing-1280.json
+evidence: competition-statistics/04-reservar-375.png
+evidence: competition-statistics/D4-crear-classe-obertura-0705-1280.png
+evidence: competition-statistics/member-confirm-1280-light.png
+evidence: competition-statistics/50-D10-dog-dates-1280.png
+evidence: competition-statistics/user-menu-chromium-320.png
+evidence: competition-statistics/D4-bloqueja-pista-1280.png
+evidence: competition-statistics/header-webkit-768.png
+evidence: competition-statistics/feedback3-history-1280.png
+evidence: competition-statistics/word-inactivity-webkit-375.png
+evidence: competition-statistics/task-focus-chromium-1280.png
+evidence: competition-statistics/50-D6-price-overlap-1280.png
+evidence: competition-statistics/admin-D18-recorregut-3d-375-dark.png
+evidence: competition-statistics/category-list-chromium-light-1280.png
+evidence: competition-statistics/feedback3-profiles-chromium-1280.png
+evidence: competition-statistics/responsive-admin-dashboard-375.png
+evidence: competition-statistics/responsive-admin-member-768.png
+evidence: competition-statistics/donut-chromium-dark-375-all.png
+evidence: competition-statistics/responsive-admin-member-375.png
+evidence: competition-statistics/risk-chromium-light-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-3-768.json
+evidence: competition-statistics/responsive-admin-billing-menu-1-1280.png
+evidence: competition-statistics/student-list-webkit-light-375.png
+evidence: competition-statistics/donut-webkit-light-1280-recent.png
+evidence: competition-statistics/16-add-dog-price-twin-375.png
+evidence: competition-statistics/member-training-375-light.png
+evidence: competition-statistics/feedback2-student-chromium-dark.png
+evidence: competition-statistics/student-grid-chromium-dark-375.png
+evidence: competition-statistics/page-gossos-chromium-375.png
+evidence: competition-statistics/agenda-selected-webkit-1512.png
+evidence: competition-statistics/responsive-admin-billing-768.png
+evidence: competition-statistics/D4-bloqueja-pista-diumenge-tancat-1280.png
+evidence: competition-statistics/hours-webkit-390.png
+evidence: competition-statistics/responsive-admin-create-menu-1280.png
+evidence: competition-statistics/responsive-admin-billing-menu-1-375.json
+evidence: competition-statistics/clubs-registra-muntat-375-light.png
+evidence: competition-statistics/clubs-visor-instructor-3d-375-dark.png
+evidence: competition-statistics/attendance-links-375.png
+evidence: competition-statistics/member-info-768-light.png
+evidence: competition-statistics/responsive-admin-billing-menu-2-768.png
+evidence: competition-statistics/clubs-23-visio-global-375-light.png
+evidence: competition-statistics/donut-chromium-dark-375-recent.png
+evidence: competition-statistics/category-list-webkit-light-1280.png
+evidence: competition-statistics/16-add-dog-price-overlap-refused-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-0-375.png
+evidence: competition-statistics/category-list-webkit-dark-375.png
+evidence: competition-statistics/training-last-slot-webkit-1280.png
+evidence: competition-statistics/clubs-10-avui-375-dark.png
+evidence: competition-statistics/responsive-admin-member-768.json
+evidence: competition-statistics/donut-chromium-light-1280-all.png
+evidence: competition-statistics/responsive-admin-library-375.json
+evidence: competition-statistics/donut-chromium-light-375-recent.png
+evidence: competition-statistics/delivery-log-webkit-375.png
+evidence: competition-statistics/user-menu-chromium-375.png
+evidence: competition-statistics/word-dogs-webkit-375.png
+evidence: competition-statistics/25-buit-375.png
+evidence: competition-statistics/user-menu-webkit-375.png
+evidence: competition-statistics/clubs-registra-muntat-375-dark.png
+evidence: competition-statistics/training-student-links-375.png
+evidence: competition-statistics/responsive-admin-dashboard-1280.png
+evidence: competition-statistics/member-training-1024-light.png
+evidence: competition-statistics/category-list-chromium-light-375.png
+evidence: competition-statistics/club-pages-chromium-375.png
+evidence: competition-statistics/training-selection-webkit-1280.png
+evidence: competition-statistics/clubs-08-entrenaments-375-dark.png
+evidence: competition-statistics/header-webkit-375.png
+evidence: competition-statistics/history-chromium-dark-1280.png
+evidence: competition-statistics/responsive-admin-calendar-selected-1280.json
+evidence: competition-statistics/responsive-admin-member-375.json
+evidence: competition-statistics/counted-before-swap-chromium-1280.png
+evidence: competition-statistics/clubs-23-visio-global-375-dark.png
+evidence: competition-statistics/donut-webkit-dark-1280-all.png
+evidence: competition-statistics/merge-webkit-375.png
+evidence: competition-statistics/training-last-slot-webkit-1024.png
+evidence: competition-statistics/risk-chromium-dark-1920.png
+evidence: competition-statistics/category-list-webkit-dark-1280.png
+evidence: competition-statistics/risk-chromium-light-1920.png
+evidence: competition-statistics/member-profile-1512-light.png
+evidence: competition-statistics/feedback3-login-webkit-375.png
+evidence: competition-statistics/admin-D18-importa-1280-dark.png
+evidence: competition-statistics/50-d10-inactividad-modificar-es-375.png
+evidence: competition-statistics/50-d10-inactividad-modificar-es-1280.png
+evidence: competition-statistics/07-anullada-tard-375.png
+evidence: competition-statistics/D4c-anullar-classe-1280.png
+evidence: competition-statistics/club-pages-webkit-375.png
+evidence: competition-statistics/clubs-registra-muntat-buit-375-dark.png
+evidence: competition-statistics/clubs-visor-alumne-375-dark.png
+evidence: competition-statistics/responsive-admin-billing-menu-3-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-2-375.png
+evidence: competition-statistics/delivery-detail-chromium-375.png
+evidence: competition-statistics/risk-webkit-dark-768.png
+evidence: competition-statistics/training-last-slot-webkit-1512.png
+evidence: competition-statistics/D6-facturacio-confirmacio-1280.png
+evidence: competition-statistics/61-D10-next-invoice-drawer-1280.png
+evidence: competition-statistics/clubs-sessio-muntatge-finalitzada-375-light.png
+evidence: competition-statistics/admin-D18-recorregut-3d-1280-dark.png
+evidence: competition-statistics/club-pages-webkit-320.png
+evidence: competition-statistics/50-D10-readmission-pending-1280.png
+evidence: competition-statistics/planning-form-webkit-375.png
+evidence: competition-statistics/responsive-admin-dashboard-768.json
+evidence: competition-statistics/member-info-1920-light.png
+evidence: competition-statistics/risk-webkit-light-1280.png
+evidence: competition-statistics/add-dog-webkit-375.png
+evidence: competition-statistics/donut-webkit-dark-1280-recent.png
+evidence: competition-statistics/member-today-1024-light.png
+evidence: competition-statistics/responsive-admin-billing-375.json
+evidence: competition-statistics/admin-D18-recorregut-2d-375-light.png
+evidence: competition-statistics/delivery-detail-chromium-1280.png
+evidence: competition-statistics/member-confirm-1024-light.png
+evidence: competition-statistics/member-home-1024-dark.png
+evidence: competition-statistics/entrenaments-bloquejos-1280.png
+evidence: competition-statistics/admin-D12-agenda-muntatges-1280-light.png
+evidence: competition-statistics/hours-webkit-320.png
+evidence: competition-statistics/risk-webkit-light-long-375.png
+evidence: competition-statistics/clubs-07-reserva-1280-dark.png
+evidence: competition-statistics/member-profile-375-light.png
+evidence: competition-statistics/benvinguda-privacy-error-375.png
+evidence: competition-statistics/page-parametres-webkit-375.png
+evidence: competition-statistics/member-confirm-1920-light.png
+evidence: competition-statistics/50-registrar-montado-biblioteca-es-1280.png
+evidence: competition-statistics/50-registrar-montado-es-375.png
+evidence: competition-statistics/feedback3-profiles-webkit-375.png
+evidence: competition-statistics/delivery-history-webkit-375.png
+evidence: competition-statistics/history-webkit-light-375.png
+evidence: competition-statistics/clubs-08-entrenaments-1280-dark.png
+evidence: competition-statistics/06-confirmar-canvi-375.png
+evidence: competition-statistics/delivery-history-webkit-1280.png
+evidence: competition-statistics/clubs-visor-instructor-3d-375-light.png
+evidence: competition-statistics/planning-form-webkit-320.png
+evidence: competition-statistics/member-today-1512-light.png
+evidence: competition-statistics/responsive-admin-calendar-selected-375.png
+evidence: competition-statistics/member-confirm-1024-dark.png
+evidence: competition-statistics/risk-webkit-dark-375.png
+evidence: competition-statistics/admin-D18-biblioteca-1280-light.png
+evidence: competition-statistics/responsive-admin-billing-menu-3-768.png
+evidence: competition-statistics/D10-reserves-1280.png
+evidence: competition-statistics/D4-dia-1280.png
+evidence: competition-statistics/50-visor-personal-es-1280.png
+evidence: competition-statistics/responsive-admin-billing-375.png
+evidence: competition-statistics/page-gossos-webkit-375.png
+evidence: competition-statistics/word-inactivity-webkit-1512.png
+evidence: competition-statistics/admin-D7-col-locacions-375-dark.png
+evidence: competition-statistics/feedback2-agenda-webkit-light.png
+evidence: competition-statistics/responsive-admin-calendar-selected-768.json
+evidence: competition-statistics/feedback2-agenda-webkit-dark.png
+evidence: competition-statistics/history-webkit-light-1280.png
+evidence: competition-statistics/clubs-sessio-muntatge-375-light.png
+evidence: competition-statistics/50-espera-after-sign-in-375.png
+evidence: competition-statistics/50-D16-ring-bookings-375.png
+evidence: competition-statistics/responsive-admin-library-768.json
+evidence: competition-statistics/training-selection-chromium-1280.png
+evidence: competition-statistics/risk-webkit-light-768.png
+evidence: competition-statistics/responsive-instructor-agenda-1280.json
+evidence: competition-statistics/admin-D18-importa-375-light.png
+evidence: competition-statistics/risk-webkit-light-1920.png
+evidence: competition-statistics/delivery-history-chromium-375.png
+evidence: competition-statistics/student-grid-webkit-light-375.png
+evidence: competition-statistics/29-confirmar-normal-375.png
+evidence: competition-statistics/app-remembered-admin-instructor-375.png
+evidence: competition-statistics/student-list-chromium-dark-1280.png
+evidence: competition-statistics/donut-webkit-dark-375-recent.png
+evidence: competition-statistics/student-grid-webkit-dark-1280.png
+evidence: competition-statistics/member-profile-1280-light.png
+evidence: competition-statistics/training-last-slot-chromium-1024.png
+evidence: competition-statistics/page-abonats-webkit-375.png
+evidence: competition-statistics/agenda-selected-chromium-1512.png
+evidence: competition-statistics/delivery-history-chromium-1280.png
+evidence: competition-statistics/member-info-1024-light.png
+evidence: competition-statistics/responsive-instructor-navigation-375.png
+evidence: competition-statistics/D4-calendari-actives-1280.png
+evidence: competition-statistics/member-home-375-dark.png
+evidence: competition-statistics/admin-D16-geometria-375-dark.png
+evidence: competition-statistics/23-classe-inscrits-375.png
+evidence: competition-statistics/D4b-calendari-esborrany-1280.png
+evidence: competition-statistics/50-visor-personal-es-375.png
+evidence: competition-statistics/risk-chromium-light-1280.png
+evidence: competition-statistics/member-home-1280-dark.png
+evidence: competition-statistics/word-home-chromium-375.png
+evidence: competition-statistics/29-temps-esgotat-375.png
+evidence: competition-statistics/clubs-07-reserva-personal-1280-light.png
+evidence: competition-statistics/feedback2-ring-mobile-webkit-light.png
+evidence: competition-statistics/responsive-admin-billing-menu-0-768.json
+evidence: competition-statistics/member-home-768-dark.png
+evidence: competition-statistics/admin-D18-col-locacio-375-light.png
+evidence: competition-statistics/word-day-chromium-375.png
+evidence: competition-statistics/responsive-admin-create-menu-375.png
+evidence: competition-statistics/clubs-07-reserva-1280-light.png
+evidence: competition-statistics/responsive-admin-billing-1280.png
+evidence: competition-statistics/planning-form-chromium-320.png
+evidence: competition-statistics/07-detall-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-2-375.json
+evidence: competition-statistics/responsive-admin-library-768.png
+evidence: competition-statistics/admin-D12-agenda-muntatges-1280-dark.png
+evidence: competition-statistics/word-dogs-webkit-1512.png
+evidence: competition-statistics/member-confirm-1280-dark.png
+evidence: competition-statistics/task-focus-chromium-375.png
+evidence: competition-statistics/feedback2-agenda-chromium-light.png
+evidence: competition-statistics/student-list-webkit-dark-1280.png
+evidence: competition-statistics/training-last-slot-webkit-768.png
+evidence: competition-statistics/risk-chromium-dark-1280.png
+evidence: competition-statistics/03-inici-375.png
+evidence: competition-statistics/25-un-gos-375.png
+evidence: competition-statistics/D11-simulacio-1280.png
+evidence: competition-statistics/word-home-webkit-375.png
+evidence: competition-statistics/hours-chromium-1280.png
+evidence: competition-statistics/member-home-1920-light.png
+evidence: competition-statistics/clubs-sessio-muntatge-finalitzada-1280-dark.png
+evidence: competition-statistics/training-last-slot-chromium-1512.png
+evidence: competition-statistics/D11-processos-1280.png
+evidence: competition-statistics/risk-chromium-dark-768.png
+evidence: competition-statistics/feedback3-login-chromium-1280.png
+evidence: competition-statistics/clubs-08-entrenaments-375-light.png
+evidence: competition-statistics/feedback2-ring-mobile-webkit-dark.png
+evidence: competition-statistics/feedback3-recovery-webkit-1280.png
+evidence: competition-statistics/club-pages-webkit-390.png
+evidence: competition-statistics/hours-webkit-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-2-1280.json
+evidence: competition-statistics/member-home-375-light.png
+evidence: competition-statistics/50-D5-unlabelled-channel-1280.png
+evidence: competition-statistics/D4-calendari-anullades-1280.png
+evidence: competition-statistics/member-info-1512-light.png
+evidence: competition-statistics/admin-D18-registra-375-dark.png
+evidence: competition-statistics/20-console-product-host-1280.png
+evidence: competition-statistics/admin-D18-recorregut-2d-1280-dark.png
+evidence: competition-statistics/50-d10-inactividad-es-1280.png
+evidence: competition-statistics/clubs-sessio-muntatge-1280-dark.png
+evidence: competition-statistics/responsive-admin-import-375.json
+evidence: competition-statistics/D4-crear-classe-diumenge-tancat-1280.png
+evidence: competition-statistics/add-dog-chromium-375.png
+evidence: competition-statistics/training-last-slot-webkit-1920.png
+evidence: competition-statistics/user-menu-chromium-390.png
+evidence: competition-statistics/responsive-admin-dashboard-1280.json
+evidence: competition-statistics/donut-chromium-light-1280-recent.png
+evidence: competition-statistics/responsive-instructor-agenda-1280.png
+evidence: competition-statistics/50-chunk-failure-1280.png
+evidence: competition-statistics/feedback3-login-chromium-375.png
+evidence: competition-statistics/word-day-webkit-375.png
+evidence: competition-statistics/clubs-visor-sense-muntatge-personal-1280-dark.png
+evidence: competition-statistics/responsive-admin-calendar-selected-768.png
+evidence: competition-statistics/category-list-chromium-dark-1280.png
+evidence: competition-statistics/clubs-visor-instructor-2d-375-dark.png
+evidence: competition-statistics/admin-D12-agenda-muntatges-375-dark.png
+evidence: competition-statistics/responsive-admin-billing-menu-2-768.json
+evidence: competition-statistics/clubs-10-avui-1280-dark.png
+evidence: competition-statistics/agenda-selected-webkit-768.png
+evidence: competition-statistics/page-tauler-chromium-375.png
+evidence: competition-statistics/admin-D7-col-locacions-375-light.png
+evidence: competition-statistics/50-D16-ring-bookings-1280.png
+evidence: competition-statistics/delivery-log-chromium-375.png
+evidence: competition-statistics/feedback3-recovery-chromium-1280.png
+evidence: competition-statistics/header-chromium-320.png
+evidence: competition-statistics/responsive-admin-import-375.png
+evidence: competition-statistics/training-last-slot-webkit-375.png
+evidence: competition-statistics/clubs-07-reserva-personal-375-light.png
+evidence: competition-statistics/admin-D16-geometria-1280-dark.png
+evidence: competition-statistics/feedback3-profiles-chromium-375.png
+evidence: competition-statistics/admin-D18-registra-375-light.png
+evidence: competition-statistics/responsive-admin-library-375.png
+evidence: competition-statistics/50-D4-review-0800-375.png
+evidence: competition-statistics/member-profile-768-light.png
+evidence: competition-statistics/responsive-admin-create-menu-375.json
+evidence: competition-statistics/responsive-admin-billing-menu-2-1280.png
+evidence: competition-statistics/60-D10-next-invoice-375.png
+evidence: competition-statistics/header-chromium-1280.png
+evidence: competition-statistics/responsive-admin-billing-menu-1-768.json
+evidence: competition-statistics/training-last-slot-chromium-1280.png
+evidence: competition-statistics/clubs-07-reserva-375-light.png
+evidence: competition-statistics/feedback3-recovery-chromium-375.png
+evidence: competition-statistics/50-D2-no-plan-proposal-1280.png
+evidence: competition-statistics/student-list-chromium-light-375.png
+evidence: competition-statistics/user-menu-webkit-390.png
+evidence: competition-statistics/D1-risc-1280.png
+evidence: competition-statistics/29-properament-375.png
+evidence: competition-statistics/donut-chromium-dark-1280-all.png
+evidence: competition-statistics/clubs-07-reserva-375-dark.png
+evidence: competition-statistics/clubs-visor-instructor-2d-1280-dark.png
+evidence: competition-statistics/header-chromium-375.png
+evidence: competition-statistics/member-training-1512-light.png
+evidence: competition-statistics/feedback2-student-webkit-light.png
+evidence: competition-statistics/62-D6-submission-due-375.png
+evidence: competition-statistics/member-today-1920-light.png
+evidence: competition-statistics/member-profile-1920-light.png
+evidence: competition-statistics/clubs-sessio-muntatge-finalitzada-375-dark.png
+evidence: competition-statistics/risk-webkit-dark-1920.png
+evidence: competition-statistics/student-grid-chromium-light-375.png
+evidence: competition-statistics/student-grid-webkit-dark-375.png
+evidence: competition-statistics/training-selection-webkit-768.png
+evidence: competition-statistics/feedback3-login-webkit-1280.png
+evidence: competition-statistics/word-day-chromium-1512.png
+evidence: competition-statistics/counted-before-swap-chromium-375.png
+evidence: competition-statistics/training-selection-webkit-375.png
+evidence: competition-statistics/add-dog-bottom-webkit-375.png
+evidence: competition-statistics/user-menu-webkit-768.png
+evidence: competition-statistics/responsive-admin-billing-menu-1-375.png
+evidence: competition-statistics/clubs-visor-alumne-375-light.png
+evidence: competition-statistics/60-D10-next-invoice-1280.png
+evidence: competition-statistics/responsive-admin-library-1280.json
+evidence: competition-statistics/user-menu-chromium-768.png
+evidence: competition-statistics/word-home-webkit-1512.png
+evidence: competition-statistics/responsive-admin-calendar-selected-1280.png
+evidence: competition-statistics/member-training-1280-light.png
+evidence: competition-statistics/header-webkit-320.png
+evidence: competition-statistics/member-confirm-375-light.png
+evidence: competition-statistics/50-d12-abrir-recorrido-es-1280.png
+evidence: competition-statistics/word-dogs-chromium-1512.png
+evidence: competition-statistics/remeses-1280.png
+evidence: competition-statistics/header-webkit-1280.png
+evidence: competition-statistics/clubs-08-entrenaments-1280-light.png
+evidence: competition-statistics/member-info-375-light.png
+evidence: competition-statistics/responsive-admin-billing-768.json
+evidence: competition-statistics/responsive-admin-billing-menu-3-1280.png
+evidence: competition-statistics/responsive-admin-billing-menu-0-768.png
+evidence: competition-statistics/admin-D7-col-locacions-1280-dark.png
+evidence: competition-statistics/risk-webkit-light-375.png
+evidence: competition-statistics/clubs-07-reserva-personal-375-dark.png
+evidence: competition-statistics/responsive-admin-member-1280.json
+evidence: competition-statistics/D6-facturacio-manual-only-1280.png
+evidence: competition-statistics/billing-provider-chromium-375.png
+evidence: competition-statistics/training-last-slot-chromium-768.png
+evidence: competition-statistics/add-dog-bottom-chromium-375.png
+evidence: competition-statistics/responsive-admin-create-menu-1280.json
+evidence: competition-statistics/admin-onboarding-1280.png
+evidence: competition-statistics/63-D6-collection-date-passed-1280.png
+evidence: competition-statistics/29-limit-375.png
+evidence: competition-statistics/training-selection-chromium-1024.png
+evidence: competition-statistics/donut-chromium-light-375-all.png
+evidence: competition-statistics/student-grid-chromium-light-1280.png
+evidence: competition-statistics/50-D5-unlabelled-channel-375.png
+evidence: competition-statistics/D6-facturacio-1280.png
+evidence: competition-statistics/risk-chromium-dark-long-375.png
+evidence: competition-statistics/training-last-slot-chromium-375.png
+evidence: competition-statistics/page-calendari-webkit-375.png
+evidence: competition-statistics/page-calendari-chromium-375.png
+evidence: competition-statistics/delivery-log-webkit-1280.png
+evidence: competition-statistics/21-console-platform-only-1280.png
+evidence: competition-statistics/clubs-10-avui-375-light.png
+evidence: competition-statistics/D6-facturacio-calaix-rebut-1280.png
+evidence: competition-statistics/clubs-sessio-muntatge-finalitzada-1280-light.png
+evidence: competition-statistics/clubs-registra-muntat-1280-light.png
+evidence: competition-statistics/category-list-webkit-light-375.png
+evidence: competition-statistics/entrenaments-registre-1280.png
+evidence: competition-statistics/clubs-visor-sense-muntatge-personal-375-light.png
+evidence: competition-statistics/student-list-chromium-light-1280.png
+evidence: competition-statistics/feedback3-recovery-webkit-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-0-375.json
+evidence: competition-statistics/clubs-visor-alumne-1280-light.png
+evidence: competition-statistics/member-375.png
+evidence: competition-statistics/member-home-1920-dark.png
+evidence: competition-statistics/category-list-chromium-dark-375.png
+evidence: competition-statistics/member-home-1280-light.png
+evidence: competition-statistics/50-28-id-document-ca-375.png
+evidence: competition-statistics/responsive-instructor-navigation-1280.png
+evidence: competition-statistics/admin-D18-recorregut-2d-375-dark.png
+evidence: competition-statistics/member-home-1512-light.png
+evidence: competition-statistics/D6-facturacio-retroces-1280.png
+evidence: competition-statistics/training-last-slot-chromium-1920.png
+evidence: competition-statistics/delivery-detail-webkit-375.png
+evidence: competition-statistics/training-selection-chromium-375.png
+evidence: competition-statistics/admin-D18-col-locacio-1280-dark.png
+evidence: competition-statistics/61-D10-next-invoice-drawer-375.png
+evidence: competition-statistics/history-chromium-light-375.png
+evidence: competition-statistics/donut-webkit-light-1280-all.png
+evidence: competition-statistics/agenda-selected-chromium-768.png
+evidence: competition-statistics/responsive-admin-create-menu-768.png
+evidence: competition-statistics/responsive-admin-import-1280.json
+evidence: competition-statistics/student-list-webkit-dark-375.png
+evidence: competition-statistics/admin-D4-recorregut-previst-1280-light.png
+evidence: competition-statistics/50-30-info-retry-375.png
+evidence: competition-statistics/feedback2-ring-mobile-chromium-dark.png
+evidence: competition-statistics/responsive-admin-billing-menu-1-768.png
+evidence: competition-statistics/50-28-id-document-ca-1280.png
+evidence: competition-statistics/member-home-768-light.png
+evidence: competition-statistics/23-D10-next-invoice-row-1280.png
+evidence: competition-statistics/merge-chromium-375.png
+evidence: competition-statistics/responsive-admin-navigation-375.png
+evidence: competition-statistics/admin-D18-recorregut-3d-1280-light.png
+evidence: competition-statistics/25-historic-375.png
+evidence: competition-statistics/clubs-registra-muntat-1280-dark.png
+evidence: competition-statistics/agenda-selected-webkit-1280.png
+evidence: competition-statistics/responsive-admin-billing-menu-3-1280.json
+evidence: competition-statistics/admin-D18-registra-1280-dark.png
+evidence: competition-statistics/page-tauler-webkit-375.png
+evidence: competition-statistics/clubs-23-visio-global-1280-light.png
+evidence: competition-statistics/member-profile-1024-light.png
+evidence: competition-statistics/responsive-admin-navigation-768.png
+evidence: competition-statistics/50-28-id-document-es-375.png
+evidence: competition-statistics/billing-provider-chromium-1280.png
+evidence: competition-statistics/clubs-visor-instructor-3d-1280-dark.png
+evidence: competition-statistics/50-d10-inactividad-es-375.png
+evidence: competition-statistics/planning-form-webkit-390.png
+evidence: competition-statistics/training-selection-webkit-1920.png
+evidence: competition-statistics/risk-chromium-dark-375.png
+evidence: competition-statistics/50-registrar-montado-es-1280.png
+evidence: competition-statistics/donut-webkit-light-375-all.png
+evidence: competition-statistics/hours-chromium-390.png
+evidence: competition-statistics/clubs-registra-muntat-buit-375-light.png
+evidence: competition-statistics/member-today-1280-light.png
+evidence: competition-statistics/hours-webkit-1280.png
+evidence: competition-statistics/feedback2-ring-mobile-chromium-light.png
+evidence: competition-statistics/responsive-instructor-agenda-375.png
+evidence: competition-statistics/responsive-admin-library-1280.png
+evidence: competition-statistics/planning-form-chromium-375.png
+evidence: competition-statistics/responsive-admin-dashboard-375.json
+evidence: competition-statistics/63-D6-collection-date-passed-375.png
+evidence: competition-statistics/50-21-empty-375.png
+evidence: competition-statistics/header-webkit-390.png
+evidence: competition-statistics/clubs-visor-sense-muntatge-personal-375-dark.png
+evidence: competition-statistics/admin-D18-recorregut-3d-375-light.png
+evidence: competition-statistics/50-registrar-montado-biblioteca-es-375.png
+evidence: competition-statistics/responsive-admin-billing-menu-3-375.json
+evidence: competition-statistics/50-chunk-failure-375.png
+evidence: competition-statistics/member-confirm-768-light.png
+evidence: competition-statistics/member-confirm-1920-dark.png
+evidence: competition-statistics/D4-inscrits-1280.png
+evidence: competition-statistics/word-inactivity-chromium-375.png
+evidence: competition-statistics/member-training-768-light.png
+evidence: competition-statistics/training-selection-chromium-1512.png
+evidence: competition-statistics/clubs-visor-instructor-2d-1280-light.png
+evidence: competition-statistics/history-chromium-dark-375.png
+evidence: competition-statistics/delivery-detail-webkit-1280.png
+evidence: competition-statistics/50-D4-review-0800-1280.png
+evidence: competition-statistics/admin-D18-col-locacio-375-dark.png
+evidence: competition-statistics/clubs-registra-muntat-buit-1280-light.png
+evidence: competition-statistics/member-home-1024-light.png
+evidence: competition-statistics/admin-D18-biblioteca-375-dark.png
+evidence: competition-statistics/page-abonats-chromium-375.png
+evidence: competition-statistics/clubs-sessio-muntatge-1280-light.png
+evidence: competition-statistics/training-selection-webkit-1512.png
+evidence: competition-statistics/student-list-chromium-dark-375.png
+evidence: competition-statistics/risk-webkit-dark-long-375.png
+evidence: competition-statistics/member-info-1280-light.png
+evidence: competition-statistics/clubs-07-reserva-personal-1280-dark.png
+evidence: competition-statistics/training-selection-chromium-768.png
+evidence: competition-statistics/feedback2-agenda-chromium-dark.png
+evidence: competition-statistics/admin-D4-recorregut-previst-1280-dark.png
+evidence: competition-statistics/responsive-instructor-agenda-375.json
+evidence: competition-statistics/admin-D4-recorregut-previst-375-light.png
+evidence: competition-statistics/clubs-registra-muntat-buit-1280-dark.png
+evidence: competition-statistics/50-d12-abrir-recorrido-es-375.png
+evidence: competition-statistics/member-training-1920-light.png
+evidence: competition-statistics/r2-course-ui-harness-1280-light.png
+evidence: competition-statistics/admin-D18-importa-375-dark.png
+evidence: competition-statistics/50-user-menu-1280.png
+evidence: competition-statistics/benvinguda-375.png
+evidence: competition-statistics/member-home-1512-dark.png
+evidence: competition-statistics/22-D6-rollback-file-not-sent-375.png
+evidence: competition-statistics/club-pages-chromium-390.png
+evidence: competition-statistics/donut-webkit-dark-375-all.png
+evidence: competition-statistics/50-28-id-document-es-1280.png
+evidence: competition-statistics/responsive-admin-calendar-selected-375.json
+evidence: competition-statistics/planning-form-chromium-390.png
+evidence: competition-statistics/50-21-empty-1280.png
+evidence: competition-statistics/responsive-admin-dashboard-768.png
+evidence: competition-statistics/clubs-sessio-muntatge-375-dark.png
+evidence: competition-statistics/training-selection-webkit-1024.png
+evidence: competition-statistics/admin-D18-biblioteca-375-light.png
+evidence: competition-statistics/member-confirm-1512-dark.png
+evidence: competition-statistics/member-confirm-1512-light.png
+evidence: competition-statistics/feedback3-profiles-webkit-1280.png
+evidence: competition-statistics/22-D6-rollback-file-not-sent-1280.png
+evidence: competition-statistics/risk-chromium-light-long-375.png
+evidence: competition-statistics/admin-D18-importa-1280-light.png
+evidence: competition-statistics/agenda-selected-chromium-1280.png
+evidence: competition-statistics/history-webkit-dark-1280.png
+evidence: competition-statistics/training-selection-chromium-1920.png
+evidence: competition-statistics/responsive-admin-import-768.json
+evidence: competition-statistics/club-pages-chromium-320.png
+evidence: competition-statistics/feedback2-student-chromium-light.png
+evidence: competition-statistics/r2-course-ui-harness-1280-dark.png
+evidence: competition-statistics/admin-dashboard-1280-dark.png
+evidence: competition-statistics/word-day-webkit-1512.png
+evidence: competition-statistics/student-grid-webkit-light-1280.png
+evidence: competition-statistics/admin-D18-biblioteca-1280-dark.png
+evidence: competition-statistics/clubs-10-avui-1280-light.png
+evidence: competition-statistics/page-parametres-chromium-375.png
+evidence: competition-statistics/admin-D18-recorregut-2d-1280-light.png
+evidence: competition-statistics/history-webkit-dark-375.png
+evidence: competition-statistics/responsive-admin-import-1280.png
+evidence: competition-statistics/admin-D16-geometria-375-light.png
+evidence: competition-statistics/admin-1280.png
+evidence: competition-statistics/word-home-chromium-1512.png
+evidence: competition-statistics/62-D6-submission-due-1280.png
+evidence: competition-statistics/responsive-admin-member-1280.png
+evidence: competition-statistics/clubs-visor-instructor-2d-375-light.png
+evidence: competition-statistics/donut-webkit-light-375-recent.png
+evidence: competition-statistics/admin-D18-registra-1280-light.png
+evidence: competition-statistics/student-list-webkit-light-1280.png
+evidence: competition-statistics/member-confirm-375-dark.png
+evidence: competition-statistics/responsive-admin-billing-menu-0-1280.png
+evidence: competition-statistics/admin-D4-recorregut-previst-375-dark.png
+evidence: competition-statistics/history-chromium-light-1280.png
+evidence: competition-statistics/agenda-selected-webkit-1920.png
+evidence: competition-statistics/admin-dashboard-1280-light.png
+evidence: competition-statistics/responsive-admin-billing-menu-0-1280.json
+evidence: competition-statistics/agenda-selected-chromium-1920.png
+evidence: competition-statistics/admin-D18-col-locacio-1280-light.png
+evidence: competition-statistics/clubs-23-visio-global-1280-dark.png
+evidence: competition-statistics/hours-chromium-375.png
+evidence: competition-statistics/admin-D16-geometria-1280-light.png
+evidence: competition-statistics/06-confirmada-tornar-inici-375.png
+evidence: competition-statistics/donut-chromium-dark-1280-recent.png
+evidence: competition-statistics/risk-webkit-dark-1280.png
+evidence: competition-statistics/header-chromium-768.png
+evidence: competition-statistics/clubs-visor-instructor-3d-1280-light.png
+evidence: competition-statistics/word-dogs-chromium-375.png
+evidence: competition-statistics/07-espera-375.png
+evidence: competition-statistics/member-confirm-768-dark.png
+evidence: competition-statistics/responsive-admin-billing-menu-1-1280.json
+evidence: competition-statistics/admin-D12-agenda-muntatges-375-light.png
+evidence: competition-statistics/student-grid-chromium-dark-1280.png
+evidence: competition-statistics/hours-chromium-320.png
+evidence: competition-statistics/feedback2-student-webkit-dark.png
+evidence: competition-statistics/risk-chromium-light-768.png
+evidence: competition-statistics/r2-course-ui-harness-1280-after-nudge.png
+evidence: competition-statistics/user-menu-webkit-320.png
+evidence: competition-statistics/header-chromium-390.png
+evidence: competition-statistics/word-inactivity-chromium-1512.png
+evidence: competition-statistics/admin-D7-col-locacions-1280-light.png
+evidence: competition-statistics/member-today-768-light.png
+evidence: competition-statistics/clubs-visor-sense-muntatge-personal-1280-light.png
+evidence: competition-statistics/clubs-visor-alumne-1280-dark.png
+evidence: competition-statistics/responsive-admin-create-menu-768.json
+evidence: competition-statistics/23-D10-next-invoice-row-375.png
+evidence: competition-statistics/member-today-375-light.png
+evidence: competition-statistics/responsive-admin-import-768.png
