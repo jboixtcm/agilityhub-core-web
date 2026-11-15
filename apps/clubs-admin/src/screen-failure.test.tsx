@@ -39,8 +39,10 @@ vi.mock("@agilityhub/ui", async (importOriginal) => ({
 
 const branding = brandingCanicFixture as Branding;
 
-beforeAll(() => {
+beforeAll(async () => {
   server.listen({ onUnhandledRequest: "bypass" });
+  // These tests exercise rendering recovery, not Vite's cold route transforms on CI.
+  await Promise.all([import("./catalogs/TeamPage"), import("./courses/CoursesRoute")]);
 });
 afterEach(() => {
   cleanup();
