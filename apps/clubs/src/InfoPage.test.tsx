@@ -31,7 +31,7 @@ afterAll(() => {
   server.close();
 });
 
-async function renderInfo(runtimeBranding: Branding = branding, waitForTabs = true) {
+async function renderInfo(runtimeBranding: Branding = branding, waitForContent = true) {
   const i18n = await createClubsI18n({
     branding: runtimeBranding,
     browserLanguages: ["ca"],
@@ -50,7 +50,7 @@ async function renderInfo(runtimeBranding: Branding = branding, waitForTabs = tr
       </BrandingProvider>
     </I18nextProvider>,
   );
-  if (waitForTabs) await screen.findByRole("tab", { name: "FAQ" });
+  if (waitForContent) await screen.findByRole("option", { name: "FAQ" });
 }
 
 describe("E11-W06 W8 (the states matrix of E11-W02): screen 30's failed read", () => {
@@ -77,7 +77,7 @@ describe("E11-W06 W8 (the states matrix of E11-W02): screen 30's failed read", (
     failing = false;
     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
 
-    expect(await screen.findByRole("tab", { name: "FAQ" })).toBeVisible();
+    expect(await screen.findByRole("option", { name: "FAQ" })).toBeVisible();
     expect(screen.queryByRole("alert")).toBeNull();
     expect(reads).toBe(2);
   });
@@ -87,21 +87,23 @@ describe("T-05-CP-07 screen 30 Info", () => {
   it("shows FAQ, rules and other active pages only", async () => {
     await renderInfo();
 
-    expect(screen.getByRole("tab", { name: "FAQ" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tab", { name: "Normes" })).toBeVisible();
-    expect(screen.getByRole("tab", { name: "Consentiment d'imatge" })).toBeVisible();
-    expect(screen.queryByRole("tab", { name: "Privacitat" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("tab", { name: "Guia de benvinguda" })).not.toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Informació del club" })).toHaveValue("faq");
+    expect(screen.getByRole("option", { name: "Normes" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Consentiment d'imatge" })).toBeVisible();
+    expect(screen.queryByRole("option", { name: "Privacitat" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Guia de benvinguda" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Convivència al club" })).toBeVisible();
 
     fireEvent.click(screen.getByRole("button", { name: "Puc venir amb més gent al club?" }));
     expect(screen.getByText("Sí, sempre que respecti les normes del club.")).toBeVisible();
-    fireEvent.click(screen.getByRole("tab", { name: "Normes" }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Informació del club" }), {
+      target: { value: "RULES" },
+    });
     expect(screen.getByRole("heading", { name: "Normes del club" })).toBeVisible();
     expect(screen.getByText(/Actualitzat el 09\/09\/2026/u)).toBeVisible();
   });
 
-  it("T-11-36 keeps Info available without the FAQ module, omits the FAQ tab and never reads /faq-entries", async () => {
+  it("T-11-36 keeps Info available without the FAQ module, omits the FAQ option and never reads /faq-entries", async () => {
     const paths: string[] = [];
     server.events.on("request:start", ({ request }) => {
       paths.push(new URL(request.url).pathname);
@@ -128,8 +130,8 @@ describe("T-05-CP-07 screen 30 Info", () => {
       </I18nextProvider>,
     );
 
-    expect(await screen.findByRole("tab", { name: "Normes" })).toBeVisible();
-    expect(screen.queryByRole("tab", { name: "FAQ" })).not.toBeInTheDocument();
+    expect(await screen.findByRole("option", { name: "Normes" })).toBeVisible();
+    expect(screen.queryByRole("option", { name: "FAQ" })).not.toBeInTheDocument();
     expect(paths).toContain("/api/v1/club-pages");
     expect(paths).not.toContain("/api/v1/faq-entries");
     server.events.removeAllListeners();

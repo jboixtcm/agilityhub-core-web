@@ -86,7 +86,8 @@
     "weeklyTemplate": "Weekly template",
     "deliveryLog": "Delivery log",
     "collapse": "Collapse menu",
-    "expand": "Expand menu"
+    "expand": "Expand menu",
+    "competitionStatistics": "Competition statistics"
   },
   "placeholder": {
     "description": "This screen will be available soon.",

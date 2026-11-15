@@ -85,7 +85,9 @@ test.describe("T-02-14 clubs shell", () => {
     await login(page);
 
     await expect(page.getByRole("link", { name: "Entrenaments" })).toHaveCount(0);
-    await expect(page.getByRole("link", { name: "Info" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Info", exact: true })).toHaveCount(0);
+    await page.getByRole("link", { name: "Perfil", exact: true }).click();
+    await expect(page.getByRole("link", { name: "Informació del club" })).toBeVisible();
     await page.screenshot({
       fullPage: true,
       path: resolve(evidenceDirectory, "clubs-minim-375.png"),

@@ -87,8 +87,7 @@ test("T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30"
   const member = await memberContext.newPage();
   await loginMember(member);
   await member.goto(`${clubsUrl}/info`);
-  await expect(member.getByRole("tab", { name: "Normes" })).toBeVisible();
-  await member.getByRole("tab", { name: "Normes" }).click();
+  await member.getByRole("combobox", { name: "Informació del club" }).selectOption("RULES");
   await expect(member.getByRole("heading", { name: "Normes del club" })).toBeVisible();
   await expect(member.getByText(/Actualitzat el 09\/09\/2026/u)).toBeVisible();
   await member.screenshot({

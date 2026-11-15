@@ -107,12 +107,12 @@ test.describe("E11-W06: the audit's fixes on the members' app (375 px)", () => {
     const alert = page.getByRole("alert");
     await expect(alert).toContainText("No s'ha pogut carregar la informació.");
     await shot(page, "50-30-info-retry-375.png");
-    // The api answers again: only the retry's new read can replace the error with the tabs.
+    // The api answers again: only the retry's new read can replace the error with the section selector.
     await page.evaluate(() => {
       localStorage.setItem("agilityhub.mockClubPagesBack", "1");
     });
     await page.getByRole("button", { name: "Torna-ho a provar" }).click();
-    await expect(page.getByRole("tab", { name: "FAQ" })).toBeVisible();
+    await expect(page.getByRole("combobox", { name: "Informació del club" })).toHaveValue("faq");
     await expect(alert).toHaveCount(0);
   });
 });

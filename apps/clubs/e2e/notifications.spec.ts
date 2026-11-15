@@ -273,7 +273,7 @@ test.describe("E7-W02 T-11-35 screen 12 «Avisos», push and «Idioma» (S11 R-1
     await login(page);
     await page.goto(`${baseUrl}/perfil`);
     await expect(page.getByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Formació" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Formació", exact: true })).toBeVisible();
     const refused = page.getByText("Activa les notificacions al navegador per rebre-les al mòbil");
     await expect(refused).toHaveCount(0);
     await shot(page, "12-avisos-375.png");
@@ -384,11 +384,11 @@ test.describe("E7-W02 T-11-36 screen 30 «Info» (S11 R-11-14, S05 R-05-22)", ()
     await shot(page, "30-info-375.png");
   });
 
-  test("a club without FAQ keeps «Info» for its pages, with no FAQ tab", async ({ page }) => {
+  test("a club without FAQ keeps «Info» for its pages, with no FAQ option", async ({ page }) => {
     await login(page, "faqOff");
     await page.goto(`${baseUrl}/info`);
-    await expect(page.getByRole("tab", { name: "Normes" })).toBeVisible();
-    await expect(page.getByRole("tab", { name: "FAQ" })).toHaveCount(0);
+    await expect(page.getByRole("combobox", { name: "Informació del club" })).toHaveValue("RULES");
+    await expect(page.getByRole("option", { name: "FAQ" })).toHaveCount(0);
   });
 });
 

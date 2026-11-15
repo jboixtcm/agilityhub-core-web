@@ -162,7 +162,12 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
       ["Avui", "Classes del dia", "today"],
       ["Info", "Info", "info"],
     ] as const) {
-      await nav.getByRole("link", { name: label, exact: true }).click();
+      if (screen === "info") {
+        await nav.getByRole("link", { name: "Perfil", exact: true }).click();
+        await page.getByRole("link", { name: "Informació del club" }).click();
+      } else {
+        await nav.getByRole("link", { name: label, exact: true }).click();
+      }
       await expect(page.getByRole("heading", { name: title, exact: true })).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
         width,

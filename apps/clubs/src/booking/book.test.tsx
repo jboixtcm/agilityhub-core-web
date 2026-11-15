@@ -9,7 +9,12 @@ import { apiClient, canic, renderApp, renderPage, setupBookingWorld, without } f
 
 setupBookingWorld();
 
-const rows = () => [...document.querySelectorAll<HTMLElement>(".class-row")];
+// These original cases exercise the available-class states. Reserved rows have separate coverage.
+const rows = () => [
+  ...document.querySelectorAll<HTMLElement>(
+    '.class-row:not([data-bookable-state="RESERVED"]):not([data-bookable-state="PAYMENT_PENDING"])',
+  ),
+];
 const clean = (value: string | null | undefined) => (value ?? "").replace(/\s+/gu, " ").trim();
 
 /** «{date · time · description} | {visible badge}[ | {screen-reader badge}]» of a 04 row. */

@@ -196,6 +196,16 @@ export function supportMe(expiresAt: string): Me {
 const productBranding = brandingProduct as Branding;
 
 const scenarios = {
+  competitionMember: {
+    branding: { ...canic, modules: [...canic.modules, "STATS"] },
+    me: meMember as Me,
+    sessions: accountSessions,
+  },
+  competitionAdmin: {
+    branding: { ...canic, modules: [...canic.modules, "STATS"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
   /** D19 on the product host, light (the product's own theme). */
   platform: {
     branding: productBranding,

@@ -436,6 +436,7 @@
   font: inherit;
   font-size: 0.78rem;
   text-align: left;
+  text-decoration: none;
 }
 
 button.class-row__body {
@@ -697,4 +698,21 @@ button.confirm-option {
   align-items: center;
   gap: var(--ah-space-3);
   padding-block: var(--ah-space-1);
+}
+
+/* Reserve: dog tabs stay reachable while the page scrolls, including wrapped family dogs. */
+@media (max-width: 47.999rem) {
+  .clubs-shell__content:has(.booking-screen--reserve) {
+    overflow: visible;
+  }
+
+  .booking-screen__dog-tabs {
+    position: sticky;
+    z-index: 20;
+    top: 0;
+    margin-inline: calc(-1 * var(--ah-space-3));
+    padding: calc(var(--ah-space-2) + env(safe-area-inset-top)) var(--ah-space-3) var(--ah-space-2);
+    background: var(--ah-color-background);
+    border-bottom: 1px solid var(--ah-color-border);
+  }
 }

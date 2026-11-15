@@ -18,6 +18,7 @@
     "retry": "Torna-ho a provar"
   },
   "list": {
+    "reserved": "Reservada",
     "freeSeats": "{count, plural, one {# plaça} other {# places}}",
     "full": "Completa",
     "waitlistFull": "{waiting}/{max}",

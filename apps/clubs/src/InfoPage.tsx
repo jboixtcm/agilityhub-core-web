@@ -7,8 +7,8 @@ import {
   ErrorState,
   Icon,
   LimitedMarkdown,
+  Select,
   Skeleton,
-  Tabs,
   useBranding,
 } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
@@ -181,9 +181,14 @@ export function InfoPage({ client }: { client: ApiClient }) {
   const selectedValue = tabItems.some((item) => item.value === selected)
     ? selected
     : (tabItems[0]?.value ?? "");
+  const selectedItem = tabItems.find((item) => item.value === selectedValue);
 
   return (
     <section className="info-page">
+      <a className="info-page__back" href="/perfil">
+        <Icon aria-hidden="true" name="chev" />
+        {t("shell:nav.profile")}
+      </a>
       <h1>{t("shell:nav.info")}</h1>
       {loading ? <Skeleton label={t("shell:info.loading")} /> : null}
       {failed ? (
@@ -207,12 +212,25 @@ export function InfoPage({ client }: { client: ApiClient }) {
         <EmptyState title={t("shell:info.empty")} />
       ) : null}
       {!loading && !failed && tabItems.length > 0 ? (
-        <Tabs
-          items={tabItems}
-          label={t("shell:info.tabs")}
-          onValueChange={setSelected}
-          value={selectedValue}
-        />
+        <>
+          <label className="info-page__selector">
+            <span>{t("shell:info.tabs")}</span>
+            <Select
+              aria-controls="info-content"
+              onChange={(event) => {
+                setSelected(event.target.value);
+              }}
+              value={selectedValue}
+            >
+              {tabItems.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
+            </Select>
+          </label>
+          <div id="info-content">{selectedItem?.content}</div>
+        </>
       ) : null}
     </section>
   );

@@ -18,6 +18,7 @@
     "retry": "Try again"
   },
   "list": {
+    "reserved": "Booked",
     "freeSeats": "{count, plural, one {# place} other {# places}}",
     "full": "Full",
     "waitlistFull": "{waiting}/{max}",

@@ -111,8 +111,10 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await shot(page, "03-inici-375.png");
     await openReserve(page);
     await expect(page.getByText("Pack 10 — amb la Duna")).toBeVisible();
-    await expect(page.locator(".class-row")).toHaveCount(6);
-    await expect(page.locator(".class-row").nth(2).getByRole("button")).toHaveCount(0);
+    await expect(page.locator(".class-row")).toHaveCount(7);
+    await expect(
+      page.locator('.class-row[data-bookable-state="WAITLIST_FULL"]').getByRole("button"),
+    ).toHaveCount(0);
     // E7-W07 step 6 (ruling E85): mockup 04 draws «ds 8» as «Límit setmanal», but Duna is at 1 of
     // 2 with Monday 3 swappable, so the api sends a normal row (R-08-03); the done world shows it.
     await expect(page.locator(".class-row").filter({ hasText: "ds 8 · 9:00" })).toContainText(
@@ -313,6 +315,8 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await page.getByRole("link", { name: "Reservar" }).click();
     await expect(page.getByRole("heading", { name: "Clases" })).toBeVisible();
     await expect(page.getByText("Pack 10 — con Duna")).toBeVisible();
-    await expect(page.locator(".class-row").first()).toContainText("2 plazas");
+    await expect(page.locator('.class-row[data-bookable-state="BOOKABLE"]').first()).toContainText(
+      "2 plazas",
+    );
   });
 });

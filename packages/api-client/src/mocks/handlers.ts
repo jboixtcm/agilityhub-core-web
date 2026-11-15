@@ -22,6 +22,7 @@ import {
 } from "./billing-handlers";
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
+import { competitionHandlers } from "./competition-handlers";
 import {
   consoleHandlers,
   isSupportToken,
@@ -1603,7 +1604,14 @@ function clubMemberPreferences(): NotificationPreferences {
   };
 }
 
+export {
+  competitionFixture,
+  competitionPreviewFixture,
+  resetCompetitionMockState,
+} from "./competition-handlers";
+
 export const handlers = [
+  ...competitionHandlers,
   ...adminMemberActionHandlers,
   ...familyGroupHandlers,
   // S17 D19 (E10-W01): the platform console's `/platform/*` world.

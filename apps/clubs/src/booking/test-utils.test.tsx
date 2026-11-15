@@ -10,7 +10,9 @@ setupBookingWorld();
 async function openSwapConfirmation(scenario: "bookingLimit" | "bookingLimitDone") {
   await renderApp("/reservar", { scenario });
   await screen.findByRole("heading", { name: "Classes" });
-  const row = document.querySelectorAll<HTMLElement>(".class-row")[3];
+  const row = document.querySelectorAll<HTMLElement>(
+    '.class-row:not([data-bookable-state="RESERVED"]):not([data-bookable-state="PAYMENT_PENDING"])',
+  )[3];
   fireEvent.click(within(row ?? document.body).getByRole("button"));
   await screen.findByRole("heading", { name: "Confirmar reserva" });
 }

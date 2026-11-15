@@ -94,6 +94,7 @@ import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
  * course lines) never suspends and hides it again under the shell's loading state. They load
  * alongside the chunk; one that fails only leaves its keys, as before.
  */
+const CompetitionStatisticsPage = lazy(() => import("./statistics/CompetitionStatisticsPage"));
 const screens = () =>
   Promise.all([
     import("./screens"),
@@ -481,7 +482,9 @@ export function MobileNavigation({
         label: t("shell:nav.students"),
       },
       {
-        active: ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path)),
+        active: ["/perfil", "/gossos", "/dades", "/info"].some((path) =>
+          matchesPath(pathname, path),
+        ),
         href: "/perfil",
         icon: "user",
         label: t("shell:nav.profile"),
@@ -510,7 +513,6 @@ export function MobileNavigation({
         }
       : { href: "/avui", icon: "day", id: "today", label: t("shell:nav.today") },
     { href: "/perfil", icon: "user", id: "profile", label: t("shell:nav.profile") },
-    { href: "/info", icon: "info", id: "info", label: t("shell:nav.info") },
   ];
   const items = definitions
     .filter((item) => isModuleUiItemEnabled(modules, "tabs", item.id))
@@ -519,7 +521,7 @@ export function MobileNavigation({
     .map((item) => ({
       active:
         item.id === "profile"
-          ? ["/perfil", "/gossos", "/dades"].some((path) => matchesPath(pathname, path))
+          ? ["/perfil", "/gossos", "/dades", "/info"].some((path) => matchesPath(pathname, path))
           : item.id === "home"
             ? // Mockups 25 and 11: the history and the notifications are reached from 03, and
               // «Inici» stays lit.
@@ -1697,6 +1699,14 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
           <span>{t("auth:profile.dogs")}</span>
           <Icon aria-hidden="true" name="chev" />
         </a>
+        {(impersonated || me.membership.roles.includes("MEMBER")) &&
+        isModuleUiItemEnabled(branding.modules, "menuEntries", "competition-statistics") ? (
+          <a href="/estadistiques">
+            <Icon aria-hidden="true" name="clipboard" />
+            <span>{t("shell:nav.competitionStatistics")}</span>
+            <Icon aria-hidden="true" name="chev" />
+          </a>
+        ) : null}
         {learnLink ? (
           <a href="https://learn.agilitydoghub.com" rel="noopener noreferrer" target="_blank">
             <Icon aria-hidden="true" name="link" />
@@ -1704,6 +1714,11 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
+        <a href="/info">
+          <Icon aria-hidden="true" name="info" />
+          <span>{t("shell:info.tabs")}</span>
+          <Icon aria-hidden="true" name="chev" />
+        </a>
         {impersonated ? null : (
           <button
             onClick={() => {
@@ -2238,6 +2253,12 @@ function AppContent({
           key={pathname}
         />
       </InstructorRoute>
+    ) : pathname === "/estadistiques" ? (
+      <RequireModule module="STATS">
+        <MemberSelfServiceRoute>
+          <CompetitionStatisticsPage client={apiClient} />
+        </MemberSelfServiceRoute>
+      </RequireModule>
     ) : pathname === "/historic" ? (
       // Screen 25 (S10 §2).
       <MemberHistoryRoute client={apiClient} />

@@ -33,6 +33,7 @@ export const namespaces = [
   "shell",
   "signup",
   "training",
+  "statistics",
   "errors",
 ] as const;
 

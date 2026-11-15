@@ -22,7 +22,7 @@ import "./booking.css";
 import { DogChips } from "./DogChips";
 import {
   type BookableClass,
-  type BookableClasses,
+  type BookingListClass,
   errorText,
   localParts,
   noticeText,
@@ -61,10 +61,15 @@ function Hourglass() {
 
 /** The badge of a row by the api's `state` (R-08-03), with the price when SINGLE_CLASS sells it. */
 function rowBadge(
-  row: BookableClass,
+  row: BookingListClass,
   t: Translate,
   money: (amount: { amountMinor: number; currency: string }) => string,
 ): { content: ReactNode; label?: string; tone: Tone } | undefined {
+  if ("bookingId" in row) {
+    return row.state === "PAYMENT_PENDING"
+      ? { content: t("enums:reservationState.PAYMENT_PENDING"), tone: "warning" }
+      : { content: t("booking:list.reserved"), tone: "success" };
+  }
   let badge: { content: ReactNode; label?: string; tone: Tone } | undefined;
   const waiting = row.waiting ?? 0;
   switch (row.state) {
@@ -143,7 +148,8 @@ function rowBadge(
  * Screen 04 «Reservar» (`/reservar`, S08 §2): one dog always (the api's proposed one first), its
  * pack, the booking block banner, the S07 activities of that dog and the class rows with the
  * mockup's badges. A row does what its `state` says (R-08-03): a seat hold → 06/29, the waiting
- * list dialog, or nothing. Nothing is computed here: weeks, limits and states are the api's.
+ * list dialog, or nothing. Existing bookings link to their detail; availability and limits
+ * remain the api's decisions.
  */
 export function BookPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["booking", "home", "enums", "errors", "shell"]);
@@ -155,7 +161,7 @@ export function BookPage({ client }: { client: ApiClient }) {
     const requested = new URLSearchParams(window.location.search).get("dogId");
     return requested === null || requested === "" ? null : requested;
   });
-  const view = useBookableClasses(client, dogId);
+  const view = useBookableClasses(client, dogId, branding.timeZone);
   const [pending, setPending] = useState<string>();
   const [joining, setJoining] = useState<BookableClass>();
   const [joinError, setJoinError] = useState<string>();
@@ -165,7 +171,7 @@ export function BookPage({ client }: { client: ApiClient }) {
 
   if (view.status === "loading") {
     return (
-      <section className="booking-screen">
+      <section className="booking-screen booking-screen--reserve">
         {bar}
         <Skeleton height="16rem" label={t("booking:classes.loading")} />
       </section>
@@ -174,7 +180,7 @@ export function BookPage({ client }: { client: ApiClient }) {
   if (view.status === "error") {
     const error = view.error;
     return (
-      <section className="booking-screen">
+      <section className="booking-screen booking-screen--reserve">
         {bar}
         <Card className="booking-error" role="alert">
           <p>{t("booking:classes.error")}</p>
@@ -193,7 +199,7 @@ export function BookPage({ client }: { client: ApiClient }) {
     );
   }
 
-  const data: BookableClasses = view.data;
+  const data = view.data;
   const dog = data.dog;
   const blocked = data.bookingBlock !== null && data.bookingBlock !== undefined;
   const busy = pending !== undefined || (dogId !== null && dogId !== dog.id);
@@ -251,7 +257,7 @@ export function BookPage({ client }: { client: ApiClient }) {
   const packState = data.pack?.state;
   const packTone: Tone = packState === "EXPIRED" || packState === "EMPTY" ? "danger" : "warning";
   return (
-    <section className="booking-screen">
+    <section className="booking-screen booking-screen--reserve">
       {bar}
       {notice === undefined ? null : (
         <Toast
@@ -264,15 +270,17 @@ export function BookPage({ client }: { client: ApiClient }) {
           {noticeText(t, notice)}
         </Toast>
       )}
-      <DogChips
-        disabled={pending !== undefined}
-        dogs={data.dogs}
-        onSelect={(next) => {
-          if (next !== null) setDogId(next);
-        }}
-        selected={dogId ?? dog.id}
-        withAll={false}
-      />
+      <div className="booking-screen__dog-tabs">
+        <DogChips
+          disabled={pending !== undefined}
+          dogs={data.dogs}
+          onSelect={(next) => {
+            if (next !== null) setDogId(next);
+          }}
+          selected={dogId ?? dog.id}
+          withAll={false}
+        />
+      </div>
       {data.pack === null ||
       data.pack === undefined ||
       !branding.modules.includes("PACKS") ? null : (
@@ -328,7 +336,8 @@ export function BookPage({ client }: { client: ApiClient }) {
           data.classes.map((row) => {
             const start = localParts(row.startsAtLocal);
             const badge = rowBadge(row, t, formats.formatMoneyMinor);
-            const canTap = actionable(row, blocked);
+            const reserved = "bookingId" in row;
+            const canTap = reserved || actionable(row, blocked);
             const content = (
               <>
                 <span
@@ -368,12 +377,24 @@ export function BookPage({ client }: { client: ApiClient }) {
             return (
               <Card
                 className={`class-row class-row--${row.state.toLowerCase().replaceAll("_", "-")}${canTap ? "" : " class-row--inert"}`}
-                // Stable hooks for the real-core E2E (E5-W04): the api's class and row state.
+                // Stable class identity and displayed state for the booking-flow E2E.
                 data-bookable-state={row.state}
                 data-class-id={row.id}
                 key={row.id}
               >
-                {canTap ? (
+                {reserved ? (
+                  <a
+                    aria-disabled={busy || undefined}
+                    className="class-row__body"
+                    href={`/reserves/${encodeURIComponent(row.bookingId)}`}
+                    onClick={(event) => {
+                      if (busy) event.preventDefault();
+                    }}
+                    tabIndex={busy ? -1 : undefined}
+                  >
+                    {content}
+                  </a>
+                ) : canTap ? (
                   <button
                     className="class-row__body"
                     disabled={busy}
