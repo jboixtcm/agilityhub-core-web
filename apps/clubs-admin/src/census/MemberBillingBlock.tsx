@@ -24,7 +24,6 @@ import { DisputeMark } from "../billing/DisputeMark";
 import { clubToday } from "../billing/shared";
 
 import { PackConsumptionCorrection } from "./PackConsumptionCorrection";
-
 import { isRefundable, UpfrontRefundModal } from "./UpfrontRefundModal";
 
 type Dog = components["schemas"]["MemberOverview"]["dogs"][number];

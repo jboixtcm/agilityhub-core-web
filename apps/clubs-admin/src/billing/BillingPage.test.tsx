@@ -2818,7 +2818,7 @@ describe("SEPA-05 (S12 R-12-12, decision of 13 Nov 2026): D6 chooses the collect
     const field = within(dialog).getByLabelText("Data de cobrament");
     expect(field).toHaveValue("2026-09-01");
     expect(field).toHaveAccessibleDescription(
-      "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
+      "Tria un dia hàbil bancari (TARGET) que respecti el termini de presentació SEPA configurat pel club.",
     );
     fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
     await confirmTwice();

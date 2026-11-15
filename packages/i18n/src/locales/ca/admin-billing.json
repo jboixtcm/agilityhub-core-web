@@ -73,7 +73,7 @@
     "undoSubmission": "Desfés «enviada»",
     "undoingSubmission": "Desfent…",
     "collectionDate": "Data de cobrament",
-    "collectionDateHelp": "Un dia hàbil bancari (TARGET), com a mínim dos dies hàbils després d'avui.",
+    "collectionDateHelp": "Tria un dia hàbil bancari (TARGET) que respecti el termini de presentació SEPA configurat pel club.",
     "collectionDateNotBusinessDay": "El {date} no és un dia hàbil bancari (TARGET): el següent és el {next}.",
     "comparison": "Respecte del mes anterior ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
     "comparisonAmount": "Respecte del mes anterior ({previousMonth}: {previousTotal}): {difference}.",

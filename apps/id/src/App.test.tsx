@@ -649,7 +649,11 @@ describe("PRIV-01 (decision of 13 Nov 2026): apps/id serves the platform's priva
       await screen.findByRole("heading", { level: 1, name: "Política de privacitat" }),
     ).toBeVisible();
     expect(screen.queryByRole("heading", { name: "Pàgina no trobada" })).toBeNull();
-    expect(screen.getByText(`Versió ${PRIVACY_POLICY_VERSION}`)).toBeVisible();
+    expect(
+      screen.getByText(
+        `Versió ${PRIVACY_POLICY_VERSION} · En vigor des del 15 de novembre del 2026`,
+      ),
+    ).toBeVisible();
     expect(
       screen.getByRole("heading", { level: 2, name: "1. Qui és el responsable del tractament" }),
     ).toBeVisible();
@@ -670,7 +674,11 @@ describe("PRIV-01 (decision of 13 Nov 2026): apps/id serves the platform's priva
     expect(
       await screen.findByRole("heading", { level: 1, name: "Política de privacidad" }),
     ).toBeVisible();
-    expect(screen.getByText(`Versión ${PRIVACY_POLICY_VERSION}`)).toBeVisible();
+    expect(
+      screen.getByText(
+        `Versión ${PRIVACY_POLICY_VERSION} · En vigor desde el 15 de noviembre de 2026`,
+      ),
+    ).toBeVisible();
     expect(
       screen.getByRole("heading", { level: 2, name: "1. Quién es el responsable del tratamiento" }),
     ).toBeVisible();

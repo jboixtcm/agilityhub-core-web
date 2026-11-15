@@ -73,7 +73,7 @@
     "undoSubmission": "Deshacer «enviada»",
     "undoingSubmission": "Deshaciendo…",
     "collectionDate": "Fecha de cobro",
-    "collectionDateHelp": "Un día hábil bancario (TARGET), como mínimo dos días hábiles después de hoy.",
+    "collectionDateHelp": "Elige un día hábil bancario (TARGET) que respete el plazo de presentación SEPA configurado por el club.",
     "collectionDateNotBusinessDay": "El {date} no es un día hábil bancario (TARGET): el siguiente es el {next}.",
     "comparison": "Respecto al mes anterior ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
     "comparisonAmount": "Respecto al mes anterior ({previousMonth}: {previousTotal}): {difference}.",

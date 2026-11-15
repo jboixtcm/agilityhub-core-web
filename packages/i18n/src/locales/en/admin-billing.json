@@ -73,7 +73,7 @@
     "undoSubmission": "Undo “sent”",
     "undoingSubmission": "Undoing…",
     "collectionDate": "Collection date",
-    "collectionDateHelp": "A TARGET banking business day, at least two business days after today.",
+    "collectionDateHelp": "Choose a TARGET banking business day that meets the club’s configured SEPA submission lead time.",
     "collectionDateNotBusinessDay": "{date} is not a TARGET banking business day: the next one is {next}.",
     "comparison": "Compared with the previous month ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
     "comparisonAmount": "Compared with the previous month ({previousMonth}: {previousTotal}): {difference}.",
