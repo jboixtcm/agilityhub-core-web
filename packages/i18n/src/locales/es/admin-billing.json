@@ -341,6 +341,7 @@
     "loadError": "No se han podido cargar los eventos de Stripe."
   },
   "errors": {
+    "sepaGenerationPaused": "La generación de remesas SEPA está en pausa. Puedes seguir simulando el mes mientras el club valida los mandatos.",
     "loadRun": "No se ha podido actualizar el estado de los cobros.",
     "billingBusy": "Hay una generación en curso. Vuelve a intentarlo dentro de unos minutos.",
     "simulationStale": "Ha habido cambios desde la última simulación. Vuelve a simular el mes.",

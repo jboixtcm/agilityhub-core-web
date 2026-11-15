@@ -339,6 +339,8 @@ export function GenerateModal({
                   earliest: dateOf(details.earliest),
                   requested: dateOf(details.requested),
                 })
+              ) : code === "SEPA_NOT_CONFIGURED" && details.reason === "GENERATION_PAUSED" ? (
+                t("admin-billing:errors.sepaGenerationPaused")
               ) : code === "SEPA_NOT_CONFIGURED" ? (
                 <>
                   {t("admin-billing:errors.sepaNotConfigured")}{" "}

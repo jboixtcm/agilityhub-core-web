@@ -341,6 +341,7 @@
     "loadError": "The Stripe events could not be loaded."
   },
   "errors": {
+    "sepaGenerationPaused": "SEPA remittance generation is paused. You can still simulate the month while the club verifies its mandates.",
     "loadRun": "The card charge status could not be refreshed.",
     "billingBusy": "A generation is in progress. Try again in a few minutes.",
     "simulationStale": "There have been changes since the last simulation. Simulate the month again.",

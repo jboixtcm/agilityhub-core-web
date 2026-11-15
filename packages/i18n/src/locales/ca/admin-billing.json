@@ -341,6 +341,7 @@
     "loadError": "No s'han pogut carregar els esdeveniments de Stripe."
   },
   "errors": {
+    "sepaGenerationPaused": "La generació de remeses SEPA està en pausa. Pots continuar simulant el mes mentre el club valida els mandats.",
     "loadRun": "No s'ha pogut actualitzar l'estat dels cobraments.",
     "billingBusy": "Hi ha una generació en curs. Torna-ho a provar d'aquí a uns minuts.",
     "simulationStale": "Hi ha hagut canvis des de l'última simulació. Torna a simular el mes.",
