@@ -1,24 +1,10 @@
 import { isApiError } from "@agilityhub/api-client";
 import { type AccountSession, type AuthClient, useSession } from "@agilityhub/auth";
+import { LOCALE_STORAGE_KEY, productLocales, type Locale } from "@agilityhub/i18n";
+import { Badge, Button, Card, Icon, Input, Modal, PasswordInput, Select } from "@agilityhub/ui";
 import {
-  formatPlainDate,
-  LOCALE_STORAGE_KEY,
-  normalizeLocale,
-  productLocales,
-  type Locale,
-} from "@agilityhub/i18n";
-import {
-  Badge,
-  Button,
-  Card,
-  Icon,
-  Input,
-  LimitedMarkdown,
-  Modal,
-  PasswordInput,
-  Select,
-} from "@agilityhub/ui";
-import {
+  lazy,
+  Suspense,
   type ReactNode,
   type SyntheticEvent,
   useCallback,
@@ -29,7 +15,9 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { PRIVACY_POLICY, type PrivacyPolicy } from "./privacy/privacy-policy";
+import { PageIntro } from "./PageIntro";
+
+const PrivacyPage = lazy(() => import("./privacy/PrivacyPage"));
 
 type Navigate = (destination: string) => void;
 type Translate = ReturnType<typeof useTranslation>["t"];
@@ -256,15 +244,6 @@ function IdShell({ authClient, children }: { authClient: AuthClient; children: R
       </header>
       {children}
       <footer className="id-footer">{t("id:footer.security")}</footer>
-    </div>
-  );
-}
-
-function PageIntro({ description, title }: { description: string; title: string }) {
-  return (
-    <div className="id-page__intro">
-      <h1>{title}</h1>
-      <p>{description}</p>
     </div>
   );
 }
@@ -1039,32 +1018,6 @@ function NotFoundPage() {
   );
 }
 
-/**
- * PRIV-01: the platform's privacy policy (S01 §2, `apps/id` `/privacy`) in the language the page
- * shows, from its versioned content file. Public: the onboarding consent links it.
- */
-export function PrivacyPage({ policy = PRIVACY_POLICY }: { policy?: PrivacyPolicy }) {
-  const { i18n, t } = useTranslation("id");
-  const locale = normalizeLocale(i18n.resolvedLanguage);
-  const description =
-    policy.effectiveDate === null
-      ? t("id:privacy.version", { version: policy.version })
-      : t("id:privacy.versionAndDate", {
-          date: formatPlainDate(policy.effectiveDate, locale, "long"),
-          version: policy.version,
-        });
-  return (
-    <main className="id-page id-page--narrow">
-      <div className="id-page__wide">
-        <PageIntro description={description} title={t("id:privacy.title")} />
-        <Card className="id-content-card">
-          <LimitedMarkdown>{policy.text[locale]}</LimitedMarkdown>
-        </Card>
-      </div>
-    </main>
-  );
-}
-
 export function App({
   authClient,
   navigate = defaultNavigate,
@@ -1115,7 +1068,11 @@ export function App({
   } else if (pathname === "/logout") {
     page = <LogoutPage authClient={authClient} navigate={navigate} />;
   } else if (pathname === "/privacy") {
-    page = <PrivacyPage />;
+    page = (
+      <Suspense fallback={<main aria-busy="true" />}>
+        <PrivacyPage />
+      </Suspense>
+    );
   } else {
     page = <NotFoundPage />;
   }

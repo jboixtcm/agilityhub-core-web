@@ -6,8 +6,9 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-li
 import { I18nextProvider } from "react-i18next";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { App, oidcContinuation, PrivacyPage } from "./App";
+import { App, oidcContinuation } from "./App";
 import { PRIVACY_POLICY, PRIVACY_POLICY_VERSION } from "./privacy/privacy-policy";
+import PrivacyPage from "./privacy/PrivacyPage";
 
 type Me = components["schemas"]["Me"];
 
