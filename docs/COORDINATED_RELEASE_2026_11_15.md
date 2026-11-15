@@ -9,3 +9,7 @@ Local checks on the integrated web passed: all 38 lint/typecheck/test/build task
 The existing 2 MB public request limit remains in place. Import preview checks the complete JSON envelope before sending escaped saved content; oversized sources can be fetched through the provider URL instead. This is covered by T-STATS-33. Flow server authentication still requires a privately provisioned provider session and real-provider validation.
 
 Operational evidence and final deployment readback are maintained under `SOFTWARE_CANIC/ops/evidence/2026-11-15-joint-release/`. This source note does not claim that deployment or provider activation has already occurred. The SEPA generation and activity-publication email holds, published privacy policy, PWA configuration and existing live data must be preserved.
+
+## Complete CI time allowance
+
+Official main run 43758611222 was cancelled at the 45-minute job limit: cold frontend checks took about 12 minutes, then the four course cases, 188 member cases and identity case passed. The 237 administration cases were still progressing without reported failures when the job expired. Increase only the job time allowance to 75 minutes; assertions, individual test timeouts, browser coverage and two-worker execution remain unchanged. Deployment still requires the entire job and production-bundle job to succeed.
