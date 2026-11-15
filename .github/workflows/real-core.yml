@@ -31,7 +31,7 @@ jobs:
       CORE_IMAGE: ${{ vars.DEPLOYED_CORE_IMAGE }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check the deployed api image is named
         run: |
