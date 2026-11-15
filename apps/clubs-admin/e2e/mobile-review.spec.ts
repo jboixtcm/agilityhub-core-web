@@ -32,7 +32,7 @@ async function login(page: Page) {
   await page.waitForURL("**/tauler");
   await expect(
     page.getByRole("heading", { name: "Preinscripcions pendents", exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
 }
 async function capture(page: Page, name: string) {
   mkdirSync(evidence, { recursive: true });

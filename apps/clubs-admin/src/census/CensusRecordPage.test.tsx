@@ -106,6 +106,34 @@ describe("Assigned access roles", () => {
     expect(link).toHaveAttribute("href", "/gossos/dog-duna");
   });
 
+  it("WEB-05: the Gossos block shows a dog's thumbnail, and the photo of a dog without one", async () => {
+    const photoUrl = "/api/v1/attachments/files/photo?expires=10&signature=example";
+    const thumbnailUrl = "/api/v1/attachments/files/thumbnail?expires=10&signature=example";
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({
+          ...overview,
+          dogs: overview.dogs.map((dog, index) => ({
+            ...dog,
+            photoUrl,
+            ...(index === 0 ? { photoThumbnailUrl: thumbnailUrl } : {}),
+          })),
+        });
+      }),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const links = [...document.querySelectorAll<HTMLAnchorElement>(".census-record__dog-link")];
+    expect(links.length).toBeGreaterThan(1);
+    expect(links.map((link) => link.querySelector("img")?.getAttribute("src"))).toEqual([
+      thumbnailUrl,
+      ...links.slice(1).map(() => photoUrl),
+    ]);
+  });
+
   it("shows only assigned roles while retaining the existing role editor", async () => {
     const { client } = await renderRecord("member");
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
@@ -582,6 +610,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
   const changeButtons = [
     "Edita",
     "Envia la benvinguda",
+    "Canvia l'adreça d'accés",
     "Entra com l'abonat",
     "Bloqueja les reserves",
     "Desbloqueja les reserves",
@@ -747,6 +776,26 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
         return dialog;
       },
       submit: "Envia la benvinguda",
+      unchanged: () => undefined,
+    },
+    {
+      method: "post",
+      name: "«Canvia l'adreça d'accés» (POST /members/{id}/login-email, AUTH-02)",
+      path: "/members/:id/login-email",
+      saved: /S'ha sol·licitat l'enllaç de confirmació/u,
+      send: () => {
+        headerAction("Canvia l'adreça d'accés");
+        const drawer = screen.getByRole("dialog", { name: "Canvia l'adreça d'accés" });
+        fireEvent.change(within(drawer).getByLabelText("Adreça nova"), {
+          target: { value: "laura.nova@example.test" },
+        });
+        fireEvent.click(
+          within(drawer).getByRole("button", { name: "Envia l'enllaç de confirmació" }),
+        );
+        fireEvent.click(screen.getByRole("button", { name: "Envia l'enllaç" }));
+        return drawer;
+      },
+      submit: "Envia l'enllaç de confirmació",
       unchanged: () => undefined,
     },
     {
@@ -1142,6 +1191,67 @@ describe("T-03-38 dog record", () => {
     expect(await screen.findByText("El gos s'ha reactivat.")).toBeVisible();
     expect(screen.getByText("actiu")).toBeVisible();
   });
+
+  it("WEB-05: «Canvia la foto» uploads the photo reduced in the browser (1600 px, JPEG, never WebP)", async () => {
+    // jsdom decodes and draws nothing: a 3024 × 4032 portrait and a canvas that encodes WebP and
+    // JPEG; the reduced photo is asked as JPEG, the type the api makes the lists' thumbnail from.
+    vi.stubGlobal(
+      "createImageBitmap",
+      vi.fn(() => Promise.resolve({ close: vi.fn(), height: 4032, width: 3024 })),
+    );
+    const context = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+      () =>
+        ({
+          drawImage: vi.fn(),
+          fillRect: vi.fn(),
+          fillStyle: "",
+          imageSmoothingQuality: "low",
+        }) as never,
+    );
+    const drawn: string[] = [];
+    const encode = vi.spyOn(HTMLCanvasElement.prototype, "toBlob").mockImplementation(function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type,
+    ) {
+      drawn.push(`${String(this.width)}×${String(this.height)} ${type ?? ""}`);
+      callback(new Blob(["reduced"], { type: type ?? "image/png" }));
+    });
+    const grants: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method !== "POST" || !request.url.endsWith("/attachments/upload-url")) return;
+      void request
+        .clone()
+        .json()
+        .then((body: unknown) => {
+          grants.push(body);
+        });
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+      context.mockRestore();
+      encode.mockRestore();
+      vi.unstubAllGlobals();
+    });
+
+    await renderRecord("dog");
+    await screen.findByRole("heading", { name: "Duna" });
+    fireEvent.click(screen.getByRole("button", { name: "Canvia la foto" }));
+    const dialog = screen.getByRole("dialog", { name: "Foto del gos" });
+    fireEvent.change(within(dialog).getByLabelText("Fitxer d'imatge"), {
+      target: {
+        files: [new File(["a 4 MB camera picture"], "duna.jpeg", { type: "image/jpeg" })],
+      },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Canvia la foto" }));
+
+    expect(await screen.findByText("La foto s'ha actualitzat.")).toBeVisible();
+    expect(drawn).toEqual(["1200×1600 image/jpeg"]);
+    expect(grants).toEqual([
+      { fileName: "duna.jpg", mimeType: "image/jpeg", purpose: "DOG_PHOTO", sizeBytes: 7 },
+    ]);
+  });
 });
 
 describe("E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission", () => {
@@ -1535,6 +1645,8 @@ describe("T-03-28 manual family management", () => {
     expect(actionLabels).toEqual([
       "Edita",
       "Envia la benvinguda",
+      // AUTH-02 (decision of 13 Nov 2026): the login e-mail change, beside the welcome.
+      "Canvia l'adreça d'accés",
       "Afegir un altre gos",
       "Grup familiar",
       "Fusiona abonats",
@@ -1724,5 +1836,445 @@ describe("T-03-39 November feedback: incomplete member records", () => {
     expect(await screen.findByLabelText("Notes internes")).toHaveValue(
       "Staff note for this member",
     );
+  });
+});
+
+describe("AUTH-02 (S03 R-03-06b, decision of 13 Nov 2026): D10's login e-mail and its change", () => {
+  type MemberLogin = components["schemas"]["MemberLogin"];
+  const current = "laura.serra@example.test";
+  const next = "laura.nova@example.test";
+
+  /** Laura's overview with this `login` (the mock's has no suppression mark). */
+  function serveLogin(login: MemberLogin | null) {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({ ...overview, member: { ...overview.member, login } });
+      }),
+    );
+  }
+
+  function loginRow(): HTMLElement | null {
+    return (
+      screen
+        .queryByText("Adreça d'accés", { selector: "dt" })
+        ?.closest<HTMLElement>(".census-record__data-row") ?? null
+    );
+  }
+
+  /** The requests D10 sends to the login e-mail route while the test runs. */
+  function recordLoginEmailRequests() {
+    const bodies: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "POST" && request.url.endsWith("/login-email")) {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            bodies.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return bodies;
+  }
+
+  function openChange(): HTMLElement {
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Canvia l'adreça d'accés" }));
+    return screen.getByRole("dialog", { name: "Canvia l'adreça d'accés" });
+  }
+
+  function typeAndReview(drawer: HTMLElement, address: string) {
+    fireEvent.change(within(drawer).getByLabelText("Adreça nova"), {
+      target: { value: address },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Envia l'enllaç de confirmació" }));
+  }
+
+  it("shows the account's login e-mail in «Dades i pagament», without a mark while mail reaches it", async () => {
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const row = loginRow();
+    if (row === null) throw new TypeError("D10 has no «Adreça d'accés» row");
+    expect(row).toHaveTextContent(current);
+    expect(within(row).queryByText("rebot")).toBeNull();
+    expect(within(row).queryByText("queixa")).toBeNull();
+  });
+
+  it.each([
+    [
+      "BOUNCED",
+      "rebot",
+      "Aquesta adreça rebota o no existeix: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda.",
+    ],
+    [
+      "COMPLAINED",
+      "queixa",
+      "Des d'aquesta adreça s'ha marcat un correu del club com a correu brossa: no hi arriben els enllaços d'accés, la recuperació de la contrasenya ni la benvinguda.",
+    ],
+  ] as const)(
+    "marks a %s login e-mail «%s» and says what does not reach it",
+    async (emailStatus, mark, help) => {
+      serveLogin({ email: current, emailStatus });
+      await renderRecord("member");
+      await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+      const row = loginRow();
+      if (row === null) throw new TypeError("D10 has no «Adreça d'accés» row");
+      expect(within(row).getByText(mark)).toHaveClass("ah-tone--danger");
+      expect(row).toHaveTextContent(help);
+    },
+  );
+
+  it("shows no row and offers no change without an account's login e-mail", async () => {
+    serveLogin(null);
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    expect(loginRow()).toBeNull();
+    openActions();
+    expect(screen.getByRole("button", { name: "Envia la benvinguda" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Canvia l'adreça d'accés" })).toBeNull();
+  });
+
+  it("sends the new address only once the change is confirmed, then says the link was requested and keeps the current address", async () => {
+    const bodies = recordLoginEmailRequests();
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const drawer = openChange();
+    expect(within(drawer).getByText(current)).toBeVisible();
+    typeAndReview(drawer, next);
+
+    expect(
+      screen.getByText(`Adreça actual: ${current} → adreça nova: ${next}`),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        `S'enviarà un enllaç a ${next}. Fins que l'abonat no l'obri, l'adreça d'accés no canvia.`,
+      ),
+    ).toBeInTheDocument();
+    expect(bodies).toEqual([]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Envia l'enllaç" }));
+    expect(
+      await screen.findByText(
+        `S'ha sol·licitat l'enllaç de confirmació per a ${next}. L'adreça d'accés canviarà quan l'abonat l'obri.`,
+      ),
+    ).toBeVisible();
+    expect(screen.queryByRole("dialog", { name: "Canvia l'adreça d'accés" })).toBeNull();
+    await waitFor(() => {
+      expect(bodies).toEqual([{ email: next }]);
+    });
+    // Nothing changes until the member opens the link.
+    expect(loginRow()).toHaveTextContent(current);
+  });
+
+  it("«Cancel·la» in the confirmation sends nothing and keeps the typed address", async () => {
+    const bodies = recordLoginEmailRequests();
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const drawer = openChange();
+    typeAndReview(drawer, next);
+    const confirmation = screen
+      .getByText(`Adreça actual: ${current} → adreça nova: ${next}`)
+      .closest<HTMLElement>("[role='dialog']");
+    if (confirmation === null) throw new TypeError("No confirmation");
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Cancel·la" }));
+    expect(confirmation).not.toBeInTheDocument();
+    expect(within(drawer).getByLabelText("Adreça nova")).toHaveValue(next);
+    expect(bodies).toEqual([]);
+  });
+
+  it("shows the current address refused at the field (UNCHANGED)", async () => {
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const drawer = openChange();
+    typeAndReview(drawer, current);
+    fireEvent.click(screen.getByRole("button", { name: "Envia l'enllaç" }));
+    const field = within(drawer).getByLabelText("Adreça nova");
+    await waitFor(() => {
+      expect(field).toHaveAttribute("aria-invalid", "true");
+    });
+    expect(within(drawer).getByText("Aquesta ja és l'adreça d'accés actual.")).toBeVisible();
+    expect(screen.queryByText(/S'ha sol·licitat l'enllaç de confirmació/u)).toBeNull();
+  });
+
+  it.each([
+    [
+      "429 RATE_LIMITED with its wait",
+      () =>
+        HttpResponse.json(
+          { code: "RATE_LIMITED", details: { retryAfter: 1800 }, message: "Limited", traceId: "t" },
+          { status: 429 },
+        ),
+      "Massa enviaments seguits. Torna-ho a provar d'aquí a 30 minuts.",
+    ],
+    [
+      "403 FORBIDDEN for an account used outside the club",
+      () =>
+        HttpResponse.json(
+          { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "t" },
+          { status: 403 },
+        ),
+      "Aquest compte també es fa servir fora del club: la seva adreça d'accés no es pot canviar des d'aquí.",
+    ],
+  ])("says why it was refused: %s", async (_name, answer, message) => {
+    server.use(http.post("*/api/v1/members/:id/login-email", answer));
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const drawer = openChange();
+    typeAndReview(drawer, next);
+    fireEvent.click(screen.getByRole("button", { name: "Envia l'enllaç" }));
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent(message);
+    expect(screen.queryByText(/S'ha sol·licitat l'enllaç de confirmació/u)).toBeNull();
+  });
+
+  it("is not offered during a support access (S17 R-17-10)", async () => {
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-census", "errors"],
+      storage: undefined,
+    });
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <MemberRecordPage client={client} id="member-laura" supportAccess />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    expect(loginRow()).toHaveTextContent(current);
+    openActions();
+    expect(screen.getByRole("button", { name: "Envia la benvinguda" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Canvia l'adreça d'accés" })).toBeNull();
+  });
+});
+
+describe("AUTH-03 (S03 R-03-06b, decision of 13 Nov 2026): D10 marks a failed access e-mail", () => {
+  type MemberLogin = components["schemas"]["MemberLogin"];
+  const email = "laura.serra@example.test";
+
+  function serveLogin(login: MemberLogin) {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new Error("Expected member overview");
+        const overview = (await original.json()) as components["schemas"]["MemberOverview"];
+        return HttpResponse.json({ ...overview, member: { ...overview.member, login } });
+      }),
+    );
+  }
+
+  async function loginRow(language = "ca", label = "Adreça d'accés"): Promise<HTMLElement> {
+    // A club that offers the three locales (the Cànic's fixture offers ca and es).
+    await renderRecord(
+      "member",
+      { ...branding, locales: ["ca", "es", "en"] },
+      "member-laura",
+      language,
+    );
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const row = screen
+      .getByText(label, { selector: "dt" })
+      .closest<HTMLElement>(".census-record__data-row");
+    if (row === null) throw new TypeError("D10 has no login row");
+    return row;
+  }
+
+  it("shows no mark while the last access e-mail reached the address", async () => {
+    serveLogin({ accessEmailFailedAt: null, email, emailStatus: null });
+    const row = await loginRow();
+    expect(row).toHaveTextContent(email);
+    expect(within(row).queryByText("enviament fallit")).toBeNull();
+    expect(row).not.toHaveTextContent("L'últim correu d'accés no ha arribat");
+  });
+
+  it("marks the failure with its day in the club's time zone, beside a suppression mark", async () => {
+    // 23:30 UTC on 12 November is already 13 November in Europe/Madrid, the club's zone.
+    serveLogin({ accessEmailFailedAt: "2026-11-12T23:30:00Z", email, emailStatus: "BOUNCED" });
+    const row = await loginRow();
+    expect(within(row).getByText("enviament fallit")).toHaveClass("ah-tone--warning");
+    expect(row).toHaveTextContent(
+      "L'últim correu d'accés no ha arribat (13/11/2026), tampoc en tornar-lo a provar.",
+    );
+    expect(within(row).getByText("rebot")).toHaveClass("ah-tone--danger");
+  });
+
+  it.each([
+    [
+      "es",
+      "Dirección de acceso",
+      "envío fallido",
+      "El último correo de acceso no ha llegado (13/11/2026), tampoco al volver a intentarlo.",
+    ],
+    [
+      "en",
+      "Login email",
+      "delivery failed",
+      "The last sign-in email was not delivered (11/13/2026), not even on a second attempt.",
+    ],
+  ] as const)("reads the mark in %s", async (language, label, mark, help) => {
+    serveLogin({ accessEmailFailedAt: "2026-11-12T23:30:00Z", email, emailStatus: null });
+    const row = await loginRow(language, label);
+    expect(within(row).getByText(mark)).toHaveClass("ah-tone--warning");
+    expect(row).toHaveTextContent(help);
+  });
+});
+
+describe("WEB-01 (decision of 13 Nov 2026): D10's welcome e-mail, manual only and limited per club", () => {
+  function recordWelcomes() {
+    const sent: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "POST" && request.url.endsWith("/access-resend"))
+        sent.push(request.url);
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return sent;
+  }
+
+  it("sends nothing until the ADMIN confirms «Envia la benvinguda», then one request for this member", async () => {
+    const sent = recordWelcomes();
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Envia la benvinguda" }));
+    let dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(sent).toEqual([]);
+
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Envia la benvinguda" }));
+    dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Envia la benvinguda" }));
+    expect(await screen.findByText(/S’ha sol·licitat la benvinguda per a/u)).toBeVisible();
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toMatch(/\/members\/member-laura\/access-resend$/u);
+  });
+
+  it("says in how many minutes to try again when the club's welcome limit is reached (429 RATE_LIMITED)", async () => {
+    server.use(
+      http.post("*/api/v1/members/:id/access-resend", () =>
+        HttpResponse.json(
+          { code: "RATE_LIMITED", details: { retryAfter: 61 }, message: "Limited", traceId: "t" },
+          { headers: { "Retry-After": "61" }, status: 429 },
+        ),
+      ),
+    );
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    openActions();
+    fireEvent.click(screen.getByRole("button", { name: "Envia la benvinguda" }));
+    const dialog = screen.getByRole("dialog", { name: "Envia la benvinguda" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Envia la benvinguda" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Massa enviaments seguits. Torna-ho a provar d'aquí a 2 minuts.",
+    );
+    expect(screen.queryByText(/S’ha sol·licitat la benvinguda per a/u)).toBeNull();
+  });
+});
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» on an ADMIN's level change and payment-method edit", () => {
+  /** The bodies D10 sends with `method` to a path ending in `suffix`. */
+  function recordBodies(method: string, suffix: string): unknown[] {
+    const bodies: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === method && new URL(request.url).pathname.endsWith(suffix)) {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            bodies.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return bodies;
+  }
+
+  async function levelDialog() {
+    await renderRecord("dog");
+    await screen.findByRole("heading", { name: "Duna" });
+    fireEvent.click(screen.getByRole("button", { name: "Canvia el nivell" }));
+    const dialog = screen.getByRole("dialog", { name: "Canvia el nivell" });
+    fireEvent.change(within(dialog).getByLabelText("Nivell nou"), {
+      target: { value: "level-d" },
+    });
+    return dialog;
+  }
+
+  it("the level change offers it ticked; unticked, PATCH /dogs/{id}/level carries notifyMember: false", async () => {
+    const bodies = recordBodies("PATCH", "/level");
+    const dialog = await levelDialog();
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El nivell s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([{ levelId: "level-d", notifyMember: false }]);
+  });
+
+  it("left ticked, the level change is sent as before (the member is notified)", async () => {
+    const bodies = recordBodies("PATCH", "/level");
+    const dialog = await levelDialog();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El nivell s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([{ levelId: "level-d" }]);
+  });
+
+  async function paymentDialog() {
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const row = screen
+      .getByText("Pagament", { selector: "dt" })
+      .closest<HTMLElement>(".census-record__data-row");
+    if (row === null) throw new TypeError("D10 has no «Pagament» row");
+    fireEvent.click(within(row).getByRole("button", { name: "Edita" }));
+    const dialog = screen.getByRole("dialog", { name: "Mètode de pagament" });
+    fireEvent.change(within(dialog).getByLabelText("IBAN nou"), {
+      target: { value: "ES9121000418450200051332" },
+    });
+    return dialog;
+  }
+
+  it("the payment-method edit offers it ticked; unticked, the PATCH carries notifyMember: false", async () => {
+    const bodies = recordBodies("PATCH", "/payment-method");
+    const dialog = await paymentDialog();
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El mètode de pagament s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([
+      {
+        notifyMember: false,
+        sepa: { holderName: "Laura Serra Vidal", iban: "ES9121000418450200051332" },
+        type: "SEPA_DD",
+      },
+    ]);
+  });
+
+  it("left ticked, the payment-method edit is sent as before (the member is notified)", async () => {
+    const bodies = recordBodies("PATCH", "/payment-method");
+    const dialog = await paymentDialog();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("El mètode de pagament s'ha actualitzat.")).toBeVisible();
+    expect(bodies).toEqual([
+      {
+        sepa: { holderName: "Laura Serra Vidal", iban: "ES9121000418450200051332" },
+        type: "SEPA_DD",
+      },
+    ]);
   });
 });

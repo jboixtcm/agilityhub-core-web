@@ -293,6 +293,11 @@
       "configuredSummary": "configurada",
       "last4": "clau pública …{last4}",
       "lastTest": "última prova OK {at}",
+      "liveToTest": {
+        "body": "Aquest club té claus live desades. Passar a mode test fa que els pagaments siguin de prova.",
+        "confirm": "Passa a mode test",
+        "title": "Passar a mode test"
+      },
       "mode": "Mode",
       "modes": {
         "live": "live",

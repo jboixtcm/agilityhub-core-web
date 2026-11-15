@@ -168,6 +168,19 @@
       "MAILBOX_FULL": "Buzón lleno",
       "RATE_LIMITED": "Límite temporal del servidor receptor",
       "TEMPORARY_REJECTION": "Rechazo temporal del servidor receptor"
+    },
+    "resend": {
+      "help": "Este aviso es de un comunicado y el correo no ha llegado. Puedes volver a enviar todos los correos del comunicado que han fallado.",
+      "action": "Reenviar los fallidos",
+      "confirmTitle": "Reenviar los correos fallidos del comunicado",
+      "confirmBody": "Se volverán a enviar ahora todos los correos de este comunicado que han fallado, al ritmo del proveedor. Los correos que ya llegaron, los SMS y los avisos push no se vuelven a enviar.",
+      "confirm": "Reenviar los fallidos",
+      "cancel": "Cancelar",
+      "sending": "Reenviando…",
+      "done": "{count, plural, one {# correo vuelve a la cola: saldrá al ritmo del proveedor.} other {# correos vuelven a la cola: saldrán al ritmo del proveedor.}}",
+      "none": "No hay ningún correo fallido que reenviar.",
+      "notFound": "Este comunicado ya no existe.",
+      "error": "No se han podido reenviar los correos. Vuelve a intentarlo."
     }
   }
 }

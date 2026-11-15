@@ -279,7 +279,8 @@ export function StudentsPage({
                     <DogPhoto
                       name={dog.name ?? ""}
                       size={view === "grid" ? "large" : "small"}
-                      src={dog.photoUrl}
+                      // WEB-05: the thumbnail, else the photo (none for one it cannot reduce).
+                      src={dog.photoThumbnailUrl ?? dog.photoUrl}
                     />
                     <span className="students-page__identity">
                       <span className="students-page__name">{name}</span>

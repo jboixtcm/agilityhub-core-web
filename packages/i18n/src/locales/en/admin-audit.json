@@ -9,6 +9,7 @@
     "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB": "Activity registration cancelled by the club",
     "ACTIVITY_UPDATED": "Activity changed",
     "ANNOUNCEMENT_SENT": "Announcement sent",
+    "ANNOUNCEMENT_RESENT": "Announcement's failed e-mails resent",
     "ATTENDANCE_OVERRIDDEN": "Attendance corrected",
     "BOOKING_BLOCK_CLEARED": "Booking block removed",
     "BOOKING_BLOCK_SET": "Bookings blocked",
@@ -18,6 +19,7 @@
     "CARD_CHARGES_STARTED": "Card charges started",
     "CATALOG_CHANGED": "Catalogue changed",
     "CLASS_CANCELLED": "Class cancelled",
+    "CLASS_RESTORED": "Class restored",
     "CLASS_RISK_EXEMPTION_CHANGED": "Risk review exemption changed",
     "CLASS_UPDATED_WITH_BOOKINGS": "Class with bookings changed",
     "CLUB_ADMIN_INVITED": "Club administrator invited",
@@ -68,6 +70,7 @@
     "REMITTANCE_GENERATED": "Remittance generated",
     "REMITTANCE_ROLLED_BACK": "Remittance rolled back",
     "REMITTANCE_SUBMITTED": "Remittance marked as sent to the bank",
+    "REMITTANCE_SUBMISSION_UNDONE": "Remittance no longer marked as sent to the bank",
     "RING_BLOCK_CANCELLED": "Ring block cancelled",
     "RING_BLOCK_CREATED": "Ring block created",
     "RING_GEOMETRY_CHANGED": "Ring geometry changed",
@@ -77,12 +80,14 @@
     "SIGNUP_SUBMITTED": "Signup request submitted",
     "SUPPORT_ACCESS_ENDED": "Support access ended",
     "SUPPORT_ACCESS_STARTED": "Support access started",
+    "SUPPORT_WRITE": "Change made by support",
     "TEMPLATE_BAND_DELETED": "Template time band deleted",
     "TEMPLATE_CLASS_DELETED": "Template class deleted",
     "TRAINING_BOOKED_BY_CLUB": "Training booked by the club",
     "TRAINING_CANCELLED_BY_CLUB": "Training cancelled by the club",
     "UPFRONT_PAYMENT_RECORDED": "Initial payment recorded",
-    "WEEK_VALIDATED": "Week validated"
+    "WEEK_VALIDATED": "Week validated",
+    "ACCOUNT_EMAIL_CHANGED": "Login email changed"
   },
   "asMember": "as member: {name}",
   "caption": "Audit entries",
@@ -191,5 +196,6 @@
   },
   "rowLabel": "Open the “{action}” change",
   "search": "Search by action, actor or entity",
-  "title": "Audit"
+  "title": "Audit",
+  "withoutNotice": "member not notified"
 }

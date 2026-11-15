@@ -11,6 +11,7 @@ import { type CSSProperties, useCallback, useEffect, useRef, useState } from "re
 import { useTranslation } from "react-i18next";
 
 import "./booking.css";
+import { memberNoticeField, NotifyMemberChoice } from "./NotifyMemberChoice";
 import {
   type Booking,
   type BookingLimitReachedDetails,
@@ -135,6 +136,8 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
   const swap = hold.limit.reached;
   const delegation = useSession().me?.impersonation;
   const delegated = delegation !== undefined && delegation.bookingsOnly !== true;
+  // COMM-03: an ADMIN acting as the member may book (or swap) without notifying them (N-36).
+  const [notify, setNotify] = useState(true);
   const price =
     hold.payment === null || hold.payment === undefined
       ? undefined
@@ -154,6 +157,7 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
         : swap && swapId !== undefined
           ? { swapBookingId: swapId }
           : {}),
+      ...memberNoticeField(delegated, notify),
     };
     setPending(true);
     setError(undefined);
@@ -347,6 +351,14 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
             ? t("booking:confirm.memberPays", { price })
             : t("booking:confirm.payAfterSwap", { price })}
         </p>
+      ) : null}
+      {delegated ? (
+        <NotifyMemberChoice
+          checked={notify}
+          disabled={pending || expired}
+          id="confirm-notify-member"
+          onChange={setNotify}
+        />
       ) : null}
       {error === undefined ? null : (
         <p className="booking-note booking-note--danger" role="alert">

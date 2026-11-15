@@ -32,6 +32,7 @@
 }
 
 .booking-screen__back {
+  position: relative;
   display: grid;
   min-width: 2rem;
   min-height: 2rem;
@@ -39,6 +40,13 @@
   font-size: 1.4rem;
   text-decoration: none;
   place-items: center;
+}
+
+/* WEB-11: a 44 px hit area (2rem + 2 × 0.375rem) around the back arrow; it looks the same. */
+.booking-screen__back::before {
+  position: absolute;
+  inset: -0.375rem;
+  content: "";
 }
 
 .booking-screen__close {
@@ -681,4 +689,12 @@ button.confirm-option {
 .weekly-limit-classes__list p {
   margin: var(--ah-space-1) 0;
   overflow-wrap: anywhere;
+}
+
+/* COMM-03: «Avisa l'abonat» on the sheets an ADMIN uses while acting as the member. */
+.staff-notice-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+  padding-block: var(--ah-space-1);
 }

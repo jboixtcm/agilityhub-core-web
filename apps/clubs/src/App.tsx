@@ -1,9 +1,16 @@
-import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agilityhub/api-client";
+import {
+  apiClient as defaultApiClient,
+  apiWritesInFlight,
+  isApiError,
+  type ApiClient,
+} from "@agilityhub/api-client";
 import {
   type AuthClient,
+  HANDOFF_SESSION_CONFLICT,
   keepReturnPath,
   type Me,
   OnboardingExperience,
+  RecentLoginDialog,
   RequireAuth,
   RequireModule,
   RequireRole,
@@ -28,6 +35,7 @@ import {
   PasswordInput,
   isModuleUiItemEnabled,
   Modal,
+  NewVersionNotice,
   requiredModulesForUiItem,
   resolveBrandingLogo,
   Select,
@@ -58,6 +66,7 @@ import {
 } from "./access-profiles";
 import { safeDecode } from "./activities/shared";
 import { navigateInApp } from "./booking/shared";
+import { RUNNING_BUILD } from "./build-version";
 import { ClubLogoImage } from "./ClubLogoImage";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
 import { NotificationAttention } from "./notifications/NotificationAttention";
@@ -67,6 +76,7 @@ import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
 import { InstallAppCard } from "./pwa/InstallAppCard";
+import { checkForWorkerUpdate, prepareMemberAppReload, useWorkerUpdated } from "./pwa/update";
 import {
   navigate as navigateTo,
   type NavigationKind,
@@ -798,9 +808,11 @@ export function AccessPage({
   // The code was redeemed but `/me` keeps failing: the tab holds that session (never another
   // one) and offers a retry (E47).
   const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
-  const emailLoginEnabled = import.meta.env.VITE_EMAIL_LOGIN_ENABLED !== "false";
-  const emailRecoveryEnabled =
-    emailLoginEnabled || import.meta.env.VITE_EMAIL_RECOVERY_ENABLED === "true";
+  // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused the code because this
+  // device already holds another account's session here, which stays; the page says why.
+  const [handoffRefused, setHandoffRefused] = useState(false);
+  // WEB-01 (pre-production audit, decision of 13 Nov 2026): the sign-in link is the members' first
+  // access, so it and the recovery are part of every build of this app (no build flag hides them).
   const countdown = useCountdown();
 
   // E11-W06 W1: 01 opened with `?next=` keeps it for the steps that leave this address (the magic
@@ -822,7 +834,10 @@ export function AccessPage({
   );
   const failHandoff = useCallback(
     (cause: unknown) => {
-      if (authClient.hasPendingHandoff()) {
+      if (isApiError(cause, HANDOFF_SESSION_CONFLICT)) {
+        setHandoffUnconfirmed(false);
+        setHandoffRefused(true);
+      } else if (authClient.hasPendingHandoff()) {
         setHandoffUnconfirmed(true);
       } else if (isApiError(cause) && (cause.status === 0 || cause.status >= 500)) {
         // E4-W18 step 1: the code went unanswered (5xx, offline): the tab stays anonymous (no
@@ -872,6 +887,38 @@ export function AccessPage({
     return (
       <main className="auth-page auth-page--loading">
         <p role="status">{t("auth:activation.loading")}</p>
+      </main>
+    );
+  }
+
+  if (handoffRefused) {
+    return (
+      <main className="auth-page auth-page--loading">
+        <p role="alert">{t("auth:access.handoffOtherSession")}</p>
+        <Button
+          onClick={() => {
+            setPending("handoff");
+            // The session this device kept (its cookie, read by the usual restore).
+            void (async () => {
+              let kept: Me | null = authClient.getMe();
+              try {
+                kept ??= await authClient.restoreSession();
+              } catch {
+                kept = null;
+              }
+              if (kept === null) {
+                // It ended meanwhile: 01 as usual.
+                setHandoffRefused(false);
+                setPending(null);
+                return;
+              }
+              await enterHandoff(kept);
+            })();
+          }}
+          type="button"
+        >
+          {t("auth:activation.continue")}
+        </Button>
       </main>
     );
   }
@@ -1016,33 +1063,31 @@ export function AccessPage({
           >
             {t("auth:access.enter")}
           </Button>
-          {emailLoginEnabled ? (
-            <Button
-              disabled={pending !== null || countdown.seconds > 0}
-              loading={pending === "magic"}
-              onClick={() => void requestLink("LOGIN")}
-              type="button"
-              variant="secondary"
-            >
-              <Icon aria-hidden="true" name="mail" />
-              {t("auth:access.passwordlessLink")}
-            </Button>
-          ) : null}
-          {emailRecoveryEnabled ? (
-            <button
-              className="auth-text-action"
-              disabled={pending !== null || countdown.seconds > 0}
-              onClick={() => void requestLink("RESET")}
-              type="button"
-            >
-              {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
-              {t("auth:access.forgot.question")}{" "}
-              <span className="auth-link">{t("auth:access.forgot.action")}</span>
-            </button>
-          ) : null}
-          {!emailRecoveryEnabled ? (
-            <p className="auth-support">{t("auth:access.manualSupport")}</p>
-          ) : null}
+          {/* WEB-01: the first-access door said in plain words, right above the link it names. */}
+          <p className="auth-support" id="access-first-time">
+            {t("auth:access.firstTime")}
+          </p>
+          <Button
+            aria-describedby="access-first-time"
+            disabled={pending !== null || countdown.seconds > 0}
+            loading={pending === "magic"}
+            onClick={() => void requestLink("LOGIN")}
+            type="button"
+            variant="secondary"
+          >
+            <Icon aria-hidden="true" name="mail" />
+            {t("auth:access.passwordlessLink")}
+          </Button>
+          <button
+            className="auth-text-action"
+            disabled={pending !== null || countdown.seconds > 0}
+            onClick={() => void requestLink("RESET")}
+            type="button"
+          >
+            {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
+            {t("auth:access.forgot.question")}{" "}
+            <span className="auth-link">{t("auth:access.forgot.action")}</span>
+          </button>
           {countdown.seconds > 0 ? (
             <p className="auth-message auth-message--error" role="alert">
               {t("auth:access.countdown", { seconds: countdown.seconds })}
@@ -1075,7 +1120,14 @@ export function AccessPage({
 
 function passwordError(error: unknown, t: ReturnType<typeof useTranslation>["t"]): string {
   if (isApiError(error, "PASSWORD_TOO_SHORT")) {
-    return t("errors:PASSWORD_TOO_SHORT");
+    // AUTH-01 (S01 R-01-05): the minimum the api applied, 12 for a staff account.
+    const minLength: unknown =
+      typeof error.details === "object" && error.details !== null && "minLength" in error.details
+        ? error.details.minLength
+        : undefined;
+    return typeof minLength === "number"
+      ? t("common:password.tooShort", { minLength })
+      : t("errors:PASSWORD_TOO_SHORT");
   }
   if (isApiError(error, "PASSWORD_MISMATCH")) {
     return t("errors:PASSWORD_MISMATCH");
@@ -1093,10 +1145,14 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation(["auth", "errors"]);
   const parameters = new URLSearchParams(window.location.search);
   const purpose = parameters.get("purpose")?.toUpperCase();
-  const token = parameters.get("token") ?? parameters.get("t");
+  // Read once: the effect below takes the token out of the address before anything else.
+  const [token] = useState(() => parameters.get("token") ?? parameters.get("t"));
   const started = useRef(false);
   const [me, setMe] = useState<CurrentMe>();
   const [invalid, setInvalid] = useState(token === null || token === "");
+  // AUTH-06 (pre-production audit): the link is redeemed when the person presses «Entra», never
+  // when the page loads (a mail scanner that opens the link no longer spends it).
+  const [redeeming, setRedeeming] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [passwordPending, setPasswordPending] = useState(false);
@@ -1109,9 +1165,26 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
       return;
     }
     started.current = true;
-    if (token === null || token === "") {
+    // AUTH-06: the one-time token leaves the address bar (and the history, a shared screen, a
+    // copied address) before anything else, as the handoff code does; `purpose` stays. It is kept
+    // in memory only, so a reload before «Entra» finds no link.
+    const address = new URL(window.location.href);
+    if (address.searchParams.has("token") || address.searchParams.has("t")) {
+      address.searchParams.delete("token");
+      address.searchParams.delete("t");
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${address.pathname}${address.search}${address.hash}`,
+      );
+    }
+  }, []);
+
+  const redeem = () => {
+    if (token === null || token === "" || redeeming) {
       return;
     }
+    setRedeeming(true);
     void authClient.exchangeMagicLink(token).then(
       (result) => {
         if (isCurrentClubMe(result)) {
@@ -1124,7 +1197,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
         setInvalid(true);
       },
     );
-  }, [authClient, token]);
+  };
 
   if (invalid) {
     return (
@@ -1141,6 +1214,24 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
             type="button"
           >
             {t("auth:activation.resend")}
+          </Button>
+        </section>
+      </main>
+    );
+  }
+
+  if (me === undefined && !redeeming) {
+    return (
+      <main className="auth-page">
+        <section
+          aria-labelledby="activation-confirm-title"
+          className="auth-panel auth-panel--centered"
+        >
+          <LogoMark compact />
+          <h1 id="activation-confirm-title">{t("auth:activation.confirmTitle")}</h1>
+          <p>{t("auth:activation.confirmDescription")}</p>
+          <Button className="auth-form__primary" onClick={redeem} type="button">
+            {t("auth:access.enter")}
           </Button>
         </section>
       </main>
@@ -1205,56 +1296,63 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
         >
           {t("auth:activation.continue")}
         </Button>
-        <form className="activation-password" onSubmit={(event) => void savePassword(event)}>
-          <h2>{t("auth:activation.passwordPrompt")}</h2>
-          <label className="ah-sr-only" htmlFor="activation-password">
-            {t("auth:activation.newPassword")}
-          </label>
-          <PasswordInput
-            autoComplete="new-password"
-            id="activation-password"
-            onChange={(event) => {
-              setNewPassword(event.currentTarget.value);
-            }}
-            placeholder={t("auth:activation.newPassword")}
-            required
-            showLabel={t("common:password.show")}
-            hideLabel={t("common:password.hide")}
-            value={newPassword}
-          />
-          <label className="ah-sr-only" htmlFor="activation-password-repeat">
-            {t("auth:activation.repeatPassword")}
-          </label>
-          <PasswordInput
-            autoComplete="new-password"
-            id="activation-password-repeat"
-            onChange={(event) => {
-              setRepeatPassword(event.currentTarget.value);
-            }}
-            placeholder={t("auth:activation.repeatPassword")}
-            required
-            showLabel={t("common:password.show")}
-            hideLabel={t("common:password.hide")}
-            value={repeatPassword}
-          />
-          <Button
-            loading={passwordPending}
-            loadingLabel={t("auth:activation.savingPassword")}
-            type="submit"
-            variant="secondary"
-          >
-            {t("auth:activation.savePassword")}
-          </Button>
-          {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
-          {resetLinkUsed ? (
-            <p role="alert">
-              {t("auth:activation.resetLinkUsed")}{" "}
-              <a href="/entrar">{t("auth:activation.recover")}</a>
-            </p>
-          ) : null}
-          {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
-        </form>
-        <p className="activation-panel__footnote">{t("auth:activation.optionalPassword")}</p>
+        {/* WEB-01: after entering by a link, an account without a password is invited (never
+            obliged) to choose one; a RESET link sets the new one. An account that already has a
+            password is not offered a form its LOGIN session could not save (R-01-05). */}
+        {purpose === "RESET" || !me.account.hasPassword ? (
+          <>
+            <form className="activation-password" onSubmit={(event) => void savePassword(event)}>
+              <h2>{t("auth:activation.passwordPrompt")}</h2>
+              <label className="ah-sr-only" htmlFor="activation-password">
+                {t("auth:activation.newPassword")}
+              </label>
+              <PasswordInput
+                autoComplete="new-password"
+                id="activation-password"
+                onChange={(event) => {
+                  setNewPassword(event.currentTarget.value);
+                }}
+                placeholder={t("auth:activation.newPassword")}
+                required
+                showLabel={t("common:password.show")}
+                hideLabel={t("common:password.hide")}
+                value={newPassword}
+              />
+              <label className="ah-sr-only" htmlFor="activation-password-repeat">
+                {t("auth:activation.repeatPassword")}
+              </label>
+              <PasswordInput
+                autoComplete="new-password"
+                id="activation-password-repeat"
+                onChange={(event) => {
+                  setRepeatPassword(event.currentTarget.value);
+                }}
+                placeholder={t("auth:activation.repeatPassword")}
+                required
+                showLabel={t("common:password.show")}
+                hideLabel={t("common:password.hide")}
+                value={repeatPassword}
+              />
+              <Button
+                loading={passwordPending}
+                loadingLabel={t("auth:activation.savingPassword")}
+                type="submit"
+                variant="secondary"
+              >
+                {t("auth:activation.savePassword")}
+              </Button>
+              {passwordFailure === undefined ? null : <p role="alert">{passwordFailure}</p>}
+              {resetLinkUsed ? (
+                <p role="alert">
+                  {t("auth:activation.resetLinkUsed")}{" "}
+                  <a href="/entrar">{t("auth:activation.recover")}</a>
+                </p>
+              ) : null}
+              {passwordMessage === undefined ? null : <p role="status">{passwordMessage}</p>}
+            </form>
+            <p className="activation-panel__footnote">{t("auth:activation.optionalPassword")}</p>
+          </>
+        ) : null}
       </section>
     </main>
   );
@@ -1309,9 +1407,11 @@ function hasAdminPortal(me: CurrentMe) {
 
 function ProfileChoicePage({
   authClient,
+  client,
   navigate,
 }: {
   authClient: AuthClient;
+  client: ApiClient;
   navigate: (path: string) => void;
 }) {
   const { me } = useSession();
@@ -1329,7 +1429,13 @@ function ProfileChoicePage({
   const gender = icuGender(me.membership.gender);
 
   if (roles.length === 0) {
-    return <NoAppProfilePage authClient={authClient} />;
+    return (
+      <NoAppProfilePage
+        authClient={authClient}
+        client={client}
+        impersonated={me.impersonation !== undefined}
+      />
+    );
   }
 
   const selectProfile = async (role: Role) => {
@@ -1400,7 +1506,15 @@ function ProfileChoicePage({
   );
 }
 
-function NoAppProfilePage({ authClient }: { authClient: AuthClient }) {
+function NoAppProfilePage({
+  authClient,
+  client,
+  impersonated,
+}: {
+  authClient: AuthClient;
+  client: ApiClient;
+  impersonated: boolean;
+}) {
   const { t } = useTranslation("auth");
   const [working, setWorking] = useState(false);
   return (
@@ -1413,8 +1527,10 @@ function NoAppProfilePage({ authClient }: { authClient: AuthClient }) {
           disabled={working}
           onClick={() => {
             setWorking(true);
-            void authClient
-              .logout()
+            const logout = () => authClient.logout();
+            // R-11-07, as on 12 (FE-06): this device's push subscription goes first. An impersonated
+            // session never subscribed: the stored id is the admin's own device's and stays.
+            void (impersonated ? logout() : logoutWithPush(client, logout))
               .catch(() => undefined)
               .finally(() => {
                 setWorking(false);
@@ -1853,9 +1969,23 @@ interface AppProps {
 
 export function App(props: AppProps) {
   const { t } = useTranslation("common");
+  const workerUpdated = useWorkerUpdated();
+  // AUTH-01 (S01 R-01-18): an instructor's week PDF or a staff account's own data package asks
+  // for a recent sign-in through «Confirma que ets tu». FE-07: «Hi ha una versió nova · Recarrega»
+  // when the host serves another build or a new worker took over, at a safe moment.
   return (
     <ToastProvider dismissLabel={t("gallery.close")}>
       <AppContent {...props} />
+      <RecentLoginDialog client={props.authClient} />
+      <NewVersionNotice
+        busy={() => apiWritesInFlight() > 0}
+        message={t("common:newVersion.message")}
+        onOtherBuild={checkForWorkerUpdate}
+        prepareReload={prepareMemberAppReload}
+        reloadLabel={t("common:newVersion.reload")}
+        running={RUNNING_BUILD}
+        workerUpdated={workerUpdated}
+      />
     </ToastProvider>
   );
 }
@@ -1972,6 +2102,7 @@ function AppContent({
         <RequireAuth>
           <ProfileChoicePage
             authClient={authClient}
+            client={apiClient}
             navigate={(path) => {
               navigate(path, false);
             }}

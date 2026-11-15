@@ -339,6 +339,7 @@ function providerSummary(
   provider: string,
   body: PlatformProviderRequest,
   previous: ProviderSummary,
+  clubId: string,
 ): ProviderSummary {
   const enabled = body.enabled ?? true;
   if (provider === "SEPA_XML") {
@@ -359,11 +360,16 @@ function providerSummary(
     };
   }
   if (provider === "STRIPE") {
+    // PAY-10: a save drops the last test; one with a new secret key records the test it passed
+    // and the (fictional) account it reached, masked, as the api does.
+    const tested = body.secretKey !== undefined;
     return {
       ...previous,
+      accountIdMasked: tested ? `****${clubId.slice(-4)}` : null,
       configured: true,
       enabled,
       last4: body.publishableKey?.slice(-4) ?? null,
+      lastTestAt: tested ? now() : null,
       masked: body.publishableKey === undefined ? null : `pk_····${body.publishableKey.slice(-4)}`,
       mode: body.mode ?? null,
     };
@@ -1014,6 +1020,23 @@ export const consoleHandlers = [
         if (body.secretKey === undefined && !stripeSecrets.has(club.id)) {
           return providerInvalid("secretKey");
         }
+        // PAY-10 (S17 R-17-05): a new secret key is tested with itself before anything is saved; the
+        // mock's Stripe refuses a key with «fail» in it, as its connection test does.
+        if (body.secretKey?.includes("fail") === true) {
+          return apiError("STRIPE_CONNECTION_FAILED", "Stripe rejected the key", 422);
+        }
+        // PAY-10: as on the api's prod profile, saved live keys switch to test only when confirmed.
+        if (
+          previous.mode === "live" &&
+          stripeSecrets.has(club.id) &&
+          body.mode === "test" &&
+          body.testModeOverride !== true
+        ) {
+          return apiError("PROVIDER_CONFIG_INVALID", "Live keys are saved", 422, {
+            field: "mode",
+            reason: "LIVE_KEYS_SAVED",
+          });
+        }
         if (body.secretKey !== undefined) stripeSecrets.set(club.id, body.secretKey);
       }
       if (provider === "SEPA_XML") {
@@ -1031,7 +1054,7 @@ export const consoleHandlers = [
       if (provider === "MANUAL" && (body.instructions?.[club.defaultLocale] ?? "").trim() === "") {
         return providerInvalid(`instructions.${club.defaultLocale}`);
       }
-      const summary = providerSummary(provider, body, previous);
+      const summary = providerSummary(provider, body, previous, club.id);
       touch(club, { paymentProviders: { ...club.paymentProviders, [provider]: summary } });
       return HttpResponse.json(summary);
     },

@@ -429,7 +429,7 @@ async function fillDog(page: Page, name: string, chip: string, breed = "Mestís"
   await page.getByLabel("Nom del gos").fill(name);
   await page.getByRole("button", { name: "Mascle" }).click();
   await page.getByLabel("Raça").fill(breed);
-  await page.getByLabel("Naix.").fill("03/2022");
+  await page.getByLabel("Naix.").fill("17/03/2022");
   await page.getByLabel("Núm. de xip").fill(chip);
 }
 
@@ -482,7 +482,7 @@ async function completePublicSignup({
   );
   await page.goto(`${clubsUrl}/apuntat-hi`);
   const formConfig = (await (await formConfigResponse).json()) as SignupQuoteConfig;
-  await expect(page.getByText(/Pas 1 de 4/u)).toBeVisible();
+  await expect(page.getByText(/Pas 1 de 3/u)).toBeVisible();
   await fillPerson(page, {
     document,
     email,
@@ -561,30 +561,32 @@ async function completePublicSignup({
     ).toBeVisible();
   }
 
-  await page.getByRole("button", { name: "CONTINUA" }).click();
-  await page.waitForURL("**/apuntat-hi/familia");
-  if (family === "found") {
-    await page.getByLabel("Nom del responsable").fill("Laia Fictici001");
-    await page.getByLabel("Nom d'un dels seus gossos").fill("Ona 1");
+  // The family step is opt-in for monthly plans. Pack applicants go straight to payment.
+  if (family !== false) {
+    await page.getByLabel("Ja tenim un altre gos actiu dins el club").check();
     await page.getByRole("button", { name: "CONTINUA" }).click();
-    await expect(page.getByText(/Grup trobat: Laia F\./u)).toBeVisible();
-    if (screenshots) await screenshot(page, "18-family-core-375.png");
+    await page.waitForURL("**/apuntat-hi/familia");
+    await page
+      .getByLabel("Nom del responsable")
+      .fill(family === "found" ? "Laia Fictici001" : "Pere Inexistent");
+    await page.getByLabel("Nom d'un dels seus gossos").fill(family === "found" ? "Ona 1" : "Tro");
+    await page.getByRole("button", { name: "CONTINUA" }).click();
+    if (family === "found") {
+      await expect(page.getByText(/Grup trobat: Laia F\./u)).toBeVisible();
+      if (screenshots) await screenshot(page, "18-family-core-375.png");
+    }
   }
-  // 19 is a full page load that reads `GET /signup` again: its quotes are what the card must show.
   const paymentConfig = page.waitForResponse(
     (response) =>
       response.url().endsWith("/api/v1/signup") &&
       response.request().method() === "GET" &&
       new URL(page.url()).pathname === "/apuntat-hi/pagament",
   );
-  if (family === "pending") {
-    await page.getByLabel("Nom del responsable").fill("Pere Inexistent");
-    await page.getByLabel("Nom d'un dels seus gossos").fill("Tro");
-    await page.getByRole("button", { name: "CONTINUA" }).click();
-    await page.getByRole("button", { name: "Deixa-ho pendent i continua ›" }).click();
-  } else {
-    await page.getByRole("button", { name: "CONTINUA" }).click();
-  }
+  await page
+    .getByRole("button", {
+      name: family === "pending" ? "Deixa-ho pendent i continua ›" : "CONTINUA",
+    })
+    .click();
   await page.waitForURL("**/apuntat-hi/pagament");
   const config = (await (await paymentConfig).json()) as SignupQuoteConfig;
   await expect(page.locator(".signup-upfront__total")).toBeVisible();
@@ -603,7 +605,9 @@ async function completePublicSignup({
   expect(cashText).toContain("No facis cap pagament real, transferència ni Bizum");
   expect(cashText).not.toMatch(/\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]){10,30}\b/u);
   expect(cashText).not.toMatch(/\b[679](?:[ .-]?\d){8}\b/u);
-  await expect(page.locator(".signup-upfront__total + p")).toHaveText(cashText);
+  const initialMethods = page.getByRole("group", { name: "Mètode del pagament inicial" });
+  await initialMethods.getByRole("button", { name: "Transferència" }).click();
+  await expect(page.locator(".signup-upfront aside")).toHaveText(cashText);
   if (screenshots) {
     writeFileSync(
       join(evidenceDirectory, "signup-payment-methods-core.json"),
@@ -715,6 +719,9 @@ async function completeValidation(
   const validationResponse = page.waitForResponse(
     (response) => response.url().includes("/validation?") && response.request().method() === "POST",
   );
+  const dashboardResponse = page.waitForResponse((response) =>
+    response.url().endsWith("/api/v1/dashboard"),
+  );
   await page.getByRole("button", { name: "VALIDA L'ALTA" }).click();
   const response = await validationResponse;
   if (nextInvoiceDate !== undefined) {
@@ -724,6 +731,8 @@ async function completeValidation(
   const errorBody = response.status() === 200 ? "" : await response.text();
   expect(response.status(), errorBody).toBe(200);
   await page.waitForURL("**/tauler?signup=validated");
+  const dashboard = await dashboardResponse;
+  expect(dashboard.status(), await dashboard.text()).toBe(200);
   await expect(page.getByText("L'alta s'ha validat.")).toBeVisible();
 }
 
@@ -970,6 +979,8 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
     memberConsole.push(`${new Date().toISOString()} ${message.type()} ${text.slice(0, 300)}`);
   });
   await member.goto(`${clubsUrl}${welcomeLink.pathname}${welcomeLink.search}`);
+  // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+  await member.getByRole("button", { name: "ENTRA", exact: true }).click();
   await expect(member.getByRole("heading", { name: /Nora/u })).toBeVisible();
   await member.getByRole("button", { name: "CONTINUAR" }).click();
   await member.waitForURL("**/inici");

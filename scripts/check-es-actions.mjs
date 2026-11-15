@@ -180,6 +180,7 @@ export const KEEP = new Map([
   ["auth:profile.iosInstall", "12's hint to add the app to the home screen: an instruction"],
   ["auth:profile.learnLink", "12's row to the AgilityHub learning site: a call to another product"],
   ["auth:profile.pushDenied", "12's hint to allow notifications: an instruction"],
+  ["auth:recentLogin.title", "the «Confirma que ets tu» dialog's title (AUTH-01): an instruction"],
   ["booking:confirm.swapTitle", "06's swap title: an instruction"],
   ["common:gallery.active", "the adjective: the dev gallery's state chip"],
   ["console:theme.logoAlt.mark", "the noun: the alt text of the club's mark"],

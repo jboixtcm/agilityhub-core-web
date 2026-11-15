@@ -1,6 +1,7 @@
 {
   "extends": "../../packages/config/tsconfig.base.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "types": ["vite/client", "vitest/globals"]
   },
   "include": ["e2e", "src", "playwright.config.ts", "vite.config.ts"]

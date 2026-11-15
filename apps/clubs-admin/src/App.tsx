@@ -1,9 +1,11 @@
-import { type components, isApiError } from "@agilityhub/api-client";
+import { apiWritesInFlight, type components, isApiError } from "@agilityhub/api-client";
 import {
   type AuthClient,
   createAuthenticatedApiClient,
+  HANDOFF_SESSION_CONFLICT,
   keepReturnPath,
   OnboardingExperience,
+  RecentLoginDialog,
   RequireModule,
   RequirePlatformRole,
   RequireRole,
@@ -23,6 +25,7 @@ import {
   Input,
   PasswordInput,
   isModuleUiItemEnabled,
+  NewVersionNotice,
   requiredModulesForUiItem,
   Sidebar,
   type SidebarEntry,
@@ -33,6 +36,7 @@ import {
 import {
   lazy,
   type ReactNode,
+  Suspense,
   type SyntheticEvent,
   useCallback,
   useContext,
@@ -49,6 +53,8 @@ import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
 import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
 import { BillingPage } from "./billing/BillingPage";
 import { RemittancesPage } from "./billing/RemittancesPage";
+import { StripeEventsPage } from "./billing/StripeEventsPage";
+import { RUNNING_BUILD } from "./build-version";
 import { PlansPage } from "./catalogs/PlansPage";
 import { RingsPage } from "./catalogs/RingsPage";
 import { SettingsPage } from "./catalogs/SettingsPage";
@@ -63,7 +69,6 @@ import { ClassNoticesPage } from "./dashboard/ClassNoticesPage";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
-import { Gallery } from "./dev/gallery";
 import { FollowUpPage } from "./followup/FollowUpPage";
 import {
   FollowUpReadFailureNotice,
@@ -90,6 +95,11 @@ import { UserMenu } from "./UserMenu";
 const ConsolePage = lazy(() => import("./console/ConsolePage"));
 // D18 and D16 «Geometria» (S16, E9-W03): the course planner's chunk.
 const CoursesRoute = lazy(() => import("./courses/CoursesRoute"));
+// The UI gallery exists in development only: loaded on demand, so neither it nor its mock branding
+// fixture reaches a production build (FE-05).
+const Gallery = import.meta.env.DEV
+  ? lazy(() => import("./dev/gallery").then((module) => ({ default: module.Gallery })))
+  : undefined;
 
 interface AdminRouteDefinition {
   path: string;
@@ -119,6 +129,8 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   // Screen D6.
   { path: "/facturacio", roles: ["ADMIN"] },
   { path: "/facturacio/remeses", roles: ["ADMIN"] },
+  // PAY-02: the failed Stripe events (S12 §2, no mockup), reached from D6.
+  { path: "/facturacio/esdeveniments-stripe", roles: ["ADMIN"] },
   // Screen D7 + registrants (INSTRUCTOR reads them without actions nor internal notes, S07 §2).
   { path: "/activitats", roles: ["INSTRUCTOR", "ADMIN"] },
   { path: "/activitats/:id", roles: ["INSTRUCTOR", "ADMIN"] },
@@ -429,7 +441,9 @@ export function AdminNavigation({
             (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")) ||
             // The notification log belongs to «Comunicats» (S11 §2).
             // The remittances page belongs to «Facturació» (S12 §2).
-            (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")) ||
+            (entry.id === "billing" &&
+              (matchesPath(pathname, "/facturacio/remeses") ||
+                matchesPath(pathname, "/facturacio/esdeveniments-stripe"))) ||
             // A course and its placement editor belong to «Recorreguts»; a ring's geometry to
             // «Pistes» (S16 §2).
             (entry.id === "courses" &&
@@ -657,6 +671,9 @@ function routeContent(
   }
   if (route.path === "/facturacio/remeses") {
     return <RemittancesPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/facturacio/esdeveniments-stripe") {
+    return <StripeEventsPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/auditoria") {
     return <AuditPage client={client} />;
@@ -924,10 +941,14 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
   const [failure, setFailure] = useState<
     { kind: "invalid" } | { kind: "refused"; message: string } | { kind: "unanswered" }
   >();
-  const [pending, setPending] = useState(token !== null && token !== "");
+  const [pending, setPending] = useState(false);
+  // AUTH-06 (pre-production audit): the link is redeemed when the person presses «Entra», never
+  // when the page loads (a mail scanner that opens the link no longer spends it).
+  const [requested, setRequested] = useState(false);
 
   const exchange = useCallback(
     (code: string) => {
+      setRequested(true);
       setPending(true);
       setFailure(undefined);
       authClient.exchangeMagicLink(code).then(
@@ -953,12 +974,12 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     [authClient, platformOnlyMessage],
   );
 
+  // The one-time token leaves the address before anything else; it is kept in memory only.
   useEffect(() => {
     if (started.current || token === null || token === "") return;
     started.current = true;
     window.history.replaceState(null, "", "/activacio");
-    exchange(token);
-  }, [exchange, token]);
+  }, [token]);
 
   if (token === null || token === "" || failure?.kind === "invalid") {
     return (
@@ -977,6 +998,19 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
     <main className="access-page">
       <Card className="access-card">
         <h1>{t("auth:admin.title")}</h1>
+        {requested ? null : (
+          <>
+            <p>{t("auth:activation.confirmDescription")}</p>
+            <Button
+              onClick={() => {
+                exchange(token);
+              }}
+              type="button"
+            >
+              {t("auth:access.enter")}
+            </Button>
+          </>
+        )}
         {pending ? <p role="status">{t("auth:activation.loading")}</p> : null}
         {failure?.kind === "refused" ? <p role="alert">{failure.message}</p> : null}
         {failure?.kind === "unanswered" ? (
@@ -1018,6 +1052,9 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   // E4-W18 step 2: the code or its `/me` went unanswered (5xx, offline): a retry, never «no és
   // vàlid o ha caducat».
   const [handoffUnanswered, setHandoffUnanswered] = useState(false);
+  // FE-03 (pre-production audit, decision of 13 Nov 2026): the api refused the code because this
+  // device already holds another account's session here, which stays; the page says why.
+  const [handoffRefused, setHandoffRefused] = useState(false);
 
   // E11-W06 W1 (S11 R-11-11): 01 opened with `?next=` keeps it for a sign-in that leaves this
   // address (the magic link, 03b's handoff from the members' app).
@@ -1030,6 +1067,12 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   }, [authClient]);
   const failHandoff = useCallback(
     async (cause: unknown) => {
+      if (isApiError(cause, HANDOFF_SESSION_CONFLICT)) {
+        setHandoffUnanswered(false);
+        setHandoffRefused(true);
+        setPending(null);
+        return;
+      }
       const transient =
         authClient.hasPendingHandoff() ||
         (isApiError(cause) && (cause.status === 0 || cause.status >= 500));
@@ -1072,6 +1115,42 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
       authClient.removeEventListener("signedIn", signedIn);
     };
   }, [authClient, enterHandoff, handoffUnanswered]);
+
+  if (handoffRefused) {
+    return (
+      <main className="access-page">
+        <Card className="access-card">
+          <h1>{t("auth:admin.title")}</h1>
+          <p role="alert">{t("auth:access.handoffOtherSession")}</p>
+          <Button
+            disabled={pending !== null}
+            onClick={() => {
+              setPending("handoff");
+              // The session this device kept (its cookie, read by the usual restore).
+              void authClient.restoreSession().then(
+                (kept) => {
+                  if (kept === null) {
+                    // It ended meanwhile: 01 as usual.
+                    setHandoffRefused(false);
+                    setPending(null);
+                    return;
+                  }
+                  enterHandoff();
+                },
+                () => {
+                  setHandoffRefused(false);
+                  setPending(null);
+                },
+              );
+            }}
+            type="button"
+          >
+            {t("auth:activation.continue")}
+          </Button>
+        </Card>
+      </main>
+    );
+  }
 
   if (handoffUnanswered) {
     return (
@@ -1210,7 +1289,40 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   );
 }
 
+/**
+ * The back office and the console, with AUTH-01's «Confirma que ets tu» (S01 R-01-18): the dialog
+ * an export, a remittance file, a bank account or a payment provider opens when the api asks the
+ * staff for a recent sign-in.
+ */
 export function App({ authClient }: { authClient: AuthClient }) {
+  return (
+    <>
+      <AppRoutes authClient={authClient} />
+      <RecentLoginDialog client={authClient} />
+      <NewVersionOffer />
+    </>
+  );
+}
+
+/**
+ * FE-07: «Hi ha una versió nova · Recarrega» when the host serves another build, at a safe moment
+ * (no dialog or drawer open, no field being typed in, no write in flight). It never suspends the
+ * back office while `common` loads: until then it shows nothing.
+ */
+function NewVersionOffer() {
+  const { ready, t } = useTranslation("common", { useSuspense: false });
+  if (!ready) return null;
+  return (
+    <NewVersionNotice
+      busy={() => apiWritesInFlight() > 0}
+      message={t("common:newVersion.message")}
+      reloadLabel={t("common:newVersion.reload")}
+      running={RUNNING_BUILD}
+    />
+  );
+}
+
+function AppRoutes({ authClient }: { authClient: AuthClient }) {
   const { i18n } = useContext(I18nContext);
   // E11-W06 W5 (CONVENCIONS_I18N §1): the signed-in account's language.
   useAccountLocale();
@@ -1273,8 +1385,12 @@ export function App({ authClient }: { authClient: AuthClient }) {
     if (strayTarget !== undefined) window.history.replaceState(null, "", strayTarget);
   }, [strayTarget]);
 
-  if (import.meta.env.DEV && pathname === "/_gallery") {
-    return <Gallery />;
+  if (import.meta.env.DEV && Gallery !== undefined && pathname === "/_gallery") {
+    return (
+      <Suspense fallback={null}>
+        <Gallery />
+      </Suspense>
+    );
   }
   if (pathname === "/acces") {
     window.location.replace("/entrar");

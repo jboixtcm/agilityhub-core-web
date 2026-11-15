@@ -5,6 +5,11 @@ import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import { defineConfig } from "vitest/config";
 
+import { contentSecurityPolicy, robotsTxt, versionJson } from "../../scripts/bundle-files.mjs";
+
+import { PRIVACY_POLICY_EFFECTIVE_DATE } from "./src/privacy/privacy-policy.ts";
+import { privacyPolicyBuildGuard } from "./src/privacy/release-guard.ts";
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const coreUrl = process.env.VITE_CORE_URL ?? env.VITE_CORE_URL ?? "http://localhost:8080";
@@ -26,6 +31,8 @@ export default defineConfig(({ mode }) => {
     // Keep MSW out of production; emit the public favicon explicitly.
     build: { copyPublicDir: mockEnabled },
     plugins: [
+      // PRIV-01: a production build fails while the privacy policy of /privacy has no effective date.
+      privacyPolicyBuildGuard(PRIVACY_POLICY_EFFECTIVE_DATE, { mock: mockEnabled }),
       {
         name: "app-favicon",
         generateBundle() {
@@ -36,6 +43,12 @@ export default defineConfig(({ mode }) => {
           });
         },
       },
+      // CFG-04: the Content-Security-Policy Caddy sends with this bundle, computed from its index.html.
+      contentSecurityPolicy(),
+      // CFG-05: `robots.txt` with `Disallow: /`, so no host this bundle serves is crawled.
+      robotsTxt(),
+      // REL-02: `version.json`, this app's version and the commit it was built from.
+      versionJson(new URL("./package.json", import.meta.url)),
       react(),
       tailwindcss(),
     ],

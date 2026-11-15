@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   type CancellationPreview,
+  type ClassSession,
   Emphasized,
   errorCode,
   useCalendarErrorMessage,
@@ -11,6 +12,14 @@ import {
 import { errorProp } from "./shared";
 
 export type CancellationReason = "CLUB_MANUAL" | "DELETED";
+
+/**
+ * PLAN-02 (R-06-10): the admin cancels or deletes a class only while its start is still ahead;
+ * from `startsAt` on the api answers INVALID_STATE, so D4c is never offered for it.
+ */
+export function isCancellable(session: ClassSession, now = Date.now()): boolean {
+  return Date.parse(session.startsAt) > now;
+}
 
 export interface ClassHeading {
   day: string;

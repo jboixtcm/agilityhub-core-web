@@ -2,35 +2,41 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
-import { refuse, selectItems, type ListSpec } from "./backoffice-handlers";
+import { listResponse, refuse, selectItems, type ListSpec } from "./backoffice-handlers";
 import {
   BILLING_ADMIN_ACCOUNT_ID,
   appliesInPeriod,
   billingState,
   billingUuid,
   buildSimulation,
+  defaultCollectionDate,
   displayNumber,
   eur,
+  FAILED_STRIPE_EVENTS,
   generateRun,
   isPeriod,
+  isTargetBusinessDay,
   listItem,
   memberMethod,
   periodCounts,
   periodRemittance,
   periodRun,
+  remittanceFileName,
   remittanceListItem,
   resetBillingState,
   rollBackRun,
   rollbackBlockers,
   runResource,
   shiftPeriod,
+  targetBusinessDayOnOrAfter,
+  targetBusinessDaysAfter,
   type BillingVariant,
   type BillingWorld,
   type StoredInvoice,
   type StoredRun,
 } from "./fixtures/billing";
 import { censusMembers, ERASED_MEMBER_ID } from "./fixtures/census";
-import { addDays, clubLocalDate } from "./fixtures/planning";
+import { clubLocalDate } from "./fixtures/planning";
 import { mockExportBody } from "./list-exports";
 import { fieldsProjection } from "./list-fields";
 import { apiError, validationError } from "./planning-handlers";
@@ -53,9 +59,12 @@ type InvoiceRetryRequest = components["schemas"]["InvoiceRetryRequest"];
 type ManualInvoiceRequest = components["schemas"]["ManualInvoiceRequest"];
 type RefundRequest = components["schemas"]["RefundRequest"];
 type Remittance = components["schemas"]["Remittance"];
+type RemittanceReturnsRequest = components["schemas"]["RemittanceReturnsRequest"];
 type RollbackRequest = components["schemas"]["RollbackRequest"];
 type SimulationRequest = components["schemas"]["SimulationRequest"];
 type SubmissionRequest = components["schemas"]["SubmissionRequest"];
+type StripeEventListItem = components["schemas"]["StripeEventListItem"];
+type SubmissionUndoRequest = components["schemas"]["SubmissionUndoRequest"];
 
 /** `billing.stripeMaxAttempts` (S12 §13 proposal, 3). */
 const STRIPE_MAX_ATTEMPTS = 3;
@@ -188,18 +197,6 @@ function staleVersion() {
   return apiError("STALE_VERSION", "Stale version", 409);
 }
 
-/** Two business days after `date` (R-12-12: RCUR/CORE, weekends only — no bank holidays). */
-function businessDaysAfter(date: string, days: number): string {
-  let current = date;
-  let left = days;
-  while (left > 0) {
-    current = addDays(current, 1);
-    const weekday = new Date(`${current}T12:00:00Z`).getUTCDay();
-    if (weekday !== 0 && weekday !== 6) left -= 1;
-  }
-  return current;
-}
-
 function appendCollection(
   item: StoredInvoice,
   fields: Partial<Collection> & Pick<Collection, "provider" | "status">,
@@ -210,6 +207,7 @@ function appendCollection(
     amount: item.invoice.total,
     attempt: 1,
     createdAt: now(),
+    dispute: null,
     failureCode: null,
     failureMessage: null,
     id: billingUuid(3, target.sequence),
@@ -247,6 +245,50 @@ function markPaid(
   item.invoice.status = "PAID";
   item.invoice.paidAt = dayInstant(paidAt);
   item.invoice.version += 1;
+}
+
+/** R-12-17: a COLLECTING SEPA receipt, or a PAID one with a SEPA collection (a later return). */
+function returnable(item: StoredInvoice): boolean {
+  const { invoice } = item;
+  const sepa = invoice.collections.some((entry) => entry.provider === "SEPA_XML");
+  return (
+    sepa &&
+    (invoice.status === "COLLECTING" ||
+      (invoice.status === "PAID" &&
+        invoice.collections.some(
+          (entry) => entry.provider === "SEPA_XML" && entry.status === "SUCCEEDED",
+        )))
+  );
+}
+
+/** The remittance of a receipt's last SEPA attempt (SEPA-04 (b): bulk returns are per remittance). */
+function returnRemittanceOf(item: StoredInvoice): string | null {
+  const last = item.invoice.collections.filter((entry) => entry.provider === "SEPA_XML").at(-1);
+  return last?.remittanceId ?? item.invoice.remittanceId ?? null;
+}
+
+/**
+ * A bank return (R-12-17): `Collection FAILED{BANK_RETURN}` appended, the receipt FAILED and, for
+ * a periodic one the admin chose to present again (SEPA-04 (b)), waiting for the next remittance.
+ */
+function markReturned(item: StoredInvoice, at: string, reason: string, includeInNextRun: boolean) {
+  const { invoice } = item;
+  const remitted = invoice.collections.find((entry) => entry.provider === "SEPA_XML");
+  appendCollection(item, {
+    failureCode: "BANK_RETURN",
+    failureMessage: reason,
+    provider: "SEPA_XML",
+    providerRef: remitted?.providerRef ?? null,
+    remittanceId: remitted?.remittanceId ?? null,
+    resolvedAt: now(),
+    status: "FAILED",
+  });
+  invoice.status = "FAILED";
+  invoice.failedAt = dayInstant(at);
+  invoice.failureReason = reason;
+  invoice.includeInNextRun = includeInNextRun;
+  invoice.paidAt = null;
+  invoice.version += 1;
 }
 
 /** `GET /invoices` (CONVENCIONS_API §4) as the api reads it. */
@@ -474,6 +516,18 @@ function remittanceList(request: Request) {
   });
 }
 
+/**
+ * `GET /billing/stripe-events` (PAY-02): the club's FAILED events, newest `receivedAt` first; no
+ * filter and no `q` (`400 INVALID_FILTER`), sortable by `receivedAt` only.
+ */
+const STRIPE_EVENT_SPEC: ListSpec<StripeEventListItem> = {
+  fields: ["id", "type", "receivedAt", "attempts", "nextAttemptAt", "processedAt"],
+  filterable: [],
+  sortable: ["receivedAt"],
+  values: (event, field) =>
+    field === "receivedAt" && event.receivedAt !== undefined ? [event.receivedAt] : [],
+};
+
 /** D6's month (`GET /billing/periods/{period}`): an empty month for any other club or month. */
 function billingPeriod(period: string): BillingPeriod {
   const target = world();
@@ -507,6 +561,7 @@ function billingPeriod(period: string): BillingPeriod {
         : {
             at: simulation.at,
             cashMembers: simulation.cashMembers,
+            ...(simulation.comparison === undefined ? {} : { comparison: simulation.comparison }),
             id: simulation.id,
             incidents: simulation.incidents,
             invoicesPreview: simulation.invoicesPreview,
@@ -691,8 +746,17 @@ export const billingHandlers = [
       const overlap = priceOverlap();
       if (overlap !== undefined) return overlap;
       const sepa = target.providers.includes("SEPA_XML");
-      const requested = payload?.collectionDate ?? `${period}-01`;
-      const earliest = businessDaysAfter(today(), 2);
+      const requested = payload?.collectionDate ?? defaultCollectionDate(period);
+      // R-12-12 (SEPA-05): a chosen date must be a TARGET business day (the default is rolled to
+      // one); then the two TARGET business days of lead time.
+      if (sepa && !isTargetBusinessDay(requested)) {
+        return apiError("VALIDATION_ERROR", "Validation failed", 400, {
+          field: "collectionDate",
+          fieldErrors: [{ code: "NOT_BUSINESS_DAY", field: "collectionDate" }],
+          nextBusinessDay: targetBusinessDayOnOrAfter(requested),
+        });
+      }
+      const earliest = targetBusinessDaysAfter(today(), 2);
       if (sepa && requested < earliest) {
         return apiError("COLLECTION_DATE_TOO_SOON", "Collection date too soon", 422, {
           earliest,
@@ -815,6 +879,15 @@ export const billingHandlers = [
       return { body: rollBackRun(target, stored, now(), payload.reason), status: 200 };
     });
   }),
+  http.get("*/api/v1/billing/stripe-events", ({ request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    return listResponse(
+      request,
+      callerClubOwnsTheWorld() ? FAILED_STRIPE_EVENTS : [],
+      STRIPE_EVENT_SPEC,
+    );
+  }),
   http.get("*/api/v1/remittances", ({ request }) => {
     const denied = refused();
     if (denied !== undefined) return denied;
@@ -834,7 +907,7 @@ export const billingHandlers = [
     return new HttpResponse(mockExportBody("xlsx"), {
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="remesa-${item.period}.xlsx"`,
+        "Content-Disposition": `attachment; filename="${remittanceFileName(item, "xlsx")}"`,
       },
     });
   }),
@@ -843,8 +916,9 @@ export const billingHandlers = [
     if (denied !== undefined) return denied;
     const remittance = findRemittance(String(params.id));
     if (remittance?.fileAvailable !== true) return notFound();
-    // The api's attachment name (S12 §6, snapshot b67a07b): `remesa-{period}.xml`.
-    const fileName = `remesa-${remittance.period}.xml`;
+    // The api's attachment name (S12 §6, SEPA-06): `remesa-{period}-{seq}.xml`, and
+    // `remesa-{period}-{seq}-ANULLADA-NO-PUJAR.xml` once rolled back.
+    const fileName = remittanceFileName(remittance, "xml");
     return json({
       downloadUrl: `https://files.example.test/remittances/${remittance.id}/${fileName}?X-Amz-Expires=300&X-Amz-Signature=mock`,
       expiresAt: new Date(Date.now() + 300_000).toISOString().replace(/\.\d{3}Z$/u, "Z"),
@@ -871,6 +945,98 @@ export const billingHandlers = [
       remittance.submittedAt = dayInstant(payload.submittedAt);
       remittance.submittedByAccountId = BILLING_ADMIN_ACCOUNT_ID;
       return { body: structuredClone(remittance), status: 200 };
+    });
+  }),
+  http.post("*/api/v1/remittances/:id/submission-undo", async ({ params, request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    const remittance = findRemittance(String(params.id));
+    if (remittance === undefined) return notFound();
+    const payload = await body<SubmissionUndoRequest>(request);
+    return keyed(request, JSON.stringify({ id: params.id, payload }), () => {
+      if (
+        typeof payload?.reason !== "string" ||
+        payload.reason.trim() === "" ||
+        payload.reason.length > 500
+      ) {
+        return validationError("reason");
+      }
+      if (remittance.status !== "SUBMITTED") return invalidState(remittance.status);
+      // SEPA-04 (a), R-12-15: only before the collection date (club-local)…
+      if (today() >= remittance.requestedCollectionDate) {
+        return apiError("INVALID_STATE", "Invalid state", 409, {
+          reason: "COLLECTION_DATE_PASSED",
+        });
+      }
+      // …and while every receipt is as the run left it: COLLECTING in it, its attempt here open
+      // and its last one.
+      const changed = world()
+        .invoices.filter((item) =>
+          item.invoice.collections.some((entry) => remittance.collectionIds.includes(entry.id)),
+        )
+        .filter(({ invoice }) => {
+          const attempt = invoice.collections.find((entry) =>
+            remittance.collectionIds.includes(entry.id),
+          );
+          return (
+            invoice.status !== "COLLECTING" ||
+            invoice.remittanceId !== remittance.id ||
+            (attempt?.status !== "CREATED" && attempt?.status !== "SUBMITTED") ||
+            invoice.collections.at(-1)?.id !== attempt.id
+          );
+        })
+        .map((item) => item.invoice.id)
+        .sort();
+      if (changed.length > 0) {
+        return apiError("INVALID_STATE", "Invalid state", 409, {
+          invoiceIds: changed,
+          reason: "INVOICE_CHANGED",
+        });
+      }
+      remittance.status = "GENERATED";
+      remittance.submittedAt = null;
+      remittance.submittedByAccountId = null;
+      return { body: structuredClone(remittance), status: 200 };
+    });
+  }),
+  http.post("*/api/v1/remittances/:id/returns", async ({ params, request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    const remittance = findRemittance(String(params.id));
+    if (remittance === undefined) return notFound();
+    const payload = await body<RemittanceReturnsRequest>(request);
+    return keyed(request, JSON.stringify({ id: params.id, payload }), () => {
+      const ids = payload?.invoiceIds;
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return validationError("invoiceIds", "REQUIRED");
+      }
+      if (
+        typeof payload?.reason !== "string" ||
+        payload.reason.trim() === "" ||
+        payload.reason.length > 500
+      ) {
+        return validationError("reason");
+      }
+      if (!isDate(payload.at) || payload.at > today()) return validationError("at");
+      const items = [...new Set(ids)].map((id) => findInvoice(id));
+      if (items.some((item) => item === undefined)) return notFound();
+      const found = items as StoredInvoice[];
+      // SEPA-04 (b), all or none: every receipt's SEPA attempt of this remittance, each returnable,
+      // and only periodic ones presented again.
+      if (found.some((item) => returnRemittanceOf(item) !== remittance.id)) {
+        return validationError("invoiceIds");
+      }
+      const blocked = found.find((item) => !returnable(item));
+      if (blocked !== undefined) return invalidState(blocked.invoice.status);
+      const includeInNextRun = payload.includeInNextRun === true;
+      if (includeInNextRun && found.some((item) => item.invoice.kind !== "PERIODIC")) {
+        return validationError("includeInNextRun");
+      }
+      for (const item of found) markReturned(item, payload.at, payload.reason, includeInNextRun);
+      return {
+        body: { invoices: found.map(invoiceAnswer), returned: found.length },
+        status: 200,
+      };
     });
   }),
   http.get("*/api/v1/invoices", ({ request }) => {
@@ -1112,31 +1278,13 @@ export const billingHandlers = [
         return validationError("reason");
       }
       const { invoice } = item;
-      const sepa = invoice.collections.some((entry) => entry.provider === "SEPA_XML");
-      const returnable =
-        sepa &&
-        (invoice.status === "COLLECTING" ||
-          (invoice.status === "PAID" &&
-            invoice.collections.some(
-              (entry) => entry.provider === "SEPA_XML" && entry.status === "SUCCEEDED",
-            )));
-      if (!returnable) return invalidState(invoice.status);
+      if (!returnable(item)) return invalidState(invoice.status);
       if (payload.version !== invoice.version) return staleVersion();
-      const remitted = invoice.collections.find((entry) => entry.provider === "SEPA_XML");
-      appendCollection(item, {
-        failureCode: "BANK_RETURN",
-        failureMessage: payload.reason,
-        provider: "SEPA_XML",
-        providerRef: remitted?.providerRef ?? null,
-        remittanceId: remitted?.remittanceId ?? null,
-        resolvedAt: now(),
-        status: "FAILED",
-      });
-      invoice.status = "FAILED";
-      invoice.failedAt = dayInstant(payload.at);
-      invoice.failureReason = payload.reason;
-      invoice.paidAt = null;
-      invoice.version += 1;
+      // SEPA-04 (b): only a periodic receipt waits for the next remittance.
+      if (payload.includeInNextRun === true && invoice.kind !== "PERIODIC") {
+        return validationError("includeInNextRun");
+      }
+      markReturned(item, payload.at, payload.reason, payload.includeInNextRun === true);
       return { body: invoiceAnswer(item), status: 200 };
     });
   }),

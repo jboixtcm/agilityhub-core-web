@@ -4,6 +4,7 @@ import type { useTranslation } from "react-i18next";
 
 import type { LoadState } from "../activities/shared";
 import { navigate } from "../router";
+import { useWindowFocus } from "../training/shared";
 
 export type Translate = ReturnType<typeof useTranslation>["t"];
 
@@ -102,25 +103,43 @@ export function errorText(t: Translate, cause: unknown): string {
  * with the rows kept on screen while they load. A quiet read that fails shows the error with its
  * retry (04's join and failed hold, 07, the waiting entry), unless `keepRows`: only 03 keeps its
  * rows then, for its `refresh` and `pageshow` reads (E7-W02 review #3, E7-W06 step 3). Another
- * request (another dog) always shows its own error.
+ * request (another dog) always shows its own error. With `onFocus` (03, 04, 07 and the waiting
+ * entry), the request is read again quietly when the app comes back (focus, visible again, back
+ * online), as 08 does (`useWindowFocus`); that read keeps the rows on screen if it fails (WEB-04),
+ * unless it replaced a read that had not answered yet and would have shown its error.
  */
-export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown, keepRows = false) {
+export function useLoader<Data>(
+  load: () => Promise<Data>,
+  refresh?: unknown,
+  keepRows = false,
+  onFocus = false,
+) {
   const [state, setState] = useState<LoadState<Data>>({ status: "loading" });
   const [reload, setReload] = useState(0);
   // The request whose rows are on screen.
   const shownBy = useRef<() => Promise<Data>>(undefined);
+  // The next read was asked by the app coming back: it keeps the rows if it fails.
+  const focusRead = useRef(false);
+  // A read that shows its error (any other read) has not answered yet. The read that replaces it
+  // shows its error too: coming back during 07's reload never keeps the old «confirmada» card.
+  const owed = useRef(false);
   useEffect(() => {
     let current = true;
+    if (!focusRead.current) owed.current = true;
+    focusRead.current = false;
+    const keep = keepRows || !owed.current;
     load().then(
       (data) => {
         if (!current) return;
+        owed.current = false;
         shownBy.current = load;
         setState({ data, status: "ready" });
       },
       (error: unknown) => {
         if (!current) return;
+        owed.current = false;
         setState((previous) =>
-          keepRows && previous.status === "ready" && shownBy.current === load
+          keep && previous.status === "ready" && shownBy.current === load
             ? previous
             : { error, status: "error" },
         );
@@ -134,6 +153,13 @@ export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown, ke
     if (!quiet) setState({ status: "loading" });
     setReload((value) => value + 1);
   }, []);
+  useWindowFocus(
+    useCallback(() => {
+      if (!onFocus) return;
+      focusRead.current = true;
+      setReload((value) => value + 1);
+    }, [onFocus]),
+  );
   return { ...state, refetch };
 }
 
@@ -160,7 +186,7 @@ export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) 
       ),
     [client, dogId],
   );
-  return useLoader(load, refresh, true);
+  return useLoader(load, refresh, true, true);
 }
 
 /** `GET /me/bookable-classes?dogId=` (04): no `dogId` = the api's proposed dog. */
@@ -176,7 +202,7 @@ export function useBookableClasses(client: ApiClient, dogId: string | null) {
       ),
     [client, dogId],
   );
-  return useLoader(load);
+  return useLoader(load, undefined, false, true);
 }
 
 export function useBooking(client: ApiClient, id: string, refresh?: unknown) {
@@ -184,7 +210,7 @@ export function useBooking(client: ApiClient, id: string, refresh?: unknown) {
     async () => required((await client.GET("/bookings/{id}", { params: { path: { id } } })).data),
     [client, id],
   );
-  return useLoader(load, refresh);
+  return useLoader(load, refresh, false, true);
 }
 
 export function useWaitlistEntry(client: ApiClient, id: string) {
@@ -193,7 +219,7 @@ export function useWaitlistEntry(client: ApiClient, id: string) {
       required((await client.GET("/waitlist-entries/{id}", { params: { path: { id } } })).data),
     [client, id],
   );
-  return useLoader(load);
+  return useLoader(load, undefined, false, true);
 }
 
 /** The club-local date part `YYYY-MM-DD` and time `HH:mm` of a `YYYY-MM-DDTHH:mm`. */

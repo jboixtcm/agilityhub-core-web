@@ -367,7 +367,11 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
     await expect(submitted).toContainText("Agost 2026");
     await expect(submitted.locator(".ah-badge")).toHaveText("enviada al banc");
     await expect(rolledBack).toContainText("Agost 2026");
-    await expect(rolledBack.locator(".ah-badge")).toHaveText("retrocedida");
+    // SEPA-06: its file is marked cancelled beside its buttons.
+    await expect(rolledBack.locator(".ah-badge")).toHaveText([
+      "retrocedida",
+      "Anul·lada — no la pugis al banc",
+    ]);
     // A rolled-back remittance is read-only: never «Marca com a enviada al banc».
     await expect(
       rolledBack.getByRole("button", { name: "Marca com a enviada al banc" }),
@@ -375,7 +379,12 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
     await expect(
       submitted.getByRole("button", { name: "Marca com a enviada al banc" }),
     ).toHaveCount(0);
-    await expect(rolledBack.getByRole("button", { name: "Descarrega l'XML" })).toBeVisible();
+    await expect(
+      rolledBack.getByRole("button", {
+        exact: true,
+        name: "Descarrega l'XML (anul·lada, no la pugis al banc)",
+      }),
+    ).toBeVisible();
     await expectIconsPainted(page.locator("main"));
     await page.screenshot({ fullPage: true, path: resolve(evidenceDirectory, "remeses-1280.png") });
 
@@ -431,8 +440,8 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
       new RegExp(`^/remittances/${remittanceId ?? ""}/[^/]+\\.xml$`, "u"),
     );
     expect(saved.suggestedFilename()).toBe(signed.pathname.split("/").at(-1));
-    // The api's attachment name (snapshot b67a07b).
-    expect(saved.suggestedFilename()).toBe("remesa-2026-09.xml");
+    // The api's attachment name (SEPA-06: `remesa-{period}-{seq}.xml`).
+    expect(saved.suggestedFilename()).toBe("remesa-2026-09-1.xml");
     // The page stays: the file is a download, never a navigation away from the list.
     await expect(page).toHaveURL(/\/facturacio\/remeses/u);
     await expect(september).toBeVisible();

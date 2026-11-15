@@ -138,7 +138,8 @@ const historyText = {
   ca: {
     all: "Tots",
     byClub: (message: string) => `«${message}»`,
-    byMemberLate: /^Per tu, el \d{1,2}\/\d{1,2} a les \d{1,2}:\d{2} · compta com a feta$/u,
+    byMemberLate:
+      /^Anul·lada per tu, el \d{1,2}\/\d{1,2} a les \d{1,2}:\d{2} · compta com a feta$/u,
     cancelled: "anul·lada",
     cancelledByClub: "cancel·lada pel club",
     cancelledLate: "anul·lada tard",
@@ -151,7 +152,8 @@ const historyText = {
   es: {
     all: "Todos",
     byClub: (message: string) => `«${message}»`,
-    byMemberLate: /^Por ti, el \d{1,2}\/\d{1,2} a las \d{1,2}:\d{2} · cuenta como hecha$/u,
+    byMemberLate:
+      /^Anulada por ti, el \d{1,2}\/\d{1,2} a las \d{1,2}:\d{2} · cuenta como realizada$/u,
     cancelled: "anulada",
     cancelledByClub: "cancelada por el club",
     cancelledLate: "anulada tarde",
@@ -471,8 +473,9 @@ async function clubsSession(
   email: string,
   landing: "/inici" | "/instructor/dia",
   locale: Locale = "ca",
+  instance = "default",
 ): Promise<Session> {
-  const key = `clubs|${email}|${locale}`;
+  const key = `clubs|${email}|${locale}|${instance}`;
   const known = sessions.get(key);
   if (known !== undefined) return known;
   const context = await newContext(browser, mobile, locale);
@@ -789,7 +792,7 @@ function castStates(sheet: AttendanceSheet): Record<string, AttendanceState> {
 /** Screen 21's row of `name` («Rita + Mel»): its radio group carries the name. */
 function sheetRow(page: Page, name: string): Locator {
   return page.locator("li.instructor-sheet__row").filter({
-    has: page.locator(".instructor-sheet__who > strong", {
+    has: page.locator(".instructor-sheet__who strong", {
       hasText: new RegExp(`^${escapeRegExp(name)}$`, "u"),
     }),
   });
@@ -1374,7 +1377,7 @@ test.describe("Monday 04:00", () => {
     await shot(berta.page, "22-fitxa-core-375.png");
   });
 
-  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves @critical-llista", async ({
+  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the assigned instructor's second session: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves @critical-llista", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1431,10 +1434,24 @@ test.describe("Monday 04:00", () => {
     await circle(page, "ca", names.nil, sheetText.ca.noShow).click();
     expect(puts).toBe(0);
 
-    // (c) The second instructor opens the same sheet and saves Martí «no presentat» first.
-    const other = await clubsSession(browser, theScene().instructorB, "/instructor/dia");
+    // An unassigned instructor can read the global sheet but cannot mark its attendance.
+    const unassigned = await clubsSession(browser, theScene().instructorB, "/instructor/dia");
+    const readOnlySheet = await open21(unassigned.page, classId);
+    expect(readOnlySheet.sheet).toMatchObject({ canMarkPresence: false, canMarkNotice: false });
+    await expect(circle(unassigned.page, "ca", names.marti, sheetText.ca.noShow)).toBeDisabled();
+
+    // (c) Two independent sessions of the assigned instructor exercise the version conflict.
+    const other = await clubsSession(
+      browser,
+      theScene().instructorA,
+      "/instructor/dia",
+      "ca",
+      "concurrent",
+    );
+    expect(other.context).not.toBe(berta.context);
     const otherSheet = await open21(other.page, classId);
     expect(otherSheet.sheet.version).toBe(versionRead);
+    expect(otherSheet.sheet.canMarkPresence).toBe(true);
     await circle(other.page, "ca", names.marti, sheetText.ca.noShow).click();
     const otherSave = await save21(other.page);
     expect(otherSave.status).toBe(200);
@@ -1508,7 +1525,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert @critical-llista", async ({
+  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays and an editable notice can be corrected @critical-llista", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -1521,7 +1538,7 @@ test.describe("Monday 04:00", () => {
     const saved = await save21(page);
     expect(saved.status).toBe(200);
     const alba = rowOf(saved.body, cast.alba.dog);
-    expect(alba).toMatchObject({ final: true, state: "NOTIFIED" });
+    expect(alba).toMatchObject({ final: false, state: "NOTIFIED" });
     expect(alba.notice).toMatchObject({
       afterClassEnd: false,
       bookingState: "CANCELLED",
@@ -1562,32 +1579,40 @@ test.describe("Monday 04:00", () => {
     });
     const n15Mail = newMessages(mailboxBefore).map(messageSummary);
 
-    // The final row is inert: no circle can be chosen, and a forced tap sends nothing.
+    // Attendance corrections restore the cancelled reservation while a seat is available.
+    // Choosing a circle remains local until save, and the API owns the resulting count.
     let puts = 0;
     page.on("request", (request) => {
       if (request.method() === "PUT" && SHEET_PATH.test(apiPath(request))) puts += 1;
     });
-    const group = page.getByRole("radiogroup", {
-      exact: true,
-      name: sheetText.ca.circles(names.alba),
-    });
-    await expect(group).toHaveAttribute("aria-disabled", "true");
-    for (const state of [sheetText.ca.pending, sheetText.ca.present, sheetText.ca.noShow]) {
-      const radio = group.getByRole("radio", { exact: true, name: state });
-      await expect(radio).toBeDisabled();
-      await radio.click({ force: true });
-    }
+    await circle(page, "ca", names.alba, sheetText.ca.pending).click();
+    expect(puts).toBe(0);
+    const restored = await save21(page);
+    expect(restored.status).toBe(200);
+    expect(rowOf(restored.body, cast.alba.dog)).toMatchObject({ final: false, state: "PENDING" });
+    expect(restored.body.classSession.booked).toBe(4);
+    await expect(page.locator(".instructor-sheet__meta")).toContainText("4/5");
+    const restoredBooking = await call<Schemas["Booking"]>(admin, `/bookings/${alba.bookingId}`);
+    expect(restoredBooking.status).toBe(200);
+    expect(restoredBooking.body.state).toBe("ACTIVE");
+
+    // Leave the scenario with Alba's notice saved for the later process/history checks.
+    await circle(page, "ca", names.alba, sheetText.ca.notified).click();
+    const notifiedAgain = await save21(page);
+    expect(notifiedAgain.status).toBe(200);
+    expect(rowOf(notifiedAgain.body, cast.alba.dog).notice?.bookingState).toBe("CANCELLED");
+    expect(notifiedAgain.body.classSession.booked).toBe(3);
     await expect(circle(page, "ca", names.alba, sheetText.ca.notified)).toHaveAttribute(
       "aria-checked",
       "true",
     );
     await expect(page.getByRole("button", { exact: true, name: sheetText.ca.save })).toBeDisabled();
-    expect(puts).toBe(0);
+    expect(puts).toBe(2);
     await shot(page, "21-ha-avisat-core-375.png");
     note("b-notice", {
       booked: saved.body.classSession.booked,
       entry: { adminRead: entry.status, state: entry.body.state ?? null },
-      forcedPuts: puts,
+      correctionPuts: puts,
       mailboxAfterNotice: n15Mail,
       notice: alba.notice,
       status: saved.status,

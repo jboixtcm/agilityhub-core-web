@@ -412,7 +412,9 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     window.history.pushState(null, "", "/tauler?signup=rejected-refund");
     await renderDashboard();
     expect(
-      screen.getByText("Hi ha un pagament cobrat: caldrà retornar-lo des de Facturació"),
+      screen.getByText(
+        "Hi ha un pagament cobrat: caldrà retornar-lo. Si es va pagar amb targeta, es reemborsa des de la fitxa de l'abonat, a «Pagaments a l'acte».",
+      ),
     ).toBeVisible();
   });
 });

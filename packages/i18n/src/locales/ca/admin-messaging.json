@@ -168,6 +168,19 @@
       "MAILBOX_FULL": "Bústia plena",
       "RATE_LIMITED": "Límit temporal del servidor receptor",
       "TEMPORARY_REJECTION": "Rebuig temporal del servidor receptor"
+    },
+    "resend": {
+      "help": "Aquest avís és d'un comunicat i el correu no ha arribat. Pots tornar a enviar tots els correus del comunicat que han fallat.",
+      "action": "Reenvia els fallits",
+      "confirmTitle": "Reenvia els correus fallits del comunicat",
+      "confirmBody": "Es tornaran a enviar ara tots els correus d'aquest comunicat que han fallat, al ritme del proveïdor. Els correus que ja van arribar, els SMS i els avisos push no es tornen a enviar.",
+      "confirm": "Reenvia els fallits",
+      "cancel": "Cancel·la",
+      "sending": "Reenviant…",
+      "done": "{count, plural, one {# correu torna a la cua: sortirà al ritme del proveïdor.} other {# correus tornen a la cua: sortiran al ritme del proveïdor.}}",
+      "none": "No hi ha cap correu fallit per reenviar.",
+      "notFound": "Aquest comunicat ja no existeix.",
+      "error": "No s'han pogut reenviar els correus. Torna-ho a provar."
     }
   }
 }

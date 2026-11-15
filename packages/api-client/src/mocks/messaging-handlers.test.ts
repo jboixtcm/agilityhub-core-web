@@ -6,6 +6,7 @@ import openapiDocument from "../../openapi/openapi.json";
 import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 
+import { notificationLog, SEED_BATCH_ID } from "./fixtures/messaging";
 import { findParameter, replaceParameter, resetSettingsState } from "./fixtures/settings";
 import {
   ERASED_MEMBER_ID,
@@ -631,5 +632,69 @@ describe("T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D
         }),
       ),
     ).resolves.toMatchObject({ code: "FORBIDDEN", status: 403 });
+  });
+});
+
+describe("COMM-07 (owner decision of 13 Nov 2026) · POST /announcements/{batchId}/resend-failed", () => {
+  const resend = (batchId: string, key = crypto.randomUUID()) =>
+    client.POST("/announcements/{batchId}/resend-failed", {
+      params: { header: { "Idempotency-Key": key }, path: { batchId } },
+    });
+
+  it("the log's rows carry their announcement batch; a batch without a failed e-mail resends nothing", async () => {
+    const page = await client.GET("/notifications", {
+      params: { query: { fields: "id,code,batchId", size: 50 } },
+    });
+    expectValid("NotificationPage", page.data);
+    const rows = page.data?.items ?? [];
+    expect(rows.find((row) => row.code === "N-24")?.batchId).toBe(SEED_BATCH_ID);
+    expect(rows.filter((row) => row.batchId != null)).toHaveLength(1);
+    const answer = await resend(SEED_BATCH_ID);
+    expectValid("AnnouncementResendResult", answer.data);
+    expect(answer.data).toEqual({ batchId: SEED_BATCH_ID, resent: 0 });
+  });
+
+  it("puts the batch's FAILED e-mails back in the queue, attempts at zero, and replays the same key", async () => {
+    const notice = notificationLog.find((item) => item.batchId === SEED_BATCH_ID);
+    const email = notice?.deliveries.find((entry) => entry.channel === "EMAIL");
+    if (notice === undefined || email === undefined) throw new TypeError("No seeded e-mail");
+    notice.deliveries = notice.deliveries.map((entry) =>
+      entry.channel === "EMAIL"
+        ? { ...entry, attempts: 5, failedAt: notice.createdAt, status: "FAILED" as const }
+        : entry,
+    );
+    const key = crypto.randomUUID();
+    expect((await resend(SEED_BATCH_ID, key)).data).toEqual({ batchId: SEED_BATCH_ID, resent: 1 });
+    const read = await client.GET("/notifications/{id}", { params: { path: { id: notice.id } } });
+    expect(read.data?.deliveries.find((entry) => entry.channel === "EMAIL")).toMatchObject({
+      attempts: 0,
+      failedAt: null,
+      status: "QUEUED",
+    });
+    expect(read.data).not.toHaveProperty("batchId");
+    // The same key answers the same, without resending anything again.
+    expect((await resend(SEED_BATCH_ID, key)).data).toEqual({ batchId: SEED_BATCH_ID, resent: 1 });
+    expect((await resend(SEED_BATCH_ID)).data).toEqual({ batchId: SEED_BATCH_ID, resent: 0 });
+  });
+
+  it("refuses an unknown batch (404), a missing key (400), a member and an impersonation (403)", async () => {
+    expect(await failure(resend("batch-unknown"))).toMatchObject({
+      code: "NOT_FOUND",
+      status: 404,
+    });
+    expect(
+      await failure(
+        client.POST("/announcements/{batchId}/resend-failed", {
+          params: { header: { "Idempotency-Key": "" }, path: { batchId: SEED_BATCH_ID } },
+        }),
+      ),
+    ).toMatchObject({ code: "VALIDATION_ERROR", status: 400 });
+    use("member");
+    expect((await failure(resend(SEED_BATCH_ID))).status).toBe(403);
+    use("impersonated");
+    expect(await failure(resend(SEED_BATCH_ID))).toMatchObject({
+      code: "IMPERSONATION_DENIED",
+      status: 403,
+    });
   });
 });

@@ -571,6 +571,7 @@ export const messagingState: {
 };
 
 export function resetMessagingState(): void {
+  resetNotificationLog();
   messagingState.batches = 0;
   messagingState.idempotency = new Map();
   messagingState.nextId = 100;
@@ -797,6 +798,8 @@ export function templatePreview(
 
 interface LogSeed {
   audience: NotificationAudience;
+  /** The announcement batch of an N-24 or CUSTOM row (INC-53, COMM-07). */
+  batchId?: string;
   category: NotificationCategory;
   code: string;
   createdAt: string;
@@ -808,6 +811,8 @@ interface LogSeed {
 }
 
 const LAURA = "member-laura";
+/** The batch of the log's announcement (`AnnouncementSent`, R-11-13). */
+export const SEED_BATCH_ID = "batch-2026-08-09";
 const MARC = "member-marc";
 const ANNA = "member-anna";
 
@@ -845,6 +850,7 @@ const LOG_SEEDS: readonly LogSeed[] = [
   {
     audience: "MEMBER",
     category: "CLUB_NEWS",
+    batchId: SEED_BATCH_ID,
     code: "N-24",
     createdAt: "2026-08-09T09:00:00Z",
     deliveries: [
@@ -1016,6 +1022,8 @@ function delivery(
 }
 
 export interface StoredNotification extends NotificationDetail {
+  /** The list's `batchId` (INC-53): an announcement's batch, else null. */
+  batchId: string | null;
   /** The filter of the D10 link (`memberId`): the recipient's member. */
   memberId: string | null;
 }
@@ -1023,6 +1031,7 @@ export interface StoredNotification extends NotificationDetail {
 function notification(seed: LogSeed, index: number): StoredNotification {
   return {
     audience: seed.audience,
+    batchId: seed.batchId ?? null,
     body: `${seed.title}. Text renderitzat i congelat del codi ${seed.code}.`,
     category: seed.category,
     channels: seed.deliveries.map(([channel, status]) => ({ channel, status })),
@@ -1051,9 +1060,21 @@ function notification(seed: LogSeed, index: number): StoredNotification {
 
 export const notificationLog: readonly StoredNotification[] = LOG_SEEDS.map(notification);
 
+/** The log's deliveries as seeded: «Reenvia els fallits» (COMM-07) changes them in a test. */
+export function resetNotificationLog(): void {
+  LOG_SEEDS.forEach((seed, index) => {
+    const stored = notificationLog[index];
+    if (stored === undefined) return;
+    const fresh = notification(seed, index);
+    stored.channels = fresh.channels;
+    stored.deliveries = fresh.deliveries;
+  });
+}
+
 export function notificationListItem(item: StoredNotification): NotificationListItem {
   return {
     audience: item.audience ?? null,
+    batchId: item.batchId,
     category: item.category,
     channels: item.channels,
     code: item.code,
@@ -1068,6 +1089,6 @@ export function notificationListItem(item: StoredNotification): NotificationList
 /** `GET /notifications/{id}`: the stored notification without the log's own filter key. */
 export function notificationDetail(item: StoredNotification): NotificationDetail {
   return Object.fromEntries(
-    Object.entries(item).filter(([key]) => key !== "memberId"),
+    Object.entries(item).filter(([key]) => key !== "memberId" && key !== "batchId"),
   ) as unknown as NotificationDetail;
 }

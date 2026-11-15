@@ -80,8 +80,14 @@ for (const width of [375, 1280]) {
     await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     await page.waitForURL("**/tauler");
+    // The route changes before its asynchronous dashboard has finished loading in WebKit.
+    await expect(
+      page.getByRole("heading", { name: "Preinscripcions pendents", exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
     await page.goto(`${baseUrl}/notificacions?q=example%40example.test`);
-    await expect(page.getByRole("searchbox")).toHaveValue("example@example.test");
+    await expect(page.getByRole("searchbox")).toHaveValue("example@example.test", {
+      timeout: 15_000,
+    });
     await expect(
       page.getByText("Accés i recuperació de contrasenya", { exact: true }),
     ).toBeVisible();

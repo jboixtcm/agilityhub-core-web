@@ -124,12 +124,30 @@
   },
   "password": {
     "show": "Mostrar la contraseña",
-    "hide": "Ocultar la contraseña"
+    "hide": "Ocultar la contraseña",
+    "tooShort": "La contraseña debe tener como mínimo {minLength} caracteres."
   },
   "recovery": {
     "title": "Solicitud recibida",
     "acknowledge": "Entendido",
     "checkSpam": "Si no encuentras el mensaje, comprueba también la carpeta de correo no deseado.",
     "close": "Cerrar"
+  },
+  "notifyMember": "Avisar al abonado",
+  "paymentDispute": {
+    "state": {
+      "open": "En disputa",
+      "won": "Disputa ganada",
+      "lost": "Disputa perdida",
+      "closed": "Disputa cerrada"
+    },
+    "reason": "{reason, select, fraudulent {fraude} duplicate {cobro duplicado} unrecognized {no lo reconoce} product_not_received {servicio no recibido} credit_not_processed {abono no realizado} general {motivo general} other {motivo: {reason}}}",
+    "noReason": "sin motivo",
+    "openDetail": "El titular ha disputado {amount} en su banco ({reason}) el {date}. Responde a la disputa desde el panel de Stripe.",
+    "closedDetail": "Disputa de {amount} ({reason}) abierta el {opened} y cerrada por Stripe el {closed}."
+  },
+  "newVersion": {
+    "message": "Hay una versión nueva",
+    "reload": "Recargar"
   }
 }

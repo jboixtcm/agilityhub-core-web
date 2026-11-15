@@ -1,5 +1,6 @@
 import {
   type AccountingExportFormat,
+  apiFieldErrors,
   type ApiClient,
   type components,
   isApiError,
@@ -9,6 +10,7 @@ import {
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
+  Checkbox,
   FormField,
   Input,
   Modal,
@@ -18,7 +20,7 @@ import {
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { useListExport } from "../audit/useListExport";
@@ -43,6 +45,7 @@ type BillingRunResult = components["schemas"]["BillingRunResult"];
 type BulkPaymentResult = components["schemas"]["BulkPaymentResult"];
 type CardChargesResult = components["schemas"]["CardChargesResult"];
 type PeriodSimulation = components["schemas"]["PeriodSimulation"];
+type RemittanceReturnsResult = components["schemas"]["RemittanceReturnsResult"];
 type RollbackResult = components["schemas"]["RollbackResult"];
 
 /**
@@ -66,7 +69,9 @@ function Alert({ children }: { children: ReactNode }) {
 
 /**
  * The strong confirmation of button 2 (S12 §2, R-12-11): «Es generaran {n} rebuts per un total de
- * {import}…» from the simulation's KPIs, then `POST /billing/runs` with one key per payload.
+ * {import}…» from the simulation's KPIs, then `POST /billing/runs` with one key per payload. With
+ * SEPA receipts, the collection date can be chosen (R-12-12, SEPA-05): prefilled with the default
+ * the api simulated (`kpis.collectionDate`, already a TARGET business day).
  */
 export function GenerateModal({
   client,
@@ -102,18 +107,38 @@ export function GenerateModal({
   // Once the admin accepts the api's first valid collection day, it is part of the submission
   // payload. A retryable failure must not turn the next press back into the original payload.
   const [acceptedCollectionDate, setAcceptedCollectionDate] = useState<string>();
+  // SEPA-05: the date field, shown when the month has SEPA receipts. Sent only when the admin
+  // changes the default: the api applies that same default without it.
+  const defaultCollectionDate = simulation.kpis.collectionDate ?? undefined;
+  const sepaReceipts = (simulation.kpis.byProvider.SEPA_XML?.count ?? 0) > 0;
+  const [chosenDate, setChosenDate] = useState(defaultCollectionDate ?? "");
+  const chosenCollectionDate =
+    sepaReceipts && chosenDate !== "" && chosenDate !== defaultCollectionDate
+      ? chosenDate
+      : undefined;
   const [simulating, setSimulating] = useState(false);
   const [simulateError, setSimulateError] = useState<ReactNode>();
+  // SEPA-10 (R-12-11): the simulated total against the previous month's run, and the second,
+  // explicit confirmation the api asks for (or when the simulation predates the comparison).
+  const comparison = simulation.comparison;
+  const needsSecondConfirmation = comparison?.secondConfirmationRequired !== false;
+  const [secondStep, setSecondStep] = useState(false);
+  const [confirmedTwice, setConfirmedTwice] = useState(false);
+  const secondHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (secondStep) secondHeading.current?.focus();
+  }, [secondStep]);
   // R-12-06: the included members' next receipt moves to that day of the following month.
   const nextDay = useNextInvoiceDay(client);
   const nextPeriod = shiftPeriod(period, 1);
   const code = isApiError(failure) ? failure.code : undefined;
 
   /**
-   * `collectionDate` only when the admin takes the api's `earliest` after `422
-   * COLLECTION_DATE_TOO_SOON` (`BillingRunRequest.collectionDate`): another payload, another key.
+   * `collectionDate` when the admin chose another date, or takes the api's `earliest` after `422
+   * COLLECTION_DATE_TOO_SOON` or its `nextBusinessDay` after `400 VALIDATION_ERROR` `NOT_BUSINESS_DAY`
+   * (`BillingRunRequest.collectionDate`): another payload, another key.
    */
-  const generate = async (collectionDate = acceptedCollectionDate) => {
+  const generate = async (collectionDate = acceptedCollectionDate ?? chosenCollectionDate) => {
     setPending(true);
     setFailure(undefined);
     const body = {
@@ -156,7 +181,63 @@ export function GenerateModal({
     /^\d{4}-\d{2}-\d{2}$/u.test(details.earliest)
       ? details.earliest
       : undefined;
-  const retryCollectionDate = earliest ?? acceptedCollectionDate;
+  // SEPA-05: a chosen date that is not a TARGET business day; the api names the next one.
+  const notBusinessDay = apiFieldErrors(failure).some(
+    (entry) => entry.field === "collectionDate" && entry.code === "NOT_BUSINESS_DAY",
+  );
+  const nextBusinessDay =
+    notBusinessDay &&
+    typeof details.nextBusinessDay === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/u.test(details.nextBusinessDay)
+      ? details.nextBusinessDay
+      : undefined;
+  const retryCollectionDate = earliest ?? nextBusinessDay ?? acceptedCollectionDate;
+
+  // SEPA-10: signed figures in the admin's language (`+96,00 €`, `+8,2 %`), the threshold whole.
+  const percent = (value: number, signed: boolean) =>
+    new Intl.NumberFormat(locale, {
+      maximumFractionDigits: signed ? 1 : 0,
+      minimumFractionDigits: signed ? 1 : 0,
+      signDisplay: signed ? "exceptZero" : "auto",
+      style: "percent",
+    }).format(value / 100);
+  const previousTotal = comparison?.previousTotal ?? undefined;
+  const differencePercent = comparison?.differencePercent ?? undefined;
+  const previousMonth =
+    comparison === undefined ? "" : formats.formatMonthTitle(comparison.previousPeriod);
+  const difference = comparison?.difference ?? undefined;
+  const comparisonFigures =
+    previousTotal === undefined
+      ? undefined
+      : {
+          difference:
+            difference === undefined
+              ? ""
+              : `${difference.amountMinor > 0 ? "+" : ""}${formatMoney(difference, locale)}`,
+          previousMonth,
+          previousTotal: formatMoney(previousTotal, locale),
+        };
+  const comparisonLine =
+    comparison === undefined
+      ? t("admin-billing:confirm.comparisonMissing")
+      : comparisonFigures === undefined
+        ? t("admin-billing:confirm.comparisonNone")
+        : differencePercent === undefined
+          ? t("admin-billing:confirm.comparisonAmount", comparisonFigures)
+          : t("admin-billing:confirm.comparison", {
+              ...comparisonFigures,
+              differencePercent: percent(differencePercent, true),
+            });
+  const secondBody =
+    comparison === undefined
+      ? t("admin-billing:confirm.secondBodyMissing")
+      : previousTotal === undefined || differencePercent === undefined
+        ? t("admin-billing:confirm.secondBodyNone")
+        : t("admin-billing:confirm.secondBody", {
+            differencePercent: percent(differencePercent, true),
+            previousMonth,
+            thresholdPercent: percent(comparison.thresholdPercent, false),
+          });
 
   return (
     <Modal
@@ -182,6 +263,28 @@ export function GenerateModal({
             </Button>
           </Actions>
         </>
+      ) : secondStep ? (
+        // SEPA-10: the second, explicit step: its own button, the focus on its heading.
+        <>
+          <h3 className="billing-modal__step" ref={secondHeading} tabIndex={-1}>
+            {t("admin-billing:confirm.secondTitle")}
+          </h3>
+          <p className="billing-modal__body">{secondBody}</p>
+          <Actions>
+            <Button
+              onClick={() => {
+                setSecondStep(false);
+                setConfirmedTwice(true);
+                void generate();
+              }}
+            >
+              {t("admin-billing:confirm.secondConfirm")}
+            </Button>
+            <Button onClick={onClose} variant="ghost">
+              {t("admin-billing:actions.cancel")}
+            </Button>
+          </Actions>
+        </>
       ) : (
         <>
           {nextDay === undefined ? (
@@ -198,7 +301,36 @@ export function GenerateModal({
               })}
             </p>
           )}
-          {failure === undefined ? null : (
+          <p className="billing-modal__body billing-modal__comparison">{comparisonLine}</p>
+          {sepaReceipts ? (
+            <FormField
+              {...(notBusinessDay
+                ? {
+                    error: t("admin-billing:confirm.collectionDateNotBusinessDay", {
+                      date: dateOf(chosenDate),
+                      next: dateOf(nextBusinessDay),
+                    }),
+                  }
+                : {})}
+              help={t("admin-billing:confirm.collectionDateHelp")}
+              id="billing-collection-date"
+              label={t("admin-billing:confirm.collectionDate")}
+            >
+              <Input
+                aria-describedby="billing-collection-date-help"
+                disabled={pending}
+                id="billing-collection-date"
+                onChange={(event) => {
+                  setChosenDate(event.currentTarget.value);
+                  setAcceptedCollectionDate(undefined);
+                  setFailure(undefined);
+                }}
+                type="date"
+                value={chosenDate}
+              />
+            </FormField>
+          ) : null}
+          {failure === undefined || notBusinessDay ? null : (
             <Alert>
               {code === "BILLING_BUSY" ? (
                 t("admin-billing:errors.billingBusy")
@@ -207,6 +339,8 @@ export function GenerateModal({
                   earliest: dateOf(details.earliest),
                   requested: dateOf(details.requested),
                 })
+              ) : code === "SEPA_NOT_CONFIGURED" && details.reason === "GENERATION_PAUSED" ? (
+                t("admin-billing:errors.sepaGenerationPaused")
               ) : code === "SEPA_NOT_CONFIGURED" ? (
                 <>
                   {t("admin-billing:errors.sepaNotConfigured")}{" "}
@@ -233,7 +367,10 @@ export function GenerateModal({
                 disabled={nextDay === undefined}
                 loading={pending}
                 loadingLabel={t("admin-billing:confirm.generating")}
-                onClick={() => void generate()}
+                onClick={() => {
+                  if (needsSecondConfirmation && !confirmedTwice) setSecondStep(true);
+                  else void generate();
+                }}
               >
                 {t("admin-billing:confirm.generate")}
               </Button>
@@ -244,6 +381,7 @@ export function GenerateModal({
                 loadingLabel={t("admin-billing:confirm.generating")}
                 onClick={() => {
                   setAcceptedCollectionDate(retryCollectionDate);
+                  setChosenDate(retryCollectionDate);
                   void generate(retryCollectionDate);
                 }}
               >
@@ -594,6 +732,148 @@ export function MarkPaidModal({
           onClick={() => void markPaid()}
         >
           {t("admin-billing:confirm.markPaid")}
+        </Button>
+        <Button disabled={pending} onClick={onClose} variant="ghost">
+          {t("admin-billing:actions.cancel")}
+        </Button>
+      </Actions>
+    </Modal>
+  );
+}
+
+/**
+ * [Marca impagats (selecció)] (R-12-17, SEPA-04 (b)): several bank returns of one remittance in
+ * one request, all or none — the club-local day (not after today), a required reason and, when
+ * every receipt is periodic, «Torna'ls a presentar a la propera remesa» (`includeInNextRun`, sent
+ * only when ticked). The admins get one notice for the whole request (N-10).
+ */
+export function MarkReturnedModal({
+  client,
+  invoiceIds,
+  keys,
+  onClose,
+  onConflict,
+  onReturned,
+  periodic,
+  remittanceId,
+}: {
+  client: ApiClient;
+  invoiceIds: readonly string[];
+  keys: SubmissionKeys;
+  onClose: () => void;
+  /** `409 INVALID_STATE`: one of them changed (all or none): the list is read again. */
+  onConflict: () => void;
+  onReturned: (result: RemittanceReturnsResult) => void;
+  /** Every receipt is PERIODIC: only those can be presented again (R-12-19). */
+  periodic: boolean;
+  remittanceId: string;
+}) {
+  const { t } = useTranslation(["admin-billing", "errors"]);
+  const branding = useBranding();
+  const errorMessage = useBillingErrorMessage();
+  const today = clubToday(branding.timeZone);
+  const [at, setAt] = useState(today);
+  const [reason, setReason] = useState("");
+  const [presentAgain, setPresentAgain] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [failure, setFailure] = useState<unknown>();
+  const fields = errorFields(failure);
+  const fieldError = fields.includes("at") || fields.includes("reason");
+
+  const markReturned = async () => {
+    if (reason.trim() === "") return;
+    setPending(true);
+    setFailure(undefined);
+    const body = {
+      at,
+      invoiceIds: [...invoiceIds],
+      ...(periodic && presentAgain ? { includeInNextRun: true } : {}),
+      reason: reason.trim(),
+    };
+    try {
+      const result = await keys.send(JSON.stringify(["returns", remittanceId, body]), (key) =>
+        client.POST("/remittances/{id}/returns", {
+          body,
+          params: { header: { "Idempotency-Key": key }, path: { id: remittanceId } },
+        }),
+      );
+      if (result.data !== undefined) onReturned(result.data);
+    } catch (error) {
+      setFailure(error);
+      if (isApiError(error, "INVALID_STATE") || isApiError(error, "STALE_VERSION")) onConflict();
+    } finally {
+      setPending(false);
+    }
+  };
+
+  const message = fields.includes("invoiceIds")
+    ? t("admin-billing:errors.returnsOtherRemittance")
+    : fields.includes("includeInNextRun")
+      ? t("admin-billing:errors.presentAgainPeriodicOnly")
+      : errorMessage(failure);
+
+  return (
+    <Modal
+      closeLabel={t("admin-billing:actions.close")}
+      dismissible={!pending}
+      onClose={onClose}
+      open
+      title={t("admin-billing:confirm.markFailedTitle")}
+    >
+      <p className="billing-modal__body">
+        {t("admin-billing:confirm.markFailedBody", { count: invoiceIds.length })}
+      </p>
+      <FormField
+        id="billing-bulk-failed-at"
+        label={t("admin-billing:drawer.failAt")}
+        {...(fields.includes("at") ? { error: t("admin-billing:errors.dateAfterToday") } : {})}
+      >
+        <Input
+          id="billing-bulk-failed-at"
+          max={today}
+          onChange={(event) => {
+            setAt(event.currentTarget.value);
+          }}
+          required
+          type="date"
+          value={at}
+        />
+      </FormField>
+      <FormField
+        id="billing-bulk-failed-reason"
+        label={t("admin-billing:drawer.reason")}
+        {...(fields.includes("reason") ? { error: t("admin-billing:errors.reasonRequired") } : {})}
+      >
+        <Textarea
+          id="billing-bulk-failed-reason"
+          maxLength={500}
+          onChange={(event) => {
+            setReason(event.currentTarget.value);
+          }}
+          required
+          value={reason}
+        />
+      </FormField>
+      {periodic ? (
+        <label className="billing-manual__check">
+          <Checkbox
+            checked={presentAgain}
+            onChange={(event) => {
+              setPresentAgain(event.currentTarget.checked);
+            }}
+          />
+          {t("admin-billing:confirm.presentAgain")}
+        </label>
+      ) : null}
+      {failure === undefined || fieldError ? null : <Alert>{message}</Alert>}
+      <Actions>
+        <Button
+          disabled={at === "" || reason.trim() === ""}
+          loading={pending}
+          loadingLabel={t("admin-billing:confirm.markingFailed")}
+          onClick={() => void markReturned()}
+        >
+          {t("admin-billing:confirm.markFailed")}
         </Button>
         <Button disabled={pending} onClick={onClose} variant="ghost">
           {t("admin-billing:actions.cancel")}

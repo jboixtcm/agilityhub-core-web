@@ -28,6 +28,7 @@ import { BOOT_FAILURE_BRANDING, BootFailurePage } from "./BootFailurePage";
 import { configureBuildEvents } from "./courses/live-events";
 import { setPushRegistration } from "./notifications/push";
 import { initializeMemberPwa } from "./pwa/install";
+import { markWorkerUpdated, setUpdateRegistration } from "./pwa/update";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
@@ -69,8 +70,12 @@ async function bootstrap(root: HTMLElement) {
     void import("virtual:pwa-register").then(({ registerSW }) => {
       registerSW({
         immediate: true,
+        // FE-07: a new worker that takes over no longer reloads the page under the member (the
+        // plugin's default); the «new version» offer appears and the member's press reloads.
+        onNeedReload: markWorkerUpdated,
         onRegisteredSW: (_url, registration) => {
           setPushRegistration(registration);
+          setUpdateRegistration(registration);
         },
       });
     });

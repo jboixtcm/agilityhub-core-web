@@ -293,6 +293,11 @@
       "configuredSummary": "configured",
       "last4": "publishable key …{last4}",
       "lastTest": "last test OK {at}",
+      "liveToTest": {
+        "body": "This club has live keys saved. Switching to test mode makes payments test payments.",
+        "confirm": "Switch to test mode",
+        "title": "Switch to test mode"
+      },
       "mode": "Mode",
       "modes": {
         "live": "live",

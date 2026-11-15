@@ -51,7 +51,7 @@
   "DOCUMENT_NOT_PENDING": "Aquest document no està pendent de revisió.",
   "DOCUMENT_REMINDER_TOO_SOON": "Encara no es pot enviar el recordatori del document.",
   "DOCUMENT_TYPE_UNKNOWN": "No es reconeix el tipus de document.",
-  "DOG_ALREADY_BOOKED": "Aquest gos ja té una reserva.",
+  "DOG_ALREADY_BOOKED": "Aquest gos ja té una reserva a aquesta hora.",
   "DOG_CHIP_ALREADY_REGISTERED": "El xip d'aquest gos ja està registrat.",
   "DOG_DOCUMENT_REQUIRED": "Cal un document per a aquest gos.",
   "DOG_HAS_FUTURE_BOOKINGS": "Aquest gos té reserves futures.",
@@ -76,6 +76,7 @@
   "FORBIDDEN": "No tens permís per fer aquesta acció.",
   "GEOMETRY_INVALID": "La geometria no és vàlida.",
   "HANDOFF_INVALID": "Aquest traspàs d'accés no és vàlid o ha caducat.",
+  "HANDOFF_SESSION_CONFLICT": "En aquest dispositiu ja hi ha una sessió iniciada d'un altre compte.",
   "HOST_ALREADY_USED": "Aquest domini ja està en ús.",
   "HOST_NOT_VERIFIED": "Aquest domini no s'ha verificat.",
   "HOST_RESERVED": "Aquest domini està reservat.",
@@ -249,5 +250,6 @@
   "WEEK_ALREADY_GENERATED": "Aquesta setmana ja s'ha generat.",
   "WEEK_IN_PAST": "Aquesta setmana ja ha passat.",
   "WEEK_INCONSISTENT": "La setmana conté dades incoherents.",
-  "WEEKLY_LIMIT_DONE": "S'ha assolit el límit setmanal."
+  "WEEKLY_LIMIT_DONE": "S'ha assolit el límit setmanal.",
+  "RECENT_LOGIN_REQUIRED": "Per seguretat, torna a iniciar la sessió per continuar."
 }

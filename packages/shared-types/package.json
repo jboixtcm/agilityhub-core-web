@@ -1,6 +1,6 @@
 {
   "name": "@agilityhub/shared-types",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "TypeScript types shared across apps. Mirrors what later becomes C# DTOs in Unity.",

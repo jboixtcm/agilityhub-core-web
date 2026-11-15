@@ -51,7 +51,7 @@
   "DOCUMENT_NOT_PENDING": "Este documento no está pendiente de revisión.",
   "DOCUMENT_REMINDER_TOO_SOON": "Todavía no se puede enviar el recordatorio del documento.",
   "DOCUMENT_TYPE_UNKNOWN": "No se reconoce el tipo de documento.",
-  "DOG_ALREADY_BOOKED": "Este perro ya tiene una reserva.",
+  "DOG_ALREADY_BOOKED": "Este perro ya tiene una reserva a esta hora.",
   "DOG_CHIP_ALREADY_REGISTERED": "El chip de este perro ya está registrado.",
   "DOG_DOCUMENT_REQUIRED": "Se necesita un documento para este perro.",
   "DOG_HAS_FUTURE_BOOKINGS": "Este perro tiene reservas futuras.",
@@ -76,6 +76,7 @@
   "FORBIDDEN": "No tienes permiso para realizar esta acción.",
   "GEOMETRY_INVALID": "La geometría no es válida.",
   "HANDOFF_INVALID": "Este traspaso de acceso no es válido o ha caducado.",
+  "HANDOFF_SESSION_CONFLICT": "En este dispositivo ya hay una sesión iniciada de otra cuenta.",
   "HOST_ALREADY_USED": "Este dominio ya está en uso.",
   "HOST_NOT_VERIFIED": "Este dominio no se ha verificado.",
   "HOST_RESERVED": "Este dominio está reservado.",
@@ -249,5 +250,6 @@
   "WEEK_ALREADY_GENERATED": "Esta semana ya se ha generado.",
   "WEEK_IN_PAST": "Esta semana ya ha pasado.",
   "WEEK_INCONSISTENT": "La semana contiene datos incoherentes.",
-  "WEEKLY_LIMIT_DONE": "Se ha alcanzado el límite semanal."
+  "WEEKLY_LIMIT_DONE": "Se ha alcanzado el límite semanal.",
+  "RECENT_LOGIN_REQUIRED": "Por seguridad, vuelve a iniciar sesión para continuar."
 }

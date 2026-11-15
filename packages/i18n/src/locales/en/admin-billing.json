@@ -6,7 +6,8 @@
     "next": "month ›",
     "previousMonth": "Previous month",
     "nextMonth": "Next month",
-    "remittances": "Remittances ›"
+    "remittances": "Remittances ›",
+    "stripeEvents": "Failed Stripe events ›"
   },
   "actions": {
     "simulate": "1 · SIMULATE THE MONTH",
@@ -19,6 +20,9 @@
     "rollback": "Roll back the remittance",
     "chargeCards": "CHARGE THE CARDS",
     "markPaidSelection": "Mark paid (selection)",
+    "markPaidSelectionWhy": "Only pending or unpaid receipts that are not paid by card can be marked as paid.",
+    "markFailedSelection": "Mark unpaid (selection)",
+    "markFailedSelectionWhy": "Only direct debits that were remitted or collected, all of one remittance, can be marked as unpaid.",
     "accountingExport": "Export for accounting",
     "manualInvoice": "Manual receipt",
     "refresh": "Refresh",
@@ -54,11 +58,32 @@
     "reference": "Reference (optional)",
     "markPaid": "Mark paid",
     "markingPaid": "Marking paid…",
+    "markFailedTitle": "Mark unpaid",
+    "markFailedBody": "{count, plural, one {# receipt of the remittance will be marked as unpaid (returned by the bank).} other {# receipts of the remittance will be marked as unpaid (returned by the bank).}}",
+    "presentAgain": "Present them again in the next remittance",
+    "markFailed": "Mark unpaid",
+    "markingFailed": "Marking unpaid…",
     "submissionTitle": "Mark as sent to the bank · {month}",
     "submissionBody": "The remittance will be marked as sent to the bank. From then on it can no longer be rolled back.",
     "submittedAt": "Date sent to the bank",
     "submit": "Mark as sent",
-    "submitting": "Saving…"
+    "submitting": "Saving…",
+    "undoSubmissionTitle": "Undo “sent to the bank” · {month}",
+    "undoSubmissionBody": "The remittance will be generated again: you can mark it as sent again or roll it back. Do this only if the bank did not accept the file or it was marked by mistake.",
+    "undoSubmission": "Undo “sent”",
+    "undoingSubmission": "Undoing…",
+    "collectionDate": "Collection date",
+    "collectionDateHelp": "Choose a TARGET banking business day that meets the club’s configured SEPA submission lead time.",
+    "collectionDateNotBusinessDay": "{date} is not a TARGET banking business day: the next one is {next}.",
+    "comparison": "Compared with the previous month ({previousMonth}: {previousTotal}): {difference} ({differencePercent}).",
+    "comparisonAmount": "Compared with the previous month ({previousMonth}: {previousTotal}): {difference}.",
+    "comparisonNone": "There is no previous month to compare with.",
+    "comparisonMissing": "This simulation does not compare the total with the previous month's.",
+    "secondTitle": "Second confirmation",
+    "secondBody": "This month's total changes by {differencePercent} compared with the previous month ({previousMonth}). The club asks for a second confirmation when the difference exceeds {thresholdPercent}. Do you want to generate the receipts anyway?",
+    "secondBodyNone": "There is no total for the previous month to compare this month's with. Do you want to generate the receipts anyway?",
+    "secondBodyMissing": "This simulation does not compare the total with the previous month's. Do you want to generate the receipts anyway?",
+    "secondConfirm": "Yes, generate the receipts"
   },
   "simulation": {
     "incidentsTitle": "Step 1 — Simulation: issues first",
@@ -194,6 +219,7 @@
     "payTitle": "Mark paid",
     "failTitle": "Mark unpaid",
     "failAt": "Unpaid date",
+    "presentAgain": "Present it again in the next remittance",
     "retryTitle": "Retry by card",
     "retryBody": "{total} will be charged again to the card ···· {last4}.",
     "refundTitle": "Refund",
@@ -269,8 +295,12 @@
     "emptyDescription": "No remittance has been generated yet.",
     "download": "Download the XML",
     "downloadExcel": "Remittance Excel",
+    "cancelledFile": "Cancelled — do not upload it to the bank",
+    "downloadCancelled": "Download the XML (cancelled, do not upload it to the bank)",
+    "downloadExcelCancelled": "Remittance Excel (cancelled, do not upload it to the bank)",
     "downloading": "Downloading…",
     "markSubmitted": "Mark as sent to the bank",
+    "undoSubmission": "Undo “sent to the bank”",
     "open": "Open the remittance: {month}",
     "drawerTitle": "Remittance · {month}",
     "close": "Close the remittance",
@@ -286,9 +316,32 @@
     "creditorId": "Creditor identifier",
     "creditorIban": "Creditor account",
     "creditorBic": "BIC",
-    "submitted": "Remittance marked as sent to the bank."
+    "submitted": "Remittance marked as sent to the bank.",
+    "submissionUndone": "The remittance is generated again: it no longer reads as sent to the bank."
+  },
+  "stripeEvents": {
+    "title": "Failed Stripe events",
+    "caption": "Stripe events that could not be processed",
+    "help": "Events Stripe sent that could not be processed. They are retried automatically for about 24 hours; a stopped event is processed again by resending it from the Stripe dashboard.",
+    "columns": {
+      "id": "Event",
+      "type": "Type",
+      "receivedAt": "Received",
+      "attempts": "Attempts",
+      "state": "Status"
+    },
+    "retrying": "next attempt on {date}",
+    "stopped": "stopped on {date}",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyId": "Copy the id {id}",
+    "copiedId": "Copied the id {id}",
+    "emptyTitle": "No failed events",
+    "emptyDescription": "Every Stripe event has been processed.",
+    "loadError": "The Stripe events could not be loaded."
   },
   "errors": {
+    "sepaGenerationPaused": "SEPA remittance generation is paused. You can still simulate the month while the club verifies its mandates.",
     "loadRun": "The card charge status could not be refreshed.",
     "billingBusy": "A generation is in progress. Try again in a few minutes.",
     "simulationStale": "There have been changes since the last simulation. Simulate the month again.",
@@ -306,7 +359,12 @@
     "trace": "Error reference: {traceId}",
     "chargingSlow": "The card charges are still being processed.",
     "dateAfterToday": "The date cannot be later than today.",
-    "submittedAtRange": "The date must be between {earliest} and today."
+    "submittedAtRange": "The date must be between {earliest} and today.",
+    "undoCollectionDatePassed": "The remittance's collection date has come: it can no longer be undone.",
+    "undoInvoiceChanged": "{count, plural, one {A receipt of the remittance has changed already (unpaid, paid or cancelled): the remittance can no longer be undone.} other {# receipts of the remittance have changed already (unpaid, paid or cancelled): the remittance can no longer be undone.}}",
+    "reasonRequired": "Write the reason (up to 500 characters).",
+    "returnsOtherRemittance": "One of the chosen receipts is not of this remittance: none was marked.",
+    "presentAgainPeriodicOnly": "Only periodic receipts can be presented again in the next remittance."
   },
   "toasts": {
     "simulated": "Month simulated.",
@@ -316,6 +374,7 @@
     "chargesSkipped": "{count, plural, one {# receipt left out} other {# receipts left out}}: {reasons}",
     "charging": "Charging the cards…",
     "markedPaid": "{count, plural, one {# receipt marked as paid} other {# receipts marked as paid}}",
+    "markedFailed": "{count, plural, one {# receipt marked as unpaid} other {# receipts marked as unpaid}}",
     "dismiss": "Close the notice"
   },
   "concepts": {

@@ -38,6 +38,8 @@
   "magic": {
     "title": "Checking the link",
     "description": "We are signing you in and preparing your account.",
+    "confirmTitle": "Sign in with the email link",
+    "confirmDescription": "Press the button to sign in to your account with this link.",
     "validating": "Validating the link…",
     "invalidTitle": "This link is no longer valid",
     "invalidDescription": "Request another link to sign in again.",
@@ -99,6 +101,11 @@
     "title": "Page not found",
     "description": "The address you opened does not match any page.",
     "back": "BACK TO SIGN IN"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "version": "Version {version}",
+    "versionAndDate": "Version {version} · In effect from {date}"
   },
   "errors": {
     "generic": "The action could not be completed. Try again."

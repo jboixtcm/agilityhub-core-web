@@ -51,7 +51,7 @@
   "DOCUMENT_NOT_PENDING": "This document is not pending review.",
   "DOCUMENT_REMINDER_TOO_SOON": "The document reminder cannot be sent yet.",
   "DOCUMENT_TYPE_UNKNOWN": "The document type is not recognized.",
-  "DOG_ALREADY_BOOKED": "This dog already has a booking.",
+  "DOG_ALREADY_BOOKED": "This dog already has a booking at this time.",
   "DOG_CHIP_ALREADY_REGISTERED": "This dog's chip is already registered.",
   "DOG_DOCUMENT_REQUIRED": "A document is required for this dog.",
   "DOG_HAS_FUTURE_BOOKINGS": "This dog has future bookings.",
@@ -76,6 +76,7 @@
   "FORBIDDEN": "You do not have permission to do this.",
   "GEOMETRY_INVALID": "The geometry is invalid.",
   "HANDOFF_INVALID": "This access handoff is invalid or has expired.",
+  "HANDOFF_SESSION_CONFLICT": "Another account is already signed in on this device.",
   "HOST_ALREADY_USED": "This host is already in use.",
   "HOST_NOT_VERIFIED": "This host has not been verified.",
   "HOST_RESERVED": "This host is reserved.",
@@ -249,5 +250,6 @@
   "WEEK_ALREADY_GENERATED": "This week has already been generated.",
   "WEEK_IN_PAST": "This week is in the past.",
   "WEEK_INCONSISTENT": "The week contains inconsistent data.",
-  "WEEKLY_LIMIT_DONE": "The weekly limit has been reached."
+  "WEEKLY_LIMIT_DONE": "The weekly limit has been reached.",
+  "RECENT_LOGIN_REQUIRED": "For your security, sign in again to continue."
 }

@@ -1,0 +1,69 @@
+name: Real-core critical flows
+
+# REL-03 / REL-08: the critical real-core e2e suite (the five flows of PLA_FRONTEND §8, tagged
+# `@critical-*`) runs on a schedule against the api image that is deployed. That image is the
+# repository variable DEPLOYED_CORE_IMAGE (`ghcr.io/<owner>/agilityhub-core-api:sha-<commit>`: the
+# tag the api's CI publishes, `sha-` and the first 7 hex of the commit, or up to all 40, optionally
+# pinned `@sha256:<digest>` as the api's IMAGE_TAG), updated at every api release
+# (docs/DEPLOYMENT.md). The run starts the disposable local stack of
+# `scripts/e2e-core.sh` (fictional seed, `local` profile) from that image; it never calls a
+# deployed host.
+on:
+  schedule:
+    # Monday to Saturday at 03:17 UTC: «muntatge» cannot run on a Sunday (INC-72).
+    - cron: "17 3 * * 1-6"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: real-core-critical
+  cancel-in-progress: false
+
+jobs:
+  critical:
+    name: Critical flows against the deployed api image
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    env:
+      CORE_IMAGE: ${{ vars.DEPLOYED_CORE_IMAGE }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check the deployed api image is named
+        run: |
+          # REL-08: an immutable sha- tag of the api's image on GHCR, never a moving tag (main,
+          # latest) or another registry.
+          if [[ ! "$CORE_IMAGE" =~ ^ghcr\.io/[a-z0-9-]+/agilityhub-core-api:sha-[0-9a-f]{7,40}(@sha256:[0-9a-f]{64})?$ ]]; then
+            echo "::error::Set the repository variable DEPLOYED_CORE_IMAGE to the deployed api image, ghcr.io/<owner>/agilityhub-core-api:sha-<commit> (7 to 40 hex of the commit, optionally @sha256:<digest>)"
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pull the deployed api image
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+          docker pull "$CORE_IMAGE"
+
+      - name: Run the critical flows
+        env:
+          CORE_PNPM_STORE_DIRECTORY: ${{ runner.temp }}/pnpm-store
+        run: bash scripts/e2e-core.sh real-core-critical critical
+
+      - name: Upload the run's evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-core-critical
+          path: roadmap/evidence/real-core-critical/
+          if-no-files-found: warn
+          retention-days: 14

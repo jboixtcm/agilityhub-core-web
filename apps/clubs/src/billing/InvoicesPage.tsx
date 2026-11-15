@@ -303,8 +303,10 @@ export function InvoicesPage({
     latestInvoice?.status === "FAILED" && latestInvoice.paymentMethod.type === "CARD"
       ? latestInvoice
       : undefined;
+  // PAY-09 (S12 R-12-22): only a member who pays by card now may open their own card setup; a
+  // SEPA or cash member moves to card through the admin's card-setup link.
   const invalidCard =
-    failedCard !== undefined || (paymentMethod?.type === "CARD" && paymentMethod.invalid === true);
+    paymentMethod?.type === "CARD" && (failedCard !== undefined || paymentMethod.invalid === true);
   return (
     <div className="billing-page">
       <header className="billing-page__bar">

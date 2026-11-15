@@ -48,7 +48,7 @@
     "dog": "{name} {isAddDog, select, true {(new dog)} other {({breed})}}",
     "validateLabel": "VALIDATE: {name}",
     "submitted": "submitted on {date}",
-    "refundRequired": "A payment has been collected: it must be refunded from Billing"
+    "refundRequired": "A payment has been collected: it must be refunded. If it was paid by card, refund it from the member's record, under «Upfront payments»."
   },
   "chart": {
     "title": "Dogs by level — {count} active",

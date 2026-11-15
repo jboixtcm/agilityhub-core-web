@@ -108,6 +108,14 @@ function memberMutations(id: string): readonly (readonly [string, () => Promise<
       () => client.POST("/members/{id}/access-resend", { params }),
     ],
     [
+      "POST /members/{id}/login-email",
+      () =>
+        client.POST("/members/{id}/login-email", {
+          body: { email: "abonat.nou@example.test" },
+          params,
+        }),
+    ],
+    [
       "POST /members/{id}/impersonation-token",
       () => client.POST("/members/{id}/impersonation-token", { body: {}, params }),
     ],
@@ -271,6 +279,8 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mu
         lastName1: "#64",
         lastName2: null,
         leaveDate: "2026-07-31",
+        // S03 R-03-06b (AUTH-02): no login e-mail after erasure.
+        login: null,
         // The IBAN is gone: no masked account either.
         maskedAccount: null,
         memberNumber: 64,
@@ -337,9 +347,13 @@ describe("E11-W06 W10 (S04 R-04-06, INC-39) · a record frozen by a pending read
   const frozenWrites: readonly (readonly [string, () => Promise<unknown>])[] = [
     [
       "POST /members/{id}/booking-block",
-      () => client.POST("/members/{id}/booking-block", { body: { reason: "Rebut pendent" }, params }),
+      () =>
+        client.POST("/members/{id}/booking-block", { body: { reason: "Rebut pendent" }, params }),
     ],
-    ["DELETE /members/{id}/booking-block", () => client.DELETE("/members/{id}/booking-block", { params })],
+    [
+      "DELETE /members/{id}/booking-block",
+      () => client.DELETE("/members/{id}/booking-block", { params }),
+    ],
     [
       "PATCH /members/{id}/payment-method",
       () =>
@@ -394,7 +408,11 @@ describe("E11-W06 W10 (S04 R-04-06, INC-39) · a record frozen by a pending read
 describe("E11-W08 E164 (e) (R-12-06, E146) · the plan change gives a member without a date next month's billing.nextInvoiceDayOfMonth", () => {
   beforeEach(() => {
     // Club-local 05/10/2026: next month is November.
-    vi.useFakeTimers({ now: new Date("2026-10-05T10:00:00Z"), shouldAdvanceTime: true, toFake: ["Date"] });
+    vi.useFakeTimers({
+      now: new Date("2026-10-05T10:00:00Z"),
+      shouldAdvanceTime: true,
+      toFake: ["Date"],
+    });
   });
   afterEach(() => {
     vi.useRealTimers();

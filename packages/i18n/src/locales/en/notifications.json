@@ -16,6 +16,8 @@
   },
   "unsubscribe": {
     "title": "Stop receiving these announcements",
+    "intro": "You will stop receiving the club's announcements by email.",
+    "confirm": "Unsubscribe",
     "working": "One moment…",
     "done": "You will no longer receive the club's announcements by email.",
     "invalid": "This link is no longer valid.",

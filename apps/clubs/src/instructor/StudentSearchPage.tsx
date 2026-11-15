@@ -99,7 +99,8 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
                     }}
                   >
                     <span className="ah-dog-identity">
-                      <DogPhoto name={dog.name ?? ""} src={dog.photoUrl} />
+                      {/* WEB-05: the thumbnail, else the photo (none for one it cannot reduce). */}
+                      <DogPhoto name={dog.name ?? ""} src={dog.photoThumbnailUrl ?? dog.photoUrl} />
                       <span>
                         {dog.level === undefined
                           ? name

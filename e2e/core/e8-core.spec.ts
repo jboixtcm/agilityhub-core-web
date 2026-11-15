@@ -415,6 +415,8 @@ async function loginMemberByLink(browser: Browser, email: string): Promise<Sessi
           "urn:agilityhub:grant:magic-link",
     );
     await page.goto(`${clubsUrl}${delivered.pathname}${delivered.search}`);
+    // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+    await page.getByRole("button", { name: "ENTRA", exact: true }).click();
     const exchange = await exchanged;
     expect(exchange.status()).toBe(200);
     await page.getByRole("button", { name: "CONTINUAR", exact: true }).click();
@@ -666,6 +668,43 @@ function kpi(page: Page, label: string): Locator {
   return page.locator(".billing-kpi").filter({ hasText: label }).locator(".billing-kpi__value");
 }
 
+/** SEPA-10: confirm the extra step required by this simulation's month comparison. */
+async function generateOnD6(
+  page: Page,
+  dialog: Locator,
+  simulation: Pick<BillingSimulation, "comparison">,
+): Promise<Response> {
+  let response = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
+  await dialog.getByRole("button", { exact: true, name: "Genera" }).click();
+  if (simulation.comparison?.secondConfirmationRequired !== false) {
+    await expect(dialog.getByRole("heading", { name: "Segona confirmació" })).toBeVisible();
+    await dialog.getByRole("button", { exact: true, name: "Sí, genera els rebuts" }).click();
+  }
+  let result = await response;
+  if (result.status() === 422) {
+    const problem = (await result.json()) as ApiProblem;
+    if (problem.code === "COLLECTION_DATE_TOO_SOON") {
+      // At the end of a month the default day may violate the club's lead time. Exercise
+      // the explicit retry offered by the UI using the earliest date returned by the API.
+      const earliest = problem.details?.earliest;
+      expect(typeof earliest).toBe("string");
+      if (typeof earliest !== "string")
+        throw new Error("The collection error has no earliest date");
+      expect(earliest).toMatch(/^\d{4}-\d{2}-\d{2}$/u);
+      const displayDate = earliest.split("-").reverse().join("/");
+      response = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
+      await dialog
+        .getByRole("button", {
+          exact: true,
+          name: `Genera amb cobrament el ${displayDate}`,
+        })
+        .click();
+      result = await response;
+    }
+  }
+  return result;
+}
+
 /** [1 · SIMULA EL MES] on D6 of `month`; the page's own `POST /billing/simulations` answer. */
 async function simulateOnD6(
   page: Page,
@@ -707,6 +746,7 @@ async function setClock(browser: Browser, instant = clockInstant): Promise<void>
 
 /** The member Laura plays in T-13-32: ACTIVE, monthly plan, SEPA, nothing pending, in a family. */
 async function lifecycleCandidates(admin: Session): Promise<{
+  cashMember: MemberListItem;
   family?: MemberListItem | undefined;
   feeMember: MemberListItem;
   member: MemberListItem;
@@ -748,7 +788,18 @@ async function lifecycleCandidates(admin: Session): Promise<{
   if (feeMember === undefined) {
     throw new Error("The E8 seed has no second standalone monthly SEPA member for the fee proof");
   }
-  return { family, feeMember, member };
+  const cashMember = members.find(
+    (candidate) =>
+      candidate.displayStatus?.kind === "ACTIVE" &&
+      candidate.hasPendingRequest !== true &&
+      candidate.leaveDate === undefined &&
+      candidate.familyGroup === undefined &&
+      candidate.paymentMethod?.type === "MANUAL" &&
+      /abonat/iu.test(candidate.plan?.name ?? ""),
+  );
+  if (cashMember === undefined)
+    throw new Error("The E8 seed has no standalone monthly cash member");
+  return { cashMember, family, feeMember, member };
 }
 
 async function findPackCase(
@@ -958,9 +1009,22 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   test.setTimeout(300_000);
   await setClock(browser);
   let admin = await login(browser, adminUrl, ADMIN);
-  const { family, feeMember, member } = await lifecycleCandidates(admin);
+  const { cashMember, family, feeMember, member } = await lifecycleCandidates(admin);
   lifecycle.member = member;
   lifecycle.familyPartner = family;
+
+  // The seed starts billing next month. Arrange an ungenerated current month for the leave
+  // control and for a multi-month cash receipt even when the run falls in June or December.
+  for (const dueMember of [member, cashMember]) {
+    const dueDate = await call<Schemas["NextInvoiceDate"]>(
+      admin,
+      `/members/${dueMember.id}/next-invoice-date`,
+      "PUT",
+      { nextInvoiceDate: `${weekMonth}-01`, reason: "Prova fictícia de facturació E8-W04" },
+    );
+    expect(dueDate.status, JSON.stringify(dueDate.body)).toBe(200);
+    expect(dueDate.body.nextInvoiceDate).toBe(`${weekMonth}-01`);
+  }
 
   // Establish the fee proof from lifecycle dates, rather than relying on the fixed seed's Oct–Nov
   // range. Admin creation is approved in one step (R-13-05), freezing the amount for this period.
@@ -1005,7 +1069,7 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   );
   await expect(laura.page.getByRole("heading", { name: "Període d'inactivitat" })).toBeVisible();
   await laura.page.getByLabel("Mes d'inici (obligatori)").selectOption(fromMonth);
-  await laura.page.getByLabel("Mes de finalització (si el saps)").fill(fromMonth);
+  await laura.page.getByLabel("Mes de tornada (opcional)").selectOption(nextMonth(fromMonth));
   await laura.page.getByLabel("Comentaris").fill("Pausa fictícia E8-W04");
   const submit = laura.page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" });
   await expect(submit).toBeEnabled();
@@ -1534,9 +1598,7 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   await generate.click();
   const generateModal = page.getByRole("dialog", { name: /Genera els rebuts/u });
   await expect(generateModal).toContainText(String(simulation.kpis.count));
-  const generatedResponse = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
-  await generateModal.getByRole("button", { exact: true, name: "Genera" }).click();
-  const generatedHttp = await generatedResponse;
+  const generatedHttp = await generateOnD6(page, generateModal, simulation);
   const generatedBody = (await generatedHttp.json()) as BillingRunResult | ApiProblem;
   expect(generatedHttp.status(), JSON.stringify(generatedBody)).toBe(201);
   const firstRun = generatedBody as BillingRunResult;
@@ -1647,12 +1709,12 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
     responseIs("POST", /\/api\/v1\/billing\/simulations$/u),
   );
   await page.getByRole("button", { name: "1 · SIMULA EL MES" }).first().click();
-  expect((await secondSimulationResponse).status()).toBe(201);
+  const secondSimulationHttp = await secondSimulationResponse;
+  expect(secondSimulationHttp.status()).toBe(201);
+  const secondSimulation = (await secondSimulationHttp.json()) as BillingSimulation;
   await page.getByRole("button", { name: /2 · GENERA/u }).click();
   const secondGenerateModal = page.getByRole("dialog", { name: /Genera els rebuts/u });
-  const secondRunResponse = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
-  await secondGenerateModal.getByRole("button", { exact: true, name: "Genera" }).click();
-  const secondRunHttp = await secondRunResponse;
+  const secondRunHttp = await generateOnD6(page, secondGenerateModal, secondSimulation);
   expect(secondRunHttp.status()).toBe(201);
   const secondRun = (await secondRunHttp.json()) as BillingRunResult;
   const secondInvoices = await invoicePage(admin, [
@@ -2008,17 +2070,19 @@ test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] →
   const { page } = admin;
   await page.goto(`${fifoAdminUrl}/facturacio?mes=${period}`);
   const initial = await billingPeriod(admin, period);
+  let simulation = initial.simulation;
   if (initial.simulation == null || initial.run == null) {
     const response = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/simulations$/u));
     await page.getByRole("button", { name: "1 · SIMULA EL MES" }).first().click();
-    expect((await response).status()).toBe(201);
+    const simulated = await response;
+    expect(simulated.status()).toBe(201);
+    simulation = (await simulated.json()) as BillingSimulation;
   }
   if (initial.run == null) {
     await page.getByRole("button", { name: /2 · GENERA/u }).click();
     const dialog = page.getByRole("dialog", { name: /Genera els rebuts/u });
-    const response = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
-    await dialog.getByRole("button", { exact: true, name: "Genera" }).click();
-    expect((await response).status()).toBe(201);
+    if (simulation == null) throw new Error("The card run has no simulation to confirm");
+    expect((await generateOnD6(page, dialog, simulation)).status()).toBe(201);
   }
   const chargeCards = page.getByRole("button", { exact: true, name: "COBRA LES TARGETES" });
   await expect(chargeCards).toBeEnabled();

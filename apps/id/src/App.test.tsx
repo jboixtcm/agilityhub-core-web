@@ -7,6 +7,8 @@ import { I18nextProvider } from "react-i18next";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { App, oidcContinuation } from "./App";
+import { PRIVACY_POLICY, PRIVACY_POLICY_VERSION } from "./privacy/privacy-policy";
+import PrivacyPage from "./privacy/PrivacyPage";
 
 type Me = components["schemas"]["Me"];
 
@@ -222,6 +224,7 @@ describe("T-01-22 apps/id", () => {
     const { fetcher, requests } = testFetcher();
     const navigate = vi.fn<(destination: string) => void>();
     await renderApp(createClient(fetcher), "ca", navigate);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
 
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/oidc/callback?flow=flow-magic");
@@ -290,6 +293,7 @@ describe("T-01-22 apps/id", () => {
     const { fetcher } = testFetcher();
     const navigate = vi.fn<(destination: string) => void>();
     await renderApp(createClient(fetcher), "ca", navigate);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
 
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/account");
@@ -575,9 +579,42 @@ describe("T-01-18 (E11-W02 round 2, INC-41): apps/id's login after a 429, and th
       expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
     });
     expect(new URLSearchParams(window.location.search).get("flow")).toBe("flow-123");
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     await waitFor(() => {
       expect(navigate).toHaveBeenCalled();
     });
+  });
+
+  it("AUTH-06 (decision of 13 Nov 2026): the magic link is redeemed only when «Entra» is pressed, never when the page loads", async () => {
+    window.history.replaceState(null, "", "/magic-link?t=valid");
+    const { fetcher, requests } = testFetcher();
+    const navigate = vi.fn<(destination: string) => void>();
+    await renderApp(createClient(fetcher), "ca", navigate);
+
+    expect(
+      await screen.findByRole("heading", { name: "Entra amb l'enllaç del correu" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText("Prem el botó per entrar al teu compte amb aquest enllaç."),
+    ).toBeVisible();
+    expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
+    const magicGrants = () =>
+      requests.filter(
+        (request) =>
+          request.url.endsWith("/oauth2/token") &&
+          new URLSearchParams(request.body).get("grant_type") === "urn:agilityhub:grant:magic-link",
+      );
+    // The page has loaded and settled: nothing has been redeemed.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(magicGrants()).toHaveLength(0);
+    expect(navigate).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/account");
+    });
+    expect(magicGrants()).toHaveLength(1);
+    expect(new URLSearchParams(magicGrants()[0]?.body).get("token")).toBe("valid");
   });
 });
 
@@ -592,4 +629,132 @@ it("Internal access: the identity fallback is neutral and email actions can be d
   ).toBeNull();
   expect(document.body.textContent).not.toMatch(/AgilityHub/u);
   expect(document.title).not.toMatch(/AgilityHub/u);
+});
+
+describe("PRIV-01 (decision of 13 Nov 2026): apps/id serves the platform's privacy policy at /privacy", () => {
+  it("shows the versioned policy to a visitor without a session, in the page's language", async () => {
+    window.history.replaceState(null, "", "/privacy");
+    const { fetcher, requests } = testFetcher();
+    // No session on this device: the cookie refresh is refused.
+    const anonymous = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = input instanceof Request ? input.url : String(input);
+      if (new URL(url).pathname === "/oauth2/token") {
+        requests.push({ body: "", method: "POST", url });
+        return json({ error: "invalid_grant" }, 400);
+      }
+      return fetcher(input, init);
+    }) as typeof fetch;
+    const { i18n, navigate } = await renderApp(createClient(anonymous));
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Política de privacitat" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "Pàgina no trobada" })).toBeNull();
+    expect(
+      screen.getByText(
+        `Versió ${PRIVACY_POLICY_VERSION} · En vigor des del 15 de novembre del 2026`,
+      ),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "1. Qui és el responsable del tractament" }),
+    ).toBeVisible();
+    expect(screen.getAllByText(/Club Agility Cànic/u).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "info@agilitycanic.cat" })[0]).toHaveAttribute(
+      "href",
+      "mailto:info@agilitycanic.cat",
+    );
+    await waitFor(() => {
+      expect(requests.some((request) => request.url.endsWith("/oauth2/token"))).toBe(true);
+    });
+    // Public: the page asks for no account and sends nobody to the login.
+    expect(requests.filter((request) => request.url.includes("/api/v1/"))).toHaveLength(0);
+    expect(navigate).not.toHaveBeenCalled();
+    expect(screen.getByRole("heading", { level: 1, name: "Política de privacitat" })).toBeVisible();
+
+    await i18n.changeLanguage("es");
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Política de privacidad" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        `Versión ${PRIVACY_POLICY_VERSION} · En vigor desde el 15 de noviembre de 2026`,
+      ),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "1. Quién es el responsable del tratamiento" }),
+    ).toBeVisible();
+  });
+
+  it("shows the effective date in the reader's language once it is set", async () => {
+    const i18n = await createTestI18n("en");
+    render(
+      <I18nextProvider i18n={i18n}>
+        <PrivacyPage policy={{ ...PRIVACY_POLICY, effectiveDate: "2026-12-01", version: "7" }} />
+      </I18nextProvider>,
+    );
+    expect(screen.getByRole("heading", { level: 1, name: "Privacy policy" })).toBeVisible();
+    expect(screen.getByText("Version 7 · In effect from December 1, 2026")).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "1. Who the controller is" }),
+    ).toBeVisible();
+  });
+});
+
+describe("AUTH-01 (S01 R-01-05, decision of 13 Nov 2026): the password's minimum comes from the api", () => {
+  /** The account page's password form, whose `PUT /me/password` answers `refusal`. */
+  async function submitPassword(refusal: Record<string, unknown>, locale: Locale = "ca") {
+    // The page follows the account's language (`useAccountLocale`).
+    const { fetcher } = testFetcher({ ...me, account: { ...me.account, locale } });
+    const answered = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      return new URL(request.url).pathname === "/api/v1/me/password"
+        ? json({ message: "Password is too short", traceId: "t", ...refusal }, 400)
+        : fetcher(input, init);
+    }) as typeof fetch;
+    const client = createClient(answered);
+    await client.login("biel.roca@example.test", "secret-password");
+    window.history.replaceState(null, "", "/set-password");
+    // The app's own namespaces (`main.tsx`): «common» holds the password texts.
+    const i18n = await createIdI18n({
+      branding: { defaultLocale: locale, locales: ["ca", "es", "en"] },
+      browserLanguages: [locale],
+      initialNamespaces: ["common", "errors", "id"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <SessionProvider client={client}>
+          <App authClient={client} navigate={vi.fn()} />
+        </SessionProvider>
+      </I18nextProvider>,
+    );
+    const form = (await screen.findByRole("heading", { name: /Contrase|Password/u })).closest(
+      "main",
+    );
+    if (form === null) throw new TypeError("Expected the password page");
+    const fields = form.querySelectorAll<HTMLInputElement>('input[autocomplete$="password"]');
+    for (const field of fields) {
+      fireEvent.change(field, { target: { value: "short-pass1" } });
+    }
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    if (submit === null) throw new TypeError("Expected the password submit");
+    fireEvent.click(submit);
+    return screen.findByRole("alert");
+  }
+
+  it.each([
+    ["ca", "La contrasenya ha de tenir com a mínim 12 caràcters."],
+    ["es", "La contraseña debe tener como mínimo 12 caracteres."],
+    ["en", "The password must be at least 12 characters long."],
+  ] as const)("a staff account's refusal shows its 12 characters (%s)", async (locale, text) => {
+    expect(
+      await submitPassword({ code: "PASSWORD_TOO_SHORT", details: { minLength: 12 } }, locale),
+    ).toHaveTextContent(text);
+  });
+
+  it("a refusal without the minimum keeps the general message", async () => {
+    expect(await submitPassword({ code: "PASSWORD_TOO_SHORT", details: {} })).toHaveTextContent(
+      "La contrasenya és massa curta.",
+    );
+  });
 });

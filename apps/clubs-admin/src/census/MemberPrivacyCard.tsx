@@ -67,6 +67,9 @@ function erasureBlockLabel(reason: string, t: ReturnType<typeof useTranslation>[
       return t("admin-census:member.privacy.erasure.blockReasons.futureBookings");
     case "OTHER_MEMBERSHIPS_ACTIVE":
       return t("admin-census:member.privacy.erasure.blockReasons.otherMembershipsActive");
+    // PRIV-04: it waits instead of refusing; the request runs when the refund window closes.
+    case "SEPA_REFUND_WINDOW":
+      return t("admin-census:member.privacy.erasure.blockReasons.sepaRefundWindow");
     default:
       return t("admin-census:member.privacy.erasure.blockReasons.other");
   }

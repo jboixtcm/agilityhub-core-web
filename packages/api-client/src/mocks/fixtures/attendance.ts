@@ -95,6 +95,8 @@ function row(spec: RowSpec): AttendanceRow {
     bookingId: spec.bookingId,
     dogId: spec.dog[0],
     dogName: spec.dog[1],
+    // WEB-05: the fixture's photo is an SVG, which the api makes no thumbnail of: the row shows it.
+    dogPhotoThumbnailUrl: null,
     dogPhotoUrl: spec.photo ?? null,
     final: false,
     handlerName: spec.handlerName ?? null,

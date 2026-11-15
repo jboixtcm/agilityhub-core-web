@@ -44,7 +44,26 @@ describe("T-15-32 / INC-92 / INC-93: the runtime job catalog", () => {
   it.each(["ca", "es", "en"])(
     "labels every published job in %s and only offers supported switches",
     async (locale) => {
-      server.use(http.get("*/api/v1/jobs", () => HttpResponse.json({ items: jobs })));
+      server.use(
+        http.get("*/api/v1/jobs", () => HttpResponse.json({ items: jobs })),
+        // PRIV-02: [Executa ara] of `retention-sweep` simulates before it asks (S15 R-15-09).
+        http.post("*/api/v1/jobs/retention-sweep/trigger", () =>
+          HttpResponse.json({
+            dryRun: true,
+            effects: { counters: {}, items: [] },
+            errors: [],
+            job: "RETENTION_SWEEP",
+            parametersSnapshot: {},
+            runId: "run-retention-dry",
+            scheduledFor: "2026-08-10T06:12:00Z",
+            scheduledForLocal: "2026-08-10T08:12",
+            startedAt: "2026-08-10T06:12:00Z",
+            status: "SUCCEEDED",
+            timeZone: "Europe/Madrid",
+            trigger: "MANUAL",
+          }),
+        ),
+      );
       const i18n = await createI18n({
         branding,
         browserLanguages: [locale],
@@ -87,7 +106,11 @@ describe("T-15-32 / INC-92 / INC-93: the runtime job catalog", () => {
         expect(run).toBeEnabled();
         if (mandatory) {
           fireEvent.click(run);
-          const dialog = screen.getByRole("dialog");
+          // PRIV-02: the retention sweep asks once its dry run has answered.
+          const dialog =
+            job.jobName === "RETENTION_SWEEP"
+              ? await screen.findByRole("dialog")
+              : screen.getByRole("dialog");
           expect(dialog).toHaveTextContent(i18n.t("admin-settings:jobs.runTitle", { name: label }));
           fireEvent.click(
             within(dialog).getByRole("button", { name: i18n.t("admin-settings:common.cancel") }),

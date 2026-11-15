@@ -1,0 +1,31 @@
+{
+  "name": "AgilityCanic",
+  "short_name": "AgilityCanic",
+  "theme_color": "#E26A2A",
+  "background_color": "#ffffff",
+  "id": "https://app.agilitycanic.cat/",
+  "start_url": "https://app.agilitycanic.cat/",
+  "scope": "https://app.agilitycanic.cat/",
+  "display": "standalone",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "https://app.agilitycanic.cat/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://app.agilitycanic.cat/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://app.agilitycanic.cat/pwa/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

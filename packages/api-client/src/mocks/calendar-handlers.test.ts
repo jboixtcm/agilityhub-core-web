@@ -84,7 +84,10 @@ describe("E11-W05 snapshot a7c85d50 (E11-T13): ClassCancellation carries reviewT
     });
 
     const active = await calendar("week-2026-08-10", "ACTIVE");
-    const target = active.classes.find((item) => item.state === "ACTIVE");
+    // PLAN-02: a class that has not started yet (a started one cannot be cancelled).
+    const target = active.classes.find(
+      (item) => item.state === "ACTIVE" && Date.parse(item.startsAt) > Date.now(),
+    );
     if (target === undefined) throw new TypeError("Missing an active class");
     const cancelled = await client.POST("/class-sessions/{id}/cancellation", {
       body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
@@ -194,6 +197,101 @@ describe("E4-W02 calendar MSW handlers follow the S06 contract (forms B and D)",
       counters: { booked: 0, waiting: 0 },
       state: "CANCELLED",
     });
+  });
+
+  it("PLAN-02 refuses to cancel or delete a class once it has started (INVALID_STATE), and nothing changes", async () => {
+    const classOf = async (id: string) => {
+      const found = (await calendar("week-2026-08-10", "ACTIVE")).classes.find(
+        (item) => item.id === id,
+      );
+      if (found === undefined) throw new TypeError(`Missing class ${id}`);
+      return found;
+    };
+    // Tuesday 11 18:50 «A+B» (3 booked) has started by the mockup's Wednesday; Wednesday 18:50 not.
+    const started = "cls-2026-08-11-1850-0";
+    const before = await classOf(started);
+    expect(before).toMatchObject({ counters: { booked: 3 }, state: "ACTIVE" });
+    for (const reason of ["CLUB_MANUAL", "DELETED"] as const) {
+      await expect(
+        client.POST("/class-sessions/{id}/cancellation", {
+          body: { adminText: "Plou massa.", reason },
+          params: { header: { "Idempotency-Key": `key-started-${reason}` }, path: { id: started } },
+        }),
+      ).rejects.toMatchObject({ code: "INVALID_STATE", status: 409 });
+    }
+    expect(await classOf(started)).toMatchObject({
+      counters: before.counters,
+      state: "ACTIVE",
+      version: before.version,
+    });
+
+    // The start itself counts as started; a second before it, the class is still cancellable.
+    const ahead = "cls-2026-08-12-1850-0";
+    const startsAt = Date.parse((await classOf(ahead)).startsAt);
+    vi.setSystemTime(startsAt);
+    await expect(
+      client.POST("/class-sessions/{id}/cancellation", {
+        body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
+        params: { header: { "Idempotency-Key": "key-at-start" }, path: { id: ahead } },
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_STATE", status: 409 });
+    vi.setSystemTime(startsAt - 1000);
+    const cancelled = await client.POST("/class-sessions/{id}/cancellation", {
+      body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
+      params: { header: { "Idempotency-Key": "key-before-start" }, path: { id: ahead } },
+    });
+    expect(cancelled.data).toMatchObject({ state: "CANCELLED" });
+  });
+
+  it("SCH-01 restores a cancelled future class with empty counters, and refuses a deleted, a started or a ring-taken one", async () => {
+    const id = "cls-2026-08-12-1850-0";
+    const cancelled = await client.POST("/class-sessions/{id}/cancellation", {
+      body: { adminText: "Plou massa.", reason: "CLUB_MANUAL" },
+      params: { header: { "Idempotency-Key": "key-restore" }, path: { id } },
+    });
+    // Another class takes the ring at that time meanwhile: CLASS_CONFLICT until it is gone.
+    const other = await client.POST("/class-sessions", {
+      body: {
+        date: "2026-08-12",
+        endTime: cancelled.data?.endTime ?? "",
+        instructorIds: ["instructor-marc"],
+        levelIds: ["level-b"],
+        ringId: cancelled.data?.ringId ?? null,
+        startTime: cancelled.data?.startTime ?? "",
+      },
+    });
+    await expect(
+      client.POST("/class-sessions/{id}/restoration", { body: {}, params: { path: { id } } }),
+    ).rejects.toMatchObject({ code: "CLASS_CONFLICT", status: 409 });
+    await client.POST("/class-sessions/{id}/cancellation", {
+      body: { reason: "DELETED" },
+      params: { header: { "Idempotency-Key": "key-other" }, path: { id: other.data?.id ?? "" } },
+    });
+
+    const restored = await client.POST("/class-sessions/{id}/restoration", {
+      body: {},
+      params: { path: { id } },
+    });
+    const validate = schema("ClassSession");
+    expect(validate(restored.data), JSON.stringify(validate.errors, null, 2)).toBe(true);
+    expect(restored.data).toMatchObject({
+      cancellation: null,
+      counters: { booked: 0, waiting: 0 },
+      state: "ACTIVE",
+      version: (cancelled.data?.version ?? 0) + 1,
+    });
+    // A repeat, the deleted class and the review's 9:30 class (already started) are INVALID_STATE.
+    const started = (await calendar("week-2026-08-10", "CANCELLED")).classes.find(
+      (item) => item.startTime === "09:30",
+    );
+    for (const target of [id, other.data?.id ?? "", started?.id ?? ""]) {
+      await expect(
+        client.POST("/class-sessions/{id}/restoration", {
+          body: {},
+          params: { path: { id: target } },
+        }),
+      ).rejects.toMatchObject({ code: "INVALID_STATE", status: 409 });
+    }
   });
 
   it("R-06-11 refuses a block over a class with the conflict list", async () => {

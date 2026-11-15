@@ -273,6 +273,8 @@ test("T-01-19 magic link is delivered and exchanged end to end", async ({ browse
   const delivered = await waitForDeliveredLink("member.3@example.test", previous);
   expect(delivered.hostname).toBe("app.example.test");
   await page.goto(`${clubsUrl}${delivered.pathname}${delivered.search}`);
+  // AUTH-06 (decision of 13 Nov 2026): the link is redeemed on «Entra», never on load.
+  await page.getByRole("button", { name: "ENTRA", exact: true }).click();
   await expect(page.getByRole("heading", { name: /Bruna/u })).toBeVisible();
   await screenshot(page, "02-activacio-core-375.png");
   await page.getByRole("button", { name: "CONTINUAR" }).click();

@@ -25,6 +25,8 @@ import {
 import { Fragment, useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { whatsAppUrl } from "../whatsapp";
+
 import { useRefreshCounters } from "./counters";
 import { loadDogDocumentTypes, signupPerson } from "./readmission";
 import { classifySignupReviewError, type SignupReviewError } from "./signup-review-errors";
@@ -832,7 +834,7 @@ export function SignupReviewPage({
               {whatsapp === undefined ? null : (
                 <a
                   className="ah-badge ah-tone--neutral signup-review-whatsapp"
-                  href={`https://wa.me/${whatsapp.prefix.replaceAll(/\D/gu, "")}${whatsapp.number.replaceAll(/\D/gu, "")}`}
+                  href={whatsAppUrl(whatsapp)}
                   rel="noreferrer"
                   target="_blank"
                 >

@@ -9,6 +9,7 @@ import { fmtMaskedIban, useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
+  Checkbox,
   Drawer,
   FormField,
   Icon,
@@ -22,6 +23,7 @@ import {
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { DisputeMark } from "./DisputeMark";
 import {
   clubToday,
   errorDetails,
@@ -471,6 +473,7 @@ export function InvoiceDrawer({
                           })}
                         </span>
                       )}
+                      {entry.dispute == null ? null : <DisputeMark dispute={entry.dispute} />}
                       {entry.refunds.map((refund) => (
                         <span key={`${refund.at}-${String(refund.amount.amountMinor)}`}>
                           {t("admin-billing:drawer.refundLine", {
@@ -585,9 +588,11 @@ function InvoiceActionModal({
   const [reference, setReference] = useState("");
   const [reason, setReason] = useState("");
   const [amount, setAmount] = useState("");
+  const [presentAgain, setPresentAgain] = useState(false);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
   const fields = errorFields(failure);
+  const periodic = invoice.kind === "PERIODIC";
   const refundMinor = amount.trim() === "" ? undefined : minorUnits(amount, invoice.total.currency);
   const invalidAmount = amount.trim() !== "" && (refundMinor === undefined || refundMinor <= 0);
   const id = invoice.id;
@@ -612,7 +617,13 @@ function InvoiceActionModal({
           )
         ).data;
       } else if (action === "fail") {
-        const body = { at: date, reason, version };
+        // SEPA-04 (b): a returned periodic receipt may wait for the next remittance (R-12-19).
+        const body = {
+          at: date,
+          ...(periodic && presentAgain ? { includeInNextRun: true } : {}),
+          reason,
+          version,
+        };
         next = (
           await keys.send(JSON.stringify(["failure", id, body]), (key) =>
             client.POST("/invoices/{id}/failure", { body, params: params(key) }),
@@ -663,7 +674,9 @@ function InvoiceActionModal({
         attempts: typeof details.attempts === "number" ? details.attempts : 0,
         max: typeof details.max === "number" ? details.max : 0,
       })
-    : errorMessage(failure);
+    : fields.includes("includeInNextRun")
+      ? t("admin-billing:errors.presentAgainPeriodicOnly")
+      : errorMessage(failure);
   const dateField = action === "pay" ? "paidAt" : "at";
 
   return (
@@ -767,6 +780,17 @@ function InvoiceActionModal({
             value={reason}
           />
         </FormField>
+      ) : null}
+      {action === "fail" && periodic ? (
+        <label className="billing-manual__check">
+          <Checkbox
+            checked={presentAgain}
+            onChange={(event) => {
+              setPresentAgain(event.currentTarget.checked);
+            }}
+          />
+          {t("admin-billing:drawer.presentAgain")}
+        </label>
       ) : null}
       {failure === undefined || fields.includes(dateField) ? null : (
         <div className="billing-modal__error" role="alert">

@@ -124,12 +124,30 @@
   },
   "password": {
     "show": "Mostra la contrasenya",
-    "hide": "Amaga la contrasenya"
+    "hide": "Amaga la contrasenya",
+    "tooShort": "La contrasenya ha de tenir com a mínim {minLength} caràcters."
   },
   "recovery": {
     "title": "Revisa el correu",
     "acknowledge": "Entesos",
     "checkSpam": "Si no trobes el missatge, comprova també la carpeta de correu no desitjat.",
     "close": "Tanca"
+  },
+  "notifyMember": "Avisa l'abonat",
+  "paymentDispute": {
+    "state": {
+      "open": "En disputa",
+      "won": "Disputa guanyada",
+      "lost": "Disputa perduda",
+      "closed": "Disputa tancada"
+    },
+    "reason": "{reason, select, fraudulent {frau} duplicate {cobrament duplicat} unrecognized {no el reconeix} product_not_received {servei no rebut} credit_not_processed {abonament no fet} general {motiu general} other {motiu: {reason}}}",
+    "noReason": "sense motiu",
+    "openDetail": "El titular ha disputat {amount} al banc ({reason}) el {date}. Respon la disputa des del tauler de Stripe.",
+    "closedDetail": "Disputa de {amount} ({reason}) oberta el {opened} i tancada per Stripe el {closed}."
+  },
+  "newVersion": {
+    "message": "Hi ha una versió nova",
+    "reload": "Recarrega"
   }
 }

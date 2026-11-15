@@ -8,6 +8,7 @@ import {
   Icon,
   IconButton,
   Input,
+  Modal,
   Select,
   Skeleton,
   Switch,
@@ -654,7 +655,9 @@ function ParameterEditor({
   parameter: Parameter;
 }) {
   const branding = useBranding();
-  const { t } = useTranslation("admin-settings");
+  const formats = useClubFormats();
+  // `auth`: the field labels `valueSummary` gives `signup.onboardingFields` in the reset's summary.
+  const { i18n, t } = useTranslation(["admin-settings", "auth"]);
   const messageForError = useCatalogError();
   const [draft, setDraft] = useState<unknown>(() => structuredClone(parameter.value));
   const [jsonText, setJsonText] = useState(() => JSON.stringify(parameter.value, null, 2));
@@ -662,6 +665,10 @@ function ParameterEditor({
   const [reason, setReason] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  // WEB-06 (decision of 13 Nov 2026): the reset asks first, showing «current → product value».
+  const [confirmReset, setConfirmReset] = useState(false);
+  const [resetError, setResetError] = useState<string>();
+  const summaryLocale = i18n.resolvedLanguage ?? i18n.language;
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -747,9 +754,10 @@ function ParameterEditor({
     }
   };
 
+  /** Sent only from the confirmation; its failure is shown inside it. */
   const reset = async () => {
     setPending(true);
-    setError(undefined);
+    setResetError(undefined);
     try {
       await client.DELETE("/parameters/{key}", {
         params: {
@@ -760,10 +768,16 @@ function ParameterEditor({
       onSaved();
       onClose();
     } catch (cause) {
-      setError(messageForError(cause));
+      setResetError(messageForError(cause));
     } finally {
       setPending(false);
     }
+  };
+
+  const closeReset = () => {
+    if (pending) return;
+    setConfirmReset(false);
+    setResetError(undefined);
   };
 
   return (
@@ -795,9 +809,19 @@ function ParameterEditor({
       </FormField>
       {error === undefined ? null : <p role="alert">{error}</p>}
       <div className="settings-editor__actions">
-        <Button disabled={pending} onClick={() => void reset()} variant="ghost">
-          {t("admin-settings:editor.reset")}
-        </Button>
+        {/* WEB-06: only a value the club has customised can go back to the product value. */}
+        {parameter.isOverride ? (
+          <Button
+            disabled={pending}
+            onClick={() => {
+              setResetError(undefined);
+              setConfirmReset(true);
+            }}
+            variant="ghost"
+          >
+            {t("admin-settings:editor.reset")}
+          </Button>
+        ) : null}
         <Button onClick={onClose} variant="ghost">
           {t("admin-settings:common.cancel")}
         </Button>
@@ -805,6 +829,38 @@ function ParameterEditor({
           {t("admin-settings:common.save")}
         </Button>
       </div>
+      <Modal
+        closeLabel={t("admin-settings:common.close")}
+        onClose={closeReset}
+        open={confirmReset}
+        title={t("admin-settings:editor.reset")}
+      >
+        <p>{t("admin-settings:editor.resetConfirm")}</p>
+        <p>
+          {t("admin-settings:editor.resetChange", {
+            current: valueSummary(parameter, summaryLocale, formats, t),
+            productValue: valueSummary(
+              { ...parameter, value: parameter.default },
+              summaryLocale,
+              formats,
+              t,
+            ),
+          })}
+        </p>
+        {resetError === undefined ? null : <p role="alert">{resetError}</p>}
+        <div className="settings-editor__actions">
+          <Button disabled={pending} onClick={closeReset} variant="ghost">
+            {t("admin-settings:common.cancel")}
+          </Button>
+          <Button
+            loading={pending}
+            loadingLabel={t("admin-settings:common.saving")}
+            onClick={() => void reset()}
+          >
+            {t("admin-settings:editor.reset")}
+          </Button>
+        </div>
+      </Modal>
     </form>
   );
 }

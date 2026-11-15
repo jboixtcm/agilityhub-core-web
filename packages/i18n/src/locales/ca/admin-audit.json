@@ -9,6 +9,7 @@
     "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB": "Inscripció a l'activitat cancel·lada pel club",
     "ACTIVITY_UPDATED": "Activitat modificada",
     "ANNOUNCEMENT_SENT": "Comunicat enviat",
+    "ANNOUNCEMENT_RESENT": "Correus fallits d'un comunicat reenviats",
     "ATTENDANCE_OVERRIDDEN": "Assistència corregida",
     "BOOKING_BLOCK_CLEARED": "Bloqueig de reserves retirat",
     "BOOKING_BLOCK_SET": "Reserves bloquejades",
@@ -18,6 +19,7 @@
     "CARD_CHARGES_STARTED": "Cobraments amb targeta iniciats",
     "CATALOG_CHANGED": "Catàleg modificat",
     "CLASS_CANCELLED": "Classe anul·lada",
+    "CLASS_RESTORED": "Classe restaurada",
     "CLASS_RISK_EXEMPTION_CHANGED": "Exempció de la revisió de risc modificada",
     "CLASS_UPDATED_WITH_BOOKINGS": "Classe amb reserves modificada",
     "CLUB_ADMIN_INVITED": "Administrador del club convidat",
@@ -68,6 +70,7 @@
     "REMITTANCE_GENERATED": "Remesa generada",
     "REMITTANCE_ROLLED_BACK": "Remesa retrocedida",
     "REMITTANCE_SUBMITTED": "Remesa marcada com a enviada al banc",
+    "REMITTANCE_SUBMISSION_UNDONE": "Remesa desmarcada com a enviada al banc",
     "RING_BLOCK_CANCELLED": "Bloqueig de pista anul·lat",
     "RING_BLOCK_CREATED": "Bloqueig de pista creat",
     "RING_GEOMETRY_CHANGED": "Geometria de la pista modificada",
@@ -77,12 +80,14 @@
     "SIGNUP_SUBMITTED": "Sol·licitud d'alta enviada",
     "SUPPORT_ACCESS_ENDED": "Accés de suport acabat",
     "SUPPORT_ACCESS_STARTED": "Accés de suport iniciat",
+    "SUPPORT_WRITE": "Canvi fet pel suport",
     "TEMPLATE_BAND_DELETED": "Franja de plantilla esborrada",
     "TEMPLATE_CLASS_DELETED": "Classe de plantilla eliminada",
     "TRAINING_BOOKED_BY_CLUB": "Entrenament reservat pel club",
     "TRAINING_CANCELLED_BY_CLUB": "Entrenament cancel·lat pel club",
     "UPFRONT_PAYMENT_RECORDED": "Pagament inicial registrat",
-    "WEEK_VALIDATED": "Setmana validada"
+    "WEEK_VALIDATED": "Setmana validada",
+    "ACCOUNT_EMAIL_CHANGED": "Adreça d'accés canviada"
   },
   "asMember": "com l'abonat: {name}",
   "caption": "Entrades d'auditoria",
@@ -191,5 +196,6 @@
   },
   "rowLabel": "Obre el canvi «{action}»",
   "search": "Cerca per acció, actor o entitat",
-  "title": "Auditoria"
+  "title": "Auditoria",
+  "withoutNotice": "sense avís a l'abonat"
 }

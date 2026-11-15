@@ -8,11 +8,17 @@ import {
 } from "@agilityhub/api-client";
 import { useSession } from "@agilityhub/auth";
 import { Button, Card, Icon, Select, Skeleton, Switch, Toast, useBranding } from "@agilityhub/ui";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { errorText } from "../booking/shared";
-import { pushPermission, pushSupport, subscribeToPush } from "../notifications/push";
+import {
+  devicePushSubscribed,
+  onPushRegistration,
+  pushPermission,
+  pushSupport,
+  subscribeToPush,
+} from "../notifications/push";
 
 import { type Category, type Edits, NOTICES_OUTBOX_KEY } from "./preferences-saver";
 
@@ -22,7 +28,9 @@ import { type Category, type Edits, NOTICES_OUTBOX_KEY } from "./preferences-sav
  * category (the fourth row «Comunicats del club», S11 §13-2), the fixed «+SMS», the reminder
  * select and the push switch. Every change shows at once and is saved as a partial `PUT`
  * (debounced 300 ms, rolled back with a message on failure). Turning push on, or a reminder other
- * than «Mai», asks for the browser's permission in context (never at start-up).
+ * than «Mai», asks for the browser's permission in context (never at start-up). WEB-02: with push
+ * on and no subscription on this device, a button subscribes it on the member's tap; a subscription
+ * that could not be made says so; on an iPhone outside the installed app the switch is inert.
  */
 export function NoticesCard({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["auth", "errors"]);
@@ -43,6 +51,13 @@ export function NoticesCard({ client }: { client: ApiClient }) {
   const [pushDenied, setPushDenied] = useState(
     () => support === "supported" && !impersonated && pushPermission() === "denied",
   );
+  // WEB-02: whether this device holds a subscription, only read (never asked, never subscribed);
+  // the outcome of a subscription that could not be made; the subscriptions on their way.
+  const [device, setDevice] = useState<"none" | "subscribed" | "unknown">("unknown");
+  const [pushProblem, setPushProblem] = useState<"failed" | "unavailable">();
+  const [subscribing, setSubscribing] = useState(0);
+  const iosNoteId = useId();
+  const reminderChannelId = useId();
   const mounted = useRef(true);
   // The account and club a change belongs to (a change kept across a reload is sent again for them
   // only, E7-W02 round 2 #1); each visit owns its own entry (E7-W02 review #4).
@@ -98,6 +113,24 @@ export function NoticesCard({ client }: { client: ApiClient }) {
       leave();
     };
   }, [outbox, saver]);
+
+  useEffect(() => {
+    // An impersonated session never subscribes the admin's own browser (E7-W05 step 6).
+    if (!reader || support !== "supported" || impersonated) return undefined;
+    let current = true;
+    const read = () => {
+      void devicePushSubscribed().then((subscribed) => {
+        if (current) setDevice(subscribed ? "subscribed" : "none");
+      });
+    };
+    read();
+    // 12 may open before `registerSW` hands the worker in: read again once it does.
+    const stop = onPushRegistration(read);
+    return () => {
+      current = false;
+      stop();
+    };
+  }, [impersonated, reader, support]);
 
   useEffect(() => {
     if (!reader) return undefined;
@@ -161,21 +194,38 @@ export function NoticesCard({ client }: { client: ApiClient }) {
   }
 
   const saving = saverState.inFlight !== undefined || saverState.waiting;
-  const pushRow = shown.modules.push && support !== "unsupported";
+  // COMM-02: without the club's published VAPID key nothing can subscribe (`subscribeToPush`
+  // answers «unavailable»), so the switch would do nothing: it is hidden as with PUSH off.
+  const pushRow =
+    shown.modules.push &&
+    support !== "unsupported" &&
+    typeof branding.pushPublicKey === "string" &&
+    branding.pushPublicKey !== "";
 
   const change = (edits: Edits) => {
     setFailure(undefined);
     saver.edit(edits);
   };
 
-  /** R-11-07: in context only, after the member asked for push; the preference is saved anyway. */
+  /**
+   * R-11-07: in context only, after the member asked for push (the switch, a reminder or, WEB-02,
+   * the button for this device); the preference is saved anyway.
+   */
   const askForPush = () => {
     if (!pushRow || support !== "supported" || impersonated) return;
+    setPushProblem(undefined);
+    setSubscribing((count) => count + 1);
     void subscribeToPush(client, branding.pushPublicKey).then((outcome) => {
       if (!mounted.current) return;
+      setSubscribing((count) => count - 1);
       // Refused or dismissed: the member asked for push and the browser did not turn it on.
       if (outcome === "denied" || outcome === "dismissed") setPushDenied(true);
-      if (outcome === "subscribed") setPushDenied(false);
+      if (outcome === "subscribed") {
+        setPushDenied(false);
+        setDevice("subscribed");
+      }
+      // WEB-02: the last attempt's outcome is the one explained.
+      if (outcome === "unavailable" || outcome === "failed") setPushProblem(outcome);
     });
   };
 
@@ -190,6 +240,9 @@ export function NoticesCard({ client }: { client: ApiClient }) {
       ? t("auth:profile.reminder.hours", { hours: minutes / 60 })
       : t("auth:profile.reminder.minutes", { minutes });
   const reminder = shown.reminderMinutesBefore ?? null;
+  const pushWanted = shown.pushClubNews || reminder !== null;
+  // WEB-03: a reminder reaches this device by push only when it holds its subscription (WEB-02).
+  const pushHere = pushRow && support === "supported" && !impersonated && device === "subscribed";
 
   return (
     <Card aria-busy={saving || undefined} className="profile-notices" id="avisos">
@@ -219,6 +272,7 @@ export function NoticesCard({ client }: { client: ApiClient }) {
       <div className="profile-notices__reminder">
         <label htmlFor="profile-reminder">{t("auth:profile.classReminder")}</label>
         <Select
+          aria-describedby={reminderChannelId}
           id="profile-reminder"
           onChange={(event) => {
             const value = event.currentTarget.value;
@@ -236,13 +290,22 @@ export function NoticesCard({ client }: { client: ApiClient }) {
           ))}
         </Select>
       </div>
+      <p className="profile-notices__note profile-notices__reminder-channel" id={reminderChannelId}>
+        {pushHere
+          ? t("auth:profile.reminderChannelAppAndPush")
+          : t("auth:profile.reminderChannelApp")}
+      </p>
       {pushRow ? (
         <div className="profile-notices__mobile">
           <div className="profile-notices__mobile-row">
             <span>{t("auth:profile.mobileNotices")}</span>
             <Switch
+              aria-describedby={support === "ios-install" ? iosNoteId : undefined}
               checked={shown.pushClubNews}
               className="profile-notices__switch"
+              // WEB-02: an iPhone outside the installed app cannot subscribe; the switch is inert
+              // there and the note under it says how to install the app.
+              disabled={support === "ios-install"}
               label={t("auth:profile.mobileNotices")}
               onCheckedChange={(checked) => {
                 change({ pushClubNews: checked });
@@ -250,16 +313,34 @@ export function NoticesCard({ client }: { client: ApiClient }) {
               }}
             />
           </div>
+          {support === "supported" && !impersonated && shown.pushClubNews && device === "none" ? (
+            // WEB-02: push is on for the account but this device holds no subscription; it is made
+            // on this tap only (R-11-07), never by opening 12.
+            <Button
+              loading={subscribing > 0}
+              loadingLabel={t("auth:profile.pushThisDeviceLoading")}
+              onClick={askForPush}
+              variant="secondary"
+            >
+              {t("auth:profile.pushThisDevice")}
+            </Button>
+          ) : null}
           {support === "supported" && !impersonated ? (
             <p className="profile-notices__note">{t("auth:profile.pushPermissionHint")}</p>
           ) : null}
           {support === "ios-install" ? (
-            <p className="profile-notices__note">
+            <p className="profile-notices__note" id={iosNoteId}>
               {t("auth:profile.iosInstall")}
               <br />
               <strong>{t("auth:profile.iosSteps")}</strong>
             </p>
-          ) : pushDenied && !impersonated && (shown.pushClubNews || reminder !== null) ? (
+          ) : pushProblem !== undefined && pushWanted ? (
+            <p className="profile-notices__note" role="status">
+              {pushProblem === "unavailable"
+                ? t("auth:profile.pushUnavailable")
+                : t("auth:profile.pushFailed")}
+            </p>
+          ) : pushDenied && !impersonated && pushWanted ? (
             <p className="profile-notices__note" role="status">
               {t("auth:profile.pushDenied")}
             </p>

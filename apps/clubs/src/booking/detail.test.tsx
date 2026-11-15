@@ -1,8 +1,8 @@
 import { bookingState, catalogState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 
 import { canic, renderApp, setupBookingWorld, without } from "./test-utils";
 
@@ -271,6 +271,51 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     },
   );
 
+  it("WEB-09 (R-08-10): a dialog opened in time and left open across `cancellableInTimeUntil` warns before the member confirms", async () => {
+    // The api's instant two seconds after it answers (the faked clock moves on with real time).
+    rewrite("/bookings/:id", (body) => {
+      body.cancellableInTimeUntil = new Date(Date.now() + 2000).toISOString();
+    });
+    await openBooking();
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).queryByText(/^Falten menys de 4 hores/u)).toBeNull();
+    expect(
+      await within(dialog).findByText(
+        "Falten menys de 4 hores: la sessió comptarà com a feta.",
+        undefined,
+        { timeout: 5000 },
+      ),
+    ).toBeVisible();
+    expect(within(dialog).queryByText(/Si anul·les ara, la classe no comptarà/u)).toBeNull();
+  });
+
+  it("WEB-09 (R-08-10): a dialog opened in time on a phone that then slept past `cancellableInTimeUntil` warns when the app comes back, without waiting for the timer", async () => {
+    // The api's instant one hour after the dialog opens; the timer set for it never runs here.
+    const inTimeUntil = new Date(Date.now() + 3_600_000).toISOString();
+    rewrite("/bookings/:id", (body) => {
+      body.cancellableInTimeUntil = inTimeUntil;
+    });
+    await openBooking();
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = screen.getByRole("dialog");
+    expect(within(dialog).getByText(/Si anul·les ara, la classe no comptarà/u)).toBeVisible();
+    // Still in time, coming back changes nothing.
+    act(() => {
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    expect(within(dialog).queryByText(/^Falten menys de 4 hores/u)).toBeNull();
+
+    vi.setSystemTime(new Date(Date.now() + 7_200_000));
+    act(() => {
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    expect(
+      within(dialog).getByText("Falten menys de 4 hores: la sessió comptarà com a feta."),
+    ).toBeVisible();
+    expect(within(dialog).queryByText(/Si anul·les ara, la classe no comptarà/u)).toBeNull();
+  });
+
   it("E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note", async () => {
     let reads = 0;
     let failing = true;
@@ -422,5 +467,55 @@ describe("T-08-39 the waiting entry (/espera/:id, R-08-16)", () => {
       expect(screen.queryByRole("button", { name: "SURT DE LA LLISTA D'ESPERA" })).toBeNull();
     });
     expect(screen.queryByText("Classe C i sup. · amb la Duna")).toBeNull();
+  });
+});
+
+describe("COMM-03 (decision of 13 Nov 2026): «Avisa l'abonat» when an ADMIN cancels for the member", () => {
+  function recordCancellations(): unknown[] {
+    const bodies: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "POST" && request.url.endsWith("/cancellation")) {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            bodies.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    return bodies;
+  }
+
+  async function cancelDialog(scenario?: "impersonated" | "instructorBookings") {
+    await renderApp("/reserves/booking-duna-mon3", scenario === undefined ? {} : { scenario });
+    await screen.findByRole("heading", { name: "Detall de la reserva" });
+    fireEvent.click(await screen.findByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    return screen.getByRole("dialog", { name: "Vols anul·lar la reserva de la classe B+C?" });
+  }
+
+  it("is offered ticked to an ADMIN acting as the member; unticked, the cancellation carries notifyMember: false", async () => {
+    const bodies = recordCancellations();
+    const dialog = await cancelDialog("impersonated");
+    const choice = within(dialog).getByRole("checkbox", { name: "Avisa l'abonat" });
+    expect(choice).toBeChecked();
+    fireEvent.click(choice);
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    await waitFor(() => {
+      expect(bodies).toEqual([{ notifyMember: false }]);
+    });
+  });
+
+  it("the member gets no choice and cancels with an empty body, as before", async () => {
+    const bodies = recordCancellations();
+    const dialog = await cancelDialog();
+    expect(within(dialog).queryByRole("checkbox", { name: "Avisa l'abonat" })).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    await waitFor(() => {
+      expect(bodies).toEqual([{}]);
+    });
   });
 });

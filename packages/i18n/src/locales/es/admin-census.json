@@ -287,7 +287,8 @@
       "leave": "Baja (con fecha)",
       "resend": "Enviar bienvenida",
       "unblock": "Desbloquear las reservas",
-      "whatsapp": "WhatsApp"
+      "whatsapp": "WhatsApp",
+      "changeLogin": "Cambiar la dirección de acceso"
     },
     "activeSince": "de alta desde {year}",
     "billingMode": {
@@ -318,7 +319,8 @@
       "preferences": "Las preferencias de avisos se han guardado.",
       "roles": "Los roles de acceso se han actualizado.",
       "saved": "Los datos del abonado se han guardado.",
-      "unblocked": "Las reservas se han desbloqueado."
+      "unblocked": "Las reservas se han desbloqueado.",
+      "loginEmailSent": "Se ha solicitado el enlace de confirmación para {email}. La dirección de acceso cambiará cuando el abonado lo abra."
     },
     "fields": {
       "address": "Dirección",
@@ -349,7 +351,8 @@
       "remarks": "Observaciones visibles",
       "roles": "Roles de acceso",
       "street": "Calle y número",
-      "monthlyAmount": "Importe mensual"
+      "monthlyAmount": "Importe mensual",
+      "login": "Dirección de acceso"
     },
     "imageNotice": "No autoriza el uso de su imagen: no publiques fotos en las que aparezca {gender, select, FEMALE {ella} OTHER {esta persona} other {él}}.",
     "readmissionPending": "Este abonado tiene una readmisión pendiente: valídala o recházala desde el panel antes de cambiar la ficha.",
@@ -396,6 +399,25 @@
         "date": "Fecha del próximo recibo",
         "range": "Elige una fecha entre el {from} y el {to}.",
         "notBefore": "La fecha no puede ser anterior al {date}."
+      },
+      "refund": {
+        "action": "Reembolsar",
+        "actionFor": "Reembolsar {concept} ({amount})",
+        "title": "Reembolsar un pago con tarjeta",
+        "summary": "{concept}: pagado con tarjeta {paid}; queda por reembolsar {left}.",
+        "amount": "Importe a reembolsar",
+        "amountHelp": "En blanco, se reembolsa todo lo que queda ({left}).",
+        "amountInvalid": "Escribe un importe positivo que no supere {left}.",
+        "reasonRequired": "Escribe el motivo del reembolso.",
+        "continue": "Continuar",
+        "confirmTitle": "Confirmar el reembolso",
+        "confirmBody": "Se reembolsarán {amount} a {member} por el pago «{concept}». Stripe los devolverá a la tarjeta con la que se pagó, y no se puede deshacer.",
+        "confirmReason": "Motivo: {reason}",
+        "confirm": "Reembolsar {amount}",
+        "back": "Volver",
+        "requested": "Reembolso de {amount} solicitado: se confirmará cuando Stripe lo procese.",
+        "stale": "Este pago ha cambiado y ya no se puede reembolsar así. Se ha vuelto a leer la lista.",
+        "line": "Reembolso de {amount} el {date}: {reason}"
       }
     },
     "language": "idioma: {locale}",
@@ -406,7 +428,7 @@
       "adminOnly": "cambio solo admin",
       "holder": "Titular de la cuenta",
       "iban": "IBAN nuevo",
-      "ibanHelp": "El número completo queda oculto y no se vuelve a mostrar.",
+      "ibanHelp": "Se ve mientras lo escribes. Una vez guardado, queda oculto y no se vuelve a mostrar.",
       "sepa": "Domiciliación",
       "title": "Método de pago"
     },
@@ -459,6 +481,7 @@
           "upfrontOpen": "Hay pagos iniciales abiertos.",
           "futureBookings": "Hay reservas futuras activas.",
           "otherMembershipsActive": "La cuenta tiene otra afiliación activa.",
+          "sepaRefundWindow": "Un cobro SEPA todavía se puede devolver (8 semanas): la supresión se ejecutará cuando se cierre el plazo.",
           "other": "La supresión está bloqueada."
         }
       }
@@ -508,7 +531,16 @@
     "reactivate": "Reactivar al abonado",
     "leftSince": "Baja desde el {date}",
     "joinedOn": "(alta: {date})",
-    "left": "Baja"
+    "left": "Baja",
+    "login": {
+      "bounced": "rebote",
+      "complained": "queja",
+      "bouncedHelp": "Esta dirección rebota o no existe: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida.",
+      "complainedHelp": "Desde esta dirección se ha marcado un correo del club como correo no deseado: no le llegan los enlaces de acceso, la recuperación de la contraseña ni la bienvenida.",
+      "accessEmailFailed": "envío fallido",
+      "accessEmailFailedHelp": "El último correo de acceso no ha llegado ({date}), tampoco al volver a intentarlo."
+    },
+    "rateLimited": "Demasiados envíos seguidos. Vuelve a intentarlo dentro de {minutes, plural, one {# minuto} other {# minutos}}."
   },
   "roles": {
     "admin": "administrador",
@@ -630,7 +662,7 @@
     "familyDecisionRequired": "Elige el grupo del titular o «Sin grupo».",
     "resolved": "Esta preinscripción ya se ha resuelto",
     "resolvedLink": "Abrir la ficha del abonado",
-    "refundWarning": "Hay un pago cobrado: habrá que devolverlo desde Facturación",
+    "refundWarning": "Hay un pago cobrado: habrá que devolverlo. Si se pagó con tarjeta, se reembolsa desde la ficha del abonado, en «Pagos al momento».",
     "invoiceInvalid": "La fecha del próximo recibo no es válida.",
     "gender": {
       "FEMALE": "Femenino",
@@ -789,5 +821,17 @@
     "dissolveConfirm": "Cada abonado volverá a tener su propia facturación y sus perros. ¿Quieres disolver el grupo?",
     "helpWithoutBilling": "Agrupa dos o más abonados y elige un único responsable. Todos los miembros pueden operar con los perros del grupo.",
     "dissolveConfirmWithoutBilling": "Cada abonado volverá a poder operar solo con sus perros. ¿Quieres disolver el grupo?"
+  },
+  "loginEmail": {
+    "current": "Dirección actual",
+    "new": "Dirección nueva",
+    "help": "Le enviaremos un enlace de confirmación. La dirección de acceso cambiará cuando el abonado lo abra; a la dirección actual no se envía ningún aviso.",
+    "submit": "Enviar el enlace de confirmación",
+    "change": "Dirección actual: {current} → dirección nueva: {next}",
+    "confirmDescription": "Se enviará un enlace a {next}. Hasta que el abonado no lo abra, la dirección de acceso no cambia.",
+    "send": "Enviar el enlace",
+    "unchanged": "Esta ya es la dirección de acceso actual.",
+    "invalid": "La dirección de correo no es válida.",
+    "forbidden": "Esta cuenta también se usa fuera del club: su dirección de acceso no se puede cambiar desde aquí."
   }
 }

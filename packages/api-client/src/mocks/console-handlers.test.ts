@@ -111,7 +111,13 @@ describe("E11-W07 step 7 (E147): the SEPA creditor identifier's check digits", (
     expect(canonicalCreditorId("es10 zzz g00000000")).toBe(true);
     // The e2e core seed's second club (e10-core.spec.ts).
     expect(canonicalCreditorId("ES37ZZZG12345674")).toBe(true);
-    for (const value of ["ES00ZZZG00000000", "ES12000G00000000", "ES11ZZZG00000000", "ES10ZZZ", ""]) {
+    for (const value of [
+      "ES00ZZZG00000000",
+      "ES12000G00000000",
+      "ES11ZZZG00000000",
+      "ES10ZZZ",
+      "",
+    ]) {
       expect(canonicalCreditorId(value)).toBe(false);
     }
     // Every fixture creditor is canonical.
@@ -328,6 +334,51 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
         }),
       ),
     ).toMatchObject({ code: "PROVIDER_IN_USE", details: { count: 164 }, status: 409 });
+  });
+
+  it("PAY-10: a Stripe key save runs the connection test (422 STRIPE_CONNECTION_FAILED, nothing saved; a passed one is recorded) and saved live keys switch to test only with testModeOverride", async () => {
+    const save = async (body: Omit<components["schemas"]["PlatformProviderRequest"], "version">) =>
+      client.PUT("/platform/clubs/{id}/payment-providers/{provider}", {
+        body: { ...body, version: (await club(minim)).version },
+        params: { path: { id: minim, provider: "STRIPE" } },
+      });
+    const live = {
+      mode: "live" as const,
+      publishableKey: "pk_live_1234",
+      secretKey: "sk_live_example",
+      webhookSecret: "whsec_example",
+    };
+    const before = await club(minim);
+    expect(await failure(save({ ...live, secretKey: "sk_live_fail" }))).toEqual({
+      code: "STRIPE_CONNECTION_FAILED",
+      details: {},
+      status: 422,
+    });
+    expect(await club(minim)).toEqual(before);
+
+    const saved = await save(live);
+    expectValid("PlatformProviderSummary", saved.data);
+    expect(saved.data).toMatchObject({
+      accountIdMasked: `****${minim.slice(-4)}`,
+      configured: true,
+      mode: "live",
+    });
+    expect(saved.data?.lastTestAt).toEqual(expect.any(String));
+    const withLiveKeys = await club(minim);
+
+    const toTest = { mode: "test" as const, publishableKey: "pk_test_5678" };
+    expect(await failure(save(toTest))).toEqual({
+      code: "PROVIDER_CONFIG_INVALID",
+      details: { field: "mode", reason: "LIVE_KEYS_SAVED" },
+      status: 422,
+    });
+    expect(await failure(save({ ...toTest, testModeOverride: false }))).toMatchObject({
+      details: { reason: "LIVE_KEYS_SAVED" },
+    });
+    expect(await club(minim)).toEqual(withLiveKeys);
+    // Confirmed: the switch is saved; a save without a new secret key drops the last test.
+    const switched = await save({ ...toTest, testModeOverride: true });
+    expect(switched.data).toMatchObject({ accountIdMasked: null, lastTestAt: null, mode: "test" });
   });
 
   it("catalog clone, team (LAST_ADMIN), platform roles (LAST_PLATFORM_ADMIN) and status transitions", async () => {

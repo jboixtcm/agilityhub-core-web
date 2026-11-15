@@ -2310,3 +2310,54 @@ it.each(["json", "text", "blob", "arrayBuffer"] as const)(
     expect(client.getAccessToken()).toBe("access-B");
   },
 );
+
+describe("FE-03 (pre-production audit, decision of 13 Nov 2026): a handoff code refused because this host holds another account's session", () => {
+  it("409 HANDOFF_SESSION_CONFLICT does not end the tab as a refused «Entra com l'abonat» code: the cookie's session is read and kept", async () => {
+    const grants: string[] = [];
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        const grant = new URLSearchParams(await request.text()).get("grant_type") ?? "";
+        grants.push(grant);
+        if (grant === "urn:agilityhub:grant:handoff") {
+          return HttpResponse.json(
+            {
+              code: "HANDOFF_SESSION_CONFLICT",
+              details: {},
+              message: "Another account holds this host's session",
+              traceId: "t",
+            },
+            { status: 409 },
+          );
+        }
+        return HttpResponse.json(tokens("access-of-the-host-session"));
+      }),
+      http.get(`${API_BASE_URL}/me`, ({ request }) =>
+        request.headers.get("Authorization") === "Bearer access-of-the-host-session"
+          ? HttpResponse.json(memberMe)
+          : HttpResponse.json(
+              { code: "UNAUTHENTICATED", details: {}, message: "No session", traceId: "t" },
+              { status: 401 },
+            ),
+      ),
+    );
+    // The members' app (`impersonation`, the default): its refused codes end the tab (E47).
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+
+    const [exchanged, restored] = await Promise.allSettled([
+      client.exchangeHandoff("code-of-another-account"),
+      client.restoreSession(),
+    ]);
+
+    expect(exchanged).toMatchObject({
+      reason: { code: "HANDOFF_SESSION_CONFLICT", status: 409 },
+      status: "rejected",
+    });
+    expect(restored).toEqual({ status: "fulfilled", value: memberMe });
+    expect(client.getMe()).toEqual(memberMe);
+    expect(client.getAccessToken()).toBe("access-of-the-host-session");
+    expect(client.isImpersonated()).toBe(false);
+    expect(client.hasPendingHandoff()).toBe(false);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+    expect(grants).toEqual(["urn:agilityhub:grant:handoff", "refresh_token"]);
+  });
+});

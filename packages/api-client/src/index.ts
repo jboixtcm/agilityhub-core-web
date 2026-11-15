@@ -44,7 +44,14 @@ export {
   createBuildEventsSubscriber,
   type SubscribeBuildEvents,
 } from "./build-events";
-export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } from "./client";
+export {
+  apiClient,
+  apiWritesInFlight,
+  countedWrite,
+  createApiClient,
+  type ApiClient,
+  type ApiClientOptions,
+} from "./client";
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
 export {
   type AccountingExportFormat,

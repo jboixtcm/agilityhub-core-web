@@ -664,7 +664,14 @@ describe("MSW bootstrap handlers", () => {
     // Price edits and confirmed price/plan deletion.
     // Administrative family group creation, updates, lookup and dissolution.
     // Administrators can correct the consumed sessions of a pack.
-    expect(handlers).toHaveLength(416);
+    // SCH-01: + `POST /class-sessions/{id}/restoration` (calendar-handlers.ts).
+    // AUTH-02: + D10's `POST /members/{id}/login-email` (handlers.ts).
+    // SEPA-04: + `POST /remittances/{id}/submission-undo` and `POST /remittances/{id}/returns`
+    // (billing-handlers.ts).
+    // PAY-02: + `GET /billing/stripe-events` (billing-handlers.ts).
+    // PAY-05: + D10's `POST /upfront-payments/{id}/refund` (member-billing-handlers.ts).
+    // COMM-07: + `POST /announcements/{batchId}/resend-failed` (messaging-handlers.ts).
+    expect(handlers).toHaveLength(423);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

@@ -14,7 +14,7 @@ import {
 } from "@agilityhub/auth";
 import { createI18n, LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider, requiredModulesForUiItem } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -330,7 +330,7 @@ describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING
     );
   }
 
-  it("E8-W01: both routes are ADMIN only and need BILLING; an INSTRUCTOR has no «Facturació» entry", async () => {
+  it("E8-W01, PAY-02: the billing routes are ADMIN only and need BILLING; an INSTRUCTOR has no «Facturació» entry", async () => {
     expect(
       ADMIN_ROUTES.filter((route) => route.path.startsWith("/facturacio")).map((route) => [
         route.path,
@@ -340,6 +340,7 @@ describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING
     ).toEqual([
       ["/facturacio", ["ADMIN"], ["BILLING"]],
       ["/facturacio/remeses", ["ADMIN"], ["BILLING"]],
+      ["/facturacio/esdeveniments-stripe", ["ADMIN"], ["BILLING"]],
     ]);
     await renderBillingNavigation(["INSTRUCTOR"], branding.modules, "/agenda");
     expect(screen.queryByRole("link", { name: "Facturació" })).toBeNull();
@@ -354,6 +355,13 @@ describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING
     expect(screen.queryByRole("link", { name: "Facturació" })).toBeNull();
     cleanup();
     await renderBillingNavigation(["ADMIN"], branding.modules, "/facturacio/remeses");
+    expect(screen.getByRole("link", { name: "Facturació" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    // PAY-02: the failed Stripe events belong to «Facturació» too.
+    cleanup();
+    await renderBillingNavigation(["ADMIN"], branding.modules, "/facturacio/esdeveniments-stripe");
     expect(screen.getByRole("link", { name: "Facturació" })).toHaveAttribute(
       "aria-current",
       "page",
@@ -795,6 +803,7 @@ describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the co
     window.history.pushState(null, "", "/activacio?t=mock-magic-token");
     const assign = stubFullLoads();
     await renderApplication(authClient(), currentMockScenario().branding);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     await waitFor(() => {
       expect(assign).toHaveBeenCalledWith("/consola/clubs");
     });
@@ -806,11 +815,42 @@ describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the co
     server.events.removeAllListeners();
   });
 
+  it("AUTH-06 (decision of 13 Nov 2026): the magic link leaves the address at once and is redeemed only when «Entra» is pressed", async () => {
+    mockScenario("platform");
+    const grants = recordTokenRequests();
+    window.history.pushState(null, "", "/activacio?t=mock-magic-token");
+    const assign = stubFullLoads();
+    await renderApplication(authClient(), currentMockScenario().branding);
+
+    const enter = await screen.findByRole("button", { name: "ENTRA" });
+    expect(
+      screen.getByText("Prem el botó per iniciar la sessió en aquest dispositiu."),
+    ).toBeVisible();
+    expect(window.location.search).toBe("");
+    // The page has loaded and settled: nothing has been redeemed.
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(grants).not.toContainEqual({
+      clientId: "clubs-admin",
+      grant: "urn:agilityhub:grant:magic-link",
+    });
+    expect(assign).not.toHaveBeenCalled();
+
+    fireEvent.click(enter);
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/consola/clubs");
+    });
+    expect(
+      grants.filter((grant) => grant.grant === "urn:agilityhub:grant:magic-link"),
+    ).toHaveLength(1);
+    server.events.removeAllListeners();
+  });
+
   it("the magic link of an account without the platform role says so (403 PLATFORM_ONLY)", async () => {
     mockScenario("platformRefused");
     window.history.pushState(null, "", "/activacio?t=mock-magic-token");
     const assign = stubFullLoads();
     await renderApplication(authClient(), currentMockScenario().branding);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(await screen.findByText(REFUSAL)).toBeVisible();
     expect(assign).not.toHaveBeenCalled();
   });
@@ -819,6 +859,7 @@ describe("E11-W08 step 2 (S01 R-01-02, S17 §2 «Entrada», ruling E157): the co
     mockScenario("platform");
     window.history.pushState(null, "", "/activacio?t=invalid");
     await renderApplication(authClient(), currentMockScenario().branding);
+    fireEvent.click(await screen.findByRole("button", { name: "ENTRA" }));
     expect(
       await screen.findByRole("heading", { level: 1, name: "Aquest enllaç ja no és vàlid" }),
     ).toBeVisible();
@@ -1022,6 +1063,44 @@ describe("E4-W18 step 2 (review #3): the back office's handoff is the caller's o
     expect(window.location.search).toBe("");
     expect(assign).not.toHaveBeenCalled();
   });
+
+  it("FE-03 (decision of 13 Nov 2026): a code the api refuses because this device holds another account's session (409 HANDOFF_SESSION_CONFLICT) keeps that session, says why and «CONTINUAR» opens it", async () => {
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === HANDOFF_GRANT
+          ? HttpResponse.json(
+              {
+                code: "HANDOFF_SESSION_CONFLICT",
+                details: {},
+                message: "Another account holds this host's session",
+                traceId: "t",
+              },
+              { status: 409 },
+            )
+          : undefined;
+      }),
+    );
+    window.history.pushState(null, "", "/entrar?handoff=mock-other-account-code");
+    const assign = stubPageLoads();
+    const client = authClient();
+    await renderApplication(client);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Aquest enllaç obre un altre compte i en aquest dispositiu ja tens una sessió iniciada, que mantenim. Si vols entrar amb un altre compte, tanca primer la sessió.",
+    );
+    expect(screen.queryByText(REFUSED_MESSAGE)).toBeNull();
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(window.location.search).toBe("");
+    expect(assign).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "CONTINUAR" }));
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/tauler");
+    });
+    expect(client.getMe()?.account.email).toBe("aina.serra@example.test");
+    expect(client.isImpersonated()).toBe(false);
+  });
 });
 
 describe("T-01-26 clubs-admin onboarding", () => {
@@ -1116,6 +1195,36 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     },
   );
 
+  it("AUTHZ-02: an INSTRUCTOR without ADMIN who opens a member's record lands on D12 and never reads /members", async () => {
+    const memberReads: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      const { pathname } = new URL(request.url);
+      if (pathname.startsWith("/api/v1/members")) memberReads.push(pathname);
+    });
+    try {
+      mockScenario("instructor");
+      const client = authClient();
+      await client.login("marc@example.test", "secret-password");
+      // An old link to an ex-member's record: the api answers 404 to an instructor (R-03-31).
+      window.history.pushState(null, "", "/abonats/member-laura");
+      await renderApplication(client);
+      expect(
+        await screen.findByRole(
+          "heading",
+          { level: 1, name: "Agenda de la setmana" },
+          { timeout: 5_000 },
+        ),
+      ).toBeVisible();
+      await waitFor(() => {
+        expect(window.location.pathname).toBe("/agenda");
+      });
+      expect(screen.queryByRole("link", { name: "Abonats" })).toBeNull();
+      expect(memberReads).toEqual([]);
+    } finally {
+      server.events.removeAllListeners();
+    }
+  });
+
   it("an unknown path lands a platform-only account on the console list, never on D1", async () => {
     await renderPlatform("/");
     expect(
@@ -1200,5 +1309,33 @@ describe("T-05 feedback 3: desktop sidebar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Desplega el menú" }));
     expect(localStorage.getItem("admin-sidebar-collapsed")).toBe("false");
     localStorage.removeItem("admin-sidebar-collapsed");
+  });
+});
+
+describe("AUTH-01 (S01 R-01-18, decision of 13 Nov 2026): the back office asks «Confirma que ets tu»", () => {
+  afterEach(() => {
+    window.history.pushState(null, "", "/");
+  });
+
+  it("answers the api's request for a recent sign-in with the password dialog, which signs the admin in again", async () => {
+    window.history.pushState(null, "", "/tauler");
+    const client = authClient();
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(client.getMe()).not.toBeNull();
+    });
+    let confirmed: Promise<boolean> | undefined;
+    act(() => {
+      confirmed = client.requestRecentLogin();
+    });
+    const dialog = await screen.findByRole("dialog", { name: "Confirma que ets tu" });
+    fireEvent.change(within(dialog).getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Continua" }));
+    await expect(confirmed).resolves.toBe(true);
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Confirma que ets tu" })).toBeNull();
+    });
   });
 });
