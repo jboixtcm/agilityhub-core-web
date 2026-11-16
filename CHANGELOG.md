@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-16 — Reserved class badge
+
+- Show reserved classes with a blue badge, distinct from the green available places.
+
 ## Unreleased — Competition statistics
 
 - Add member competition statistics and administrator preview/confirm imports behind STATS, with source links, period filters and Catalan/Spanish/English copy.

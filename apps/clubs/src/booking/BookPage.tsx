@@ -68,7 +68,7 @@ function rowBadge(
   if ("bookingId" in row) {
     return row.state === "PAYMENT_PENDING"
       ? { content: t("enums:reservationState.PAYMENT_PENDING"), tone: "warning" }
-      : { content: t("booking:list.reserved"), tone: "success" };
+      : { content: t("booking:list.reserved"), tone: "info" };
   }
   let badge: { content: ReactNode; label?: string; tone: Tone } | undefined;
   const waiting = row.waiting ?? 0;
