@@ -2,6 +2,7 @@
   "title": "Estadístiques de competició",
   "description": "Resultats oficials importats, per gos i període.",
   "source": "Veure la font",
+  "trialName": "Prova: {name}",
   "importedAt": "Importat el {date}",
   "unknown": "—",
   "loading": "Carregant…",

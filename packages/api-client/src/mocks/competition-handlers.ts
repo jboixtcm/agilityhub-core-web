@@ -86,7 +86,13 @@ export function competitionFixture(dogId: string, year = 2026, season = "2025-20
     results:
       populated && year === 2026
         ? [
-            { source: "FLOW_AGILITY", sourceUrl: FLOW_URL, importedAt, result: run },
+            {
+              source: "FLOW_AGILITY",
+              sourceUrl: FLOW_URL,
+              importedAt,
+              result: run,
+              organizingClubName: "Club Organitzador",
+            },
             {
               source: "FLOW_AGILITY",
               sourceUrl: FLOW_URL,

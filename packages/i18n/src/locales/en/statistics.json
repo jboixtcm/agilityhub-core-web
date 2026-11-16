@@ -2,6 +2,7 @@
   "title": "Competition statistics",
   "description": "Imported official results by dog and period.",
   "source": "View source",
+  "trialName": "Trial: {name}",
   "importedAt": "Imported on {date}",
   "unknown": "—",
   "loading": "Loading…",

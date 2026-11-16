@@ -1,5 +1,7 @@
 # Changelog
 
+- Show the organizing club immediately after the competition date. Keep the full trial title in expanded details, with a title fallback for historical sources without organizer metadata.
+
 - Compare three years of competition results per licence with separate Agility/Jumping charts and annual clear-round, elimination, speed and P/PV/PA metrics. Show data periods, grades and known-result sample sizes; limit the year selector to the last three calendar years.
 
 - Competition statistics show per-licence RSCE grade, lifetime promotion targets, annual championship progress and separate Agility/Jumping P, PV and PA counters, with official 2026 rule references.

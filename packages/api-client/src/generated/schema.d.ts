@@ -10363,6 +10363,7 @@ export interface components {
         CompetitionResult: {
             /** Format: date-time */
             importedAt: string;
+            organizingClubName?: string | null;
             result: components["schemas"]["CompetitionEntry"];
             /** @enum {string} */
             source: "FCAG" | "FLOW_AGILITY";

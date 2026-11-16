@@ -1,0 +1,14 @@
+{
+  "workspaceTasks": 38,
+  "workspaceExitCode": 0,
+  "statisticsTests": 10,
+  "statisticsExitCode": 0,
+  "i18nExitCode": 0,
+  "browserTests": 430,
+  "browserExitCode": 0,
+  "screenshotsReviewed": [
+    "runs-375.png",
+    "runs-1280.png"
+  ],
+  "productionDeployed": false
+}

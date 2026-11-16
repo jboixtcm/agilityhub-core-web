@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { expect, test } from "@playwright/test";
-const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/flow-annual");
+const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/flow-organizer");
 const branding = JSON.parse(
   readFileSync(
     resolve(
@@ -37,6 +37,12 @@ test("T-STATS-21 member sees own statistics, source and period filters", async (
   await expect(page.getByText("140", { exact: true })).toBeVisible();
   await expect(page.getByText("1 prova amb punt")).toBeVisible();
   await expect(page.locator(".competition-runs li")).toHaveCount(2);
+  const organizedRun = page
+    .locator(".competition-runs summary")
+    .filter({ hasText: "Club Organitzador" });
+  await expect(organizedRun).toHaveText(/19\/07 · Club Organitzador · Agility/u);
+  await organizedRun.click();
+  await expect(page.getByText("Prova: Prova d’estiu", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Veure la font" }).first()).toHaveAttribute(
     "href",
     "https://app.fcagility.cat/federated/classification/division/128",
@@ -60,11 +66,13 @@ test("T-STATS-21 member sees own statistics, source and period filters", async (
   await page.setViewportSize({ width: 375, height: 900 });
   await expect(page.locator("body")).toHaveJSProperty("scrollWidth", 375);
   await page.screenshot({ path: resolve(evidence, "member-375.png"), fullPage: true });
+  await page.locator(".competition-runs").screenshot({ path: resolve(evidence, "runs-375.png") });
   await page
     .locator(".competition-comparison")
     .screenshot({ path: resolve(evidence, "annual-375.png") });
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.screenshot({ path: resolve(evidence, "member-1280.png"), fullPage: true });
+  await page.locator(".competition-runs").screenshot({ path: resolve(evidence, "runs-1280.png") });
   await page
     .locator(".competition-comparison")
     .screenshot({ path: resolve(evidence, "annual-1280.png") });
