@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 
 import { errorText, useLoader } from "../booking/shared";
 
+import { RsceProgressPanel } from "./RsceProgressPanel";
+
 import "./statistics.css";
 
 type Statistics = components["schemas"]["CompetitionStatistics"];
@@ -39,6 +41,7 @@ function DogStatistics({
   const { t, i18n } = useTranslation(["statistics", "errors"]);
   const formats = useClubFormats();
   const [scoredOnly, setScoredOnly] = useState(false);
+  const [license, setLicense] = useState("");
   const load = useCallback(async () => {
     const { data } = await client.GET("/me/dogs/{id}/competition-statistics", {
       params: { path: { id }, query: { year, season } },
@@ -66,7 +69,18 @@ function DogStatistics({
       </Card>
     );
   const stats = state.data;
-  const runs = stats.results.filter(
+  const progression =
+    stats.rsceProgress.find((row) => row.license === license) ?? stats.rsceProgress[0];
+  const selectedRuns = stats.results.filter(
+    (row) => !progression || row.result.license === progression.license,
+  );
+  const summaries = progression?.summaries ?? stats.summaries;
+  const scoredTrials = new Set(
+    selectedRuns
+      .filter((row) => row.result.point && row.result.point !== "NONE")
+      .map((row) => row.result.trialId),
+  ).size;
+  const runs = selectedRuns.filter(
     (row) => !scoredOnly || (row.result.point != null && row.result.point !== "NONE"),
   );
   return (
@@ -100,21 +114,52 @@ function DogStatistics({
       </Card>
       <Card>
         <h2>{t("statistics:rsce")}</h2>
-        {stats.results.length === 0 ? (
+        {stats.rsceProgress.length > 1 && (
+          <label className="competition-license">
+            {t("statistics:license")}
+            <Select
+              value={progression?.license ?? ""}
+              onChange={(event) => {
+                setLicense(event.target.value);
+              }}
+            >
+              {stats.rsceProgress.map((row) => (
+                <option key={row.license} value={row.license}>
+                  {row.license}
+                </option>
+              ))}
+            </Select>
+          </label>
+        )}
+        {progression && <RsceProgressPanel progress={progression} year={year} />}
+        <h3>{t("statistics:progress.annualPoints", { year })}</h3>
+        {selectedRuns.length === 0 ? (
           <p>{t("statistics:noRuns")}</p>
         ) : (
           <>
-            <p>{t("statistics:scoredTrials", { count: stats.scoredTrials })}</p>
+            <p>{t("statistics:scoredTrials", { count: scoredTrials })}</p>
             <p className="competition-source">{t("statistics:officialPointsHelp")}</p>
             <div className="competition-grid">
-              {stats.summaries.map((summary) => (
+              {summaries.map((summary) => (
                 <section key={summary.discipline}>
                   <h3>
                     {summary.discipline === "AGILITY"
                       ? t("statistics:discipline.AGILITY")
                       : t("statistics:discipline.JUMPING")}
                   </h3>
-                  <dl className="competition-metrics">
+                  <dl className="competition-metrics competition-awards">
+                    <div>
+                      <dt>{t("statistics:pointP")}</dt>
+                      <dd>{summary.p}</dd>
+                    </div>
+                    <div>
+                      <dt>{t("statistics:pointPV")}</dt>
+                      <dd>{summary.pv}</dd>
+                    </div>
+                    <div>
+                      <dt>{t("statistics:pointPA")}</dt>
+                      <dd>{summary.pa}</dd>
+                    </div>
                     <div>
                       <dt>{t("statistics:runs")}</dt>
                       <dd>{summary.runs}</dd>
@@ -122,18 +167,6 @@ function DogStatistics({
                     <div>
                       <dt>{t("statistics:clearRuns")}</dt>
                       <dd>{summary.clearRuns}</dd>
-                    </div>
-                    <div>
-                      <dt>{t("statistics:pointP")}</dt>
-                      <dd>{summary.p}</dd>
-                    </div>
-                    <div>
-                      <dt>{t("statistics:pointPA")}</dt>
-                      <dd>{summary.pa}</dd>
-                    </div>
-                    <div>
-                      <dt>{t("statistics:pointPV")}</dt>
-                      <dd>{summary.pv}</dd>
                     </div>
                     <div>
                       <dt>{t("statistics:averageSpeed")}</dt>

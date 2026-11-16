@@ -2112,7 +2112,12 @@ describe("Josep feedback: generated daily bands", () => {
     fireEvent.change(start, { target: { value: "18:50" } });
     expect(end).toHaveValue("19:50");
     fireEvent.change(date, { target: { value: "2026-08-16" } });
-    await waitFor(() => expect(start).toBeEnabled());
+    // Wait for the loaded day's suggestions to hydrate before simulating the admin's edits.
+    await waitFor(() => {
+      expect(start).toBeEnabled();
+      expect(start).toHaveValue("07:00");
+      expect(end).toHaveValue("08:00");
+    });
     fireEvent.change(start, { target: { value: "10:15" } });
     fireEvent.change(end, { target: { value: "11:20" } });
     expect(start).toHaveValue("10:15");

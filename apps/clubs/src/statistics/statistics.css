@@ -28,7 +28,7 @@
 }
 .competition-metrics dt,
 .competition-source {
-  color: var(--ah-text-muted);
+  color: var(--ah-color-text-muted);
   font-size: 0.875rem;
 }
 .competition-metrics dd {
@@ -42,7 +42,7 @@
 }
 .competition-runs li {
   padding-block: 0.875rem;
-  border-top: 1px solid var(--ah-border);
+  border-top: 1px solid var(--ah-color-border);
 }
 .competition-runs summary {
   cursor: pointer;
@@ -53,4 +53,73 @@
   gap: 0.5rem;
   align-items: center;
   margin-block: 1rem;
+}
+
+.competition-progress {
+  display: grid;
+  gap: 1.25rem;
+  margin-block: 1rem 2rem;
+}
+.competition-grade {
+  border-inline-start: 4px solid var(--ah-color-primary);
+  padding-inline-start: 1rem;
+}
+.competition-grade p,
+.competition-target p {
+  margin-block: 0 0.5rem;
+}
+.competition-grade strong {
+  display: inline-block;
+  margin-inline-start: 0.5rem;
+}
+.competition-route {
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  padding: 1rem;
+  margin-block: 0.75rem;
+}
+.competition-route h4 {
+  margin-block: 0 1rem;
+}
+.competition-target {
+  display: grid;
+  gap: 0.375rem;
+}
+.competition-target strong {
+  font-size: 1.4rem;
+}
+.competition-target progress {
+  width: 100%;
+  appearance: none;
+  border: 0;
+  border-radius: var(--ah-radius-sm);
+  height: 0.625rem;
+  overflow: hidden;
+  background: var(--ah-color-surface-2);
+}
+.competition-review {
+  padding: 0.75rem;
+  border: 1px solid var(--ah-color-border);
+}
+.competition-rule-notes summary {
+  cursor: pointer;
+}
+.competition-license {
+  display: grid;
+  gap: 0.375rem;
+  max-width: 20rem;
+}
+
+.competition-awards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.competition-target progress::-webkit-progress-bar {
+  background: var(--ah-color-surface-2);
+}
+.competition-target progress::-webkit-progress-value {
+  background: var(--ah-color-primary);
+}
+.competition-target progress::-moz-progress-bar {
+  background: var(--ah-color-primary);
 }

@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { expect, test } from "@playwright/test";
-const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/competition-statistics");
+const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/flow-weekly");
 const branding = JSON.parse(
   readFileSync(
     resolve(
@@ -41,7 +41,20 @@ test("T-STATS-21 member sees own statistics, source and period filters", async (
     "href",
     "https://app.fcagility.cat/federated/classification/division/128",
   );
+  await expect(page.getByRole("heading", { name: "Grau actual G2" })).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Progrés d’ascens" }).getByText("Falten 2"),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole("region", { name: "Campionat d’Espanya 2027" })
+      .getByRole("progressbar", { name: "Agility · PV" }),
+  ).toHaveAttribute("value", "1");
+  await page.setViewportSize({ width: 375, height: 900 });
+  await expect(page.locator("body")).toHaveJSProperty("scrollWidth", 375);
   await page.screenshot({ path: resolve(evidence, "member-375.png"), fullPage: true });
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.screenshot({ path: resolve(evidence, "member-1280.png"), fullPage: true });
   await page.getByLabel("Mostra només mànegues amb punt").check();
   await expect(page.locator(".competition-runs li")).toHaveCount(1);
   await page.getByRole("combobox", { name: "Gos", exact: true }).selectOption({ label: "Rock" });
