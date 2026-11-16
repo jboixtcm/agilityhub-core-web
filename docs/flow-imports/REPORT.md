@@ -99,3 +99,5 @@ evidence: flow-weekly/23-D10-next-invoice-row-375.png
 evidence: flow-weekly/member-today-375-light.png
 evidence: flow-weekly/responsive-admin-import-768.png
 ```
+
+The subsequent cold CI caught the shared contrast guard treating native progress-bar fills as text containers. Their labels sit outside `<progress>`, so both browser fill pseudo-elements now join the existing explicit textless-shape allowlist. No text-bearing selector is exempted. The direct `corepack pnpm --filter @agilityhub/ui test` rerun passed all 235 cases in 26 files (exit 0), avoiding the prior cross-package cached result.

@@ -11,6 +11,9 @@ const TEXTLESS = new Set([
   ".ah-bar-chart__bar--highlighted",
   ".ah-switch--checked",
   ".dog-pack__track span",
+  // Native progress fills contain no text; their labels sit outside the progress element.
+  ".competition-target progress::-webkit-progress-value",
+  ".competition-target progress::-moz-progress-bar",
   // Screen 11's unread dot (E7-W02); its «Nova» is screen-reader text only.
   ".notification-card__unread",
   ".signup-progress__track .signup-progress__done",
