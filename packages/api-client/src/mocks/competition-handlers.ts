@@ -33,7 +33,7 @@ const run: Entry = {
   runId: "run-1",
   date: "2026-07-19",
   trial: "Prova d’estiu",
-  grade: "G3",
+  grade: "G2",
   category: "S",
   discipline: "AGILITY",
   position: 2,
@@ -43,10 +43,22 @@ const run: Entry = {
   timeSeconds: 35.21,
   speedMps: 5.4,
   qualification: "EXC_0",
-  point: "PA",
+  point: "PA / PV",
 };
 export function competitionFixture(dogId: string, year = 2026, season = "2025-2026"): Statistics {
   const populated = dogId === "dog-duna";
+  const summaries: Statistics["summaries"] = (["AGILITY", "JUMPING"] as const).map(
+    (discipline) => ({
+      discipline,
+      runs: populated && year === 2026 ? 1 : 0,
+      clearRuns: populated && year === 2026 ? 1 : 0,
+      p: 0,
+      pa: populated && year === 2026 && discipline === "AGILITY" ? 1 : 0,
+      pv: populated && year === 2026 && discipline === "AGILITY" ? 1 : 0,
+      averageSpeedMps: populated && year === 2026 ? 5.4 : null,
+    }),
+  );
+
   return {
     dogId,
     year,
@@ -73,15 +85,68 @@ export function competitionFixture(dogId: string, year = 2026, season = "2025-20
           ]
         : [],
     scoredTrials: populated && year === 2026 ? 1 : 0,
-    summaries: (["AGILITY", "JUMPING"] as const).map((discipline) => ({
-      discipline,
-      runs: populated && year === 2026 ? 1 : 0,
-      clearRuns: populated && year === 2026 ? 1 : 0,
-      p: 0,
-      pa: populated && year === 2026 && discipline === "AGILITY" ? 1 : 0,
-      pv: 0,
-      averageSpeedMps: populated && year === 2026 ? 5.4 : null,
-    })),
+    summaries,
+    rsceProgress: populated
+      ? [
+          {
+            license: "0123",
+            currentGrade: "G2",
+            gradeSource: "LICENSE",
+            registeredGrade: "G2",
+            lastResultGrade: "G2",
+            lastResultDate: "2026-07-19",
+            gradeConflict: false,
+            previousHigherGrade: false,
+            historyFrom: "2026-07-19",
+            historyThrough: "2026-07-19",
+            summaries,
+            promotionRoutes: [
+              {
+                code: "G2_TO_G3",
+                targetGrade: "G3",
+                championshipYear: 0,
+                pointTargetsMet: false,
+                requiresDifferentJudges: false,
+                targets: [
+                  { discipline: "AGILITY", kind: "PA", earned: 1, required: 3, remaining: 2 },
+                  { discipline: "JUMPING", kind: "PA", earned: 0, required: 3, remaining: 3 },
+                ],
+              },
+            ],
+            championshipRoutes:
+              year < 2026
+                ? []
+                : [
+                    {
+                      code: "G2_STANDARD",
+                      targetGrade: "G2",
+                      championshipYear: year + 1,
+                      pointTargetsMet: false,
+                      requiresDifferentJudges: false,
+                      targets: summaries.flatMap((summary) => [
+                        {
+                          discipline: summary.discipline,
+                          kind: "CHAMPIONSHIP_POINT",
+                          earned: summary.p + summary.pv,
+                          required: 6,
+                          remaining: 6 - summary.p - summary.pv,
+                        },
+                        {
+                          discipline: summary.discipline,
+                          kind: "PV",
+                          earned: summary.pv,
+                          required: 4,
+                          remaining: 4 - summary.pv,
+                        },
+                      ]),
+                    },
+                  ],
+            rulesVersion: "RSCE-2026-07-01",
+            rulesUrl:
+              "https://www.rsce.es/wp-content/uploads/2026/07/REGLAMENTO-AGILITY-1-01-26-EN-VIGOR-mayo.pdf",
+          },
+        ]
+      : [],
     lastImportedAt: populated ? importedAt : null,
   };
 }

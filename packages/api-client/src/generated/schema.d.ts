@@ -10300,7 +10300,7 @@ export interface components {
             key: string;
             license: string;
             /** @enum {string|null} */
-            point?: "NONE" | "P" | "PA" | "PV" | null;
+            point?: "NONE" | "P" | "PA" | "PV" | "PA / PV" | null;
             points?: number | null;
             /** Format: int32 */
             position?: number | null;
@@ -10378,6 +10378,7 @@ export interface components {
             /** Format: date-time */
             lastImportedAt?: string | null;
             results: components["schemas"]["CompetitionResult"][];
+            rsceProgress: components["schemas"]["RsceLicenseProgress"][];
             /** Format: int32 */
             scoredTrials: number;
             season: string;
@@ -15884,6 +15885,46 @@ export interface components {
             cancelledInvoices: number;
             /** Format: int32 */
             restoredMembers: number;
+        };
+        RsceLicenseProgress: {
+            championshipRoutes: components["schemas"]["RsceProgressRoute"][];
+            currentGrade?: string | null;
+            gradeConflict: boolean;
+            gradeSource: string;
+            /** Format: date */
+            historyFrom?: string | null;
+            /** Format: date */
+            historyThrough?: string | null;
+            /** Format: date */
+            lastResultDate?: string | null;
+            lastResultGrade?: string | null;
+            license: string;
+            previousHigherGrade: boolean;
+            promotionRoutes: components["schemas"]["RsceProgressRoute"][];
+            registeredGrade?: string | null;
+            rulesUrl: string;
+            rulesVersion: string;
+            summaries: components["schemas"]["CompetitionRunSummary"][];
+        };
+        RscePointTarget: {
+            /** @enum {string} */
+            discipline: "AGILITY" | "JUMPING";
+            /** Format: int32 */
+            earned: number;
+            kind: string;
+            /** Format: int32 */
+            remaining: number;
+            /** Format: int32 */
+            required: number;
+        };
+        RsceProgressRoute: {
+            /** Format: int32 */
+            championshipYear: number;
+            code: string;
+            pointTargetsMet: boolean;
+            requiresDifferentJudges: boolean;
+            targetGrade: string;
+            targets: components["schemas"]["RscePointTarget"][];
         };
         RunNotRollbackableDetails: {
             reasons: components["schemas"]["RollbackBlocker"][];

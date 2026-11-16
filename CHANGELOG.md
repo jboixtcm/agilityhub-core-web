@@ -1,5 +1,7 @@
 # Changelog
 
+- Competition statistics show per-licence RSCE grade, lifetime promotion targets, annual championship progress and separate Agility/Jumping P, PV and PA counters, with official 2026 rule references.
+
 ## 2026-11-16 — Reserved class badge
 
 - Show reserved classes with a blue badge, distinct from the green available places.
