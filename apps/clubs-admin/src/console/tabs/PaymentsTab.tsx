@@ -169,9 +169,9 @@ function SepaCard(props: ConsoleTabProps) {
   return (
     <SectionCard title={t("console:payments.sepa.title")}>
       <ProviderState summary={summary} />
-      <form className="console-form" onSubmit={(event) => void submit(event)}>
+      <form className="console-form console-form--sepa" onSubmit={(event) => void submit(event)}>
         <fieldset className="console-fieldset" disabled={write.pending}>
-          <div className="console-grid">
+          <div className="console-sepa-grid">
             <TextField
               error={fields.creditorName}
               id="console-sepa-creditor-name"
@@ -217,33 +217,36 @@ function SepaCard(props: ConsoleTabProps) {
               value={iban}
             />
           </div>
-          <div className="catalog-switch-row">
-            <span>{t("console:payments.enabledLabel")}</span>
-            <Switch
-              checked={enabled}
-              label={t("console:payments.enabledLabel")}
-              onCheckedChange={(checked) => {
-                form.setField("enabled", checked);
-              }}
-            />
-          </div>
         </fieldset>
         <FormMessage
           message={write.error === undefined ? undefined : consoleErrorMessage(t, write.error)}
           tone="danger"
         />
         <FormMessage message={write.done ? t("console:common.saved") : undefined} tone="success" />
-        <div className="console-actions">
-          {summary.configured ? (
-            <RemoveProvider
-              name={t("console:payments.sepa.title")}
-              onRemove={write.remove}
-              pending={write.pending}
+        <div className="console-sepa-footer">
+          <div className="console-sepa-toggle">
+            <span>{t("console:payments.enabledLabel")}</span>
+            <Switch
+              checked={enabled}
+              disabled={write.pending}
+              label={t("console:payments.enabledLabel")}
+              onCheckedChange={(checked) => {
+                form.setField("enabled", checked);
+              }}
             />
-          ) : null}
-          <Button loading={write.pending} loadingLabel={t("console:common.saving")} type="submit">
-            {t("console:common.save")}
-          </Button>
+          </div>
+          <div className="console-actions">
+            {summary.configured ? (
+              <RemoveProvider
+                name={t("console:payments.sepa.title")}
+                onRemove={write.remove}
+                pending={write.pending}
+              />
+            ) : null}
+            <Button loading={write.pending} loadingLabel={t("console:common.saving")} type="submit">
+              {t("console:common.save")}
+            </Button>
+          </div>
         </div>
       </form>
     </SectionCard>
