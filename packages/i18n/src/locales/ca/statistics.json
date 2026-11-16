@@ -18,7 +18,7 @@
   "position": "Posició",
   "netPoints": "Punts nets oficials",
   "scoredTrials": "{count, plural, one {# prova amb punt} other {# proves amb punt}}",
-  "officialPointsHelp": "Els punts P, PA i PV són els indicats a la font. Un recorregut a zero no implica obtenir un punt. La mitjana de velocitat inclou les mànegues acabades amb velocitat informada.",
+  "officialPointsHelp": "P, PV i PA són pistes a zero. Una mànega amb PA / PV compta una sola vegada a «A zero». Els percentatges utilitzen les mànegues amb resultat conegut; la velocitat mitjana, les mànegues acabades amb velocitat informada.",
   "discipline": {
     "AGILITY": "Agility",
     "JUMPING": "Jumping"
@@ -112,5 +112,23 @@
     "source": "Reglament RSCE vigent des de l’1 de juliol de 2026 · articles 60–63 i 71",
     "gradeToReview": "Grau pendent de revisar",
     "lastObservedGrade": "Últim grau a Flow"
+  },
+  "comparison": {
+    "title": "Comparativa dels últims tres anys",
+    "description": "Compara les dades importades de cada any. El període disponible, el nombre de proves i els graus poden ser diferents; l’any en curs encara no està tancat.",
+    "legend": "Les barres destaquen les pistes a zero dins del total de mànegues.",
+    "chart": "Comparativa anual · {discipline}",
+    "noData": "Sense dades",
+    "chartValue": "{clear} a zero / {runs, plural, one {# mànega} other {# mànegues}}",
+    "details": "Dades anuals · {discipline}",
+    "metric": "Mètrica",
+    "clearRate": "A zero (%)",
+    "eliminated": "Eliminacions",
+    "eliminatedRate": "Eliminacions (%)",
+    "speedSamples": "Amb velocitat",
+    "outcomeSamples": "Resultat conegut",
+    "samplesHelp": "Els percentatges es calculen sobre les mànegues amb resultat conegut. Les dades desconegudes no es compten com a zero ni com a eliminació. La mitjana de velocitat exclou les eliminacions i les velocitats no informades.",
+    "grades": "Graus",
+    "period": "Dates importades"
   }
 }

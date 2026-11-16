@@ -1,0 +1,22 @@
+{
+  "workspaceTasks": 38,
+  "workspaceExitCode": 0,
+  "focusedStatisticsTests": 9,
+  "focusedMessagingTests": 14,
+  "browserExitCode": 0,
+  "browserCases": {
+    "course": 4,
+    "administration": 237,
+    "identity": 1,
+    "members": 188
+  },
+  "screenshotsReviewed": [
+    "annual-375.png",
+    "annual-1280.png"
+  ],
+  "locales": [
+    "ca",
+    "es",
+    "en"
+  ]
+}

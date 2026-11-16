@@ -123,3 +123,54 @@
 .competition-target progress::-moz-progress-bar {
   background: var(--ah-color-primary);
 }
+
+.competition-comparison {
+  margin-block: 1.5rem 2rem;
+  padding-block: 1rem;
+  border-block: 1px solid var(--ah-color-border);
+}
+.competition-comparison-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+.competition-comparison-grid > section {
+  min-width: 0;
+}
+.competition-comparison-grid h4 {
+  margin-block: 0 0.75rem;
+}
+.competition-comparison-detail {
+  margin-block-start: 1rem;
+}
+.competition-comparison-detail > summary {
+  cursor: pointer;
+  line-height: 1.5;
+}
+.competition-comparison-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  margin-block: 0.75rem;
+  font-size: 0.75rem;
+}
+.competition-comparison-table th,
+.competition-comparison-table td {
+  padding: 0.5rem 0.15rem;
+  border-bottom: 1px solid var(--ah-color-border);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.competition-comparison-table th:first-child {
+  width: 29%;
+  text-align: start;
+}
+.competition-comparison-dates {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+}
+@media (min-width: 48rem) {
+  .competition-comparison-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -2,7 +2,7 @@ import { mkdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { expect, test } from "@playwright/test";
-const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/flow-weekly");
+const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/flow-annual");
 const branding = JSON.parse(
   readFileSync(
     resolve(
@@ -50,11 +50,24 @@ test("T-STATS-21 member sees own statistics, source and period filters", async (
       .getByRole("region", { name: "Campionat d’Espanya 2027" })
       .getByRole("progressbar", { name: "Agility · PV" }),
   ).toHaveAttribute("value", "1");
+  await expect(
+    page.getByRole("region", { name: "Comparativa dels últims tres anys" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Any RSCE").locator("option")).toHaveCount(3);
+  await page.locator("summary").filter({ hasText: "Dades anuals · Agility" }).click();
+  await page.locator("summary").filter({ hasText: "Dades anuals · Jumping" }).click();
+  await expect(page.getByRole("table", { name: "Dades anuals · Agility" })).toBeVisible();
   await page.setViewportSize({ width: 375, height: 900 });
   await expect(page.locator("body")).toHaveJSProperty("scrollWidth", 375);
   await page.screenshot({ path: resolve(evidence, "member-375.png"), fullPage: true });
+  await page
+    .locator(".competition-comparison")
+    .screenshot({ path: resolve(evidence, "annual-375.png") });
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.screenshot({ path: resolve(evidence, "member-1280.png"), fullPage: true });
+  await page
+    .locator(".competition-comparison")
+    .screenshot({ path: resolve(evidence, "annual-1280.png") });
   await page.getByLabel("Mostra només mànegues amb punt").check();
   await expect(page.locator(".competition-runs li")).toHaveCount(1);
   await page.getByRole("combobox", { name: "Gos", exact: true }).selectOption({ label: "Rock" });
