@@ -107,3 +107,141 @@ Latest direct user request: P/PV/PA are clear rounds, and competition statistics
 Validation: `PATH=/opt/homebrew/opt/node@22/bin:$PATH pnpm turbo run lint typecheck test build` passed all 38 tasks (exit 0); `pnpm i18n:check` passed ca/es/en; nine focused statistics tests passed. `PATH=/opt/homebrew/opt/node@22/bin:$PATH E2E_EVIDENCE_TASK=flow-annual pnpm e2e:docker flow-annual --capture-task=flow-annual --workers=2` passed all 430 browser cases (4 course, 237 administration, 1 identity, 188 member; exit 0). Mobile 375 and desktop 1280 comparison captures were visually reviewed; no horizontal overflow. Logs, summary and own screenshots are in `roadmap/evidence/flow-annual/`.
 
 The full checks caught an existing notification test racing a loading placeholder after remount. It now waits for the expected N-24 row, preserving application behavior; its 14 cases and the final full checks passed. Publication, production deployment and corrected historical coverage remain separate operational checks.
+
+
+### Organizing club in each result
+
+The source-level `organizingClubName` now appears after the date in each result summary. The full trial name remains in expanded details. Missing or whitespace-only metadata retains the original trial label; the competitor’s club is never substituted. The generated contract comes from the API snapshot, and `trialName` has Catalan, Spanish and English translations. T-STATS-45 and the browser member scenario verify the ordering, expanded title and legacy fallback without changing result counts.
+
+Validation: `PATH=/opt/homebrew/opt/node@22/bin:$PATH pnpm turbo run lint typecheck test build` passed all 38 tasks (exit 0); `pnpm i18n:check` passed (exit 0); ten focused statistics component tests passed. `PATH=/opt/homebrew/opt/node@22/bin:$PATH E2E_EVIDENCE_TASK=flow-organizer pnpm e2e:docker flow-organizer --capture-task=flow-organizer --workers=2` passed 430 browser cases (4 course, 188 members, 237 administration, 1 identity; exit 0). Mobile 375 and desktop 1280 result-list captures were visually reviewed without overflow. Evidence is in `roadmap/evidence/flow-organizer/`; publication and production historical metadata repair remain separate operations.
+
+Final verification tails:
+
+`workspace-checks.log` (exit 0):
+
+```text
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build:
+clubs:build:  WARN  inlineDynamicImports option is deprecated, please use codeSplitting: false instead.
+clubs:build:
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.95 kB │ gzip: 6.02 kB
+clubs:build:
+clubs:build: ✓ built in 16ms
+clubs:build:
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  67 entries (1358.21 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: warnings
+clubs:build:   One of the glob patterns doesn't match any files. Please remove or fix the following: {
+clubs:build:   "globDirectory": "/Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/implementation/competition-clubs/web/apps/clubs/dist",
+clubs:build:   "globPattern": "pwa/*.{png,webmanifest}",
+clubs:build:   "globIgnores": [
+clubs:build:     "**/browser-*.js",
+clubs:build:     "**/mockServiceWorker.js",
+clubs:build:     "**/CourseViewer3D-*.js",
+clubs:build:     "sw.js",
+clubs:build:     "sw.js"
+clubs:build:   ]
+clubs:build: }
+clubs:build:
+clubs:build: check-clubs-bundle: 61 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace (by name or contents)
+clubs:build: check-initial-budget: «clubs initial JavaScript» counts the 3 scripts apps/clubs/dist/index.html loads
+
+ Tasks:    38 successful, 38 total
+Cached:    18 cached, 38 total
+  Time:    3m39.746s
+
+```
+
+`browser-checks.log` (exit 0):
+
+```text
+evidence: flow-organizer/member-confirm-375-dark.png
+evidence: flow-organizer/responsive-admin-billing-menu-0-1280.png
+evidence: flow-organizer/admin-D4-recorregut-previst-375-dark.png
+evidence: flow-organizer/history-chromium-light-1280.png
+evidence: flow-organizer/agenda-selected-webkit-1920.png
+evidence: flow-organizer/admin-dashboard-1280-light.png
+evidence: flow-organizer/responsive-admin-billing-menu-0-1280.json
+evidence: flow-organizer/agenda-selected-chromium-1920.png
+evidence: flow-organizer/admin-D18-col-locacio-1280-light.png
+evidence: flow-organizer/clubs-23-visio-global-1280-dark.png
+evidence: flow-organizer/hours-chromium-375.png
+evidence: flow-organizer/admin-D16-geometria-1280-light.png
+evidence: flow-organizer/06-confirmada-tornar-inici-375.png
+evidence: flow-organizer/donut-chromium-dark-1280-recent.png
+evidence: flow-organizer/risk-webkit-dark-1280.png
+evidence: flow-organizer/header-chromium-768.png
+evidence: flow-organizer/clubs-visor-instructor-3d-1280-light.png
+evidence: flow-organizer/word-dogs-chromium-375.png
+evidence: flow-organizer/07-espera-375.png
+evidence: flow-organizer/member-confirm-768-dark.png
+evidence: flow-organizer/responsive-admin-billing-menu-1-1280.json
+evidence: flow-organizer/admin-D12-agenda-muntatges-375-light.png
+evidence: flow-organizer/student-grid-chromium-dark-1280.png
+evidence: flow-organizer/hours-chromium-320.png
+evidence: flow-organizer/feedback2-student-webkit-dark.png
+evidence: flow-organizer/risk-chromium-light-768.png
+evidence: flow-organizer/r2-course-ui-harness-1280-after-nudge.png
+evidence: flow-organizer/user-menu-webkit-320.png
+evidence: flow-organizer/header-chromium-390.png
+evidence: flow-organizer/word-inactivity-chromium-1512.png
+evidence: flow-organizer/admin-D7-col-locacions-1280-light.png
+evidence: flow-organizer/member-today-768-light.png
+evidence: flow-organizer/clubs-visor-sense-muntatge-personal-1280-light.png
+evidence: flow-organizer/clubs-visor-alumne-1280-dark.png
+evidence: flow-organizer/info-faq-webkit-ui-375-dark.png
+evidence: flow-organizer/profile-webkit-ui-1280-light.png
+evidence: flow-organizer/responsive-admin-create-menu-768.json
+evidence: flow-organizer/23-D10-next-invoice-row-375.png
+evidence: flow-organizer/member-today-375-light.png
+evidence: flow-organizer/responsive-admin-import-768.png
+```
+
+`i18n-checks.log` (exit 0):
+
+```text
+
+> agilityhub-core-web@1.0.0 i18n:check /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/implementation/competition-clubs/web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs && node scripts/check-es-actions.mjs
+
+i18n check passed
+ca: 5743 keys
+es: 5743 keys
+en: 5743 keys
+4519 statically used keys, 0 unused
+253 codes, 0 missing
+156 catalog parameters (124 in D11, 32 system-only), 11 blocks, 0 missing
+check-es-actions: packages/i18n/src/locales/es
+  kept admin-billing:confirm.rollbackKeywordLabel · «Escribe {keyword} para confirmarlo» — D6's rollback field label: an instruction
+  kept admin-catalogs:common.active · «Activa» — the adjective: a catalog switch's state («Active»)
+  kept admin-catalogs:plans.columns.active · «Activa» — the adjective: D8's column header («Active»)
+  kept admin-census:common.choose · «Elige una opción» — a select's empty option: an instruction
+  kept admin-census:signupReview.confirmNothingPaid · «Confirma que no se ha cobrado ningún importe» — D2's checkbox statement, not an action
+  kept admin-courses:import.file · «Elige el archivo .txt que exporta Smarter» — a file input's label: an instruction
+  kept admin-courses:doors.active · «Activa» — the adjective: the door in use
+  kept admin-messaging:templates.choose · «Elige una plantilla» — D9's empty-state title: an instruction
+  kept admin-scheduling:templates.gridFooter · «Haz clic en el nombre de un día para verlo por pista o por instructor · color = pista · gris = sin pista» — D3's grid legend: an instruction
+  kept auth:profile.pushDenied · «Activa las notificaciones en el navegador para recibirlas en el móvil» — 12's hint to allow notifications: an instruction
+  kept auth:profile.iosInstall · «Añade la app a la pantalla de inicio para recibir notificaciones» — 12's hint to add the app to the home screen: an instruction
+  kept auth:recentLogin.title · «Confirma que eres tú» — the «Confirma que ets tu» dialog's title (AUTH-01): an instruction
+  kept booking:confirm.swapTitle · «Elige cuál anulas para hacerle sitio» — 06's swap title: an instruction
+  kept common:gallery.active · «Activa» — the adjective: the dev gallery's state chip
+  kept console:theme.logoAlt.mark · «Marca» — the noun: the alt text of the club's mark
+  kept console:theme.logos.mark · «Marca (versión pequeña)» — the noun: a logo slot's name
+  kept id:login.title · «Entra en tu cuenta» — the login page's title
+  kept id:password.repeat · «Repite la contraseña nueva» — the second password field's label: an instruction
+  kept notifications:unsubscribe.toPreferences · «Cambia tus avisos en el perfil» — a navigation link written as a sentence
+  kept signup:success.addDogTitle · «Añade un perro» — the add-dog flow's title on its success screen
+  KEEP entries this catalog does not need: auth:profile.learnLink
+check-es-actions: 0 flagged, 20 kept
+```

@@ -2,6 +2,7 @@
   "title": "Estadísticas de competición",
   "description": "Resultados oficiales importados, por perro y periodo.",
   "source": "Ver la fuente",
+  "trialName": "Prueba: {name}",
   "importedAt": "Importado el {date}",
   "unknown": "—",
   "loading": "Cargando…",

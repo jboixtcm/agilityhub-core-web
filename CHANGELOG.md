@@ -1,5 +1,7 @@
 # Changelog
 
+- Show the organizing club immediately after the competition date. Keep the full trial title in expanded details, with a title fallback for historical sources without organizer metadata.
+
 - Compare three years of competition results per licence with separate Agility/Jumping charts and annual clear-round, elimination, speed and P/PV/PA metrics. Show data periods, grades and known-result sample sizes; limit the year selector to the last three calendar years.
 
 - Align SEPA creditor fields without stretching inputs to the IBAN help text, size columns to their contents, and group the provider switch with responsive form actions.

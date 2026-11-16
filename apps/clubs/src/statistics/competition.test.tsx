@@ -15,6 +15,17 @@ const options = {
 };
 
 describe("Competition statistics", () => {
+  it("T-STATS-45 places the organizing club after the date and keeps the trial in the details", async () => {
+    await renderPage(<CompetitionStatisticsPage client={apiClient()} />, options);
+    await screen.findByText("140");
+    const summaries = document.querySelectorAll(".competition-runs summary");
+    expect(summaries[0]).toHaveTextContent("19/07 · Club Organitzador · Agility");
+    expect(summaries[0]).not.toHaveTextContent("Prova d’estiu");
+    expect(summaries[1]).toHaveTextContent("19/07 · Prova d’estiu · Jumping");
+    fireEvent.click(screen.getByText(/Club Organitzador/, { selector: "summary" }));
+    expect(screen.getByText("Prova: Prova d’estiu")).toBeVisible();
+    expect(document.querySelectorAll(".competition-runs li")).toHaveLength(2);
+  });
   it("T-STATS-15 shows official points, sources and filters without recalculating totals", async () => {
     await renderPage(<CompetitionStatisticsPage client={apiClient()} />, options);
     await screen.findByText("140");

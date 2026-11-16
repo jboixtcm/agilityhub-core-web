@@ -210,7 +210,9 @@ function DogStatistics({
                       <summary>
                         {formats.formatPlainDate(row.result.date ?? "", "dayMonthNumeric")}
                         {" · "}
-                        {row.result.trial}
+                        {row.organizingClubName?.trim()
+                          ? row.organizingClubName.trim()
+                          : row.result.trial}
                         {" · "}
                         {row.result.discipline === "JUMPING"
                           ? t("statistics:discipline.JUMPING")
@@ -218,6 +220,11 @@ function DogStatistics({
                         {" · "}
                         {row.result.point === "NONE" ? t("statistics:noPoint") : row.result.point}
                       </summary>
+                      {row.organizingClubName?.trim() && row.result.trial && (
+                        <p className="competition-source">
+                          {t("statistics:trialName", { name: row.result.trial })}
+                        </p>
+                      )}
                       <p>
                         {row.result.grade}
                         {" · "}
