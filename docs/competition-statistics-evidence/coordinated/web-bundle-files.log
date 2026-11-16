@@ -1,0 +1,3 @@
+check-bundle-files: apps/clubs/dist carries its bundle files
+check-bundle-files: apps/clubs-admin/dist carries its bundle files
+check-bundle-files: apps/id/dist carries its bundle files

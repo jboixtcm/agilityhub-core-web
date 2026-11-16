@@ -1,0 +1,15 @@
+{
+  "run": 43763107300,
+  "commit": "13f04dda9f8f8d395d4ed3ee14f8033007b9b46e",
+  "url": "https://github.com/jboixtcm/agilityhub-core-web/actions/runs/43763107300",
+  "conclusion": "success",
+  "browserProjects": {
+    "@agilityhub/course-ui": 4,
+    "clubs-admin": 237,
+    "id": 1,
+    "clubs": 188
+  },
+  "browserTests": 430,
+  "browserFailures": 0,
+  "productionBundles": "success"
+}

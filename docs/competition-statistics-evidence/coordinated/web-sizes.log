@@ -1,0 +1,48 @@
+
+> agilityhub-core-web@1.0.0 size-limit /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/implementation/joint-release-20261115/web
+> size-limit
+
+
+  clubs initial JavaScript
+  Size limit: 300 kB
+  Size:       162.32 kB gzipped
+
+  clubs all JavaScript
+  Size limit: 420 kB
+  Size:       340.67 kB gzipped
+
+  clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)
+  Size limit: 40 kB
+  Size:       36.85 kB gzipped
+
+  clubs course 3D viewer JavaScript (the viewer's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.27 kB gzipped
+
+  clubs-admin initial JavaScript
+  Size limit: 465 kB
+  Size:       331.22 kB gzipped
+
+  clubs-admin all JavaScript
+  Size limit: 690 kB
+  Size:       572.82 kB gzipped
+
+  clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)
+  Size limit: 66 kB
+  Size:       63.15 kB gzipped
+
+  clubs-admin course 3D viewer JavaScript (D18's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.28 kB gzipped
+
+  clubs-admin platform console JavaScript (D19, lazy, AGILITYHUB_ADMIN only)
+  Size limit: 58 kB
+  Size:       52.86 kB gzipped
+
+  id initial JavaScript
+  Size limit: 110 kB
+  Size:       105.06 kB gzipped
+
+  id all JavaScript
+  Size limit: 310 kB
+  Size:       149.37 kB gzipped

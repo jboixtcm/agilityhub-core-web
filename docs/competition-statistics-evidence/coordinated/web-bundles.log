@@ -1,0 +1,3 @@
+check-production-bundles: 91 files in apps/clubs/dist, no mock data
+check-production-bundles: 114 files in apps/clubs-admin/dist, no mock data
+check-production-bundles: 26 files in apps/id/dist, no mock data

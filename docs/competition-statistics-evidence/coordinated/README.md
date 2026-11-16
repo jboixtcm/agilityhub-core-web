@@ -16,7 +16,7 @@ Last 40 lines:
 
 ```text
 id:build: > tsc --noEmit && vite build
-id:build: 
+id:build:
 id:build: vite v8.2.2 building client environment for production...
 id:build: transforming...
 id:build: ✓ 275 modules transformed.
@@ -48,12 +48,12 @@ id:build: dist/assets/errors-DjchtCZd.js                           23.57 kB │ 
 id:build: dist/assets/errors-CWUelEMY.js                           23.60 kB │ gzip:   7.66 kB
 id:build: dist/assets/PrivacyPage-CUTY7F5Q.js                      33.69 kB │ gzip:  12.12 kB
 id:build: dist/assets/index-huxx8Oty.js                           346.56 kB │ gzip: 106.55 kB
-id:build: 
+id:build:
 id:build: ✓ built in 174ms
 
  Tasks:    38 successful, 38 total
 Cached:    17 cached, 38 total
-  Time:    4m10.227s 
+  Time:    4m10.227s
 
 ```
 
@@ -203,3 +203,101 @@ evidence: joint-release-recheck-20261115/admin-D16-geometria-1280-light.png
 evidence: joint-release-recheck-20261115/header-chromium-768.png
 evidence: joint-release-recheck-20261115/admin-D7-col-locacions-1280-light.png
 ```
+
+## bundles
+
+Command: `node scripts/check-production-bundles.mjs`
+
+Exit: 0. Complete output: [web-bundles.log](web-bundles.log).
+
+Last 40 lines:
+
+```text
+check-production-bundles: 91 files in apps/clubs/dist, no mock data
+check-production-bundles: 114 files in apps/clubs-admin/dist, no mock data
+check-production-bundles: 26 files in apps/id/dist, no mock data
+```
+
+## bundle-files
+
+Command: `node scripts/check-bundle-files.mjs`
+
+Exit: 0. Complete output: [web-bundle-files.log](web-bundle-files.log).
+
+Last 40 lines:
+
+```text
+check-bundle-files: apps/clubs/dist carries its bundle files
+check-bundle-files: apps/clubs-admin/dist carries its bundle files
+check-bundle-files: apps/id/dist carries its bundle files
+```
+
+## core-types
+
+Command: `pnpm typecheck:e2e-core`
+
+Exit: 0. Complete output: [web-core-types.log](web-core-types.log).
+
+Last 40 lines:
+
+```text
+
+> agilityhub-core-web@1.0.0 typecheck:e2e-core /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/implementation/joint-release-20261115/web
+> tsc -p e2e/core/tsconfig.json --noEmit
+
+```
+
+## sizes
+
+Command: `pnpm size-limit`
+
+Exit: 0. Complete output: [web-sizes.log](web-sizes.log).
+
+Last 40 lines:
+
+```text
+  clubs all JavaScript
+  Size limit: 420 kB
+  Size:       340.67 kB gzipped
+
+  clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)
+  Size limit: 40 kB
+  Size:       36.85 kB gzipped
+
+  clubs course 3D viewer JavaScript (the viewer's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.27 kB gzipped
+
+  clubs-admin initial JavaScript
+  Size limit: 465 kB
+  Size:       331.22 kB gzipped
+
+  clubs-admin all JavaScript
+  Size limit: 690 kB
+  Size:       572.82 kB gzipped
+
+  clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)
+  Size limit: 66 kB
+  Size:       63.15 kB gzipped
+
+  clubs-admin course 3D viewer JavaScript (D18's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.28 kB gzipped
+
+  clubs-admin platform console JavaScript (D19, lazy, AGILITYHUB_ADMIN only)
+  Size limit: 58 kB
+  Size:       52.86 kB gzipped
+
+  id initial JavaScript
+  Size limit: 110 kB
+  Size:       105.06 kB gzipped
+
+  id all JavaScript
+  Size limit: 310 kB
+  Size:       149.37 kB gzipped
+
+```
+
+## Official merged release CI
+
+The complete main CI passed on `13f04dda`: 430 browser cases (237 administration, 188 members, 4 courses and 1 identity), zero failures. Production bundles also succeeded. See [official-ci.json](official-ci.json) and the linked official run. This supersedes the earlier 45-minute job timeout; no individual assertion or test timeout was relaxed.
