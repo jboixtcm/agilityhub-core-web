@@ -90,7 +90,12 @@
 }
 .competition-target progress {
   width: 100%;
-  accent-color: var(--ah-color-primary);
+  appearance: none;
+  border: 0;
+  border-radius: var(--ah-radius-sm);
+  height: 0.625rem;
+  overflow: hidden;
+  background: var(--ah-color-surface-2);
 }
 .competition-review {
   padding: 0.75rem;
@@ -107,4 +112,14 @@
 
 .competition-awards {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.competition-target progress::-webkit-progress-bar {
+  background: var(--ah-color-surface-2);
+}
+.competition-target progress::-webkit-progress-value {
+  background: var(--ah-color-primary);
+}
+.competition-target progress::-moz-progress-bar {
+  background: var(--ah-color-primary);
 }

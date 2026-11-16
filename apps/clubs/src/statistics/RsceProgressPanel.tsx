@@ -55,12 +55,16 @@ function RouteProgress({ route }: { route: Route }) {
 export function RsceProgressPanel({ progress, year }: { progress: Progress; year: number }) {
   const { t } = useTranslation("statistics");
   const formats = useClubFormats();
-  const date = (value: string) => formats.formatPlainDate(value, "dayMonthNumeric");
+  const date = (value: string) => formats.formatPlainDate(value);
   return (
     <div className="competition-progress">
       <div className="competition-grade">
         <h3>
-          {t("statistics:progress.grade")}{" "}
+          {progress.gradeConflict
+            ? t("statistics:progress.gradeToReview")
+            : progress.gradeSource === "LAST_RESULT"
+              ? t("statistics:progress.lastObservedGrade")
+              : t("statistics:progress.grade")}{" "}
           <strong>{progress.currentGrade ?? t("statistics:unknown")}</strong>
         </h3>
         <p>
@@ -89,8 +93,8 @@ export function RsceProgressPanel({ progress, year }: { progress: Progress; year
           {progress.historyFrom && progress.historyThrough ? (
             <p className="competition-source">
               {t("statistics:progress.history", {
-                from: progress.historyFrom,
-                through: progress.historyThrough,
+                from: date(progress.historyFrom),
+                through: date(progress.historyThrough),
               })}
             </p>
           ) : (

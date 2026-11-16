@@ -109,6 +109,8 @@
     "rules": "Criteris i altres vies del reglament",
     "importedOnly": "El progrés utilitza els resultats importats i els punts oficials de la font, separats per llicència. Poden faltar proves d’altres fonts o punts anteriors a l’històric disponible. Una etiqueta PA / PV suma un PA i un PV, però una sola mànega.",
     "specialRoutes": "Aquests comptadors mostren la via ordinària. Les condicions per a residents insulars, el valor doble de proves insulars, els debutants, J12, Para-Agility i les classificacions directes requereixen validació específica amb el club.",
-    "source": "Reglament RSCE vigent des de l’1 de juliol de 2026 · articles 60–63 i 71"
+    "source": "Reglament RSCE vigent des de l’1 de juliol de 2026 · articles 60–63 i 71",
+    "gradeToReview": "Grau pendent de revisar",
+    "lastObservedGrade": "Últim grau a Flow"
   }
 }

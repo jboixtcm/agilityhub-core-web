@@ -109,6 +109,8 @@
     "rules": "Criterios y otras vías del reglamento",
     "importedOnly": "El progreso utiliza los resultados importados y los puntos oficiales de la fuente, separados por licencia. Pueden faltar pruebas de otras fuentes o puntos anteriores al histórico disponible. Una etiqueta PA / PV suma un PA y un PV, pero una sola manga.",
     "specialRoutes": "Estos contadores muestran la vía ordinaria. Las condiciones para residentes insulares, el valor doble de pruebas insulares, los debutantes, J12, Para-Agility y las clasificaciones directas requieren validación específica con el club.",
-    "source": "Reglamento RSCE vigente desde el 1 de julio de 2026 · artículos 60–63 y 71"
+    "source": "Reglamento RSCE vigente desde el 1 de julio de 2026 · artículos 60–63 y 71",
+    "gradeToReview": "Grado pendiente de revisar",
+    "lastObservedGrade": "Último grado en Flow"
   }
 }

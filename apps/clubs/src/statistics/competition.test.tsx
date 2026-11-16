@@ -205,4 +205,28 @@ describe("Competition statistics", () => {
     expect(document.querySelectorAll(".competition-runs li")).toHaveLength(0);
     expect(screen.getByText("No hi ha resultats importats per a aquest any.")).toBeVisible();
   });
+  it("T-STATS-43 identifies observed grades and licence conflicts without presenting them as confirmed", async () => {
+    let conflict = false;
+    server.use(
+      http.get("*/api/v1/me/dogs/:id/competition-statistics", () => {
+        const stats = competitionFixture("dog-duna");
+        const p = stats.rsceProgress[0];
+        if (!p) throw new Error("Missing progress fixture");
+        p.gradeSource = conflict ? "LICENSE" : "LAST_RESULT";
+        p.registeredGrade = conflict ? "G2" : null;
+        p.lastResultDate = "2025-07-19";
+        p.lastResultGrade = conflict ? "G3" : "G2";
+        p.gradeConflict = conflict;
+        return HttpResponse.json(stats);
+      }),
+    );
+    await renderPage(<CompetitionStatisticsPage client={apiClient()} />, options);
+    await screen.findByRole("heading", { name: "Últim grau a Flow G2" });
+    expect(screen.getByText("Segons l’última prova importada, del 19/07/2025.")).toBeVisible();
+    conflict = true;
+    fireEvent.change(screen.getByLabelText("Any RSCE"), { target: { value: "2025" } });
+    await screen.findByRole("heading", { name: "Grau pendent de revisar G2" });
+    expect(screen.getByText(/A Flow consta G3 el 19\/07\/2025/)).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "Grau actual G2" })).not.toBeInTheDocument();
+  });
 });

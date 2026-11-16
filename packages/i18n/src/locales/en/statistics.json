@@ -109,6 +109,8 @@
     "rules": "Criteria and other qualification routes",
     "importedOnly": "Progress uses imported results and official source awards, separately for each licence. Results from other sources or before the available history may be missing. A PA / PV label adds one PA and one PV, but only one round.",
     "specialRoutes": "These counters show the standard route. Island residency, double points at island competitions, debutants, J12, Para-Agility and direct qualification require specific verification with your club.",
-    "source": "RSCE regulations effective 1 July 2026 · articles 60–63 and 71"
+    "source": "RSCE regulations effective 1 July 2026 · articles 60–63 and 71",
+    "gradeToReview": "Grade to review",
+    "lastObservedGrade": "Latest grade in Flow"
   }
 }
