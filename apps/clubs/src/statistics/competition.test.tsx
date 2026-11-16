@@ -33,6 +33,41 @@ describe("Competition statistics", () => {
     await screen.findByText("No hi ha resultats importats per a aquest any.");
     expect(screen.queryByText("140")).not.toBeInTheDocument();
   });
+  it("T-STATS-44 compares three years with empty periods, clear rates and unchanged annual history", async () => {
+    await renderPage(<CompetitionStatisticsPage client={apiClient()} />, options);
+    const comparison = await screen.findByRole("region", {
+      name: "Comparativa dels últims tres anys",
+    });
+    expect(
+      within(screen.getByLabelText("Any RSCE"))
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual(["2026", "2025", "2024"]);
+    expect(within(comparison).getAllByText("Sense dades")).toHaveLength(2);
+    fireEvent.click(
+      within(comparison).getByText("Dades anuals · Agility", { selector: "summary" }),
+    );
+    const table = within(comparison).getByRole("table", { name: "Dades anuals · Agility" });
+    const clearRow = within(table).getByText("A zero (%)").closest("tr");
+    if (!clearRow) throw new Error("Missing clear-rate row");
+    expect(
+      within(clearRow)
+        .getAllByRole("cell")
+        .map((cell) => cell.textContent),
+    ).toEqual(["—", "50 %", "100 %"]);
+    const speedRow = within(table).getByText("Mitjana (m/s)").closest("tr");
+    if (!speedRow) throw new Error("Missing speed row");
+    expect(
+      within(speedRow)
+        .getAllByRole("cell")
+        .map((cell) => cell.textContent),
+    ).toEqual(["—", "4,8", "5,4"]);
+    fireEvent.change(screen.getByLabelText("Any RSCE"), { target: { value: "2025" } });
+    await screen.findByText(/El reglament de 2026 no s’aplica aquí/);
+    const reloaded = screen.getByRole("region", { name: "Comparativa dels últims tres anys" });
+    expect(within(reloaded).getAllByText("1 a zero / 2 mànegues")).toHaveLength(1);
+    expect(within(reloaded).getAllByText("1 a zero / 1 mànega")).toHaveLength(2);
+  });
   it("T-STATS-16 retry keeps the selected period and never shows the previous dog's results", async () => {
     let failed = true;
     server.use(
@@ -179,6 +214,7 @@ describe("Competition statistics", () => {
           lastResultGrade: "G3",
           promotionRoutes: [],
           summaries: [],
+          annualSummaries: [],
           championshipRoutes: [
             {
               code: "G3_STANDARD",
@@ -204,6 +240,9 @@ describe("Competition statistics", () => {
     expect(screen.queryByRole("region", { name: "Progrés d’ascens" })).not.toBeInTheDocument();
     expect(document.querySelectorAll(".competition-runs li")).toHaveLength(0);
     expect(screen.getByText("No hi ha resultats importats per a aquest any.")).toBeVisible();
+    expect(
+      screen.queryByRole("region", { name: "Comparativa dels últims tres anys" }),
+    ).not.toBeInTheDocument();
   });
   it("T-STATS-43 identifies observed grades and licence conflicts without presenting them as confirmed", async () => {
     let conflict = false;

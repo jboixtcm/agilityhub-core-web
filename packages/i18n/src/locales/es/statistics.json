@@ -18,7 +18,7 @@
   "position": "Posición",
   "netPoints": "Puntos netos oficiales",
   "scoredTrials": "{count, plural, one {# prueba con punto} other {# pruebas con punto}}",
-  "officialPointsHelp": "Los puntos P, PA y PV son los indicados en la fuente. Un recorrido a cero no implica obtener un punto. La velocidad media incluye las mangas terminadas con velocidad informada.",
+  "officialPointsHelp": "P, PV y PA son recorridos a cero. Una manga con PA / PV cuenta una sola vez en «A cero». Los porcentajes usan las mangas con resultado conocido; la velocidad media, las mangas finalizadas con velocidad informada.",
   "discipline": {
     "AGILITY": "Agility",
     "JUMPING": "Jumping"
@@ -112,5 +112,23 @@
     "source": "Reglamento RSCE vigente desde el 1 de julio de 2026 · artículos 60–63 y 71",
     "gradeToReview": "Grado pendiente de revisar",
     "lastObservedGrade": "Último grado en Flow"
+  },
+  "comparison": {
+    "title": "Comparativa de los últimos tres años",
+    "description": "Compara los datos importados de cada año. El periodo disponible, el número de pruebas y los grados pueden ser distintos; el año en curso aún no ha terminado.",
+    "legend": "Las barras destacan los recorridos a cero dentro del total de mangas.",
+    "chart": "Comparativa anual · {discipline}",
+    "noData": "Sin datos",
+    "chartValue": "{clear} a cero / {runs, plural, one {# manga} other {# mangas}}",
+    "details": "Datos anuales · {discipline}",
+    "metric": "Métrica",
+    "clearRate": "A cero (%)",
+    "eliminated": "Eliminaciones",
+    "eliminatedRate": "Eliminaciones (%)",
+    "speedSamples": "Con velocidad",
+    "outcomeSamples": "Resultado conocido",
+    "samplesHelp": "Los porcentajes se calculan sobre las mangas con resultado conocido. Los datos desconocidos no cuentan como cero ni como eliminación. La velocidad media excluye las eliminaciones y las velocidades no informadas.",
+    "grades": "Grados",
+    "period": "Fechas importadas"
   }
 }

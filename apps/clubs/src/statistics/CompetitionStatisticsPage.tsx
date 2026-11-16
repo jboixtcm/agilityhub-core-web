@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { errorText, useLoader } from "../booking/shared";
 
+import { AnnualCompetitionPanel } from "./AnnualCompetitionPanel";
 import { RsceProgressPanel } from "./RsceProgressPanel";
 
 import "./statistics.css";
@@ -132,6 +133,7 @@ function DogStatistics({
           </label>
         )}
         {progression && <RsceProgressPanel progress={progression} year={year} />}
+        {progression && <AnnualCompetitionPanel years={progression.annualSummaries} />}
         <h3>{t("statistics:progress.annualPoints", { year })}</h3>
         {selectedRuns.length === 0 ? (
           <p>{t("statistics:noRuns")}</p>
@@ -167,6 +169,18 @@ function DogStatistics({
                     <div>
                       <dt>{t("statistics:clearRuns")}</dt>
                       <dd>{summary.clearRuns}</dd>
+                    </div>
+                    <div>
+                      <dt>{t("statistics:comparison.clearRate")}</dt>
+                      <dd>
+                        {summary.clearRatePercent == null
+                          ? t("statistics:unknown")
+                          : `${number(summary.clearRatePercent)} %`}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>{t("statistics:comparison.eliminated")}</dt>
+                      <dd>{summary.eliminatedRuns}</dd>
                     </div>
                     <div>
                       <dt>{t("statistics:averageSpeed")}</dt>
@@ -322,13 +336,11 @@ export default function CompetitionStatisticsPage({ client }: { client: ApiClien
                   setYear(Number(event.target.value));
                 }}
               >
-                {Array.from({ length: currentYear - 1999 }, (_, index) => currentYear - index).map(
-                  (value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ),
-                )}
+                {Array.from({ length: 3 }, (_, index) => currentYear - index).map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
               </Select>
             </label>
             <label>

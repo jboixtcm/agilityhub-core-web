@@ -18,7 +18,7 @@
   "position": "Position",
   "netPoints": "Official net points",
   "scoredTrials": "{count, plural, one {# trial with points} other {# trials with points}}",
-  "officialPointsHelp": "P, PA and PV are taken from the source. A clear round does not imply an official point. Average speed includes completed runs with a reported speed.",
+  "officialPointsHelp": "P, PV and PA are clear rounds. A run with PA / PV counts once under Clear rounds. Percentages use runs with a known outcome; average speed uses completed runs with a reported speed.",
   "discipline": {
     "AGILITY": "Agility",
     "JUMPING": "Jumping"
@@ -112,5 +112,23 @@
     "source": "RSCE regulations effective 1 July 2026 · articles 60–63 and 71",
     "gradeToReview": "Grade to review",
     "lastObservedGrade": "Latest grade in Flow"
+  },
+  "comparison": {
+    "title": "Last three years compared",
+    "description": "Compare each year’s imported results. Available dates, competition counts and grades may differ; the current year is still in progress.",
+    "legend": "The bars highlight clear rounds within the total number of runs.",
+    "chart": "Annual comparison · {discipline}",
+    "noData": "No data",
+    "chartValue": "{clear} clear / {runs, plural, one {# run} other {# runs}}",
+    "details": "Annual data · {discipline}",
+    "metric": "Metric",
+    "clearRate": "Clear rounds (%)",
+    "eliminated": "Eliminations",
+    "eliminatedRate": "Eliminations (%)",
+    "speedSamples": "With speed",
+    "outcomeSamples": "Known outcome",
+    "samplesHelp": "Percentages use runs with a known outcome. Unknown data do not count as a clear or an elimination. Average speed excludes eliminations and unreported speeds.",
+    "grades": "Grades",
+    "period": "Imported dates"
   }
 }

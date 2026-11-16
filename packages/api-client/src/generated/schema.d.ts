@@ -10274,6 +10274,16 @@ export interface components {
             textMuted: string;
             warning: string;
         };
+        CompetitionAnnualSummary: {
+            /** Format: date */
+            firstResultDate?: string | null;
+            grades: string[];
+            /** Format: date */
+            lastResultDate?: string | null;
+            summaries: components["schemas"]["CompetitionRunSummary"][];
+            /** Format: int32 */
+            year: number;
+        };
         CompetitionConfirmation: {
             assignments: {
                 [key: string]: string;
@@ -10360,10 +10370,16 @@ export interface components {
         };
         CompetitionRunSummary: {
             averageSpeedMps?: number | null;
+            clearRatePercent?: number | null;
             /** Format: int32 */
             clearRuns: number;
             /** @enum {string} */
             discipline: "AGILITY" | "JUMPING";
+            eliminatedRatePercent?: number | null;
+            /** Format: int32 */
+            eliminatedRuns: number;
+            /** Format: int32 */
+            outcomeSamples: number;
             /** Format: int32 */
             p: number;
             /** Format: int32 */
@@ -10372,6 +10388,8 @@ export interface components {
             pv: number;
             /** Format: int32 */
             runs: number;
+            /** Format: int32 */
+            speedSamples: number;
         };
         CompetitionStatistics: {
             dogId: string;
@@ -15887,6 +15905,7 @@ export interface components {
             restoredMembers: number;
         };
         RsceLicenseProgress: {
+            annualSummaries: components["schemas"]["CompetitionAnnualSummary"][];
             championshipRoutes: components["schemas"]["RsceProgressRoute"][];
             currentGrade?: string | null;
             gradeConflict: boolean;

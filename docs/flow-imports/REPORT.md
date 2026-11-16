@@ -101,3 +101,9 @@ evidence: flow-weekly/responsive-admin-import-768.png
 ```
 
 The subsequent cold CI caught the shared contrast guard treating native progress-bar fills as text containers. Their labels sit outside `<progress>`, so both browser fill pseudo-elements now join the existing explicit textless-shape allowlist. No text-bearing selector is exempted. The direct `corepack pnpm --filter @agilityhub/ui test` rerun passed all 235 cases in 26 files (exit 0), avoiding the prior cross-package cached result.
+
+Latest direct user request: P/PV/PA are clear rounds, and competition statistics should compare the latest three years (2024–2026). Adopted the generated API annual-summary contract, with per-licence Agility/Jumping charts and expandable metric tables. Empty periods show no data and null rates; the selected year does not change the three-year comparison. Source awards stay separate, combined PA/PV contributes one clear, and sample-size text explains missing outcomes and speed. No client-side official point calculation is introduced.
+
+Validation: `PATH=/opt/homebrew/opt/node@22/bin:$PATH pnpm turbo run lint typecheck test build` passed all 38 tasks (exit 0); `pnpm i18n:check` passed ca/es/en; nine focused statistics tests passed. `PATH=/opt/homebrew/opt/node@22/bin:$PATH E2E_EVIDENCE_TASK=flow-annual pnpm e2e:docker flow-annual --capture-task=flow-annual --workers=2` passed all 430 browser cases (4 course, 237 administration, 1 identity, 188 member; exit 0). Mobile 375 and desktop 1280 comparison captures were visually reviewed; no horizontal overflow. Logs, summary and own screenshots are in `roadmap/evidence/flow-annual/`.
+
+The full checks caught an existing notification test racing a loading placeholder after remount. It now waits for the expected N-24 row, preserving application behavior; its 14 cases and the final full checks passed. Publication, production deployment and corrected historical coverage remain separate operational checks.

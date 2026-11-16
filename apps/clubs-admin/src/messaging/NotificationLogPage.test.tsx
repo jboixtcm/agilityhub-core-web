@@ -517,10 +517,11 @@ describe("COMM-07 (decision of 13 Nov 2026): «Reenvia els fallits» of an annou
     expect(within(drawer).queryByRole("button", { name: "Reenvia els fallits" })).toBeNull();
     cleanup();
     server.resetHandlers();
+    // Wait for the notification itself; the loading placeholder is also a table row.
     // The mock's announcement (N-24, batch of 9 August): its e-mail was skipped by preference.
     await renderLog();
     await waitFor(() => {
-      expect(rows().length).toBeGreaterThan(0);
+      expect(rows().some((item) => item.textContent.includes("N-24"))).toBe(true);
     });
     const row = rows().find((item) => item.textContent.includes("N-24"));
     if (row === undefined) throw new Error("No N-24 row");

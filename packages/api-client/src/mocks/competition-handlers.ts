@@ -47,18 +47,35 @@ const run: Entry = {
 };
 export function competitionFixture(dogId: string, year = 2026, season = "2025-2026"): Statistics {
   const populated = dogId === "dog-duna";
-  const summaries: Statistics["summaries"] = (["AGILITY", "JUMPING"] as const).map(
-    (discipline) => ({
-      discipline,
-      runs: populated && year === 2026 ? 1 : 0,
-      clearRuns: populated && year === 2026 ? 1 : 0,
-      p: 0,
-      pa: populated && year === 2026 && discipline === "AGILITY" ? 1 : 0,
-      pv: populated && year === 2026 && discipline === "AGILITY" ? 1 : 0,
-      averageSpeedMps: populated && year === 2026 ? 5.4 : null,
-    }),
-  );
-
+  const makeSummaries = (period: number): Statistics["summaries"] =>
+    (["AGILITY", "JUMPING"] as const).map((discipline) => {
+      const available = populated && period >= 2025;
+      const olderAgility = period === 2025 && discipline === "AGILITY";
+      const runs = available ? (olderAgility ? 2 : 1) : 0;
+      const clears = available && (period === 2026 || olderAgility) ? 1 : 0;
+      return {
+        discipline,
+        runs,
+        clearRuns: clears,
+        p: available && olderAgility ? 1 : 0,
+        pa: available && period === 2026 && discipline === "AGILITY" ? 1 : 0,
+        pv: available && period === 2026 && discipline === "AGILITY" ? 1 : 0,
+        eliminatedRuns: available && olderAgility ? 1 : 0,
+        outcomeSamples: runs,
+        speedSamples: available ? 1 : 0,
+        clearRatePercent: runs > 0 ? (clears / runs) * 100 : null,
+        eliminatedRatePercent: available ? (olderAgility ? 50 : 0) : null,
+        averageSpeedMps: available ? (period === 2026 ? 5.4 : 4.8) : null,
+      };
+    });
+  const summaries = makeSummaries(year);
+  const annualSummaries = [2024, 2025, 2026].map((period) => ({
+    year: period,
+    firstResultDate: populated && period >= 2025 ? `${String(period)}-07-19` : null,
+    lastResultDate: populated && period >= 2025 ? `${String(period)}-07-19` : null,
+    grades: populated && period >= 2025 ? ["G2"] : [],
+    summaries: makeSummaries(period),
+  }));
   return {
     dogId,
     year,
@@ -83,8 +100,53 @@ export function competitionFixture(dogId: string, year = 2026, season = "2025-20
               },
             },
           ]
-        : [],
-    scoredTrials: populated && year === 2026 ? 1 : 0,
+        : populated && year === 2025
+          ? [
+              {
+                source: "FLOW_AGILITY",
+                sourceUrl: FLOW_URL,
+                importedAt,
+                result: { ...run, date: "2025-07-19", season: "2025", point: "P", speedMps: 4.8 },
+              },
+              {
+                source: "FLOW_AGILITY",
+                sourceUrl: FLOW_URL,
+                importedAt,
+                result: {
+                  ...run,
+                  key: "old-eliminated",
+                  runId: "old-eliminated",
+                  date: "2025-07-19",
+                  season: "2025",
+                  point: "NONE",
+                  qualification: "DISQ",
+                  position: null,
+                  timeSeconds: null,
+                  speedMps: null,
+                  totalPenalty: null,
+                },
+              },
+              {
+                source: "FLOW_AGILITY",
+                sourceUrl: FLOW_URL,
+                importedAt,
+                result: {
+                  ...run,
+                  key: "old-jumping",
+                  runId: "old-jumping",
+                  date: "2025-07-19",
+                  season: "2025",
+                  discipline: "JUMPING",
+                  point: "NONE",
+                  qualification: "EXC",
+                  totalPenalty: 5,
+                  faults: 1,
+                  speedMps: 4.8,
+                },
+              },
+            ]
+          : [],
+    scoredTrials: populated && year >= 2025 ? 1 : 0,
     summaries,
     rsceProgress: populated
       ? [
@@ -97,9 +159,10 @@ export function competitionFixture(dogId: string, year = 2026, season = "2025-20
             lastResultDate: "2026-07-19",
             gradeConflict: false,
             previousHigherGrade: false,
-            historyFrom: "2026-07-19",
+            historyFrom: "2025-07-19",
             historyThrough: "2026-07-19",
             summaries,
+            annualSummaries,
             promotionRoutes: [
               {
                 code: "G2_TO_G3",
