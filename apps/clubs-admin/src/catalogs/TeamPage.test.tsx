@@ -259,7 +259,7 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
   );
 
   it("deactivates an instructor with past classes through the team row", async () => {
-    let change;
+    let change: unknown;
     server.use(
       http.get(`${base}/members`, () =>
         HttpResponse.json(page([member("member-second-page", 201)])),
