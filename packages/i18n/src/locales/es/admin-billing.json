@@ -402,5 +402,15 @@
     "stopConfirm": "¿Quieres retirarlo de las próximas generaciones?",
     "keep": "Conservar",
     "retry": "Reintentar"
+  },
+  "outstanding": {
+    "title": "Pendientes de cobro por abonado",
+    "name": "Abonado",
+    "invoices": "Recibos pendientes o devueltos",
+    "upfront": "Pendiente de pagos en el acto",
+    "processing": "En proceso de cobro",
+    "empty": "Ningún abonado con importes pendientes.",
+    "error": "No se han podido cargar los saldos pendientes.",
+    "retry": "Reintentar"
   }
 }

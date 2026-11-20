@@ -627,6 +627,15 @@ function NotificationDrawer({
             </strong>
           </p>
           <p className="messaging-log__body">{state.detail.body}</p>
+          {state.detail.students?.length ? (
+            <ul>
+              {state.detail.students.map((student, index) => (
+                <li key={index}>
+                  {student.href ? <a href={student.href}>{student.name}</a> : student.name}
+                </li>
+              ))}
+            </ul>
+          ) : null}
           {state.detail.smsBody == null ? null : (
             <p className="messaging-log__sms">
               {t("admin-messaging:log.detail.sms")}: «{state.detail.smsBody}»

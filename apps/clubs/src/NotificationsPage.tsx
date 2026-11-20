@@ -336,6 +336,15 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
                   ) : null}
                 </div>
                 <p className="notification-card__body">{item.body}</p>
+                {item.students?.length ? (
+                  <ul>
+                    {item.students.map((student, index) => (
+                      <li key={index}>
+                        {student.href ? <a href={student.href}>{student.name}</a> : student.name}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
                 <div className="notification-card__foot">
                   <span className="notification-card__meta">{meta}</span>
                   {button}

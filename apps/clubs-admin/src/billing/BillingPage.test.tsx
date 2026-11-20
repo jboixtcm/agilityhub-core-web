@@ -197,6 +197,29 @@ async function openDrawer(number: string) {
 }
 
 describe("T-12-07 saved simulation forecast", () => {
+  it("opens all-period balances and links each debtor to the member record", async () => {
+    const amount = (amountMinor: number) => ({ amountMinor, currency: "EUR" });
+    server.use(
+      http.get("*/api/v1/billing/outstanding-balances", () =>
+        HttpResponse.json([
+          {
+            memberId: "sample",
+            memberName: "Alex Exemple",
+            invoices: amount(1200),
+            upfront: amount(800),
+            processing: amount(500),
+          },
+        ]),
+      ),
+    );
+    await renderPage();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Pendents de cobrament per abonat" }),
+    );
+    const debtor = await screen.findByRole("link", { name: "Alex Exemple" });
+    expect(debtor).toHaveAttribute("href", "/abonats/sample");
+    expect(debtor.closest("tr")).toHaveTextContent(/12.*8.*5/u);
+  });
   it("shows, pages and searches planned invoices without generating or charging them", async () => {
     const month = (
       await client().GET("/billing/periods/{period}", { params: { path: { period: "2026-09" } } })

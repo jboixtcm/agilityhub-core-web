@@ -418,7 +418,8 @@
         "requested": "Reemborsament de {amount} sol·licitat: es confirmarà quan Stripe el processi.",
         "stale": "Aquest pagament ha canviat i ja no es pot reemborsar així. S'ha tornat a llegir la llista.",
         "line": "Reemborsament de {amount} el {date}: {reason}"
-      }
+      },
+      "paymentHelp": "Crea un pagament a l’acte. Indica l’import degut i el que has cobrat. Per liquidar un rebut existent, obre’l a Facturació."
     },
     "language": "idioma: {locale}",
     "number": "núm. {number}",

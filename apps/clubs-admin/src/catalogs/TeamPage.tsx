@@ -39,6 +39,15 @@ function isManagedInstructor(item: Instructor | InstructorReaderView): item is I
   return "active" in item && "version" in item;
 }
 
+function futureCount(details: unknown, fallback: number) {
+  return details &&
+    typeof details === "object" &&
+    "futureClassSessions" in details &&
+    typeof details.futureClassSessions === "number"
+    ? details.futureClassSessions
+    : fallback;
+}
+
 function memberText(
   member: Member | undefined,
   fallback: string,
@@ -207,7 +216,7 @@ function TeamPersonForm({
       setError(
         isApiError(reason, "INSTRUCTOR_IN_USE") && item !== undefined && "usage" in item
           ? t("admin-catalogs:team.instructorInUse", {
-              count: item.usage.futureClassSessions,
+              count: futureCount(reason.details, item.usage.futureClassSessions),
             })
           : messageForError(reason),
       );
@@ -379,15 +388,21 @@ export function TeamPage({ client }: { client: ApiClient }) {
     members.reload();
   };
 
+  const deactivating = removing?.kind !== "administrator" && removing?.item.active === true;
   const remove = async () => {
     if (removing === undefined) {
       return;
     }
     try {
       if (removing.kind !== "administrator" && "id" in removing.item) {
-        await client.DELETE("/instructors/{id}", {
-          params: { path: { id: removing.item.id } },
-        });
+        if (deactivating) {
+          await client.PATCH("/instructors/{id}", {
+            body: { active: false, version: removing.item.version },
+            params: { path: { id: removing.item.id } },
+          });
+        } else {
+          await client.DELETE("/instructors/{id}", { params: { path: { id: removing.item.id } } });
+        }
       } else if ("membershipId" in removing.item) {
         await client.DELETE("/administrators/{membershipId}", {
           params: { path: { membershipId: removing.item.membershipId } },
@@ -397,10 +412,11 @@ export function TeamPage({ client }: { client: ApiClient }) {
       reload();
     } catch (reason) {
       if (isApiError(reason, "INSTRUCTOR_IN_USE") && "usage" in removing.item) {
+        const count = futureCount(reason.details, removing.item.usage.futureClassSessions);
         setFeedback(
-          t("admin-catalogs:team.instructorInUse", {
-            count: removing.item.usage.futureClassSessions,
-          }),
+          count > 0
+            ? t("admin-catalogs:team.instructorInUse", { count })
+            : t("admin-catalogs:team.hasHistory"),
         );
       } else {
         setFeedback(messageForError(reason));
@@ -494,6 +510,14 @@ export function TeamPage({ client }: { client: ApiClient }) {
             setRemoving({ item, kind: item.schedulingOnly ? "support" : "instructor" });
           }}
           rowName={(item) => memberLabel(memberById.get(item.memberId ?? ""), item.shortName)}
+          removeLabel={(item) =>
+            t(
+              item.active
+                ? "admin-catalogs:team.deactivateNamed"
+                : "admin-catalogs:common.removeNamed",
+              { name: memberLabel(memberById.get(item.memberId ?? ""), item.shortName) },
+            )
+          }
           rows={instructors.items}
         />
       </section>
@@ -592,18 +616,25 @@ export function TeamPage({ client }: { client: ApiClient }) {
           setRemoving(undefined);
         }}
         open={removing !== undefined}
-        title={t("admin-catalogs:team.removeTitle")}
+        title={t(
+          deactivating ? "admin-catalogs:team.deactivateTitle" : "admin-catalogs:team.removeTitle",
+        )}
       >
         <p>
-          {t("admin-catalogs:team.removeQuestion", {
-            name:
-              removing === undefined
-                ? ""
-                : memberLabel(
-                    memberById.get(removing.item.memberId ?? ""),
-                    removing.item.shortName,
-                  ),
-          })}
+          {t(
+            deactivating
+              ? "admin-catalogs:team.deactivateQuestion"
+              : "admin-catalogs:team.removeQuestion",
+            {
+              name:
+                removing === undefined
+                  ? ""
+                  : memberLabel(
+                      memberById.get(removing.item.memberId ?? ""),
+                      removing.item.shortName,
+                    ),
+            },
+          )}
         </p>
         <div className="catalog-form__actions">
           <Button
@@ -615,7 +646,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
             {t("admin-catalogs:common.cancel")}
           </Button>
           <Button onClick={() => void remove()} variant="danger">
-            {t("admin-catalogs:common.remove")}
+            {t(deactivating ? "admin-catalogs:team.deactivate" : "admin-catalogs:common.remove")}
           </Button>
         </div>
       </Modal>

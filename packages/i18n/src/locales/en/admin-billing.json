@@ -402,5 +402,15 @@
     "stopConfirm": "Remove this item from future runs?",
     "keep": "Keep item",
     "retry": "Try again"
+  },
+  "outstanding": {
+    "title": "Outstanding balances by member",
+    "name": "Member",
+    "invoices": "Pending or failed invoices",
+    "upfront": "Outstanding upfront payments",
+    "processing": "Collection in progress",
+    "empty": "No members have outstanding balances.",
+    "error": "Could not load outstanding balances.",
+    "retry": "Retry"
   }
 }

@@ -238,6 +238,11 @@
     "removeTitle": "Eliminar el miembro del equipo",
     "support": "Apoyo",
     "supportHelp": "Puedes asignar a este abonado a plantillas y clases. Conserva sus permisos actuales.",
-    "title": "Equipo del club"
+    "title": "Equipo del club",
+    "deactivateNamed": "Da de baja a {name}",
+    "deactivateTitle": "Baja del equipo",
+    "deactivateQuestion": "¿Quieres dar de baja a {name} del equipo? Se conservarán sus clases anteriores.",
+    "deactivate": "Dar de baja",
+    "hasHistory": "La ficha conserva clases o plantillas asignadas. Puedes mantenerla inactiva."
   }
 }

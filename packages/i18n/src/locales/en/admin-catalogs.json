@@ -238,6 +238,11 @@
     "removeTitle": "Delete team member",
     "support": "Support",
     "supportHelp": "This member can be assigned to templates and classes. Their current permissions stay the same.",
-    "title": "Club team"
+    "title": "Club team",
+    "deactivateNamed": "Deactivate {name}",
+    "deactivateTitle": "Deactivate team member",
+    "deactivateQuestion": "Deactivate {name} on the team? Past classes will be kept.",
+    "deactivate": "Deactivate",
+    "hasHistory": "This profile has class or template references. It can remain inactive."
   }
 }

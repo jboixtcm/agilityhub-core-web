@@ -418,7 +418,8 @@
         "requested": "Reembolso de {amount} solicitado: se confirmará cuando Stripe lo procese.",
         "stale": "Este pago ha cambiado y ya no se puede reembolsar así. Se ha vuelto a leer la lista.",
         "line": "Reembolso de {amount} el {date}: {reason}"
-      }
+      },
+      "paymentHelp": "Crea un pago en el acto. Indica el importe debido y el que has cobrado. Para liquidar un recibo existente, ábrelo en Facturación."
     },
     "language": "idioma: {locale}",
     "number": "n.º {number}",

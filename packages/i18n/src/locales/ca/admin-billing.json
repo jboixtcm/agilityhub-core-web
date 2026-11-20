@@ -402,5 +402,15 @@
     "stopConfirm": "Vols retirar-lo de les generacions futures?",
     "keep": "Conserva",
     "retry": "Torna-ho a provar"
+  },
+  "outstanding": {
+    "title": "Pendents de cobrament per abonat",
+    "name": "Abonat",
+    "invoices": "Rebuts pendents o retornats",
+    "upfront": "Pendent de pagaments a l’acte",
+    "processing": "En procés de cobrament",
+    "empty": "Cap abonat amb imports pendents.",
+    "error": "No s’han pogut carregar els saldos pendents.",
+    "retry": "Torna-ho a provar"
   }
 }
