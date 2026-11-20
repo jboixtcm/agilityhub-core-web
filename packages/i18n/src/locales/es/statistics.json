@@ -131,5 +131,7 @@
     "samplesHelp": "Los porcentajes se calculan sobre las mangas con resultado conocido. Los datos desconocidos no cuentan como cero ni como eliminación. La velocidad media excluye las eliminaciones y las velocidades no informadas.",
     "grades": "Grados",
     "period": "Fechas importadas"
-  }
+  },
+  "historyDay": "{date} · {source} · {sources} fuentes · {results} resultados",
+  "moreSources": "Mostrar más fuentes"
 }

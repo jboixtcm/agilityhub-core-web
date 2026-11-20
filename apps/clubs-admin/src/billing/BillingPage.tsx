@@ -48,6 +48,7 @@ import {
 import { InvoiceConceptsModal } from "./InvoiceConceptsModal";
 import { InvoiceDrawer } from "./InvoiceDrawer";
 import { ManualInvoiceModal } from "./ManualInvoiceModal";
+import { OutstandingBalances } from "./OutstandingBalances";
 import { isPriceOverlap, PriceOverlapMessage } from "./PriceOverlapMessage";
 import {
   type BillingPeriod,
@@ -1036,6 +1037,7 @@ export function BillingPage({
           title={t("admin-billing:actions.manualInvoice")}
         />
       </header>
+      <OutstandingBalances client={client} />
 
       <div className="billing-feedback">
         {feedback.map((item) => (

@@ -27,7 +27,7 @@ afterEach(() => {
 afterAll(() => {
   server.close();
 });
-async function show() {
+async function show(expectEmpty = true) {
   const i18n = await createI18n({
     branding: testBranding,
     browserLanguages: ["ca"],
@@ -42,12 +42,38 @@ async function show() {
       </BrandingProvider>
     </I18nextProvider>,
   );
-  await screen.findByText("Encara no s’ha importat cap resultat.");
-  fireEvent.change(screen.getByLabelText("Enllaç de la classificació o prova"), {
+  if (expectEmpty) await screen.findByText("Encara no s’ha importat cap resultat.");
+  fireEvent.change(await screen.findByLabelText("Enllaç de la classificació o prova"), {
     target: { value: "https://app.fcagility.cat/federated/classification/division/128" },
   });
 }
 describe("Competition imports", () => {
+  it("groups sources by the club date and loads their details on demand", async () => {
+    server.use(
+      http.get("*/api/v1/competition-imports", () =>
+        HttpResponse.json(
+          Array.from({ length: 26 }, (_, i) => ({
+            id: String(i),
+            source: "FLOW_AGILITY",
+            sourceUrl: `https://flowagility.com/zone/prints/run/${String(i)}`,
+            season: "2026",
+            importedAt: "2026-11-18T23:30:00Z",
+            importedRows: 2,
+            revision: 1,
+          })),
+        ),
+      ),
+    );
+    await show(false);
+    const day = await screen.findByRole("button", {
+      name: /19.*11.*2026.*26 fonts.*52 resultats/u,
+    });
+    expect(screen.queryAllByRole("link")).toHaveLength(0);
+    fireEvent.click(day);
+    expect(screen.getAllByRole("link")).toHaveLength(25);
+    fireEvent.click(screen.getByRole("button", { name: "Mostra més fonts" }));
+    expect(screen.getAllByRole("link")).toHaveLength(26);
+  });
   it("T-STATS-33 refuses source text whose JSON envelope exceeds the public gateway limit", async () => {
     let requests = 0;
     server.use(

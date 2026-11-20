@@ -258,6 +258,24 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
     },
   );
 
+  it("deactivates an instructor with past classes through the team row", async () => {
+    let change: unknown;
+    server.use(
+      http.get(`${base}/members`, () =>
+        HttpResponse.json(page([member("member-second-page", 201)])),
+      ),
+      http.patch(`${base}/instructors/:id`, async ({ request }) => {
+        change = await request.json();
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+    await renderTeam([{ ...instructor, usage: { futureClassSessions: 0 } }]);
+    fireEvent.click(await screen.findByRole("button", { name: "Dona de baixa Alex Serra" }));
+    const dialog = await screen.findByRole("dialog", { name: "Baixa de l’equip" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Dona de baixa" }));
+    await waitFor(() => { expect(change).toEqual({ active: false, version: 1 }); });
+  });
+
   it("shows the approved future-class count when deactivation is refused", async () => {
     server.use(
       http.get(`${base}/members`, () =>

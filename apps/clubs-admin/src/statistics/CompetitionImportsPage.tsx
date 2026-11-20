@@ -1,7 +1,7 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Card, Input, Select, Textarea } from "@agilityhub/ui";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./statistics.css";
@@ -22,6 +22,23 @@ export default function CompetitionImportsPage({ client }: { client: ApiClient }
   const [preview, setPreview] = useState<Preview | null>(null);
   const [assignments, setAssignments] = useState<Record<string, string>>({});
   const [history, setHistory] = useState<Receipt[]>([]);
+  const [expanded, setExpanded] = useState<string>();
+  const [visibleSources, setVisibleSources] = useState(PAGE_SIZE);
+  const groups = useMemo(() => {
+    const days = new Map<
+      string,
+      { date: string; source: Receipt["source"]; receipts: Receipt[]; results: number }
+    >();
+    for (const receipt of history) {
+      const date = formats.formatDate(receipt.importedAt, "short");
+      const key = date + receipt.source;
+      const group = days.get(key) ?? { date, source: receipt.source, receipts: [], results: 0 };
+      group.receipts.push(receipt);
+      group.results += receipt.importedRows;
+      days.set(key, group);
+    }
+    return Array.from(days.entries());
+  }, [history, formats]);
   const [historyLoading, setHistoryLoading] = useState(true);
   const [historyError, setHistoryError] = useState<unknown>(null);
   const [refresh, setRefresh] = useState(0);
@@ -415,34 +432,73 @@ export default function CompetitionImportsPage({ client }: { client: ApiClient }
           <p>{t("statistics:noHistory")}</p>
         ) : (
           <ul className="competition-import-history">
-            {history.map((receipt) => (
-              <li key={receipt.id}>
-                <a href={receipt.sourceUrl} rel="noopener noreferrer" target="_blank">
-                  {receipt.source === "FCAG" ? t("statistics:fcag") : t("statistics:flow")}
-                  {" · "}
-                  {receipt.season}
-                </a>
-                <p>
-                  {t("statistics:importedAt", {
-                    date: formats.formatDate(receipt.importedAt, "dayMonthNumeric"),
+            {groups.map(([key, group]) => (
+              <li key={key}>
+                <Button
+                  variant="secondary"
+                  aria-expanded={expanded === key}
+                  onClick={() => {
+                    setExpanded(expanded === key ? undefined : key);
+                    setVisibleSources(PAGE_SIZE);
+                  }}
+                >
+                  {t("statistics:historyDay", {
+                    date: group.date,
+                    source: t(group.source === "FCAG" ? "statistics:fcag" : "statistics:flow"),
+                    sources: group.receipts.length,
+                    results: group.results,
                   })}
-                  {" · "}
-                  {t("statistics:saved", { count: receipt.importedRows })}
-                </p>
-                {receipt.source === "FCAG" || receipt.sourceUrl.includes("/zone/prints/run/") ? (
-                  <Button
-                    disabled={busy || preview !== null}
-                    variant="secondary"
-                    onClick={() => {
-                      setSource(receipt.source);
-                      setSourceUrl(receipt.sourceUrl);
-                      setContent("");
-                      void prepare({ source: receipt.source, sourceUrl: receipt.sourceUrl });
-                    }}
-                  >
-                    {t("statistics:refreshSource")}
-                  </Button>
-                ) : null}
+                </Button>
+                {expanded === key && (
+                  <>
+                    <ul>
+                      {group.receipts.slice(0, visibleSources).map((receipt) => (
+                        <li key={receipt.id}>
+                          <a href={receipt.sourceUrl} rel="noopener noreferrer" target="_blank">
+                            {receipt.source === "FCAG"
+                              ? t("statistics:fcag")
+                              : t("statistics:flow")}
+                            {" · "}
+                            {receipt.season}
+                          </a>
+                          <p>
+                            {t("statistics:importedAt", {
+                              date: formats.formatDate(receipt.importedAt, "dayMonthNumeric"),
+                            })}
+                            {" · "}
+                            {t("statistics:saved", { count: receipt.importedRows })}
+                          </p>
+                          {receipt.source === "FCAG" ||
+                          receipt.sourceUrl.includes("/zone/prints/run/") ? (
+                            <Button
+                              disabled={busy || preview !== null}
+                              variant="secondary"
+                              onClick={() => {
+                                setSource(receipt.source);
+                                setSourceUrl(receipt.sourceUrl);
+                                setContent("");
+                                void prepare({
+                                  source: receipt.source,
+                                  sourceUrl: receipt.sourceUrl,
+                                });
+                              }}
+                            >
+                              {t("statistics:refreshSource")}
+                            </Button>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                    {visibleSources < group.receipts.length && (
+                      <Button
+                        variant="secondary"
+                        onClick={() => { setVisibleSources((n) => n + PAGE_SIZE); }}
+                      >
+                        {t("statistics:moreSources")}
+                      </Button>
+                    )}
+                  </>
+                )}
               </li>
             ))}
           </ul>

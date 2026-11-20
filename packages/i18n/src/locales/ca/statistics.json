@@ -131,5 +131,7 @@
     "samplesHelp": "Els percentatges es calculen sobre les mànegues amb resultat conegut. Les dades desconegudes no es compten com a zero ni com a eliminació. La mitjana de velocitat exclou les eliminacions i les velocitats no informades.",
     "grades": "Graus",
     "period": "Dates importades"
-  }
+  },
+  "historyDay": "{date} · {source} · {sources} fonts · {results} resultats",
+  "moreSources": "Mostra més fonts"
 }

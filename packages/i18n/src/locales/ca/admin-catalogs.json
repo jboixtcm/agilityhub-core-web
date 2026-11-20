@@ -238,6 +238,11 @@
     "removeTitle": "Elimina el membre de l'equip",
     "support": "Suport",
     "supportHelp": "Aquest abonat es pot assignar a plantilles i classes. Conserva els seus permisos actuals.",
-    "title": "Equip del club"
+    "title": "Equip del club",
+    "deactivateNamed": "Dona de baixa {name}",
+    "deactivateTitle": "Baixa de l’equip",
+    "deactivateQuestion": "Vols donar de baixa {name} de l’equip? Es conservaran les classes anteriors.",
+    "deactivate": "Dona de baixa",
+    "hasHistory": "La fitxa conserva classes o plantilles assignades. Pots mantenir-la inactiva."
   }
 }

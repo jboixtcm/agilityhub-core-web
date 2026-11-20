@@ -420,6 +420,7 @@ export function MemberBillingBlock({
         title={t("admin-census:member.billing.recordPayment")}
       >
         <form className="census-record__form" onSubmit={(event) => void savePayment(event)}>
+          <p>{t("admin-census:member.billing.paymentHelp")}</p>
           <FormField id="upfront-dog" label={t("admin-census:member.billing.dog")}>
             <Select
               id="upfront-dog"

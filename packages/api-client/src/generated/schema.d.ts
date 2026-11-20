@@ -755,6 +755,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/billing/outstanding-balances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * outstandingBalances
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. All periods, grouped by member and currency. Collection in progress is shown separately.
+         */
+        get: operations["outstandingBalances"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/billing/periods/{period}": {
         parameters: {
             query?: never;
@@ -13082,6 +13102,7 @@ export interface components {
             id: string;
             /** Format: date-time */
             readAt?: string | null;
+            students?: components["schemas"]["RosterStudent"][];
             title: string;
         };
         MeNotifications: {
@@ -13772,6 +13793,7 @@ export interface components {
             readAt?: string | null;
             recipient: components["schemas"]["NotificationRecipient"];
             smsBody?: string | null;
+            students?: components["schemas"]["RosterStudent"][];
             subject: components["schemas"]["NotificationSubject"];
             /** @description null for SYSTEM codes (no template) */
             templateId?: string | null;
@@ -13963,6 +13985,13 @@ export interface components {
             };
             /** Format: int64 */
             version: number;
+        };
+        OutstandingBalance: {
+            invoices: components["schemas"]["Money"];
+            memberId: string;
+            memberName: string;
+            processing: components["schemas"]["Money"];
+            upfront: components["schemas"]["Money"];
         };
         /** @enum {string} */
         OverlapHint: "EXTEND";
@@ -15904,6 +15933,10 @@ export interface components {
             cancelledInvoices: number;
             /** Format: int32 */
             restoredMembers: number;
+        };
+        RosterStudent: {
+            href?: string;
+            name: string;
         };
         RsceLicenseProgress: {
             annualSummaries: components["schemas"]["CompetitionAnnualSummary"][];
@@ -23285,6 +23318,127 @@ export interface operations {
                 };
             };
             /** @description RATE_LIMITED */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    outstandingBalances: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OutstandingBalance"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
             429: {
                 headers: {
                     /** @description Seconds before retrying */

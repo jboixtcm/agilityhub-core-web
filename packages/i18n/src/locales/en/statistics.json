@@ -131,5 +131,7 @@
     "samplesHelp": "Percentages use runs with a known outcome. Unknown data do not count as a clear or an elimination. Average speed excludes eliminations and unreported speeds.",
     "grades": "Grades",
     "period": "Imported dates"
-  }
+  },
+  "historyDay": "{date} · {source} · {sources} sources · {results} results",
+  "moreSources": "Show more sources"
 }

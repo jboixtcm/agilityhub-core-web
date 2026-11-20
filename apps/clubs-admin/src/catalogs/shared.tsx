@@ -58,6 +58,7 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
   onActivate,
   onEdit,
   onRemove,
+  removeLabel,
   onReorder,
   rowName,
   rows,
@@ -73,6 +74,7 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
   onActivate?: (row: Row) => void;
   onEdit?: (row: Row) => void;
   onRemove?: (row: Row) => void;
+  removeLabel?: (row: Row) => string;
   onReorder?: (sourceId: string, targetId: string) => void;
 }) {
   const { t } = useTranslation("admin-catalogs");
@@ -205,7 +207,10 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                       {onRemove === undefined ? null : (
                         <IconButton
                           icon="x"
-                          label={t("admin-catalogs:common.removeNamed", { name: rowName(row) })}
+                          label={
+                            removeLabel?.(row) ??
+                            t("admin-catalogs:common.removeNamed", { name: rowName(row) })
+                          }
                           onClick={(event) => {
                             event.stopPropagation();
                             onRemove(row);
