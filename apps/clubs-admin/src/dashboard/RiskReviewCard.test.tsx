@@ -101,3 +101,34 @@ it("shows a recoverable read failure without claiming there are no notices", asy
   fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
   expect(await screen.findByText("4 avisos d’avui")).toBeVisible();
 });
+
+it.each([false, true])(
+  "links the enrolled student in the staff notice (history %s)",
+  async (history) => {
+    server.use(
+      http.get("*/api/v1/class-notices", () =>
+        HttpResponse.json({
+          items: [
+            {
+              id: "notice",
+              code: "N-16",
+              title: "Classe",
+              body: "",
+              createdAt: JOBS_MOCK_NOW,
+              classDescription: "Classe de prova",
+              students: [{ name: "Alumna (Gos)", href: "/abonats/prova" }],
+            },
+          ],
+          totalItems: 1,
+          page: 0,
+          size: 20,
+        }),
+      ),
+    );
+    await mount(history);
+    expect(await screen.findByRole("link", { name: "Alumna (Gos)" })).toHaveAttribute(
+      "href",
+      "/abonats/prova",
+    );
+  },
+);

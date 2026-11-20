@@ -9637,6 +9637,7 @@ export interface components {
             createdAt: string;
             id: string;
             ringName: string;
+            students?: components["schemas"]["RosterStudent"][];
             title: string;
         };
         ClassNoticePage: {

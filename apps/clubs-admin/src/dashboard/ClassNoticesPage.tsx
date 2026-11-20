@@ -1,6 +1,6 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { Badge, Button, Card, Icon, Skeleton } from "@agilityhub/ui";
+import { NoticeStudents, Badge, Button, Card, Icon, Skeleton } from "@agilityhub/ui";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -64,6 +64,7 @@ function NoticeRows({ items }: { items: Notice[] }) {
                 {[item.classDate, item.classTime, item.ringName].filter(Boolean).join(" · ")}
               </span>
               {item.classDescription === "" ? <p>{item.body}</p> : null}
+              <NoticeStudents students={item.students} />
             </div>
             <Badge tone={cancelled ? "danger" : "warning"}>
               {cancelled
