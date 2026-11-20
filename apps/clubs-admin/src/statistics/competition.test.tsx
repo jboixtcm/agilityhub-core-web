@@ -55,7 +55,7 @@ describe("Competition imports", () => {
           Array.from({ length: 26 }, (_, i) => ({
             id: String(i),
             source: "FLOW_AGILITY",
-            sourceUrl: `https://flowagility.com/zone/prints/run/${i}`,
+            sourceUrl: `https://flowagility.com/zone/prints/run/${String(i)}`,
             season: "2026",
             importedAt: "2026-11-18T23:30:00Z",
             importedRows: 2,
