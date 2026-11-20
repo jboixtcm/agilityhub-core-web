@@ -388,6 +388,9 @@ export function TeamPage({ client }: { client: ApiClient }) {
     members.reload();
   };
 
+  const removingName = removing
+    ? memberLabel(memberById.get(removing.item.memberId ?? ""), removing.item.shortName)
+    : "";
   const deactivating = removing?.kind !== "administrator" && removing?.item.active === true;
   const remove = async () => {
     if (removing === undefined) {
@@ -510,14 +513,12 @@ export function TeamPage({ client }: { client: ApiClient }) {
             setRemoving({ item, kind: item.schedulingOnly ? "support" : "instructor" });
           }}
           rowName={(item) => memberLabel(memberById.get(item.memberId ?? ""), item.shortName)}
-          removeLabel={(item) =>
-            t(
-              item.active
-                ? "admin-catalogs:team.deactivateNamed"
-                : "admin-catalogs:common.removeNamed",
-              { name: memberLabel(memberById.get(item.memberId ?? ""), item.shortName) },
-            )
-          }
+          removeLabel={(item) => {
+            const name = memberLabel(memberById.get(item.memberId ?? ""), item.shortName);
+            return item.active
+              ? t("admin-catalogs:team.deactivateNamed", { name })
+              : t("admin-catalogs:common.removeNamed", { name });
+          }}
           rows={instructors.items}
         />
       </section>
@@ -616,25 +617,16 @@ export function TeamPage({ client }: { client: ApiClient }) {
           setRemoving(undefined);
         }}
         open={removing !== undefined}
-        title={t(
-          deactivating ? "admin-catalogs:team.deactivateTitle" : "admin-catalogs:team.removeTitle",
-        )}
+        title={
+          deactivating
+            ? t("admin-catalogs:team.deactivateTitle")
+            : t("admin-catalogs:team.removeTitle")
+        }
       >
         <p>
-          {t(
-            deactivating
-              ? "admin-catalogs:team.deactivateQuestion"
-              : "admin-catalogs:team.removeQuestion",
-            {
-              name:
-                removing === undefined
-                  ? ""
-                  : memberLabel(
-                      memberById.get(removing.item.memberId ?? ""),
-                      removing.item.shortName,
-                    ),
-            },
-          )}
+          {deactivating
+            ? t("admin-catalogs:team.deactivateQuestion", { name: removingName })
+            : t("admin-catalogs:team.removeQuestion", { name: removingName })}
         </p>
         <div className="catalog-form__actions">
           <Button
@@ -646,7 +638,7 @@ export function TeamPage({ client }: { client: ApiClient }) {
             {t("admin-catalogs:common.cancel")}
           </Button>
           <Button onClick={() => void remove()} variant="danger">
-            {t(deactivating ? "admin-catalogs:team.deactivate" : "admin-catalogs:common.remove")}
+            {deactivating ? t("admin-catalogs:team.deactivate") : t("admin-catalogs:common.remove")}
           </Button>
         </div>
       </Modal>

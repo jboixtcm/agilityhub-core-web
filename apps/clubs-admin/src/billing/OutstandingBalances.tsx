@@ -38,36 +38,35 @@ export function OutstandingBalances({ client }: { client: ApiClient }) {
           setOpen(!open);
         }}
       >
-        {t("outstanding.title")}
+        {t("admin-billing:outstanding.title")}
       </Button>
       {open &&
         (failed ? (
           <div role="alert">
-            {t("outstanding.error")}{" "}
+            {t("admin-billing:outstanding.error")}{" "}
             <Button
               onClick={() => {
                 setFailed(false);
                 setAttempt((n) => n + 1);
               }}
             >
-              {t("outstanding.retry")}
+              {t("admin-billing:outstanding.retry")}
             </Button>
           </div>
         ) : rows === undefined ? (
-          <p role="status">{t("list.loading")}</p>
+          <p role="status">{t("admin-billing:list.loading")}</p>
         ) : rows.length === 0 ? (
-          <p>{t("outstanding.empty")}</p>
+          <p>{t("admin-billing:outstanding.empty")}</p>
         ) : (
           <div className="catalog-table-scroll">
             <table className="catalog-table">
-              <caption className="ah-sr-only">{t("outstanding.title")}</caption>
+              <caption className="ah-sr-only">{t("admin-billing:outstanding.title")}</caption>
               <thead>
                 <tr>
-                  {(["name", "invoices", "upfront", "processing"] as const).map((key) => (
-                    <th scope="col" key={key}>
-                      {t(`outstanding.${key}`)}
-                    </th>
-                  ))}
+                  <th scope="col">{t("admin-billing:outstanding.name")}</th>
+                  <th scope="col">{t("admin-billing:outstanding.invoices")}</th>
+                  <th scope="col">{t("admin-billing:outstanding.upfront")}</th>
+                  <th scope="col">{t("admin-billing:outstanding.processing")}</th>
                 </tr>
               </thead>
               <tbody>

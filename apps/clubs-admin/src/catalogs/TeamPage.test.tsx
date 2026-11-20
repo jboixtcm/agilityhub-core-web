@@ -273,7 +273,7 @@ describe("T-05-23 D17 team identities and recovery (INC-41 W3-14)", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Dona de baixa Alex Serra" }));
     const dialog = await screen.findByRole("dialog", { name: "Baixa de l’equip" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Dona de baixa" }));
-    await waitFor(() => expect(change).toEqual({ active: false, version: 1 }));
+    await waitFor(() => { expect(change).toEqual({ active: false, version: 1 }); });
   });
 
   it("shows the approved future-class count when deactivation is refused", async () => {
