@@ -82,7 +82,7 @@ jobs:
 
       - name: Upload Playwright screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-screenshots
           path: roadmap/evidence/**/*.png
@@ -91,7 +91,7 @@ jobs:
 
       - name: Upload Playwright failure diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-failure-diagnostics
           path: roadmap/evidence/ci/test-results
@@ -133,7 +133,7 @@ jobs:
         run: echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
 
       - name: Upload the production bundles
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-bundles-${{ steps.web.outputs.version }}-${{ github.sha }}
           path: |
