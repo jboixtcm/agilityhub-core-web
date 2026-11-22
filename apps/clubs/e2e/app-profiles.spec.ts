@@ -147,24 +147,31 @@ test("the instructor profile keeps the account and preferences close on desktop"
 
   for (const width of [375, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
-    const account = await profile.locator(".profile-account").boundingBox();
-    const menu = await profile
-      .getByRole("link", { name: "Els meus gossos" })
-      .locator("..")
-      .boundingBox();
-    const preferences = await profile.locator(".profile-preferences").boundingBox();
-    if (!account || !menu || !preferences) throw new Error("Missing profile cards");
+    const { account, menu, preferences, rowGap } = await profile.evaluate((element) => {
+      // The notice banner above the profile can load between separate browser calls.
+      const bounds = (selector: string) => {
+        const card = element.querySelector(selector);
+        if (!card) throw new Error(`Missing profile card: ${selector}`);
+        const { x, top, right, bottom } = card.getBoundingClientRect();
+        return { x, top, right, bottom };
+      };
+      return {
+        account: bounds(".profile-account"),
+        menu: bounds(".profile-account + .profile-list"),
+        preferences: bounds(".profile-preferences"),
+        rowGap: parseFloat(getComputedStyle(element).rowGap),
+      };
+    });
     expect(preferences.x).toBe(account.x);
     if (width < 768) {
-      const gap = await profile.evaluate((element) => parseFloat(getComputedStyle(element).rowGap));
       expect(menu.x).toBe(account.x);
-      expect(menu.y - account.y - account.height).toBeCloseTo(gap);
-      expect(preferences.y - menu.y - menu.height).toBeCloseTo(gap);
+      expect(menu.top - account.bottom).toBeCloseTo(rowGap);
+      expect(preferences.top - menu.bottom).toBeCloseTo(rowGap);
     } else {
-      const gap = menu.x - account.x - account.width;
+      const gap = menu.x - account.right;
       expect(gap).toBeGreaterThan(0);
-      expect(menu.y).toBe(account.y);
-      expect(preferences.y - account.y - account.height).toBeCloseTo(gap);
+      expect(menu.top).toBe(account.top);
+      expect(preferences.top - account.bottom).toBeCloseTo(gap);
     }
   }
 });
