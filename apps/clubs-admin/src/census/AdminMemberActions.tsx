@@ -110,7 +110,7 @@ export function AdminMemberActions({
                 filter: ["status:eq:ACTIVE"],
                 page,
                 size: 200,
-                sort: ["lastName,asc"],
+                sort: ["firstName,asc", "lastName,asc"],
               },
             },
           });

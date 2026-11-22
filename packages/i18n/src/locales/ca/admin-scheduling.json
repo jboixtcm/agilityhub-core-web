@@ -233,7 +233,8 @@
       "training": "Entren. {who}",
       "block": "Bloq. {reason}",
       "empty": "Cap classe aquest dia"
-    }
+    },
+    "printPdf": "Imprimeix / Desa PDF"
   },
   "cancelModal": {
     "title": "Anul·lar la classe — {day} · {time} · {description} · {ring} · {instructors}",

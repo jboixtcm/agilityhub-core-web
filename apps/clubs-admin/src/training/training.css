@@ -157,3 +157,10 @@
   background: var(--ah-ring-color, var(--ah-color-text-muted));
   border-radius: var(--ah-radius-full);
 }
+
+.training-register__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+  margin-block: var(--ah-space-2);
+}

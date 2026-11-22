@@ -1,4 +1,5 @@
 import { type ApiClient, studentSearchGuide, useStudentSearch } from "@agilityhub/api-client";
+import { StudentLevelFilter } from "@agilityhub/club-staff/student-level";
 import {
   AppBar,
   Button,
@@ -39,7 +40,10 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
     };
   }, [text]);
 
-  const dogs = useStudentSearch(client, query);
+  const [levelId, setLevelId] = useState("");
+  const [showAll, setShowAll] = useState(false);
+  const searching = showAll || query !== "" || levelId !== "";
+  const dogs = useStudentSearch(client, query, "name,asc", { levelId, enabled: searching });
   const loadError = t("instructor:students.loadError");
 
   return (
@@ -60,7 +64,26 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
           value={text}
         />
       </label>
-      {dogs.loading ? (
+      <StudentLevelFilter
+        client={client}
+        levelId={levelId}
+        onChange={setLevelId}
+        className="instructor-students__level"
+      />
+      {!searching ? (
+        <>
+          <p>{t("instructor:students.searchHint")}</p>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowAll(true);
+            }}
+          >
+            {t("instructor:students.showAll")}
+          </Button>
+        </>
+      ) : null}
+      {searching && dogs.loading ? (
         <Skeleton
           className="instructor-screen__skeleton"
           height="12rem"
@@ -77,7 +100,7 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
           </span>
         </Toast>
       ) : null}
-      {dogs.loading || dogs.firstFailed ? null : dogs.items.length === 0 ? (
+      {!searching || dogs.loading || dogs.firstFailed ? null : dogs.items.length === 0 ? (
         <Card className="instructor-day__empty">
           <EmptyState icon="search" title={t("instructor:students.empty")} />
         </Card>

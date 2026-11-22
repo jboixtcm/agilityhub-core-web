@@ -19,6 +19,11 @@ import {
   useAccountLocale,
 } from "@agilityhub/auth";
 import type { Role } from "@agilityhub/auth";
+import {
+  FollowUpReadFailureNotice,
+  UnreadFollowUpContext,
+  useUnreadFollowUp,
+} from "@agilityhub/club-staff/unread";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import { clubsNamespaces } from "@agilityhub/i18n/clubs";
 import {
@@ -34,6 +39,7 @@ import {
   Input,
   PasswordInput,
   isModuleUiItemEnabled,
+  ListPreferencesProvider,
   Modal,
   NewVersionNotice,
   requiredModulesForUiItem,
@@ -94,6 +100,9 @@ import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
  * course lines) never suspends and hides it again under the shell's loading state. They load
  * alongside the chunk; one that fails only leaves its keys, as before.
  */
+const FollowUpPage = lazy(() =>
+  import("@agilityhub/club-staff/followup").then(({ FollowUpPage }) => ({ default: FollowUpPage })),
+);
 const CompetitionStatisticsPage = lazy(() => import("./statistics/CompetitionStatisticsPage"));
 const screens = () =>
   Promise.all([
@@ -198,6 +207,7 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   // Screens 20, 21, 22 and the student search (S10 §2, E6-W01; R-10-01: instructors and admins).
   { path: "/instructor/dia", roles: ["INSTRUCTOR"] },
   { path: "/instructor/classes/:id", roles: ["INSTRUCTOR"] },
+  { path: "/instructor/seguiment", roles: ["INSTRUCTOR"] },
   { path: "/instructor/alumnes", roles: ["INSTRUCTOR"] },
   { path: "/instructor/alumnes/:dogId", roles: ["INSTRUCTOR"] },
   // Screen 24 (S09 §2 writes it as `/instructor/ring-blocks/new`).
@@ -457,7 +467,7 @@ export function MobileNavigation({
 }) {
   const { t } = useTranslation("shell");
   if (activeProfile === "INSTRUCTOR" && !impersonated && roles.includes("INSTRUCTOR")) {
-    // Mockups 20, 21 and 22 (E6-W01): «El meu dia · Visió global · Alumnes · Perfil».
+    // Follow-up is available alongside the student directory in clubs with TASKS.
     const tabs: TabBarItem[] = [
       {
         active: ["/instructor/dia", "/instructor/classes/:id"].some((path) =>
@@ -473,6 +483,16 @@ export function MobileNavigation({
         icon: "globe",
         label: t("shell:nav.globalView"),
       },
+      ...(modules.includes("TASKS")
+        ? [
+            {
+              active: pathname === "/instructor/seguiment",
+              href: "/instructor/seguiment",
+              icon: "clipboard" as const,
+              label: t("shell:nav.studentFollowUp"),
+            },
+          ]
+        : []),
       {
         active: ["/instructor/alumnes", "/instructor/alumnes/*"].some((path) =>
           matchesPath(pathname, path),
@@ -645,6 +665,24 @@ interface AppLocation {
   visit: number;
 }
 
+function InstructorFollowUpFrame({
+  client,
+  scope,
+  children,
+}: {
+  client: ApiClient;
+  scope: string;
+  children: ReactNode;
+}) {
+  const unread = useUnreadFollowUp(client, true);
+  return (
+    <UnreadFollowUpContext.Provider value={unread}>
+      {unread.failure === undefined ? null : <FollowUpReadFailureNotice unread={unread} />}
+      <ListPreferencesProvider scope={scope}>{children}</ListPreferencesProvider>
+    </UnreadFollowUpContext.Provider>
+  );
+}
+
 function MobileShell({
   authClient,
   children,
@@ -673,6 +711,15 @@ function MobileShell({
       branding.modules.includes("FREE_TRAINING") &&
       (session.roles.includes("MEMBER") || session.me?.impersonation !== undefined),
   );
+
+  const screen = <ScreenBoundary key={location.visit}>{children}</ScreenBoundary>;
+  const followUpEnabled =
+    session.me !== null &&
+    session.activeProfile === "INSTRUCTOR" &&
+    session.roles.includes("INSTRUCTOR") &&
+    session.me.impersonation === undefined &&
+    branding.modules.includes("TASKS");
+  const scope = JSON.stringify([session.me?.account.id, branding.club.slug]);
 
   return (
     <div className={`clubs-shell${detail && pathname !== "/perfil" ? " clubs-shell--detail" : ""}`}>
@@ -720,7 +767,13 @@ function MobileShell({
             the next screen's chunk loads, and a late answer could still take the user back
             (R-16-11). Keyed by the visit, not the route: the same screen opened at another
             address (`/historic?tipus=…` → `/historic`) reads that address again (round 2). */}
-        <ScreenBoundary key={location.visit}>{children}</ScreenBoundary>
+        {followUpEnabled ? (
+          <InstructorFollowUpFrame client={client} key={scope} scope={scope}>
+            {screen}
+          </InstructorFollowUpFrame>
+        ) : (
+          screen
+        )}
       </main>
     </div>
   );
@@ -2231,6 +2284,16 @@ function AppContent({
           key={pathname}
         />
       </InstructorRoute>
+    ) : pathname === "/instructor/seguiment" ? (
+      <InstructorRoute>
+        <RequireModule module="TASKS">
+          <FollowUpPage
+            client={apiClient}
+            onNavigate={navigateInApp}
+            studentPath="/instructor/alumnes"
+          />
+        </RequireModule>
+      </InstructorRoute>
     ) : pathname === "/instructor/alumnes" ? (
       <InstructorRoute>
         <StudentSearchPage client={apiClient} />
@@ -2401,6 +2464,7 @@ function AppContent({
             "/avui",
             "/instructor/avui",
             "/instructor/dia",
+            "/instructor/seguiment",
             "/instructor/alumnes",
             "/inici",
             "/notificacions",

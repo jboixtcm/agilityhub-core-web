@@ -134,7 +134,7 @@ export function ManualInvoiceModal({
               page: 0,
               q: text,
               size: 20,
-              sort: ["lastName,asc"],
+              sort: ["firstName,asc", "lastName,asc"],
             },
           },
         })

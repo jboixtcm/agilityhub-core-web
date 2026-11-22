@@ -1,6 +1,8 @@
 /* D14 «Seguiment alumnes» (mockup V3 at 1280 px). Theme tokens only. */
 .followup {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: var(--ah-space-4);
 }
 

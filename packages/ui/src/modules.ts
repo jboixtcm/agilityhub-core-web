@@ -65,7 +65,7 @@ export const moduleUi = {
   TASKS: {
     menuEntries: ["student-follow-up"],
     // S10 §2: screen 26 (E6-W02) replaces E0-W06's `/instructor/tasques` placeholder.
-    routes: ["/seguiment", "/instructor/alumnes/:dogId/tasques"],
+    routes: ["/seguiment", "/instructor/seguiment", "/instructor/alumnes/:dogId/tasques"],
     tabs: [],
   },
   FAQ: { menuEntries: [], routes: [], tabs: [] },

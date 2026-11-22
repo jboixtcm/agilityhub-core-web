@@ -233,7 +233,8 @@
       "training": "Train. {who}",
       "block": "Block. {reason}",
       "empty": "No classes this day"
-    }
+    },
+    "printPdf": "Print / Save PDF"
   },
   "cancelModal": {
     "title": "Cancel the class — {day} · {time} · {description} · {ring} · {instructors}",

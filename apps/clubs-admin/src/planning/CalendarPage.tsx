@@ -729,6 +729,19 @@ export function CalendarPage({
   };
 
   const range = monday === undefined ? "" : rangeOf(monday);
+  // Without the opening hours nothing offers times ([Crear classe], [Bloqueja pista] and the card's
+  // «Hora» wait for them): the error shows here with [Torna-ho a provar].
+  const failure =
+    weeks.error ?? week.error ?? calendar.error ?? catalogs.error ?? openingHours.error;
+  const loading =
+    monday === undefined ||
+    cat === undefined ||
+    !weekKnown ||
+    (weekItem !== undefined && current === undefined);
+  const empty =
+    !loading &&
+    (current === undefined || (current.classes.length === 0 && current.ringBlocks.length === 0));
+
   const header = (
     <header className="planning-header calendar-header">
       <h1>{t("admin-scheduling:calendar.title")}</h1>
@@ -776,45 +789,43 @@ export function CalendarPage({
         range={range}
         selected={monday}
       />
-      {readOnly ? null : (
-        <div className="planning-header__actions">
-          <Button
-            disabled={cat === undefined || openingHours.data === undefined}
-            onClick={() => {
-              setCreateOpen(true);
-            }}
-            variant="secondary"
-          >
-            <Icon aria-hidden="true" name="plus" />
-            {t("admin-scheduling:calendar.create")}
-          </Button>
-          <Button
-            disabled={cat === undefined || openingHours.data === undefined}
-            onClick={() => {
-              setBlockDrawer({ kind: "create" });
-            }}
-            variant="ghost"
-          >
-            <Icon aria-hidden="true" name="cone" />
-            {t("admin-scheduling:calendar.block")}
-          </Button>
-        </div>
-      )}
+      <div className="planning-header__actions">
+        <Button
+          disabled={loading || failure !== undefined}
+          onClick={() => {
+            window.print();
+          }}
+          variant="secondary"
+        >
+          {t("admin-scheduling:calendar.printPdf")}
+        </Button>
+        {readOnly ? null : (
+          <>
+            <Button
+              disabled={cat === undefined || openingHours.data === undefined}
+              onClick={() => {
+                setCreateOpen(true);
+              }}
+              variant="secondary"
+            >
+              <Icon aria-hidden="true" name="plus" />
+              {t("admin-scheduling:calendar.create")}
+            </Button>
+            <Button
+              disabled={cat === undefined || openingHours.data === undefined}
+              onClick={() => {
+                setBlockDrawer({ kind: "create" });
+              }}
+              variant="ghost"
+            >
+              <Icon aria-hidden="true" name="cone" />
+              {t("admin-scheduling:calendar.block")}
+            </Button>
+          </>
+        )}
+      </div>
     </header>
   );
-
-  // Without the opening hours nothing offers times ([Crear classe], [Bloqueja pista] and the card's
-  // «Hora» wait for them): the error shows here with [Torna-ho a provar].
-  const failure =
-    weeks.error ?? week.error ?? calendar.error ?? catalogs.error ?? openingHours.error;
-  const loading =
-    monday === undefined ||
-    cat === undefined ||
-    !weekKnown ||
-    (weekItem !== undefined && current === undefined);
-  const empty =
-    !loading &&
-    (current === undefined || (current.classes.length === 0 && current.ringBlocks.length === 0));
 
   const footer = (
     <p className="planning-grid__hint calendar-footer">

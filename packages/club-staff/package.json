@@ -1,0 +1,27 @@
+{
+  "name": "@agilityhub/club-staff",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./followup": "./src/FollowUpPage.tsx",
+    "./unread": "./src/unread.tsx",
+    "./saved-views": "./src/saved-views.ts",
+    "./student-level": "./src/StudentLevelFilter.tsx"
+  },
+  "dependencies": {
+    "@agilityhub/api-client": "workspace:*",
+    "@agilityhub/i18n": "workspace:*",
+    "@agilityhub/ui": "workspace:*",
+    "react": "catalog:",
+    "react-i18next": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "lint": "eslint src --max-warnings 0 --config ../../eslint.config.mjs",
+    "typecheck": "tsc --noEmit"
+  }
+}

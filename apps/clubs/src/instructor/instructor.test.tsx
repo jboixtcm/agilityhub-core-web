@@ -964,6 +964,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
       }),
     );
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     const duna = await screen.findByRole("link", { name: "Laura + Duna · C" });
     expect(duna.querySelector("img")).toHaveAttribute("src", thumbnailUrl);
     const others = screen
@@ -979,6 +980,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
   it("lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22", async () => {
     const requests = recordRequests();
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     expect(await screen.findByRole("link", { name: "Laura + Duna · C" })).toBeVisible();
     fireEvent.change(screen.getByLabelText("Cerca un alumne"), { target: { value: "Rock" } });
     // R-10-00 (E5-W05 step 23): Rock's guide is not its owner, so the row names the owner too.
@@ -988,7 +990,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     await waitFor(() => {
       expect(screen.queryByRole("link", { name: "Laura + Duna · C" })).toBeNull();
     });
-    const searches = requests.filter((request) => request.line.startsWith("GET /dogs"));
+    const searches = requests.filter((request) => request.line.startsWith("GET /dogs?"));
     expect(searches).toHaveLength(2);
     expect(decodeURIComponent(searches[1]?.line ?? "")).toContain("q=Rock");
     expect(decodeURIComponent(searches[1]?.line ?? "")).toContain("filter=status:eq:ACTIVE");
@@ -1040,6 +1042,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     const requests = recordRequests();
     fiftyOneDogs();
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     expect(await screen.findByRole("link", { name: "Clara + Gos 01 · C" })).toBeVisible();
     const list = () => within(screen.getByRole("list")).getAllByRole("link");
     expect(list()).toHaveLength(50);
@@ -1049,7 +1052,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     expect(list()).toHaveLength(51);
     expect(screen.queryByRole("button", { name: /Mostra'n més/u })).toBeNull();
     const pages = requests
-      .filter((request) => request.line.startsWith("GET /dogs"))
+      .filter((request) => request.line.startsWith("GET /dogs?"))
       .map((request) => {
         const query = new URLSearchParams(request.line.split("?")[1] ?? "");
         return `${query.get("page") ?? ""}/${query.get("size") ?? ""}`;
@@ -1061,6 +1064,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     let refuse = true;
     fiftyOneDogs(() => refuse);
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     expect(await screen.findByRole("link", { name: "Clara + Gos 50 · C" })).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Mostra'n més" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -1076,6 +1080,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
   it("E5-W05 step 23 (R-10-00): the guide is the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and a dog led by another guide adds «(abonat: {nom i cognom})»", async () => {
     server.use(http.get("*/api/v1/dogs", () => HttpResponse.json(compoundAndGuideDogs())));
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     const toby = await screen.findByRole("link", { name: "Joan Antoni + Toby · B" });
     expect(toby).toBeVisible();
     expect(within(toby).queryByText(/abonat/u)).toBeNull();
@@ -1090,6 +1095,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     answer.items = [{ ...toby, handlerName: "Joan Antoni" }];
     server.use(http.get("*/api/v1/dogs", () => HttpResponse.json(answer)));
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     const row = await screen.findByRole("link", { name: "Joan Antoni + Toby · B" });
     expect(within(row).queryByText(/abonat/u)).toBeNull();
   });
@@ -1155,6 +1161,7 @@ describe("E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, 
     expect(await screen.findByText("No s'ha trobat l'element sol·licitat.")).toBeVisible();
     cleanup();
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     expect(await screen.findByText("No tens permís per fer aquesta acció.")).toBeVisible();
     expect(screen.getByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
   });
@@ -1176,6 +1183,7 @@ describe("E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, 
     expect(await screen.findByText("No s'ha pogut carregar la fitxa.")).toBeVisible();
     cleanup();
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     expect(await screen.findByText("No s'han pogut carregar els alumnes.")).toBeVisible();
   });
 });
@@ -1224,7 +1232,7 @@ describe("E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonat
       within(tabs)
         .getAllByRole("link")
         .map((link) => link.textContent),
-    ).toEqual(["El meu dia", "Visió global", "Alumnes", "Perfil"]);
+    ).toEqual(["El meu dia", "Visió global", "Seguiment alumnes", "Alumnes", "Perfil"]);
     expect(within(tabs).getByRole("link", { name: "El meu dia" })).toHaveAttribute(
       "aria-current",
       "page",
@@ -1238,6 +1246,21 @@ describe("E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonat
     expect(requests.some((request) => request.line.includes("/attendance"))).toBe(false);
     expect(screen.queryByRole("link", { name: "El meu dia" })).toBeNull();
   });
+
+  it.each(["member", "instructorNoTasks", "impersonated"] as const)(
+    "keeps the follow-up list and counter out of an ineligible session (%s)",
+    async (scenario) => {
+      const requests = recordRequests();
+      await renderApp("/instructor/seguiment", {
+        scenario,
+        ...(scenario === "instructorNoTasks" ? { branding: without("TASKS") } : {}),
+      });
+      await screen.findByRole("navigation", { name: "Navegació principal" });
+      expect(screen.queryByRole("link", { name: "Seguiment alumnes" })).toBeNull();
+      expect(screen.queryByRole("heading", { name: "Seguiment alumnes" })).toBeNull();
+      expect(requests.some(({ line }) => line.includes("/followup"))).toBe(false);
+    },
+  );
 
   it("a member cannot open 22 (RequireRole); screen 26 is E6-W02's page under «Alumnes»", async () => {
     const requests = recordRequests();
@@ -1399,7 +1422,7 @@ describe("E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a n
       expect(result.current.items).toHaveLength(51);
     });
     const pages = requests
-      .filter((request) => request.line.startsWith("GET /dogs"))
+      .filter((request) => request.line.startsWith("GET /dogs?"))
       .map((request) => {
         const query = new URLSearchParams(request.line.split("?")[1] ?? "");
         return `${query.get("q") ?? "-"}:${query.get("page") ?? ""}`;

@@ -27,9 +27,8 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useSavedViews } from "../activities/shared";
-
 import "./followup.css";
+import { useSavedViews } from "./saved-views";
 import { FollowUpReadFailureNotice, useUnreadFollowUp, useUnreadFollowUpContext } from "./unread";
 
 type FollowupItem = components["schemas"]["FollowupItem"];
@@ -224,12 +223,12 @@ function kindLabel(t: Translate, kind: string): string {
 function authorLabel(t: Translate, row: FollowupItem): string {
   const name = row.authorName ?? "";
   return row.kind === "MEMBER_NOTE"
-    ? t("admin-census:followup.author.member", {
+    ? t("instructor:followup.author.member", {
         // The api's value (E11-W05 step 4): `OTHER` has its own form; none reads the masculine.
         gender: row.authorGender ?? "other",
         name,
       })
-    : t("admin-census:followup.author.task", { name });
+    : t("instructor:followup.author.task", { name });
 }
 
 interface ListData {
@@ -247,11 +246,13 @@ interface ListData {
 export function FollowUpPage({
   client,
   onNavigate,
+  studentPath = "/alumnes",
 }: {
+  studentPath?: string;
   client: ApiClient;
   onNavigate: (path: string) => void;
 }) {
-  const { t } = useTranslation(["admin-census", "census", "enums", "errors", "common"]);
+  const { t } = useTranslation(["instructor", "census", "enums", "errors", "common"]);
   const formats = useClubFormats();
   const shell = useUnreadFollowUpContext();
   const own = useUnreadFollowUp(client, shell === undefined);
@@ -334,7 +335,7 @@ export function FollowUpPage({
   // S10 §9 / R-10-16: `levelCode` is null on every row with `levels.enabled = false` (the api's
   // answer is all an INSTRUCTOR can read of the parameter): no «Nivell» column then.
   const levels = rows.length === 0 || rows.some((row) => row.levelCode != null);
-  const empty = t("admin-census:followup.none");
+  const empty = t("instructor:followup.none");
   const day = useCallback(
     (instant: string | null | undefined) =>
       instant == null ? empty : formats.formatDate(instant, "dayMonthNumeric").replaceAll("/", "-"),
@@ -345,26 +346,26 @@ export function FollowUpPage({
     () => [
       {
         key: "memberName",
-        label: t("admin-census:followup.columns.member"),
+        label: t("instructor:followup.columns.member"),
         render: (row) => (
           <span className="followup__member">
             {row.memberName ?? empty}
             {row.unread === true ? (
-              <span className="ah-sr-only">{` · ${t("admin-census:followup.unreadMark")}`}</span>
+              <span className="ah-sr-only">{` · ${t("instructor:followup.unreadMark")}`}</span>
             ) : null}
           </span>
         ),
       },
       {
         key: "dogName",
-        label: t("admin-census:followup.columns.dog"),
+        label: t("instructor:followup.columns.dog"),
         render: (row) => row.dogName ?? empty,
       },
       ...(levels
         ? [
             {
               key: "levelCode",
-              label: t("admin-census:followup.columns.level"),
+              label: t("instructor:followup.columns.level"),
               render: (row: FollowupItem) =>
                 row.levelCode == null ? null : (
                   <Badge className="followup__level" tone="warning">
@@ -376,18 +377,18 @@ export function FollowUpPage({
         : []),
       {
         key: "activityAt",
-        label: t("admin-census:followup.columns.date"),
+        label: t("instructor:followup.columns.date"),
         render: (row) => day(row.activityAt),
         sortKey: "activityAt",
       },
       {
         key: "authorName",
-        label: t("admin-census:followup.columns.author"),
+        label: t("instructor:followup.columns.author"),
         render: (row) => authorLabel(t, row),
       },
       {
         key: "textExcerpt",
-        label: t("admin-census:followup.columns.text"),
+        label: t("instructor:followup.columns.text"),
         render: (row) => (
           <span
             className={
@@ -400,12 +401,12 @@ export function FollowUpPage({
       },
       {
         key: "createdAt",
-        label: t("admin-census:followup.columns.createdAt"),
+        label: t("instructor:followup.columns.createdAt"),
         render: (row) => day(row.createdAt),
       },
       {
         key: "completedAt",
-        label: t("admin-census:followup.columns.completedAt"),
+        label: t("instructor:followup.columns.completedAt"),
         render: (row) =>
           row.completedAt == null ? empty : <Badge tone="success">{day(row.completedAt)}</Badge>,
       },
@@ -414,29 +415,29 @@ export function FollowUpPage({
   );
 
   const filterColumns: UniversalListFilterColumn[] = [
-    { key: "kind", label: t("admin-census:followup.columns.kind"), type: "enum" },
+    { key: "kind", label: t("instructor:followup.columns.kind"), type: "enum" },
     {
       key: "unread",
-      label: t("admin-census:followup.columns.unread"),
+      label: t("instructor:followup.columns.unread"),
       operators: ["eq"],
       type: "boolean",
     },
     {
       key: "memberId",
-      label: t("admin-census:followup.columns.member"),
+      label: t("instructor:followup.columns.member"),
       operators: RELATION_OPERATORS,
       type: "relation",
     },
     {
       key: "dogId",
-      label: t("admin-census:followup.columns.dog"),
+      label: t("instructor:followup.columns.dog"),
       operators: RELATION_OPERATORS,
       type: "relation",
     },
     // E6-W04 step 0c (E75): «Creador», whoever wrote the task or the note (`authorAccountId`).
     {
       key: "authorAccountId",
-      label: t("admin-census:followup.columns.author"),
+      label: t("instructor:followup.columns.author"),
       operators: RELATION_OPERATORS,
       type: "relation",
     },
@@ -450,8 +451,8 @@ export function FollowUpPage({
     if (field === "kind") return kindLabel(t, value);
     if (field === "unread") {
       return value === "true"
-        ? t("admin-census:followup.unreadValue.yes")
-        : t("admin-census:followup.unreadValue.no");
+        ? t("instructor:followup.unreadValue.yes")
+        : t("instructor:followup.unreadValue.no");
     }
     const row =
       field === "memberId"
@@ -586,10 +587,10 @@ export function FollowUpPage({
 
   const labels: UniversalListLabels<FollowupItem> = {
     ...commonLabels(t),
-    emptyDescription: t("admin-census:followup.emptyDescription"),
-    emptyTitle: t("admin-census:followup.emptyTitle"),
-    search: t("admin-census:followup.search"),
-    selectRow: (row) => t("admin-census:followup.selectRow", { name: row.dogName ?? "" }),
+    emptyDescription: t("instructor:followup.emptyDescription"),
+    emptyTitle: t("instructor:followup.emptyTitle"),
+    search: t("instructor:followup.search"),
+    selectRow: (row) => t("instructor:followup.selectRow", { name: row.dogName ?? "" }),
   };
 
   const open = (row: FollowupItem) => {
@@ -605,7 +606,7 @@ export function FollowUpPage({
         if (accepted) return;
         setReadIds((current) => new Set([...current].filter((id) => id !== row.id)));
       });
-    onNavigate(`/alumnes/${encodeURIComponent(row.dogId)}`);
+    onNavigate(`${studentPath}/${encodeURIComponent(row.dogId)}`);
   };
 
   const readAll = async () => {
@@ -633,30 +634,24 @@ export function FollowUpPage({
 
   const kind = kindOf(state);
   const chips: { label: string; value: Kind }[] = [
-    { label: t("admin-census:followup.filter.all"), value: "" },
-    { label: t("admin-census:followup.filter.tasks"), value: "TASK" },
-    { label: t("admin-census:followup.filter.notes"), value: "MEMBER_NOTE" },
+    { label: t("instructor:followup.filter.all"), value: "" },
+    { label: t("instructor:followup.filter.tasks"), value: "TASK" },
+    { label: t("instructor:followup.filter.notes"), value: "MEMBER_NOTE" },
   ];
   const listError =
-    error === undefined ? undefined : errorText(t, error, t("admin-census:followup.error"));
+    error === undefined ? undefined : errorText(t, error, t("instructor:followup.error"));
 
   return (
     <section className="followup">
       <header className="followup__header">
         <div className="followup__title">
-          <h1>{t("admin-census:followup.title")}</h1>
+          <h1>{t("instructor:followup.title")}</h1>
           {unread.count === undefined ? null : (
-            <Badge tone="warning">
-              {t("admin-census:followup.unread", { count: unread.count })}
-            </Badge>
+            <Badge tone="warning">{t("instructor:followup.unread", { count: unread.count })}</Badge>
           )}
         </div>
         <div className="followup__actions">
-          <div
-            aria-label={t("admin-census:followup.kinds")}
-            className="followup__chips"
-            role="group"
-          >
+          <div aria-label={t("instructor:followup.kinds")} className="followup__chips" role="group">
             {chips.map((chip) => (
               <button
                 aria-pressed={kind === chip.value}
@@ -673,18 +668,18 @@ export function FollowUpPage({
           </div>
           <Button
             loading={readingAll}
-            loadingLabel={t("admin-census:followup.readingAll")}
+            loadingLabel={t("instructor:followup.readingAll")}
             onClick={() => void readAll()}
             variant="secondary"
           >
             <Icon aria-hidden="true" name="check" />
-            {t("admin-census:followup.readAll")}
+            {t("instructor:followup.readAll")}
           </Button>
         </div>
       </header>
       {feedback === undefined ? null : (
         <Toast
-          dismissLabel={t("admin-census:followup.dismiss")}
+          dismissLabel={t("instructor:followup.dismiss")}
           onDismiss={() => {
             setFeedback(undefined);
           }}
@@ -697,7 +692,7 @@ export function FollowUpPage({
       {shell === undefined ? <FollowUpReadFailureNotice unread={own} /> : null}
       <UniversalList<FollowupItem>
         appliedFilters={applied}
-        caption={t("admin-census:followup.caption")}
+        caption={t("instructor:followup.caption")}
         columns={columns}
         {...(listError === undefined ? {} : { error: listError })}
         // `GET /followup` publishes no export (`x-exportable: false`).
@@ -721,7 +716,7 @@ export function FollowUpPage({
           "data-followup-id": row.id,
           "data-unread": String(row.unread === true),
         })}
-        rowHref={(row) => `/alumnes/${encodeURIComponent(row.dogId ?? "")}`}
+        rowHref={(row) => `${studentPath}/${encodeURIComponent(row.dogId ?? "")}`}
         rowKey={(row) => row.id}
         rows={rows}
         savedViews={savedViews.views}

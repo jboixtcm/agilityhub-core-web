@@ -14,6 +14,12 @@ import {
   useSession,
 } from "@agilityhub/auth";
 import type { PlatformRole, Role } from "@agilityhub/auth";
+import { FollowUpPage } from "@agilityhub/club-staff/followup";
+import {
+  FollowUpReadFailureNotice,
+  UnreadFollowUpContext,
+  useUnreadFollowUp,
+} from "@agilityhub/club-staff/unread";
 import {
   AppearanceSelector,
   ListPreferencesProvider,
@@ -69,12 +75,6 @@ import { ClassNoticesPage } from "./dashboard/ClassNoticesPage";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
-import { FollowUpPage } from "./followup/FollowUpPage";
-import {
-  FollowUpReadFailureNotice,
-  UnreadFollowUpContext,
-  useUnreadFollowUp,
-} from "./followup/unread";
 import { StudentRecordPage } from "./instructor/StudentRecordPage";
 import { StudentsPage } from "./instructor/StudentsPage";
 import { WeekAgendaPage } from "./instructor/WeekAgendaPage";
@@ -271,6 +271,15 @@ export function AdminNavigation({
           label: t("shell:nav.weeklyAgenda"),
         },
         {
+          ...(unreadFollowUp === undefined || unreadFollowUp === 0
+            ? {}
+            : { count: unreadFollowUp }),
+          href: "/seguiment",
+          icon: "clipboard",
+          id: "student-follow-up",
+          label: t("shell:nav.studentFollowUp"),
+        },
+        {
           // «Alumnes», the student search that opens D13.
           href: "/alumnes",
           icon: "graduate",
@@ -309,17 +318,6 @@ export function AdminNavigation({
           icon: "palm",
           id: "inactivity",
           label: t("shell:nav.inactivity"),
-        },
-        {
-          ...(unreadFollowUp === undefined || unreadFollowUp === 0
-            ? {}
-            : { count: unreadFollowUp }),
-          href: "/seguiment",
-          icon: "clipboard",
-          id: "student-follow-up",
-          label: t("shell:nav.studentFollowUp"),
-          // S10 §2 row D14: instructors too; the group renders for them with this entry only.
-          roles: ["INSTRUCTOR", "ADMIN"],
         },
       ],
     },
@@ -430,7 +428,7 @@ export function AdminNavigation({
     },
   ];
 
-  // A group's roles are its entries' default; an entry with its own roles (D14's) overrides them,
+  // A group's roles are its entries' default; an entry with its own roles overrides them,
   // and a group shows when at least one of its entries does.
   const groups: SidebarGroup[] = definitions
     .map((group) => ({

@@ -11,6 +11,7 @@ import {
   Badge,
   Button,
   Tabs,
+  Icon,
   type Tone,
   Toast,
   UniversalList,
@@ -32,8 +33,16 @@ import {
   universalListLabels,
   useUrlListState,
 } from "../lists/list-helpers";
-import { addDays, clubInstant, dayLabel, timeLabel } from "../planning/calendar-shared";
-import { clubToday, mondayOf } from "../planning/shared";
+import {
+  addDays,
+  clubInstant,
+  dayLabel,
+  timeLabel,
+  loadCalendarSettings,
+  loadOpeningHours,
+} from "../planning/calendar-shared";
+import { RingBlockDrawer } from "../planning/RingBlockDrawer";
+import { clubToday, mondayOf, useResource } from "../planning/shared";
 
 import "./training.css";
 
@@ -482,11 +491,35 @@ function TrainingBookingsList({
 }
 
 /** Tab 2 — `GET /ring-blocks` (S06/S09 §6): blocks and ring reservations, the register's other half. */
-function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }) {
+function RingBlocksList({
+  admin,
+  client,
+  onNavigate,
+}: {
+  admin: boolean;
+  client: ApiClient;
+  onNavigate: (path: string) => void;
+}) {
   const branding = useBranding();
   const formats = useClubFormats();
-  const { t } = useTranslation(["admin-training", "census", "enums", "errors"]);
+  const { t } = useTranslation(["admin-scheduling", "admin-training", "census", "enums", "errors"]);
   const rings = useClubRings(client, admin);
+  const [creating, setCreating] = useState(false);
+  const form = useResource(
+    useMemo(
+      () =>
+        admin && creating
+          ? async () => {
+              const [openingHours, settings] = await Promise.all([
+                loadOpeningHours(client),
+                loadCalendarSettings(client),
+              ]);
+              return { openingHours, settings };
+            }
+          : undefined,
+      [admin, creating, client],
+    ),
+  );
   const week = currentWeek(branding.timeZone);
   const weekFilter = clubDaysRange(week.start, week.end, branding.timeZone);
   const [state, setState, applySavedView] = useUrlListState(
@@ -751,6 +784,50 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
           {feedback.message}
         </Toast>
       )}
+      {admin ? (
+        <div className="training-register__actions">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              if (rings.status === "error") rings.refetch();
+              if (creating) form.reload();
+              setCreating(true);
+            }}
+            loading={creating && (form.loading || rings.status === "loading")}
+          >
+            <Icon aria-hidden="true" name="cone" />
+            {t("admin-scheduling:calendar.block")}
+          </Button>
+          {creating && (form.error !== undefined || rings.status === "error") ? (
+            <Toast tone="danger">{t("admin-training:list.error")}</Toast>
+          ) : null}
+        </div>
+      ) : null}
+      {admin &&
+      creating &&
+      !form.loading &&
+      form.error === undefined &&
+      form.data !== undefined &&
+      rings.status === "ready" ? (
+        <RingBlockDrawer
+          client={client}
+          mode={{ kind: "create" }}
+          modules={branding.modules}
+          onClose={() => {
+            setCreating(false);
+          }}
+          onNavigate={onNavigate}
+          onSaved={(message) => {
+            setCreating(false);
+            setFeedback({ message, tone: "success" });
+            retry();
+          }}
+          openingHours={form.data.openingHours}
+          settings={form.data.settings}
+          rings={rings.data}
+          timeZone={branding.timeZone}
+        />
+      ) : null}
       <UniversalList<BlockRow>
         appliedFilters={applied}
         caption={t("admin-training:blocks.caption")}
@@ -819,7 +896,7 @@ export function TrainingRegisterPage({
             value: "bookings",
           },
           {
-            content: <RingBlocksList admin={admin} client={client} />,
+            content: <RingBlocksList admin={admin} client={client} onNavigate={onNavigate} />,
             label: t("admin-training:tab.blocks"),
             value: "blocks",
           },

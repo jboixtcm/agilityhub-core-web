@@ -94,6 +94,7 @@ function TeamMemberPicker({
             fields: listFields(MEMBER_REQUEST_FIELDS),
             filter: ["status:eq:ACTIVE"],
             ...(query.trim() === "" ? {} : { q: query.trim() }),
+            sort: ["firstName,asc", "lastName,asc"],
             size: 20,
           },
         },

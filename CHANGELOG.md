@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-22 — Club feedback 20261121-2
+
+- Administrators can create a ring block from the training register. Member pickers order candidates by given name and surname.
+- The week calendar has a landscape print and PDF layout. The instructor app includes student follow-up, and both student directories support searching by name or level before expanding the roster.
+
 - Show staff roster links, member balances across periods, explicit team deactivation, and daily import summaries with on-demand source details.
 
 - Show the organizing club immediately after the competition date. Keep the full trial title in expanded details, with a title fallback for historical sources without organizer metadata.

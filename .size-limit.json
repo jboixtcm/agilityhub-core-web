@@ -4,6 +4,7 @@
     "path": [
       "apps/clubs/dist/assets/index-*.js",
       "apps/clubs/dist/assets/shared-*.js",
+      "apps/clubs/dist/assets/src-*.js",
       "apps/clubs/dist/assets/jsx-runtime-*.js"
     ],
     "limit": "300 kB",

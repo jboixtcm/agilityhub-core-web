@@ -69,7 +69,7 @@ export function RingBlockDrawer({
   onNavigate: (path: string) => void;
   onSaved: (message: string) => void;
   openingHours: OpeningHours;
-  rings: readonly Ring[];
+  rings: readonly Pick<Ring, "id" | "name" | "active">[];
   settings: CalendarSettings;
   timeZone: string;
 }) {

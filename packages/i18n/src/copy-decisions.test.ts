@@ -82,7 +82,7 @@ describe("E11-W05 step 4 (A40.3, E142/E153): the api's gender reaches every gend
         "No autoritza l'ús de la seva imatge: no publiquis fotos on surti ell.",
       ],
       [
-        "admin-census:followup.author.member",
+        "instructor:followup.author.member",
         { name: "Àlex" },
         "Àlex (alumna)",
         "Àlex (alumne/a)",
@@ -131,7 +131,7 @@ describe("E11-W05 step 4 (A40.3, E142/E153): the api's gender reaches every gend
         "No autoriza el uso de su imagen: no publiques fotos en las que aparezca él.",
       ],
       [
-        "admin-census:followup.author.member",
+        "instructor:followup.author.member",
         { name: "Àlex" },
         "Àlex (alumna)",
         "Àlex (alumno/a)",
