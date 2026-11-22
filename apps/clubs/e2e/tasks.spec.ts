@@ -100,7 +100,7 @@ test.describe("E6-W02 T-10-28 screen 26 «Tasques i notes» against MSW", () => 
     );
     await expect(page.getByRole("button", { name: "foto_balancí.jpg" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Desa" })).toBeDisabled();
-    await expect(page.getByRole("link", { name: "Alumnes" })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: "Alumnes", exact: true })).toHaveAttribute(
       "aria-current",
       "page",
     );
