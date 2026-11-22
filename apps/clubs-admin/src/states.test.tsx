@@ -4,7 +4,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { delay, getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -86,6 +86,9 @@ async function renderAt(path: string, reads: "empty" | "fail" | "pending") {
       </BrandingProvider>
     </I18nextProvider>,
   );
+  if (path === "/alumnes") {
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
+  }
 }
 
 /**
