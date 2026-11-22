@@ -128,6 +128,47 @@ test("an instructor opens only the selected student's bookings and can return to
   await expect(page.getByRole("button", { name: "Gestiona les reserves" })).toBeVisible();
 });
 
+test("the instructor profile keeps the account and preferences close on desktop", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("agilityhub.locale", "ca");
+    localStorage.setItem("agilityhub.mockScenario", "multiProfile");
+  });
+  await page.goto(baseUrl + "/entrar");
+  await page.getByLabel("Correu electrònic").fill("estel.rius@example.test");
+  await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
+  await page.getByRole("button", { name: "ENTRA", exact: true }).click();
+  await page.getByRole("button", { name: /Com a instructora/u }).click();
+  await page.waitForURL("**/instructor/dia");
+  await page.getByRole("link", { name: "Perfil", exact: true }).click();
+  const profile = page.locator(".profile-page");
+  await expect(profile.getByLabel("Aparença")).toBeVisible();
+
+  for (const width of [375, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    const account = await profile.locator(".profile-account").boundingBox();
+    const menu = await profile
+      .getByRole("link", { name: "Els meus gossos" })
+      .locator("..")
+      .boundingBox();
+    const preferences = await profile.locator(".profile-preferences").boundingBox();
+    if (!account || !menu || !preferences) throw new Error("Missing profile cards");
+    expect(preferences.x).toBe(account.x);
+    if (width < 768) {
+      const gap = await profile.evaluate((element) => parseFloat(getComputedStyle(element).rowGap));
+      expect(menu.x).toBe(account.x);
+      expect(menu.y - account.y - account.height).toBeCloseTo(gap);
+      expect(preferences.y - menu.y - menu.height).toBeCloseTo(gap);
+    } else {
+      const gap = menu.x - account.x - account.width;
+      expect(gap).toBeGreaterThan(0);
+      expect(menu.y).toBe(account.y);
+      expect(preferences.y - account.y - account.height).toBeCloseTo(gap);
+    }
+  }
+});
+
 test("an administrator explicitly returns to the portal from the instructor's profile", async ({
   context,
   page,

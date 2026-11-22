@@ -2548,13 +2548,25 @@ div.lifecycle-error p {
     justify-content: flex-start;
   }
   .clubs-shell__content .profile-page {
+    /* Each side stacks in source order, including when optional cards are hidden. */
+    --profile-card-gap: var(--ah-space-5);
+    display: flow-root;
     max-width: 68rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--ah-space-5);
-    align-items: start;
   }
-  .profile-page > h1 {
-    grid-column: 1 / -1;
+  .profile-page > .ah-card {
+    float: inline-start;
+    clear: inline-start;
+    width: calc((100% - var(--profile-card-gap)) / 2);
+    margin-block-start: var(--profile-card-gap);
+  }
+  .profile-account + .profile-list,
+  .profile-page > .profile-install,
+  .profile-page > .profile-data-export {
+    float: inline-end;
+    clear: inline-end;
+  }
+  .profile-page > [role="status"] {
+    clear: both;
   }
   .clubs-shell__content .my-data-form {
     max-width: 48rem;
