@@ -221,6 +221,8 @@ for (const theme of ["light", "dark"]) {
     const grid = page.getByRole("button", { name: "Vista de graella" });
     const list = page.getByRole("button", { name: "Vista de llista" });
     const items = page.locator(".students-page__student");
+    await expect(items).toHaveCount(0);
+    await page.getByRole("button", { name: "Mostra tots els alumnes" }).click();
     await expect(items.first()).toBeVisible();
     await expect(grid).toHaveAttribute("aria-pressed", "true");
     const initialCount = await items.count();
@@ -364,6 +366,7 @@ for (const theme of ["light", "dark"]) {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${baseUrl}/alumnes`);
     await expect(page.getByRole("combobox", { name: "Ordena per" })).toHaveValue("name,asc");
+    await page.getByRole("button", { name: "Mostra tots els alumnes" }).click();
     const sorted = page.waitForRequest(
       (request) => request.url().includes("/dogs?") && request.url().includes("ownerLastName"),
     );

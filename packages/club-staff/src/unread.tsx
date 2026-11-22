@@ -213,7 +213,7 @@ export function useUnreadFollowUpContext(): UnreadFollowUp | undefined {
  * is: the shell renders it over every page (D14 itself when it runs without the shell).
  */
 export function FollowUpReadFailureNotice({ unread }: { unread: UnreadFollowUp }) {
-  const { t } = useTranslation(["admin-census", "errors", "common"]);
+  const { t } = useTranslation(["instructor", "errors", "common"]);
   const { failure } = unread;
   if (failure === undefined) return null;
   // IN_PROGRESS is not the read's answer: the retry sends the same key (CONVENCIONS_API §7, E80).
@@ -221,17 +221,17 @@ export function FollowUpReadFailureNotice({ unread }: { unread: UnreadFollowUp }
     ? t("common:inProgress")
     : isApiError(failure.error) && failure.error.status !== 0
       ? t(`errors:${failure.error.code}`, { defaultValue: t("errors:INTERNAL_ERROR") })
-      : t("admin-census:followup.readOffline");
+      : t("instructor:followup.readOffline");
   return (
     <Toast
-      dismissLabel={t("admin-census:followup.dismiss")}
+      dismissLabel={t("instructor:followup.dismiss")}
       onDismiss={unread.dismissFailure}
       tone="danger"
     >
       <span className="followup-read-failure">
-        {t("admin-census:followup.readFailed", { name: failure.item.dogName ?? "" })} {reason}
+        {t("instructor:followup.readFailed", { name: failure.item.dogName ?? "" })} {reason}
         <Button onClick={unread.retry} variant="secondary">
-          {t("admin-census:followup.readRetry")}
+          {t("instructor:followup.readRetry")}
         </Button>
       </span>
     </Toast>

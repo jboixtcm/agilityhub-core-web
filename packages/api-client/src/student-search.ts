@@ -54,9 +54,10 @@ export function useStudentSearch(
   query: string,
   sort: "name,asc" | "ownerLastName,asc" = "name,asc",
   {
+    enabled = true,
     levelId = "",
     status = "ACTIVE",
-  }: { levelId?: string; status?: "ACTIVE" | "INACTIVE" | "ALL" } = {},
+  }: { enabled?: boolean; levelId?: string; status?: "ACTIVE" | "INACTIVE" | "ALL" } = {},
 ) {
   const [reload, setReload] = useState(0);
   const requestKey = JSON.stringify([query, sort, levelId, status, reload]);
@@ -97,6 +98,7 @@ export function useStudentSearch(
   );
 
   useEffect(() => {
+    if (!enabled) return;
     let current = true;
     readPage(0).then(
       (data) => {
@@ -117,9 +119,9 @@ export function useStudentSearch(
     return () => {
       current = false;
     };
-  }, [readPage, requestKey]);
+  }, [enabled, readPage, requestKey]);
 
-  const ready = pages.key === requestKey;
+  const ready = enabled && pages.key === requestKey;
   const more = async () => {
     if (!ready || reading.current === requestKey || pages.loaded >= pages.totalPages) return;
     const forKey = requestKey;
@@ -151,7 +153,7 @@ export function useStudentSearch(
     firstFailed: ready && pages.loaded === 0 && pages.error !== undefined,
     hasMore: ready && pages.loaded > 0 && pages.loaded < pages.totalPages,
     items: ready ? pages.items : [],
-    loading: !ready,
+    loading: enabled && !ready,
     more,
     pending: ready && pages.pending,
     retry: () => {

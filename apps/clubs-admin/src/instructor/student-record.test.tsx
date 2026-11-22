@@ -765,6 +765,7 @@ describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () =>
         </BrandingProvider>
       </I18nextProvider>,
     );
+    fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
     const toby = await screen.findByRole("link", { name: "Joan Antoni + Toby · B" });
     expect(within(toby).queryByText(/abonat/u)).toBeNull();
     const rock = screen.getByRole("link", { name: /^Júlia Roca \+ Rock · D/u });

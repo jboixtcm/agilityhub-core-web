@@ -298,6 +298,7 @@ test.describe("E6-W01 S10 screens 20, 21 and 22 against MSW", () => {
 
     await page.getByRole("link", { name: "Cerca un alumne" }).click();
     await page.waitForURL("**/instructor/alumnes");
+    await page.getByLabel("Cerca un alumne").fill("Duna");
     await expect(page.getByRole("link", { name: "Laura + Duna · C" })).toBeVisible();
   });
 

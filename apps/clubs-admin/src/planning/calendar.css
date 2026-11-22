@@ -453,3 +453,66 @@
   align-items: center;
   gap: var(--ah-space-3);
 }
+
+@page calendar-week {
+  size: A4 landscape;
+  margin: 9mm;
+}
+
+@media print {
+  body:has(.calendar-page) {
+    page: calendar-week;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body:has(.calendar-page)
+    :is(
+      .admin-shell,
+      .admin-shell__content,
+      .calendar-page,
+      .planning-grid-card,
+      .calendar-grid,
+      .ah-schedule-grid__scroll
+    ) {
+    display: block;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+    padding: 0;
+  }
+
+  body:has(.calendar-page)
+    :is(
+      .admin-shell__header,
+      .admin-shell__navigation,
+      .calendar-header .planning-header__actions,
+      .calendar-week .ah-icon-button,
+      .calendar-week__menu,
+      .calendar-filter button[aria-pressed="false"],
+      .ah-schedule-grid__column-button .ah-icon,
+      .calendar-page > :not(.calendar-header, .planning-grid-card),
+      .admin-shell__content > :not(:has(.calendar-page), .calendar-page),
+      [role="dialog"],
+      .calendar-footer
+    ) {
+    display: none;
+  }
+
+  .calendar-header {
+    margin-bottom: var(--ah-space-3);
+  }
+
+  .calendar-week__toggle::after {
+    content: none;
+  }
+
+  .calendar-grid .ah-schedule-grid__table {
+    min-width: 0;
+  }
+
+  .calendar-grid tr {
+    break-inside: avoid;
+  }
+}

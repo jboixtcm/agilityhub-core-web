@@ -8,6 +8,13 @@ import {
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
+import { FollowUpPage } from "@agilityhub/club-staff/followup";
+import {
+  FOLLOWUP_UNREAD_POLL_MS,
+  FollowUpReadFailureNotice,
+  UnreadFollowUpContext,
+  useUnreadFollowUp,
+} from "@agilityhub/club-staff/unread";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import {
@@ -26,14 +33,6 @@ import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AdminNavigation } from "../App";
-
-import { FollowUpPage } from "./FollowUpPage";
-import {
-  FOLLOWUP_UNREAD_POLL_MS,
-  FollowUpReadFailureNotice,
-  UnreadFollowUpContext,
-  useUnreadFollowUp,
-} from "./unread";
 
 const canic: Branding = {
   ...brandingCanicFixture,
@@ -78,7 +77,7 @@ async function renderFollowUp({
   const i18n = await createI18n({
     branding: canic,
     browserLanguages: [locale],
-    initialNamespaces: ["admin-census", "census", "enums", "errors", "common"],
+    initialNamespaces: ["instructor", "census", "enums", "errors", "common"],
     storage: undefined,
   });
   const onNavigate = vi.fn();
@@ -390,7 +389,7 @@ describe("E6-W03 round 2: D14's reads (R-10-13) and its filter values", () => {
     const i18n = await createI18n({
       branding: canic,
       browserLanguages: ["ca"],
-      initialNamespaces: ["admin-census", "census", "enums", "errors", "common"],
+      initialNamespaces: ["instructor", "census", "enums", "errors", "common"],
       storage: undefined,
     });
     render(
@@ -711,7 +710,7 @@ describe("E6-W05 (review of E6-W03's round 2): D14's counter and rows after a fa
     const i18n = await createI18n({
       branding: canic,
       browserLanguages: ["ca"],
-      initialNamespaces: ["admin-census", "census", "enums", "errors", "common"],
+      initialNamespaces: ["instructor", "census", "enums", "errors", "common"],
       storage: undefined,
     });
     render(
@@ -827,9 +826,9 @@ describe("E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entr
     );
   }
 
-  it("an instructor sees «Persones» with «Seguiment alumnes» and its counter only, and «Agenda de la setmana» (current) once, on /agenda", async () => {
+  it("an instructor sees follow-up and its counter just before students in the instructor menu", async () => {
     await renderNavigation(["INSTRUCTOR"], canic.modules, 3);
-    expect(screen.getByRole("heading", { name: "Persones" })).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "Persones" })).toBeNull();
     expect(screen.getByRole("link", { name: /Seguiment alumnes\s*3/u })).toHaveAttribute(
       "href",
       "/seguiment",
@@ -849,12 +848,11 @@ describe("E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entr
     const groups = [...document.querySelectorAll(".ah-sidebar__group")];
     expect(groups.map((group) => group.querySelector("h2")?.textContent)).toEqual([
       "Instructor",
-      "Persones",
       "Camp",
     ]);
     expect(
       [...(groups[0]?.querySelectorAll("a") ?? [])].map((link) => link.getAttribute("href")),
-    ).toEqual(["/agenda", "/alumnes"]);
+    ).toEqual(["/agenda", "/seguiment", "/alumnes"]);
   });
 
   it("TASKS off: no «Seguiment alumnes» and no counter; an instructor then has no «Persones» group", async () => {

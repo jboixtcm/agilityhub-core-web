@@ -91,7 +91,7 @@ export function InvoiceConceptsModal({
               page: 0,
               size: 20,
               fields: listFields(["fullName", "memberNumber"]),
-              sort: ["lastName,asc"],
+              sort: ["firstName,asc", "lastName,asc"],
             },
           },
         })

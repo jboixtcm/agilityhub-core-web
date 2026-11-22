@@ -233,7 +233,8 @@
       "training": "Entren. {who}",
       "block": "Bloq. {reason}",
       "empty": "Ninguna clase este día"
-    }
+    },
+    "printPdf": "Imprimir / Guardar PDF"
   },
   "cancelModal": {
     "title": "Anular la clase — {day} · {time} · {description} · {ring} · {instructors}",

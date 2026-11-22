@@ -1,9 +1,5 @@
-import {
-  type ApiClient,
-  isApiError,
-  studentSearchGuide,
-  useStudentSearch,
-} from "@agilityhub/api-client";
+import { type ApiClient, studentSearchGuide, useStudentSearch } from "@agilityhub/api-client";
+import { StudentLevelFilter } from "@agilityhub/club-staff/student-level";
 import { useFollowupTexts } from "@agilityhub/i18n";
 import {
   Badge,
@@ -47,51 +43,13 @@ export function StudentsPage({
   client: ApiClient;
   onNavigate: (path: string) => void;
 }) {
-  const { t, i18n } = useTranslation(["instructor", "errors"]);
+  const { t } = useTranslation(["instructor", "errors"]);
   const texts = useFollowupTexts();
   const [text, setText] = useState("");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<"name,asc" | "ownerLastName,asc">("name,asc");
   const [levelId, setLevelId] = useState("");
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE" | "ALL">("ACTIVE");
-  const [levels, setLevels] = useState<{ label: string; value: string }[]>([]);
-  const [levelsError, setLevelsError] = useState(false);
-  const [levelsUnavailable, setLevelsUnavailable] = useState(false);
-  const [levelsRetry, setLevelsRetry] = useState(0);
-  useEffect(() => {
-    let current = true;
-    void client.GET("/dogs/filter-values", { params: { query: { field: "levelId" } } }).then(
-      ({ data }) => {
-        if (!current) return;
-        if (data === undefined) {
-          setLevelsError(true);
-          return;
-        }
-        setLevelsError(false);
-        setLevelsUnavailable(false);
-        setLevels(
-          data.values
-            .flatMap((item) =>
-              typeof item.value === "string" ? [{ label: item.label, value: item.value }] : [],
-            )
-            .sort((a, b) =>
-              a.label.localeCompare(b.label, i18n.resolvedLanguage, { numeric: true }),
-            ),
-        );
-      },
-      (error: unknown) => {
-        if (!current) return;
-        if (isApiError(error) && error.code === "INVALID_FILTER") {
-          // The API removes this facet when the club disables levels.
-          setLevelsUnavailable(true);
-          setLevelId("");
-        } else setLevelsError(true);
-      },
-    );
-    return () => {
-      current = false;
-    };
-  }, [client, i18n.resolvedLanguage, levelsRetry]);
   const [view, setView] = useState<StudentView>(readView);
   function changeView(nextView: StudentView) {
     setView(nextView);
@@ -109,7 +67,9 @@ export function StudentsPage({
       window.clearTimeout(timer);
     };
   }, [text]);
-  const dogs = useStudentSearch(client, query, sort, { levelId, status });
+  const [showAll, setShowAll] = useState(false);
+  const searching = showAll || query !== "" || levelId !== "" || status !== "ACTIVE";
+  const dogs = useStudentSearch(client, query, sort, { levelId, status, enabled: searching });
   const loadError = t("instructor:students.loadError");
 
   return (
@@ -160,24 +120,12 @@ export function StudentsPage({
       <div className="students-page__tools">
         <p className="students-page__hint">{t("instructor:students.searchHint")}</p>
         <div className="students-page__filters">
-          {levelsUnavailable ? null : (
-            <label className="students-page__sort">
-              <span>{t("instructor:students.level")}</span>
-              <select
-                value={levelId}
-                onChange={(event) => {
-                  setLevelId(event.currentTarget.value);
-                }}
-              >
-                <option value="">{t("instructor:students.allLevels")}</option>
-                {levels.map((level) => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
+          <StudentLevelFilter
+            client={client}
+            levelId={levelId}
+            onChange={setLevelId}
+            className="students-page__sort"
+          />
           <label className="students-page__sort">
             <span>{t("instructor:students.status")}</span>
             <select
@@ -213,6 +161,7 @@ export function StudentsPage({
             onClick={() => {
               setText("");
               setQuery("");
+              setShowAll(false);
               setLevelId("");
               setStatus("ACTIVE");
             }}
@@ -221,20 +170,19 @@ export function StudentsPage({
           </Button>
         </div>
       </div>
-      {levelsError ? (
-        <Toast tone="danger">
-          {t("instructor:students.levelsLoadError")}
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setLevelsRetry((value) => value + 1);
-            }}
-          >
-            {t("instructor:students.retry")}
-          </Button>
-        </Toast>
+      {!searching ? (
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setShowAll(true);
+          }}
+        >
+          {t("instructor:students.showAll")}
+        </Button>
       ) : null}
-      {dogs.loading ? <Skeleton height="12rem" label={t("instructor:students.loading")} /> : null}
+      {searching && dogs.loading ? (
+        <Skeleton height="12rem" label={t("instructor:students.loading")} />
+      ) : null}
       {dogs.firstFailed ? (
         <Toast tone="danger">
           <span className="student-record__error">
@@ -245,7 +193,7 @@ export function StudentsPage({
           </span>
         </Toast>
       ) : null}
-      {dogs.loading || dogs.firstFailed ? null : dogs.items.length === 0 ? (
+      {!searching || dogs.loading || dogs.firstFailed ? null : dogs.items.length === 0 ? (
         <Card>
           <EmptyState icon="search" title={t("instructor:students.empty")} />
         </Card>

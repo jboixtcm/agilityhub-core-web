@@ -589,6 +589,11 @@
 }
 
 /* Student search */
+.instructor-students__level {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
 .instructor-students__search {
   display: flex;
   align-items: center;

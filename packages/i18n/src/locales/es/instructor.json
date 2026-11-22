@@ -142,7 +142,8 @@
     "allStatuses": "Todos",
     "resetFilters": "Restablecer filtros",
     "levelsLoadError": "No se han podido cargar los niveles.",
-    "inactiveStudent": "Inactivo"
+    "inactiveStudent": "Inactivo",
+    "showAll": "Mostrar todos los alumnos"
   },
   "overview": {
     "title": "Visión global",
@@ -321,5 +322,49 @@
     "saveSheet": "Guardar la lista",
     "overflowHint": "Desplazar la cuadrícula horizontalmente para ver todos los días.",
     "selectClass": "Seleccionar una clase de la agenda para ver los inscritos y pasar lista."
+  },
+  "followup": {
+    "title": "Seguimiento de alumnos",
+    "unread": "{count, plural, one {# pendiente de leer} other {# pendientes de leer}}",
+    "kinds": "Qué se muestra",
+    "filter": {
+      "all": "Todo",
+      "tasks": "Tareas",
+      "notes": "Notas de alumnos"
+    },
+    "readAll": "Marcarlo todo como leído",
+    "readingAll": "Marcándolo todo como leído",
+    "columns": {
+      "member": "Abonado",
+      "dog": "Perro",
+      "level": "Nivel",
+      "date": "Fecha",
+      "author": "Creador",
+      "text": "Texto",
+      "createdAt": "Creación",
+      "completedAt": "Finalización",
+      "kind": "Tipo",
+      "unread": "Pendiente de leer"
+    },
+    "author": {
+      "member": "{name} ({gender, select, FEMALE {alumna} OTHER {alumno/a} other {alumno}})",
+      "task": "{name} (tarea)"
+    },
+    "none": "—",
+    "unreadMark": "no leído",
+    "unreadValue": {
+      "yes": "no leído",
+      "no": "leído"
+    },
+    "search": "Buscar en el seguimiento",
+    "caption": "Tareas y notas de alumnos, las no leídas primero",
+    "emptyTitle": "No hay nada en el seguimiento",
+    "emptyDescription": "Las tareas de los instructores y las notas de los alumnos llegarán aquí.",
+    "selectRow": "Abrir la ficha de {name}",
+    "error": "No se ha podido cargar el seguimiento.",
+    "dismiss": "Cerrar",
+    "readFailed": "No se ha podido marcar como leído el seguimiento de {name}.",
+    "readOffline": "No hay conexión con el servidor.",
+    "readRetry": "Volver a intentarlo"
   }
 }

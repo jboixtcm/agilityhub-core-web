@@ -71,6 +71,22 @@ async function shot(page: Page, name: string) {
 }
 
 test.describe("E6-W02 T-10-28 screen 26 «Tasques i notes» against MSW", () => {
+  test("opens the shared follow-up from the instructor menu and filters students by level", async ({
+    page,
+  }) => {
+    await openTasks(page);
+    await page.getByRole("link", { name: "Seguiment alumnes" }).click();
+    await expect(page.getByRole("heading", { name: "Seguiment alumnes" })).toBeVisible();
+    const row = page.locator("tr[data-followup-id]").first();
+    await expect(row).toBeVisible();
+    await row.click();
+    await page.waitForURL("**/instructor/alumnes/*");
+    await page.getByRole("link", { name: "Alumnes", exact: true }).click();
+    await expect(page.locator(".instructor-students__list")).toHaveCount(0);
+    await page.getByRole("combobox", { name: "Nivell" }).selectOption("level-c");
+    await page.getByLabel("Cerca un alumne").fill("Duna");
+    await expect(page.getByRole("link", { name: "Laura + Duna · C" })).toBeVisible();
+  });
   test("26 as mockup 26: observations, the three tasks with the struck done one, the member's note and [DESA]", async ({
     page,
   }) => {

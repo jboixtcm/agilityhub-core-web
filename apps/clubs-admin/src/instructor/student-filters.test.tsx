@@ -50,6 +50,8 @@ async function openStudents() {
       </BrandingProvider>
     </I18nextProvider>,
   );
+  expect(screen.queryByRole("link")).toBeNull();
+  fireEvent.click(await screen.findByRole("button", { name: "Mostra tots els alumnes" }));
   await screen.findByRole("button", { name: "Mostra'n més" });
 }
 
@@ -98,10 +100,8 @@ it("combines level, status, search and sort on page zero; resetting filters keep
   await screen.findByRole("link", { name: "Laura + Duna · C" });
   fireEvent.click(screen.getByRole("button", { name: "Vista de llista" }));
   fireEvent.click(screen.getByRole("button", { name: "Restableix els filtres" }));
-  await waitFor(() => {
-    expect(requests.at(-1)?.searchParams.getAll("filter")).toEqual(["status:eq:ACTIVE"]);
-    expect(requests.at(-1)?.searchParams.has("q")).toBe(false);
-  });
+  expect(screen.getByRole("button", { name: "Mostra tots els alumnes" })).toBeVisible();
+  expect(screen.queryByRole("link")).toBeNull();
   expect(screen.getByRole("combobox", { name: "Nivell" })).toHaveValue("");
   expect(screen.getByRole("combobox", { name: "Estat" })).toHaveValue("ACTIVE");
   expect(screen.getByRole("button", { name: "Vista de llista" })).toHaveAttribute(

@@ -236,6 +236,9 @@ importers:
       '@agilityhub/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@agilityhub/club-staff':
+        specifier: workspace:*
+        version: link:../../packages/club-staff
       '@agilityhub/course-core':
         specifier: workspace:*
         version: link:../../packages/course-core
@@ -315,6 +318,9 @@ importers:
       '@agilityhub/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@agilityhub/club-staff':
+        specifier: workspace:*
+        version: link:../../packages/club-staff
       '@agilityhub/course-core':
         specifier: workspace:*
         version: link:../../packages/course-core
@@ -532,6 +538,31 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 5.0.0(@types/node@24.13.3)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@5.9.3))(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+
+  packages/club-staff:
+    dependencies:
+      '@agilityhub/api-client':
+        specifier: workspace:*
+        version: link:../api-client
+      '@agilityhub/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@agilityhub/ui':
+        specifier: workspace:*
+        version: link:../ui
+      react:
+        specifier: 'catalog:'
+        version: 19.2.8
+      react-i18next:
+        specifier: 'catalog:'
+        version: 17.0.13(i18next@26.4.2(typescript@5.9.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.9.3)
+    devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.18
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
 
   packages/config: {}
 

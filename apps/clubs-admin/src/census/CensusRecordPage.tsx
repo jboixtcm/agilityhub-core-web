@@ -94,7 +94,7 @@ async function activeMembers(client: ApiClient) {
           filter: ["status:eq:ACTIVE"],
           page,
           size: 200,
-          sort: ["lastName,asc"],
+          sort: ["firstName,asc", "lastName,asc"],
         },
       },
     });

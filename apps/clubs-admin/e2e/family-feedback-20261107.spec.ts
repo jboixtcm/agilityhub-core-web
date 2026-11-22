@@ -47,6 +47,12 @@ for (const width of [1280, 375]) {
     const dialog = page.getByRole("dialog", { name: "Grup familiar" });
     await expect(dialog.getByRole("button", { name: "Desa", exact: true })).toBeEnabled();
     await expect(dialog.getByRole("link", { name: "Laura Serra Vidal" })).toBeVisible();
+    const options = await dialog.getByRole("combobox").locator("option").allTextContents();
+    const names = options.slice(1);
+    expect(names.length).toBeGreaterThan(1);
+    expect(names).toEqual(
+      [...names].sort((a, b) => a.localeCompare(b, "ca", { sensitivity: "base" })),
+    );
     const joan = dialog
       .getByRole("listitem")
       .filter({ has: page.getByRole("link", { name: "Joan Antoni Serra" }) });

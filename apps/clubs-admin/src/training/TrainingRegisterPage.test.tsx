@@ -101,6 +101,35 @@ function rowOf(text: string): HTMLElement {
 }
 
 describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8)", () => {
+  it("creates a block from the register and refreshes the list with its current filters", async () => {
+    const requests = recordRequests();
+    await renderPage("admin", "?vista=bloquejos");
+    await screen.findAllByText("Bloqueig");
+    fireEvent.click(await screen.findByRole("button", { name: "Bloqueja pista" }));
+    const form = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    fireEvent.change(within(form).getByLabelText("Data"), { target: { value: "2026-08-06" } });
+    fireEvent.change(within(form).getByLabelText("Nota"), { target: { value: "Register test" } });
+    const before = requests.filter(
+      (url) => url.pathname.endsWith("/ring-blocks") && url.searchParams.has("filter"),
+    ).length;
+    fireEvent.click(within(form).getByRole("button", { name: "DESA EL BLOQUEIG" }));
+    expect(await screen.findByText("Bloqueig desat")).toBeVisible();
+    await waitFor(() => {
+      expect(
+        requests.filter(
+          (url) => url.pathname.endsWith("/ring-blocks") && url.searchParams.has("filter"),
+        ),
+      ).toHaveLength(before + 1);
+    });
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("keeps block creation off the instructor's register", async () => {
+    await renderPage("instructor", "?vista=bloquejos");
+    await screen.findAllByText("Bloqueig");
+    expect(screen.queryByRole("button", { name: "Bloqueja pista" })).toBeNull();
+  });
+
   it("tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN)", async () => {
     const requests = recordRequests();
     const onNavigate = await renderPage();

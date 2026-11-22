@@ -21,7 +21,7 @@ export function FamilyGroupAction({
   member: Member;
   onChanged: () => void;
 }) {
-  const { t } = useTranslation(["admin-census", "errors"]);
+  const { t, i18n } = useTranslation(["admin-census", "errors"]);
   const billingEnabled = useBranding().modules.includes("BILLING");
   const [open, setOpen] = useState(false);
   const [group, setGroup] = useState<Group>();
@@ -64,7 +64,7 @@ export function FamilyGroupAction({
               size: 200,
               filter: ["status:eq:ACTIVE"],
               fields: billingEnabled ? "fullName,plan,familyGroup" : "fullName,familyGroup",
-              sort: ["lastName,asc"],
+              sort: ["firstName,asc", "lastName,asc"],
             },
           },
         });
@@ -158,6 +158,11 @@ export function FamilyGroupAction({
                   (item) =>
                     !ids.includes(item.id) &&
                     (item.familyGroup == null || item.familyGroup.id === group?.id),
+                )
+                .sort((a, b) =>
+                  a.fullName.localeCompare(b.fullName, i18n.resolvedLanguage, {
+                    sensitivity: "base",
+                  }),
                 )
                 .map((item) => (
                   <option key={item.id} value={item.id}>

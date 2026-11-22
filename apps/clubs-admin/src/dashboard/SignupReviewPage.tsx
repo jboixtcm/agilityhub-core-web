@@ -334,6 +334,7 @@ export function SignupReviewPage({
               fields: listFields([...FAMILY_SEARCH_FIELDS, "familyGroup"]),
               filter: ["status:eq:ACTIVE"],
               q: query,
+              sort: ["firstName,asc", "lastName,asc"],
               size: 20,
             },
           },
