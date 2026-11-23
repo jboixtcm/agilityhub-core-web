@@ -62,7 +62,7 @@ async function shot(page: Page, name: string) {
 }
 
 async function openTraining(page: Page) {
-  await page.getByRole("link", { name: "Entrenaments" }).click();
+  await page.getByRole("link", { name: "Reserva", exact: true }).click();
   await page.waitForURL("**/entrenaments");
   await expect(page.getByRole("group", { name: "Matí" })).toBeVisible();
 }

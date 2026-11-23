@@ -47,9 +47,9 @@ test.describe("E4-W04 activities in the app", () => {
     await expect(tournament).toContainText("Divendres 7 · 18:30–20:30 · totes les pistes");
     await page.screenshot({ path: resolve(evidenceDirectory, "03-activitat-inscrita-375.png") });
 
-    await page.getByRole("link", { name: "Reservar" }).click();
+    await page.getByRole("link", { name: "Activitats", exact: true }).click();
     await page.waitForURL("**/reservar");
-    const block = page.getByRole("region", { name: "Activitats" });
+    const block = page.getByRole("region", { name: "Properes activitats" });
     await expect(block.getByRole("link", { name: /Seminari de handling/u })).toContainText(
       "Seminari de handling · ds 12/09 · 9:00–13:00",
     );
@@ -150,9 +150,9 @@ test.describe("T-07-30 E4-W14 R-07-13 the 04 rows print the activity's hours", (
   // the Vitest «T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours».
   test("04: «{hh:mm}–{hh:mm}» for the activities with both hours", async ({ page }) => {
     await login(page);
-    await page.getByRole("link", { name: "Reservar" }).click();
+    await page.getByRole("link", { name: "Activitats", exact: true }).click();
     await page.waitForURL("**/reservar");
-    const block = page.getByRole("region", { name: "Activitats" });
+    const block = page.getByRole("region", { name: "Properes activitats" });
     await expect(block.getByRole("link", { name: /Seminari de handling/u })).toContainText(
       "Seminari de handling · ds 12/09 · 9:00–13:00",
     );

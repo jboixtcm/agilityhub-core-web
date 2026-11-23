@@ -188,6 +188,7 @@ export const KEEP = new Map([
   ["id:login.title", "the login page's title"],
   ["id:password.repeat", "the second password field's label: an instruction"],
   ["notifications:unsubscribe.toPreferences", "a navigation link written as a sentence"],
+  ["shell:nav.ringBooking", "the noun «Reserva» names the ring booking section"],
   ["signup:success.addDogTitle", "the add-dog flow's title on its success screen"],
 ]);
 

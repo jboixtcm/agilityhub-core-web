@@ -118,7 +118,7 @@ test("an instructor opens only the selected student's bookings and can return to
   ]);
   await expect(desk.getByText("Estàs gestionant les reserves de Laura Serra Vidal")).toBeVisible();
   await expect(desk.getByRole("heading", { name: "Reserves de l’alumne" })).toBeVisible();
-  await desk.getByRole("link", { name: "Reservar", exact: true }).click();
+  await desk.getByRole("link", { name: "Activitats", exact: true }).click();
   await expect(desk.getByRole("heading", { name: "Classes" })).toBeVisible();
   await desk.goto(baseUrl + "/rebuts");
   await desk.waitForURL("**/inici");

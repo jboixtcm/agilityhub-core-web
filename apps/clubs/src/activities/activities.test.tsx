@@ -75,11 +75,11 @@ function rowTexts(section: HTMLElement) {
 describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", () => {
   it("draws the 04 block with the exact badges; the full row with waitlist stays tappable", async () => {
     await renderWith(<ReserveActivitiesPage client={client()} />);
-    expect(screen.getByRole("heading", { name: "Reservar" })).toBeVisible();
+    expect(screen.getByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
     expect(
       screen.getByText("Seleccioneu l'activitat o classe que vulgueu reservar."),
     ).toBeVisible();
-    const block = await screen.findByRole("region", { name: "Activitats" });
+    const block = await screen.findByRole("region", { name: "Properes activitats" });
     // R-07-13: start–end when the activity has both (E4-W14; the mockup's «9:00» has no end).
     expect(rowTexts(block)).toEqual([
       "Taller de contactes · ds 22 · 10:00–12:00Completa · ⏳2",
@@ -101,7 +101,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       <ReserveActivitiesPage client={client()} />,
       branding.modules.filter((module) => module !== "WAITLIST"),
     );
-    const block = await screen.findByRole("region", { name: "Activitats" });
+    const block = await screen.findByRole("region", { name: "Properes activitats" });
     expect(rowTexts(block)[0]).toBe("Taller de contactes · ds 22 · 10:00–12:00Completa");
     expect(within(block).queryByRole("link", { name: /Taller de contactes/u })).toBeNull();
     cleanup();
@@ -109,7 +109,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
     mockScenario("member");
     vi.setSystemTime(new Date("2026-09-02T08:00:00Z"));
     await renderWith(<ReserveActivitiesPage client={client()} />);
-    const september = await screen.findByRole("region", { name: "Activitats" });
+    const september = await screen.findByRole("region", { name: "Properes activitats" });
     expect(rowTexts(september)).toEqual([
       "Seminari de handling · ds 12 · 9:00–13:006 places",
       // E4-W17 step 6: the league ends at 14:00, as the core's seed.
@@ -122,8 +122,8 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       <ReserveActivitiesPage client={client()} />,
       branding.modules.filter((module) => module !== "ACTIVITIES"),
     );
-    expect(await screen.findByRole("heading", { name: "Reservar" })).toBeVisible();
-    expect(screen.queryByRole("region", { name: "Activitats" })).toBeNull();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
+    expect(screen.queryByRole("region", { name: "Properes activitats" })).toBeNull();
   });
 
   it("OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ]", async () => {
@@ -244,7 +244,10 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       ...answer,
       mine: answer.mine.map((registration) =>
         registration.activityId === LEAGUE
-          ? { ...registration, activity: { ...registration.activity, endTime: null, endsAtLocal: null } }
+          ? {
+              ...registration,
+              activity: { ...registration.activity, endTime: null, endsAtLocal: null },
+            }
           : registration,
       ),
     };
@@ -317,11 +320,11 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       http.get("*/api/v1/me/activities", () => HttpResponse.json({ ...real, bookable: [] })),
     );
     await renderWith(<ReserveActivitiesPage client={client()} />);
-    expect(await screen.findByRole("heading", { name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
     await waitFor(() => {
       expect(screen.queryByLabelText("Carregant les activitats")).toBeNull();
     });
-    expect(screen.queryByRole("region", { name: "Activitats" })).toBeNull();
+    expect(screen.queryByRole("region", { name: "Properes activitats" })).toBeNull();
     cleanup();
 
     const seminar = real.bookable.find((row) => row.id === SEMINAR);
@@ -337,7 +340,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       ),
     );
     await renderWith(<ReserveActivitiesPage client={client()} />);
-    const block = await screen.findByRole("region", { name: "Activitats" });
+    const block = await screen.findByRole("region", { name: "Properes activitats" });
     expect(within(block).queryByRole("link")).toBeNull();
     expect(
       within(block).getByText("Seminari de handling").closest("[aria-disabled]"),
@@ -358,7 +361,7 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       }),
     );
     await renderWith(<ReserveActivitiesPage client={client()} />);
-    const block = await screen.findByRole("region", { name: "Activitats" });
+    const block = await screen.findByRole("region", { name: "Properes activitats" });
     expect(await within(block).findByRole("alert")).toHaveTextContent(
       "No s'han pogut carregar les activitats.",
     );
@@ -375,11 +378,11 @@ describe("T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25", (
       ),
     );
     await renderWith(<ReserveActivitiesPage client={client()} />);
-    expect(await screen.findByRole("heading", { name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
     await waitFor(() => {
       expect(screen.queryByLabelText("Carregant les activitats")).toBeNull();
     });
-    expect(screen.queryByRole("region", { name: "Activitats" })).toBeNull();
+    expect(screen.queryByRole("region", { name: "Properes activitats" })).toBeNull();
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
@@ -872,7 +875,12 @@ describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration 
             );
           case 3:
             return HttpResponse.json(
-              { code: "INTERNAL_ERROR", details: {}, message: "Unexpected error", traceId: "t-503" },
+              {
+                code: "INTERNAL_ERROR",
+                details: {},
+                message: "Unexpected error",
+                traceId: "t-503",
+              },
               { status: 503 },
             );
           case 4:

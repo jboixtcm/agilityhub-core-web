@@ -167,7 +167,9 @@ export function BookPage({ client }: { client: ApiClient }) {
   const [joinError, setJoinError] = useState<string>();
   const [notice, setNotice] = useState<PageNotice | undefined>(pageNotice);
 
-  const bar = <AppBar className="booking-screen__bar" title={<h1>{t("shell:nav.reserve")}</h1>} />;
+  const bar = (
+    <AppBar className="booking-screen__bar" title={<h1>{t("shell:nav.activities")}</h1>} />
+  );
 
   if (view.status === "loading") {
     return (

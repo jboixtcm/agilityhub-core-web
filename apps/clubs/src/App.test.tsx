@@ -171,8 +171,12 @@ describe("T-02-14 clubs shell", () => {
     await renderNavigation(["FREE_TRAINING", "FAQ"], ["MEMBER"]);
 
     expect(screen.getByRole("link", { name: "Inici" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Reservar" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Entrenaments" })).toBeInTheDocument();
+    const activities = screen.getByRole("link", { name: "Activitats" });
+    expect(activities).toHaveAttribute("href", "/reservar");
+    expect(activities.querySelector("use")?.getAttribute("href")).toMatch(/#i-list$/u);
+    const booking = screen.getByRole("link", { name: "Reserva" });
+    expect(booking).toHaveAttribute("href", "/entrenaments");
+    expect(booking.querySelector("use")?.getAttribute("href")).toMatch(/#i-calendar-plus$/u);
     expect(screen.getByRole("link", { name: "Avui" })).toHaveAttribute("href", "/avui");
     expect(screen.queryByRole("link", { name: "Visió global" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Perfil" })).toBeInTheDocument();
@@ -231,10 +235,24 @@ describe("T-02-14 clubs shell", () => {
     expect(screen.queryByRole("link", { name: "Alumnes" })).not.toBeInTheDocument();
   });
 
-  it("omits Entrenaments when FREE_TRAINING is disabled", async () => {
+  it("keeps Activitats selected on an activity detail", async () => {
+    await renderNavigation(
+      ["ACTIVITIES", "FREE_TRAINING"],
+      ["MEMBER"],
+      "MEMBER",
+      "/activitats/seminar",
+    );
+    expect(screen.getByRole("link", { name: "Activitats" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "Reserva" })).not.toHaveAttribute("aria-current");
+  });
+
+  it("omits Reserva when FREE_TRAINING is disabled", async () => {
     await renderNavigation(["WAITLIST", "FAQ", "PUSH"], ["MEMBER"]);
 
-    expect(screen.queryByRole("link", { name: "Entrenaments" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Reserva" })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Info" })).not.toBeInTheDocument();
   });
 
@@ -334,10 +352,10 @@ describe("A38 (E11-W02 step 1): the members' app navigates without reloading", (
     const requests = recordRequests();
 
     const tabs = screen.getByRole("navigation", { name: "Navegació principal" });
-    fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" }));
+    fireEvent.click(within(tabs).getByRole("link", { name: "Activitats" }));
 
     expect(window.location.pathname).toBe("/reservar");
-    expect(await screen.findByRole("heading", { level: 1, name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
     window.history.back();
     expect(await screen.findByRole("heading", { name: "El meu perfil" })).toBeVisible();
     requests.stop();
@@ -737,7 +755,7 @@ describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands whe
     await waitFor(() => {
       expect(window.location.pathname).toBe("/inici");
     });
-    expect(await screen.findByRole("link", { name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("link", { name: "Activitats" })).toBeVisible();
     expect(screen.queryByRole("link", { name: "Alumnes" })).toBeNull();
     window.history.pushState(null, "", "/instructor/dia");
     window.dispatchEvent(new PopStateEvent("popstate"));

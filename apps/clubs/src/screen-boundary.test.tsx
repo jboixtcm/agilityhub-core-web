@@ -80,13 +80,13 @@ describe("A38 (E11-W02 step 1): the screen the user left is gone, even while the
     await screen.findByRole("heading", { name: "El meu perfil" });
 
     const tabs = screen.getByRole("navigation", { name: "Navegació principal" });
-    fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" }));
+    fireEvent.click(within(tabs).getByRole("link", { name: "Activitats" }));
 
     expect(await screen.findByRole("status", { name: "Carregant" })).toBeVisible();
     // Not merely hidden: a hidden screen keeps its effects, so its late answers could still act.
     expect(screen.queryByText("El meu perfil")).not.toBeInTheDocument();
 
     chunk.open();
-    expect(await screen.findByRole("heading", { level: 1, name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
   });
 });

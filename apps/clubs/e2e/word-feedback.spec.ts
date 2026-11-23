@@ -82,7 +82,7 @@ for (const width of [375, 1512]) {
       fullPage: true,
     });
 
-    await page.getByRole("link", { name: "Entrenaments" }).click();
+    await page.getByRole("link", { name: "Reserva", exact: true }).click();
     await page.waitForURL("**/entrenaments");
     await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
 

@@ -66,7 +66,7 @@ test.describe("T-02-14 clubs shell", () => {
           .__ahPrimaryAtDomContentLoaded,
     );
     expect(initialPrimary).toBe(brandingCanic.theme.colors.primary);
-    await expect(page.getByRole("link", { name: "Entrenaments" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Reserva", exact: true })).toBeVisible();
     // E4-W03: the member tab bar of mockup 10 has «Avui» → /avui.
     await expect(page.getByRole("link", { name: "Avui" })).toHaveAttribute("href", "/avui");
 
@@ -84,7 +84,7 @@ test.describe("T-02-14 clubs shell", () => {
     await prepareScenario(page, "minimal", brandingMinim);
     await login(page);
 
-    await expect(page.getByRole("link", { name: "Entrenaments" })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: "Reserva", exact: true })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Info", exact: true })).toHaveCount(0);
     await page.getByRole("link", { name: "Perfil", exact: true }).click();
     await expect(page.getByRole("link", { name: "Informació del club" })).toBeVisible();

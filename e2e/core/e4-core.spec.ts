@@ -1163,7 +1163,7 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   const member = await context.newPage();
   await loginClubs(member, "member.4@example.test", "/inici");
   await navigateClubRoute(member, "/reservar");
-  const block = member.getByRole("region", { name: "Activitats" });
+  const block = member.getByRole("region", { name: "Properes activitats" });
   const seminarRow = block.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
   // E4-W14 (R-07-13): the 04 row prints the start–end of an activity that has both.
   // R-07-13 `list`: «ds 24» in the club's current month, «ds 24/10» in another one (E5-W05 round 2:

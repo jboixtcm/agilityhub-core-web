@@ -214,7 +214,7 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
   it("[CANVIA DE CLASSE] opens 04 with the notification's dog", async () => {
     await openFeed();
     fireEvent.click(newest("button", "CANVIA DE CLASSE"));
-    expect(await screen.findByRole("heading", { level: 1, name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
     expect(`${window.location.pathname}${window.location.search}`).toBe("/reservar?dogId=dog-duna");
     await waitFor(() => {
       expect(

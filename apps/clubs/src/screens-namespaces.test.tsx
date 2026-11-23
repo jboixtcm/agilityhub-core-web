@@ -61,7 +61,7 @@ describe("A38 (E11-W02 step 1): a screen of the lazy chunk never hides itself ag
         </BrandingProvider>
       </I18nextProvider>,
     );
-    await screen.findByRole("heading", { level: 1, name: "Reservar" }, { timeout: 5_000 });
+    await screen.findByRole("heading", { level: 1, name: "Activitats" }, { timeout: 5_000 });
     expect(clubsNamespaces.filter((namespace) => !i18n.hasLoadedNamespace(namespace))).toEqual([]);
   });
 });

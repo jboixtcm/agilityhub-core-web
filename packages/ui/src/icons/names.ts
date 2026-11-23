@@ -3,6 +3,7 @@ export const ICON_NAMES = [
   "ban",
   "bell",
   "cal",
+  "calendar-plus",
   "cam",
   "check",
   "chev",

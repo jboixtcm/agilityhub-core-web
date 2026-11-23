@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Member navigation
+
+- The Activities tab lists classes and club activities. The Book tab opens ring booking and uses a calendar with a plus sign.
+
 ## 2026-11-23 — Member task attachments
 
 - Members can open each file attached to a pending or completed task from their dog’s profile. Opening a file preserves the task status.

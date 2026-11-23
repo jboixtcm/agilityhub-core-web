@@ -116,8 +116,8 @@ describe("E11-W02 round 2 (review #6): the document's scroll on push, Back and a
     scrollDocumentTo(420);
 
     const tabs = screen.getByRole("navigation", { name: "Navegació principal" });
-    fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" }));
-    await screen.findByRole("heading", { level: 1, name: "Reservar" }, { timeout: 5_000 });
+    fireEvent.click(within(tabs).getByRole("link", { name: "Activitats" }));
+    await screen.findByRole("heading", { level: 1, name: "Activitats" }, { timeout: 5_000 });
     expect(window.scrollY).toBe(0);
 
     window.history.back();
@@ -143,8 +143,8 @@ describe("E11-W02 round 2 (review #6): the document's scroll on push, Back and a
     expect(window.history.scrollRestoration).toBe("auto");
 
     const tabs = screen.getByRole("navigation", { name: "Navegació principal" });
-    fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" }));
-    await screen.findByRole("heading", { level: 1, name: "Reservar" }, { timeout: 5_000 });
+    fireEvent.click(within(tabs).getByRole("link", { name: "Activitats" }));
+    await screen.findByRole("heading", { level: 1, name: "Activitats" }, { timeout: 5_000 });
     expect(window.history.scrollRestoration).toBe("manual");
 
     // Leaving or reloading the document from here: the next load is the browser's again.

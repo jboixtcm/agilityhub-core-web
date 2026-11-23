@@ -128,7 +128,7 @@ export function ReserveActivitiesPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["activities", "shell"]);
   return (
     <section className="activities-screen">
-      <AppBar className="activities-screen__bar" title={<h1>{t("shell:nav.reserve")}</h1>} />
+      <AppBar className="activities-screen__bar" title={<h1>{t("shell:nav.activities")}</h1>} />
       <p className="activities-screen__intro">{t("activities:block.intro")}</p>
       <ActivitiesBlock client={client} />
     </section>

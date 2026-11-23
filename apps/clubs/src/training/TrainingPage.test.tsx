@@ -74,13 +74,13 @@ describe("T-09-37 screen 08 exists only with a dog allowed to train alone", () =
     await new Promise((resolve) => {
       setTimeout(resolve, 30);
     });
-    expect(screen.queryByRole("link", { name: "Entrenaments" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Reserva" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Inici" })).toBeInTheDocument();
   });
 
   it("with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip", async () => {
     await openTraining();
-    expect(await screen.findByRole("link", { name: "Entrenaments" })).toHaveAttribute(
+    expect(await screen.findByRole("link", { name: "Reserva" })).toHaveAttribute(
       "aria-current",
       "page",
     );
@@ -91,13 +91,13 @@ describe("T-09-37 screen 08 exists only with a dog allowed to train alone", () =
         .map((button) => button.textContent),
     ).toEqual(["Rock · D", "Toby · B (Joan Antoni)"]);
     expect(pressed(dogs)).toEqual(["Rock · D"]);
-    expect(screen.getByRole("heading", { name: "Entrenaments" })).toBeVisible();
+    expect(screen.getByRole("heading", { level: 1, name: "Reserva de pista" })).toBeVisible();
   });
 
   it("FREE_TRAINING off: no tab, and the route shows nothing of the module", async () => {
     await renderApp("/inici", { scenario: "trainingModuleOff" });
     await screen.findByRole("heading", { name: "Les meves reserves" });
-    expect(screen.queryByRole("link", { name: "Entrenaments" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Reserva" })).not.toBeInTheDocument();
   });
 });
 
@@ -576,7 +576,7 @@ describe("E5-W02 round 2 · review #1: the offline copy of 08 is per club and pe
 });
 
 function trainingTab(): HTMLElement | null {
-  return screen.queryByRole("link", { name: "Entrenaments" });
+  return screen.queryByRole("link", { name: "Reserva" });
 }
 
 describe("E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7)", () => {
@@ -589,12 +589,12 @@ describe("E5-W02 round 2 · review #3: the tab follows the member's rights (R-09
     expect(trainingTab()).not.toBeInTheDocument();
     mockScenario("member");
     fireEvent.focus(window);
-    expect(await screen.findByRole("link", { name: "Entrenaments" })).toBeVisible();
+    expect(await screen.findByRole("link", { name: "Reserva" })).toBeVisible();
   });
 
   it("rights revoked while away: the tab goes when the app regains focus", async () => {
     await renderApp("/inici");
-    expect(await screen.findByRole("link", { name: "Entrenaments" })).toBeVisible();
+    expect(await screen.findByRole("link", { name: "Reserva" })).toBeVisible();
     mockScenario("trainingNoRight");
     fireEvent.focus(window);
     await waitFor(() => {

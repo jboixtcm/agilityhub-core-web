@@ -86,7 +86,7 @@ describe("T-09-41 training and instructor vocabulary, locales and club time zone
       storage: undefined,
     });
     const t = i18n.getFixedT("ca");
-    expect(t("training:title")).toBe("Entrenaments");
+    expect(t("training:title")).toBe("Reserva de pista");
     expect(t("training:days.today", { day: "dl 3" })).toBe("Avui dl 3");
     expect(t("training:rings.any")).toBe("Qualsevol");
     expect(t("training:grid.morning")).toBe("Matí");

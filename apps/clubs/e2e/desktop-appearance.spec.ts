@@ -92,7 +92,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
       expect(brand.y + brand.height).toBeLessThanOrEqual(navigation.y + navigation.height);
       expect(navigation.height).toBeLessThanOrEqual(80);
     }
-    await nav.getByRole("link", { name: "Reservar", exact: true }).click();
+    await nav.getByRole("link", { name: "Activitats", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Classes", exact: true })).toBeVisible();
     await page
       .locator(".class-row")
@@ -132,7 +132,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
       fullPage: true,
       path: resolve(evidence, `member-home-${String(width)}-light.png`),
     });
-    await nav.getByRole("link", { name: "Reservar", exact: true }).click();
+    await nav.getByRole("link", { name: "Activitats", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Classes", exact: true })).toBeVisible();
     await nav.getByRole("link", { name: "Perfil", exact: true }).click();
     await expect(page.getByRole("heading", { name: "El meu perfil", exact: true })).toBeVisible();
@@ -143,7 +143,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
       fullPage: true,
       path: resolve(evidence, `member-profile-${String(width)}-light.png`),
     });
-    await nav.getByRole("link", { name: "Reservar", exact: true }).click();
+    await nav.getByRole("link", { name: "Activitats", exact: true }).click();
     await page
       .locator(".class-row")
       .filter({ hasText: "dc 5 · 18:50" })
@@ -158,7 +158,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
     await page.getByRole("button", { name: "Tanca", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Classes", exact: true })).toBeVisible();
     for (const [label, title, screen] of [
-      ["Entrenaments", "Entrenaments", "training"],
+      ["Reserva", "Reserva de pista", "training"],
       ["Avui", "Classes del dia", "today"],
       ["Info", "Info", "info"],
     ] as const) {

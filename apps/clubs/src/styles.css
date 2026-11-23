@@ -2421,6 +2421,11 @@ div.lifecycle-error p {
   min-width: 0;
 }
 
+.clubs-shell__navigation .ah-tab-bar__item .ah-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 @media (max-width: 47.999rem) {
   .clubs-shell__content {
     padding-bottom: calc(var(--clubs-navigation-height) + env(safe-area-inset-bottom));

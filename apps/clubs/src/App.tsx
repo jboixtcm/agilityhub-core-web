@@ -515,12 +515,12 @@ export function MobileNavigation({
   const staffProfile = activeProfile === "INSTRUCTOR";
   const definitions: (TabBarItem & { id: string; roles?: readonly Role[] })[] = [
     { href: "/inici", icon: "home", id: "home", label: t("shell:nav.home") },
-    { href: "/reservar", icon: "cal", id: "reserve", label: t("shell:nav.reserve") },
+    { href: "/reservar", icon: "list", id: "reserve", label: t("shell:nav.activities") },
     {
       href: "/entrenaments",
-      icon: "cone",
+      icon: "calendar-plus",
       id: "training",
-      label: t("shell:nav.training"),
+      label: t("shell:nav.ringBooking"),
     },
     // Mockup 10: «Avui» for the member profile; mockup 23: the same slot is «Visió global».
     staffProfile
@@ -549,10 +549,13 @@ export function MobileNavigation({
             : item.id === "training"
               ? ["/entrenaments", "/entrenaments/:id"].some((path) => matchesPath(pathname, path))
               : item.id === "reserve"
-                ? // Mockups 06, 29 and 07: the confirmation and the booking detail belong to «Reservar».
-                  ["/reservar", "/reservar/confirmar", "/reserves/:id", "/espera/:id"].some(
-                    (path) => matchesPath(pathname, path),
-                  )
+                ? [
+                    "/reservar",
+                    "/reservar/confirmar",
+                    "/reserves/:id",
+                    "/espera/:id",
+                    "/activitats/:id",
+                  ].some((path) => matchesPath(pathname, path))
                 : matchesPath(pathname, item.href),
       href: item.href,
       icon: item.icon,
@@ -601,9 +604,9 @@ function BookingDeskFrame({
       <ImpersonationBanner authClient={authClient} />
       <nav className="booking-desk__nav" aria-label={t("instructor:card.manageBookings")}>
         <a href="/inici">{t("instructor:card.bookingList")}</a>
-        <a href="/reservar">{t("shell:nav.reserve")}</a>
+        <a href="/reservar">{t("shell:nav.activities")}</a>
         {branding.modules.includes("FREE_TRAINING") ? (
-          <a href="/entrenaments">{t("shell:nav.training")}</a>
+          <a href="/entrenaments">{t("shell:nav.ringBooking")}</a>
         ) : null}
       </nav>
       <BrandingProvider

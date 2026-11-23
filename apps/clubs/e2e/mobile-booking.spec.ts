@@ -46,7 +46,7 @@ async function login(page: Page, theme: "light" | "dark" = "dark") {
   await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
   await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
   await expect(page.getByRole("heading", { name: "Hola, Laura!" })).toBeVisible();
-  await page.getByRole("link", { name: "Reservar", exact: true }).click();
+  await page.getByRole("link", { name: "Activitats", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Classes", exact: true })).toBeVisible();
 }
 
@@ -90,7 +90,7 @@ test("T-08-37 a newly confirmed class remains reserved after returning, refreshi
   await expect(page.getByRole("heading", { name: "Confirmar reserva" })).toBeVisible();
   await page.getByRole("button", { name: "CONFIRMAR LA RESERVA", exact: true }).click();
   await expect(page.getByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
-  await page.getByRole("link", { name: "Reservar", exact: true }).click();
+  await page.getByRole("link", { name: "Activitats", exact: true }).click();
   const row = page.locator('.class-row[data-class-id="class-2026-08-05-1850"]');
   await expect(row).toContainText("Reservada");
   await expect(row.getByRole("button")).toHaveCount(0);
@@ -106,7 +106,7 @@ test("T-08-37 a newly confirmed class remains reserved after returning, refreshi
   await page.getByRole("button", { name: "ANUL·LA LA RESERVA" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "ANUL·LA", exact: true }).click();
   await expect(page.getByText("anul·lada", { exact: true })).toBeVisible();
-  await page.getByRole("link", { name: "Reservar", exact: true }).click();
+  await page.getByRole("link", { name: "Activitats", exact: true }).click();
   await expect(row).not.toContainText("Reservada");
   await expect(row.getByRole("button")).toBeVisible();
 });

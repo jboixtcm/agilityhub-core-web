@@ -79,7 +79,9 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     expect(
       screen.getByText("Seleccioneu l'activitat o classe que vulgueu reservar."),
     ).toBeVisible();
-    expect(await screen.findByRole("heading", { name: "Activitats" })).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { level: 2, name: "Properes activitats" }),
+    ).toBeVisible();
     expect(rows().map(text)).toEqual([
       "dc 5 · 18:50 · B+C | 2 places",
       "dj 6 · 20:00 · C+D | Completa · 1 | Completa, 1 en llista d'espera",
@@ -236,7 +238,7 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     await renderBook({
       branding: { ...canic, modules: without("ACTIVITIES").filter((module) => module !== "PACKS") },
     });
-    expect(screen.queryByRole("heading", { name: "Activitats" })).toBeNull();
+    expect(screen.queryByRole("heading", { level: 2, name: "Properes activitats" })).toBeNull();
     expect(document.querySelector(".pack-card")).toBeNull();
   });
 
@@ -385,10 +387,13 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     expect(window.location.pathname).not.toBe("/reservar/confirmar");
   });
 
-  it("the app mounts 04 on /reservar with the «Reservar» tab active", async () => {
+  it("the app mounts 04 on /reservar with the «Activitats» tab active", async () => {
     await renderApp("/reservar");
-    expect(await screen.findByRole("heading", { name: "Reservar" })).toBeVisible();
+    expect(await screen.findByRole("heading", { level: 1, name: "Activitats" })).toBeVisible();
     expect(await screen.findByRole("heading", { name: "Classes" })).toBeVisible();
-    expect(screen.getByRole("link", { name: "Reservar" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Activitats" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
   });
 });

@@ -24,7 +24,7 @@ for (const width of [375, 768, 1024, 1280, 1512, 1920]) {
     await page.getByLabel("Correu electrònic").fill("laura@example.test");
     await page.getByLabel("Contrasenya", { exact: true }).fill("secret-password");
     await page.getByRole("button", { name: "ENTRA", exact: true }).click();
-    await page.getByRole("link", { name: "Entrenaments", exact: true }).click();
+    await page.getByRole("link", { name: "Reserva", exact: true }).click();
     await expect(page.getByRole("group", { name: "Matí" })).toBeVisible();
     await page.getByRole("button", { name: "8:30, lliure", exact: true }).click();
     const actions = page.getByRole("region", { name: "Reserva d’entrenament", exact: true });

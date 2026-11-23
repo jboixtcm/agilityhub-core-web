@@ -85,7 +85,7 @@ async function shot(page: Page, name: string) {
 }
 
 async function openReserve(page: Page) {
-  await page.getByRole("link", { name: "Reservar" }).click();
+  await page.getByRole("link", { name: "Activitats", exact: true }).click();
   await page.waitForURL("**/reservar");
   await expect(page.getByRole("heading", { name: "Classes" })).toBeVisible();
 }
@@ -312,7 +312,7 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
 
   test("es: 04 reads in Spanish", async ({ page }) => {
     await login(page, "member", { locale: "es" });
-    await page.getByRole("link", { name: "Reservar" }).click();
+    await page.getByRole("link", { name: "Actividades", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Clases" })).toBeVisible();
     await expect(page.getByText("Pack 10 — con Duna")).toBeVisible();
     await expect(page.locator('.class-row[data-bookable-state="BOOKABLE"]').first()).toContainText(
