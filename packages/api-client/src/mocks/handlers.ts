@@ -1610,28 +1610,53 @@ export {
   resetCompetitionMockState,
 } from "./competition-handlers";
 
+function memberTask(id: string | null) {
+  const scenario = currentMockScenario();
+  const impersonation = scenario.me.impersonation;
+  const asMember =
+    impersonation !== undefined || (scenario.me.membership?.roles.includes("MEMBER") ?? false);
+  if (!scenario.branding.modules.includes("TASKS") || !asMember) return undefined;
+  const dog = memberDogsState.dogs.find(
+    (candidate) => candidate.tasks?.items.some((item) => item.id === id) === true,
+  );
+  const block = dog?.tasks;
+  const task = block?.items.find((item) => item.id === id);
+  return dog && block && task ? { dog, block, task } : undefined;
+}
+
+function memberTaskAttachments(task: NonNullable<MeDog["tasks"]>["items"][number]) {
+  return Array.from({ length: task.attachmentsCount }, (_, index) => ({
+    id: `${task.id}-attachment-${String(index + 1)}`,
+    mimeType: "application/pdf",
+    name: `adjunt-${String(index + 1)}.pdf`,
+    sizeBytes: 120_000,
+    uploadedAt: task.createdAt,
+    url: `https://files.example.test/tasks/${encodeURIComponent(task.id)}/${String(index + 1)}?X-Amz-Expires=300&X-Amz-Signature=mock`,
+  }));
+}
+
 export const handlers = [
   ...competitionHandlers,
   ...adminMemberActionHandlers,
   ...familyGroupHandlers,
   // S17 D19 (E10-W01): the platform console's `/platform/*` world.
   ...consoleHandlers,
+  http.get("*/api/v1/attachments", ({ request }) => {
+    const query = new URL(request.url).searchParams;
+    if (query.get("entityType") !== "TASK") return undefined;
+    const found = memberTask(query.get("entityId"));
+    if (!found) return undefined;
+    return HttpResponse.json({ items: memberTaskAttachments(found.task) });
+  }),
   // E6-W04 step 0b: screen 13's checkbox (S10 R-10-10, §6) completes a task of `GET /me/dogs` for
   // its member (also the impersonation token), so 13 read again shows it done and counted. Any
   // other task, a staff caller or TASKS off are the follow-up world's, below.
   http.post("*/api/v1/tasks/:id/completion", ({ params }) => {
     const scenario = currentMockScenario();
     const impersonation = scenario.me.impersonation;
-    const asMember =
-      impersonation !== undefined || (scenario.me.membership?.roles.includes("MEMBER") ?? false);
-    if (!scenario.branding.modules.includes("TASKS") || !asMember) return undefined;
-    const id = String(params.id);
-    const dog = memberDogsState.dogs.find(
-      (candidate) => candidate.tasks?.items.some((item) => item.id === id) === true,
-    );
-    const block = dog?.tasks;
-    const task = block?.items.find((item) => item.id === id);
-    if (dog === undefined || block === undefined || task === undefined) return undefined;
+    const found = memberTask(String(params.id));
+    if (!found) return undefined;
+    const { dog, block, task } = found;
     // Already DONE, also the second of two calls (idempotent by state, no key: ruling E74).
     if (task.doneAt !== undefined) return apiError("TASK_ALREADY_DONE", "Task already done", 422);
     const doneAt = new Date().toISOString().replace(/\.\d{3}Z$/u, "Z");
@@ -1640,14 +1665,7 @@ export const handlers = [
     block.completed += 1;
     const name = impersonation?.memberName ?? scenario.me.account.name;
     const answer: components["schemas"]["Task"] = {
-      attachments: Array.from({ length: task.attachmentsCount }, (_, index) => ({
-        id: `${task.id}-attachment-${String(index + 1)}`,
-        mimeType: "application/pdf",
-        name: `adjunt-${String(index + 1)}.pdf`,
-        sizeBytes: 120_000,
-        uploadedAt: task.createdAt,
-        url: `https://files.example.test/tasks/${encodeURIComponent(task.id)}/${String(index + 1)}?X-Amz-Expires=300&X-Amz-Signature=mock`,
-      })),
+      attachments: memberTaskAttachments(task),
       createdAt: task.createdAt,
       createdBy: {
         accountId: null,

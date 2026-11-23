@@ -31,6 +31,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { TaskAttachmentsDialog } from "./TaskAttachmentsDialog";
 import { TrainingConditions } from "./training/TrainingConditions";
 
 type License = components["schemas"]["License"];
@@ -294,6 +295,7 @@ function DogTasks({
   const { i18n, t } = useTranslation(["census", "errors"]);
   const [tasks, setTasks] = useState<DogTaskBlock | undefined>(dog.tasks);
   // Who completed a task from this page: the completion's answer names them (`Task.doneBy`).
+  const [filesTaskId, setFilesTaskId] = useState<string>();
   const [doneBy, setDoneBy] = useState<Readonly<Record<string, TaskActor>>>({});
   const [working, setWorking] = useState<ReadonlySet<string>>(new Set());
 
@@ -411,14 +413,19 @@ function DogTasks({
                       instructor: task.instructorName,
                     })}
                     {doneAt === undefined ? null : ` · ${doneLine(task.id, doneAt)}`}
-                    {task.attachmentsCount > 0 ? (
-                      <>
-                        {" · "}
-                        <Icon aria-hidden="true" name="clip" />
-                        {t("census:myDogs.taskAttachments", { count: task.attachmentsCount })}
-                      </>
-                    ) : null}
                   </small>
+                  {task.attachmentsCount > 0 ? (
+                    <Button
+                      aria-haspopup="dialog"
+                      onClick={() => {
+                        setFilesTaskId(task.id);
+                      }}
+                      variant="secondary"
+                    >
+                      <Icon aria-hidden="true" name="clip" />
+                      {t("census:myDogs.taskAttachments", { count: task.attachmentsCount })}
+                    </Button>
+                  ) : null}
                   {doneAt === undefined ? (
                     <Button disabled={busy} onClick={() => void complete(task.id)} variant="ghost">
                       {t("census:myDogs.completeTask")}
@@ -429,6 +436,15 @@ function DogTasks({
             );
           })}
         </ul>
+      )}
+      {filesTaskId === undefined ? null : (
+        <TaskAttachmentsDialog
+          client={client}
+          onClose={() => {
+            setFilesTaskId(undefined);
+          }}
+          taskId={filesTaskId}
+        />
       )}
       <a className="self-link" href="/historic">
         {t("census:myDogs.history")}

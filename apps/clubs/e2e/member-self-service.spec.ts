@@ -141,7 +141,7 @@ test.describe("T-03-40 mobile own dogs", () => {
     await expect(tasks.getByText("2 pendents · 1 feta")).toBeVisible();
     await expect(tasks.getByRole("listitem")).toHaveText([
       "Treballar l'entrada al balancí10-08 · LauraMarca com a completada",
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjuntMarca com a completada",
+      "Revisar l'entrada a l'eslàlom12-08 · MarcVeure 1 adjuntMarca com a completada",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
     await expect(
@@ -230,6 +230,50 @@ test.describe("T-03-40 mobile own dogs", () => {
       expect((await upload).postDataJSON()).toMatchObject({ name });
       await expect(dialog).toHaveCount(0);
     }
+  });
+
+  test("opens the file before and after explicit completion and preserves each state", async ({
+    page,
+    context,
+  }) => {
+    await login(page);
+    await page.goto(baseUrl + "/gossos");
+    const row = page.getByRole("listitem").filter({ hasText: "Revisar l'entrada a l'eslàlom" });
+    const check = row.getByRole("checkbox");
+    const writes: string[] = [];
+    page.on("request", (request) => {
+      if (
+        request.method() !== "GET" &&
+        new URL(request.url()).pathname.startsWith("/api/v1/tasks/")
+      ) {
+        writes.push(request.method() + " " + new URL(request.url()).pathname);
+      }
+    });
+    await context.route("https://files.example.test/tasks/**", (route) =>
+      route.fulfill({ contentType: "text/plain", body: "Training instructions" }),
+    );
+    const openFile = async () => {
+      await row.getByRole("button", { name: "Veure 1 adjunt" }).click();
+      const dialog = page.getByRole("dialog", { name: "Adjunts de la tasca" });
+      const tabReady = context.waitForEvent("page");
+      await dialog.getByRole("button", { name: "adjunt-1.pdf" }).click();
+      const tab = await tabReady;
+      await expect(tab).toHaveURL(/^https:\/\/files\.example\.test\/tasks\/task-duna-weave\/1\?/u);
+      await expect(tab.locator("body")).toHaveText("Training instructions");
+      await tab.close();
+      await dialog.getByRole("button", { name: "Tanca" }).click();
+    };
+    await openFile();
+    await expect(check).not.toBeChecked();
+    await expect(page.getByText("2 pendents · 1 feta")).toBeVisible();
+    expect(writes).toEqual([]);
+
+    await row.getByRole("button", { name: "Marca com a completada" }).click();
+    await expect(check).toBeChecked();
+    await openFile();
+    await expect(check).toBeChecked();
+    await expect(page.getByText("1 pendent · 2 fetes")).toBeVisible();
+    expect(writes).toEqual(["POST /api/v1/tasks/task-duna-weave/completion"]);
   });
 
   test("hides instructor notes and tasks when TASKS is disabled", async ({ page }) => {

@@ -2015,9 +2015,16 @@ div.lifecycle-error p {
   text-decoration: none;
 }
 
-.dog-task small .ah-icon {
-  width: 0.8rem;
-  height: 0.8rem;
+.dog-task-files .ah-attachment-chips {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.dog-task-files .ah-attachment-chip__open {
+  min-height: 2.75rem;
+  text-align: start;
+  text-decoration: underline;
+  overflow-wrap: anywhere;
 }
 
 .dog-task__check {

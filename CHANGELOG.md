@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Member task attachments
+
+- Members can open each file attached to a pending or completed task from their dog’s profile. Opening a file preserves the task status.
+
 ## 2026-11-23 — Smarter course links
 
 - Scheduled classes link to the course mounted on their ring at class start from the day grid and booking detail.

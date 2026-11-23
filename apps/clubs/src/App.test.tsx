@@ -2684,7 +2684,7 @@ describe("T-03-40 mobile own dogs", () => {
     const rows = within(tasks).getAllByRole("listitem");
     expect(rows.map((row) => row.textContent)).toEqual([
       "Treballar l'entrada al balancí10-08 · LauraMarca com a completada",
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjuntMarca com a completada",
+      "Revisar l'entrada a l'eslàlom12-08 · MarcVeure 1 adjuntMarca com a completada",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
     const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
@@ -2844,6 +2844,50 @@ describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /ta
     vi.useRealTimers();
   });
 
+  it("retrieves a fresh URL for the selected file and leaves the task pending on success and failure", async () => {
+    const tasks = await renderMyDogs();
+    const { lines } = recordFlow();
+    const tab = { close: vi.fn(), location: { replace: vi.fn() }, opener: window };
+    const popup = vi.spyOn(window, "open").mockReturnValue(tab as unknown as Window);
+    const files = ["first", "second"].map((id) => ({ id, name: id + ".png", url: "/stale/" + id }));
+    let reads = 0;
+    server.use(
+      http.get("*/api/v1/attachments", ({ request }) => {
+        const query = new URL(request.url).searchParams;
+        expect(query.get("entityId")).toBe("task-duna-weave");
+        expect(query.get("entityType")).toBe("TASK");
+        reads++;
+        if (reads === 1) return HttpResponse.json({ items: files });
+        if (reads === 2) return HttpResponse.json({ items: [] });
+        return HttpResponse.json({
+          items: files.map((file) => ({ ...file, url: "/fresh/" + file.id })),
+        });
+      }),
+    );
+    try {
+      fireEvent.click(within(tasks).getByRole("button", { name: "Veure 1 adjunt" }));
+      const dialog = screen.getByRole("dialog", { name: "Adjunts de la tasca" });
+      fireEvent.click(await within(dialog).findByRole("button", { name: "first.png" }));
+      expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+        "Aquest fitxer ja no està disponible.",
+      );
+      expect(tab.close).toHaveBeenCalledOnce();
+      fireEvent.click(within(dialog).getByRole("button", { name: "second.png" }));
+      await waitFor(() => {
+        expect(tab.location.replace).toHaveBeenCalledWith(window.location.origin + "/fresh/second");
+      });
+      expect(tab.opener).toBeNull();
+      expect(reads).toBe(3);
+      expect(lines).toEqual([]);
+      expect(
+        within(tasks).getByRole("checkbox", { name: "Revisar l'entrada a l'eslàlom" }),
+      ).not.toBeChecked();
+      expect(within(tasks).getByText("2 pendents · 1 feta")).toBeVisible();
+    } finally {
+      popup.mockRestore();
+    }
+  });
+
   it("opens the notified task even when its dog is second, and completes it with the visible action", async () => {
     mockScenario("member");
     const client = authClient();
@@ -2916,7 +2960,7 @@ describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /ta
     const rows = within(tasks).getAllByRole("listitem");
     expect(rows.map((row) => row.textContent)).toEqual([
       "Treballar l'entrada al balancí10-08 · Laura · feta per en Biel el 14-08",
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjuntMarca com a completada",
+      "Revisar l'entrada a l'eslàlom12-08 · MarcVeure 1 adjuntMarca com a completada",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
     expect(rows[0]).toHaveAttribute("data-done");
@@ -2962,7 +3006,7 @@ describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /ta
     });
     expect(lines).toEqual(["POST /api/v1/tasks/task-duna-weave/completion", "GET /api/v1/me/dogs"]);
     expect(within(tasks).getAllByRole("listitem")[1]?.textContent).toBe(
-      "Revisar l'entrada a l'eslàlom12-08 · Marc · feta el 14-08 · 1 adjunt",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · feta el 14-08Veure 1 adjunt",
     );
     expect(within(tasks).getByText("1 pendent · 2 fetes")).toBeVisible();
     expect(screen.queryByRole("alert")).toBeNull();
