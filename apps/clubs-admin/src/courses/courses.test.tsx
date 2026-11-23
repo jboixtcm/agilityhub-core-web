@@ -301,6 +301,10 @@ describe("T-16-15 D18 «Biblioteca de recorreguts» (S16 §2)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Nou recorregut" }));
     fireEvent.click(screen.getByRole("menuitem", { name: "Importa un fitxer Smarter (.txt)" }));
     const dialog = await screen.findByRole("dialog", { name: "Importa un fitxer Smarter" });
+    const link = "https://www.smarteragility.com/public-design?id=00000000000000000000000000000001";
+    fireEvent.change(within(dialog).getByLabelText("Enllaç de Smarter (opcional)"), {
+      target: { value: link },
+    });
     const input = within(dialog).getByLabelText("Tria el fitxer .txt que exporta Smarter");
     fireEvent.change(input, {
       target: {
@@ -323,7 +327,7 @@ describe("T-16-15 D18 «Biblioteca de recorreguts» (S16 §2)", () => {
     expect(created).toHaveLength(1);
     expect(created[0]?.idempotencyKey).not.toBeNull();
     const body = (await created[0]?.body) as { pathLengthM: number; source: string };
-    expect(body.source).toBe("SMARTER");
+    expect(body).toMatchObject({ source: "SMARTER", smarterUrl: link });
     expect(body.pathLengthM).toBeGreaterThan(0);
     const patch = (await requests("PATCH", /\/courses\/course-\d+$/u)[0]?.body) as {
       thumbnailFileKey: string;

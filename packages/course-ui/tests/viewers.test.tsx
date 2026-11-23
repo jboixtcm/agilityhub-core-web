@@ -309,6 +309,31 @@ describe("T-16-02 R-16-01/05 one heading convention: what the planners render is
   };
   const ring = ringFor(course);
 
+  it("draws the full contact and turns the jump bar across the 3D running direction", async () => {
+    const model: CourseData = {
+      ...tilted,
+      obstacles: [
+        { ...plain, id: "walk", sourceId: "walk", obstacleType: "DogWalk", rotationDegrees: 30 },
+        { ...plain, id: "jump", sourceId: "jump", obstacleType: "Jump", rotationDegrees: 30 },
+      ],
+    };
+    const placement = centred(ring);
+    render3D(model, ring, placement);
+    const scene = await sceneSummary();
+    cleanup();
+    const { container } = render2D(model, ring, placement);
+    const icons = Array.from(container.querySelectorAll("svg g[transform*='rotate(']"));
+    for (const [index, id] of ["walk", "jump"].entries()) {
+      const icon = icons[index];
+      const mesh = scene.obstacles.find((item) => item.id === id);
+      const angle = Number(/rotate\(([^)]+)\)/u.exec(icon?.getAttribute("transform") ?? "")?.[1]);
+      expect(angle).toBeCloseTo(((mesh?.rotationY ?? Number.NaN) * 180) / Math.PI, 1);
+    }
+    const planks = Array.from(icons[0]?.querySelectorAll("rect") ?? []);
+    const span = planks.reduce((total, plank) => total + Number(plank.getAttribute("width")), 0);
+    expect(span).toBeCloseTo(11);
+  });
+
   it.each([
     // [flipX, flipY, placement rotation, ring heading of a Smarter 30° obstacle]
     [false, false, 0, -30],
@@ -334,8 +359,8 @@ describe("T-16-02 R-16-01/05 one heading convention: what the planners render is
       const { container } = render2D(tilted, ring, placement);
       const transform = canvasSummary(container).icons[0] ?? "";
       const svgRotation = Number(/rotate\((-?[\d.e-]+)\)/u.exec(transform)?.[1]);
-      // The outer scale(1 -1) mirrors SVG rotations: the icon turns by −heading.
-      expect(-svgRotation).toBeCloseTo(expected, 2);
+      // The SVG group uses ring coordinates, then projects positions and heading together.
+      expect(svgRotation).toBeCloseTo(expected, 2);
     },
   );
 });

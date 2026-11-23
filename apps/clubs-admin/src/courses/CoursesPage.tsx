@@ -5,7 +5,7 @@ import {
   putSignedFile,
   useSubmissionKeys,
 } from "@agilityhub/api-client";
-import type { CourseData } from "@agilityhub/course-core";
+import { smarterDesignUrl, type CourseData } from "@agilityhub/course-core";
 import { UploadCourse, type UploadCourseLabels } from "@agilityhub/course-ui";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
@@ -86,7 +86,7 @@ type Owner = (typeof OWNERS)[number];
 
 const ENUM: readonly UniversalFilterOperator[] = ["eq", "ne", "in", "nin"];
 
-type NewCourseKind = "image" | "smarter";
+type NewCourseKind = "image" | "link" | "smarter";
 
 /** «Nou recorregut»: the ways in (S16 §2). The editor («Dibuixa'l») has no screen yet. */
 function NewCourseMenu({
@@ -130,6 +130,16 @@ function NewCourseMenu({
           <button
             onClick={() => {
               close();
+              onChoose("link");
+            }}
+            role="menuitem"
+            type="button"
+          >
+            {t("admin-courses:smarter.addLink")}
+          </button>
+          <button
+            onClick={() => {
+              close();
               onChoose("smarter");
             }}
             role="menuitem"
@@ -168,13 +178,15 @@ function NewCourseMenu({
  * signed upload, `POST /courses` under one key), then the list's thumbnail (S16 §3: generated on
  * the client, best effort) and the new course's page.
  */
-function ImportCourseModal({
+export function ImportCourseModal({
   client,
+  existing,
   onClose,
   onImported,
 }: {
   client: ApiClient;
   onClose: () => void;
+  existing?: { id: string; version: number };
   onImported: (courseId: string) => void;
 }) {
   const { t } = useTranslation("admin-courses");
@@ -187,6 +199,14 @@ function ImportCourseModal({
       t("admin-courses:import.dimensions", { length: metres(length), width: metres(width) }),
     error: errorText,
     file: t("admin-courses:import.file"),
+    ...(existing
+      ? {}
+      : {
+          smarterLink: {
+            label: t("admin-courses:smarter.optional"),
+            invalid: t("admin-courses:smarter.invalid"),
+          },
+        }),
     ignoredLogos: (count) => t("admin-courses:import.ignoredLogos", { count }),
     noGoZones: (count) => t("admin-courses:import.noGoZones", { count }),
     numbers: (count) => t("admin-courses:import.numbers", { count }),
@@ -211,6 +231,7 @@ function ImportCourseModal({
     >
       <div className="courses-import">
         <UploadCourse
+          existing={existing}
           labels={labels}
           onUploaded={(course, courseId) => {
             void finish(course, courseId);
@@ -257,13 +278,15 @@ export async function attachThumbnail(
  * «Puja un plànol o foto» (S16 §2): a course of source `IMAGE` — its name, discipline and the
  * picture (signed upload of purpose `COURSE_IMAGE`) under one `Idempotency-Key` per payload.
  */
-function ImageCourseModal({
+function NewCourseModal({
   client,
+  kind,
   onClose,
   onCreated,
 }: {
   client: ApiClient;
   onClose: () => void;
+  kind: "image" | "link";
   onCreated: (courseId: string) => void;
 }) {
   const { t } = useTranslation(["admin-courses", "errors"]);
@@ -273,11 +296,12 @@ function ImageCourseModal({
   const keys = useSubmissionKeys();
   const [name, setName] = useState("");
   const [discipline, setDiscipline] = useState<Discipline>("OTHER");
+  const [url, setUrl] = useState("");
   const [file, setFile] = useState<File>();
   /** The stored picture of this file: a retry never uploads it again (CONVENCIONS_API §7). */
   const [uploaded, setUploaded] = useState<{ file: File; fileKey: string }>();
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<{ field?: "file" | "name"; message: string }>();
+  const [error, setError] = useState<{ field?: "file" | "link" | "name"; message: string }>();
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -285,15 +309,20 @@ function ImageCourseModal({
       setError({ field: "name", message: t("admin-courses:image.nameRequired") });
       return;
     }
-    if (file === undefined) {
+    const link = smarterDesignUrl(url);
+    if (kind === "link" && link === null) {
+      setError({ field: "link", message: t("admin-courses:smarter.invalid") });
+      return;
+    }
+    if (kind === "image" && file === undefined) {
       setError({ field: "file", message: t("admin-courses:image.fileRequired") });
       return;
     }
     setPending(true);
     setError(undefined);
     try {
-      let fileKey = uploaded?.file === file ? uploaded.fileKey : undefined;
-      if (fileKey === undefined) {
+      let fileKey = uploaded && uploaded.file === file ? uploaded.fileKey : undefined;
+      if (kind === "image" && file !== undefined && fileKey === undefined) {
         const grant = await client.POST("/courses/upload-urls", {
           body: { contentType: file.type, purpose: "COURSE_IMAGE", size: file.size },
         });
@@ -307,10 +336,10 @@ function ImageCourseModal({
       }
       const body = {
         discipline,
-        imageFileKey: fileKey,
+        ...(kind === "image" ? { imageFileKey: fileKey ?? null } : { smarterUrl: link }),
         levelIds: [],
         name: { [branding.defaultLocale]: name.trim() },
-        source: "IMAGE" as const,
+        source: kind === "image" ? ("IMAGE" as const) : ("SMARTER" as const),
         tags: [],
         visibility: "CLUB" as const,
       };
@@ -334,7 +363,7 @@ function ImageCourseModal({
       closeLabel={t("admin-courses:common.close")}
       onClose={onClose}
       open
-      title={t("admin-courses:image.title")}
+      title={kind === "image" ? t("admin-courses:image.title") : t("admin-courses:smarter.addLink")}
     >
       <form className="courses-form" noValidate onSubmit={(event) => void submit(event)}>
         <FormField
@@ -367,21 +396,40 @@ function ImageCourseModal({
             ))}
           </Select>
         </FormField>
-        <FormField
-          {...(error?.field === "file" ? { error: error.message } : {})}
-          help={t("admin-courses:image.fileHelp")}
-          id="course-image-file"
-          label={t("admin-courses:image.file")}
-        >
-          <Input
-            accept="image/*"
+        {kind === "link" ? (
+          <FormField
+            id="course-smarter-url"
+            label={t("admin-courses:smarter.label")}
+            help={t("admin-courses:smarter.linkHelp")}
+            {...(error?.field === "link" ? { error: error.message } : {})}
+          >
+            <Input
+              id="course-smarter-url"
+              type="url"
+              required
+              value={url}
+              onChange={(event) => {
+                setUrl(event.currentTarget.value);
+              }}
+            />
+          </FormField>
+        ) : (
+          <FormField
+            {...(error?.field === "file" ? { error: error.message } : {})}
+            help={t("admin-courses:image.fileHelp")}
             id="course-image-file"
-            onChange={(event) => {
-              setFile(event.currentTarget.files?.[0]);
-            }}
-            type="file"
-          />
-        </FormField>
+            label={t("admin-courses:image.file")}
+          >
+            <Input
+              accept="image/*"
+              id="course-image-file"
+              onChange={(event) => {
+                setFile(event.currentTarget.files?.[0]);
+              }}
+              type="file"
+            />
+          </FormField>
+        )}
         {error === undefined || error.field !== undefined ? null : (
           <p className="ah-form-field__error" role="alert">
             {error.message}
@@ -741,8 +789,9 @@ export function CoursesPage({
           }}
         />
       ) : null}
-      {creating === "image" ? (
-        <ImageCourseModal
+      {creating === "image" || creating === "link" ? (
+        <NewCourseModal
+          kind={creating}
           client={client}
           onClose={() => {
             setCreating(undefined);

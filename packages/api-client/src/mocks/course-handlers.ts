@@ -5,7 +5,7 @@
  * caller's club (R-16-16): the world is one club's (`callerClubOwnsTheWorld`), and another club's
  * token finds none of its records (`coursesOtherClub`).
  */
-import { courseDataSchema } from "@agilityhub/course-core";
+import { courseDataSchema, smarterDesignUrl } from "@agilityhub/course-core";
 import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
@@ -936,11 +936,18 @@ export const courseHandlers = [
       if (Object.values(body.name).every((name) => name.trim() === "")) {
         return fieldError("name", "REQUIRED");
       }
+      const link = smarterDesignUrl(body.smarterUrl);
+      if (body.smarterUrl?.trim() && !link) return fieldError("smarterUrl", "INVALID");
       if (body.source === "IMAGE") {
         if (body.imageFileKey === null || body.imageFileKey === undefined) {
           return fieldError("imageFileKey", "REQUIRED");
         }
-      } else {
+      } else if (
+        body.source !== "SMARTER" ||
+        !link ||
+        body.normalizedJson != null ||
+        body.schemaVersion != null
+      ) {
         const problem = modelProblem(body.normalizedJson, body.schemaVersion);
         if (problem !== undefined) return problem;
       }
@@ -983,6 +990,7 @@ export const courseHandlers = [
         sizeCategory: body.sizeCategory ?? null,
         source: body.source,
         sourceCourseId: null,
+        smarterUrl: link,
         sourceFileKey: body.sourceFileKey ?? null,
         stats: courseStats(model, body.pathLengthM ?? 0),
         tags: [...body.tags],
@@ -1030,13 +1038,19 @@ export const courseHandlers = [
       if (problem !== undefined) return problem;
     }
     const files =
-      uploaded(body.thumbnailFileKey, "THUMBNAIL") ?? uploaded(body.imageFileKey, "COURSE_IMAGE");
+      uploaded(body.thumbnailFileKey, "THUMBNAIL") ??
+      uploaded(body.imageFileKey, "COURSE_IMAGE") ??
+      uploaded(body.sourceFileKey, "SMARTER_SOURCE");
     if (files !== undefined) return files;
     if (body.levelIds != null) {
       const levels = levelsProblem(body.levelIds);
       if (levels !== undefined) return levels;
     }
+    const link = body.smarterUrl == null ? course.smarterUrl : smarterDesignUrl(body.smarterUrl);
+    if (body.smarterUrl?.trim() && !link) return fieldError("smarterUrl", "INVALID");
     const model = body.normalizedJson ?? course.normalizedJson ?? null;
+    if (course.source === "SMARTER" && !link && model === null)
+      return fieldError("smarterUrl", "REQUIRED");
     const next: Course = {
       ...course,
       ...(body.agilityhubLevel === undefined ? {} : { agilityhubLevel: body.agilityhubLevel }),
@@ -1051,6 +1065,9 @@ export const courseHandlers = [
             name: body.name.ca ?? Object.values(body.name)[0] ?? course.name,
             nameI18n: { ...body.name },
           }),
+      smarterUrl: link ?? null,
+      ...(body.sourceFileKey == null ? {} : { sourceFileKey: body.sourceFileKey }),
+      ...(body.schemaVersion == null ? {} : { schemaVersion: body.schemaVersion }),
       ...(body.notes == null ? {} : { notes: body.notes }),
       ...(body.tags == null ? {} : { tags: [...body.tags] }),
       ...(body.visibility == null ? {} : { visibility: body.visibility }),

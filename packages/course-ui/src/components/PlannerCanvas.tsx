@@ -16,6 +16,7 @@ import { useMemo, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 
 import type { PlannerRing } from '../lib/planner-state.js';
 
+import { ICON_AXIS_OFFSET, TUNNEL_RADIUS_M } from '../lib/obstacle-plan.js';
 import { ObstacleIcon, OBSTACLE_FOOTPRINTS_M } from './ObstacleIcon.js';
 
 interface Props {
@@ -268,7 +269,11 @@ export function PlannerCanvas({
       course.obstacles.map((o) => {
         const anchor = placeObstacleInRing(o, placement, course);
         const cps = placeControlPointsInRing(o.controlPointsMeters, placement, course);
-        return { o, anchor, cps };
+        const heading = placedObstacleHeadingVector(o.rotationDegrees, placement);
+        // Icons and points share the same Y-up group. Its outer SVG transform flips both once.
+        const crossbar = ICON_AXIS_OFFSET[o.obstacleType] === 90;
+        const axis = crossbar ? { x: -heading.y, y: heading.x } : heading;
+        return { o, anchor, cps, heading, axis };
       }),
     [course, placement],
   );
@@ -318,10 +323,9 @@ export function PlannerCanvas({
       xs.push(point.x - halfX, point.x + halfX);
       ys.push(point.y - halfY, point.y + halfY);
     };
-    for (const { o, anchor, cps } of placed) {
+    for (const { o, anchor, cps, axis } of placed) {
       if (cps && cps.length > 0) {
-        const half = Math.max(0.2, footprintRadiusMeters(o)) / 2;
-        for (const point of cps) reach(point, half, half);
+        for (const point of cps) reach(point, TUNNEL_RADIUS_M, TUNNEL_RADIUS_M);
         continue;
       }
       if (!anchor) continue;
@@ -331,8 +335,8 @@ export function PlannerCanvas({
         reach(anchor, r, r);
         continue;
       }
-      // The icon's length lies along the heading, its width across it.
-      const { x: rx, y: ry } = placedObstacleHeadingVector(o.rotationDegrees, placement);
+      // Bound the rotated symbol using the same local axis used to draw it.
+      const { x: rx, y: ry } = axis;
       reach(
         anchor,
         (Math.abs(rx) * footprint.lengthM + Math.abs(ry) * footprint.widthM) / 2,
@@ -625,7 +629,7 @@ export function PlannerCanvas({
                 points={cps.map((p) => `${p.x},${p.y}`).join(' ')}
                 fill="none"
                 stroke={COLORS.door}
-                strokeWidth={Math.max(0.2, footprintRadiusMeters(o))}
+                strokeWidth={2 * TUNNEL_RADIUS_M}
                 strokeLinecap="round"
                 strokeOpacity={0.85}
               />
@@ -635,24 +639,13 @@ export function PlannerCanvas({
           {/* Obstacle anchors (non-tunnel). For known types we draw a
               recognisable top-down silhouette (see ObstacleIcon); types that
               don't have an icon yet fall back to the legacy orange circle. */}
-          {placed.map(({ o, anchor }) => {
+          {placed.map(({ o, anchor, heading, axis }) => {
             if (!anchor || (o.controlPointsMeters && o.controlPointsMeters.length > 0)) return null;
             const isSelected = selectedObstacleId === o.sourceId;
             const isWarn = obstaclesWithWarnings.has(o.sourceId);
 
-            // Visual rotation angle for this obstacle, in the SVG's already-
-            // Y-flipped frame. The heading vector comes from course-core's
-            // `placedObstacleHeadingVector` (flip → Smarter Y-down → rotate),
-            // the same function persistence and Planner3D use, then atan2
-            // gives a single rotation we can pass to SVG `rotate(...)`.
-            //
-            // The angle is then NEGATED before being handed to SVG `rotate`
-            // because the outer <g scale(1 -1) ...> reverses orientation:
-            // a positive CCW math-angle on a vector corresponds to a
-            // negative-degree SVG rotation under that flip.
-            const { x: rx, y: ry } = placedObstacleHeadingVector(o.rotationDegrees, placement);
-            const visualAngleDeg = (Math.atan2(ry, rx) * 180) / Math.PI;
-
+            const visualAngleDeg = (Math.atan2(axis.y, axis.x) * 180) / Math.PI;
+            const { x: rx, y: ry } = heading;
             const hasIcon = OBSTACLE_FOOTPRINTS_M[o.obstacleType] != null;
             const r = footprintRadiusMeters(o);
 
@@ -664,11 +657,7 @@ export function PlannerCanvas({
                 style={{ cursor: 'pointer' }}
               >
                 {hasIcon ? (
-                  // Place + rotate the icon. SVG `rotate(deg)` is clockwise;
-                  // we use -visualAngleDeg so the icon visually rotates in
-                  // the same direction as the heading vector under the outer
-                  // scale(1,-1) flip.
-                  <g transform={`translate(${anchor.x} ${anchor.y}) rotate(${-visualAngleDeg})`}>
+                  <g transform={`translate(${anchor.x} ${anchor.y}) rotate(${visualAngleDeg})`}>
                     <ObstacleIcon type={o.obstacleType} selected={isSelected} warn={isWarn} />
                   </g>
                 ) : (

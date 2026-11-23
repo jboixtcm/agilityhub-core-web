@@ -1580,6 +1580,8 @@ describe("E9-W04 · what the members' app reads of S16, and the build sessions (
       valid("DayGrid", grid.body);
       return grid.body.columns;
     };
+    vi.useFakeTimers({ now: new Date("2026-08-04T08:00:00Z"), toFake: ["Date"] });
+    resetCourseMockState();
     const fixture = "/day-grid?date=2026-08-04&view=member";
     const ids = (list: Schemas["DayGridColumn"][]) =>
       list.filter((column) => column.ringId != null).map((column) => column.activeSetupId);
@@ -1606,6 +1608,7 @@ describe("E9-W04 · what the members' app reads of S16, and the build sessions (
     // The calendar world's day (Wednesday 12 August 2026, its classes on Central and Muntanya).
     vi.useFakeTimers({ now: new Date("2026-08-12T08:00:00Z"), toFake: ["Date"] });
     resetPlanningState();
+    resetCourseMockState();
     const calendar = await columns("instructor", "/day-grid?date=2026-08-12&view=instructor");
     expect(calendar.find((column) => column.ringId === "ring-central")?.activeSetupId).toBe(
       SETUP_IDS.centralPhoto,

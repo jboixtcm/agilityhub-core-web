@@ -92,6 +92,15 @@ describe("T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09)", () => {
     expect(screen.queryByRole("button", { name: "Sessió de muntatge" })).not.toBeInTheDocument();
   });
 
+  it("T-16-13 a class keeps its planned course when the ring setup starts after the class", async () => {
+    const setup = courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto);
+    if (!setup) throw new Error("Missing Central setup");
+    setup.builtAt = "2026-08-03T18:00:00Z";
+    await renderApp("/reserves/booking-duna-mon3", { scenario: "member" });
+    expect(await screen.findByText("Recorregut previst: Agility C–D")).toBeVisible();
+    expect(screen.queryByRole("link", { name: /^A la pista hi ha muntat/u })).toBeNull();
+  });
+
   it("a photo setup shows its photo; «previst fins» is the club's day", async () => {
     const central = courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto);
     if (central === undefined) throw new Error("SETUP_NOT_FOUND");
@@ -100,6 +109,20 @@ describe("T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09)", () => {
     const photo = await screen.findByRole("img", { name: "Foto o plànol del muntatge" });
     expect(photo).toHaveAttribute("src", central.imageUrl);
     expect(screen.getByText("previst fins dijous, 6 d’agost")).toBeVisible();
+  });
+
+  it("a member opens the original plan of a link-only course registered on a ring", async () => {
+    const central = courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto);
+    const course = courseState.courses.find((item) => item.id === "course-agility-c-d");
+    if (!central || !course) throw new Error("FIXTURE_NOT_FOUND");
+    const url = "https://www.smarteragility.com/public-design?id=00000000000000000000000000000001";
+    Object.assign(central, { courseId: course.id, imageFileKey: null, imageUrl: null });
+    Object.assign(course, { normalizedJson: null, smarterUrl: url, thumbnailUrl: null });
+    await viewer(`/recorreguts/${central.id}`, "member");
+    expect(await screen.findByRole("link", { name: "Obre a Smarter" })).toHaveAttribute(
+      "href",
+      url,
+    );
   });
 
   it("R-16-16: a setup registered from the library draws its course in 2D for a MEMBER, with zoom and a quarter turn", async () => {
@@ -183,8 +206,9 @@ describe("E11-W03 INC-72: the member's plan draws what stands on the ring (R-16-
       (item) => Math.hypot(item.x - row.x, item.y - row.y) < 0.001,
     );
     expect(drawn).toHaveLength(1);
-    // SVG `rotate` is clockwise under the plan's Y flip: the icon turns by minus the ring heading.
-    const angle = (-(drawn[0]?.angle ?? Number.NaN) * Math.PI) / 180;
+    // The crossbar is perpendicular to the saved running direction in the ring frame.
+    const axisOffset = ["Jump", "DoubleJump", "Wall", "Tire"].includes(row.type) ? 90 : 0;
+    const angle = (((drawn[0]?.angle ?? Number.NaN) - axisOffset) * Math.PI) / 180;
     const stored = (row.rotationDeg * Math.PI) / 180;
     expect(Math.cos(angle)).toBeCloseTo(Math.cos(stored), 6);
     expect(Math.sin(angle)).toBeCloseTo(Math.sin(stored), 6);
@@ -372,7 +396,7 @@ describe("the instructor's viewer, «Registra què hi ha muntat» and the build 
     fireEvent.click(await screen.findByRole("button", { name: "Marca com a desmuntat" }));
     expect(
       screen.getByText(
-        "El muntatge de Central deixarà de sortir als quadres i a la reserva d'entrenaments.",
+        "El muntatge de Central deixarà de sortir a les classes i als entrenaments.",
       ),
     ).toBeVisible();
     const confirm = screen.getAllByRole("button", { name: "Marca com a desmuntat" }).at(-1);

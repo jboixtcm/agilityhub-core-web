@@ -277,3 +277,8 @@
   color: var(--ah-color-text-muted);
   font-size: 0.78rem;
 }
+
+.course-smarter-link {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}

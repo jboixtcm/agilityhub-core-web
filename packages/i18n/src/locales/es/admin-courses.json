@@ -375,5 +375,15 @@
     "fallback": "recorrido",
     "buildSheet": "{course}-{ring}.pdf",
     "markerSheet": "marcadores-{ring}.pdf"
+  },
+  "smarter": {
+    "addLink": "Añadir un enlace de Smarter",
+    "label": "Enlace de Smarter",
+    "optional": "Enlace de Smarter (opcional)",
+    "invalid": "Pega el enlace para compartir el diseño de Smarter Agility.",
+    "linkHelp": "El plano se abre en Smarter. Para verlo también en 3D aquí, importa el archivo .txt del recorrido.",
+    "open": "Abrir en Smarter",
+    "copy": "Copiar enlace",
+    "copied": "Enlace copiado"
   }
 }

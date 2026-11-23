@@ -41,6 +41,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
+import { CONTACT_FOOTPRINTS, ICON_AXIS_OFFSET, TUNNEL_RADIUS_M } from '../lib/obstacle-plan.js';
 import type { PlannerRing } from '../lib/planner-state.js';
 
 interface Props {
@@ -69,35 +70,6 @@ const OBSTACLE_FBX: Partial<Record<ObstacleType, string>> = {
   LongJump: 'long_jump.fbx',
   Wall: 'wall.fbx',
   Tire: 'tire.fbx',
-};
-
-/**
- * Per-obstacle FBX heading-axis offset, in degrees, applied as an EXTRA
- * Y-rotation on top of the obstacle's stored heading.
- *
- * The generic-fci FBX pack uses two different "forward" conventions:
- *   * Ramp-style obstacles (DogWalk, AFrame, Seesaw, Weave): the dog runs
- *     ALONG the model's long axis (FBX local +X). Smarter's `angle` is
- *     the running direction, so heading maps directly to local +X. No
- *     offset.
- *   * Jump-style obstacles (Jump, DoubleJump, LongJump, Wall, Tire): the
- *     BAR/WALL/HOOP runs along local +X, and the dog runs PERPENDICULAR
- *     (local +Z). Smarter's `angle` is still the running direction, so we
- *     have to add +90° around Y to align the bar perpendicular to the
- *     heading. (Sign: three.js Y-rotation +90° takes local +X to world -Z,
- *     so adding +90° to the heading-derived rotation rotates the bar a
- *     quarter-turn CCW relative to the running direction — exactly what
- *     a top-down view of a real jump looks like.)
- */
-const OBSTACLE_HEADING_OFFSET_DEG: Partial<Record<ObstacleType, number>> = {
-  Jump: 90,
-  DoubleJump: 90,
-  Wall: 90,
-  Tire: 90,
-  // NOTE: LongJump is NOT in this list. Probed the FBX (Part_1..Part_4):
-  // each bar is 120 cm long along +Z and the 4 bars are stacked along +X,
-  // so the dog's running direction is +X. Same convention as the ramp-style
-  // obstacles (DogWalk, AFrame, Seesaw, Weave) → no extra rotation.
 };
 
 function themeColor(property: string): string {
@@ -231,7 +203,7 @@ function ringToWorld(x: number, y: number, height = 0): THREE.Vector3 {
  * at planner zoom.
  *
  * Local +X is the running direction (DogWalk / AFrame / Seesaw / Weave
- * share this convention — see OBSTACLE_HEADING_OFFSET_DEG header).
+ * share this convention — see ICON_AXIS_OFFSET header).
  */
 function buildWeaveOverlay(): THREE.Group {
   const N_POLES = 12;
@@ -307,7 +279,7 @@ function buildWeaveOverlay(): THREE.Group {
  * ~10 px in the real FCI spec — see weave for the same trick).
  *
  * Local frame: +X is the dog's running direction (matches the FBX
- * convention, see OBSTACLE_HEADING_OFFSET_DEG header — DogWalk is not
+ * convention, see ICON_AXIS_OFFSET header — DogWalk is not
  * in that list, so its "forward" is the model's local +X).
  */
 function buildDogWalkOverlay(): THREE.Group {
@@ -316,8 +288,7 @@ function buildDogWalkOverlay(): THREE.Group {
   // yellow caps; this is sized generously so the overlay reads as a
   // single continuous Smarter-style silhouette and the FBX is invisible
   // under it from the top-down ortho camera.
-  const TOTAL_LEN = 11.0; // m — horizontal projection of the full obstacle (3 planks at ~30° ramps)
-  const WIDTH = 0.4; // m — wider than the real 0.30 m so it reads, but not chunky
+  const { lengthM: TOTAL_LEN, widthM: WIDTH } = CONTACT_FOOTPRINTS.DogWalk;
   const CONTACT_LEN = 1.5; // m — yellow caps sized to match Smarter's stylized proportion (~14% each)
   const SLAB_THICK = 0.04; // m — thin so it reads as a flat decal
   const OVERLAY_Y = 1.5; // m — above the FBX's ~1.2 m apex
@@ -376,11 +347,10 @@ function buildDogWalkOverlay(): THREE.Group {
  *   - Contact zone = lower 1.06 m of each ramp surface → projects to ~0.84 m
  *
  * Local +X is the running direction (DogWalk / AFrame / Seesaw / Weave
- * share this convention — see OBSTACLE_HEADING_OFFSET_DEG header).
+ * share this convention — see ICON_AXIS_OFFSET header).
  */
 function buildAFrameOverlay(): THREE.Group {
-  const TOTAL_LEN = 4.2; // m — full chevron horizontal projection
-  const WIDTH = 0.9; // m — FCI panel width
+  const { lengthM: TOTAL_LEN, widthM: WIDTH } = CONTACT_FOOTPRINTS.AFrame;
   const CONTACT_LEN = 0.85; // m — lower contact zone projected length
   const SLAB_THICK = 0.04;
   const OVERLAY_Y = 1.9; // m — above the A-frame's 1.7 m apex
@@ -434,11 +404,10 @@ function buildAFrameOverlay(): THREE.Group {
  * short dog walk.
  *
  * Local +X is the running direction (DogWalk / AFrame / Seesaw / Weave
- * share this convention — see OBSTACLE_HEADING_OFFSET_DEG header).
+ * share this convention — see ICON_AXIS_OFFSET header).
  */
 function buildSeesawOverlay(): THREE.Group {
-  const TOTAL_LEN = 3.7; // m — FCI plank length
-  const WIDTH = 0.4; // m — slightly wider than the real 0.30 m for readability (same trick as dog walk)
+  const { lengthM: TOTAL_LEN, widthM: WIDTH } = CONTACT_FOOTPRINTS.Seesaw;
   const CONTACT_LEN = 0.85; // m — bottom-of-ramp contact zone projection
   const SLAB_THICK = 0.04;
   // 1.3 m — high enough to clear the FBX plank's tilted rest pose. The
@@ -499,7 +468,7 @@ function buildSeesawOverlay(): THREE.Group {
  *     rules require them so judges can tell the jump zone limits
  *
  * Local +X is the running direction (LongJump is NOT in
- * OBSTACLE_HEADING_OFFSET_DEG → its "forward" is the model's local +X,
+ * ICON_AXIS_OFFSET → its "forward" is the model's local +X,
  * same as the contact obstacles).
  */
 function buildLongJumpOverlay(): THREE.Group {
@@ -578,7 +547,7 @@ function buildLongJumpOverlay(): THREE.Group {
  *   - Bar width 1.2 m (FCI standard); standards 5 cm diameter
  *
  * Coordinate convention: jump-style obstacles have the BAR along local
- * +X with the dog running along local +Z (see OBSTACLE_HEADING_OFFSET_DEG
+ * +X with the dog running along local +Z (see ICON_AXIS_OFFSET
  * header — Jump gets +90° rotation correction on the heading because of
  * this). So our overlay puts a wide bar on +X with thin depth in +Z and
  * two standards at the +X extremes.
@@ -1166,13 +1135,12 @@ export function Planner3D(props: Props): React.ReactElement {
         // exaggerated to 0.40 m for visibility but tunnels then read
         // larger than they should next to real-size jumps; Jordi asked
         // for real size on both, so we drop back to the real radius.
-        const TUBE_RADIUS_M = 0.3;
         const TUBE_CENTRE_Y = 0.35;
         // Control points are ring Y-up (post-parse flip). World z = -ring-y.
         const points = placedCps.map((p) => new THREE.Vector3(p.x, TUBE_CENTRE_Y, -p.y));
         const curve = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.5);
         const tubularSegments = Math.max(40, placedCps.length * 12);
-        const geo = new THREE.TubeGeometry(curve, tubularSegments, TUBE_RADIUS_M, 16, false);
+        const geo = new THREE.TubeGeometry(curve, tubularSegments, TUNNEL_RADIUS_M, 16, false);
         // depthWrite:false means the tube draws its colour but doesn't update
         // the depth buffer. Combined with renderOrder=1 (tunnel) <
         // renderOrder=2 (obstacles), this guarantees a dog-walk / a-frame /
@@ -1227,8 +1195,8 @@ export function Planner3D(props: Props): React.ReactElement {
       const assetBaseUrl = (props.assetBaseUrl ?? '/obstacle-models').replace(/\/$/, '');
       const fbxUrl = fbxFilename === undefined ? undefined : `${assetBaseUrl}/${fbxFilename}`;
       const baseHeadingY = obstacleHeadingY(o.rotationDegrees, placement);
-      // Per-type heading-axis correction (see OBSTACLE_HEADING_OFFSET_DEG).
-      const offsetRad = ((OBSTACLE_HEADING_OFFSET_DEG[o.obstacleType] ?? 0) * Math.PI) / 180;
+      // Per-type heading-axis correction (see ICON_AXIS_OFFSET).
+      const offsetRad = ((ICON_AXIS_OFFSET[o.obstacleType] ?? 0) * Math.PI) / 180;
       const headingY = baseHeadingY + offsetRad;
 
       // Always add a placeholder pivot group so click selection has a target

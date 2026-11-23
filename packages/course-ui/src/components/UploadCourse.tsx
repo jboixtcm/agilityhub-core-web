@@ -1,6 +1,11 @@
 "use client";
 
-import { parseSmarterTxt, summarizeCourse, type CourseData } from "@agilityhub/course-core";
+import {
+  parseSmarterTxt,
+  smarterDesignUrl,
+  summarizeCourse,
+  type CourseData,
+} from "@agilityhub/course-core";
 import { useState, type ChangeEvent } from "react";
 
 import { getPlannerStore } from "../lib/storage/get-store.js";
@@ -12,6 +17,7 @@ import { Card, CardTitle } from "./ui/Card.js";
 export interface UploadCourseLabels {
   readonly title: string;
   readonly file: string;
+  readonly smarterLink?: { label: string; invalid: string };
   readonly parsing: (filename: string) => string;
   readonly parseError: string;
   /** An api failure in the reader's language, by its code (the shared catalog mapper). */
@@ -28,6 +34,7 @@ export interface UploadCourseLabels {
 }
 
 interface Props {
+  readonly existing?: { id: string; version: number } | undefined;
   readonly labels: UploadCourseLabels;
   readonly onUploaded: (course: CourseData, courseDbId: string, filename: string) => void;
 }
@@ -41,7 +48,11 @@ type Phase = "idle" | "parsing" | "preview" | "uploading" | "error";
  */
 function retiresKey(error: unknown): boolean {
   if (typeof error !== "object" || error === null) return false;
-  const { code, details, status } = error as { code?: unknown; details?: unknown; status?: unknown };
+  const { code, details, status } = error as {
+    code?: unknown;
+    details?: unknown;
+    status?: unknown;
+  };
   if (typeof code !== "string" || typeof status !== "number" || status < 400 || status >= 500) {
     return false;
   }
@@ -51,11 +62,15 @@ function retiresKey(error: unknown): boolean {
       : undefined;
   return !(code === "IDEMPOTENCY_KEY_REUSED" && reason === "IN_PROGRESS");
 }
-type UploadError = { readonly kind: "parse" } | { readonly kind: "upload"; readonly error: unknown };
+type UploadError =
+  { readonly kind: "parse" } | { readonly kind: "upload"; readonly error: unknown };
 
-export function UploadCourse({ labels, onUploaded }: Props) {
+export function UploadCourse({ labels, onUploaded, existing }: Props) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [failure, setFailure] = useState<UploadError | null>(null);
+  const [url, setUrl] = useState("");
+  const link = smarterDesignUrl(url);
+  const invalidLink = url.trim() !== "" && link === null;
   const [filename, setFilename] = useState<string | null>(null);
   const [course, setCourse] = useState<CourseData | null>(null);
   const [savedDbId, setSavedDbId] = useState<string | null>(null);
@@ -84,12 +99,21 @@ export function UploadCourse({ labels, onUploaded }: Props) {
   }
 
   async function handleContinue() {
-    if (course === null || bytes === null || filename === null || phase === "uploading") return;
+    if (
+      course === null ||
+      bytes === null ||
+      filename === null ||
+      phase === "uploading" ||
+      invalidLink
+    )
+      return;
     setPhase("uploading");
     setFailure(null);
     try {
       const { course: savedCourse } = await getPlannerStore().uploadSmarterFile({
         submissionKey,
+        ...(existing ? { existing } : {}),
+        ...(link === null ? {} : { smarterUrl: link }),
         filename,
         bytes,
         courseData: course,
@@ -121,6 +145,24 @@ export function UploadCourse({ labels, onUploaded }: Props) {
         />
       </label>
 
+      {labels.smarterLink === undefined ? null : (
+        <label className="block mt-3">
+          <span className="block text-sm text-muted">{labels.smarterLink.label}</span>
+          <input
+            type="url"
+            value={url}
+            disabled={busy || savedDbId !== null}
+            aria-invalid={invalidLink}
+            className="w-full"
+            onChange={(event) => {
+              setUrl(event.currentTarget.value);
+              setSubmissionKey(crypto.randomUUID());
+            }}
+          />
+          {invalidLink ? <span role="alert">{labels.smarterLink.invalid}</span> : null}
+        </label>
+      )}
+
       {phase === "parsing" && filename !== null ? (
         <p className="mt-3 text-sm text-muted">{labels.parsing(filename)}</p>
       ) : null}
@@ -138,7 +180,10 @@ export function UploadCourse({ labels, onUploaded }: Props) {
       course !== null ? (
         <div className="mt-4 space-y-3">
           <UploadPreview course={course} labels={labels} />
-          <Button onClick={handleContinue} disabled={savedDbId !== null || phase === "uploading"}>
+          <Button
+            onClick={handleContinue}
+            disabled={savedDbId !== null || phase === "uploading" || invalidLink}
+          >
             {phase === "uploading"
               ? labels.uploading
               : savedDbId !== null

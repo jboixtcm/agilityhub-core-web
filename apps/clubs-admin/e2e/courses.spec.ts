@@ -49,6 +49,66 @@ test.beforeAll(() => {
 });
 
 test.describe("E9-W03 D18 «Biblioteca de recorreguts» and D16 «Geometria» (S16)", () => {
+  test("Smarter share link can be saved directly, edited, and given a 3D model in place", async ({
+    page,
+  }, testInfo) => {
+    await signIn(page, "instructor");
+    await openLibrary(page);
+    await page.getByRole("button", { name: "Nou recorregut" }).click();
+    await page.getByRole("menuitem", { name: "Afegeix un enllaç de Smarter" }).click();
+    const dialog = page.getByRole("dialog");
+    const link = "https://www.smarteragility.com/public-design?id=00000000000000000000000000000001";
+    await dialog.getByLabel("Nom", { exact: true }).fill("Diumenge al club");
+    await dialog.getByLabel("Enllaç de Smarter").fill("https://example.test/pista.png");
+    await dialog.getByRole("button", { name: "Desa el recorregut" }).click();
+    await expect(
+      dialog.getByText("Enganxa l’enllaç de compartició del disseny de Smarter Agility."),
+    ).toBeVisible();
+    await dialog.getByLabel("Enllaç de Smarter").fill(link);
+    await dialog.getByRole("button", { name: "Desa el recorregut" }).click();
+    await expect(page.getByRole("link", { name: "Obre a Smarter" })).toHaveAttribute("href", link);
+    await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.getByRole("button", { name: "Copia l’enllaç" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Enllaç copiat" })).toBeVisible();
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(link);
+    const coursePage = page.url();
+    await page.getByRole("button", { name: "Registra-ho com a muntat" }).click();
+    const setup = page.getByRole("dialog", { name: "Registra-ho com a muntat" });
+    await setup.getByLabel("Pista", { exact: true }).selectOption({ label: "Central" });
+    const until = setup.getByLabel("Fins quan?");
+    const today = await until.getAttribute("min");
+    expect(today).toBeTruthy();
+    await until.fill(today ?? "");
+    await setup.getByRole("button", { name: "REGISTRA", exact: true }).click();
+    await expect(page.getByText(/^Registrat com a muntat a Central/u)).toBeVisible();
+    await page.getByLabel("Enllaç de Smarter", { exact: true }).fill(link.replace(/1$/u, "2"));
+    await page.getByRole("button", { name: "Desa", exact: true }).click();
+    await expect(page.getByRole("link", { name: "Obre a Smarter" })).toHaveAttribute(
+      "href",
+      link.replace(/1$/u, "2"),
+    );
+    await page.getByRole("button", { name: "Importa un fitxer Smarter (.txt)" }).click();
+    await dialog
+      .getByLabel("Tria el fitxer .txt que exporta Smarter")
+      .setInputFiles(smarterFixture);
+    await dialog.getByRole("button", { name: "Desa el recorregut" }).click();
+    await expect(page.getByRole("img", { name: "Plànol de Diumenge al club" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "3D" })).toBeVisible();
+    expect(page.url()).toBe(coursePage);
+    await page.screenshot({ path: testInfo.outputPath("smarter-course-desktop.png") });
+    await page.setViewportSize({ width: 375, height: 812 });
+    await expect(page.getByRole("link", { name: "Obre a Smarter" })).toBeVisible();
+    await page.screenshot({ path: testInfo.outputPath("smarter-course-mobile.png") });
+    await expect(page.getByRole("link", { name: "Obre a Smarter" })).toHaveAttribute(
+      "href",
+      link.replace(/1$/u, "2"),
+    );
+    await page.getByRole("link", { name: "‹ Biblioteca de recorreguts" }).click();
+    await expect(page.getByRole("row").filter({ hasText: "Diumenge al club" })).toContainText(
+      "Central",
+    );
+  });
+
   test("T-16-15 the library: thumbnails, owner chips, the AgilityHub library", async ({ page }) => {
     await signIn(page, "admin");
     await openLibrary(page);

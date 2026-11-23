@@ -140,6 +140,17 @@
   gap: var(--ah-space-2);
 }
 
+.courses-smarter-actions {
+  margin-top: var(--ah-space-2);
+}
+
+.courses-smarter-link {
+  color: var(--ah-color-text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .courses-name-cell {
   display: flex;
   align-items: center;

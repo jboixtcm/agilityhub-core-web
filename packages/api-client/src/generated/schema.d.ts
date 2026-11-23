@@ -1762,7 +1762,7 @@ export interface paths {
         put?: never;
         /**
          * createCourse
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. Creates a CLUB course. S16 §3: club-owned courses cannot use PUBLIC visibility (VALIDATION_ERROR). R-16-01: normalizedJson (required unless source = IMAGE, else COURSE_MODEL_INVALID) is validated against course-data.v1 with schemaVersion 1; the server reads designLengthM, designWidthM, canvas, origin, courseGrade, courseType and stats from it. source = IMAGE requires imageFileKey; AGILITYHUB_COPY only comes from copy-to-club (VALIDATION_ERROR). File keys must be this club's uploads of the matching purpose (sourceFileKey SMARTER_SOURCE, imageFileKey COURSE_IMAGE, thumbnailFileKey THUMBNAIL), else NOT_FOUND. name: enabled club locales (LOCALE_NOT_ENABLED). levelIds: none while levels.enabled = false (LEVELS_DISABLED), else this club's levels (NOT_FOUND). Publishes CourseImported (SMARTER) or CourseCreated.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. Creates a CLUB course. S16 §3: club-owned courses cannot use PUBLIC visibility (VALIDATION_ERROR). R-16-01: normalizedJson (optional for IMAGE and for SMARTER with a public smarterUrl, otherwise required) is validated against course-data.v1 with schemaVersion 1; the server reads designLengthM, designWidthM, canvas, origin, courseGrade, courseType and stats from it. source = IMAGE requires imageFileKey; AGILITYHUB_COPY only comes from copy-to-club (VALIDATION_ERROR). File keys must be this club's uploads of the matching purpose (sourceFileKey SMARTER_SOURCE, imageFileKey COURSE_IMAGE, thumbnailFileKey THUMBNAIL), else NOT_FOUND. name: enabled club locales (LOCALE_NOT_ENABLED). levelIds: none while levels.enabled = false (LEVELS_DISABLED), else this club's levels (NOT_FOUND). Publishes CourseImported (SMARTER) or CourseCreated.
          */
         post: operations["createCourse"];
         delete?: never;
@@ -9708,6 +9708,8 @@ export interface components {
             /** @description Only in GET /class-sessions/{id} (E5-T15), where it is always sent: the ring, null for a class without a ring */
             ring?: components["schemas"]["ClassRing"] | null;
             ringId?: string | null;
+            /** @description Visible mounted setup of the class ring at the start of this session */
+            ringSetupId?: string;
             riskExempt: boolean;
             startTime: string;
             /** Format: date-time */
@@ -9784,6 +9786,8 @@ export interface components {
             /** @description S16 R-16-13 «Recorregut previst» (screen 07): only with COURSES and courses.showSetupToMembers; null when the class plans no placement or its course is gone */
             plannedPlacement?: components["schemas"]["PlannedPlacement"] | null;
             ring?: components["schemas"]["ClassRing"] | null;
+            /** @description Visible mounted setup of the class ring at the start of this session */
+            ringSetupId?: string;
             startTime: string;
             /** @enum {string} */
             state: "DRAFT" | "ACTIVE" | "FINISHED" | "CANCELLED";
@@ -10506,6 +10510,8 @@ export interface components {
             schemaVersion?: number | null;
             /** @enum {string|null} */
             sizeCategory?: "GRAND" | "GARDEN" | null;
+            /** @description Public Smarter Agility design URL. An empty string clears it on update. */
+            smarterUrl?: string | null;
             /** @enum {string} */
             source: "SMARTER" | "EDITOR" | "IMAGE" | "AGILITYHUB_COPY";
             sourceCourseId?: string | null;
@@ -10693,6 +10699,8 @@ export interface components {
             schemaVersion?: number | null;
             /** @enum {string|null} */
             sizeCategory?: "GRAND" | "GARDEN" | null;
+            /** @description Public Smarter Agility design URL. An empty string clears it on update. */
+            smarterUrl?: string | null;
             /** @enum {string|null} */
             source?: "SMARTER" | "EDITOR" | "IMAGE" | "AGILITYHUB_COPY" | null;
             sourceFileKey?: string | null;
@@ -10728,6 +10736,8 @@ export interface components {
             schemaVersion?: number | null;
             /** @enum {string|null} */
             sizeCategory?: "GRAND" | "GARDEN" | null;
+            /** @description Public Smarter Agility design URL. An empty string clears it on update. */
+            smarterUrl?: string | null;
             /** @enum {string} */
             source: "SMARTER" | "EDITOR" | "IMAGE" | "AGILITYHUB_COPY";
             sourceFileKey?: string | null;
@@ -10909,6 +10919,8 @@ export interface components {
             /** @enum {string} */
             reason?: "MAINTENANCE" | "PRIVATE_CLASS" | "THERAPY" | "PREPARATION" | "ACTIVITY" | "OTHER" | "TRAINING";
             ringId?: string | null;
+            /** @description Visible mounted setup of the class ring at the start of this session */
+            ringSetupId?: string;
             riskText?: string | null;
             /** @enum {string} */
             state?: "DRAFT" | "ACTIVE" | "FINISHED" | "CANCELLED";

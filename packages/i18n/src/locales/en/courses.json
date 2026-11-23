@@ -26,7 +26,7 @@
     "register": "Register what is set up",
     "buildSession": "Build session",
     "dismantle": "Mark as dismantled",
-    "dismantleConfirm": "The setup on {ring} will no longer show on the day boards and in training bookings.",
+    "dismantleConfirm": "The setup on {ring} will disappear from classes and training sessions.",
     "dismantled": "Marked as dismantled.",
     "join": {
       "label": "Code of a build session",
@@ -47,7 +47,8 @@
     "zoomInGlyph": "+",
     "zoomOutGlyph": "−",
     "zoom": "{percent}%",
-    "rotate": "Turn a quarter"
+    "rotate": "Turn a quarter",
+    "openSmarter": "Open in Smarter"
   },
   "register": {
     "title": "Register what is set up",
@@ -105,6 +106,7 @@
   "blocks": {
     "trainingTitle": "Courses set up",
     "ringLine": "{ring}: {setup}",
+    "classPlan": "Plan",
     "bookingSetup": "Set up on the ring: {setup}",
     "bookingPlanned": "Planned course: {course}",
     "columnSetup": "Course set up on {ring}",

@@ -26,7 +26,7 @@
     "register": "Registrar qué hay montado",
     "buildSession": "Sesión de montaje",
     "dismantle": "Marcar como desmontado",
-    "dismantleConfirm": "El montaje de {ring} dejará de salir en los cuadros y en la reserva de entrenamientos.",
+    "dismantleConfirm": "El montaje de {ring} dejará de mostrarse en las clases y los entrenamientos.",
     "dismantled": "Marcado como desmontado.",
     "join": {
       "label": "Código de una sesión de montaje",
@@ -47,7 +47,8 @@
     "zoomInGlyph": "+",
     "zoomOutGlyph": "−",
     "zoom": "{percent} %",
-    "rotate": "Girar un cuarto de vuelta"
+    "rotate": "Girar un cuarto de vuelta",
+    "openSmarter": "Abrir en Smarter"
   },
   "register": {
     "title": "Registrar qué hay montado",
@@ -105,6 +106,7 @@
   "blocks": {
     "trainingTitle": "Recorridos montados",
     "ringLine": "{ring}: {setup}",
+    "classPlan": "Plano",
     "bookingSetup": "En la pista hay montado: {setup}",
     "bookingPlanned": "Recorrido previsto: {course}",
     "columnSetup": "Recorrido montado en {ring}",

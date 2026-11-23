@@ -3,7 +3,7 @@ import type { components } from "../../generated/schema";
 import brandingCanic from "./branding-canic.json";
 import { classSession, clubInstant, type ClassSession, type RingBlock } from "./calendar";
 import { catalogState } from "./catalogs";
-import { activeSetupOf, setupsVisible } from "./courses";
+import { classSetupField, daySetupId, setupsVisible } from "./courses";
 
 type ClassSessionMemberView = components["schemas"]["ClassSessionMemberView"];
 type DayGrid = components["schemas"]["DayGrid"];
@@ -249,7 +249,10 @@ export function isDayGridFixtureDate(date: string): boolean {
  * `GET /class-sessions/{id}` for ADMIN/INSTRUCTOR: the instructor projection plus the detail-only
  * `instructorNames` and `ring` (always sent, `null` without a ring) of api E5-T15.
  */
-export function dayGridStaffSession(id: string): ClassSession | undefined {
+export function dayGridStaffSession(
+  id: string,
+  modules: readonly string[],
+): ClassSession | undefined {
   for (const [date, items] of Object.entries(days)) {
     for (const item of items) {
       if (item.kind !== "CLASS" || classId(date, item) !== id) continue;
@@ -258,6 +261,7 @@ export function dayGridStaffSession(id: string): ClassSession | undefined {
       const ring = catalogState.rings.find((candidate) => candidate.id === item.ring);
       return {
         ...session,
+        ...classSetupField(item.ring, session.startsAt, modules, item.cancelled),
         instructorNames: [item.instructor],
         ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
       };
@@ -338,6 +342,7 @@ export function dayGridMemberSession(
         instructorName: item.hiddenForMembers === true ? null : item.instructor,
         levelIds: [],
         ...planned,
+        ...classSetupField(item.ring, clubInstant(date, item.start), modules),
         ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
         startTime: item.start,
         state: "ACTIVE",
@@ -396,6 +401,12 @@ export function dayGridFixture(
         push(item.start, {
           atRisk: item.atRisk === true,
           classId: classId(date, item),
+          ...classSetupField(
+            item.ring,
+            clubInstant(date, item.start, options.timeZone),
+            options.modules,
+            item.cancelled,
+          ),
           description: item.description,
           endTime: item.end,
           instructorName:
@@ -462,13 +473,12 @@ export function dayGridFixture(
   );
   // S06/S16: `activeSetupId` only with COURSES; a MEMBER reads it only while
   // `courses.showSetupToMembers` (null otherwise, like a ring without an ACTIVE setup).
-  const showSetups = setupsVisible(options.modules);
   const ringColumns: DayGridColumn[] = [...catalogState.rings]
     .filter((ring) => ring.active)
     .sort((left, right) => left.order - right.order)
     .map((ring) => ({
       ...(options.modules.includes("COURSES")
-        ? { activeSetupId: showSetups ? (activeSetupOf(ring.id)?.id ?? null) : null }
+        ? { activeSetupId: daySetupId(ring.id, date, options.modules) }
         : {}),
       color: ring.color,
       name: ring.name,

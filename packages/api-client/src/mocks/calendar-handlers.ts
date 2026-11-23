@@ -16,7 +16,8 @@ import {
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import {
-  activeSetupOf,
+  classSetupField,
+  daySetupId,
   plannedPlacementOf,
   readsAsMember,
   setupsVisible,
@@ -507,6 +508,7 @@ function memberView(session: ClassSession, locale: string): ClassSessionMemberVi
     id: session.id,
     instructorName: named ? session.instructorIds.map(instructorName).join(", ") : null,
     levelIds: [...session.levelIds],
+    ...classSetupField(session.ringId, session.startsAt, modules),
     ...(setupsVisible(modules)
       ? { plannedPlacement: plannedPlacementOf(session.placementId, locale) }
       : {}),
@@ -630,6 +632,7 @@ function dayGrid(
   const blocks = planningState.blocks.filter(
     (block) => block.date === date && block.state === "ACTIVE",
   );
+  const modules = currentMockScenario().branding.modules;
   const usedRings = new Set(
     [...sessions.map((session) => session.ringId), ...blocks.map((block) => block.ringId)].filter(
       (ringId): ringId is string => ringId !== null && ringId !== undefined,
@@ -643,6 +646,7 @@ function dayGrid(
   };
   for (const session of sessions) {
     push(session.startTime, {
+      ...classSetupField(session.ringId, session.startsAt, modules, session.state === "CANCELLED"),
       atRisk: atRiskNow(session, minDogs),
       classId: session.id,
       description: session.displayDescription,
@@ -693,15 +697,12 @@ function dayGrid(
   }
   // S06/S16: `activeSetupId` only with COURSES; a MEMBER reads it only while
   // `courses.showSetupToMembers` (null otherwise, like a ring without an ACTIVE setup).
-  const modules = currentMockScenario().branding.modules;
-  const showSetups = setupsVisible(modules);
+
   const ringColumns = [...catalogState.rings]
     .filter((ring) => usedRings.has(ring.id))
     .sort((left, right) => left.order - right.order)
     .map((ring) => ({
-      ...(modules.includes("COURSES")
-        ? { activeSetupId: showSetups ? (activeSetupOf(ring.id)?.id ?? null) : null }
-        : {}),
+      ...(modules.includes("COURSES") ? { activeSetupId: daySetupId(ring.id, date, modules) } : {}),
       color: ring.color,
       name: ring.name,
       ringId: ring.id,
@@ -823,6 +824,12 @@ export const calendarHandlers = [
     }
     return HttpResponse.json({
       ...sessionResponse(session),
+      ...classSetupField(
+        session.ringId,
+        session.startsAt,
+        currentMockScenario().branding.modules,
+        session.state === "CANCELLED",
+      ),
       instructorNames: session.instructorIds.map(instructorName),
       ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
     });

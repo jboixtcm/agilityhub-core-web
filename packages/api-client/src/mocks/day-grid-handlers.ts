@@ -123,7 +123,7 @@ export const dayGridHandlers = [
     if (!isFixtureClass(id)) return undefined;
     if (!ownTenant(scenario)) return apiError("NOT_FOUND", "Class not found", 404);
     if (isStaff(scenario)) {
-      return HttpResponse.json(dayGridStaffSession(id));
+      return HttpResponse.json(dayGridStaffSession(id, scenario.branding.modules));
     }
     const view = dayGridMemberSession(id, scenario.branding.modules);
     return view === undefined

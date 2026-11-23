@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, type ReactNode, useEffect } from "react";
+import { type CSSProperties, Fragment, type MouseEvent, type ReactNode, useEffect } from "react";
 
 import { Icon } from "./icons/Icon";
 import type { IconName } from "./icons/names";
@@ -56,6 +56,8 @@ export interface DayGridCellModel {
   pressable?: boolean | undefined;
   title?: string | undefined;
   who?: readonly string[] | undefined;
+  /** Optional secondary action, rendered outside the cell button. */
+  action?: ReactNode;
   /** Staff-only student navigation for an inert training cell. */
   whoContent?: ReactNode;
 }
@@ -268,31 +270,33 @@ export function DayGrid({
                   <span aria-hidden="true" className="ah-schedule-cell ah-schedule-cell--empty" />
                 ) : (
                   cells.map(({ cell, text }) => (
-                    <ScheduleCell
-                      color={text.plain === true ? undefined : colorOf.get(column.id)}
-                      dashed={text.plain === true && cell.dashed === true}
-                      key={cell.id}
-                      muted={text.muted === true}
-                      onClick={
-                        onCellPress !== undefined && cell.pressable === true
-                          ? (event: MouseEvent<HTMLButtonElement>) => {
-                              onCellPress(cell, event.currentTarget);
-                            }
-                          : undefined
-                      }
-                      plain={text.plain === true}
-                      selected={cell.id === selectedCellId}
-                      subtitle={
-                        view === "instructor" &&
-                        cell.kind === "TRAINING" &&
-                        cell.pressable !== true &&
-                        cell.whoContent != null
-                          ? cell.whoContent
-                          : text.lines.filter((line) => line !== "").join("\n")
-                      }
-                      title={text.title}
-                      warning={text.warning === true}
-                    />
+                    <Fragment key={cell.id}>
+                      <ScheduleCell
+                        color={text.plain === true ? undefined : colorOf.get(column.id)}
+                        dashed={text.plain === true && cell.dashed === true}
+                        muted={text.muted === true}
+                        onClick={
+                          onCellPress !== undefined && cell.pressable === true
+                            ? (event: MouseEvent<HTMLButtonElement>) => {
+                                onCellPress(cell, event.currentTarget);
+                              }
+                            : undefined
+                        }
+                        plain={text.plain === true}
+                        selected={cell.id === selectedCellId}
+                        subtitle={
+                          view === "instructor" &&
+                          cell.kind === "TRAINING" &&
+                          cell.pressable !== true &&
+                          cell.whoContent != null
+                            ? cell.whoContent
+                            : text.lines.filter((line) => line !== "").join("\n")
+                        }
+                        title={text.title}
+                        warning={text.warning === true}
+                      />
+                      {cell.action}
+                    </Fragment>
                   ))
                 )}
               </div>

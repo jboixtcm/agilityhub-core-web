@@ -375,5 +375,15 @@
     "fallback": "recorregut",
     "buildSheet": "{course}-{ring}.pdf",
     "markerSheet": "marcadors-{ring}.pdf"
+  },
+  "smarter": {
+    "addLink": "Afegeix un enllaç de Smarter",
+    "label": "Enllaç de Smarter",
+    "optional": "Enllaç de Smarter (opcional)",
+    "invalid": "Enganxa l’enllaç de compartició del disseny de Smarter Agility.",
+    "linkHelp": "El plànol s’obre a Smarter. Per tenir també el visor 3D aquí, importa el fitxer .txt del recorregut.",
+    "open": "Obre a Smarter",
+    "copy": "Copia l’enllaç",
+    "copied": "Enllaç copiat"
   }
 }

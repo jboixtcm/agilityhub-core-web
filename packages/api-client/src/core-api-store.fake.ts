@@ -135,6 +135,7 @@ function courseFrom(id: string, body: Schemas["CourseRequest"]): Schemas["Course
     ownerType: "CLUB",
     schemaVersion: body.schemaVersion ?? 1,
     source: body.source,
+    smarterUrl: body.smarterUrl ?? null,
     sourceFileKey: body.sourceFileKey ?? null,
     stats: { bbox: { h: 20, w: 40 }, obstacleCount: 0, pathLengthM: 0 },
     tags: [...body.tags],
@@ -243,7 +244,9 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
     api.buildSession = {
       ...session,
       obstacles: session.obstacles.map((obstacle) =>
-        obstacle.obstacleId === obstacleId ? { ...obstacle, at: LATER, byAccountId, status } : obstacle,
+        obstacle.obstacleId === obstacleId
+          ? { ...obstacle, at: LATER, byAccountId, status }
+          : obstacle,
       ),
       status: "IN_PROGRESS",
       version: session.version + 1,

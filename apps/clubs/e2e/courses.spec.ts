@@ -100,6 +100,10 @@ test.describe("E9-W04 S16 in the members' app (WP-16-F′) against MSW, 375 px",
     const icon = page.getByRole("button", { name: "Recorregut muntat a Muntanya" });
     await expect(icon).toBeVisible();
     await shot(page, "10-avui-icona-recorregut-375.png");
+    const classPlan = page.getByRole("link", { name: "Plànol de Muntanya" }).first();
+    await expect(classPlan).toHaveText("Plànol");
+    await classPlan.click();
+    await expect(page.getByRole("img", { name: "Plànol de Jumping del dijous" })).toBeVisible();
 
     await navigate(page, "/reserves/booking-duna-mon3");
     await expect(page.getByText("Recorregut previst: Agility C–D")).toBeVisible();

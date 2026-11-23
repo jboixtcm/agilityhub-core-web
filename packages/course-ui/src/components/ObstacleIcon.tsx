@@ -2,18 +2,12 @@
 
 import type { ObstacleType } from '@agilityhub/course-core';
 
+import { CONTACT_FOOTPRINTS } from '../lib/obstacle-plan.js';
+
 /**
- * Top-down obstacle silhouettes drawn at the obstacle's nominal footprint
- * size (length × width, meters). Each <ObstacleIcon> renders SVG primitives
- * centred on (0, 0) in the obstacle's LOCAL frame with the obstacle's
- * "forward" direction pointing along +X. The PlannerCanvas wraps the icon
- * in `<g transform="translate(anchor.x anchor.y) rotate(angle)">` so the
- * shape lands at the right ring-frame position and orientation.
- *
- * Dimensions are mirrored from the generic-fci manifest
- * (`unity/.../ObstaclePacks/generic-fci/manifest.json`); the warning engine
- * still uses the coarser `footprintRadiusMeters` since these icons are
- * informational, not authoritative footprints.
+ * Top-down symbols in metres, centred on their anchor. The local X axis follows the
+ * long dimension of the symbol (the bar for a jump, the plank for a contact).
+ * PlannerCanvas places each symbol along the same axis as its 3D counterpart.
  */
 
 export interface ObstacleFootprintM {
@@ -25,15 +19,13 @@ export interface ObstacleFootprintM {
 
 /** Manifest-derived footprints in meters. Tunnels are procedural — handled separately by the polyline renderer. */
 export const OBSTACLE_FOOTPRINTS_M: Partial<Record<ObstacleType, ObstacleFootprintM>> = {
-  Jump: { lengthM: 1.6, widthM: 0.4 },
-  DoubleJump: { lengthM: 1.6, widthM: 0.7 },
-  DogWalk: { lengthM: 3.65, widthM: 0.3 },
-  AFrame: { lengthM: 2.7, widthM: 0.9 },
-  Seesaw: { lengthM: 3.65, widthM: 0.3 },
+  Jump: { lengthM: 1.3, widthM: 0.55 },
+  DoubleJump: { lengthM: 1.3, widthM: 0.65 },
+  ...CONTACT_FOOTPRINTS,
   Weave: { lengthM: 6.6, widthM: 0.6 },
   LongJump: { lengthM: 1.5, widthM: 1.5 },
-  Wall: { lengthM: 1.4, widthM: 0.4 },
-  Tire: { lengthM: 1.0, widthM: 1.0 },
+  Wall: { lengthM: 2, widthM: 0.35 },
+  Tire: { lengthM: 0.77, widthM: 1.25 },
 };
 
 interface IconProps {
@@ -84,7 +76,7 @@ export function ObstacleIcon({ type, selected, warn }: IconProps): React.ReactEl
 
   switch (type) {
     case 'Jump': {
-      const upW = 0.16;
+      const upW = 0.1;
       return (
         <g>
           {outline}
@@ -121,7 +113,7 @@ export function ObstacleIcon({ type, selected, warn }: IconProps): React.ReactEl
       );
     }
     case 'DoubleJump': {
-      const upW = 0.16;
+      const upW = 0.1;
       const poleY1 = -W / 2 + W * 0.22;
       const poleY2 = W / 2 - W * 0.22;
       return (
@@ -278,10 +270,10 @@ export function ObstacleIcon({ type, selected, warn }: IconProps): React.ReactEl
       const n = 12;
       const r = Math.min(W * 0.4, 0.12);
       const poles: React.ReactElement[] = [];
-      // Distribute 12 poles inside the L span with a half-spacing margin.
-      const spacing = L / n;
+      // The distance between the first and last pole is 11 intervals.
+      const spacing = L / (n - 1);
       for (let i = 0; i < n; i += 1) {
-        const cx = -L / 2 + spacing * (i + 0.5);
+        const cx = -L / 2 + spacing * i;
         poles.push(
           <circle
             key={i}
@@ -313,11 +305,11 @@ export function ObstacleIcon({ type, selected, warn }: IconProps): React.ReactEl
       );
     }
     case 'LongJump': {
-      // 5 parallel low bars, ascending in spacing front-to-back.
-      const n = 5;
+      // 4 parallel low bars, ascending in spacing front-to-back.
+      const n = 4;
       const bars: React.ReactElement[] = [];
       for (let i = 0; i < n; i += 1) {
-        const cx = -L / 2 + (L / (n - 1)) * i;
+        const cx = -L / 2 + (L / n) * (i + 0.5);
         // Slightly wider bars towards the back.
         const halfH = W / 2 - 0.04;
         bars.push(
@@ -386,21 +378,14 @@ export function ObstacleIcon({ type, selected, warn }: IconProps): React.ReactEl
       );
     }
     case 'Tire': {
-      // Ring/hoop from above (the dog jumps through it).
-      const rOuter = Math.min(L, W) / 2;
-      const rInner = rOuter * 0.55;
+      // Top view of the upright hoop and its two feet (generic-fci tire model).
       return (
         <g>
           {outline}
-          <circle
-            cx={0}
-            cy={0}
-            r={rOuter}
-            fill={COLORS.body}
-            stroke={COLORS.stroke}
-            strokeWidth={sw}
-          />
-          <circle cx={0} cy={0} r={rInner} fill={COLORS.bodyDark} />
+          <rect x={-L / 2} y={-W / 2} width={0.07} height={W} fill={COLORS.bodyDark} />
+          <rect x={L / 2 - 0.07} y={-W / 2} width={0.07} height={W} fill={COLORS.bodyDark} />
+          <rect x={-0.35} y={-0.05} width={0.7} height={0.1} rx={0.05}
+            fill={COLORS.body} stroke={COLORS.stroke} strokeWidth={sw} />
         </g>
       );
     }

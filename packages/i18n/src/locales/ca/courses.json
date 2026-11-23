@@ -26,7 +26,7 @@
     "register": "Registra què hi ha muntat",
     "buildSession": "Sessió de muntatge",
     "dismantle": "Marca com a desmuntat",
-    "dismantleConfirm": "El muntatge de {ring} deixarà de sortir als quadres i a la reserva d'entrenaments.",
+    "dismantleConfirm": "El muntatge de {ring} deixarà de sortir a les classes i als entrenaments.",
     "dismantled": "Marcat com a desmuntat.",
     "join": {
       "label": "Codi d'una sessió de muntatge",
@@ -47,7 +47,8 @@
     "zoomInGlyph": "+",
     "zoomOutGlyph": "−",
     "zoom": "{percent} %",
-    "rotate": "Gira un quart de volta"
+    "rotate": "Gira un quart de volta",
+    "openSmarter": "Obre a Smarter"
   },
   "register": {
     "title": "Registra què hi ha muntat",
@@ -105,6 +106,7 @@
   "blocks": {
     "trainingTitle": "Recorreguts muntats",
     "ringLine": "{ring}: {setup}",
+    "classPlan": "Plànol",
     "bookingSetup": "A la pista hi ha muntat: {setup}",
     "bookingPlanned": "Recorregut previst: {course}",
     "columnSetup": "Recorregut muntat a {ring}",

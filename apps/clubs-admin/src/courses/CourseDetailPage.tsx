@@ -1,4 +1,5 @@
 import { type ApiClient, isApiError, useSubmissionKeys } from "@agilityhub/api-client";
+import { smarterDesignUrl } from "@agilityhub/course-core";
 import { PlannerCanvas } from "@agilityhub/course-ui";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
@@ -22,6 +23,7 @@ import { useTranslation } from "react-i18next";
 
 import { ChunkBoundary } from "../ChunkBoundary";
 
+import { ImportCourseModal } from "./CoursesPage";
 import {
   RegisterSetupModal,
   useBuildSheet,
@@ -47,6 +49,40 @@ import {
 
 const CourseViewer3D = lazy(() => import("./CourseViewer3D"));
 
+function SmarterLink({ url }: { url: string }) {
+  const { t } = useTranslation("admin-courses");
+  const [status, setStatus] = useState<"copied" | "manual">();
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setStatus("copied");
+    } catch {
+      setStatus("manual");
+    }
+  }
+  return (
+    <>
+      <a className="courses-smarter-link" href={url} target="_blank" rel="noopener noreferrer">
+        {t("admin-courses:smarter.open")}
+      </a>
+      <Button variant="ghost" onClick={() => void copy()}>
+        {t("admin-courses:smarter.copy")}
+      </Button>
+      {status === "copied" ? <span role="status">{t("admin-courses:smarter.copied")}</span> : null}
+      {status === "manual" ? (
+        <Input
+          aria-label={t("admin-courses:smarter.label")}
+          readOnly
+          value={url}
+          onFocus={(event) => {
+            event.currentTarget.select();
+          }}
+        />
+      ) : null}
+    </>
+  );
+}
+
 /** The fields of D18's metadata card (S16 §2 «metadades editables»). */
 interface Metadata {
   agilityhubLevel: AgilityhubLevel | "";
@@ -54,6 +90,7 @@ interface Metadata {
   discipline: Discipline;
   name: string;
   notes: string;
+  smarterUrl: string;
   tags: string;
 }
 
@@ -64,6 +101,7 @@ function metadataOf(course: Course, locale: string): Metadata {
     discipline: course.discipline,
     name: course.nameI18n?.[locale] ?? course.name,
     notes: course.notes ?? "",
+    smarterUrl: course.smarterUrl ?? "",
     tags: course.tags.join(", "),
   };
 }
@@ -126,6 +164,14 @@ function MetadataCard({
       setMessage({ text: t("admin-courses:detail.nameRequired"), tone: "error" });
       return;
     }
+    const link = smarterDesignUrl(values.smarterUrl);
+    if (
+      (values.smarterUrl.trim() !== "" && link === null) ||
+      (link === null && course.source === "SMARTER" && course.normalizedJson == null)
+    ) {
+      setMessage({ text: t("admin-courses:smarter.invalid"), tone: "error" });
+      return;
+    }
     setPending(true);
     setMessage(undefined);
     try {
@@ -139,6 +185,7 @@ function MetadataCard({
           ...(dirty.includes("agilityhubLevel")
             ? { agilityhubLevel: values.agilityhubLevel === "" ? null : values.agilityhubLevel }
             : {}),
+          ...(dirty.includes("smarterUrl") ? { smarterUrl: link ?? "" } : {}),
           ...(dirty.includes("notes") ? { notes: values.notes } : {}),
           ...(dirty.includes("tags") ? { tags: tagsOf(values.tags) } : {}),
           version: base.version,
@@ -246,6 +293,17 @@ function MetadataCard({
               set("tags", event.currentTarget.value);
             }}
             value={values.tags}
+          />
+        </FormField>
+        <FormField id="course-smarter-url" label={t("admin-courses:smarter.label")}>
+          <Input
+            id="course-smarter-url"
+            type="url"
+            maxLength={2048}
+            onChange={(event) => {
+              set("smarterUrl", event.currentTarget.value);
+            }}
+            value={values.smarterUrl}
           />
         </FormField>
         <FormField id="course-notes" label={t("admin-courses:fields.notes")}>
@@ -586,6 +644,7 @@ export function CourseDetailPage({
     | { kind: "copy" }
     | { kind: "delete" }
     | { kind: "duplicate" }
+    | { kind: "attach" }
     | { kind: "register"; placement?: Placement }
   >();
   const [notice, setNotice] = useState<string>();
@@ -653,6 +712,7 @@ export function CourseDetailPage({
     return <Skeleton height="16rem" label={t("admin-courses:common.loading")} />;
   }
 
+  const link = smarterDesignUrl(course.smarterUrl);
   const library = course.ownerType === "AGILITYHUB";
   const editable = !library;
   const withModel = isCourseData(model);
@@ -661,6 +721,7 @@ export function CourseDetailPage({
     withModel && frame !== null && placement !== null ? (
       <PlannerCanvas
         course={model}
+        frame="content"
         labels={{
           ariaLabel: t("admin-courses:detail.plan2d", { name: course.name }),
           entry: t("admin-courses:viewer.entry"),
@@ -679,7 +740,20 @@ export function CourseDetailPage({
         src={course.imageUrl}
       />
     ) : (
-      <p className="courses-muted">{t("admin-courses:detail.noModel")}</p>
+      <>
+        <p className="courses-muted">
+          {link ? t("admin-courses:smarter.linkHelp") : t("admin-courses:detail.noModel")}
+        </p>
+        {link && editable && course.source === "SMARTER" ? (
+          <Button
+            onClick={() => {
+              setDialog({ kind: "attach" });
+            }}
+          >
+            {t("admin-courses:list.newSmarter")}
+          </Button>
+        ) : null}
+      </>
     );
 
   return (
@@ -707,6 +781,11 @@ export function CourseDetailPage({
               </span>
             ) : null}
           </p>
+          {link === null ? null : (
+            <div className="courses-chips-inline courses-smarter-actions">
+              <SmarterLink key={link} url={link} />
+            </div>
+          )}
         </div>
         <div className="courses-actions">
           {library ? (
@@ -818,6 +897,20 @@ export function CourseDetailPage({
           }}
           placements={placements}
           rings={rings}
+        />
+      ) : null}
+      {dialog?.kind === "attach" ? (
+        <ImportCourseModal
+          client={client}
+          existing={{ id: course.id, version: course.version }}
+          onClose={() => {
+            setDialog(undefined);
+            setReload((value) => value + 1);
+          }}
+          onImported={() => {
+            setDialog(undefined);
+            setReload((value) => value + 1);
+          }}
         />
       ) : null}
       {dialog?.kind === "register" ? (

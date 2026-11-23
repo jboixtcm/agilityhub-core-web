@@ -899,6 +899,38 @@ export function activeSetupOf(ringId: string): RingSetup | undefined {
   return courseState.setups.find((item) => item.ringId === ringId && item.status === "ACTIVE");
 }
 
+function visibleMount(ringId: string | null | undefined, modules: readonly string[]) {
+  if (ringId == null || !setupsVisible(modules)) return undefined;
+  const setup = activeSetupOf(ringId);
+  return setup && Date.parse(setup.expiresAt) > Date.now() ? setup : undefined;
+}
+
+export function classSetupField(
+  ringId: string | null | undefined,
+  startsAt: string,
+  modules: readonly string[],
+  cancelled = false,
+) {
+  const setup = visibleMount(ringId, modules);
+  const start = Date.parse(startsAt);
+  return !cancelled &&
+    setup &&
+    Date.parse(setup.builtAt) <= start &&
+    start < Date.parse(setup.expiresAt)
+    ? { ringSetupId: setup.id }
+    : {};
+}
+
+export function daySetupId(ringId: string, date: string, modules: readonly string[]) {
+  const setup = visibleMount(ringId, modules);
+  const zone = currentMockScenario().branding.timeZone;
+  return setup &&
+    Date.parse(setup.builtAt) < Date.parse(clubInstant(addDays(date, 1), "00:00", zone)) &&
+    Date.parse(setup.expiresAt) > Date.parse(clubInstant(date, "00:00", zone))
+    ? setup.id
+    : null;
+}
+
 /** S16 §3 (INC-62): a deactivated ring's ACTIVE setup is dismantled with `RING_INACTIVE`. */
 export function dismantleForInactiveRing(ringId: string, byAccountId: string): void {
   const active = activeSetupOf(ringId);

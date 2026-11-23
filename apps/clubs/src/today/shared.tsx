@@ -14,6 +14,7 @@ import {
 import { Fragment, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ClassSetupLink } from "../courses/blocks";
 import { StudentLink } from "../instructor/StudentLink";
 
 import { addDays, type DayGridApiCell, type DayGridResponse, weekChipDates } from "./useDayGrid";
@@ -165,6 +166,10 @@ export function mapDayGrid(
       const id = cellId(cell, row.time, index);
       cellsById.set(id, cell);
       return {
+        action:
+          cell.ringSetupId && cell.kind === "CLASS" ? (
+            <ClassSetupLink setupId={cell.ringSetupId} ring={ringName(grid, cell.ringId) ?? ""} />
+          ) : undefined,
         atRisk: cell.atRisk,
         cancelled: cell.state === "CANCELLED",
         dashed: cell.kind === "BLOCK" || (cell.kind === "OCCUPIED" && cell.reason !== "TRAINING"),

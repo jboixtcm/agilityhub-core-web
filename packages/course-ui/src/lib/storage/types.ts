@@ -82,6 +82,8 @@ export interface SaveRingDoorInput {
 }
 
 export interface UploadCourseInput {
+  readonly existing?: { readonly id: string; readonly version: number };
+  readonly smarterUrl?: string;
   readonly submissionKey: string;
   readonly filename: string;
   readonly bytes: Uint8Array;

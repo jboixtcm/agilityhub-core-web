@@ -2,7 +2,7 @@ import type { components } from "../../generated/schema";
 
 import { classSession, clubInstant, clubLocalDateOf } from "./calendar";
 import { catalogState } from "./catalogs";
-import { PLACEMENT_IDS, plannedPlacementOf, setupsVisible } from "./courses";
+import { classSetupField, PLACEMENT_IDS, plannedPlacementOf, setupsVisible } from "./courses";
 import { addDays, mondayOf } from "./planning";
 import {
   registrantAllocations,
@@ -514,6 +514,7 @@ export function bookingClassMemberView(
     id: item.id,
     instructorName: visibleInstructor(item, options.now),
     levelIds: levelIdsOf(item),
+    ...classSetupField(ring?.id, localInstant(item.startsAtLocal), options.modules),
     ...(setupsVisible(options.modules)
       ? { plannedPlacement: plannedPlacementOf(item.placementId, options.locale) }
       : {}),
@@ -559,6 +560,7 @@ export function bookingClassStaffView(
   return {
     ...session,
     instructorNames: [item.instructorName],
+    ...classSetupField(ring?.id, session.startsAt, options.modules),
     ...(options.modules.includes("COURSES") ? { placementId: item.placementId ?? null } : {}),
     ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
   };

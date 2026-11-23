@@ -16,7 +16,7 @@ import {
   coursePaths,
   levelNamesLabel,
   type MeRingSetupSummary,
-  readMeRingSetup,
+  readActiveSetup,
   type RingSetupSummary,
   setupLine,
   useStaffRoles,
@@ -87,6 +87,24 @@ export function TrainingSetupLines({ rings }: { rings: readonly TrainingRing[] }
         </li>
       ))}
     </ul>
+  );
+}
+
+export function ClassSetupLink({ setupId, ring }: { setupId: string; ring: string }) {
+  const { t, ready } = useTranslation("courses", BLOCK_TRANSLATION);
+  const branding = useBranding();
+  if (!ready || !branding.modules.includes("COURSES")) return null;
+  const path = coursePaths.setup(setupId);
+  return (
+    <a
+      className="class-setup-link"
+      href={path}
+      onClick={open(path)}
+      aria-label={t("courses:viewer.plan", { name: ring })}
+    >
+      <Icon aria-hidden="true" name="flag" />
+      {t("courses:blocks.classPlan")}
+    </a>
   );
 }
 
@@ -176,7 +194,12 @@ export function BookingCourseLines({
     const ringId = session?.ring?.id;
     const [planned, setup] = await Promise.all([
       plannedOf(client, session, staff),
-      ringId === undefined ? null : readMeRingSetup(client, ringId).catch(() => null),
+      ringId === undefined || session?.ringSetupId == null
+        ? null
+        : readActiveSetup(client, ringId).then(
+            (active) => (active?.id === session.ringSetupId ? active : null),
+            () => null,
+          ),
     ]);
     const plannedBuilt =
       staff && planned !== null && setup !== null

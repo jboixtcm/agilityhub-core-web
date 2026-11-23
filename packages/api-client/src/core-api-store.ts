@@ -38,6 +38,10 @@ type ApiBuildObstacle = components["schemas"]["BuildObstacle"];
 type ApiCalibrationLog = components["schemas"]["CalibrationLog"];
 type ApiCourse = components["schemas"]["Course"];
 type ApiCourseRequest = components["schemas"]["CourseRequest"];
+type SmarterUpload = ApiCourseRequest &
+  Required<
+    Pick<ApiCourseRequest, "sourceFileKey" | "normalizedJson" | "schemaVersion" | "pathLengthM">
+  >;
 type ApiGeometry = components["schemas"]["RingGeometry"];
 type ApiGeometryRequest = components["schemas"]["RingGeometryRequest"];
 type ApiInventory = components["schemas"]["ObstacleInventory"];
@@ -424,7 +428,7 @@ export class CoreApiStore implements PlannerStore {
    * `sourceFileKey`), never a new upload, so a lost answer is recovered instead of tripping
    * `IDEMPOTENCY_KEY_REUSED`. A new file comes with a new key (UploadCourse), hence a new upload.
    */
-  readonly #courseUploads = new Map<string, ApiCourseRequest>();
+  readonly #courseUploads = new Map<string, SmarterUpload>();
 
   constructor(options: CoreApiStoreOptions) {
     this.#client = options.client ?? apiClient;
@@ -553,11 +557,13 @@ export class CoreApiStore implements PlannerStore {
     const body =
       this.#courseUploads.get(input.submissionKey) ?? (await this.#storeCourseSource(input));
     try {
-      const result = await this.#client.POST("/courses", {
-        body,
-        headers: { "Idempotency-Key": input.submissionKey },
-      });
-      const course = plannerCourse(required(result.data, "createCourse"));
+      const result = input.existing
+        ? await this.#attachCourseModel(input.existing, body)
+        : await this.#client.POST("/courses", {
+            body,
+            headers: { "Idempotency-Key": input.submissionKey },
+          });
+      const course = plannerCourse(required(result.data, "uploadSmarterFile"));
       this.#courseUploads.delete(input.submissionKey);
       return { course };
     } catch (error) {
@@ -578,8 +584,37 @@ export class CoreApiStore implements PlannerStore {
     }
   }
 
+  /** Add the file to an existing link without changing its name, visibility, or ring assignments. */
+  async #attachCourseModel(existing: { id: string; version: number }, body: SmarterUpload) {
+    const params = { path: { id: existing.id } };
+    try {
+      return await this.#client.PATCH("/courses/{id}", {
+        params,
+        body: {
+          version: existing.version,
+          sourceFileKey: body.sourceFileKey,
+          normalizedJson: body.normalizedJson,
+          schemaVersion: body.schemaVersion,
+          pathLengthM: body.pathLengthM,
+        },
+      });
+    } catch (error) {
+      if (isApiError(error, "STALE_VERSION")) {
+        const latest = await this.#client.GET("/courses/{id}", { params });
+        // A retry after a lost response can recognize the exact upload it already attached.
+        if (
+          latest.data?.sourceFileKey === body.sourceFileKey &&
+          latest.data.normalizedJson != null
+        ) {
+          return latest;
+        }
+      }
+      throw error;
+    }
+  }
+
   /** Stores the `.txt` (signed upload) and remembers the creation body under the upload's key. */
-  async #storeCourseSource(input: UploadCourseInput): Promise<ApiCourseRequest> {
+  async #storeCourseSource(input: UploadCourseInput): Promise<SmarterUpload> {
     const upload = required(
       (
         await this.#client.POST("/courses/upload-urls", {
@@ -605,7 +640,7 @@ export class CoreApiStore implements PlannerStore {
         ? "AGILITY"
         : "OTHER";
     const designedOn = /^\d{4}-\d{2}-\d{2}$/.test(metadata.date) ? metadata.date : null;
-    const body: ApiCourseRequest = {
+    const body: SmarterUpload = {
       designedOn,
       designerName: metadata.designer.trim() === "" ? null : metadata.designer,
       discipline,
@@ -617,6 +652,7 @@ export class CoreApiStore implements PlannerStore {
       schemaVersion: 1,
       source: "SMARTER",
       sourceFileKey: upload.fileKey,
+      ...(input.smarterUrl === undefined ? {} : { smarterUrl: input.smarterUrl }),
       tags: [],
       visibility: "CLUB",
     };

@@ -375,5 +375,15 @@
     "fallback": "course",
     "buildSheet": "{course}-{ring}.pdf",
     "markerSheet": "markers-{ring}.pdf"
+  },
+  "smarter": {
+    "addLink": "Add a Smarter link",
+    "label": "Smarter link",
+    "optional": "Smarter link (optional)",
+    "invalid": "Paste the design sharing link from Smarter Agility.",
+    "linkHelp": "The plan opens in Smarter. To view it in 3D here, import the course .txt file.",
+    "open": "Open in Smarter",
+    "copy": "Copy link",
+    "copied": "Link copied"
   }
 }

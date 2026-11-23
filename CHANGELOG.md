@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 — Smarter course links
+
+- Scheduled classes link to the course mounted on their ring at class start from the day grid and booking detail.
+
+- Instructors can save a Smarter design link, attach its exported model to the same course, and open or copy the link. The ring setup viewer also links to the original plan. The 2D plan uses the 3D obstacle axes and footprints.
+
 ## 2026-11-22 — Club feedback 20261121-2
 
 - Administrators can create a ring block from the training register. Member pickers order candidates by given name and surname.

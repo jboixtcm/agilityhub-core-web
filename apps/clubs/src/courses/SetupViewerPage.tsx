@@ -5,6 +5,7 @@ import {
   useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { plannerPlacement } from "@agilityhub/api-client/core-api-store";
+import { smarterDesignUrl } from "@agilityhub/course-core";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -79,6 +80,7 @@ interface ViewerData {
  */
 interface ViewerContent {
   courseName: string | null;
+  smarterUrl: string | null;
   scene: ViewerScene | null;
   stale: boolean;
 }
@@ -289,7 +291,7 @@ function SetupContent({
   const { t } = useTranslation("courses");
   const store = useCourseStore(client);
   const load = useCallback(async (): Promise<ViewerContent> => {
-    const none: ViewerContent = { courseName: null, scene: null, stale: false };
+    const none: ViewerContent = { courseName: null, smarterUrl: null, scene: null, stale: false };
     let courseId = setup.courseId ?? null;
     let placed: Pick<ViewerScene, "placement" | "ring"> | null = null;
     let stale = false;
@@ -309,13 +311,15 @@ function SetupContent({
     const course = (await client.GET("/courses/{id}", { params: { path: { id: courseId } } })).data;
     if (course === undefined) return none;
     const model = course.normalizedJson;
-    if (!isCourseData(model)) return { courseName: course.name, scene: null, stale };
+    const smarterUrl = smarterDesignUrl(course.smarterUrl);
+    if (!isCourseData(model)) return { courseName: course.name, smarterUrl, scene: null, stale };
     const memberScene =
       !isStaffSetup(setup) && setup.placement != null
         ? memberPlacementScene(model, setup.placement)
         : null;
     return {
       courseName: course.name,
+      smarterUrl,
       scene:
         placed === null
           ? (memberScene ?? frameScene(model))
@@ -344,6 +348,16 @@ function SetupContent({
           {t("courses:viewer.course", { name: data.courseName })}
         </p>
       )}
+      {data?.smarterUrl == null ? null : (
+        <a
+          className="course-smarter-link"
+          href={data.smarterUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t("courses:viewer.openSmarter")}
+        </a>
+      )}
       {data?.stale === true ? (
         <p className="booking-note booking-note--warning" role="status">
           {t("courses:viewer.stale")}
@@ -359,7 +373,7 @@ function SetupContent({
             src={summary.thumbnailUrl}
           />
         </figure>
-      ) : (
+      ) : data?.smarterUrl ? null : (
         <p className="course-muted">{t("courses:viewer.noPlan")}</p>
       )}
     </>
