@@ -672,7 +672,8 @@ describe("MSW bootstrap handlers", () => {
     // PAY-05: + D10's `POST /upfront-payments/{id}/refund` (member-billing-handlers.ts).
     // COMM-07: + `POST /announcements/{batchId}/resend-failed` (messaging-handlers.ts).
     // STATS: member results, import history, preview and confirmation.
-    expect(handlers).toHaveLength(427);
+    // Member task attachments from the dog profile have their own read-only fixture handler.
+    expect(handlers).toHaveLength(428);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {
