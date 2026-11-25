@@ -711,7 +711,9 @@
       "ring": "Ring",
       "dog": "Dog",
       "state": "Status",
-      "origin": "Origin"
+      "origin": "Origin",
+      "bookedAt": "Booked on",
+      "cancelledAt": "Cancelled on"
     },
     "when": "{day} · {time}",
     "noClasses": "No class bookings.",

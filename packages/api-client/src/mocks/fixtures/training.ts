@@ -1007,6 +1007,7 @@ type TrainingBookingListItem = components["schemas"]["TrainingBookingListItem"];
 export function trainingBookingListItems(now: number): Required<TrainingBookingListItem>[] {
   const ringName = (ringId: string) => findRing(ringId)?.name ?? ringId;
   const mockup = visibleBookings(now).map((booking) => ({
+    cancelledAt: booking.cancelledAt ?? null,
     createdAt: booking.createdAt,
     date: booking.date,
     dogId: booking.dogId,
@@ -1029,6 +1030,7 @@ export function trainingBookingListItems(now: number): Required<TrainingBookingL
     .filter((booking) => !isMockupDay(booking.date))
     .map((booking) => ({
       createdAt: "2026-08-01T09:00:00Z",
+      cancelledAt: null,
       date: booking.date,
       dogId: `dog-${booking.dogName.toLowerCase()}`,
       dogName: booking.dogName,

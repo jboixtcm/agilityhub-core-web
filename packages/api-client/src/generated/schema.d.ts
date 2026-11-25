@@ -7749,6 +7749,7 @@ export interface components {
             maxPlaces?: number | null;
             /** Format: int32 */
             minPlaces?: number | null;
+            notifyMembers?: boolean;
             /** @description Only with COURSES */
             placementIds?: string[];
             /** @description Always empty in R1 */
@@ -7829,6 +7830,8 @@ export interface components {
             waiting: number;
         };
         ActivityCreateRequest: {
+            /** @description Notify eligible members when this draft is published (defaults to true) */
+            notifyMembers?: boolean;
             title: {
                 [key: string]: string;
             };
@@ -8763,6 +8766,8 @@ export interface components {
             /** Format: date-time */
             bookedAt?: string;
             bookingWeekKey?: string;
+            /** Format: date-time */
+            cancelledAt?: string | null;
             /** @description The class's display description in the reader's language (D10 «Classes», E5-T29) */
             classDescription?: string;
             classSessionId?: string;
@@ -17094,6 +17099,8 @@ export interface components {
             reason: string;
         };
         TrainingBookingListItem: {
+            /** Format: date-time */
+            cancelledAt?: string | null;
             /** Format: date-time */
             createdAt?: string;
             /** Format: date */

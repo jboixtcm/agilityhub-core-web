@@ -1695,6 +1695,7 @@ export function ActivityPage({
           {...(conflictDialog.askText === undefined ? {} : { askText: conflictDialog.askText })}
           initial={conflictDialog.initial}
           mode={conflictDialog.mode}
+          notifyMembers={activity.notifyMembers ?? true}
           onClose={() => {
             setConflictDialog(undefined);
           }}

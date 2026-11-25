@@ -1,5 +1,5 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
-import { type ClubFormats, useClubFormats } from "@agilityhub/i18n";
+import { clubLocalInstant, type ClubFormats, useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
   Button,
@@ -9,6 +9,7 @@ import {
   Skeleton,
   Toast,
   type Tone,
+  useBranding,
 } from "@agilityhub/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -115,6 +116,7 @@ function initialDog(): string | null {
 export function HistoryPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["history", "enums", "errors"]);
   const formats = useClubFormats();
+  const { timeZone } = useBranding();
   const [dogId, setDogId] = useState<string | null>(initialDog);
   const [type, setType] = useState<HistoryType | null>(initialType);
   const [dismissed, setDismissed] = useState<unknown>();
@@ -126,7 +128,24 @@ export function HistoryPage({ client }: { client: ApiClient }) {
         },
       });
       if (data === undefined) throw new TypeError("The history response did not contain data");
-      return data;
+      const now = Date.now();
+      return {
+        ...data,
+        items: data.items.map((item) => {
+          let href: string | undefined;
+          if (item.type === "ACTIVITY" && item.activityId != null)
+            href = `/activitats/${encodeURIComponent(item.activityId)}`;
+          if (
+            item.type === "CLASS" &&
+            (item.state === "CANCELLED" || item.state === "CANCELLED_LATE") &&
+            item.startsAtLocal &&
+            clubLocalInstant(item.startsAtLocal, timeZone) > now
+          ) {
+            href = `/reserves/${encodeURIComponent(item.id)}`;
+          }
+          return { ...item, href };
+        }),
+      };
     };
     try {
       return { data: await read(dogId), refused: undefined, type };
@@ -135,7 +154,7 @@ export function HistoryPage({ client }: { client: ApiClient }) {
       if (dogId === null || !isApiError(error, "DOG_NOT_ACCESSIBLE")) throw error;
       return { data: await read(null), refused: error, type };
     }
-  }, [client, dogId, type]);
+  }, [client, dogId, type, timeZone]);
   const history = useLoader(load);
   const refused = history.status === "ready" ? history.data.refused : undefined;
   // After a refusal the chips show «Tots», which is what was read.
@@ -284,12 +303,7 @@ export function HistoryPage({ client }: { client: ApiClient }) {
                 }}
                 date={`${formats.formatActivityDate(item.startsAtLocal ?? item.date, null, null, "history")}${item.type === "CLASS" && item.startsAtLocal ? ` · ${shortTime(item.startsAtLocal.slice(11, 16))}` : ""}`}
                 detail={historyDetail(t, formats, item)}
-                // An activity whose page answers (`activityId` not null, S07 §6) opens it.
-                href={
-                  item.type === "ACTIVITY" && item.activityId != null
-                    ? `/activitats/${encodeURIComponent(item.activityId)}`
-                    : undefined
-                }
+                href={item.href}
                 title={
                   data.showDog && item.dogName != null
                     ? t("history:withDog", { dog: item.dogName, title: item.title })

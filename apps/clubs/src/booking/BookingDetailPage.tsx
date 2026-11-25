@@ -1,5 +1,5 @@
 import { type ApiClient, isApiError } from "@agilityhub/api-client";
-import { dogArticle, useClubFormats } from "@agilityhub/i18n";
+import { clubLocalInstant, dogArticle, useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
   Badge,
@@ -10,16 +10,25 @@ import {
   Modal,
   Skeleton,
   type Tone,
+  useBranding,
 } from "@agilityhub/ui";
 import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BookingCourseLines } from "../courses/blocks";
-import { useWindowFocus } from "../training/shared";
+import { useNowUntil, useWindowFocus } from "../training/shared";
 
 import "./booking.css";
 import { memberNoticeField, NotifyMemberChoice, useMemberNoticeChoice } from "./NotifyMemberChoice";
-import { type Booking, errorText, localParts, type Translate, useBooking } from "./shared";
+import {
+  type Booking,
+  errorText,
+  localParts,
+  type Translate,
+  useBooking,
+  useLoader,
+} from "./shared";
+import { holdSeat, openConfirmation } from "./useSeatHold";
 
 type DisplayState = NonNullable<Booking["displayState"]>;
 
@@ -52,6 +61,56 @@ export function RingDot({ color }: { color: string | null | undefined }) {
       className="detail-card__dot"
       style={{ "--class-row-ring": color } as CSSProperties}
     />
+  );
+}
+
+function RebookClass({ client, booking }: { client: ApiClient; booking: Booking }) {
+  const { t } = useTranslation(["booking", "errors"]);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string>();
+  const load = useCallback(async () => {
+    const { data } = await client.GET("/me/bookable-classes", {
+      params: { query: { dogId: booking.dogId } },
+    });
+    return data?.classes.some(
+      (row) => row.id === booking.classSessionId && row.state === "BOOKABLE" && row.freeSeats > 0,
+    );
+  }, [client, booking.classSessionId, booking.dogId]);
+  const available = useLoader(load, undefined, false, true);
+  const rebook = async () => {
+    setPending(true);
+    setError(undefined);
+    try {
+      openConfirmation(await holdSeat(client, booking.classSessionId, booking.dogId));
+    } catch (cause) {
+      setError(errorText(t, cause));
+      available.refetch(true);
+    } finally {
+      setPending(false);
+    }
+  };
+  return (
+    <>
+      {available.status === "ready" && available.data ? (
+        <Button disabled={pending} onClick={() => void rebook()}>
+          {t("booking:detail.rebook")}
+        </Button>
+      ) : null}
+      {available.status === "error" ? (
+        <div role="alert">
+          <p>{errorText(t, available.error)}</p>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              available.refetch();
+            }}
+          >
+            {t("booking:detail.retry")}
+          </Button>
+        </div>
+      ) : null}
+      {error === undefined ? null : <p role="alert">{error}</p>}
+    </>
   );
 }
 
@@ -88,7 +147,13 @@ export function BookingDetailPage({
 }) {
   const { t } = useTranslation(["booking", "enums", "errors", "common"]);
   const formats = useClubFormats();
+  const { timeZone } = useBranding();
   const booking = useBooking(client, bookingId, refresh);
+  const startsAt =
+    booking.status === "ready"
+      ? clubLocalInstant(booking.data.classSession.startsAtLocal, timeZone)
+      : Number.NaN;
+  const now = useNowUntil([startsAt]);
   const [dialog, setDialog] = useState<{ late: boolean }>();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
@@ -254,6 +319,11 @@ export function BookingDetailPage({
         <a className="ah-button ah-button--primary" href={data.checkoutUrl}>
           {t("booking:detail.completePayment")}
         </a>
+      ) : null}
+      {(data.state === "CANCELLED" || data.state === "CANCELLED_LATE") &&
+      data.cancellation?.byRole === "MEMBER" &&
+      startsAt > now ? (
+        <RebookClass client={client} booking={data} />
       ) : null}
       {cancellable ? <Button onClick={open}>{t("booking:detail.cancel")}</Button> : null}
       {note !== undefined ? (

@@ -746,6 +746,31 @@ export function meHome(
 
 /** The 04 rows of each dog, as the mockup (Duna) and the variants the tests need (Rock, Toby). */
 function rowsFor(dogId: string, options: BookingOptions): MockRow[] {
+  const rows = scenarioRows(dogId, options);
+  for (const booking of bookingState.bookings) {
+    if (
+      booking.dogId === dogId &&
+      booking.cancellation?.byRole === "MEMBER" &&
+      (booking.state === "CANCELLED" || booking.state === "CANCELLED_LATE") &&
+      !rows.some((row) => row.classId === booking.classSessionId)
+    ) {
+      rows.push({ classId: booking.classSessionId, freeSeats: 1, state: "BOOKABLE" });
+    }
+  }
+  return rows;
+}
+
+export function lateCancellation(dogId: string, classId: string) {
+  return bookingState.bookings.find(
+    (booking) =>
+      booking.dogId === dogId &&
+      booking.classSessionId === classId &&
+      booking.state === "CANCELLED_LATE" &&
+      booking.cancellation?.byRole === "MEMBER",
+  );
+}
+
+function scenarioRows(dogId: string, options: BookingOptions): MockRow[] {
   if (dogId === BOOKING_DOG_IDS.rock) {
     return [
       { classId: CLASSES.wed5Rock.id, freeSeats: 1, heldByOther: true, state: "BOOKABLE" },
@@ -861,15 +886,21 @@ function rowState(
   week: BookingWeek,
   options: BookingOptions,
 ): BookableClass["state"] {
-  if (row.state === "NOT_BOOKABLE" || row.state === "NOT_YET_OPEN" || row.state === "PACK_EMPTY")
+  const restoring = lateCancellation(dogId, row.classId) !== undefined;
+  if (
+    row.state === "NOT_BOOKABLE" ||
+    row.state === "NOT_YET_OPEN" ||
+    (!restoring && row.state === "PACK_EMPTY")
+  )
     return row.state;
-  if (!options.delegated && limitRefuses(dogId, week, options)) return "WEEKLY_LIMIT_DONE";
+  if (!restoring && !options.delegated && limitRefuses(dogId, week, options))
+    return "WEEKLY_LIMIT_DONE";
   if (
     !options.modules.includes("WAITLIST") &&
     (row.state === "WAITLIST_OPEN" || row.state === "WAITLIST_FULL")
   )
     return "FULL";
-  return row.state;
+  return restoring && row.state === "PACK_EMPTY" && row.freeSeats > 0 ? "BOOKABLE" : row.state;
 }
 
 function isLive(item: StoredBooking | StoredEntry): boolean {
@@ -908,7 +939,10 @@ export function bookableClasses(
           id: session.id,
           notBookableReason: row.notBookableReason ?? null,
           opensAt: listed.opensAt,
-          price: single ? SINGLE_CLASS_PRICE : null,
+          price:
+            single && lateCancellation(selected.id, row.classId) === undefined
+              ? SINGLE_CLASS_PRICE
+              : null,
           ringColor: ringColor(session.ringName),
           ringName: session.ringName,
           startsAtLocal: session.startsAtLocal,
@@ -1077,8 +1111,9 @@ export function seatHoldResponse(
   const dog = findDog(hold.dogId);
   const week = session === undefined ? undefined : classWeek(session, options.now);
   if (session === undefined || dog === undefined || week === undefined) return undefined;
+  const restoring = lateCancellation(dog.id, session.id) !== undefined;
   const limit = limitStatus(dog.id, week, options);
-  const pack = packFor(dog.id, options);
+  const pack = restoring ? null : packFor(dog.id, options);
   return {
     classSession: {
       description: session.description,
@@ -1094,11 +1129,12 @@ export function seatHoldResponse(
     expiresAt: new Date(hold.expiresAt).toISOString(),
     holdSeconds: 60,
     id: hold.id,
-    limit,
+    limit: restoring ? { ...limit, reached: false, swappable: [], notSelectable: [] } : limit,
     pack: pack === null ? null : { available: pack.available, expiresOn: pack.expiresOn ?? null },
-    payment: options.modules.includes("SINGLE_CLASS")
-      ? { mode: chargeMode(dog.id), price: SINGLE_CLASS_PRICE }
-      : null,
+    payment:
+      !restoring && options.modules.includes("SINGLE_CLASS")
+        ? { mode: chargeMode(dog.id), price: SINGLE_CLASS_PRICE }
+        : null,
     serverNow: new Date(options.now).toISOString(),
   };
 }
@@ -1115,7 +1151,10 @@ export function createHold(
   );
   const session = findClass(classSessionId);
   const week = session === undefined ? undefined : classWeek(session, options.now);
-  const limit = week === undefined ? undefined : limitStatus(dogId, week, options);
+  const limit =
+    week === undefined || lateCancellation(dogId, classSessionId) !== undefined
+      ? undefined
+      : limitStatus(dogId, week, options);
   const hold: StoredHold = {
     classSessionId,
     dogId,

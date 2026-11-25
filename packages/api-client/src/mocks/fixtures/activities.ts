@@ -57,6 +57,7 @@ export interface StoredActivity {
   typeLabel: Record<string, string> | null;
   version: number;
   waitlistEnabled: boolean;
+  notifyMembers?: boolean;
   createdAt: string;
 }
 
@@ -619,7 +620,9 @@ export function activityResource(
     freeSeats: freeSeats(activity),
     id: activity.id,
     image: activity.image,
-    ...(admin ? { internalNotes: activity.internalNotes } : {}),
+    ...(admin
+      ? { internalNotes: activity.internalNotes, notifyMembers: activity.notifyMembers ?? true }
+      : {}),
     levelIds: activity.levelIds,
     levelNames: levelNames(activity, locale),
     location: activity.location,

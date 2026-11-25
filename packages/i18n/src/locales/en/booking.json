@@ -104,6 +104,7 @@
     "retry": "Try again",
     "notFound": "This booking does not exist or is no longer available.",
     "inTimeNotice": "If you cancel now, the class will not count as attended: you will recover your weekly allowance or pack credit, depending on your plan.",
-    "completePayment": "Complete payment"
+    "completePayment": "Complete payment",
+    "rebook": "Book this class again"
   }
 }

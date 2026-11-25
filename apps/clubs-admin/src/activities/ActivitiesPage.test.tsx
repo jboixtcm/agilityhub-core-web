@@ -173,6 +173,9 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     fireEvent.change(within(dialog).getByLabelText("Títol"), {
       target: { value: "Curset d'estiu" },
     });
+    const notify = within(dialog).getByRole("checkbox", { name: /Avisa els abonats actius/u });
+    expect(notify).toBeChecked();
+    fireEvent.click(notify);
     fireEvent.change(within(dialog).getByLabelText("Tipus"), { target: { value: "COURSE" } });
     fireEvent.click(within(dialog).getByRole("button", { name: "Crea l'activitat" }));
     await waitFor(() => {
@@ -182,6 +185,9 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
     });
     cleanup();
     const created = String(onNavigate.mock.calls[0]?.[0]).split("/")[2] ?? "";
+    expect(
+      activityState.activities.find((activity) => activity.id === created)?.notifyMembers,
+    ).toBe(false);
     await renderPage({ selectedId: created });
     const card = await maintenance("Curset d'estiu");
     expect(within(card).getByLabelText("Tipus")).toHaveValue("COURSE");

@@ -711,7 +711,9 @@
       "ring": "Pista",
       "dog": "Perro",
       "state": "Estado",
-      "origin": "Origen"
+      "origin": "Origen",
+      "bookedAt": "Reservada el",
+      "cancelledAt": "Anulada el"
     },
     "when": "{day} · {time}",
     "noClasses": "Ninguna reserva de clase.",

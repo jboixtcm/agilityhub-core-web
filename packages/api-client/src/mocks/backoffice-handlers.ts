@@ -368,6 +368,7 @@ function bookingListItems(scenario: MockScenarioDefinition): Required<BookingLis
     return [
       {
         bookedAt: booking.bookedAt,
+        cancelledAt: booking.cancellation?.at ?? null,
         // R-08-01: the week the class's start falls in, the opening's hour included.
         bookingWeekKey: bookingWeekKeyOf(localInstant(item.startsAtLocal)),
         classDescription: item.description,
@@ -392,6 +393,7 @@ function bookingListItems(scenario: MockScenarioDefinition): Required<BookingLis
   const staffWorld = planningState.sessions.flatMap((session) =>
     (registrants.get(session.id) ?? []).map((item) => ({
       bookedAt: item.bookedAt,
+      cancelledAt: null,
       bookingWeekKey: item.bookingWeekKey,
       classDescription: session.displayDescription,
       classSessionId: item.classSessionId,
@@ -423,6 +425,7 @@ const BOOKING_SPEC: ListSpec<Required<BookingListItem>> = {
     "memberId",
     "memberName",
     "bookedAt",
+    "cancelledAt",
     "late",
     "classDescription",
     "ringId",
@@ -472,6 +475,7 @@ function manyTrainingRows(): ReturnType<typeof trainingBookingListItems> {
       `${String(Math.floor(value / 60)).padStart(2, "0")}:${String(value % 60).padStart(2, "0")}`;
     return {
       createdAt: "2026-08-01T09:00:00Z",
+      cancelledAt: null,
       date,
       dogId: late ? "dog-coco-many" : "dog-blat-many",
       dogName: late ? "Coco" : "Blat",
@@ -532,6 +536,7 @@ const TRAINING_SPEC: ListSpec<TrainingRow> = {
     "state",
     "origin",
     "createdAt",
+    "cancelledAt",
   ],
   filterable: ["id", "date", "ringId", "memberId", "dogId", "state", "origin"],
   search: (item) => `${item.memberName} ${item.dogName} ${item.ringName}`,

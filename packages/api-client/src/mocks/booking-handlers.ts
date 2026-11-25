@@ -11,6 +11,7 @@ import {
   createHold,
   findClass,
   findDog,
+  lateCancellation,
   limitReachedDetails,
   localInstant,
   meHome,
@@ -255,9 +256,10 @@ function confirm(
   }
   const payment = seatHoldResponse(hold, context)?.payment ?? null;
   const pack = seatHoldResponse(hold, context)?.pack ?? null;
-  const id = nextBookingId("booking");
+  const previous = lateCancellation(hold.dogId, hold.classSessionId);
+  const id = previous?.id ?? nextBookingId("booking");
   const payToBook = payment?.mode === "PAY_TO_BOOK";
-  const created: StoredBooking = {
+  const created: StoredBooking = previous ?? {
     bookedAt: new Date(context.now).toISOString(),
     // An admin acting as the member books through the club: not the reader's own account (E5-T25).
     bookedBy: {
@@ -286,7 +288,11 @@ function confirm(
     state: payToBook ? "PAYMENT_PENDING" : "ACTIVE",
     swapFromBookingId: swapId,
   };
-  bookingState.bookings.push(created);
+  if (previous === undefined) bookingState.bookings.push(created);
+  else {
+    previous.state = "ACTIVE";
+    previous.cancellation = null;
+  }
   bookingState.holds = bookingState.holds.filter((item) => item.id !== hold.id);
   bookingState.lastDogForClass = hold.dogId;
   // A live waitlist entry of the dog for the class is consolidated (R-08-08, R-08-15).

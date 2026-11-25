@@ -85,7 +85,16 @@ describe("E5-W05 step 4 · D10's «Classes» table names each class and its ring
       within(classes)
         .getAllByRole("columnheader")
         .map((cell) => cell.textContent),
-    ).toEqual(["Dia i hora", "Classe", "Pista", "Gos", "Estat", "Origen"]);
+    ).toEqual([
+      "Dia i hora",
+      "Classe",
+      "Pista",
+      "Gos",
+      "Estat",
+      "Origen",
+      "Reservada el",
+      "Anul·lada el",
+    ]);
     // What the api sends for the newest booking (the mock world's, read the same way).
     const answer = (await (
       await fetch(
@@ -123,7 +132,7 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     // Wednesday 12 at 18:50 is the latest class the api lists for Laura: Duna holds two classes of
     // that booking week, its limit (E7-W07 step 5, R-08-03 and R-08-19; B+C takes B and C dogs,
     // E5-W05 round 3 #4), both booked in the app.
-    expect(firstRow?.textContent).toBe("dc 12/08 · 18:50B+CCentralDunaconfirmadaapp");
+    expect(firstRow?.textContent).toContain("dc 12/08 · 18:50B+CCentralDunaconfirmadaapp");
     const bookings = requests.find((url) => url.pathname.endsWith("/api/v1/bookings"));
     expect(bookings?.searchParams.getAll("filter")).toEqual(["memberId:eq:member-laura"]);
     expect(bookings?.searchParams.getAll("sort")).toEqual(["classStartsAt,desc"]);
@@ -135,12 +144,20 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
       within(trainings)
         .getAllByRole("row")
         .slice(1)
-        .map((row) => row.textContent),
+        .map((row) =>
+          within(row)
+            .getAllByRole("cell")
+            .slice(0, 5)
+            .map((cell) => cell.textContent)
+            .join(""),
+        ),
     ).toEqual([
       "dt 04/08 · 8:00MuntanyaRockconfirmadaapp",
       "dl 03/08 · 16:30CarreteraRockcancel·lada pel clubapp",
       "dl 03/08 · 7:00MuntanyaRockconfirmadaclub",
     ]);
+    const cancelledRow = within(trainings).getByText("cancel·lada pel club").closest("tr");
+    expect(cancelledRow).toHaveTextContent("18:00");
     const training = requests.find((url) => url.pathname.endsWith("/api/v1/training-bookings"));
     expect(training?.searchParams.getAll("filter")).toEqual(["memberId:eq:member-laura"]);
     // R-08-19: nothing to book or cancel from D10.
@@ -162,8 +179,10 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     );
     const { card } = await renderCard();
     const rows = within(within(card).getByRole("table", { name: "Classes" })).getAllByRole("row");
-    expect(rows[1]?.textContent).toBe("dc 12/08 · 18:50B+CCentralDunaconfirmadaclub");
-    expect(rows.slice(2).every((row) => row.textContent.endsWith("app"))).toBe(true);
+    expect(rows[1]?.textContent).toContain("dc 12/08 · 18:50B+CCentralDunaconfirmadaclub");
+    expect(
+      rows.slice(2).every((row) => within(row).getAllByRole("cell")[5]?.textContent === "app"),
+    ).toBe(true);
   });
 
   it("E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000", async () => {

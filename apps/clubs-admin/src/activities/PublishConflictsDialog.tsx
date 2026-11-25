@@ -25,6 +25,7 @@ export function PublishConflictsDialog({
   askText,
   initial,
   mode,
+  notifyMembers,
   onClose,
   onConfirm,
   preview,
@@ -34,6 +35,7 @@ export function PublishConflictsDialog({
   askText?: string;
   initial?: ConflictOptions & { notifyEmail?: boolean };
   mode: ConflictDialogMode;
+  notifyMembers: boolean;
   onClose: () => void;
   onConfirm: (options: ConflictOptions & { notifyEmail: boolean }) => Promise<void>;
   preview: RingConflicts;
@@ -187,7 +189,7 @@ export function PublishConflictsDialog({
             />
           </FormField>
         ) : null}
-        {mode === "publish" ? (
+        {mode === "publish" && notifyMembers ? (
           <div className="activity-switch">
             <Switch
               checked={notifyEmail}

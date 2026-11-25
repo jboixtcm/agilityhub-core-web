@@ -292,6 +292,27 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await shot(page, "07-anullada-tard-375.png");
   });
 
+  for (const { clock, late } of [
+    { clock: "2026-08-03T16:00:00+02:00", late: true },
+    { clock: "2026-08-02T20:30:00+02:00", late: false },
+  ]) {
+    test(`a member rebooks their ${late ? "late" : "in-time"} cancellation from the reservation detail`, async ({
+      page,
+    }) => {
+      await login(page, "member", { clock: new Date(clock) });
+      await page.goto(`${baseUrl}/reserves/booking-duna-mon3`);
+      await page.getByRole("button", { name: "ANUL·LA LA RESERVA" }).click();
+      await page.getByRole("dialog").getByRole("button", { name: "ANUL·LA", exact: true }).click();
+      await page.getByRole("button", { name: "Torna a reservar la classe" }).click();
+      await page.getByRole("button", { name: "CONFIRMAR LA RESERVA" }).click();
+      await page.getByRole("link", { name: "VEURE LA RESERVA" }).click();
+      await expect(page).toHaveURL(/\/reserves\/booking-/u);
+      expect(page.url().endsWith("/booking-duna-mon3")).toBe(late);
+      await expect(page.getByText("confirmada", { exact: true })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Torna a reservar la classe" })).toHaveCount(0);
+    });
+  }
+
   test("impersonated: the banner stays over 03 and 04, and the admin books as the member", async ({
     page,
   }) => {

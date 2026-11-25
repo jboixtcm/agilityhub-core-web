@@ -18,6 +18,8 @@ const PAGE_SIZE = 20;
 
 const BOOKING_FIELDS = [
   "classStartsAt",
+  "bookedAt",
+  "cancelledAt",
   // E5-T29: the class's description in the reader's language, its ring and the ring's colour.
   "classDescription",
   "ringName",
@@ -30,6 +32,8 @@ const BOOKING_FIELDS = [
 const TRAINING_FIELDS = [
   "date",
   "startsAtLocal",
+  "createdAt",
+  "cancelledAt",
   "ringName",
   "dogName",
   "state",
@@ -328,6 +332,18 @@ export function MemberBookingsCard({
               render: (row) =>
                 row.origin === undefined ? empty : t(`enums:bookingOrigin.${row.origin}`),
             },
+            {
+              header: t("admin-census:bookings.columns.bookedAt"),
+              key: "bookedAt",
+              render: (row) =>
+                row.bookedAt == null ? empty : formats.formatDateTime(row.bookedAt),
+            },
+            {
+              header: t("admin-census:bookings.columns.cancelledAt"),
+              key: "cancelledAt",
+              render: (row) =>
+                row.cancelledAt == null ? empty : formats.formatDateTime(row.cancelledAt),
+            },
           ]}
           empty={t("admin-census:bookings.noClasses")}
           loading={classes.loading}
@@ -408,6 +424,18 @@ export function MemberBookingsCard({
                   key: "origin",
                   render: (row) =>
                     row.origin === undefined ? empty : t(`enums:trainingOrigin.${row.origin}`),
+                },
+                {
+                  header: t("admin-census:bookings.columns.bookedAt"),
+                  key: "bookedAt",
+                  render: (row) =>
+                    row.createdAt == null ? empty : formats.formatDateTime(row.createdAt),
+                },
+                {
+                  header: t("admin-census:bookings.columns.cancelledAt"),
+                  key: "cancelledAt",
+                  render: (row) =>
+                    row.cancelledAt == null ? empty : formats.formatDateTime(row.cancelledAt),
                 },
               ]}
               empty={t("admin-census:bookings.noTrainings")}

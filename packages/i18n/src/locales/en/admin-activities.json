@@ -54,7 +54,8 @@
   "create": {
     "title": "New activity",
     "submit": "Create the activity",
-    "titleRequired": "Write the title in {locale}."
+    "titleRequired": "Write the title in {locale}.",
+    "notifyMembers": "Notify active members at the eligible levels when the activity is published"
   },
   "form": {
     "maintenanceTitle": "Activity maintenance — {title}",

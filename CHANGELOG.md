@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-25 — Club reservations and activity notices
+
+- The member card shows when class and training reservations were made and cancelled in the club's time zone.
+- The activity creation form lets staff choose whether to notify eligible members on publication.
+- Members can reopen a future cancelled class in their history and reserve an available seat from its detail.
+
 ## 2026-11-23 — Member navigation
 
 - The Activities tab lists classes and club activities. The Book tab opens ring booking and uses a calendar with a plus sign.

@@ -104,6 +104,7 @@
     "retry": "Volver a intentarlo",
     "notFound": "Esta reserva no existe o ya no es accesible.",
     "inTimeNotice": "Si cancelas ahora, la clase no contará como realizada: recuperarás la disponibilidad del límite semanal o el saldo del bono, según tu modalidad.",
-    "completePayment": "Completar el pago"
+    "completePayment": "Completar el pago",
+    "rebook": "Volver a reservar la clase"
   }
 }

@@ -3,6 +3,7 @@ import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
+  Checkbox,
   FormField,
   Icon,
   Input,
@@ -183,6 +184,7 @@ function CreateActivityModal({
   const branding = useBranding();
   const errorMessage = useActivityErrorMessage();
   const [locale, setLocale] = useState(branding.defaultLocale);
+  const [notifyMembers, setNotifyMembers] = useState(true);
   const [title, setTitle] = useState<Record<string, string>>({});
   const [type, setType] = useState<ActivityType>("SEMINAR");
   const [pending, setPending] = useState(false);
@@ -208,7 +210,9 @@ function CreateActivityModal({
     setPending(true);
     setError(undefined);
     try {
-      const result = await client.POST("/activities", { body: { title: values, type } });
+      const result = await client.POST("/activities", {
+        body: { title: values, type, notifyMembers },
+      });
       if (result.data === undefined) throw new TypeError("Missing created activity");
       onCreated(result.data.id);
     } catch (cause) {
@@ -259,6 +263,15 @@ function CreateActivityModal({
             ))}
           </Select>
         </FormField>
+        <label className="activity-check">
+          <Checkbox
+            checked={notifyMembers}
+            onChange={(event) => {
+              setNotifyMembers(event.currentTarget.checked);
+            }}
+          />
+          <span>{t("admin-activities:create.notifyMembers")}</span>
+        </label>
         {error === undefined || error.field ? null : (
           <p className="ah-form-field__error" role="alert">
             {error.message}

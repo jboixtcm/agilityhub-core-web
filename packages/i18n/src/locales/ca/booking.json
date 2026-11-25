@@ -104,6 +104,7 @@
     "retry": "Torna-ho a provar",
     "notFound": "Aquesta reserva no existeix o ja no és accessible.",
     "inTimeNotice": "Si anul·les ara, la classe no comptarà com a feta: recuperaràs la disponibilitat del límit setmanal o el saldo del pack, segons la teva modalitat.",
-    "completePayment": "Completa el pagament"
+    "completePayment": "Completa el pagament",
+    "rebook": "Torna a reservar la classe"
   }
 }

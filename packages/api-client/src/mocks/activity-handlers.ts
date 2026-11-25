@@ -672,6 +672,7 @@ export const activityHandlers = [
     const activity: StoredActivity = {
       cancellation: null,
       createdAt: new Date().toISOString(),
+      notifyMembers: body.notifyMembers ?? true,
       // As the api: a new draft has no date nor hours yet (seen on the core, E4-W14 round 2).
       date: null,
       documents: [],

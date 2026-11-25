@@ -711,7 +711,9 @@
       "ring": "Pista",
       "dog": "Gos",
       "state": "Estat",
-      "origin": "Origen"
+      "origin": "Origen",
+      "bookedAt": "Reservada el",
+      "cancelledAt": "Anul·lada el"
     },
     "when": "{day} · {time}",
     "noClasses": "Cap reserva de classe.",

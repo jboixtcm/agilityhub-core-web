@@ -94,6 +94,8 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
   it("every other line of R-10-14's table: a cancelled future class on top, «ha avisat» late and in time, the club on the member's behalf, the system, a cancelled training, and a club cancellation without a message", async () => {
     window.history.replaceState(null, "", "/historic");
     await renderHistory({ scenario: "historyAllReasons" });
+    const futureClass = document.querySelector('[data-booking-id="b20"]');
+    expect(futureClass?.querySelector("a")).toHaveAttribute("href", "/reserves/b20");
     // As delivered (`startsAt` desc): the eight extra lines mixed with mockup 25's seven.
     expect(historyRows()).toEqual([
       "dl 10/08 · 18:50 | Classe B+C · amb Duna | anul·lada / Anul·lada per tu, dins termini · no compta",

@@ -54,7 +54,8 @@
   "create": {
     "title": "Nova activitat",
     "submit": "Crea l'activitat",
-    "titleRequired": "Escriu el títol en {locale}."
+    "titleRequired": "Escriu el títol en {locale}.",
+    "notifyMembers": "Avisa els abonats actius dels nivells admesos quan es publiqui l’activitat"
   },
   "form": {
     "maintenanceTitle": "Manteniment de l'activitat — {title}",

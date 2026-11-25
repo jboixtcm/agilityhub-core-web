@@ -45,6 +45,24 @@ test.beforeAll(() => {
 });
 
 test.describe("E4-W04 D7 activities", () => {
+  test("staff can create a draft without a publication notice", async ({ page }) => {
+    await signIn(page, "admin");
+    await page.getByRole("link", { name: "Activitats", exact: true }).click();
+    await page.getByRole("button", { name: "Nova activitat" }).click();
+    const draft = page.getByRole("dialog", { name: "Nova activitat" });
+    const notify = draft.getByRole("checkbox", { name: /Avisa els abonats actius/u });
+    await expect(notify).toBeChecked();
+    await notify.uncheck();
+    await draft.getByLabel("Títol", { exact: true }).fill("Sessió de prova");
+    const saved = page.waitForResponse(
+      (response) =>
+        response.request().method() === "POST" && response.url().endsWith("/api/v1/activities"),
+    );
+    await draft.getByRole("button", { name: "Crea l'activitat" }).click();
+    expect(await (await saved).json()).toMatchObject({ state: "DRAFT", notifyMembers: false });
+    await expect(maintenance(page, "Sessió de prova")).toBeVisible();
+  });
+
   test("T-07-29 list + maintenance of «Torneig d'Estiu 2026» as the mockup", async ({ page }) => {
     await signIn(page, "admin");
     await page.getByRole("link", { exact: true, name: "Activitats" }).click();
