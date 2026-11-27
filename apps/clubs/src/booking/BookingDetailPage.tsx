@@ -237,12 +237,14 @@ export function BookingDetailPage({
     session.ringName === null || session.ringName === undefined || session.ringName === ""
       ? when
       : `${when}${t("booking:separator")}${session.ringName}`;
-  // The booking always names its dog (api E5-T25, adopted by E4-W15 step 0).
-  const title = t("booking:detail.classWithDog", {
-    description: session.description,
-    dogArticle: dogArticle(data.dog.name, data.dog.sex, formats.locale),
-    dogName: data.dog.name,
-  });
+  const title =
+    data.dog == null
+      ? t("booking:detail.classWithoutDog", { description: session.description })
+      : t("booking:detail.classWithDog", {
+          description: session.description,
+          dogArticle: dogArticle(data.dog.name, data.dog.sex, formats.locale),
+          dogName: data.dog.name,
+        });
   const bookedAt = {
     date: t("booking:detail.weekdayDate", {
       date: formats.formatDate(data.bookedAt, "dayMonthNumeric"),
@@ -321,6 +323,7 @@ export function BookingDetailPage({
         </a>
       ) : null}
       {(data.state === "CANCELLED" || data.state === "CANCELLED_LATE") &&
+      data.dog != null &&
       data.cancellation?.byRole === "MEMBER" &&
       startsAt > now ? (
         <RebookClass client={client} booking={data} />

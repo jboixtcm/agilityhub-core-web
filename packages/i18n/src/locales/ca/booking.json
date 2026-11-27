@@ -87,6 +87,7 @@
     "back": "Torna enrere",
     "backGlyph": "‹",
     "classWithDog": "Classe {description} · amb {dogArticle}{dogName}",
+    "classWithoutDog": "Classe {description} · dades del gos no disponibles",
     "bookedAt": "Reservada el {date} a les {time}",
     "bookedByMember": "Reservada per {name} el {date} a les {time}",
     "bookedByClub": "Reservada pel club el {date} a les {time}",

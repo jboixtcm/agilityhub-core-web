@@ -8668,8 +8668,8 @@ export interface components {
              * @enum {string}
              */
             displayState?: "CONFIRMED" | "DONE" | "NO_SHOW" | "CANCELLED" | "CANCELLED_LATE" | "CANCELLED_BY_CLUB" | "PAYMENT_PENDING";
-            /** @description The booked dog; its sex gives 07's Catalan article («amb la Duna») */
-            dog: components["schemas"]["HoldDog"];
+            /** @description The booked dog when present in the club census. The booking retains its original dogId if the dog is missing. */
+            dog?: components["schemas"]["HoldDog"] | null;
             dogId: string;
             id: string;
             /**

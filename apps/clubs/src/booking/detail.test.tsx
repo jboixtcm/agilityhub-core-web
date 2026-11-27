@@ -205,6 +205,20 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     },
   );
 
+  it("shows the cancelled booking when its dog is missing from the census", async () => {
+    rewrite("/bookings/booking-duna-mon3", (body) => {
+      body.dog = null;
+      body.state = "CANCELLED";
+      body.displayState = "CANCELLED";
+      body.cancellation = { byRole: "MEMBER", late: false };
+    });
+    const title = await openBooking();
+    expect(title).toHaveTextContent("Classe B+C · dades del gos no disponibles");
+    expect(screen.getByText("anul·lada", { exact: true })).toBeVisible();
+    expect(screen.getByText(/^Reservada el /u)).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Torna a reservar la classe" })).toBeNull();
+  });
+
   it("E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor`", async () => {
     const title = await openBooking();
     const { before, colour, dot } = cardDot(title);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-27 — Historical booking detail
+
+- The class booking detail shows the class and booking information when the dog is missing from the census.
+
 ## 2026-11-25 — Club reservations and activity notices
 
 - The member card shows when class and training reservations were made and cancelled in the club's time zone.
