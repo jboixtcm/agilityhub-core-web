@@ -1239,14 +1239,17 @@ async function findScene(browser: Browser, admin: Session, pushKey: null | strin
     seededA,
   });
   if (pair === undefined) throw new Error("The two registrants share no class and can book none");
-  const person = (email: string, home: MeHome, booking: Booking): Person => ({
-    bookingA: booking.id,
-    dogId: booking.dogId,
-    dogName: booking.dog.name,
-    email,
-    firstName: home.member.firstName,
-    memberId: home.member.id,
-  });
+  const person = (email: string, home: MeHome, booking: Booking): Person => {
+    if (booking.dog == null) throw new Error("The registrant's booking needs a dog in the census");
+    return {
+      bookingA: booking.id,
+      dogId: booking.dogId,
+      dogName: booking.dog.name,
+      email,
+      firstName: home.member.firstName,
+      memberId: home.member.id,
+    };
+  };
   const caPerson = person(MEMBER_CA, caLive.home, pair.ca);
   const esPerson = person(MEMBER_ES, esLive.home, pair.es);
   for (const item of [caPerson, esPerson]) {
